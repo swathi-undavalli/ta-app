@@ -1,0 +1,166 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
+import 'package:temple_adventures/features/compressor/presentation/compressor.dart';
+import 'package:temple_adventures/features/employees/presentation/screens/employee-profile-screen.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/attendance/attendance-page.dart';
+import 'package:temple_adventures/features/Activities/presentation/screens/all-activities-screen.dart';
+
+class NavDrawer extends StatelessWidget {
+  static const String id = "sideMenuWidget";
+
+  @override
+  Widget build(BuildContext context) {
+    return Drawer(
+      child: Column(
+        children: [
+          Spacer(),
+          buildUserProfile(),
+          SizedBox(height: 30),
+          buildName(),
+          SizedBox(height: 50),
+          buildLine(),
+          SizedBox(height: 50),
+          buildMenuItem(
+            icon: Icons.account_circle,
+            text: 'Profile',
+            onTap: () {
+              Get.offAndToNamed(EmployeeProfileScreen.id);
+            },
+          ),
+          buildMenuItem(
+              icon: Icons.book_rounded,
+              text: 'Attendance',
+              onTap: () {
+                Get.offAndToNamed(AttendancePage.id);
+              }),
+          buildMenuItem(
+            icon: Icons.settings,
+            text: 'Settings',
+            onTap: () {},
+          ),
+          buildMenuItem(
+            icon: Icons.edit,
+            text: 'Edit Prices',
+            onTap: () {
+              Get.offAndToNamed(AllActivitiesScreen.id);
+            },
+          ),
+          buildMenuItem(
+            icon: Icons.local_gas_station,
+            text: 'Compressor',
+            onTap: () {
+              Get.offAndToNamed(CompressorScreen.id);
+            },
+          ),
+          buildMenuItem(
+            icon: Icons.collections_bookmark_rounded,
+            text: 'All Bookings',
+            onTap: () {
+              Get.offAndToNamed(AllBookingsScreen.id);
+            },
+          ),
+          Spacer(),
+          buildLine(),
+          buildMiniMenuItem(text: 'templeadventures.com'),
+          SizedBox(height: 20)
+        ],
+      ),
+    );
+  }
+
+  SizedBox buildUserProfile() {
+    return SizedBox(
+      height: 100,
+      width: 100,
+      child: CircleAvatar(
+        backgroundImage: NetworkImage(
+            "https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/profile_user.jpg"),
+      ),
+    );
+  }
+
+  ///================Business logic==================///
+
+  Widget buildMiniMenuItem({@required text}) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 30, top: 15),
+      child: Container(
+        alignment: Alignment.centerLeft,
+        child: Text(
+          text,
+          style: TextStyle(color: Colors.black45, fontSize: FontSize.small),
+        ),
+      ),
+    );
+  }
+
+  Widget buildMenuItem(
+      {@required IconData icon,
+      @required String text,
+      Color color = Colors.black87,
+      @required Function onTap}) {
+    return Container(
+      width: Get.width,
+      alignment: Alignment.centerLeft,
+      child: ListTile(
+        contentPadding: EdgeInsets.only(left: 30),
+        title: Text(
+          text,
+          style: TextStyle(
+              fontSize: 16,
+              color: Color(0xff605B5B),
+              fontWeight: FontWeight.w500),
+        ),
+        leading: Icon(
+          icon,
+          color: color,
+        ),
+        trailing: SizedBox(
+          width: 100,
+        ),
+        onTap: onTap,
+      ),
+    );
+  }
+
+  Widget buildName() {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          'hello,',
+          style: TextStyle(
+            color: Colors.black45,
+            fontSize: FontSize.textSize,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 1.2,
+          ),
+        ),
+        Text(
+          currentEmployee.firstName + " !",
+          style: TextStyle(
+            color: Colors.black54,
+            fontSize: 25,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.2,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildLine() {
+    return Padding(
+      padding: const EdgeInsets.only(top: 30.0),
+      child: Container(
+        width: 250,
+        height: 1,
+        color: Colors.grey[300],
+      ),
+    );
+  }
+}

@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "671883511961",
+    "project_id": "seismic-glow-283418",
+    "storage_bucket": "seismic-glow-283418.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671883511961:android:c0058fab134f4f4eb05008",
+        "android_client_info": {
+          "package_name": "com.temple_adventures.scubadiving"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "671883511961-lpiu63ln1vcebrdd5fdbsj3lodi8n80u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.temple_adventures.scubadiving",
+            "certificate_hash": "73d6de603f7da3455f5b5d1ae930fd49791aff47"
+          }
+        },
+        {
+          "client_id": "671883511961-5a2pnqspukd1g7fljfd2npai41sshnmo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdRCPOJF_yuMjaYfyVXCYCXgZ6efZDVBI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "671883511961-5a2pnqspukd1g7fljfd2npai41sshnmo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
