@@ -10,11 +10,11 @@ class AddNewActivityLogic {
 
   onSubmit() async {
     var data = await FirebaseFirestore.instance
-        .collection("activityCounter")
-        .doc("activities")
+        .collection("counter")
+        .doc("activity")
         .get();
     Map<String, dynamic> activityCount = data.data();
-    var totalCount = activityCount["count"].toString();
+    var totalCount = activityCount["count"];
     if (controller.nameTED.text != "" &&
         controller.priceTED.text != "" &&
         controller.priorityTED.text != "" &&
@@ -24,11 +24,15 @@ class AddNewActivityLogic {
           price: int.parse(controller.priceTED.text),
           priority: int.parse(controller.priorityTED.text),
           color: controller.colorTED.text,
-          id: (int.parse(totalCount) + 1).toString());
+          id: (totalCount + 1).toString());
       FirebaseFirestore.instance
           .collection('catalogue')
           .doc(activityModel.id)
           .set(activityModel.toMap());
+      FirebaseFirestore.instance
+          .collection("counter")
+          .doc("activity")
+          .set({"count": totalCount+1});
       Fluttertoast.showToast(msg: "Saved");
       disposeKeyboard();
       controller.reset();
