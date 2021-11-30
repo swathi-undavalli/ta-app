@@ -23,12 +23,7 @@ class ActivityEditScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          leading: BackNavigationIcon(),
-          toolbarHeight: 50,
-          backgroundColor: AppColors.background.white,
-          elevation: 0),
-
+      appBar: buildAppBar(),
       body: SafeArea(
         child: GetBuilder<ActivityEditController>(builder: (controller) {
           return Padding(
@@ -94,6 +89,30 @@ class ActivityEditScreen extends StatelessWidget {
         ],
       );
     });
+  }
+
+  Widget buildAppBar() {
+    return AppBar(
+      toolbarHeight: 70,
+      centerTitle: true,
+      title: buildTitle(),
+      leading: BackNavigationIcon(),
+      elevation: 0,
+      backgroundColor: AppColors.background.white,
+    );
+  }
+
+  Widget buildTitle() {
+    return Text(
+      'Edit Activity',
+      style: TextStyle(
+        color: AppColors.text.black,
+        fontSize: 20,
+        fontFamily: AppFonts.nunito,
+        fontWeight: FontWeight.normal,
+        letterSpacing: 1.2,
+      ),
+    );
   }
 
   Widget buildTextFields(

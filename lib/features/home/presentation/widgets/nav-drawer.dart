@@ -19,11 +19,10 @@ class NavDrawer extends StatelessWidget {
         children: [
           Spacer(),
           buildUserProfile(),
-          SizedBox(height: 30),
+          SizedBox(height: 20),
           buildName(),
-          SizedBox(height: 50),
+          SizedBox(height: 20),
           buildLine(),
-          SizedBox(height: 50),
           buildMenuItem(
             icon: Icons.account_circle,
             text: 'Profile',
@@ -77,8 +76,7 @@ class NavDrawer extends StatelessWidget {
       height: 100,
       width: 100,
       child: CircleAvatar(
-        backgroundImage: NetworkImage(
-            "https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/profile_user.jpg"),
+        backgroundImage: AssetImage('images/AppLogoPondy.png'),
       ),
     );
   }

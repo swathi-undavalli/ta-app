@@ -15,14 +15,7 @@ class PaymentDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 70,
-        centerTitle: true,
-        title: buildTitle(),
-        leading: BackNavigationIcon(),
-        elevation: 0,
-        backgroundColor: AppColors.background.white,
-      ),
+      appBar: buildAppBar(),
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -50,6 +43,17 @@ class PaymentDetailsScreen extends StatelessWidget {
   }
 
   ///==================UI==================///
+
+  Widget buildAppBar() {
+    return AppBar(
+      toolbarHeight: 70,
+      centerTitle: true,
+      title: buildTitle(),
+      leading: BackNavigationIcon(),
+      elevation: 0,
+      backgroundColor: AppColors.background.white,
+    );
+  }
 
   Widget buildPaymentDate(BuildContext context) {
     return GetBuilder<NewBookingController>(builder: (controller) {

@@ -325,7 +325,8 @@ class BookingsCalenderWidgetController extends GetxController {
   List<ItemModel> _expansionBookings = [];
 
   DateTime _startDate;
-
+  DateTime _startTime;
+  DateTime _endTime;
   bool _showLoading = false;
 
   DateTime _selectedDate = DateTime(
@@ -363,6 +364,13 @@ class BookingsCalenderWidgetController extends GetxController {
 
   FilterType get selectedType => _selectedType;
 
+  DateTime get startTime => _startTime;
+
+  set startTime(DateTime value) {
+    _startTime = value;
+    update();
+  }
+
   set selectedType(FilterType value) {
     _selectedType = value;
     update();
@@ -390,6 +398,13 @@ class BookingsCalenderWidgetController extends GetxController {
 
   set selectedDate(value) {
     _selectedDate = value;
+    update();
+  }
+
+  DateTime get endTime => _endTime;
+
+  set endTime(DateTime value) {
+    _endTime = value;
     update();
   }
 }

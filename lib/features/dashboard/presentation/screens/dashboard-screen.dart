@@ -68,25 +68,26 @@ class DashBoardScreen extends StatelessWidget {
         unselectedItemColor: Colors.white,
         showUnselectedLabels: false,
         showSelectedLabels: false,
-        iconSize: 20,
+        iconSize: 30,
         currentIndex: controller.currentIndex,
         onTap: (index) {
           controller.currentIndex = index;
         },
         items: [
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('images/Home.png')),
-            activeIcon: buildActiveIcon('images/Home_black.png'),
+            icon: ImageIcon(AssetImage('images/taHomeWhite.png')),
+            // icon: Icon(Icons.home_outlined),
+            activeIcon: buildActiveIcon('images/taHomeBlack.png'),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('images/Cloud.png')),
-            activeIcon: buildActiveIcon('images/Cloud_black.png'),
+            icon: ImageIcon(AssetImage('images/taCloudWhite.png')),
+            activeIcon: buildActiveIcon('images/taCloudBlack.png'),
             label: 'weather',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('images/booking.png')),
-            activeIcon: buildActiveIcon('images/booking_black.png'),
+            icon: ImageIcon(AssetImage('images/taCalWhite.png')),
+            activeIcon: buildActiveIcon('images/taCalBlack.png'),
             label: 'bookings',
           ),
           BottomNavigationBarItem(
@@ -101,8 +102,8 @@ class DashBoardScreen extends StatelessWidget {
 
   Widget buildActiveIcon(String image) {
     return Container(
-      height: 40,
-      width: 40,
+      height: 30,
+      width: 30,
       child: Image.asset(image),
       decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
     );

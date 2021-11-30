@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:step_progress_indicator/step_progress_indicator.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
+import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/attendance/attendance-page-controller.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 
@@ -18,27 +19,7 @@ class AttendancePage extends StatelessWidget {
         children: [
           buildShowLoading(),
           Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.white,
-              title: Text(
-                "Attendance & Clock",
-                style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold),
-              ),
-              elevation: 0,
-              leading: TextButton(
-                onPressed: () {
-                  Get.back();
-                },
-                child: Icon(
-                  Icons.arrow_back_ios,
-                  size: 16,
-                  color: AppColors.text.black,
-                ),
-              ),
-            ),
+            appBar: buildAppBar(),
             body: SafeArea(
               child: SingleChildScrollView(
                 child: Padding(
@@ -46,10 +27,6 @@ class AttendancePage extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      // SizedBox(height: 20),
-                      // buildBackNavigation(),
-                      // SizedBox(height: 20),
-
                       SizedBox(height: 20),
                       Row(
                         children: [
@@ -59,68 +36,8 @@ class AttendancePage extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
 
-                      // Divider(),
-                      // Container(
-                      //   width: Get.width,
-                      //   height: 30,
-                      //   alignment: Alignment.centerLeft,
-                      //   child: RichText(
-                      //     text: TextSpan(
-                      //       text: 'Last login',
-                      //       style: TextStyle(
-                      //         fontFamily: AppFonts.nunito,
-                      //         fontWeight: FontWeight.bold,
-                      //         color: AppColors.text.black,
-                      //       ),
-                      //       children: <TextSpan>[
-                      //         TextSpan(
-                      //           text: '     25-01-2001 @ 03:00',
-                      //           style: TextStyle(
-                      //             fontWeight: FontWeight.bold,
-                      //             color: AppColors.text.skyBlue,
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                      // Container(
-                      //   width: Get.width,
-                      //   alignment: Alignment.centerLeft,
-                      //   height: 30,
-                      //   child: RichText(
-                      //     text: TextSpan(
-                      //       text: 'Login location',
-                      //       style: TextStyle(
-                      //         fontFamily: AppFonts.nunito,
-                      //         fontWeight: FontWeight.bold,
-                      //         color: AppColors.text.black,
-                      //       ),
-                      //       children: <TextSpan>[
-                      //         TextSpan(
-                      //           text: '     Pondicherry',
-                      //           style: TextStyle(
-                      //             fontWeight: FontWeight.bold,
-                      //             color: AppColors.text.skyBlue,
-                      //           ),
-                      //         ),
-                      //       ],
-                      //     ),
-                      //   ),
-                      // ),
-                      // Divider(),
-
-                      // SizedBox(height: 10),
-
                       Divider(),
                       SizedBox(height: 10),
-
-                      // SizedBox(height: 10),
-                      // Container(
-                      //   width: Get.width,
-                      //   child: Text("Attendance Calender",
-                      //       style: TextStyle(fontWeight: FontWeight.bold)),
-                      // ),
 
                       Padding(
                         padding: const EdgeInsets.only(left: 15, right: 15),
@@ -139,34 +56,6 @@ class AttendancePage extends StatelessWidget {
                       ),
                       SizedBox(height: 20),
                       buildCalender(),
-                      // ElevatedButton(
-                      //     onPressed: () {
-                      //       var today = DateTime.now();
-                      //       for (int i = 0; i < 100; i++) {
-                      //         today = today.add(Duration(days: 1));
-                      //         Attendance attendance = Attendance(
-                      //           checkInInput: "TA-Mobile App",
-                      //           checkInLocation: "Temple Adventures Pondicherry",
-                      //           checkInTime: Timestamp.fromMillisecondsSinceEpoch(
-                      //               today.millisecondsSinceEpoch),
-                      //           checkOutInput: "TA-Mobile App",
-                      //           checkOutLocation: "Temple Adventures Pondicherry",
-                      //           checkOutTime:
-                      //               Timestamp.fromMillisecondsSinceEpoch(
-                      //                   today.millisecondsSinceEpoch),
-                      //           date: Timestamp.fromMillisecondsSinceEpoch(
-                      //               today.millisecondsSinceEpoch),
-                      //           punctual: "On-Time",
-                      //         );
-                      //         FirebaseFirestore.instance
-                      //             .collection("employees")
-                      //             .doc("-2")
-                      //             .collection("attendance")
-                      //             .doc(DateFormat("dd-MM-yyyy").format(today))
-                      //             .set(attendance.toMap());
-                      //       }
-                      //     },
-                      //     child: Text("DO")),
                     ],
                   ),
                 ),
@@ -176,6 +65,30 @@ class AttendancePage extends StatelessWidget {
         ],
       );
     });
+  }
+
+  Widget buildAppBar() {
+    return AppBar(
+      toolbarHeight: 70,
+      centerTitle: true,
+      title: buildTitle(),
+      leading: BackNavigationIcon(),
+      elevation: 0,
+      backgroundColor: AppColors.background.white,
+    );
+  }
+
+  Widget buildTitle() {
+    return Text(
+      'Attendance',
+      style: TextStyle(
+        color: AppColors.text.black,
+        fontSize: 20,
+        fontFamily: AppFonts.nunito,
+        fontWeight: FontWeight.normal,
+        letterSpacing: 1.2,
+      ),
+    );
   }
 
   Widget buildEmployeeClock() {

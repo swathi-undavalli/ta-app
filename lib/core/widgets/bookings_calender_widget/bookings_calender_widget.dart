@@ -12,6 +12,8 @@ class BookingsCalenderWidget extends StatelessWidget {
   final bool isDiveSession;
   final bool showDetails;
   DateTime startDate;
+  DateTime startTime;
+  DateTime endTime;
   final bool highlightInvalidTime;
 
   BookingsCalenderWidget({
@@ -20,12 +22,30 @@ class BookingsCalenderWidget extends StatelessWidget {
     this.showDetails = false,
     this.startDate,
     this.highlightInvalidTime = false,
+    this.startTime,
+    this.endTime,
   }) {
     if (startDate == null) startDate = DateTime.now();
     startDate = startDate.subtract(Duration(days: 1));
     logic.controller.startDate = startDate;
     logic.controller.showDetails = showDetails;
     logic.controller.isDiveSession = isDiveSession;
+    logic.controller.startTime = startTime;
+    logic.controller.endTime = endTime;
+    if (logic.controller.startTime == null)
+      logic.controller.startTime = DateTime(
+        logic.controller.selectedDate.year,
+        logic.controller.selectedDate.month,
+        logic.controller.selectedDate.day,
+        logic.controller.showDetails ? 3 : 5,
+      );
+    if (logic.controller.endTime == null)
+      logic.controller.endTime = DateTime(
+        logic.controller.selectedDate.year,
+        logic.controller.selectedDate.month,
+        logic.controller.selectedDate.day,
+        19,
+      );
     if (showDetails) autoCenter();
   }
 
@@ -96,12 +116,12 @@ class BookingsCalenderWidget extends StatelessWidget {
   }
 
   Widget buildTabButton(
-      String title,
-      Function onTap, {
-        bool enable = false,
-        Color color,
-        int count,
-      }) {
+    String title,
+    Function onTap, {
+    bool enable = false,
+    Color color,
+    int count,
+  }) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -171,13 +191,13 @@ class BookingsCalenderWidget extends StatelessWidget {
                   buildTitle("Bookings"),
                   controller.showLoading
                       ? SizedBox(
-                    width: 10,
-                    height: 10,
-                    child: CircularProgressIndicator(
-                      color: AppColors.background.black,
-                      strokeWidth: 1,
-                    ),
-                  )
+                          width: 10,
+                          height: 10,
+                          child: CircularProgressIndicator(
+                            color: AppColors.background.black,
+                            strokeWidth: 1,
+                          ),
+                        )
                       : SizedBox(),
                 ],
               ),
@@ -198,13 +218,13 @@ class BookingsCalenderWidget extends StatelessWidget {
                   Center(
                     child: Container(
                       child: (controller.poolCount == 0 &&
-                          controller.theoryCount == 0 &&
-                          controller.diveCount == 0 &&
-                          showDetails)
+                              controller.theoryCount == 0 &&
+                              controller.diveCount == 0 &&
+                              showDetails)
                           ? Text(
-                        "No Bookings Found",
-                        style: TextStyle(fontSize: 15),
-                      )
+                              "No Bookings Found",
+                              style: TextStyle(fontSize: 15),
+                            )
                           : SizedBox(),
                     ),
                   ),
