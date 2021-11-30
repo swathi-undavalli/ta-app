@@ -11,7 +11,7 @@ import 'package:temple_adventures/features/Activities/presentation/screens/add-n
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/edit-booking-details.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/edit-booking-details-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-customer-screen.dart';

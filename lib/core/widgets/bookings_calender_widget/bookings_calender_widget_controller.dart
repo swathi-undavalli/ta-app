@@ -291,6 +291,17 @@ class BookingsCalenderWidgetLogic {
 
   getTime() {
     controller.timeTable = [];
+    var hour  = 3;
+    if(controller.calenderType == null)
+      hour = controller.showDetails ? 3 : 5;
+    else {
+      if(controller.calenderType == FilterType.Theory)
+        hour = 7;
+      else if(controller.calenderType == FilterType.Pool)
+        hour = 5;
+      else if(controller.calenderType == FilterType.Dive)
+        hour = 5;
+    }
     var temp = DateTime(
       controller.selectedDate.year,
       controller.selectedDate.month,
@@ -325,8 +336,6 @@ class BookingsCalenderWidgetController extends GetxController {
   List<ItemModel> _expansionBookings = [];
 
   DateTime _startDate;
-  DateTime _startTime;
-  DateTime _endTime;
   bool _showLoading = false;
 
   DateTime _selectedDate = DateTime(
@@ -352,6 +361,8 @@ class BookingsCalenderWidgetController extends GetxController {
 
   bool isDiveSession;
 
+  FilterType calenderType;
+
   get selectedDate => _selectedDate;
 
   bool get showLoading => _showLoading;
@@ -363,13 +374,6 @@ class BookingsCalenderWidgetController extends GetxController {
   List<ItemModel> get expansionBookings => _expansionBookings;
 
   FilterType get selectedType => _selectedType;
-
-  DateTime get startTime => _startTime;
-
-  set startTime(DateTime value) {
-    _startTime = value;
-    update();
-  }
 
   set selectedType(FilterType value) {
     _selectedType = value;
@@ -398,13 +402,6 @@ class BookingsCalenderWidgetController extends GetxController {
 
   set selectedDate(value) {
     _selectedDate = value;
-    update();
-  }
-
-  DateTime get endTime => _endTime;
-
-  set endTime(DateTime value) {
-    _endTime = value;
     update();
   }
 }

@@ -101,12 +101,14 @@ class BookingModel {
   double get balance {
     double balance = price;
 
+    balance = balance * (noOfPersons ?? 1);
+
     /// Deduct Discount
     if (discountType != null) {
       if (discountType == "%")
-        balance -= price * discount / 100;
+        balance -= balance * discount / 100;
       else
-        balance = price - discount;
+        balance = balance - discount;
     }
 
     /// Add Tax
@@ -122,21 +124,36 @@ class BookingModel {
   }
 
   double get totalCost {
+    print("================");
+    // print(price);
+    // print(noOfPersons);
+    // print(discountType);
+    // print(discount);
+    // print(tax);
     double total = price;
+    total = total * (noOfPersons ?? 1);
+    // print("================");
+    // print(price);
+    // print(noOfPersons);
+    // print(discountType);
+    // print(discount);
+    // print(tax);
 
     /// Deduct Discount
     if (discountType != null) {
       if (discountType == "%")
-        total -= price * discount / 100;
+        total -= total * discount / 100;
       else
-        total = price - discount;
+        total = total - discount;
+      print("total $total");
     }
+    print(total);
 
     /// Add Tax
     if (tax != null && tax != 0) {
       total += total * tax / 100;
     }
-
+    print(total);
     return total;
   }
 

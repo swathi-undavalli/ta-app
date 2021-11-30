@@ -71,29 +71,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                       children: [
                         buildActivityDropDown(),
                         buildPriceTF(controller),
-                        buildTextFields(
-                            text: "PAX",
-                            textEditingController: controller.paxTED,
-                            keyBoardType: TextInputType.number,
-                            onChanged: () {
-                              try {
-                                logic.getPrice();
-                                controller.update();
-                              } catch (e) {
-                                print("error");
-                                print(e);
-                              }
-                            },
-                            onChangedCallBack: (payingNow) {
-                              try {
-                                controller.bookingModel.payingNow =
-                                    double.parse(controller.depositTED.text);
-                              } catch (e) {
-                                controller.bookingModel.payingNow = 0;
-                              }
-                            },
-                            focus: controller.paxNode,
-                            nextFocus: controller.discountNode),
+                        buildPAXTF(controller),
                         buildDiscount(),
                         buildTax(),
                         Container(
@@ -112,7 +90,6 @@ class EditBookingDetailsScreen extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                width: 80,
                                 child: Text(
                                   controller.bookingModel.totalCost.toString() +
                                       "/-",
@@ -124,24 +101,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        buildTextFields(
-                          text: "Deposit",
-                          textEditingController: controller.depositTED,
-                          keyBoardType: TextInputType.number,
-                          onChanged: () {
-                            logic.getPrice();
-                          },
-                          onChangedCallBack: (payingNow) {
-                            try {
-                              controller.bookingModel.payingNow =
-                                  double.parse(controller.depositTED.text);
-                            } catch (e) {
-                              controller.bookingModel.payingNow = 0;
-                            }
-                          },
-                          focus: controller.depositNode,
-                          nextFocus: controller.balanceNode,
-                        ),
+                        buildDepositTF(controller),
                         SizedBox(height: 20),
                         Container(
                           width: 320,
@@ -171,17 +131,8 @@ class EditBookingDetailsScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        buildTextFields(
-                            text: "Remarks",
-                            textEditingController: controller.remarksTED,
-                            focus: controller.remarksNode,
-                            nextFocus: controller.emailNode),
-                        buildTextFields(
-                            text: "Email",
-                            textEditingController: controller.emailTED,
-                            keyBoardType: TextInputType.emailAddress,
-                            focus: controller.emailNode,
-                            nextFocus: controller.phoneNode),
+                        buildRemarksTF(controller),
+                        buildEmailTF(controller),
                         SizedBox(height: 10),
                         buildPhoneNumber(),
                         SizedBox(height: 10),
@@ -219,19 +170,85 @@ class EditBookingDetailsScreen extends StatelessWidget {
     );
   }
 
+  Widget buildEmailTF(EditBookingDetailsController controller) {
+    return buildTextFields(
+                          text: "Email",
+                          textEditingController: controller.emailTED,
+                          keyBoardType: TextInputType.emailAddress,
+                          focus: controller.emailNode,
+                          nextFocus: controller.phoneNode);
+  }
+
+  Widget buildRemarksTF(EditBookingDetailsController controller) {
+    return buildTextFields(
+                          text: "Remarks",
+                          textEditingController: controller.remarksTED,
+                          focus: controller.remarksNode,
+                          nextFocus: controller.emailNode);
+  }
+
+  Widget buildDepositTF(EditBookingDetailsController controller) {
+    return buildTextFields(
+                        text: "Deposit",
+                        textEditingController: controller.depositTED,
+                        keyBoardType: TextInputType.number,
+                        onChanged: () {
+                          logic.getPrice();
+                        },
+                        onChangedCallBack: (payingNow) {
+                          try {
+                            controller.bookingModel.payingNow =
+                                double.parse(controller.depositTED.text);
+                          } catch (e) {
+                            controller.bookingModel.payingNow = 0;
+                          }
+                        },
+                        focus: controller.depositNode,
+                        nextFocus: controller.balanceNode,
+                      );
+  }
+
+  Widget buildPAXTF(EditBookingDetailsController controller) {
+    return buildTextFields(
+        text: "PAX",
+        textEditingController: controller.paxTED,
+        keyBoardType: TextInputType.number,
+        // onChanged: () {
+        //   try {
+        //     logic.getPrice();
+        //     controller.update();
+        //   } catch (e) {
+        //     print("error");
+        //     print(e);
+        //   }
+        // },
+        onChangedCallBack: (pax) {
+          try {
+            controller.bookingModel.noOfPersons = int.parse(pax);
+          } catch (e) {
+            controller.bookingModel.noOfPersons = 1;
+          }
+          print(controller.bookingModel.totalCost);
+          // print(controller.bookingModel.noOfPersons);
+          controller.update();
+        },
+        focus: controller.paxNode,
+        nextFocus: controller.discountNode);
+  }
+
   Widget buildPriceTF(EditBookingDetailsController controller) {
     return buildTextFields(
         text: "Price",
         textEditingController: controller.priceTED,
         keyBoardType: TextInputType.number,
-        onChanged: () {
-          try {
-            logic.getPrice();
-          } catch (e) {
-            print("error");
-            print(e);
-          }
-        },
+        // onChanged: () {
+        //   try {
+        //     logic.getPrice();
+        //   } catch (e) {
+        //     print("error");
+        //     print(e);
+        //   }
+        // },
         onChangedCallBack: (price) {
           try {
             controller.bookingModel.price = double.parse(price);
@@ -303,6 +320,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                         controller.bookingModel.discountType =
                             controller.discountSwitch ? "%" : "₹";
                         print("VALUE : ${controller.discountSwitch}");
+                        controller.update();
                       }),
                 ),
                 Text(
@@ -618,7 +636,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
     FocusNode focus,
     FocusNode nextFocus,
     Function onChanged,
-    Function onChangedCallBack,
+    Function(String) onChangedCallBack,
   }) {
     return Container(
       child: AppTextField(
@@ -629,7 +647,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
         nextFocusNode: nextFocus,
         onChanged: onChanged,
         onChangedCallBack: (_) {
-          onChanged(_);
+          onChangedCallBack(_);
         },
         errorValidator: () {
           return null;

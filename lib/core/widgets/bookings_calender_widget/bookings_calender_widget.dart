@@ -14,9 +14,8 @@ class BookingsCalenderWidget extends StatelessWidget {
   final bool isDiveSession;
   final bool showDetails;
   DateTime startDate;
-  DateTime startTime;
-  DateTime endTime;
   final bool highlightInvalidTime;
+  final FilterType calenderType;
 
   BookingsCalenderWidget({
     @required this.onDateTimeSelected,
@@ -24,35 +23,17 @@ class BookingsCalenderWidget extends StatelessWidget {
     this.showDetails = false,
     this.startDate,
     this.highlightInvalidTime = false,
-    this.startTime,
-    this.endTime,
+    this.calenderType,
   }) {
     if (startDate == null) startDate = DateTime.now();
     startDate = startDate.subtract(Duration(days: 1));
     logic.controller.startDate = startDate;
     logic.controller.showDetails = showDetails;
     logic.controller.isDiveSession = isDiveSession;
-    logic.controller.startTime = startTime;
-    logic.controller.endTime = endTime;
-    if (logic.controller.startTime == null)
-      logic.controller.startTime = DateTime(
-        logic.controller.selectedDate.year,
-        logic.controller.selectedDate.month,
-        logic.controller.selectedDate.day,
-        logic.controller.showDetails ? 3 : 5,
-      );
-    if (logic.controller.endTime == null)
-      logic.controller.endTime = DateTime(
-        logic.controller.selectedDate.year,
-        logic.controller.selectedDate.month,
-        logic.controller.selectedDate.day,
-        19,
-      );
-
+    logic.controller.calenderType = calenderType;
     if (showDetails)
       EmployeeAccess.run(
-          function: autoCenter,
-          access: AccessRights.viewBookings);
+          function: autoCenter, access: AccessRights.viewBookings);
   }
 
   Future<void> autoCenter() async {

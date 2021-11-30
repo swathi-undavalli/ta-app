@@ -83,12 +83,13 @@ class _AppTextFieldsState extends State<AppTextField> {
               fontFamily: AppFonts.nunito,
             ),
           ),
-          onTap: (){},
+          onTap: () {},
           validator: (value) {
             return widget.validator(value);
           },
           onChanged: (value) {
-            widget.onChangedCallBack(value);
+            if (widget.onChangedCallBack != null)
+              widget.onChangedCallBack(value);
             if (widget.maxLimit != null && value.length == widget.maxLimit)
               widget.nextFocusNode.requestFocus();
             setState(() {});

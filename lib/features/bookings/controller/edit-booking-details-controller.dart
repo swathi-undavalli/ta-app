@@ -154,6 +154,7 @@ class EditBookingDetailsLogic {
 
   onChooseTheorySessionPressed() {
     DateTime selectedDiveDate = controller.bookingModel.theoryDate;
+    DateTime now = DateTime.now();
     Get.defaultDialog(
       title: "",
       titlePadding: EdgeInsets.all(0),

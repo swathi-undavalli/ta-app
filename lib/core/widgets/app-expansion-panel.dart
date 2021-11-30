@@ -8,7 +8,7 @@ import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings
 import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/edit-booking-details.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/edit-booking-details-screen.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
@@ -377,7 +377,7 @@ class ItemModel {
       name: bookingModel.pax[0]["first-name"],
       pax: bookingModel.noOfPersons,
       email: bookingModel.pax[0]["email"],
-      remarks: bookingModel.pax[0]["remarks"],
+      remarks: bookingModel.remarks,
       time: getTime(),
       session: getSessions(),
       bookingModel: bookingModel,
