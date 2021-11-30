@@ -4,6 +4,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/dummy.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'mini_employee_model.dart';
 import 'package:intl/intl.dart';
@@ -18,26 +20,33 @@ class _AttendanceReportWidgetState extends State<AttendanceReportWidget> {
 
   @override
   void initState() {
+    // EmployeeAccess.run(
+    //   function: logic.getAbsents,
+    //   access: currentEmployee.accessLevels.attendanceReport,
+    // );
     logic.getAbsents();
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 321,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(12),
-        color: Colors.white,
-      ),
-      child: Padding(
-        padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-        child: Column(
-          children: [
-            buildTitle(),
-            buildLoading(),
-            buildContent(),
-          ],
+    return EmployeeAccess(
+      access: AccessRights.attendanceReport,
+      child: Container(
+        width: 321,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+          child: Column(
+            children: [
+              buildTitle(),
+              buildLoading(),
+              buildContent(),
+            ],
+          ),
         ),
       ),
     );
@@ -423,7 +432,6 @@ class AttendanceReportWidgetLogic {
   void toggleShowButton() {
     controller.showAll = !controller.showAll;
   }
-
 }
 
 class AttendanceReportWidgetController extends GetxController {
@@ -453,8 +461,6 @@ class AttendanceReportWidgetController extends GetxController {
 
   List<EmployeeMiniModel> get notYetSignedInEmployeesList =>
       _notYetSignedInEmployeesList;
-
-
 
   set notYetSignedInEmployeesList(List<EmployeeMiniModel> value) {
     _notYetSignedInEmployeesList = value;

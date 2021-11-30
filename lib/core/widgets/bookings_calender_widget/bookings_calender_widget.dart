@@ -6,6 +6,8 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
+import 'package:temple_adventures/dummy.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 
 class BookingsCalenderWidget extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
@@ -46,7 +48,11 @@ class BookingsCalenderWidget extends StatelessWidget {
         logic.controller.selectedDate.day,
         19,
       );
-    if (showDetails) autoCenter();
+
+    if (showDetails)
+      EmployeeAccess.run(
+          function: autoCenter,
+          access: AccessRights.viewBookings);
   }
 
   Future<void> autoCenter() async {
@@ -63,17 +69,22 @@ class BookingsCalenderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
-      return Column(
-        children: [
-          buildDaySelector(),
-          if (showDetails) SizedBox(height: 20),
-          buildTimeTable(),
-          buildBookingDetails(),
-          SizedBox(height: 20),
-        ],
-      );
-    });
+    return EmployeeAccess(
+      access: AccessRights.viewBookings,
+      showMessage: true,
+      child:
+          GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
+        return Column(
+          children: [
+            buildDaySelector(),
+            if (showDetails) SizedBox(height: 20),
+            buildTimeTable(),
+            buildBookingDetails(),
+            SizedBox(height: 20),
+          ],
+        );
+      }),
+    );
   }
 
   ///==================UI===================///
@@ -260,7 +271,7 @@ class BookingsCalenderWidget extends StatelessWidget {
         });
       }
       if (showDetails)
-        return MyExpansionPanel(
+        return BookingsExpansionPanel(
           items: expansionList,
         );
       return SizedBox();

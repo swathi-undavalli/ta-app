@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/compressor/presentation/compressor.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/employee-profile-screen.dart';
@@ -21,7 +22,7 @@ class NavDrawer extends StatelessWidget {
           buildUserProfile(),
           SizedBox(height: 20),
           buildName(),
-          SizedBox(height: 20),
+          SizedBox(height: 10),
           buildLine(),
           buildMenuItem(
             icon: Icons.account_circle,
@@ -30,37 +31,41 @@ class NavDrawer extends StatelessWidget {
               Get.offAndToNamed(EmployeeProfileScreen.id);
             },
           ),
-          buildMenuItem(
-              icon: Icons.book_rounded,
-              text: 'Attendance',
+          EmployeeAccess(
+            access: AccessRights.personalAttendanceReport,
+            child: buildMenuItem(
+                icon: Icons.book_rounded,
+                text: 'Attendance',
+                onTap: () {
+                  Get.offAndToNamed(AttendancePage.id);
+                }),
+          ),
+          EmployeeAccess(
+            access: AccessRights.editActivityPrices,
+            child: buildMenuItem(
+              icon: Icons.edit,
+              text: 'Edit Prices',
               onTap: () {
-                Get.offAndToNamed(AttendancePage.id);
-              }),
-          buildMenuItem(
-            icon: Icons.settings,
-            text: 'Settings',
-            onTap: () {},
+                Get.offAndToNamed(AllActivitiesScreen.id);
+              },
+            ),
           ),
-          buildMenuItem(
-            icon: Icons.edit,
-            text: 'Edit Prices',
-            onTap: () {
-              Get.offAndToNamed(AllActivitiesScreen.id);
-            },
-          ),
-          buildMenuItem(
-            icon: Icons.local_gas_station,
-            text: 'Compressor',
-            onTap: () {
-              Get.offAndToNamed(CompressorScreen.id);
-            },
-          ),
-          buildMenuItem(
-            icon: Icons.collections_bookmark_rounded,
-            text: 'All Bookings',
-            onTap: () {
-              Get.offAndToNamed(AllBookingsScreen.id);
-            },
+          // buildMenuItem(
+          //   icon: Icons.local_gas_station,
+          //   text: 'Compressor',
+          //   onTap: () {
+          //     Get.offAndToNamed(CompressorScreen.id);
+          //   },
+          // ),
+          EmployeeAccess(
+            access: AccessRights.viewBookings,
+            child: buildMenuItem(
+              icon: Icons.collections_bookmark_rounded,
+              text: 'All Bookings',
+              onTap: () {
+                Get.offAndToNamed(AllBookingsScreen.id);
+              },
+            ),
           ),
           Spacer(),
           buildLine(),

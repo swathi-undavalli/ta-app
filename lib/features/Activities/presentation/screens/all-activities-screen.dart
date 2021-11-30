@@ -4,10 +4,12 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
+import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/Activities/controller/all-activities-controller.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 
 class AllActivitiesScreen extends StatelessWidget {
   static const String id = "PriceEditingScreen";
@@ -47,13 +49,16 @@ class AllActivitiesScreen extends StatelessWidget {
   ///============UI=============///
 
   Widget buildFloatingActionButton() {
-    return FloatingActionButton(
-      elevation: 0,
-      onPressed: () {
-        Get.toNamed(AddNewActivityScreen.id);
-      },
-      backgroundColor: AppColors.background.black,
-      child: Icon(Icons.add),
+    return EmployeeAccess(
+      access: AccessRights.addActivity,
+      child: FloatingActionButton(
+        elevation: 0,
+        onPressed: () {
+          Get.toNamed(AddNewActivityScreen.id);
+        },
+        backgroundColor: AppColors.background.black,
+        child: Icon(Icons.add),
+      ),
     );
   }
 

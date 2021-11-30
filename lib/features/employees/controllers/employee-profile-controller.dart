@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 
 class EmployeeProfileLogic {
   EmployeeProfileController controller = Get.put(EmployeeProfileController());
-
 }
 
 class EmployeeProfileController extends GetxController {
