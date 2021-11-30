@@ -6,6 +6,8 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
+import 'package:temple_adventures/dummy.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 
 class BookingsCalenderWidget extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
@@ -26,7 +28,11 @@ class BookingsCalenderWidget extends StatelessWidget {
     logic.controller.startDate = startDate;
     logic.controller.showDetails = showDetails;
     logic.controller.isDiveSession = isDiveSession;
-    if (showDetails) autoCenter();
+
+    if (showDetails)
+      EmployeeAccess.run(
+          function: autoCenter,
+          access: currentEmployee.accessLevels.viewBookings);
   }
 
   Future<void> autoCenter() async {
@@ -43,17 +49,22 @@ class BookingsCalenderWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
-      return Column(
-        children: [
-          buildDaySelector(),
-          if (showDetails) SizedBox(height: 20),
-          buildTimeTable(),
-          buildBookingDetails(),
-          SizedBox(height: 20),
-        ],
-      );
-    });
+    return EmployeeAccess(
+      access: currentEmployee.accessLevels.viewBookings,
+      showMessage: true,
+      child:
+          GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
+        return Column(
+          children: [
+            buildDaySelector(),
+            if (showDetails) SizedBox(height: 20),
+            buildTimeTable(),
+            buildBookingDetails(),
+            SizedBox(height: 20),
+          ],
+        );
+      }),
+    );
   }
 
   ///==================UI===================///
@@ -96,12 +107,12 @@ class BookingsCalenderWidget extends StatelessWidget {
   }
 
   Widget buildTabButton(
-      String title,
-      Function onTap, {
-        bool enable = false,
-        Color color,
-        int count,
-      }) {
+    String title,
+    Function onTap, {
+    bool enable = false,
+    Color color,
+    int count,
+  }) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -171,13 +182,13 @@ class BookingsCalenderWidget extends StatelessWidget {
                   buildTitle("Bookings"),
                   controller.showLoading
                       ? SizedBox(
-                    width: 10,
-                    height: 10,
-                    child: CircularProgressIndicator(
-                      color: AppColors.background.black,
-                      strokeWidth: 1,
-                    ),
-                  )
+                          width: 10,
+                          height: 10,
+                          child: CircularProgressIndicator(
+                            color: AppColors.background.black,
+                            strokeWidth: 1,
+                          ),
+                        )
                       : SizedBox(),
                 ],
               ),
@@ -198,13 +209,13 @@ class BookingsCalenderWidget extends StatelessWidget {
                   Center(
                     child: Container(
                       child: (controller.poolCount == 0 &&
-                          controller.theoryCount == 0 &&
-                          controller.diveCount == 0 &&
-                          showDetails)
+                              controller.theoryCount == 0 &&
+                              controller.diveCount == 0 &&
+                              showDetails)
                           ? Text(
-                        "No Bookings Found",
-                        style: TextStyle(fontSize: 15),
-                      )
+                              "No Bookings Found",
+                              style: TextStyle(fontSize: 15),
+                            )
                           : SizedBox(),
                     ),
                   ),
@@ -240,7 +251,7 @@ class BookingsCalenderWidget extends StatelessWidget {
         });
       }
       if (showDetails)
-        return MyExpansionPanel(
+        return BookingsExpansionPanel(
           items: expansionList,
         );
       return SizedBox();

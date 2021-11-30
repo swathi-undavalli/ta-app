@@ -5,20 +5,22 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
+import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/edit-booking-details.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MyExpansionPanel extends StatelessWidget {
-  ExpansionPanelLogic logic = ExpansionPanelLogic();
+class BookingsExpansionPanel extends StatelessWidget {
+  final ExpansionPanelLogic logic = ExpansionPanelLogic();
 
   final List<ItemModel> items;
   List<Widget> expansions = [];
 
-  MyExpansionPanel({this.items}) {
+  BookingsExpansionPanel({this.items}) {
     logic.controller.isExpanded = [];
     for (int i = 0; i < items.length; i++) {
       logic.controller.isExpanded.add(false);
@@ -52,7 +54,7 @@ class MyExpansionPanel extends StatelessWidget {
         padding: const EdgeInsets.only(bottom: 10),
         child: AnimatedContainer(
           duration: Duration(milliseconds: 200),
-          curve: Curves.bounceOut,
+          curve: Curves.easeInCubic,
           alignment: Alignment.topCenter,
           height: controller.isExpanded[i] ? 240 : 50,
           width: 350,
@@ -90,76 +92,82 @@ class MyExpansionPanel extends StatelessWidget {
                           },
                         ),
                       ),
-                      Material(
-                        color: getColor(),
-                        child: IconButton(
-                          splashRadius: 20,
-                          icon: Icon(Icons.delete,
-                              color: AppColors.background.black),
-                          iconSize: 15,
-                          onPressed: () {
-                            Get.defaultDialog(
-                              contentPadding: EdgeInsets.only(
-                                  left: 30, right: 30, top: 20, bottom: 30),
-                              title: "\nAre You Sure ? ",
-                              middleText:
-                                  "Booking will Be Deleted Permanently.",
-                              backgroundColor: Colors.white,
-                              titleStyle: TextStyle(
-                                  color: AppColors.text.black,
-                                  fontFamily: AppFonts.nunito,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold),
-                              middleTextStyle: TextStyle(
-                                  color: AppColors.text.black,
-                                  fontFamily: AppFonts.nunito,
-                                  fontSize: 15,
-                                  fontWeight: FontWeight.w500),
-                              confirm: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  AppButton.miniText(
-                                    text: 'Cancel',
-                                    onTap: () {
-                                      Get.back();
-                                    },
-                                  ),
-                                  AppButton.miniFlat(
-                                    text: 'OK',
-                                    onTap: () {
-                                      FirebaseFirestore.instance
-                                          .collection("bookings")
-                                          .doc(itemModel.bookingModel.id)
-                                          .delete();
-                                      Get.back();
-                                      BookingsCalenderWidgetLogic
-                                          bookingCalenderLogic =
-                                          BookingsCalenderWidgetLogic();
-                                      bookingCalenderLogic.onDateSelected(
-                                          bookingCalenderLogic
-                                              .controller.lastDateIndex);
-                                    },
-                                  ),
-                                ],
-                              ),
-                              barrierDismissible: false,
-                              radius: 10,
-                            );
-                          },
+                      EmployeeAccess(
+                        access: currentEmployee.accessLevels.editBookings,
+                        child: Material(
+                          color: getColor(),
+                          child: IconButton(
+                            splashRadius: 20,
+                            icon: Icon(Icons.delete,
+                                color: AppColors.background.black),
+                            iconSize: 15,
+                            onPressed: () {
+                              Get.defaultDialog(
+                                contentPadding: EdgeInsets.only(
+                                    left: 30, right: 30, top: 20, bottom: 30),
+                                title: "\nAre You Sure ? ",
+                                middleText:
+                                    "Booking will Be Deleted Permanently.",
+                                backgroundColor: Colors.white,
+                                titleStyle: TextStyle(
+                                    color: AppColors.text.black,
+                                    fontFamily: AppFonts.nunito,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold),
+                                middleTextStyle: TextStyle(
+                                    color: AppColors.text.black,
+                                    fontFamily: AppFonts.nunito,
+                                    fontSize: 15,
+                                    fontWeight: FontWeight.w500),
+                                confirm: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    AppButton.miniText(
+                                      text: 'Cancel',
+                                      onTap: () {
+                                        Get.back();
+                                      },
+                                    ),
+                                    AppButton.miniFlat(
+                                      text: 'OK',
+                                      onTap: () {
+                                        FirebaseFirestore.instance
+                                            .collection("bookings")
+                                            .doc(itemModel.bookingModel.id)
+                                            .delete();
+                                        Get.back();
+                                        BookingsCalenderWidgetLogic
+                                            bookingCalenderLogic =
+                                            BookingsCalenderWidgetLogic();
+                                        bookingCalenderLogic.onDateSelected(
+                                            bookingCalenderLogic
+                                                .controller.lastDateIndex);
+                                      },
+                                    ),
+                                  ],
+                                ),
+                                barrierDismissible: false,
+                                radius: 10,
+                              );
+                            },
+                          ),
                         ),
                       ),
-                      Material(
-                        color: getColor(),
-                        child: IconButton(
-                          splashRadius: 20,
-                          icon: Icon(Icons.edit,
-                              color: AppColors.background.black),
-                          iconSize: 15,
-                          onPressed: () {
-                            Get.toNamed(EditBookingDetailsScreen.id,
-                                arguments: itemModel.bookingModel);
-                          },
+                      EmployeeAccess(
+                        access: currentEmployee.accessLevels.editBookings,
+                        child: Material(
+                          color: getColor(),
+                          child: IconButton(
+                            splashRadius: 20,
+                            icon: Icon(Icons.edit,
+                                color: AppColors.background.black),
+                            iconSize: 15,
+                            onPressed: () {
+                              Get.toNamed(EditBookingDetailsScreen.id,
+                                  arguments: itemModel.bookingModel);
+                            },
+                          ),
                         ),
                       ),
                       Material(

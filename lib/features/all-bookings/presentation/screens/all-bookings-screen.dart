@@ -110,7 +110,7 @@ class AllBookingsScreen extends StatelessWidget {
     return GetBuilder<AllBookingsController>(builder: (controller) {
       return Padding(
         padding: const EdgeInsets.only(left: 15, right: 15, top: 8, bottom: 8),
-        child: MyExpansionPanel(items: controller.bookings),
+        child: BookingsExpansionPanel(items: controller.bookings),
       );
     });
   }

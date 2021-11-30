@@ -18,6 +18,7 @@ import 'package:temple_adventures/core/widgets/attendance_widget/attendence_widg
 import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
 import 'package:temple_adventures/features/home/controller/home-page-controller.dart';
 import 'package:temple_adventures/features/home/presentation/widgets/nav-drawer.dart';
 // import 'package:http/http.dart' as http;
@@ -43,7 +44,6 @@ class HomePage extends StatelessWidget {
         await Future.wait(futures).whenComplete(() => log("all done"));
       },
       child: Scaffold(
-        drawer: NavDrawer(),
         backgroundColor: AppColors.background.lightBlue,
         body: SafeArea(
           child: SingleChildScrollView(
@@ -52,7 +52,18 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: Column(
                 children: [
-                  SizedBox(height: 40),
+                  Container(
+                    margin: EdgeInsets.only(left: 10, top: 10),
+                    width: Get.width,
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      onPressed: () {
+                        dashboardDrawerKey.currentState.openDrawer();
+                      },
+                      icon: Icon(Icons.menu_rounded),
+                    ),
+                  ),
+                  SizedBox(height: 10),
                   AttendanceWidget(),
                   SizedBox(height: 20),
                   AddEmployeeWidget(),

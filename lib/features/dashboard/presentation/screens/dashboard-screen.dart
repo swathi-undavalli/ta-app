@@ -6,6 +6,7 @@ import 'package:temple_adventures/features/dashboard/controller/dashboard-contro
 import 'package:temple_adventures/features/home/presentation/screens/home-page.dart';
 import 'package:temple_adventures/features/home/presentation/widgets/nav-drawer.dart';
 import 'package:temple_adventures/features/weather/presentation/screens/weather-page.dart';
+final GlobalKey<ScaffoldState> dashboardDrawerKey = GlobalKey();
 
 class DashBoardScreen extends StatelessWidget {
   static const String id = "DashBoardScreen";
@@ -18,6 +19,7 @@ class DashBoardScreen extends StatelessWidget {
 
   final DashBoardScreenLogic logic = DashBoardScreenLogic();
 
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -25,6 +27,7 @@ class DashBoardScreen extends StatelessWidget {
         Scaffold(
           bottomNavigationBar: buildBottomNavigationBar(),
           drawer: NavDrawer(),
+          key: dashboardDrawerKey,
           body: SafeArea(
             child: buildSelectedPage(),
           ),

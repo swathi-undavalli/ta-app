@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
+import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/employees/controllers/all-employees-controller.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/employee-details-screen.dart';
@@ -30,14 +31,7 @@ class AllEmployeesScreen extends StatelessWidget {
         return true;
       },
       child: Scaffold(
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            Get.toNamed(AddAnUser.id);
-          },
-          backgroundColor: AppColors.background.black,
-          child: Icon(Icons.add),
-          elevation: 0,
-        ),
+        floatingActionButton: buildFloatingActionButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         appBar: AppBar(
           toolbarHeight: 70,
@@ -85,6 +79,20 @@ class AllEmployeesScreen extends StatelessWidget {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildFloatingActionButton() {
+    return EmployeeAccess(
+      access: currentEmployee.accessLevels.createEmployees,
+      child: FloatingActionButton(
+        onPressed: () {
+          Get.toNamed(AddAnUser.id);
+        },
+        backgroundColor: AppColors.background.black,
+        child: Icon(Icons.add),
+        elevation: 0,
       ),
     );
   }
@@ -685,6 +693,5 @@ class AllEmployeesScreen extends StatelessWidget {
 //     );
 //   }
 // }
-
 
 ///TODO :: Check Please

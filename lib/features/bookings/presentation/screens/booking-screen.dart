@@ -4,9 +4,11 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
+import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/bookings/controller/booking-controller.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 
 class BookingScreen extends StatelessWidget {
   static const String id = "BookingPage";
@@ -18,13 +20,16 @@ class BookingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      floatingActionButton: FloatingActionButton(
-        elevation: 0,
-        onPressed: () {
-          Get.toNamed(AddCustomerDetailsScreen.id);
-        },
-        backgroundColor: AppColors.background.black,
-        child: Icon(Icons.add),
+      floatingActionButton: EmployeeAccess(
+        access: currentEmployee.accessLevels.createBookings,
+        child: FloatingActionButton(
+          elevation: 0,
+          onPressed: () {
+            Get.toNamed(AddCustomerDetailsScreen.id);
+          },
+          backgroundColor: AppColors.background.black,
+          child: Icon(Icons.add),
+        ),
       ),
       body: RefreshIndicator(
         color: AppColors.IconColor.black,

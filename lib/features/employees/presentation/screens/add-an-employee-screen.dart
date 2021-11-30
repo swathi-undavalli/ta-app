@@ -78,25 +78,7 @@ class AddAnUser extends StatelessWidget {
                             ),
                           ),
                         ),
-                        GetBuilder<AddAnUserController>(builder: (controller) {
-                          return buildSwitch(
-                              text: "Booking",
-                              switchValue: controller.bookingSwitch,
-                              onChanged: (value) {
-                                controller.bookingSwitch = value;
-                                print("VALUE : ${controller.bookingSwitch}");
-                              });
-                        }),
-                        GetBuilder<AddAnUserController>(builder: (controller) {
-                          return buildSwitch(
-                            text: "Attendance",
-                            switchValue: controller.attendanceSwitch,
-                            onChanged: (value) {
-                              controller.attendanceSwitch = value;
-                              print("VALUE : ${controller.attendanceSwitch}");
-                            },
-                          );
-                        }),
+                        buildAccessLevels(),
                       ],
                     ),
                   ),
@@ -116,6 +98,98 @@ class AddAnUser extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget buildAccessLevels() {
+    return GetBuilder<AddAnUserController>(builder: (controller) {
+      return Column(
+        children: [
+          buildSwitch(
+              text: "View Bookings",
+              switchValue: controller.viewBookings,
+              onChanged: (value) {
+                controller.viewBookings = value;
+              }),
+          buildSwitch(
+            text: "Create Bookings",
+            switchValue: controller.createBookings,
+            onChanged: (value) {
+              controller.createBookings = value;
+            },
+          ),
+          buildSwitch(
+            text: "Edit Bookings",
+            switchValue: controller.editBookings,
+            onChanged: (value) {
+              controller.editBookings = value;
+            },
+          ),
+          buildSwitch(
+            text: "View Employees",
+            switchValue: controller.viewEmployees,
+            onChanged: (value) {
+              controller.viewEmployees = value;
+            },
+          ),
+          buildSwitch(
+            text: "Create Employees",
+            switchValue: controller.createEmployees,
+            onChanged: (value) {
+              controller.createEmployees = value;
+            },
+          ),
+          buildSwitch(
+            text: "Edit Employees",
+            switchValue: controller.editEmployees,
+            onChanged: (value) {
+              controller.editEmployees = value;
+            },
+          ),
+          buildSwitch(
+            text: "Personal Profile Edit",
+            switchValue: controller.personalProfileEdit,
+            onChanged: (value) {
+              controller.personalProfileEdit = value;
+            },
+          ),
+          buildSwitch(
+            text: "Personal Attendance Report",
+            switchValue: controller.personalAttendanceReport,
+            onChanged: (value) {
+              controller.personalAttendanceReport = value;
+            },
+          ),
+          buildSwitch(
+            text: "Attendance Report",
+            switchValue: controller.attendanceReport,
+            onChanged: (value) {
+              controller.attendanceReport = value;
+            },
+          ),
+          buildSwitch(
+            text: "Weather Report",
+            switchValue: controller.weatherReport,
+            onChanged: (value) {
+              controller.weatherReport = value;
+            },
+          ),
+          buildSwitch(
+            text: "Edit Activity Prices",
+            switchValue: controller.editActivityPrices,
+            onChanged: (value) {
+              controller.editActivityPrices = value;
+            },
+          ),
+          buildSwitch(
+            text: "Add Activity",
+            switchValue: controller.addActivity,
+            onChanged: (value) {
+              controller.addActivity = value;
+            },
+          ),
+        ],
+      );
+    });
   }
 
   ///===============UI==============///

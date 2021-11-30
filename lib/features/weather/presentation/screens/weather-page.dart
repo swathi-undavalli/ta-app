@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
+import 'package:temple_adventures/dummy.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/weather/controller/weather-controller.dart';
 
 class WeatherPage extends StatefulWidget {
@@ -24,26 +26,30 @@ class _WeatherPageState extends State<WeatherPage> {
       body: SafeArea(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 30),
-                    buildTideTimings(),
-                    SizedBox(height: 20),
-                    buildTideConditions(context),
-                  ],
+          child: EmployeeAccess(
+            access: currentEmployee.accessLevels.weatherReport,
+            showMessage: true,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, right: 20),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 30),
+                      buildTideTimings(),
+                      SizedBox(height: 20),
+                      buildTideConditions(context),
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 50),
-              buildButtons(),
-            ],
+                SizedBox(height: 50),
+                buildButtons(),
+              ],
+            ),
           ),
         ),
       ),
@@ -242,11 +248,11 @@ class _WeatherPageState extends State<WeatherPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: windDetails
                             .map((e) => Text(
-                          e,
-                          style: TextStyle(
-                              color: AppColors.text.white,
-                              fontSize: FontSize.small),
-                        ))
+                                  e,
+                                  style: TextStyle(
+                                      color: AppColors.text.white,
+                                      fontSize: FontSize.small),
+                                ))
                             .toList(),
                       ),
                     ),
@@ -264,12 +270,12 @@ class _WeatherPageState extends State<WeatherPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ...controller.tides.map((e) => Text(
-                        e,
-                        style: TextStyle(
-                            color: AppColors.text.skyBlue,
-                            fontSize: 11,
-                            fontWeight: FontWeight.w700),
-                      )),
+                            e,
+                            style: TextStyle(
+                                color: AppColors.text.skyBlue,
+                                fontSize: 11,
+                                fontWeight: FontWeight.w700),
+                          )),
                     ],
                   ),
                   Column(
@@ -277,12 +283,12 @@ class _WeatherPageState extends State<WeatherPage> {
                     children: [
                       ...controller.tideTiming
                           .map((e) => Text(
-                        e,
-                        style: TextStyle(
-                            color: AppColors.text.black,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700),
-                      ))
+                                e,
+                                style: TextStyle(
+                                    color: AppColors.text.black,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700),
+                              ))
                           .toList(),
                     ],
                   ),
@@ -291,12 +297,12 @@ class _WeatherPageState extends State<WeatherPage> {
                     children: [
                       ...controller.tideHeight
                           .map((e) => Text(
-                        e,
-                        style: TextStyle(
-                            color: AppColors.text.black,
-                            fontSize: 13,
-                            fontWeight: FontWeight.w700),
-                      ))
+                                e,
+                                style: TextStyle(
+                                    color: AppColors.text.black,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.w700),
+                              ))
                           .toList(),
                     ],
                   )

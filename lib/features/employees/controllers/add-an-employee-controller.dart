@@ -33,8 +33,19 @@ class AddAnUserLogic {
         shiftTiming: pickedTime,
         countryIsoCode: controller.countryISoCOde,
         accessLevels: AccessLevels(
-            attendence: controller.attendanceSwitch,
-            booking: controller.bookingSwitch),
+          viewBookings: controller.viewBookings,
+          createBookings: controller.createBookings,
+          editBookings: controller.editBookings,
+          viewEmployees: controller.viewEmployees,
+          createEmployees: controller.createEmployees,
+          editEmployees: controller.editEmployees,
+          personalProfileEdit: controller.personalProfileEdit,
+          personalAttendanceReport: controller.personalAttendanceReport,
+          attendanceReport: controller.attendanceReport,
+          weatherReport: controller.weatherReport,
+          editActivityPrices: controller.editActivityPrices,
+          addActivity: controller.addActivity,
+        ),
       );
       FirebaseFirestore.instance
           .collection('employees')
@@ -115,15 +126,29 @@ class AddAnUserController extends GetxController {
     'bookings'
   ];
 
-  bool _attendanceSwitch = false;
+  ///Switches
+  bool _viewBookings = false;
+  bool _weatherReport = false;
 
-  bool _bookingSwitch = false;
+  bool _createBookings = false;
+  bool _editBookings = false;
+  bool _personalAttendanceReport = false;
+  bool _editActivityPrices = false;
+  bool _addActivity = false;
+  bool _editEmployees = false;
+  bool _personalProfileEdit = false;
+  bool _attendanceReport = false;
+  bool _createEmployees = false;
+  bool _viewEmployees = false;
+
+  bool get viewBookings => _viewBookings;
+
+  set viewBookings(bool value) {
+    _viewBookings = value;
+    update();
+  }
 
   String _countryISoCOde;
-
-  bool get bookingSwitch => _bookingSwitch;
-
-  bool get attendanceSwitch => _attendanceSwitch;
 
   List<String> get roles => _roles;
 
@@ -131,16 +156,6 @@ class AddAnUserController extends GetxController {
 
   set countryISoCOde(String value) {
     _countryISoCOde = value;
-    update();
-  }
-
-  set bookingSwitch(bool value) {
-    _bookingSwitch = value;
-    update();
-  }
-
-  set attendanceSwitch(bool value) {
-    _attendanceSwitch = value;
     update();
   }
 
@@ -158,7 +173,94 @@ class AddAnUserController extends GetxController {
     shiftTimeTED.text = "";
     genderTED.text = "";
     employeeIdTED.text = "";
-    bookingSwitch = false;
-    attendanceSwitch = false;
+    viewBookings = false;
+    createBookings = false;
+    editBookings = false;
+    viewEmployees = false;
+    createEmployees = false;
+    editEmployees = false;
+    personalProfileEdit = false;
+    personalAttendanceReport = false;
+    attendanceReport = false;
+    weatherReport = false;
+    editActivityPrices = false;
+    addActivity = false;
+  }
+
+  bool get createBookings => _createBookings;
+
+  set createBookings(bool value) {
+    _createBookings = value;
+    update();
+  }
+
+  bool get editBookings => _editBookings;
+
+  set editBookings(bool value) {
+    _editBookings = value;
+    update();
+  }
+
+  bool get viewEmployees => _viewEmployees;
+
+  set viewEmployees(bool value) {
+    _viewEmployees = value;
+    update();
+  }
+
+  bool get createEmployees => _createEmployees;
+
+  set createEmployees(bool value) {
+    _createEmployees = value;
+    update();
+  }
+
+  bool get editEmployees => _editEmployees;
+
+  set editEmployees(bool value) {
+    _editEmployees = value;
+    update();
+  }
+
+  bool get personalProfileEdit => _personalProfileEdit;
+
+  set personalProfileEdit(bool value) {
+    _personalProfileEdit = value;
+    update();
+  }
+
+  bool get personalAttendanceReport => _personalAttendanceReport;
+
+  set personalAttendanceReport(bool value) {
+    _personalAttendanceReport = value;
+    update();
+  }
+
+  bool get attendanceReport => _attendanceReport;
+
+  set attendanceReport(bool value) {
+    _attendanceReport = value;
+    update();
+  }
+
+  bool get weatherReport => _weatherReport;
+
+  set weatherReport(bool value) {
+    _weatherReport = value;
+    update();
+  }
+
+  bool get editActivityPrices => _editActivityPrices;
+
+  set editActivityPrices(bool value) {
+    _editActivityPrices = value;
+    update();
+  }
+
+  bool get addActivity => _addActivity;
+
+  set addActivity(bool value) {
+    _addActivity = value;
+    update();
   }
 }

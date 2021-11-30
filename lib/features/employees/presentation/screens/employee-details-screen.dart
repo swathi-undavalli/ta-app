@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
+import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/employees/controllers/add-an-employee-controller.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
@@ -58,58 +59,64 @@ class EmployeeDetailsScreen extends StatelessWidget {
                             employeeArgument.countryCode);
                       },
                     ),
-                    buildIcons(Icons.edit, () async {
-                      if (await checkFirebase()) {
-                        await Future.delayed(Duration(milliseconds: 300));
-                        Get.toNamed(AddAnUser.id);
-                      }
-                    }),
-                    buildIcons(
-                      Icons.delete,
-                      () {
-                        Get.defaultDialog(
-                          contentPadding: EdgeInsets.only(
-                              left: 30, right: 30, top: 20, bottom: 30),
-                          title: "\nAre You Sure ? ",
-                          middleText: "Account will Be Deleted Permanently.",
-                          backgroundColor: Colors.white,
-                          titleStyle: TextStyle(
-                              color: AppColors.text.black,
-                              fontFamily: AppFonts.nunito,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold),
-                          middleTextStyle: TextStyle(
-                              color: AppColors.text.black,
-                              fontFamily: AppFonts.nunito,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500),
-                          confirm: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              AppButton.miniText(
-                                text: 'Cancel',
-                                onTap: () {
-                                  Get.back();
-                                },
-                              ),
-                              AppButton.miniFlat(
-                                text: 'OK',
-                                onTap: () {
-                                  FirebaseFirestore.instance
-                                      .collection("employees")
-                                      .doc(employeeArgument.id)
-                                      .collection("employeeFullInformation")
-                                      .doc("employeeData")
-                                      .delete();
-                                  Get.back();
-                                },
-                              ),
-                            ],
-                          ),
-                          barrierDismissible: false,
-                          radius: 10,
-                        );
-                      },
+                    EmployeeAccess(
+                      access: currentEmployee.accessLevels.editEmployees,
+                      child: buildIcons(Icons.edit, () async {
+                        if (await checkFirebase()) {
+                          await Future.delayed(Duration(milliseconds: 300));
+                          Get.toNamed(AddAnUser.id);
+                        }
+                      }),
+                    ),
+                    EmployeeAccess(
+                      access: currentEmployee.accessLevels.editEmployees,
+                      child: buildIcons(
+                        Icons.delete,
+                        () {
+                          Get.defaultDialog(
+                            contentPadding: EdgeInsets.only(
+                                left: 30, right: 30, top: 20, bottom: 30),
+                            title: "\nAre You Sure ? ",
+                            middleText: "Account will Be Deleted Permanently.",
+                            backgroundColor: Colors.white,
+                            titleStyle: TextStyle(
+                                color: AppColors.text.black,
+                                fontFamily: AppFonts.nunito,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                            middleTextStyle: TextStyle(
+                                color: AppColors.text.black,
+                                fontFamily: AppFonts.nunito,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500),
+                            confirm: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                AppButton.miniText(
+                                  text: 'Cancel',
+                                  onTap: () {
+                                    Get.back();
+                                  },
+                                ),
+                                AppButton.miniFlat(
+                                  text: 'OK',
+                                  onTap: () {
+                                    FirebaseFirestore.instance
+                                        .collection("employees")
+                                        .doc(employeeArgument.id)
+                                        .collection("employeeFullInformation")
+                                        .doc("employeeData")
+                                        .delete();
+                                    Get.back();
+                                  },
+                                ),
+                              ],
+                            ),
+                            barrierDismissible: false,
+                            radius: 10,
+                          );
+                        },
+                      ),
                     ),
                   ],
                 ),

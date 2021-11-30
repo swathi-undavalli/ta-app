@@ -9,6 +9,13 @@ class BoatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: SafeArea(
+        child: Center(
+          child: Text("Under Construction"),
+        ),
+      ),
+    );
+    return Scaffold(
+      body: SafeArea(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Column(

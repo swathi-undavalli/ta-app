@@ -6,6 +6,7 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
+import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/employees/controllers/employee-profile-controller.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
@@ -20,7 +21,6 @@ class EmployeeProfileScreen extends StatelessWidget {
     final DateTime date = currentEmployee.shiftTiming;
     final DateFormat formatter = DateFormat('HH-mm-ss');
     final String shiftTiming = formatter.format(date);
-    bool enable = true;
     return WillPopScope(
       onWillPop: () async {
         onBackPressed();
@@ -49,7 +49,7 @@ class EmployeeProfileScreen extends StatelessWidget {
                           ),
                         ),
                       ),
-                      buildEditButton(enable),
+                      buildEditButton(),
                     ],
                   ),
                   Padding(
@@ -228,42 +228,46 @@ class EmployeeProfileScreen extends StatelessWidget {
     });
   }
 
-  Widget buildEditButton(bool enable) {
-    return GetBuilder<EmployeeProfileController>(builder: (controller) {
-      if (!controller.isEditMode)
-        return TextButton(
-          style: ButtonStyle(
-            overlayColor:
-                MaterialStateProperty.all(Colors.black.withOpacity(0.2)),
-            backgroundColor: MaterialStateProperty.all<Color>(enable
-                ? Colors.transparent
-                : Colors.transparent.withOpacity(0.5)),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-              RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(20),
+  Widget buildEditButton() {
+    bool enable = true;
+    return EmployeeAccess(
+      access: currentEmployee.accessLevels.personalProfileEdit,
+      child: GetBuilder<EmployeeProfileController>(builder: (controller) {
+        if (!controller.isEditMode)
+          return TextButton(
+            style: ButtonStyle(
+              overlayColor:
+                  MaterialStateProperty.all(Colors.black.withOpacity(0.2)),
+              backgroundColor: MaterialStateProperty.all<Color>(enable
+                  ? Colors.transparent
+                  : Colors.transparent.withOpacity(0.5)),
+              shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              minimumSize: MaterialStateProperty.all<Size>(Size(100, 31)),
+            ),
+            onPressed: () {
+              if (enable) {
+                controller.isEditMode = !controller.isEditMode;
+              }
+            },
+            child: Text(
+              "Edit",
+              style: TextStyle(
+                color: AppColors.text.black,
+                fontSize: 14,
+                fontFamily: AppFonts.nunito,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.60,
               ),
             ),
-            minimumSize: MaterialStateProperty.all<Size>(Size(100, 31)),
-          ),
-          onPressed: () {
-            if (enable) {
-              controller.isEditMode = !controller.isEditMode;
-            }
-          },
-          child: Text(
-            "Edit",
-            style: TextStyle(
-              color: AppColors.text.black,
-              fontSize: 14,
-              fontFamily: AppFonts.nunito,
-              fontWeight: FontWeight.w600,
-              letterSpacing: 0.60,
-            ),
-          ),
-        );
-      else
-        return SizedBox();
-    });
+          );
+        else
+          return SizedBox();
+      }),
+    );
   }
 
   Widget buildEmployeeInfo({String subHeading, String text}) {
@@ -374,7 +378,6 @@ class EmployeeProfileScreen extends StatelessWidget {
     });
   }
 }
-
 
 /// TODO:: CHECK PLEASE
 // class EmployeeProfileScreen extends StatelessWidget {
