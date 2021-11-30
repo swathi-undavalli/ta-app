@@ -31,7 +31,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
     logic.controller.depositTED.text = bookingArg.payingNow.toString();
     logic.controller.balanceTED.text = bookingArg.balance.toString();
     logic.controller.paxTED.text = bookingArg.noOfPersons.toString();
-    logic.controller.remarksTED.text = bookingArg.pax[0]["remarks"];
+    logic.controller.remarksTED.text = bookingArg.remarks;
     logic.controller.countryCodeTED.text = bookingArg.pax[0]["countryCode"];
     logic.controller.phoneTED.text = bookingArg.pax[0]["phoneNumber"];
     logic.controller.emailTED.text = bookingArg.pax[0]["email"];
@@ -84,39 +84,93 @@ class EditBookingDetailsScreen extends StatelessWidget {
                                 print(e);
                               }
                             },
+                            onChangedCallBack: (payingNow) {
+                              try {
+                                controller.bookingModel.payingNow =
+                                    double.parse(controller.depositTED.text);
+                              } catch (e) {
+                                controller.bookingModel.payingNow = 0;
+                              }
+                            },
                             focus: controller.paxNode,
                             nextFocus: controller.discountNode),
                         buildDiscount(),
                         buildTax(),
-                        // buildTextFields(
-                        //     text: "Total Amount",
-                        //     textEditingController: controller.totalAmountTED,
-                        //     keyBoardType: TextInputType.number,
-                        //     onChanged: () {
-                        //       logic.getPrice();
-                        //     },
-                        //     focus: controller.totalAmountNode,
-                        //     nextFocus: controller.depositNode),
-                        Text(controller.bookingModel.balance.toString()),
-                        Text(controller.bookingModel.totalCost.toString()),
+                        Container(
+                          width: 320,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 12),
+                                  child: Text(
+                                    "TotalCost" + "   :",
+                                    style: TextStyle(
+                                        fontSize: FontSize.small,
+                                        color: AppColors.text.darkgrey),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 80,
+                                child: Text(
+                                  controller.bookingModel.totalCost.toString() +
+                                      "/-",
+                                  style: TextStyle(
+                                      fontSize: FontSize.textSize,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         buildTextFields(
-                            text: "Deposit",
-                            textEditingController: controller.depositTED,
-                            keyBoardType: TextInputType.number,
-                            onChanged: () {
-                              logic.getPrice();
-                            },
-                            focus: controller.depositNode,
-                            nextFocus: controller.balanceNode),
-                        // buildTextFields(
-                        //     text: "Balance",
-                        //     textEditingController: controller.balanceTED,
-                        //     keyBoardType: TextInputType.number,
-                        //     onChanged: () {
-                        //       logic.getPrice();
-                        //     },
-                        //     focus: controller.balanceNode,
-                        //     nextFocus: controller.remarksNode),
+                          text: "Deposit",
+                          textEditingController: controller.depositTED,
+                          keyBoardType: TextInputType.number,
+                          onChanged: () {
+                            logic.getPrice();
+                          },
+                          onChangedCallBack: (payingNow) {
+                            try {
+                              controller.bookingModel.payingNow =
+                                  double.parse(controller.depositTED.text);
+                            } catch (e) {
+                              controller.bookingModel.payingNow = 0;
+                            }
+                          },
+                          focus: controller.depositNode,
+                          nextFocus: controller.balanceNode,
+                        ),
+                        SizedBox(height: 20),
+                        Container(
+                          width: 320,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(right: 12),
+                                  child: Text(
+                                    "Balance" + "   :",
+                                    style: TextStyle(
+                                        fontSize: FontSize.small,
+                                        color: AppColors.text.darkgrey),
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                width: 80,
+                                child: Text(
+                                  controller.bookingModel.balance.toString() +
+                                      "/-",
+                                  style: TextStyle(
+                                      fontSize: FontSize.textSize,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                         buildTextFields(
                             text: "Remarks",
                             textEditingController: controller.remarksTED,
@@ -155,6 +209,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 50),
                 buildButtons(),
+                SizedBox(height: 50),
                 // SizedBox(height: 50),
               ],
             );
@@ -268,33 +323,15 @@ class EditBookingDetailsScreen extends StatelessWidget {
 
   Widget buildTitle() {
     return GetBuilder<EditBookingDetailsController>(builder: (controller) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          SizedBox(width: 20),
-          Text(
-            'Edit Booking',
-            style: TextStyle(
-              color: AppColors.text.black,
-              fontSize: 20,
-              fontFamily: AppFonts.nunito,
-              fontWeight: FontWeight.normal,
-              letterSpacing: 1.0,
-            ),
-          ),
-          SizedBox(width: 20),
-          Material(
-            color: Colors.white,
-            child: IconButton(
-              splashRadius: 20,
-              icon: Icon(Icons.refresh, color: AppColors.background.black),
-              iconSize: 23,
-              onPressed: () {
-                controller.allReset();
-              },
-            ),
-          ),
-        ],
+      return Text(
+        'Edit Booking',
+        style: TextStyle(
+          color: AppColors.text.black,
+          fontSize: 20,
+          fontFamily: AppFonts.nunito,
+          fontWeight: FontWeight.normal,
+          letterSpacing: 1.0,
+        ),
       );
     });
   }
@@ -455,7 +492,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
 
   getStringFromDate(DateTime dateT) {
     if (dateT != null) {
-      final DateFormat formatter = DateFormat('HH:mm a');
+      final DateFormat formatter = DateFormat('hh:mm a');
       String time;
       final DateFormat format = DateFormat('dd-MM-yyyy');
       String date;
@@ -549,8 +586,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                     double.parse(controller.depositTED.text);
                 controller.bookingModel.noOfPersons =
                     int.parse(controller.paxTED.text);
-                controller.bookingModel.pax[0]["remarks"] =
-                    controller.remarksTED.text;
+                controller.bookingModel.remarks = controller.remarksTED.text;
                 controller.bookingModel.pax[0]["phoneNumber"] =
                     controller.phoneTED.text;
                 controller.bookingModel.pax[0]["countryCode"] =

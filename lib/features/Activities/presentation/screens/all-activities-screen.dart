@@ -6,6 +6,7 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/Activities/controller/all-activities-controller.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
+import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 
 class AllActivitiesScreen extends StatelessWidget {
@@ -17,12 +18,7 @@ class AllActivitiesScreen extends StatelessWidget {
     return Stack(
       children: [
         Scaffold(
-          floatingActionButton: FloatingActionButton(
-            elevation: 0,
-            onPressed: () {},
-            backgroundColor: AppColors.background.black,
-            child: Icon(Icons.add),
-          ),
+          floatingActionButton: buildFloatingActionButton(),
           appBar: buildAppBar(),
           body: SafeArea(
             child: SingleChildScrollView(
@@ -49,6 +45,17 @@ class AllActivitiesScreen extends StatelessWidget {
   }
 
   ///============UI=============///
+
+  Widget buildFloatingActionButton() {
+    return FloatingActionButton(
+      elevation: 0,
+      onPressed: () {
+        Get.toNamed(AddNewActivityScreen.id);
+      },
+      backgroundColor: AppColors.background.black,
+      child: Icon(Icons.add),
+    );
+  }
 
   Widget buildShowLoading() {
     return GetBuilder<AllActivitiesController>(builder: (controller) {

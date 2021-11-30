@@ -9,10 +9,12 @@ import 'package:temple_adventures/core/services/firebase_api.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
+import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
 import 'package:temple_adventures/features/dashboard/controller/dashboard-controller.dart';
@@ -160,6 +162,7 @@ class NewBookingLogic {
         controller.bookingModel.payingNow = 0;
       }
       controller.bookingModel.price = controller.cost;
+      controller.bookingModel.remarks = controller.remarksTED.text.toString();
       controller.bookingModel.tax = 18;
       controller.bookingModel.discountType =
           controller.discountSwitch ? "%" : "₹";
@@ -200,6 +203,10 @@ class NewBookingLogic {
                       dashboardlogic.controller.currentIndex = 0;
                       Get.offAllNamed(DashBoardScreen.id);
                       controller.reset();
+                      BookingsCalenderWidgetLogic bookingCalenderLogic =
+                          BookingsCalenderWidgetLogic();
+                      bookingCalenderLogic.onDateSelected(
+                          bookingCalenderLogic.controller.lastDateIndex);
                     },
                   )
                 ],
@@ -261,6 +268,10 @@ class NewBookingLogic {
                     dashboardlogic.controller.currentIndex = 0;
                     Get.offAllNamed(DashBoardScreen.id);
                     controller.reset();
+                    BookingsCalenderWidgetLogic bookingCalenderLogic =
+                        BookingsCalenderWidgetLogic();
+                    bookingCalenderLogic.onDateSelected(
+                        bookingCalenderLogic.controller.lastDateIndex);
                   },
                 )
               ],
@@ -566,7 +577,6 @@ class NewBookingLogic {
   void onCheckPressed() {
     if (controller.emailTED.text != "" &&
         controller.fNameTED.text != "" &&
-        controller.lNameTED.text != "" &&
         controller.phoneNumberTED.text != "") {
       log("started");
       log(controller.emailTED.text);
@@ -584,7 +594,7 @@ class NewBookingLogic {
         "last-name": controller.lNameTED.text,
         "countryCode": controller.countryCodeTED.text,
         "phoneNumber": controller.phoneNumberTED.text,
-        "remarks": controller.remarksTED.text,
+        "isoCode": controller.isoCode,
       });
       disposeKeyboard();
       Get.toNamed(BookDateTime.id);
@@ -616,7 +626,7 @@ class NewBookingController extends GetxController {
 
   DateTime _paymentDate = DateTime.now();
 
-  bool _taxable = false;
+  bool _taxable = true;
 
   DateTime get paymentDate => _paymentDate;
 
@@ -706,19 +716,19 @@ class NewBookingController extends GetxController {
     remarksTED.text = "";
     receiptNoTED.text = "";
     selectedActivity = [];
-    _isoCode = "";
+    _isoCode = "IN";
     _cost = 0;
     _taxableAmount = 0;
     _balance = 0;
     _discount = 0;
     _totalCost = 0;
     activities = [];
-    taxable = false;
+    taxable = true;
   }
 
   bool _showLoading = true;
 
-  String _isoCode;
+  String _isoCode = "IN";
 
   String get isoCode => _isoCode;
 

@@ -12,7 +12,7 @@ class DashBoardScreen extends StatelessWidget {
   final screens = [
     HomePage(),
     WeatherPage(),
-    BookingPage(),
+    BookingScreen(),
     BoatPage(),
   ];
 

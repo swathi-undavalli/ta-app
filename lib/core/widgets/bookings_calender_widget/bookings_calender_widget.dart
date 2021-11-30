@@ -32,7 +32,7 @@ class BookingsCalenderWidget extends StatelessWidget {
   Future<void> autoCenter() async {
     await Future.delayed(Duration(microseconds: 500));
     scrollController
-        .jumpTo(DateTime.now().difference(startDate).inDays.toDouble() * 40);
+        .jumpTo(DateTime.now().difference(startDate).inDays.toDouble() * 72);
     // scrollController
     //     .jumpTo(DateTime.now().difference(startDate).inDays.toDouble());
   }
@@ -96,12 +96,12 @@ class BookingsCalenderWidget extends StatelessWidget {
   }
 
   Widget buildTabButton(
-    String title,
-    Function onTap, {
-    bool enable = false,
-    Color color,
-    int count,
-  }) {
+      String title,
+      Function onTap, {
+        bool enable = false,
+        Color color,
+        int count,
+      }) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -171,13 +171,13 @@ class BookingsCalenderWidget extends StatelessWidget {
                   buildTitle("Bookings"),
                   controller.showLoading
                       ? SizedBox(
-                          width: 10,
-                          height: 10,
-                          child: CircularProgressIndicator(
-                            color: AppColors.background.black,
-                            strokeWidth: 1,
-                          ),
-                        )
+                    width: 10,
+                    height: 10,
+                    child: CircularProgressIndicator(
+                      color: AppColors.background.black,
+                      strokeWidth: 1,
+                    ),
+                  )
                       : SizedBox(),
                 ],
               ),
@@ -198,13 +198,13 @@ class BookingsCalenderWidget extends StatelessWidget {
                   Center(
                     child: Container(
                       child: (controller.poolCount == 0 &&
-                              controller.theoryCount == 0 &&
-                              controller.diveCount == 0 &&
-                              showDetails)
+                          controller.theoryCount == 0 &&
+                          controller.diveCount == 0 &&
+                          showDetails)
                           ? Text(
-                              "No Bookings Found",
-                              style: TextStyle(fontSize: 15),
-                            )
+                        "No Bookings Found",
+                        style: TextStyle(fontSize: 15),
+                      )
                           : SizedBox(),
                     ),
                   ),
@@ -342,31 +342,35 @@ class BookingsCalenderWidget extends StatelessWidget {
     });
   }
 
+  bool isSameDates(DateTime a, DateTime b) {
+    return (a.day == b.day && a.month == b.month && a.year == b.year);
+  }
+
   Widget buildDaySelector() {
     getDotColor(int index, BookingsCalenderWidgetController controller) {
-      if (controller.selectedDate.day == controller.calenderDates[index].day)
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
         return Colors.green;
-      return controller.calenderDates[index].day == DateTime.now().day
+      return isSameDates(controller.calenderDates[index], DateTime.now())
           ? AppColors.background.skyBlue
           : AppColors.background.grey;
     }
 
     getDateColor(int index, BookingsCalenderWidgetController controller) {
-      if (controller.selectedDate.day == controller.calenderDates[index].day)
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
         return Colors.white;
       return AppColors.background.black;
     }
 
     getDayColor(int index, BookingsCalenderWidgetController controller) {
-      if (controller.selectedDate.day == controller.calenderDates[index].day)
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
         return Colors.white;
       return AppColors.background.black;
     }
 
     getBoxColor(int index, BookingsCalenderWidgetController controller) {
-      if (controller.selectedDate.day == controller.calenderDates[index].day)
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
         return Colors.black;
-      return controller.calenderDates[index].day == DateTime.now().day
+      return isSameDates(controller.calenderDates[index], DateTime.now())
           ? AppColors.background.datesBlue
           : AppColors.background.white;
     }
@@ -377,7 +381,7 @@ class BookingsCalenderWidget extends StatelessWidget {
         height: 100,
         width: Get.width,
         child: ListView.builder(
-            itemCount: 20,
+            itemCount: 100,
             controller: scrollController,
             scrollDirection: Axis.horizontal,
             physics: BouncingScrollPhysics(),

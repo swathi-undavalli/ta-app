@@ -241,7 +241,7 @@ class EditBookingDetailsLogic {
       controller.cost += int.parse(controller.priceTED.text);
     } catch (e) {
       controller.cost += 0;
-      showToast("Invalid Input");
+      // showToast("Invalid Input");
     }
     print(controller.cost);
     if (controller.paxTED.text != null) {

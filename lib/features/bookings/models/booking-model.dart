@@ -26,6 +26,7 @@ class BookingModel {
     this.bookingDate,
     this.receiptNo,
     this.discountType,
+    this.remarks,
   });
 
   List<ActivityModel> activity;
@@ -38,6 +39,7 @@ class BookingModel {
   String id;
   String paymentMode;
   String location;
+  String remarks;
   String paymentTransactionId;
   String receiptNo;
   DateTime poolDate;
@@ -64,6 +66,7 @@ class BookingModel {
       payingNow: json["paid"].toDouble(),
       paymentMode: json["paymentMode"],
       receiptNo: json["receiptNo"],
+      remarks: json["remarks"],
       id: json["id"],
       location: json["location"],
       paymentTransactionId: json["paymentTransactionId"],
@@ -81,6 +84,7 @@ class BookingModel {
         "discount": discount,
         "price": price,
         "id": id,
+        "remarks": remarks,
         "discountSwitch": discountType,
         "tax": tax,
         "paid": payingNow,

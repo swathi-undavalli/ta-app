@@ -188,6 +188,22 @@ class NewBookingScreen extends StatelessWidget {
             buildDiscount(),
             buildTax(),
             buildPayingNow(),
+            AppTextField(
+              hintText: "Remarks",
+              controller: logic.controller.remarksTED,
+              focusNode: logic.controller.remarksNode,
+              required: false,
+              onChangedCallBack: (_) {},
+              errorValidator: () {
+                return null;
+                // return Validator.validateEmail(
+                //     logic.controller.emailTED.text);
+              },
+              validator: (email) {
+                return null;
+                // return Validator.validateEmail(email);
+              },
+            ),
           ],
         );
       }),
@@ -342,6 +358,13 @@ class NewBookingScreen extends StatelessWidget {
                   errorValidator: () {
                     return null;
                   },
+                  onChangedCallBack: (discount) {
+                    try {
+                      controller.bookingModel.discount = double.parse(discount);
+                    } catch (e) {
+                      controller.bookingModel.discount = 0;
+                    }
+                  },
                   validator: (firstName) {
                     return null;
                     // return Validator.validateName(firstName);
@@ -427,13 +450,21 @@ class NewBookingScreen extends StatelessWidget {
             hintText: "Paying Now",
             controller: logic.controller.payingNowTED,
             focusNode: logic.controller.payingNowNode,
+            nextFocusNode: logic.controller.remarksNode,
             onChanged: logic.getPrice,
             keyboardType: TextInputType.number,
             required: false,
             errorValidator: () {
               if (controller.balance < 0) return "Invalid Amount";
-
               return null;
+            },
+            onChangedCallBack: (payingNow) {
+              try {
+                controller.bookingModel.payingNow =
+                    double.parse(controller.payingNowTED.text);
+              } catch (e) {
+                controller.bookingModel.payingNow = 0;
+              }
             },
             validator: (firstName) {
               print(firstName);

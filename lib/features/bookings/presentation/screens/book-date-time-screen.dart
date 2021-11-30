@@ -7,7 +7,6 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/booking-calender-screen.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
 
@@ -228,11 +227,11 @@ class BookDateTime extends StatelessWidget {
   Widget buildContinueButton() {
     return Center(
       child: AppButton.flat(
-          text: "Continue",
-          textColor: AppColors.text.white,
-          color: AppColors.background.black,
-          onTap: logic.onContinueChooseDatesPressed,
-          ),
+        text: "Continue",
+        textColor: AppColors.text.white,
+        color: AppColors.background.black,
+        onTap: logic.onContinueChooseDatesPressed,
+      ),
     );
   }
 

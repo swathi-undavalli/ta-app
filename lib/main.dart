@@ -7,10 +7,10 @@ import 'package:get_storage/get_storage.dart';
 import 'package:temple_adventures/core/authentication/firebase-authentication.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
+import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/booking-calender-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/edit-booking-details.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
@@ -78,10 +78,10 @@ class MyApp extends StatelessWidget {
           NewCustomerScreen.id: (context) => NewCustomerScreen(),
           AllActivitiesScreen.id: (context) => AllActivitiesScreen(),
           EditBookingDetailsScreen.id: (context) => EditBookingDetailsScreen(),
+          AddNewActivityScreen.id: (context) => AddNewActivityScreen(),
           ActivityEditScreen.id: (context) => ActivityEditScreen(),
           AllBookingsScreen.id: (context) => AllBookingsScreen(),
-          BookingPage.id: (context) => BookingPage(),
-          BookingCalender.id: (context) => BookingCalender(),
+          BookingScreen.id: (context) => BookingScreen(),
           PaymentDetailsScreen.id: (context) => PaymentDetailsScreen(),
           BookDateTime.id: (context) => BookDateTime(),
           NewBookingScreen.id: (context) => NewBookingScreen(),

@@ -8,7 +8,7 @@ import 'package:temple_adventures/features/bookings/controller/booking-controlle
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
 
-class BookingPage extends StatelessWidget {
+class BookingScreen extends StatelessWidget {
   static const String id = "BookingPage";
   final BookingScreenLogic logic = BookingScreenLogic();
   var bookings = [DateTime.now()];
@@ -46,7 +46,7 @@ class BookingPage extends StatelessWidget {
                         print(selectedDate.toString());
                       },
                       showDetails: true,
-                      startDate: DateTime.now().subtract(Duration(days: 4)),
+                      startDate: DateTime.now().subtract(Duration(days: 50)),
                     ),
                     SizedBox(
                       height: 200,

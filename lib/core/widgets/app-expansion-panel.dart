@@ -4,11 +4,13 @@ import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
+import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/edit-booking-details.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class MyExpansionPanel extends StatelessWidget {
   ExpansionPanelLogic logic = ExpansionPanelLogic();
@@ -32,6 +34,19 @@ class MyExpansionPanel extends StatelessWidget {
   }
 
   Widget buildExpansion({ItemModel itemModel, int i}) {
+    getColor() {
+      if (itemModel.colorCode == "Blue")
+        return Color(0xffA9EBF8);
+      else if (itemModel.colorCode == "Purple")
+        return Color(0xffBCB8F5);
+      else if (itemModel.colorCode == "Red")
+        return Color(0xffF6B2B2);
+      else if (itemModel.colorCode == "Green")
+        return Color(0xff96F1BD);
+      else
+        return Colors.white;
+    }
+
     return GetBuilder<ExpansionPanelController>(builder: (controller) {
       return Padding(
         padding: const EdgeInsets.only(bottom: 10),
@@ -42,12 +57,12 @@ class MyExpansionPanel extends StatelessWidget {
           height: controller.isExpanded[i] ? 240 : 50,
           width: 350,
           decoration: BoxDecoration(
-            color: AppColors.background.white,
+            color: getColor(),
             borderRadius: BorderRadius.circular(10),
             // border: Border.all(color: AppColors.text.grey),
           ),
           child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 10),
+            padding: const EdgeInsets.only(left: 20, right: 6),
             child: Column(
               children: [
                 Row(
@@ -64,7 +79,19 @@ class MyExpansionPanel extends StatelessWidget {
                       ),
                       Spacer(),
                       Material(
-                        color: Colors.white,
+                        color: getColor(),
+                        child: IconButton(
+                          splashRadius: 20,
+                          icon: Icon(Icons.call_rounded,
+                              color: AppColors.background.black),
+                          iconSize: 15,
+                          onPressed: () {
+                            makingPhoneCall(itemModel.phone);
+                          },
+                        ),
+                      ),
+                      Material(
+                        color: getColor(),
                         child: IconButton(
                           splashRadius: 20,
                           icon: Icon(Icons.delete,
@@ -106,6 +133,12 @@ class MyExpansionPanel extends StatelessWidget {
                                           .doc(itemModel.bookingModel.id)
                                           .delete();
                                       Get.back();
+                                      BookingsCalenderWidgetLogic
+                                          bookingCalenderLogic =
+                                          BookingsCalenderWidgetLogic();
+                                      bookingCalenderLogic.onDateSelected(
+                                          bookingCalenderLogic
+                                              .controller.lastDateIndex);
                                     },
                                   ),
                                 ],
@@ -117,7 +150,7 @@ class MyExpansionPanel extends StatelessWidget {
                         ),
                       ),
                       Material(
-                        color: Colors.white,
+                        color: getColor(),
                         child: IconButton(
                           splashRadius: 20,
                           icon: Icon(Icons.edit,
@@ -130,7 +163,7 @@ class MyExpansionPanel extends StatelessWidget {
                         ),
                       ),
                       Material(
-                        color: Colors.white,
+                        color: getColor(),
                         child: IconButton(
                           splashRadius: 20,
                           icon: Icon(controller.isExpanded[i]
@@ -161,7 +194,8 @@ class MyExpansionPanel extends StatelessWidget {
                                 buildKeyValuePairs("Balance", items[i].balance),
                                 buildKeyValuePairs(
                                     "PAX", items[i].pax.toString()),
-                                buildKeyValuePairs("Remarks", items[i].remarks),
+                                buildKeyValuePairs(
+                                    "Remarks", items[i].remarks.toString()),
                                 buildKeyValuePairs("Phone", items[i].phone),
                                 buildKeyValuePairs("Email", items[i].email),
                                 buildKeyValuePairs("Time", items[i].time),
@@ -177,6 +211,15 @@ class MyExpansionPanel extends StatelessWidget {
         ),
       );
     });
+  }
+
+  makingPhoneCall(String phoneNumber) async {
+    String url = 'tel:$phoneNumber';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   Widget buildKeyValuePairs(String key, String value) {
@@ -228,6 +271,7 @@ class ItemModel {
   final String email;
   final String phone;
   final String activity;
+  final String colorCode;
   final String price;
   final String date;
   final String cost;
@@ -241,6 +285,7 @@ class ItemModel {
   ItemModel(
       {@required this.phone,
       @required this.activity,
+      @required this.colorCode,
       @required this.price,
       @required this.time,
       @required this.session,
@@ -315,13 +360,13 @@ class ItemModel {
           bookingModel.pax[0]["phoneNumber"],
       activity: bookingModel.activity[0].name.toString(),
       price: bookingModel.activity[0].price.toString(),
+      colorCode: bookingModel.activity[0].color.toString(),
       date: bookingModel.bookingDate[0],
       cost: bookingModel.totalCost.toString(),
       paid: bookingModel.payingNow.toString(),
       balance: bookingModel.balance.toString(),
       registration: true,
-      name:
-          bookingModel.pax[0]["first-name"] + bookingModel.pax[0]["last-name"],
+      name: bookingModel.pax[0]["first-name"],
       pax: bookingModel.noOfPersons,
       email: bookingModel.pax[0]["email"],
       remarks: bookingModel.pax[0]["remarks"],

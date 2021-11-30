@@ -283,7 +283,7 @@ class BookingsCalenderWidgetLogic {
     print("Hello mawa");
     controller.calenderDates = [];
     var temp = controller.startDate;
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 100; i++) {
       temp = temp.add(Duration(days: 1));
       controller.calenderDates.add(temp);
     }

@@ -1,16 +1,18 @@
 class ActivityModel {
-  ActivityModel({this.name, this.price, this.id, this.priority});
+  ActivityModel({this.name, this.price, this.id, this.priority , this.color});
 
   String name;
   int price;
   String id;
   int priority;
+  String color;
 
   factory ActivityModel.fromMap(Map<String, dynamic> json) => ActivityModel(
         name: json["name"],
         price: json["price"],
         priority: json["priority"],
         id: json["id"],
+        color: json["color"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -18,6 +20,7 @@ class ActivityModel {
         "price": price,
         "priority": priority,
         "id": id,
+        "color": color,
       };
 
   bool operator ==(dynamic other) {
