@@ -118,12 +118,12 @@ class AddAnUserController extends GetxController {
 
   List<String> _roles = [
     'Manager',
-    'dive team',
-    'admin team',
-    'accounts',
-    'servicing',
-    'marketing',
-    'bookings'
+    'Office Staff',
+    'Admin Team',
+    'Accounts',
+    'Servicing',
+    'Marketing',
+    'Bookings'
   ];
 
   ///Switches
