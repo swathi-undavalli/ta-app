@@ -45,6 +45,8 @@ class EditBookingDetailsLogic {
             BookingsCalenderWidget(
               highlightInvalidTime: true,
               startDate: DateTime.now(),
+              calenderType: FilterType.Pool,
+
               onDateTimeSelected: (date) {
                 print("updated");
                 selectedDiveDate = date;
@@ -111,6 +113,8 @@ class EditBookingDetailsLogic {
             BookingsCalenderWidget(
               highlightInvalidTime: true,
               startDate: DateTime.now(),
+              calenderType: FilterType.Dive,
+
               onDateTimeSelected: (date) {
                 selectedDiveDate = date;
               },
@@ -177,6 +181,7 @@ class EditBookingDetailsLogic {
             BookingsCalenderWidget(
               highlightInvalidTime: true,
               startDate: DateTime.now(),
+              calenderType: FilterType.Theory,
               onDateTimeSelected: (date) {
                 selectedDiveDate = date;
               },

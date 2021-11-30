@@ -200,7 +200,7 @@ class NewBookingLogic {
                     onTap: () async {
                       DashBoardScreenLogic dashboardlogic =
                           DashBoardScreenLogic();
-                      dashboardlogic.controller.currentIndex = 0;
+                      dashboardlogic.controller.currentIndex = 2;
                       Get.offAllNamed(DashBoardScreen.id);
                       controller.reset();
                       BookingsCalenderWidgetLogic bookingCalenderLogic =
@@ -263,9 +263,7 @@ class NewBookingLogic {
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
                   onTap: () async {
-                    DashBoardScreenLogic dashboardlogic =
-                        DashBoardScreenLogic();
-                    dashboardlogic.controller.currentIndex = 0;
+                    dashboardLogic.controller.currentIndex = 2;
                     Get.offAllNamed(DashBoardScreen.id);
                     controller.reset();
                     BookingsCalenderWidgetLogic bookingCalenderLogic =
@@ -346,6 +344,7 @@ class NewBookingLogic {
             ),
             BookingsCalenderWidget(
               highlightInvalidTime: true,
+              calenderType: FilterType.Pool,
               startDate: DateTime.now(),
               onDateTimeSelected: (date) {
                 print("updated");
@@ -405,6 +404,7 @@ class NewBookingLogic {
             BookingsCalenderWidget(
               highlightInvalidTime: true,
               startDate: DateTime.now(),
+              calenderType: FilterType.Dive,
               onDateTimeSelected: (date) {
                 selectedDiveDate = date;
               },
@@ -462,6 +462,7 @@ class NewBookingLogic {
             ),
             BookingsCalenderWidget(
               highlightInvalidTime: true,
+              calenderType: FilterType.Theory,
               startDate: DateTime.now(),
               onDateTimeSelected: (date) {
                 selectedDiveDate = date;

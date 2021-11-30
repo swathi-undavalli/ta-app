@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/boat-page.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/dashboard/controller/dashboard-controller.dart';
 import 'package:temple_adventures/features/home/presentation/screens/home-page.dart';
 import 'package:temple_adventures/features/home/presentation/widgets/nav-drawer.dart';
 import 'package:temple_adventures/features/weather/presentation/screens/weather-page.dart';
-final GlobalKey<ScaffoldState> dashboardDrawerKey = GlobalKey();
+
+DashBoardScreenLogic dashboardLogic;
 
 class DashBoardScreen extends StatelessWidget {
   static const String id = "DashBoardScreen";
@@ -17,8 +19,9 @@ class DashBoardScreen extends StatelessWidget {
     BoatPage(),
   ];
 
-  final DashBoardScreenLogic logic = DashBoardScreenLogic();
-
+  DashBoardScreen() {
+    dashboardLogic = DashBoardScreenLogic();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,18 +44,21 @@ class DashBoardScreen extends StatelessWidget {
 
   Widget buildShowLoading() {
     return GetBuilder<DashBoardScreenController>(builder: (controller) {
-      if (controller.showLoading)
-        return Container(
-          color: Colors.black54,
-          height: Get.height,
-          width: Get.width,
-          child: Center(
-              child: CircularProgressIndicator(
-            color: Colors.white,
-          )),
-        );
-      else
-        return Container();
+      // if (controller.showLoading)
+      // return Material(
+      //   color: Colors.transparent,
+      //   child: Container(
+      //     color: Colors.black54,
+      //     height: Get.height,
+      //     width: Get.width,
+      //     child: Center(
+      //         child: CircularProgressIndicator(
+      //       color: Colors.white,
+      //     )),
+      //   ),
+      // );
+      // else
+      return SizedBox();
     });
   }
 

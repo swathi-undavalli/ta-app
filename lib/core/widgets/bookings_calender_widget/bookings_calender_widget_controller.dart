@@ -291,29 +291,41 @@ class BookingsCalenderWidgetLogic {
 
   getTime() {
     controller.timeTable = [];
-    var hour  = 3;
-    if(controller.calenderType == null)
+    var hour = 3;
+    if (controller.calenderType == null)
       hour = controller.showDetails ? 3 : 5;
     else {
-      if(controller.calenderType == FilterType.Theory)
+      if (controller.calenderType == FilterType.Theory)
         hour = 7;
-      else if(controller.calenderType == FilterType.Pool)
+      else if (controller.calenderType == FilterType.Pool)
         hour = 5;
-      else if(controller.calenderType == FilterType.Dive)
-        hour = 5;
+      else if (controller.calenderType == FilterType.Dive) hour = 5;
     }
+    var endHour = 23;
+    if (controller.calenderType == null)
+      endHour = 23;
+    else {
+      if (controller.calenderType == FilterType.Theory)
+        endHour = 12 + 5;
+      else if (controller.calenderType == FilterType.Pool)
+        endHour = 12 + 6;
+      else if (controller.calenderType == FilterType.Dive) endHour = 12 + 11;
+    }
+    print(hour);
     var temp = DateTime(
       controller.selectedDate.year,
       controller.selectedDate.month,
       controller.selectedDate.day,
-      controller.showDetails ? 3 : 5,
+      hour - 1,
     );
-    for (int i = 0; i < 18; i++) {
+    for (int i = 0; i < (controller.isDiveSession ? 18 + 4 : 18); i++) {
       if (controller.isDiveSession)
         temp = temp.add(Duration(minutes: 30));
       else
         temp = temp.add(Duration(hours: 1));
-      controller.timeTable.add(temp);
+
+      if (temp.hour != 0 && temp.hour < endHour + 1)
+        controller.timeTable.add(temp);
     }
   }
 

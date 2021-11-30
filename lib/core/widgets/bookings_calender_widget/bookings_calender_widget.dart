@@ -454,9 +454,18 @@ class BookingsCalenderWidget extends StatelessWidget {
     var show = false;
     int count = 0;
     for (DateTime booking in logic.controller.bookingTimings) {
-      if (booking.hour == date.hour && booking.day == date.day) {
-        count++;
-        show = true;
+      if (controller.isDiveSession) {
+        if (booking.hour == date.hour &&
+            booking.day == date.day &&
+            booking.minute == date.minute) {
+          count++;
+          show = true;
+        }
+      } else {
+        if (booking.hour == date.hour && booking.day == date.day) {
+          count++;
+          show = true;
+        }
       }
     }
     if (show)
