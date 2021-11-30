@@ -60,7 +60,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                       },
                     ),
                     EmployeeAccess(
-                      access: currentEmployee.accessLevels.editEmployees,
+                      access: AccessRights.editEmployees,
                       child: buildIcons(Icons.edit, () async {
                         if (await checkFirebase()) {
                           await Future.delayed(Duration(milliseconds: 300));
@@ -69,7 +69,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                       }),
                     ),
                     EmployeeAccess(
-                      access: currentEmployee.accessLevels.editEmployees,
+                      access: AccessRights.editEmployees,
                       child: buildIcons(
                         Icons.delete,
                         () {
@@ -289,7 +289,25 @@ class EmployeeDetailsScreen extends StatelessWidget {
       logic.controller.countryCodeTED.text = employee.countryCode;
       logic.controller.countryISoCOde = employee.countryIsoCode;
       logic.controller.genderTED.text = employee.gender;
-      // logic.controller.roleTED.text = employee.role;
+      logic.controller.roleTED.text = employee.role;
+
+      logic.controller.viewBookings = employee.accessLevels.viewBookings;
+      logic.controller.createBookings = employee.accessLevels.createBookings;
+      logic.controller.editBookings = employee.accessLevels.editBookings;
+      logic.controller.viewEmployees = employee.accessLevels.viewEmployees;
+      logic.controller.createEmployees = employee.accessLevels.createEmployees;
+      logic.controller.editEmployees = employee.accessLevels.editEmployees;
+      logic.controller.personalProfileEdit =
+          employee.accessLevels.personalProfileEdit;
+      logic.controller.personalAttendanceReport =
+          employee.accessLevels.personalAttendanceReport;
+      logic.controller.attendanceReport =
+          employee.accessLevels.attendanceReport;
+      logic.controller.weatherReport = employee.accessLevels.weatherReport;
+      logic.controller.editActivityPrices =
+          employee.accessLevels.editActivityPrices;
+      logic.controller.addActivity = employee.accessLevels.addActivity;
+
       return true;
     }
     return false;

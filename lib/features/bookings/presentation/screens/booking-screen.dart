@@ -21,7 +21,7 @@ class BookingScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
       floatingActionButton: EmployeeAccess(
-        access: currentEmployee.accessLevels.createBookings,
+        access: AccessRights.createBookings,
         child: FloatingActionButton(
           elevation: 0,
           onPressed: () {

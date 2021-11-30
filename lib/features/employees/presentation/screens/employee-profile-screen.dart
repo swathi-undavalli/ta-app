@@ -231,7 +231,7 @@ class EmployeeProfileScreen extends StatelessWidget {
   Widget buildEditButton() {
     bool enable = true;
     return EmployeeAccess(
-      access: currentEmployee.accessLevels.personalProfileEdit,
+      access: AccessRights.personalProfileEdit,
       child: GetBuilder<EmployeeProfileController>(builder: (controller) {
         if (!controller.isEditMode)
           return TextButton(

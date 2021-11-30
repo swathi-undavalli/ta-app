@@ -33,7 +33,7 @@ class NavDrawer extends StatelessWidget {
             },
           ),
           EmployeeAccess(
-            access: currentEmployee.accessLevels.personalAttendanceReport,
+            access: AccessRights.personalAttendanceReport,
             child: buildMenuItem(
                 icon: Icons.book_rounded,
                 text: 'Attendance',
@@ -42,7 +42,7 @@ class NavDrawer extends StatelessWidget {
                 }),
           ),
           EmployeeAccess(
-            access: currentEmployee.accessLevels.editActivityPrices,
+            access: AccessRights.editActivityPrices,
             child: buildMenuItem(
               icon: Icons.edit,
               text: 'Edit Prices',
@@ -59,7 +59,7 @@ class NavDrawer extends StatelessWidget {
           //   },
           // ),
           EmployeeAccess(
-            access: currentEmployee.accessLevels.viewBookings,
+            access: AccessRights.viewBookings,
             child: buildMenuItem(
               icon: Icons.collections_bookmark_rounded,
               text: 'All Bookings',

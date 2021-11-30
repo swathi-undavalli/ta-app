@@ -50,7 +50,7 @@ class AllActivitiesScreen extends StatelessWidget {
 
   Widget buildFloatingActionButton() {
     return EmployeeAccess(
-      access: currentEmployee.accessLevels.addActivity,
+      access: AccessRights.addActivity,
       child: FloatingActionButton(
         elevation: 0,
         onPressed: () {

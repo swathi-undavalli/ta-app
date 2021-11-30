@@ -85,7 +85,7 @@ class AllEmployeesScreen extends StatelessWidget {
 
   Widget buildFloatingActionButton() {
     return EmployeeAccess(
-      access: currentEmployee.accessLevels.createEmployees,
+      access: AccessRights.createEmployees,
       child: FloatingActionButton(
         onPressed: () {
           Get.toNamed(AddAnUser.id);

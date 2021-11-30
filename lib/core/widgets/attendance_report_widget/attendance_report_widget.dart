@@ -31,7 +31,7 @@ class _AttendanceReportWidgetState extends State<AttendanceReportWidget> {
   @override
   Widget build(BuildContext context) {
     return EmployeeAccess(
-      access: currentEmployee.accessLevels.attendanceReport,
+      access: AccessRights.attendanceReport,
       child: Container(
         width: 321,
         decoration: BoxDecoration(

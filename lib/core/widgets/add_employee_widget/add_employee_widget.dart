@@ -10,7 +10,7 @@ class AddEmployeeWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EmployeeAccess(
-      access: currentEmployee.accessLevels.viewEmployees,
+      access: AccessRights.viewEmployees,
       child: Container(
         width: 321,
         height: 80,
@@ -48,7 +48,7 @@ class AddEmployeeWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(width: 60),
+              Spacer(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: AppButton.miniFlat(

@@ -93,7 +93,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                         ),
                       ),
                       EmployeeAccess(
-                        access: currentEmployee.accessLevels.editBookings,
+                        access: AccessRights.editBookings,
                         child: Material(
                           color: getColor(),
                           child: IconButton(
@@ -155,7 +155,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                         ),
                       ),
                       EmployeeAccess(
-                        access: currentEmployee.accessLevels.editBookings,
+                        access: AccessRights.editBookings,
                         child: Material(
                           color: getColor(),
                           child: IconButton(

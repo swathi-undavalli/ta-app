@@ -27,7 +27,7 @@ class _WeatherPageState extends State<WeatherPage> {
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: EmployeeAccess(
-            access: currentEmployee.accessLevels.weatherReport,
+            access: AccessRights.weatherReport,
             showMessage: true,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.spaceAround,

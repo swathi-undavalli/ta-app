@@ -32,7 +32,7 @@ class BookingsCalenderWidget extends StatelessWidget {
     if (showDetails)
       EmployeeAccess.run(
           function: autoCenter,
-          access: currentEmployee.accessLevels.viewBookings);
+          access: AccessRights.viewBookings);
   }
 
   Future<void> autoCenter() async {
@@ -50,7 +50,7 @@ class BookingsCalenderWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return EmployeeAccess(
-      access: currentEmployee.accessLevels.viewBookings,
+      access: AccessRights.viewBookings,
       showMessage: true,
       child:
           GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {

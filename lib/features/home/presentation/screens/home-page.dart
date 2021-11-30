@@ -53,7 +53,7 @@ class HomePage extends StatelessWidget {
               child: Column(
                 children: [
                   Container(
-                    margin: EdgeInsets.only(left: 10, top: 10),
+                    margin: EdgeInsets.only(left: 0, top: 10),
                     width: Get.width,
                     alignment: Alignment.centerLeft,
                     child: IconButton(
