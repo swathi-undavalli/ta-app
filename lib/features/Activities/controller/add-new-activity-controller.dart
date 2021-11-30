@@ -32,7 +32,7 @@ class AddNewActivityLogic {
       FirebaseFirestore.instance
           .collection("counter")
           .doc("activity")
-          .set({"count": totalCount+1});
+          .set({"count": totalCount + 1});
       Fluttertoast.showToast(msg: "Saved");
       disposeKeyboard();
       controller.reset();
