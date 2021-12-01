@@ -508,7 +508,7 @@ class NewBookingScreen extends StatelessWidget {
       child: AppButton.flat(
         text: "Cancel",
         textColor: AppColors.text.black,
-        color: AppColors.background.white,
+        color: AppColors.background.grey,
         onTap: () {
           Get.back();
         },

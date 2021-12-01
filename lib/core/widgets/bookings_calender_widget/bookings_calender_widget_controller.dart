@@ -318,7 +318,7 @@ class BookingsCalenderWidgetLogic {
       controller.selectedDate.day,
       hour - 1,
     );
-    for (int i = 0; i < (controller.isDiveSession ? 18 + 4 : 18); i++) {
+    for (int i = 0; i < (controller.isDiveSession ? 18 + 2 : 18); i++) {
       if (controller.isDiveSession)
         temp = temp.add(Duration(minutes: 30));
       else

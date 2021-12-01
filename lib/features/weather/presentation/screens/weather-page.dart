@@ -33,11 +33,10 @@ class _WeatherPageState extends State<WeatherPage> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
+                Center(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       SizedBox(height: 30),
                       buildTideTimings(),
@@ -60,6 +59,7 @@ class _WeatherPageState extends State<WeatherPage> {
 
   Widget buildTideConditions(BuildContext context) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Column(
           children: [

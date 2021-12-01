@@ -14,6 +14,7 @@ class AllBookingsLogic {
     print("getBookings");
     controller.bookings = [];
     List<ItemModel> bookingList = [];
+
     int count = 0;
     int pageCount = 0;
 

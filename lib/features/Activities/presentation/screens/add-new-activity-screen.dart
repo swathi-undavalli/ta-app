@@ -170,7 +170,7 @@ class AddNewActivityScreen extends StatelessWidget {
       child: AppButton.flat(
         text: "Cancel",
         textColor: AppColors.text.black,
-        color: AppColors.background.white,
+        color: AppColors.background.grey,
         onTap: () {
           logic.controller.reset();
           Get.back();

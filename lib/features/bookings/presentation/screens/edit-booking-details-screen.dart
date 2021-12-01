@@ -119,7 +119,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                width: 80,
+                                // width: 80,
                                 child: Text(
                                   controller.bookingModel.balance.toString() +
                                       "/-",
@@ -172,40 +172,40 @@ class EditBookingDetailsScreen extends StatelessWidget {
 
   Widget buildEmailTF(EditBookingDetailsController controller) {
     return buildTextFields(
-                          text: "Email",
-                          textEditingController: controller.emailTED,
-                          keyBoardType: TextInputType.emailAddress,
-                          focus: controller.emailNode,
-                          nextFocus: controller.phoneNode);
+        text: "Email",
+        textEditingController: controller.emailTED,
+        keyBoardType: TextInputType.emailAddress,
+        focus: controller.emailNode,
+        nextFocus: controller.phoneNode);
   }
 
   Widget buildRemarksTF(EditBookingDetailsController controller) {
     return buildTextFields(
-                          text: "Remarks",
-                          textEditingController: controller.remarksTED,
-                          focus: controller.remarksNode,
-                          nextFocus: controller.emailNode);
+        text: "Remarks",
+        textEditingController: controller.remarksTED,
+        focus: controller.remarksNode,
+        nextFocus: controller.emailNode);
   }
 
   Widget buildDepositTF(EditBookingDetailsController controller) {
     return buildTextFields(
-                        text: "Deposit",
-                        textEditingController: controller.depositTED,
-                        keyBoardType: TextInputType.number,
-                        onChanged: () {
-                          logic.getPrice();
-                        },
-                        onChangedCallBack: (payingNow) {
-                          try {
-                            controller.bookingModel.payingNow =
-                                double.parse(controller.depositTED.text);
-                          } catch (e) {
-                            controller.bookingModel.payingNow = 0;
-                          }
-                        },
-                        focus: controller.depositNode,
-                        nextFocus: controller.balanceNode,
-                      );
+      text: "Deposit",
+      textEditingController: controller.depositTED,
+      keyBoardType: TextInputType.number,
+      onChanged: () {
+        logic.getPrice();
+      },
+      onChangedCallBack: (payingNow) {
+        try {
+          controller.bookingModel.payingNow =
+              double.parse(controller.depositTED.text);
+        } catch (e) {
+          controller.bookingModel.payingNow = 0;
+        }
+      },
+      focus: controller.depositNode,
+      nextFocus: controller.balanceNode,
+    );
   }
 
   Widget buildPAXTF(EditBookingDetailsController controller) {
