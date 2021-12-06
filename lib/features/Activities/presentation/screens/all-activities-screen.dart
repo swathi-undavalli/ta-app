@@ -24,16 +24,18 @@ class AllActivitiesScreen extends StatelessWidget {
           appBar: buildAppBar(),
           body: SafeArea(
             child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
+              physics: BouncingScrollPhysics(),
+              child: Center(
                 child:
                     GetBuilder<AllActivitiesController>(builder: (controller) {
                   return Column(
                     children: [
+                      SizedBox(height: 20),
                       for (int i = 0;
                           i < controller.allActivitiesList.length;
                           i++)
                         buildActivities(controller.allActivitiesList[i]),
+                      SizedBox(height: 50),
                     ],
                   );
                 }),

@@ -1,6 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/validator.dart';
@@ -95,10 +96,11 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                   hintText: "No of Persons",
                   controller: logic.controller.paxTED,
                   focusNode: logic.controller.noOfPersonsNode,
-                  nextFocusNode: logic.controller.remarksNode,
+                  nextFocusNode: logic.controller.phoneNumberNode,
                   keyboardType: TextInputType.number,
                   required: false,
                   onChangedCallBack: (_) {},
+                  isStrictNumber: true,
                   errorValidator: () {
                     return null;
                     // return Validator.validateEmail(
@@ -125,9 +127,11 @@ class AddCustomerDetailsScreen extends StatelessWidget {
     return GetBuilder<NewBookingController>(builder: (controller) {
       return IntlPhoneField(
         autoValidate: true,
+        focusNode: controller.phoneNumberNode,
         initialCountryCode: controller.isoCode,
         showCountryFlag: false,
         initialValue: controller.phoneNumberTED.text,
+        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         decoration: InputDecoration(
           labelText: "Phone Number",
           labelStyle: TextStyle(

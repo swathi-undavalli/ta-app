@@ -21,7 +21,7 @@ class EditBookingDetailsLogic {
   DateTime pickedTime = DateTime.now();
 
   onChoosePoolSessionPressed() {
-    DateTime selectedDiveDate = controller.bookingModel.poolDate;
+    DateTime selectedDiveDate = controller.bookingModel.poolDate[0];
 
     Get.defaultDialog(
       title: "",
@@ -46,7 +46,6 @@ class EditBookingDetailsLogic {
               highlightInvalidTime: true,
               startDate: DateTime.now(),
               calenderType: FilterType.Pool,
-
               onDateTimeSelected: (date) {
                 print("updated");
                 selectedDiveDate = date;
@@ -70,7 +69,7 @@ class EditBookingDetailsLogic {
                         selectedDiveDate.hour != null &&
                         selectedDiveDate.minute != null &&
                         selectedDiveDate.day != null) {
-                      controller.bookingModel.poolDate = selectedDiveDate;
+                      controller.bookingModel.poolDate[0] = selectedDiveDate;
                       print(controller.bookingModel.poolDate);
                       controller.update();
                       Get.back();
@@ -89,7 +88,7 @@ class EditBookingDetailsLogic {
   }
 
   onChooseDiveSessionPressed() {
-    DateTime selectedDiveDate = controller.bookingModel.diveDate;
+    DateTime selectedDiveDate = controller.bookingModel.diveDate[0];
 
     Get.defaultDialog(
       title: "",
@@ -114,7 +113,6 @@ class EditBookingDetailsLogic {
               highlightInvalidTime: true,
               startDate: DateTime.now(),
               calenderType: FilterType.Dive,
-
               onDateTimeSelected: (date) {
                 selectedDiveDate = date;
               },
@@ -138,7 +136,7 @@ class EditBookingDetailsLogic {
                         selectedDiveDate.hour != null &&
                         selectedDiveDate.minute != null &&
                         selectedDiveDate.day != null) {
-                      controller.bookingModel.diveDate = selectedDiveDate;
+                      controller.bookingModel.diveDate[0] = selectedDiveDate;
                       print(controller.bookingModel.diveDate);
                       controller.update();
                       Get.back();
@@ -157,7 +155,7 @@ class EditBookingDetailsLogic {
   }
 
   onChooseTheorySessionPressed() {
-    DateTime selectedDiveDate = controller.bookingModel.theoryDate;
+    DateTime selectedDiveDate = controller.bookingModel.theoryDate[0];
     DateTime now = DateTime.now();
     Get.defaultDialog(
       title: "",
@@ -205,7 +203,7 @@ class EditBookingDetailsLogic {
                         selectedDiveDate.hour != null &&
                         selectedDiveDate.minute != null &&
                         selectedDiveDate.day != null) {
-                      controller.bookingModel.theoryDate = selectedDiveDate;
+                      controller.bookingModel.theoryDate[0] = selectedDiveDate;
                       print(controller.bookingModel.theoryDate);
                       controller.update();
                       Get.back();
@@ -449,8 +447,7 @@ class EditBookingDetailsController extends GetxController {
     remarksTED.text = "";
     emailTED.text = "";
     _isoCode = null;
-    phoneTED.text = "";
-  }
+    phoneTED.text = "";}
 
   allReset() {
     activityNAmeTED.text = "";

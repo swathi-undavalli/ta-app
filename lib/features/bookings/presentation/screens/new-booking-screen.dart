@@ -239,9 +239,10 @@ class NewBookingScreen extends StatelessWidget {
   Widget buildPriceField() {
     return AppTextField(
       hintText: 'Price',
+      isStrictNumber: true,
       controller: logic.controller.priceTED,
       focusNode: logic.controller.priceNode,
-      nextFocusNode: logic.controller.noOfPersonsNode,
+      nextFocusNode: logic.controller.discountNode,
       keyboardType: TextInputType.number,
       onChanged: () {
         try {
@@ -451,6 +452,7 @@ class NewBookingScreen extends StatelessWidget {
             controller: logic.controller.payingNowTED,
             focusNode: logic.controller.payingNowNode,
             nextFocusNode: logic.controller.remarksNode,
+            isStrictNumber: true,
             onChanged: logic.getPrice,
             keyboardType: TextInputType.number,
             required: false,
@@ -508,7 +510,7 @@ class NewBookingScreen extends StatelessWidget {
       child: AppButton.flat(
         text: "Cancel",
         textColor: AppColors.text.black,
-        color: AppColors.background.white,
+        color: AppColors.background.grey,
         onTap: () {
           Get.back();
         },

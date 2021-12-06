@@ -27,34 +27,55 @@ class EmployeeProfileScreen extends StatelessWidget {
         return false;
       },
       child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: AppColors.background.white,
+          elevation: 0,
+          toolbarHeight: 70,
+          leading: Container(
+            alignment: Alignment.centerLeft,
+            child: TextButton(
+              onPressed: () {
+                onBackPressed();
+              },
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: AppColors.text.black,
+                size: 17,
+              ),
+            ),
+          ),
+          title: Container(
+            alignment: Alignment.centerRight,
+            child: buildEditButton(),
+          ),
+        ),
         body: SafeArea(
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: GetBuilder<EmployeeProfileController>(builder: (controller) {
               return Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        alignment: Alignment.centerLeft,
-                        child: TextButton(
-                          onPressed: () {
-                            onBackPressed();
-                          },
-                          child: Icon(
-                            Icons.arrow_back_ios,
-                            color: AppColors.text.black,
-                            size: 17,
-                          ),
-                        ),
-                      ),
-                      buildEditButton(),
-                    ],
-                  ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Container(
+                  //       alignment: Alignment.centerLeft,
+                  //       child: TextButton(
+                  //         onPressed: () {
+                  //           onBackPressed();
+                  //         },
+                  //         child: Icon(
+                  //           Icons.arrow_back_ios,
+                  //           color: AppColors.text.black,
+                  //           size: 17,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //     buildEditButton(),
+                  //   ],
+                  // ),
                   Padding(
-                    padding:
-                        const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+                    padding: const EdgeInsets.all(20),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [

@@ -7,8 +7,8 @@ import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings
 import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/bookings/controller/booking-controller.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:intl/intl.dart';
+import 'dart:developer';
 
 class BookingScreen extends StatelessWidget {
   static const String id = "BookingPage";
@@ -34,30 +34,46 @@ class BookingScreen extends StatelessWidget {
       body: RefreshIndicator(
         color: AppColors.IconColor.black,
         onRefresh: () async {
-          await calenderLogic.getBookings(calenderLogic.controller.startDate);
+          if (calenderLogic.controller.lastSelectedIndex == null)
+            calenderLogic.controller.lastSelectedIndex = 50;
+          calenderLogic
+              .scrollToIndex(calenderLogic.controller.lastSelectedIndex);
+          await calenderLogic
+              .onDateSelected(calenderLogic.controller.lastSelectedIndex);
         },
         child: SafeArea(
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 40),
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 50),
-                child: Column(
-                  children: [
-                    buildTitle("Calendar"),
-                    BookingsCalenderWidget(
-                      onDateTimeSelected: (DateTime selectedDate) {
-                        print(selectedDate.toString());
-                      },
-                      showDetails: true,
-                      startDate: DateTime.now().subtract(Duration(days: 50)),
-                    ),
-                    SizedBox(
-                      height: 200,
-                    ),
-                  ],
-                ),
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 40, bottom: 50),
+              child: Column(
+                children: [
+                  GetBuilder<BookingsCalenderWidgetController>(
+                      builder: (controller) {
+                    DateTime date = controller.selectedDate;
+                    String formattedDate =
+                        DateFormat('dd-MMM-yyyy').format(date);
+                    return Row(
+                      children: [
+                        buildTitle("Calendar"),
+                        Spacer(),
+                        Text(formattedDate),
+                        buildCalendarIcon(context, controller),
+                      ],
+                    );
+                  }),
+                  BookingsCalenderWidget(
+                    onDateTimeSelected: (DateTime selectedDate) {
+                      print(selectedDate.toString());
+                    },
+                    showDetails: true,
+                    startDate: DateTime.now().subtract(Duration(days: 50)),
+                  ),
+                  SizedBox(
+                    height: 200,
+                  ),
+                ],
               ),
             ),
           ),
@@ -67,6 +83,20 @@ class BookingScreen extends StatelessWidget {
   }
 
   ///===============UI==============///
+  ///
+  Widget buildCalendarIcon(
+      BuildContext context, BookingsCalenderWidgetController controller) {
+    return IconButton(
+      splashRadius: 20,
+      onPressed: () {
+        selectDate(context, controller);
+      },
+      icon: Icon(
+        Icons.calendar_today_outlined,
+        size: 17,
+      ),
+    );
+  }
 
   Widget buildTitle(String text) {
     return Container(
@@ -81,6 +111,48 @@ class BookingScreen extends StatelessWidget {
             fontFamily: AppFonts.nunito),
       ),
     );
+  }
+
+  selectDate(
+      BuildContext context, BookingsCalenderWidgetController controller) async {
+    final DateTime selected = await showDatePicker(
+      context: context,
+      initialDate: controller.selectedDate,
+      firstDate: DateTime(2010),
+      lastDate: DateTime(2050),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: AppColors.text.black,
+              onPrimary: Colors.white, // header text color
+              onSurface: AppColors.text.black, // body text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                primary: AppColors.text.black,
+                textStyle:
+                    TextStyle(fontWeight: FontWeight.w500), // button text color
+              ),
+            ),
+          ),
+          child: child,
+        );
+      },
+    );
+    if (selected != null && selected != controller.selectedDate) {
+      var dif = controller.startDate.difference(selected).inDays;
+      if (dif < 0) {
+        dif = dif * -1;
+        calenderLogic.scrollToIndex(dif);
+      } else
+        calenderLogic.scrollToIndex(dif);
+      calenderLogic.onDateSelected(dif);
+
+      log("=============$dif");
+      controller.selectedDate = selected;
+    }
+    controller.update();
   }
 }
 

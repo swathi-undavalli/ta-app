@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 
 class AppTextField extends StatefulWidget {
@@ -21,9 +22,11 @@ class AppTextField extends StatefulWidget {
   Function finalSubmit;
   Function onChanged;
   String labelText;
+  bool isStrictNumber;
 
   AppTextField({
     this.maxLimit,
+    this.isStrictNumber = false,
     this.labelText,
     this.minLines,
     this.maxLines,
@@ -65,10 +68,15 @@ class _AppTextFieldsState extends State<AppTextField> {
           maxLines: widget.maxLines,
           controller: widget.controller,
           focusNode: widget.focusNode,
-          keyboardType: widget.keyboardType,
+          keyboardType: widget.isStrictNumber
+              ? TextInputType.number
+              : widget.keyboardType,
           textInputAction: (widget.finalSubmit == null)
               ? widget.textInputAction
               : TextInputAction.done,
+          inputFormatters: widget.isStrictNumber
+              ? [FilteringTextInputFormatter.digitsOnly]
+              : null,
           enableSuggestions: widget.enableSuggestions,
           decoration: InputDecoration(
             labelText: "${widget.hintText}  ${(widget.required) ? "*" : ""}",

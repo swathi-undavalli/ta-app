@@ -6,11 +6,13 @@ import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
+import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
 import 'package:temple_adventures/features/bookings/controller/edit-booking-details-controller.dart';
 import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:intl/intl.dart';
 
@@ -119,7 +121,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                                 ),
                               ),
                               Container(
-                                width: 80,
+                                // width: 80,
                                 child: Text(
                                   controller.bookingModel.balance.toString() +
                                       "/-",
@@ -136,24 +138,40 @@ class EditBookingDetailsScreen extends StatelessWidget {
                         SizedBox(height: 10),
                         buildPhoneNumber(),
                         SizedBox(height: 10),
-                        buildDateButton(
-                            date: controller.bookingModel.theoryDate,
-                            onTap: () {
-                              logic.onChooseTheorySessionPressed();
-                            },
-                            text: "Theory"),
-                        buildDateButton(
-                            date: controller.bookingModel.poolDate,
-                            onTap: () {
-                              logic.onChoosePoolSessionPressed();
-                            },
-                            text: "Pool"),
-                        buildDateButton(
-                            date: controller.bookingModel.diveDate,
-                            onTap: () {
-                              logic.onChooseDiveSessionPressed();
-                            },
-                            text: "Dive"),
+                        SizedBox(height: 100),
+                        buildEditSessions(
+                          controller,
+                          type: DateType.Theory,
+                        ),
+                        SizedBox(height: 30),
+                        buildEditSessions(
+                          controller,
+                          type: DateType.Pool,
+                        ),
+                        SizedBox(height: 30),
+                        buildEditSessions(
+                          controller,
+                          type: DateType.Dive,
+                        ),
+                        SizedBox(height: 100),
+                        // buildDateButton(
+                        //     date: controller.bookingModel.theoryDate[0],
+                        //     onTap: () {
+                        //       logic.onChooseTheorySessionPressed();
+                        //     },
+                        //     text: "Theory"),
+                        // buildDateButton(
+                        //     date: controller.bookingModel.poolDate[0],
+                        //     onTap: () {
+                        //       logic.onChoosePoolSessionPressed();
+                        //     },
+                        //     text: "Pool"),
+                        // buildDateButton(
+                        //     date: controller.bookingModel.diveDate[0],
+                        //     onTap: () {
+                        //       logic.onChooseDiveSessionPressed();
+                        //     },
+                        //     text: "Dive"),
                       ],
                     ),
                   ),
@@ -170,42 +188,390 @@ class EditBookingDetailsScreen extends StatelessWidget {
     );
   }
 
+  Column buildEditSessions(EditBookingDetailsController controller,
+      {@required DateType type}) {
+    String title = "";
+    List<Widget> dates = [];
+    if (type == DateType.Theory) {
+      title = "Theory";
+      dates = controller.bookingModel.theoryDate
+          .map(
+            (e) => buildDateButton(
+              date: e,
+              onEdit: () {
+                DateTime selectedTheoryDate = e;
+                Get.defaultDialog(
+                  title: "",
+                  titlePadding: EdgeInsets.all(0),
+                  titleStyle: TextStyle(fontSize: 0, height: 0),
+                  content: Container(
+                    height: 480,
+                    width: 400,
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20),
+                          child: Text(
+                            "Choose Date",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        BookingsCalenderWidget(
+                          highlightInvalidTime: true,
+                          startDate: DateTime.now(),
+                          calenderType: FilterType.Theory,
+                          onDateTimeSelected: (date) {
+                            selectedTheoryDate = date;
+                          },
+                          isDiveSession: false,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            AppButton.miniText(
+                              text: "Cancel",
+                              onTap: () {
+                                Get.back();
+                              },
+                            ),
+                            AppButton.miniFlat(
+                              text: "Okay",
+                              bgColor: AppColors.background.black,
+                              textColor: AppColors.text.white,
+                              onTap: () {
+                                if (selectedTheoryDate != null &&
+                                    selectedTheoryDate.hour != null &&
+                                    selectedTheoryDate.minute != null &&
+                                    selectedTheoryDate.day != null) {
+                                  int index = controller.bookingModel.theoryDate
+                                      .indexOf(e);
+                                  controller.bookingModel.theoryDate[index] =
+                                      selectedTheoryDate;
+                                  print(controller.bookingModel.theoryDate);
+                                  controller.update();
+                                  Get.back();
+                                } else {
+                                  showToast("Select Time");
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  radius: 10,
+                );
+              },
+              onDelete: () {
+                controller.bookingModel.theoryDate.remove(e);
+                controller.update();
+              },
+            ),
+          )
+          .toList();
+    } else if (type == DateType.Pool) {
+      title = "Pool";
+      dates = controller.bookingModel.poolDate
+          .map(
+            (e) => buildDateButton(
+              date: e,
+              onEdit: () {
+                DateTime selectedPoolDate = e;
+                Get.defaultDialog(
+                  title: "",
+                  titlePadding: EdgeInsets.all(0),
+                  titleStyle: TextStyle(fontSize: 0, height: 0),
+                  content: Container(
+                    height: 480,
+                    width: 400,
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20),
+                          child: Text(
+                            "Choose Date",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        BookingsCalenderWidget(
+                          highlightInvalidTime: true,
+                          startDate: DateTime.now(),
+                          calenderType: FilterType.Pool,
+                          onDateTimeSelected: (date) {
+                            selectedPoolDate = date;
+                          },
+                          isDiveSession: false,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            AppButton.miniText(
+                              text: "Cancel",
+                              onTap: () {
+                                Get.back();
+                              },
+                            ),
+                            AppButton.miniFlat(
+                              text: "Okay",
+                              bgColor: AppColors.background.black,
+                              textColor: AppColors.text.white,
+                              onTap: () {
+                                if (selectedPoolDate != null &&
+                                    selectedPoolDate.hour != null &&
+                                    selectedPoolDate.minute != null &&
+                                    selectedPoolDate.day != null) {
+                                  int index = controller.bookingModel.poolDate
+                                      .indexOf(e);
+                                  controller.bookingModel.poolDate[index] =
+                                      selectedPoolDate;
+                                  print(controller.bookingModel.poolDate);
+                                  controller.update();
+                                  Get.back();
+                                } else {
+                                  showToast("Select Time");
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  radius: 10,
+                );
+              },
+              onDelete: () {
+                controller.bookingModel.poolDate.remove(e);
+                controller.update();
+              },
+            ),
+          )
+          .toList();
+    } else if (type == DateType.Dive) {
+      title = "Dive";
+      dates = controller.bookingModel.diveDate
+          .map(
+            (e) => buildDateButton(
+              date: e,
+              onEdit: () {
+                DateTime selectedDiveDate = e;
+                Get.defaultDialog(
+                  title: "",
+                  titlePadding: EdgeInsets.all(0),
+                  titleStyle: TextStyle(fontSize: 0, height: 0),
+                  content: Container(
+                    height: 480,
+                    width: 400,
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20),
+                          child: Text(
+                            "Choose Date",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        BookingsCalenderWidget(
+                          highlightInvalidTime: true,
+                          startDate: DateTime.now(),
+                          calenderType: FilterType.Dive,
+                          onDateTimeSelected: (date) {
+                            selectedDiveDate = date;
+                          },
+                          isDiveSession: false,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            AppButton.miniText(
+                              text: "Cancel",
+                              onTap: () {
+                                Get.back();
+                              },
+                            ),
+                            AppButton.miniFlat(
+                              text: "Okay",
+                              bgColor: AppColors.background.black,
+                              textColor: AppColors.text.white,
+                              onTap: () {
+                                if (selectedDiveDate != null &&
+                                    selectedDiveDate.hour != null &&
+                                    selectedDiveDate.minute != null &&
+                                    selectedDiveDate.day != null) {
+                                  int index = controller.bookingModel.diveDate
+                                      .indexOf(e);
+                                  controller.bookingModel.diveDate[index] =
+                                      selectedDiveDate;
+                                  print(controller.bookingModel.diveDate);
+                                  controller.update();
+                                  Get.back();
+                                } else {
+                                  showToast("Select Time");
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  radius: 10,
+                );
+              },
+              onDelete: () {
+                controller.bookingModel.diveDate.remove(e);
+                controller.update();
+              },
+            ),
+          )
+          .toList();
+    }
+
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            AppButton.miniFlat(
+              text: "ADD",
+              onTap: () {
+                DateTime selectedDate;
+                Get.defaultDialog(
+                  title: "",
+                  titlePadding: EdgeInsets.all(0),
+                  titleStyle: TextStyle(fontSize: 0, height: 0),
+                  content: Container(
+                    height: 480,
+                    width: 400,
+                    child: Column(
+                      children: [
+                        Container(
+                          alignment: Alignment.centerLeft,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20),
+                          child: Text(
+                            "Choose Date",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        BookingsCalenderWidget(
+                          highlightInvalidTime: true,
+                          startDate: DateTime.now(),
+                          calenderType: FilterType.Pool,
+                          onDateTimeSelected: (date) {
+                            selectedDate = date;
+                          },
+                          isDiveSession: false,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            AppButton.miniText(
+                              text: "Cancel",
+                              onTap: () {
+                                Get.back();
+                              },
+                            ),
+                            AppButton.miniFlat(
+                              text: "Okay",
+                              bgColor: AppColors.background.black,
+                              textColor: AppColors.text.white,
+                              onTap: () {
+                                if (selectedDate != null &&
+                                    selectedDate.hour != null &&
+                                    selectedDate.minute != null &&
+                                    selectedDate.day != null) {
+                                  if (type == DateType.Theory)
+                                    controller.bookingModel.theoryDate
+                                        .add(selectedDate);
+                                  else if (type == DateType.Pool)
+                                    controller.bookingModel.poolDate
+                                        .add(selectedDate);
+                                  else if (type == DateType.Dive)
+                                    controller.bookingModel.diveDate
+                                        .add(selectedDate);
+
+                                  controller.bookingModel.bookingDate.add(getStringDate(selectedDate));
+
+
+                                  controller.update();
+                                  Get.back();
+                                } else {
+                                  showToast("Select Time");
+                                }
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  radius: 10,
+                );
+              },
+            ),
+          ],
+        ),
+        ...dates,
+      ],
+    );
+  }
+
   Widget buildEmailTF(EditBookingDetailsController controller) {
     return buildTextFields(
-                          text: "Email",
-                          textEditingController: controller.emailTED,
-                          keyBoardType: TextInputType.emailAddress,
-                          focus: controller.emailNode,
-                          nextFocus: controller.phoneNode);
+        text: "Email",
+        textEditingController: controller.emailTED,
+        keyBoardType: TextInputType.emailAddress,
+        focus: controller.emailNode,
+        nextFocus: controller.phoneNode);
   }
 
   Widget buildRemarksTF(EditBookingDetailsController controller) {
     return buildTextFields(
-                          text: "Remarks",
-                          textEditingController: controller.remarksTED,
-                          focus: controller.remarksNode,
-                          nextFocus: controller.emailNode);
+        text: "Remarks",
+        textEditingController: controller.remarksTED,
+        focus: controller.remarksNode,
+        nextFocus: controller.emailNode);
   }
 
   Widget buildDepositTF(EditBookingDetailsController controller) {
     return buildTextFields(
-                        text: "Deposit",
-                        textEditingController: controller.depositTED,
-                        keyBoardType: TextInputType.number,
-                        onChanged: () {
-                          logic.getPrice();
-                        },
-                        onChangedCallBack: (payingNow) {
-                          try {
-                            controller.bookingModel.payingNow =
-                                double.parse(controller.depositTED.text);
-                          } catch (e) {
-                            controller.bookingModel.payingNow = 0;
-                          }
-                        },
-                        focus: controller.depositNode,
-                        nextFocus: controller.balanceNode,
-                      );
+      text: "Deposit",
+      textEditingController: controller.depositTED,
+      keyBoardType: TextInputType.number,
+      onChanged: () {
+        logic.getPrice();
+      },
+      onChangedCallBack: (payingNow) {
+        try {
+          controller.bookingModel.payingNow =
+              double.parse(controller.depositTED.text);
+        } catch (e) {
+          controller.bookingModel.payingNow = 0;
+        }
+      },
+      focus: controller.depositNode,
+      nextFocus: controller.balanceNode,
+    );
   }
 
   Widget buildPAXTF(EditBookingDetailsController controller) {
@@ -493,16 +859,39 @@ class EditBookingDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildDateButton({DateTime date, Function onTap, String text}) {
+  Widget buildDateButton({
+    DateTime date,
+    Function onEdit,
+    Function onDelete,
+    String text = "Change",
+  }) {
     return GetBuilder<EditBookingDetailsController>(builder: (controller) {
       return Row(
         children: [
           Text(getStringFromDate(date)),
           Spacer(),
-          AppButton.miniFlat(
-            text: text,
-            onTap: onTap,
-          ),
+          IconButton(
+              splashRadius: 20,
+              onPressed: () {
+                onEdit();
+              },
+              icon: Icon(
+                Icons.edit,
+                size: 15,
+              )),
+          IconButton(
+              splashRadius: 20,
+              onPressed: () {
+                onDelete();
+              },
+              icon: Icon(
+                Icons.delete,
+                size: 15,
+              )),
+          // AppButton.miniFlat(
+          //   text: text,
+          //   onTap: onEdit,
+          // ),
         ],
       );
     });
@@ -584,15 +973,15 @@ class EditBookingDetailsScreen extends StatelessWidget {
                 controller.bookingModel.bookingDate = [];
                 if (controller.bookingModel.poolDate != null) {
                   controller.bookingModel.bookingDate
-                      .add(getStringDate(controller.bookingModel.poolDate));
+                      .add(getStringDate(controller.bookingModel.poolDate[0]));
                 }
                 if (controller.bookingModel.theoryDate != null) {
-                  controller.bookingModel.bookingDate
-                      .add(getStringDate(controller.bookingModel.theoryDate));
+                  controller.bookingModel.bookingDate.add(
+                      getStringDate(controller.bookingModel.theoryDate[0]));
                 }
                 if (controller.bookingModel.diveDate != null) {
                   controller.bookingModel.bookingDate
-                      .add(getStringDate(controller.bookingModel.diveDate));
+                      .add(getStringDate(controller.bookingModel.diveDate[0]));
                 }
                 controller.bookingModel.tax = controller.taxableAmount;
                 controller.bookingModel.discount = controller.discount;

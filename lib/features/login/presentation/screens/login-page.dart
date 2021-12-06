@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
@@ -61,6 +62,10 @@ class LoginScreen extends StatelessWidget {
             ),
             textAlign: TextAlign.center,
             cursorColor: Colors.black,
+            keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter. digitsOnly
+            ],
             decoration: InputDecoration(
               labelText: "Employee ID",
               labelStyle: TextStyle(

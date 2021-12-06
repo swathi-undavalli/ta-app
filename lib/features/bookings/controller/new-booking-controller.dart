@@ -173,6 +173,7 @@ class NewBookingLogic {
       {
         createBooking();
         Get.defaultDialog(
+          barrierDismissible: false,
           title: "",
           titlePadding: EdgeInsets.all(0),
           titleStyle: TextStyle(fontSize: 0),
@@ -198,10 +199,10 @@ class NewBookingLogic {
                     bgColor: AppColors.background.black,
                     textColor: AppColors.text.white,
                     onTap: () async {
+                      Get.offAllNamed(DashBoardScreen.id);
                       DashBoardScreenLogic dashboardlogic =
                           DashBoardScreenLogic();
                       dashboardlogic.controller.currentIndex = 2;
-                      Get.offAllNamed(DashBoardScreen.id);
                       controller.reset();
                       BookingsCalenderWidgetLogic bookingCalenderLogic =
                           BookingsCalenderWidgetLogic();
@@ -238,6 +239,7 @@ class NewBookingLogic {
       // Get.toNamed(AddCustomerDetailsScreen.id);
       createBooking();
       Get.defaultDialog(
+        barrierDismissible: false,
         title: "",
         titlePadding: EdgeInsets.all(0),
         titleStyle: TextStyle(fontSize: 0),
@@ -263,8 +265,8 @@ class NewBookingLogic {
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
                   onTap: () async {
-                    dashboardLogic.controller.currentIndex = 2;
                     Get.offAllNamed(DashBoardScreen.id);
+                    dashboardLogic.controller.currentIndex = 2;
                     controller.reset();
                     BookingsCalenderWidgetLogic bookingCalenderLogic =
                         BookingsCalenderWidgetLogic();
@@ -321,7 +323,7 @@ class NewBookingLogic {
         ));
   }
 
-  onChoosePoolSessionPressed() {
+  addPoolSessionDateTime() {
     DateTime selectedPoolDate;
     Get.defaultDialog(
       title: "",
@@ -365,7 +367,11 @@ class NewBookingLogic {
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
                   onTap: () {
-                    controller.bookingModel.poolDate = selectedPoolDate;
+                    if (controller.bookingModel.poolDate == null)
+                      controller.bookingModel.poolDate = [];
+                    controller.bookingModel.poolDate.add(selectedPoolDate);
+                    controller.bookingModel.poolDate =
+                        controller.bookingModel.poolDate.toSet().toList();
                     print(controller.bookingModel.poolDate);
                     controller.update();
                     Get.back();
@@ -380,7 +386,7 @@ class NewBookingLogic {
     );
   }
 
-  onChooseDiveSessionPressed() {
+  addDiveSessionDateTime() {
     DateTime selectedDiveDate;
     Get.defaultDialog(
       title: "",
@@ -424,7 +430,12 @@ class NewBookingLogic {
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
                   onTap: () {
-                    controller.bookingModel.diveDate = selectedDiveDate;
+                    if (controller.bookingModel.diveDate == null)
+                      controller.bookingModel.diveDate = [];
+                    controller.bookingModel.diveDate.add(selectedDiveDate);
+                    controller.bookingModel.diveDate =
+                        controller.bookingModel.diveDate.toSet().toList();
+
                     print(controller.bookingModel.diveDate);
                     controller.update();
                     Get.back();
@@ -439,8 +450,8 @@ class NewBookingLogic {
     );
   }
 
-  onChooseTheorySessionPressed() {
-    DateTime selectedDiveDate;
+  addTheorySessionDateTime() {
+    DateTime selectedTheoryDate;
     Get.defaultDialog(
       title: "",
       titlePadding: EdgeInsets.all(0),
@@ -465,7 +476,7 @@ class NewBookingLogic {
               calenderType: FilterType.Theory,
               startDate: DateTime.now(),
               onDateTimeSelected: (date) {
-                selectedDiveDate = date;
+                selectedTheoryDate = date;
               },
               isDiveSession: false,
             ),
@@ -483,8 +494,12 @@ class NewBookingLogic {
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
                   onTap: () {
-                    controller.bookingModel.theoryDate = selectedDiveDate;
-                    print(controller.bookingModel.theoryDate);
+                    if (controller.bookingModel.theoryDate == null)
+                      controller.bookingModel.theoryDate = [];
+                    controller.bookingModel.theoryDate.add(selectedTheoryDate);
+                    controller.bookingModel.theoryDate =
+                        controller.bookingModel.theoryDate.toSet().toList();
+                    log(controller.bookingModel.theoryDate.toString());
                     controller.update();
                     Get.back();
                   },
@@ -501,16 +516,28 @@ class NewBookingLogic {
   createBooking() async {
     print("createBooking");
     controller.bookingModel.bookingDate = [];
-    if (controller.bookingModel.theoryDate != null)
-      controller.bookingModel.bookingDate
-          .add(getStringDate(controller.bookingModel.theoryDate));
-    if (controller.bookingModel.poolDate != null)
-      controller.bookingModel.bookingDate
-          .add(getStringDate(controller.bookingModel.poolDate));
-    if (controller.bookingModel.diveDate != null)
-      controller.bookingModel.bookingDate
-          .add(getStringDate(controller.bookingModel.diveDate));
 
+    if (controller.bookingModel.theoryDate != null &&
+        controller.bookingModel.theoryDate.isNotEmpty) {
+      controller.bookingModel.theoryDate.forEach((element) {
+        print(getStringDate(element));
+        controller.bookingModel.bookingDate.add(getStringDate(element));
+      });
+    }
+    if (controller.bookingModel.poolDate != null &&
+        controller.bookingModel.poolDate.isNotEmpty) {
+      controller.bookingModel.poolDate.forEach((element) {
+        print(getStringDate(element));
+        controller.bookingModel.bookingDate.add(getStringDate(element));
+      });
+    }
+    if (controller.bookingModel.diveDate != null &&
+        controller.bookingModel.diveDate.isNotEmpty) {
+      controller.bookingModel.diveDate.forEach((element) {
+        print(getStringDate(element));
+        controller.bookingModel.bookingDate.add(getStringDate(element));
+      });
+    }
     // controller.bookingModel.activity = controller.selectedActivity;
     controller.bookingId =
         await FirebaseApi.addNewBooking(controller.bookingModel);

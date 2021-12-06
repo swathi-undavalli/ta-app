@@ -25,6 +25,7 @@ import 'package:temple_adventures/features/employees/presentation/screens/all-em
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
 import 'features/Activities/presentation/screens/all-activities-screen.dart';
+import 'features/dashboard/controller/dashboard-controller.dart';
 import 'features/employees/presentation/screens/employee-details-screen.dart';
 import 'features/employees/presentation/screens/employee-profile-screen.dart';
 import 'features/login/presentation/screens/login-page.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     print(FirebaseAuth.instance.currentUser == null);
+    Get.put(DashBoardScreenController());
     return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         initialRoute: FirebaseAuthentication.isUserLoggedIn()

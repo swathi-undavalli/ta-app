@@ -42,9 +42,9 @@ class BookingModel {
   String remarks;
   String paymentTransactionId;
   String receiptNo;
-  DateTime poolDate;
-  DateTime diveDate;
-  DateTime theoryDate;
+  List<DateTime> poolDate;
+  List<DateTime> diveDate;
+  List<DateTime> theoryDate;
   List<String> bookingDate;
   String discountType;
 
@@ -71,9 +71,12 @@ class BookingModel {
       location: json["location"],
       paymentTransactionId: json["paymentTransactionId"],
       bookingDate: List<String>.from(json["bookingDate"].map((x) => x)),
-      poolDate: parseDateOrNull(json["poolDate"]),
-      diveDate: parseDateOrNull(json["diveDate"]),
-      theoryDate: parseDateOrNull(json["theoryDate"]),
+      theoryDate: List<DateTime>.from(
+          json["theoryDate"].map((x) => parseDateOrNull(x))),
+      poolDate:
+          List<DateTime>.from(json["poolDate"].map((x) => parseDateOrNull(x))),
+      diveDate:
+          List<DateTime>.from(json["diveDate"].map((x) => parseDateOrNull(x))),
     );
   }
 
@@ -93,9 +96,12 @@ class BookingModel {
         "bookingDate": List<String>.from(bookingDate.map((x) => x)),
         "location": location,
         "paymentTransactionId": paymentTransactionId,
-        "poolDate": toDateOrNull(poolDate),
-        "theoryDate": toDateOrNull(theoryDate),
-        "diveDate": toDateOrNull(diveDate),
+        "theoryDate":
+            List<String>.from((theoryDate ?? []).map((x) => toDateOrNull(x))),
+        "poolDate":
+            List<String>.from((poolDate ?? []).map((x) => toDateOrNull(x))),
+        "diveDate":
+            List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
       };
 
   double get balance {
@@ -157,7 +163,7 @@ class BookingModel {
     return total;
   }
 
-  toDateOrNull(DateTime date) {
+  String toDateOrNull(DateTime date) {
     if (date == null) return null;
     return date.toIso8601String();
   }

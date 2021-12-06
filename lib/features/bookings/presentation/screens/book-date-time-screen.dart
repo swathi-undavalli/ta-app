@@ -1,4 +1,4 @@
-import 'dart:math';
+import 'dart:developer';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -21,26 +21,40 @@ class BookDateTime extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 30, right: 30),
-          child: SizedBox(
-            height: Get.height,
-            width: Get.width,
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
             child: Column(
               children: [
                 SizedBox(height: 20),
                 buildActivityDropDown(),
-                Spacer(),
-                buildTheorySession(),
-                Spacer(),
-                buildPoolSession(),
-                Spacer(),
-                buildDiveSession(),
-                Spacer(),
-                Spacer(),
-                Spacer(),
-                buildContinueButton(),
-                SizedBox(
-                  height: 30,
+                SizedBox(height: 30),
+
+                Container(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    "Add Dates",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: FontSize.message,
+                      color: AppColors.text.skyBlue,
+                    ),
+                  ),
                 ),
+                SizedBox(height: 30),
+                buildTheorySession(),
+                SizedBox(height: 30),
+                buildPoolSession(),
+                SizedBox(height: 30),
+                buildDiveSession(),
+                // Spacer(),
+                // Spacer(),
+                // Spacer(),
+                SizedBox(height: 30),
+                buildContinueButton(),
+                SizedBox(height: 30),
+                // SizedBox(
+                //   height: 30,
+                // ),
               ],
             ),
           ),
@@ -116,32 +130,26 @@ class BookDateTime extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Pool Session",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: FontSize.textSize),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                (controller.bookingModel.poolDate != null)
-                    ? DateFormat('MMM, dd @ hh:mm a')
-                        .format(controller.bookingModel.poolDate)
-                    : "Please Choose",
+                "Pool Session",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: FontSize.message,
-                  color: AppColors.text.skyBlue,
-                ),
+                    fontWeight: FontWeight.bold, fontSize: FontSize.textSize),
               ),
               AppButton.miniFlat(
-                text: "Choose",
-                onTap: logic.onChoosePoolSessionPressed,
+                text: "ADD",
+                onTap: logic.addPoolSessionDateTime,
                 bgColor: AppColors.background.black,
                 textColor: AppColors.text.white,
               )
             ],
+          ),
+          Wrap(
+            children: (controller.bookingModel.poolDate ?? [])
+                .map((e) => buildTime(e, DateType.Pool))
+                .toList(),
           ),
         ],
       );
@@ -154,32 +162,26 @@ class BookDateTime extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Dive Session",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: FontSize.textSize),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                (controller.bookingModel.diveDate != null)
-                    ? DateFormat('MMM, dd @ hh:mm a')
-                        .format(controller.bookingModel.diveDate)
-                    : "Please Choose",
+                "Dive Session",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: FontSize.message,
-                  color: AppColors.text.skyBlue,
-                ),
+                    fontWeight: FontWeight.bold, fontSize: FontSize.textSize),
               ),
               AppButton.miniFlat(
-                text: "Choose",
-                onTap: logic.onChooseDiveSessionPressed,
+                text: "ADD",
+                onTap: logic.addDiveSessionDateTime,
                 bgColor: AppColors.background.black,
                 textColor: AppColors.text.white,
               )
             ],
+          ),
+          Wrap(
+            children: (controller.bookingModel.diveDate ?? [])
+                .map((e) => buildTime(e, DateType.Dive))
+                .toList(),
           ),
         ],
       );
@@ -192,36 +194,67 @@ class BookDateTime extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            "Theory Session",
-            style: TextStyle(
-                fontWeight: FontWeight.bold, fontSize: FontSize.textSize),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                (controller.bookingModel.theoryDate != null)
-                    ? DateFormat('MMM, dd @ hh:mm a')
-                        .format(controller.bookingModel.theoryDate)
-                    : "Please Choose",
+                "Theory Session",
                 style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: FontSize.message,
-                  color: AppColors.text.skyBlue,
-                ),
+                    fontWeight: FontWeight.bold, fontSize: FontSize.textSize),
               ),
               AppButton.miniFlat(
-                text: "Choose",
-                onTap: logic.onChooseTheorySessionPressed,
+                text: "ADD",
+                onTap: logic.addTheorySessionDateTime,
                 bgColor: AppColors.background.black,
                 textColor: AppColors.text.white,
               )
             ],
           ),
+          Wrap(
+            children: (controller.bookingModel.theoryDate ?? [])
+                .map((e) => buildTime(e, DateType.Theory))
+                .toList(),
+          ),
         ],
       );
     });
+  }
+
+  Widget buildTime(DateTime date, DateType type) {
+    if (date != null)
+      return GestureDetector(
+        onTap: () {
+          if (type == DateType.Theory)
+            logic.controller.bookingModel.theoryDate.remove(date);
+          if (type == DateType.Dive)
+            logic.controller.bookingModel.diveDate.remove(date);
+          if (type == DateType.Pool)
+            logic.controller.bookingModel.poolDate.remove(date);
+          logic.controller.update();
+        },
+        child: Container(
+          width: 170,
+          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          margin: EdgeInsets.only(right: 10, bottom: 10),
+          decoration: BoxDecoration(
+            color: AppColors.background.lightSkyBlue,
+            borderRadius: BorderRadius.all(
+              Radius.circular(20),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(DateFormat("MMM  dd @ hh:mm a").format(date)),
+              Icon(
+                Icons.close,
+                size: 16,
+              ),
+            ],
+          ),
+        ),
+      );
+    return SizedBox();
   }
 
   Widget buildContinueButton() {
@@ -475,3 +508,9 @@ class BookDateTime extends StatelessWidget {
 //     );
 //   }
 // }
+
+enum DateType {
+  Theory,
+  Pool,
+  Dive,
+}

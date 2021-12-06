@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
@@ -25,12 +26,14 @@ class BookingsCalenderWidget extends StatelessWidget {
     this.highlightInvalidTime = false,
     this.calenderType,
   }) {
+    print("new instance");
     if (startDate == null) startDate = DateTime.now();
     startDate = startDate.subtract(Duration(days: 1));
     logic.controller.startDate = startDate;
     logic.controller.showDetails = showDetails;
     logic.controller.isDiveSession = isDiveSession;
     logic.controller.calenderType = calenderType;
+    logic.getDates();
     if (showDetails)
       EmployeeAccess.run(
           function: autoCenter, access: AccessRights.viewBookings);
@@ -38,15 +41,11 @@ class BookingsCalenderWidget extends StatelessWidget {
 
   Future<void> autoCenter() async {
     await Future.delayed(Duration(microseconds: 500));
-    scrollController
-        .jumpTo(DateTime.now().difference(startDate).inDays.toDouble() * 72);
-    // scrollController
-    //     .jumpTo(DateTime.now().difference(startDate).inDays.toDouble());
+    logic.scrollToIndex(50);
+    logic.onDateSelected(50);
   }
 
   final BookingsCalenderWidgetLogic logic = BookingsCalenderWidgetLogic();
-
-  final ScrollController scrollController = ScrollController();
 
   @override
   Widget build(BuildContext context) {
@@ -388,57 +387,62 @@ class BookingsCalenderWidget extends StatelessWidget {
     }
 
     return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
-      logic.getDates();
       return Container(
         height: 100,
         width: Get.width,
         child: ListView.builder(
-            itemCount: 100,
-            controller: scrollController,
+            itemCount: 400,
+            controller: controller.autoScrollController,
             scrollDirection: Axis.horizontal,
             physics: BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: GestureDetector(
-                  onTap: () {
-                    logic.onDateSelected(index);
-                  },
-                  child: Container(
-                    width: 60,
-                    height: 70,
-                    decoration: BoxDecoration(
-                      color: getBoxColor(index, controller),
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    child: Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Text(
-                            DateFormat('MMM')
-                                .format(controller.calenderDates[index]),
-                            style: TextStyle(
-                                color: getDotColor(index, controller),
-                                fontSize: FontSize.small,
-                                fontWeight: FontWeight.normal),
-                          ),
-                          Text(
-                            controller.calenderDates[index].day.toString(),
-                            style: TextStyle(
-                                color: getDateColor(index, controller),
-                                fontSize: FontSize.textSize,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                            DateFormat('EE')
-                                .format(controller.calenderDates[index]),
-                            style: TextStyle(
-                                color: getDayColor(index, controller),
-                                fontSize: FontSize.small,
-                                fontWeight: FontWeight.normal),
-                          ),
-                        ],
+              return AutoScrollTag(
+                controller: controller.autoScrollController,
+                key: ValueKey(index),
+                index: index,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                    onTap: () {
+                      logic.controller.lastSelectedIndex = index;
+                      logic.onDateSelected(index);
+                    },
+                    child: Container(
+                      width: 60,
+                      height: 70,
+                      decoration: BoxDecoration(
+                        color: getBoxColor(index, controller),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              DateFormat('MMM')
+                                  .format(controller.calenderDates[index]),
+                              style: TextStyle(
+                                  color: getDotColor(index, controller),
+                                  fontSize: FontSize.small,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                            Text(
+                              controller.calenderDates[index].day.toString(),
+                              style: TextStyle(
+                                  color: getDateColor(index, controller),
+                                  fontSize: FontSize.textSize,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                            Text(
+                              DateFormat('EE')
+                                  .format(controller.calenderDates[index]),
+                              style: TextStyle(
+                                  color: getDayColor(index, controller),
+                                  fontSize: FontSize.small,
+                                  fontWeight: FontWeight.normal),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),

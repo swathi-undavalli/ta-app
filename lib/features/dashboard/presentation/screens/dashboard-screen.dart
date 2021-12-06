@@ -44,21 +44,21 @@ class DashBoardScreen extends StatelessWidget {
 
   Widget buildShowLoading() {
     return GetBuilder<DashBoardScreenController>(builder: (controller) {
-      // if (controller.showLoading)
-      // return Material(
-      //   color: Colors.transparent,
-      //   child: Container(
-      //     color: Colors.black54,
-      //     height: Get.height,
-      //     width: Get.width,
-      //     child: Center(
-      //         child: CircularProgressIndicator(
-      //       color: Colors.white,
-      //     )),
-      //   ),
-      // );
-      // else
-      return SizedBox();
+      if (controller.showLoading)
+        return Material(
+          color: Colors.transparent,
+          child: Container(
+            color: Colors.black54,
+            height: Get.height,
+            width: Get.width,
+            child: Center(
+                child: CircularProgressIndicator(
+              color: Colors.white,
+            )),
+          ),
+        );
+      else
+        return SizedBox();
     });
   }
 

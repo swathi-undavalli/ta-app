@@ -164,8 +164,9 @@ class BookingsExpansionPanel extends StatelessWidget {
                                 color: AppColors.background.black),
                             iconSize: 15,
                             onPressed: () {
+                               var model = itemModel.bookingModel;
                               Get.toNamed(EditBookingDetailsScreen.id,
-                                  arguments: itemModel.bookingModel);
+                                  arguments: model);
                             },
                           ),
                         ),
@@ -354,12 +355,12 @@ class ItemModel {
 
     getTime() {
       var d = "";
-      if (bookingModel.theoryDate != null)
-        d = d + DateFormat("hh:mm").format(bookingModel.theoryDate) + ", ";
-      if (bookingModel.poolDate != null)
-        d = d + DateFormat("hh:mm").format(bookingModel.poolDate) + ", ";
-      if (bookingModel.diveDate != null)
-        d = d + DateFormat("hh:mm").format(bookingModel.diveDate) + ", ";
+      if (bookingModel.theoryDate != null && bookingModel.theoryDate.isNotEmpty)
+        d = d + DateFormat("hh:mm").format(bookingModel.theoryDate[0]) + ", ";
+      if (bookingModel.poolDate != null && bookingModel.poolDate.isNotEmpty)
+        d = d + DateFormat("hh:mm").format(bookingModel.poolDate[0]) + ", ";
+      if (bookingModel.diveDate != null && bookingModel.diveDate.isNotEmpty)
+        d = d + DateFormat("hh:mm").format(bookingModel.diveDate[0]) + ", ";
       return d.substring(0, d.length - 2);
     }
 

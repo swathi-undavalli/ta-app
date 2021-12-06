@@ -43,6 +43,9 @@ class LoginScreenLogic {
                     keyboardType: TextInputType.number,
                     controller: controller.textEditingControllersOTP[i],
                     focusNode: controller.focusNodesOTP[i],
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly
+                    ],
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       focusedBorder: InputBorder.none,

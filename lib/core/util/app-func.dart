@@ -1,6 +1,7 @@
 //@dart = 2.9
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 void disposeKeyboard() {
   FocusManager.instance.primaryFocus?.unfocus();
@@ -11,12 +12,16 @@ void showToast(String msg) {
 }
 
 getStringDate(DateTime newDate) {
-  return "${newDate.day < 10 ? "0${newDate.day}" : newDate.day}-${newDate.month < 10 ? "0${newDate.month}" : newDate.month}-${newDate.year}";
+  return DateFormat('dd-MM-yyyy').format(newDate);
 }
 
 checkDate(DateTime a, DateTime b) {
   if (a == null || b == null) return false;
   return ((a.day == b.day) && (a.month == b.month) && (a.year == b.year));
+}
+
+isSameHour(DateTime a, DateTime b) {
+  return ((a.difference(b).inDays == 0) && checkDate(a, b) && a.hour == b.hour);
 }
 
 getDate() {}
