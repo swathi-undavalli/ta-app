@@ -12,13 +12,12 @@ class AllBookingsLogic {
   AllBookingsController controller = Get.put(AllBookingsController());
   getBookings() async {
     print("getBookings");
+    controller.showLoading = true;
     controller.bookings = [];
     List<ItemModel> bookingList = [];
 
-    int count = 0;
-    int pageCount = 0;
-
     var data = await FirebaseFirestore.instance.collection("bookings").get();
+    print(data.docs.length);
     data.docs.forEach((element) {
       log(element.data().toString());
       BookingModel booking = BookingModel.fromMap(element.data());

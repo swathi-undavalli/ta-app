@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:developer';
-import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
@@ -18,8 +17,10 @@ import 'package:temple_adventures/core/widgets/attendance_widget/attendence_widg
 import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
 import 'package:temple_adventures/features/home/controller/home-page-controller.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/home/presentation/widgets/nav-drawer.dart';
 // import 'package:http/http.dart' as http;
 import 'package:path/path.dart';
@@ -34,6 +35,7 @@ class HomePage extends StatelessWidget {
       color: Colors.black,
       onRefresh: () async {
         var futures = <Future>[];
+
         AttendanceWidgetLogic attendanceWidgetLogic = AttendanceWidgetLogic();
         AttendanceReportWidgetLogic attendanceReportWidgetLogic =
             AttendanceReportWidgetLogic();
@@ -70,6 +72,93 @@ class HomePage extends StatelessWidget {
                   SizedBox(height: 20),
                   AttendanceReportWidget(),
                   SizedBox(height: 100),
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     for (int i = 1; i < 47; i++) {
+                  //       var map = {
+                  //         "firstName": (employees[i - 1][1]).split(" ")[0],
+                  //         "lastName": getString(
+                  //             (employees[i - 1][1]).split(" ").sublist(1)),
+                  //       };
+                  //       print(map);
+                  //       FirebaseFirestore.instance
+                  //           .collection("employees")
+                  //           .doc(i.toString())
+                  //           .collection("employeeFullInformation")
+                  //           .doc("employeeData")
+                  //           .set({
+                  //         "firstName": (employees[i - 1][1]).split(" ")[0],
+                  //         "lastName": getString(
+                  //             (employees[i - 1][1]).split(" ").sublist(1)),
+                  //       }, SetOptions(merge: true));
+                  //     }
+                  //   },
+                  //   child: Text("Do"),
+                  // ),
+                  // ElevatedButton(
+                  //   onPressed: () async {
+                  //     log("clicked");
+                  //     for (int i = 44; i < 47; i++) {
+                  //       var accessLevels = AccessLevels(
+                  //           viewBookings: true,
+                  //           createBookings: true,
+                  //           editBookings: true,
+                  //           viewEmployees: true,
+                  //           createEmployees: true,
+                  //           editEmployees: true,
+                  //           personalProfileEdit: true,
+                  //           personalAttendanceReport: true,
+                  //           attendanceReport: true,
+                  //           weatherReport: true,
+                  //           editActivityPrices: true,
+                  //           addActivity: true);
+                  //       for (var employee in employees) {
+                  //         var id = employee[0];
+                  //         var name = employee[1];
+                  //         var phone = employee[2];
+                  //         var names = name.split(" ");
+                  //         Employee emp = Employee(
+                  //           id: id,
+                  //           firstName: names[0],
+                  //           lastName: getString(names.sublist(1)),
+                  //           phoneNumber: phone,
+                  //           role: "Office Staff",
+                  //           countryIsoCode: "IN",
+                  //           countryCode: "+91",
+                  //           shiftTiming: DateTime(0, 0, 0, 9),
+                  //           accessLevels: accessLevels,
+                  //         );
+                  //         FirebaseFirestore.instance
+                  //             .collection("employees")
+                  //             .doc(id)
+                  //             .collection("employeeFullInformation")
+                  //             .doc("employeeData")
+                  //             .set(emp.toMap())
+                  //             .whenComplete(() => log(emp.toMap().toString()));
+                  //         log(emp.toMap().toString());
+                  //       }
+                  //
+                  //       // FirebaseFirestore.instance
+                  //       //     .collection("employees")
+                  //       //     .doc(i.toString())
+                  //       //     .collection("employeeFullInformation")
+                  //       //     .doc("employeeData")
+                  //       //     .set(accessLevels.toMap(), SetOptions(merge: true));
+                  //     }
+                  //   },
+                  //   child: Text("Do"),
+                  // ),
+                  // ElevatedButton(
+                  //     onPressed: () async {
+                  //       log("Finiding count");
+                  //       var rawData = await FirebaseFirestore.instance
+                  //           .collection("counter")
+                  //           .doc("employee")
+                  //           .get();
+                  //       var data = rawData.data();
+                  //       log(rawData.data().toString());
+                  //     },
+                  //     child: Text("DO"))
                 ],
               ),
             ),
@@ -80,30 +169,12 @@ class HomePage extends StatelessWidget {
   }
 }
 
-// for (var employee in employees) {
-//   var id = employee[0];
-//   var name = employee[1];
-//   var phone = employee[2];
-//   var names = name.split(" ");
-//   Employee emp = Employee(
-//       id: id,
-//       firstName: names[0],
-//       lastName: getString(names.sublist(1)),
-//       phoneNumber: "+91" + phone,
-//       role: "Office Staff",
-//       shiftTiming: DateTime(0, 0, 0, 9),
-//       accessLevels: AccessLevels(
-//         attendence: true,
-//         booking: false,
-//       ));
-//   FirebaseFirestore.instance
-//       .collection("employees")
-//       .doc(id)
-//       .collection("employeeFullInformation")
-//       .doc("employeeData")
-//       .set(emp.toMap());
-//   print(emp.toMap().toString());
-// }
+getString(List<String> sublist) {
+  if (sublist.length != 0) {
+    return sublist[0];
+  }
+  return "";
+}
 
 // Future<String> getPDFlink({
 //   @required String email,
@@ -178,7 +249,8 @@ class HomePage extends StatelessWidget {
 //   var documentDirectory = await getTemporaryDirectory();
 //
 //   var file = File(join(
-//       documentDirectory.path, '${DateTime.now().microsecondsSinceEpoch}.pdf'));
+//       documentDirectory.path, '${DateTime.now().micr
+//   osecondsSinceEpoch}.pdf'));
 //
 //   print(1);
 //   file.writeAsBytesSync(response.bodyBytes);
@@ -187,4 +259,30 @@ class HomePage extends StatelessWidget {
 //   return file;
 // }
 
+// To parse this JSON data, do
+//
+//     final bookingModel = bookingModelFromMap(jsonString);
 
+class BookingModel {
+  BookingModel({
+    this.activity,
+    this.booking,
+    this.employee,
+  });
+
+  int activity;
+  int booking;
+  int employee;
+
+  factory BookingModel.fromMap(Map<String, dynamic> json) => BookingModel(
+        activity: json["activity"],
+        booking: json["booking"],
+        employee: json["employee"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "activity": activity,
+        "booking": booking,
+        "employee": employee,
+      };
+}

@@ -37,6 +37,8 @@ class EditBookingDetailsScreen extends StatelessWidget {
     logic.controller.countryCodeTED.text = bookingArg.pax[0]["countryCode"];
     logic.controller.phoneTED.text = bookingArg.pax[0]["phoneNumber"];
     logic.controller.emailTED.text = bookingArg.pax[0]["email"];
+    logic.controller.firstNameTED.text = bookingArg.pax[0]["first-name"];
+    logic.controller.lastNameTED.text = bookingArg.pax[0]["last-name"];
     logic.controller.isoCode = bookingArg.pax[0]["isoCode"];
     logic.controller.taxableAmount = bookingArg.tax;
     logic.controller.discount = bookingArg.discount;
@@ -60,135 +62,155 @@ class EditBookingDetailsScreen extends StatelessWidget {
       ),
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
-        child: SafeArea(
-          child:
-              GetBuilder<EditBookingDetailsController>(builder: (controller) {
-            return Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(30),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        buildActivityDropDown(),
-                        buildPriceTF(controller),
-                        buildPAXTF(controller),
-                        buildDiscount(),
-                        buildTax(),
-                        Container(
-                          width: 320,
-                          child: Row(
+        child: WillPopScope(
+          onWillPop: () async {
+            logic.controller.startDate =
+                logic.controller.startDate.subtract(Duration(days: 50));
+            return true;
+          },
+          child: SafeArea(
+            child:
+                GetBuilder<EditBookingDetailsController>(builder: (controller) {
+              return Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(30),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          buildActivityDropDown(),
+                          buildPriceTF(controller),
+                          Row(
                             children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 12),
-                                  child: Text(
-                                    "TotalCost" + "   :",
-                                    style: TextStyle(
-                                        fontSize: FontSize.small,
-                                        color: AppColors.text.darkgrey),
-                                  ),
-                                ),
-                              ),
                               Container(
-                                child: Text(
-                                  controller.bookingModel.totalCost.toString() +
-                                      "/-",
-                                  style: TextStyle(
-                                      fontSize: FontSize.textSize,
-                                      fontWeight: FontWeight.w600),
-                                ),
+                                width: (Get.width / 2) - 35,
+                                child: buildFirstName(controller),
+                              ),
+                              SizedBox(width: 10),
+                              Container(
+                                width: (Get.width / 2) - 35,
+                                child: buildLastName(controller),
                               ),
                             ],
                           ),
-                        ),
-                        buildDepositTF(controller),
-                        SizedBox(height: 20),
-                        Container(
-                          width: 320,
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(right: 12),
-                                  child: Text(
-                                    "Balance" + "   :",
-                                    style: TextStyle(
-                                        fontSize: FontSize.small,
-                                        color: AppColors.text.darkgrey),
+                          buildPAXTF(controller),
+                          buildDiscount(),
+                          buildTax(),
+                          Container(
+                            width: 320,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 12),
+                                    child: Text(
+                                      "TotalCost" + "   :",
+                                      style: TextStyle(
+                                          fontSize: FontSize.small,
+                                          color: AppColors.text.darkgrey),
+                                    ),
                                   ),
                                 ),
-                              ),
-                              Container(
-                                // width: 80,
-                                child: Text(
-                                  controller.bookingModel.balance.toString() +
-                                      "/-",
-                                  style: TextStyle(
-                                      fontSize: FontSize.textSize,
-                                      fontWeight: FontWeight.w600),
+                                Container(
+                                  child: Text(
+                                    controller.bookingModel.totalCost
+                                            .toString() +
+                                        "/-",
+                                    style: TextStyle(
+                                        fontSize: FontSize.textSize,
+                                        fontWeight: FontWeight.w600),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
-                        ),
-                        buildRemarksTF(controller),
-                        buildEmailTF(controller),
-                        SizedBox(height: 10),
-                        buildPhoneNumber(),
-                        SizedBox(height: 10),
-                        SizedBox(height: 100),
-                        buildEditSessions(
-                          controller,
-                          type: DateType.Theory,
-                        ),
-                        SizedBox(height: 30),
-                        buildEditSessions(
-                          controller,
-                          type: DateType.Pool,
-                        ),
-                        SizedBox(height: 30),
-                        buildEditSessions(
-                          controller,
-                          type: DateType.Dive,
-                        ),
-                        SizedBox(height: 100),
-                        // buildDateButton(
-                        //     date: controller.bookingModel.theoryDate[0],
-                        //     onTap: () {
-                        //       logic.onChooseTheorySessionPressed();
-                        //     },
-                        //     text: "Theory"),
-                        // buildDateButton(
-                        //     date: controller.bookingModel.poolDate[0],
-                        //     onTap: () {
-                        //       logic.onChoosePoolSessionPressed();
-                        //     },
-                        //     text: "Pool"),
-                        // buildDateButton(
-                        //     date: controller.bookingModel.diveDate[0],
-                        //     onTap: () {
-                        //       logic.onChooseDiveSessionPressed();
-                        //     },
-                        //     text: "Dive"),
-                      ],
+                          buildDepositTF(controller),
+                          SizedBox(height: 20),
+                          Container(
+                            width: 320,
+                            child: Row(
+                              children: [
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(right: 12),
+                                    child: Text(
+                                      "Balance" + "   :",
+                                      style: TextStyle(
+                                          fontSize: FontSize.small,
+                                          color: AppColors.text.darkgrey),
+                                    ),
+                                  ),
+                                ),
+                                Container(
+                                  // width: 80,
+                                  child: Text(
+                                    controller.bookingModel.balance.toString() +
+                                        "/-",
+                                    style: TextStyle(
+                                        fontSize: FontSize.textSize,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          buildRemarksTF(controller),
+                          buildEmailTF(controller),
+                          SizedBox(height: 10),
+                          buildPhoneNumber(),
+                          SizedBox(height: 50),
+                          buildEditSessions(
+                            controller,
+                            type: DateType.Theory,
+                          ),
+                          SizedBox(height: 30),
+                          buildEditSessions(
+                            controller,
+                            type: DateType.Pool,
+                          ),
+                          SizedBox(height: 30),
+                          buildEditSessions(
+                            controller,
+                            type: DateType.Dive,
+                          ),
+                          SizedBox(height: 100),
+                          // buildDateButton(
+                          //     date: controller.bookingModel.theoryDate[0],
+                          //     onTap: () {
+                          //       logic.onChooseTheorySessionPressed();
+                          //     },
+                          //     text: "Theory"),
+                          // buildDateButton(
+                          //     date: controller.bookingModel.poolDate[0],
+                          //     onTap: () {
+                          //       logic.onChoosePoolSessionPressed();
+                          //     },
+                          //     text: "Pool"),
+                          // buildDateButton(
+                          //     date: controller.bookingModel.diveDate[0],
+                          //     onTap: () {
+                          //       logic.onChooseDiveSessionPressed();
+                          //     },
+                          //     text: "Dive"),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                SizedBox(height: 50),
-                buildButtons(),
-                SizedBox(height: 50),
-                // SizedBox(height: 50),
-              ],
-            );
-          }),
+                  SizedBox(height: 50),
+                  buildButtons(),
+                  SizedBox(height: 50),
+                  // SizedBox(height: 50),
+                ],
+              );
+            }),
+          ),
         ),
       ),
     );
   }
 
-  Column buildEditSessions(EditBookingDetailsController controller,
+  Widget buildEditSessions(EditBookingDetailsController controller,
       {@required DateType type}) {
     String title = "";
     List<Widget> dates = [];
@@ -391,7 +413,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                           onDateTimeSelected: (date) {
                             selectedDiveDate = date;
                           },
-                          isDiveSession: false,
+                          isDiveSession: true,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -510,8 +532,8 @@ class EditBookingDetailsScreen extends StatelessWidget {
                                     controller.bookingModel.diveDate
                                         .add(selectedDate);
 
-                                  controller.bookingModel.bookingDate.add(getStringDate(selectedDate));
-
+                                  controller.bookingModel.bookingDate
+                                      .add(getStringDate(selectedDate));
 
                                   controller.update();
                                   Get.back();
@@ -553,6 +575,22 @@ class EditBookingDetailsScreen extends StatelessWidget {
         nextFocus: controller.emailNode);
   }
 
+  Widget buildFirstName(EditBookingDetailsController controller) {
+    return buildTextFields(
+        text: "First Name",
+        textEditingController: controller.firstNameTED,
+        focus: controller.firstNameNode,
+        nextFocus: controller.lastNameNode);
+  }
+
+  Widget buildLastName(EditBookingDetailsController controller) {
+    return buildTextFields(
+        text: "Last Name",
+        textEditingController: controller.lastNameTED,
+        focus: controller.lastNameNode,
+        nextFocus: controller.paxNode);
+  }
+
   Widget buildDepositTF(EditBookingDetailsController controller) {
     return buildTextFields(
       text: "Deposit",
@@ -570,7 +608,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
         }
       },
       focus: controller.depositNode,
-      nextFocus: controller.balanceNode,
+      nextFocus: controller.remarksNode,
     );
   }
 
@@ -623,7 +661,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
           }
         },
         focus: controller.priceNode,
-        nextFocus: controller.paxNode);
+        nextFocus: controller.firstNameNode);
   }
 
   Widget buildDiscount() {
@@ -638,7 +676,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                   hintText: "Discount",
                   controller: logic.controller.discountTED,
                   focusNode: logic.controller.discountNode,
-                  nextFocusNode: logic.controller.totalAmountNode,
+                  nextFocusNode: logic.controller.depositNode,
                   onChanged: logic.getPrice,
                   keyboardType: TextInputType.number,
                   required: false,
@@ -916,6 +954,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
         autoValidate: true,
         initialCountryCode: controller.isoCode,
         showCountryFlag: false,
+        focusNode: controller.phoneNode,
         initialValue: controller.phoneTED.text,
         decoration: InputDecoration(
           labelText: "Phone Number",
@@ -971,17 +1010,27 @@ class EditBookingDetailsScreen extends StatelessWidget {
                 print(controller.discount);
                 print(controller.taxableAmount);
                 controller.bookingModel.bookingDate = [];
-                if (controller.bookingModel.poolDate != null) {
-                  controller.bookingModel.bookingDate
-                      .add(getStringDate(controller.bookingModel.poolDate[0]));
+
+                if (controller.bookingModel.poolDate != null &&
+                    controller.bookingModel.poolDate.isNotEmpty) {
+                  controller.bookingModel.poolDate.forEach((date) {
+                    controller.bookingModel.bookingDate
+                        .add(getStringDate(date));
+                  });
                 }
-                if (controller.bookingModel.theoryDate != null) {
-                  controller.bookingModel.bookingDate.add(
-                      getStringDate(controller.bookingModel.theoryDate[0]));
+                if (controller.bookingModel.theoryDate != null &&
+                    controller.bookingModel.theoryDate.isNotEmpty) {
+                  controller.bookingModel.theoryDate.forEach((date) {
+                    controller.bookingModel.bookingDate
+                        .add(getStringDate(date));
+                  });
                 }
-                if (controller.bookingModel.diveDate != null) {
-                  controller.bookingModel.bookingDate
-                      .add(getStringDate(controller.bookingModel.diveDate[0]));
+                if (controller.bookingModel.diveDate != null &&
+                    controller.bookingModel.diveDate.isNotEmpty) {
+                  controller.bookingModel.diveDate.forEach((date) {
+                    controller.bookingModel.bookingDate
+                        .add(getStringDate(date));
+                  });
                 }
                 controller.bookingModel.tax = controller.taxableAmount;
                 controller.bookingModel.discount = controller.discount;
@@ -1000,6 +1049,10 @@ class EditBookingDetailsScreen extends StatelessWidget {
                     controller.countryCodeTED.text;
                 controller.bookingModel.pax[0]["email"] =
                     controller.emailTED.text;
+                controller.bookingModel.pax[0]["first-name"] =
+                    controller.firstNameTED.text;
+                controller.bookingModel.pax[0]["last-name"] =
+                    controller.lastNameTED.text;
                 controller.bookingModel.pax[0]["isoCode"] = controller.isoCode;
                 await FirebaseFirestore.instance
                     .collection("bookings")
@@ -1011,6 +1064,8 @@ class EditBookingDetailsScreen extends StatelessWidget {
                     BookingsCalenderWidgetLogic();
                 bookingCalenderLogic.onDateSelected(
                     bookingCalenderLogic.controller.lastDateIndex);
+                controller.startDate =
+                    controller.startDate.subtract(Duration(days: 50));
                 // controller.update();
               }),
         ],

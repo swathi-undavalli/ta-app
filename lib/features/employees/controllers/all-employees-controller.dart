@@ -2,12 +2,17 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/home/presentation/screens/home-page.dart';
 
 class AllEmployeesLogic {
   AllEmployeesController controller = Get.put(AllEmployeesController());
   void updateSearchList(String text) {
+    // controller.allEmployeesList = [];
     controller.suggestionsList = [];
+    print(
+        controller.allEmployeesList[controller.allEmployeesList.length - 1].id);
     controller.allEmployeesList.forEach((employee) {
       if (employee.firstName.toLowerCase().contains(text.toLowerCase()) ||
           employee.lastName.toLowerCase().contains(text.toLowerCase())) {
@@ -16,6 +21,19 @@ class AllEmployeesLogic {
     });
     controller.update();
   }
+
+  // count() async {
+  //   log("Finiding count");
+  //   var rawData = await FirebaseFirestore.instance
+  //       .collection("counter")
+  //       .doc("employee")
+  //       .get();
+  //   var data = rawData.data();
+  //   log(rawData.data().toString());
+  //   // controller.data = data["count"];
+  //   // print("===================${controller.data}");
+  // }
+
 }
 
 class AllEmployeesController extends GetxController {
@@ -32,8 +50,8 @@ class AllEmployeesController extends GetxController {
   ];
 
   List<Employee> allEmployeesList = [];
-  List<Employee> suggestionsList = [];
 
+  List<Employee> suggestionsList = [];
 
   TextEditingController optionsTEDDe = TextEditingController();
 
@@ -43,15 +61,21 @@ class AllEmployeesController extends GetxController {
 
   bool _showSuggestions = false;
 
+  int _data = 0;
 
   bool get showSuggestions => _showSuggestions;
+
+  int get data => _data;
+
+  set data(int value) {
+    _data = value;
+    update();
+  }
 
   set showSuggestions(bool value) {
     _showSuggestions = value;
     update();
   }
-
-
 }
 
 ///TODO :: CHECK PLEASE

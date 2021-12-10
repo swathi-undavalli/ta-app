@@ -15,7 +15,7 @@ import 'package:intl/intl.dart';
 
 class EmployeeDetailsScreen extends StatelessWidget {
   static const String id = "EmployeeDetailsScreen";
-  final employeeArgument = Get.arguments[0];
+  final employeeArgument = Get.arguments;
   AddAnUserLogic logic = AddAnUserLogic();
 
   @override
@@ -64,7 +64,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                       child: buildIcons(Icons.edit, () async {
                         if (await checkFirebase()) {
                           await Future.delayed(Duration(milliseconds: 300));
-                          Get.toNamed(AddAnUser.id);
+                          Get.toNamed(AddAnUser.id, arguments: true);
                         }
                       }),
                     ),

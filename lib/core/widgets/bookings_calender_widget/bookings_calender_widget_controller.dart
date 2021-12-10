@@ -359,7 +359,7 @@ class BookingsCalenderWidgetLogic {
         endHour = 12 + 5;
       else if (controller.calenderType == FilterType.Pool)
         endHour = 12 + 6;
-      else if (controller.calenderType == FilterType.Dive) endHour = 12 + 11;
+      else if (controller.calenderType == FilterType.Dive) endHour = 12 + 3;
     }
     var temp = DateTime(
       controller.selectedDate.year,

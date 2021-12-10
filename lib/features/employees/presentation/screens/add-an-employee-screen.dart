@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
@@ -12,6 +13,7 @@ import 'package:temple_adventures/features/employees/controllers/add-an-employee
 class AddAnUser extends StatelessWidget {
   static const String id = "AddAnUser";
   final AddAnUserLogic logic = AddAnUserLogic();
+  final bool isEdit = (Get.arguments) ?? false;
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +59,42 @@ class AddAnUser extends StatelessWidget {
                           ],
                         ),
                         buildShiftTimePicker(context),
-                        buildPhoneNumber(),
+                        IntlPhoneField(
+                          autoValidate: true,
+                          focusNode: logic.controller.phoneNumberNode,
+                          initialCountryCode: logic.controller.countryISoCOde,
+                          showCountryFlag: false,
+                          controller: logic.controller.phoneNumberTED,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.digitsOnly
+                          ],
+                          decoration: InputDecoration(
+                            labelText: "Phone Number",
+                            labelStyle: TextStyle(
+                              fontSize: FontSize.small,
+                              fontFamily: AppFonts.nunito,
+                            ),
+                          ),
+                          style: TextStyle(
+                            fontFamily: AppFonts.nunito,
+                            fontWeight: FontWeight.normal,
+                            fontSize: 14,
+                          ),
+                          searchText: "Search",
+                          onSubmitted: (_) {
+                            logic.controller.roleNode.requestFocus();
+                          },
+                          onChanged: (phone) {
+                            // logic.controller.phoneNumberTED.text = phone.number;
+                            logic.controller.countryCodeTED.text =
+                                phone.countryCode;
+                            logic.controller.countryISoCOde =
+                                phone.countryISOCode;
+                            print(phone.number);
+                            print(phone.countryISOCode);
+                            print(phone.countryCode);
+                          },
+                        ),
                         buildSubtitle("Role *"),
                         buildRolesList(),
                         buildSubtitle("Gender *"),
@@ -100,6 +137,7 @@ class AddAnUser extends StatelessWidget {
     );
   }
 
+  ///===============UI==============///
   Widget buildAccessLevels() {
     return GetBuilder<AddAnUserController>(builder: (controller) {
       return Column(
@@ -192,8 +230,6 @@ class AddAnUser extends StatelessWidget {
     });
   }
 
-  ///===============UI==============///
-
   Widget buildSwitch({String text, Function onChanged, bool switchValue}) {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
@@ -219,9 +255,12 @@ class AddAnUser extends StatelessWidget {
 
   Widget buildPhoneNumber() {
     return IntlPhoneField(
+      autoValidate: true,
+      focusNode: logic.controller.phoneNumberNode,
       initialCountryCode: logic.controller.countryISoCOde,
-      controller: logic.controller.phoneNumberTED,
       showCountryFlag: false,
+      controller: logic.controller.phoneNumberTED,
+      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(
         labelText: "Phone Number",
         labelStyle: TextStyle(
@@ -240,6 +279,7 @@ class AddAnUser extends StatelessWidget {
       onChanged: (phone) {
         logic.controller.phoneNumberTED.text = phone.number;
         logic.controller.countryCodeTED.text = phone.countryCode;
+        logic.controller.countryISoCOde = phone.countryISOCode;
         print(phone.number);
         print(phone.countryISOCode);
         print(phone.countryCode);
@@ -302,7 +342,7 @@ class AddAnUser extends StatelessWidget {
         hintText: 'Last Name',
         controller: logic.controller.lastNameTED,
         focusNode: logic.controller.lastNameNode,
-        nextFocusNode: logic.controller.employeeIdNode,
+        nextFocusNode: logic.controller.shiftTimeNode,
         required: false,
         errorValidator: () {
           return null;
@@ -322,7 +362,7 @@ class AddAnUser extends StatelessWidget {
         hintText: 'EmployeeID',
         controller: logic.controller.employeeIdTED,
         focusNode: logic.controller.employeeIdNode,
-        nextFocusNode: logic.controller.countryCodeNode,
+        nextFocusNode: logic.controller.firstNameNode,
         required: true,
         errorValidator: () {
           return null;
@@ -437,7 +477,10 @@ class AddAnUser extends StatelessWidget {
         textColor: AppColors.text.white,
         color: AppColors.background.black,
         onTap: () {
-          logic.onSubmit();
+          if (isEdit)
+            logic.updateEmployee();
+          else
+            logic.createEmployee();
         },
       ),
     );

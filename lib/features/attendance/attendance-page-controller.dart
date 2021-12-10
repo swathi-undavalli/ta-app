@@ -40,7 +40,9 @@ class AttendancePageLogic {
     for (int i = 0; i < data.docs.length; i++) {
       Map<String, dynamic> attendanceData = data.docs[i].data();
       var attandence = Attendance.fromMap(attendanceData);
-      controller.absentDates.add(attandence.LogTime.toDate());
+      print("============== ${data.docs[i].id}");
+      if (attandence.LogTime != null)
+        controller.absentDates.add(attandence.LogTime.toDate());
     }
     print(controller.absentDates);
     controller.update();

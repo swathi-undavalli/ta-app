@@ -45,19 +45,19 @@ class FirebaseApi {
     print("addNewBooking");
 
     DocumentReference counterRef =
-        FirebaseFirestore.instance.collection('counter').doc("booking");
+        FirebaseFirestore.instance.collection('counter').doc("count");
 
     var bookingId;
     await FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot counterSnapshot = await transaction.get(counterRef);
       Map<String, dynamic> data = counterSnapshot.data();
-      int newBookingID = data["count"] + 1;
+      int newBookingID = data["booking"] + 1;
       DocumentReference bookingRef = FirebaseFirestore.instance
           .collection('bookings')
           .doc(newBookingID.toString());
       booking.id = newBookingID.toString();
       transaction.set(bookingRef, booking.toMap());
-      transaction.update(counterRef, {'count': newBookingID});
+      transaction.update(counterRef, {'booking': newBookingID});
       bookingId = newBookingID;
       return newBookingID;
     });

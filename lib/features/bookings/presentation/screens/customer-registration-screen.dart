@@ -59,9 +59,7 @@ class CustomerRegistrationScreen extends StatelessWidget {
     );
   }
 
-
   ///===================UI===================///
-
 
   Widget buildPinCodeTextField() {
     return AppTextField(

@@ -69,6 +69,7 @@ class BookingScreen extends StatelessWidget {
                     },
                     showDetails: true,
                     startDate: DateTime.now().subtract(Duration(days: 50)),
+                    isDiveSession: true,
                   ),
                   SizedBox(
                     height: 200,

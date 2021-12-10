@@ -44,11 +44,12 @@ class EditBookingDetailsLogic {
             ),
             BookingsCalenderWidget(
               highlightInvalidTime: true,
-              startDate: DateTime.now(),
+              startDate: controller.startDate,
               calenderType: FilterType.Pool,
               onDateTimeSelected: (date) {
                 print("updated");
                 selectedDiveDate = date;
+
               },
             ),
             Row(
@@ -89,7 +90,6 @@ class EditBookingDetailsLogic {
 
   onChooseDiveSessionPressed() {
     DateTime selectedDiveDate = controller.bookingModel.diveDate[0];
-
     Get.defaultDialog(
       title: "",
       titlePadding: EdgeInsets.all(0),
@@ -111,7 +111,7 @@ class EditBookingDetailsLogic {
             ),
             BookingsCalenderWidget(
               highlightInvalidTime: true,
-              startDate: DateTime.now(),
+              startDate: controller.startDate,
               calenderType: FilterType.Dive,
               onDateTimeSelected: (date) {
                 selectedDiveDate = date;
@@ -156,7 +156,6 @@ class EditBookingDetailsLogic {
 
   onChooseTheorySessionPressed() {
     DateTime selectedDiveDate = controller.bookingModel.theoryDate[0];
-    DateTime now = DateTime.now();
     Get.defaultDialog(
       title: "",
       titlePadding: EdgeInsets.all(0),
@@ -178,7 +177,7 @@ class EditBookingDetailsLogic {
             ),
             BookingsCalenderWidget(
               highlightInvalidTime: true,
-              startDate: DateTime.now(),
+              startDate: controller.startDate,
               calenderType: FilterType.Theory,
               onDateTimeSelected: (date) {
                 selectedDiveDate = date;
@@ -347,8 +346,12 @@ class EditBookingDetailsController extends GetxController {
   TextEditingController priceTED = TextEditingController();
   TextEditingController discountTED = TextEditingController();
   TextEditingController totalAmountTED = TextEditingController();
+  TextEditingController firstNameTED = TextEditingController();
+  TextEditingController lastNameTED = TextEditingController();
 
   FocusNode activityNode = FocusNode();
+  FocusNode firstNameNode = FocusNode();
+  FocusNode lastNameNode = FocusNode();
   FocusNode discountNode = FocusNode();
   FocusNode priceNode = FocusNode();
   FocusNode totalAmountNode = FocusNode();
@@ -359,6 +362,8 @@ class EditBookingDetailsController extends GetxController {
   FocusNode phoneNode = FocusNode();
   FocusNode emailNode = FocusNode();
   FocusNode timeNode = FocusNode();
+
+  DateTime startDate = DateTime.now();
 
   String _isoCode;
 

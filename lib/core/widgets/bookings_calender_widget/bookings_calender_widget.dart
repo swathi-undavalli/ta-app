@@ -327,14 +327,18 @@ class BookingsCalenderWidget extends StatelessWidget {
                     child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                        text: DateFormat("hh:mm").format(date),
+                        text: (date.minute == 0)
+                            ? DateFormat("hh").format(date)
+                            : DateFormat("hh:mm").format(date),
                         style: TextStyle(
                             color: AppColors.text.black,
                             fontFamily: AppFonts.nunito,
                             fontSize: 10),
                         children: <TextSpan>[
                           TextSpan(
-                            text: DateFormat("\na").format(date),
+                            text: (date.minute == 0)
+                                ? DateFormat(" a").format(date)
+                                : DateFormat("\na").format(date),
                             style: TextStyle(fontSize: 6),
                           ),
                         ],
@@ -404,8 +408,10 @@ class BookingsCalenderWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
+                      print("======Started");
                       logic.controller.lastSelectedIndex = index;
                       logic.onDateSelected(index);
+                      // logic.scrollToIndex(index);
                     },
                     child: Container(
                       width: 60,

@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/repository/employee_repo.dart';
 import 'package:temple_adventures/core/services/data_persistance.dart';
+import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 
 class DashBoardScreenLogic {
@@ -12,7 +13,17 @@ class DashBoardScreenLogic {
 
   DashBoardScreenLogic() {
     getCurrentEmployee();
+    getCounterData();
     reloadAfter1Sec();
+  }
+  getCounterData() async {
+    var data = await FirebaseFirestore.instance
+        .collection("counter")
+        .doc("count")
+        .get();
+    counterModel = CounterModel.fromMap(data.data());
+    var count = counterModel.employee;
+    print(count);
   }
   reloadAfter1Sec() {
     log("reloadAfter1Sec");

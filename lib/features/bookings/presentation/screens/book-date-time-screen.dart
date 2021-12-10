@@ -28,7 +28,6 @@ class BookDateTime extends StatelessWidget {
                 SizedBox(height: 20),
                 buildActivityDropDown(),
                 SizedBox(height: 30),
-
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(

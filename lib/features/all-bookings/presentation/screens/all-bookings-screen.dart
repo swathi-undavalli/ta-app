@@ -39,7 +39,7 @@ class AllBookingsScreen extends StatelessWidget {
                     // buildAllBookings(),
                     buildBookings(),
                     // Spacer(),
-                    buildAllPages(),
+                    // buildAllPages(),
                     SizedBox(height: 30)
                   ],
                 );
@@ -61,7 +61,7 @@ class AllBookingsScreen extends StatelessWidget {
   //         mainAxisAlignment: MainAxisAlignment.start,
   //         crossAxisAlignment: CrossAxisAlignment.start,
   //         children: [
-  //           ...List.generate(controller.bookingCount,
+  //           ...List.generate(108,
   //               (index) => buildListTile((index + 1).toString())),
   //         ],
   //       ),
@@ -110,7 +110,12 @@ class AllBookingsScreen extends StatelessWidget {
     return GetBuilder<AllBookingsController>(builder: (controller) {
       return Padding(
         padding: const EdgeInsets.only(left: 15, right: 15, top: 8, bottom: 8),
-        child: BookingsExpansionPanel(items: controller.bookings),
+        child: BookingsExpansionPanel(
+          items: controller.bookings,
+          onDeletePressed: () {
+            logic.getBookings();
+          },
+        ),
       );
     });
   }
@@ -169,12 +174,12 @@ class AllBookingsScreen extends StatelessWidget {
     return GetBuilder<AllBookingsController>(builder: (controller) {
       if (controller.showLoading)
         return Container(
-          color: Colors.black54,
+          color: Colors.white,
           height: Get.height,
           width: Get.width,
           child: Center(
               child: CircularProgressIndicator(
-            color: Colors.white,
+            color: Colors.black,
           )),
         );
       else

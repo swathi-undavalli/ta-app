@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
+import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:intl/intl.dart';
 
@@ -13,14 +14,19 @@ class AddAnUserLogic {
   Employee employee;
   DateTime pickedTime = DateTime.now();
 
-  onSubmit() {
+  createEmployee() async {
     //TODO: Change.
+    var data = await FirebaseFirestore.instance
+        .collection("counter")
+        .doc("count")
+        .get();
+    CounterModel counterModel = CounterModel.fromMap(data.data());
     if (controller.firstNameTED.text != "" &&
         controller.employeeIdTED.text != "" &&
         controller.shiftTimeTED.text != "" &&
         controller.phoneNumberTED.text != "" &&
         controller.countryCodeTED.text != "" &&
-        controller.genderTED.text != "" &&
+        // controller.genderTED.text != "" &&
         controller.roleTED.text != "") {
       Employee employee = Employee(
         firstName: controller.firstNameTED.text,
@@ -47,6 +53,57 @@ class AddAnUserLogic {
           addActivity: controller.addActivity,
         ),
       );
+      // viewBookings: controller.viewBookings,
+      FirebaseFirestore.instance
+          .collection('employees')
+          .doc(employee.id)
+          .collection('employeeFullInformation')
+          .doc('employeeData')
+          .set(employee.toMap());
+      counterModel.employee++;
+      FirebaseFirestore.instance
+          .collection("counter")
+          .doc("count")
+          .set(counterModel.toMap());
+      Fluttertoast.showToast(msg: "Saved");
+      disposeKeyboard();
+      Get.back();
+      controller.reset();
+    } else {
+      Fluttertoast.showToast(msg: "Invalid Input");
+    }
+  }
+
+  updateEmployee() async {
+    if (controller.firstNameTED.text != "" &&
+        controller.employeeIdTED.text != "" &&
+        controller.shiftTimeTED.text != "") {
+      Employee employee = Employee(
+        firstName: controller.firstNameTED.text,
+        lastName: controller.lastNameTED.text,
+        id: controller.employeeIdTED.text,
+        phoneNumber: controller.phoneNumberTED.text,
+        countryCode: controller.countryCodeTED.text,
+        role: controller.roleTED.text,
+        gender: controller.genderTED.text,
+        shiftTiming: pickedTime,
+        countryIsoCode: controller.countryISoCOde,
+        accessLevels: AccessLevels(
+          viewBookings: controller.viewBookings,
+          createBookings: controller.createBookings,
+          editBookings: controller.editBookings,
+          viewEmployees: controller.viewEmployees,
+          createEmployees: controller.createEmployees,
+          editEmployees: controller.editEmployees,
+          personalProfileEdit: controller.personalProfileEdit,
+          personalAttendanceReport: controller.personalAttendanceReport,
+          attendanceReport: controller.attendanceReport,
+          weatherReport: controller.weatherReport,
+          editActivityPrices: controller.editActivityPrices,
+          addActivity: controller.addActivity,
+        ),
+      );
+      // viewBookings: controller.viewBookings,
       FirebaseFirestore.instance
           .collection('employees')
           .doc(employee.id)
@@ -56,10 +113,10 @@ class AddAnUserLogic {
       Fluttertoast.showToast(msg: "Saved");
       disposeKeyboard();
       Get.back();
+      controller.reset();
     } else {
       Fluttertoast.showToast(msg: "Invalid Input");
     }
-    controller.reset();
   }
 
   timePicker(context) {
@@ -148,7 +205,7 @@ class AddAnUserController extends GetxController {
     update();
   }
 
-  String _countryISoCOde;
+  String _countryISoCOde = "IN";
 
   List<String> get roles => _roles;
 
@@ -156,7 +213,6 @@ class AddAnUserController extends GetxController {
 
   set countryISoCOde(String value) {
     _countryISoCOde = value;
-    update();
   }
 
   set roles(List<String> value) {

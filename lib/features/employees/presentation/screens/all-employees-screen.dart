@@ -8,6 +8,7 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/employees/controllers/all-employees-controller.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/employee-details-screen.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
@@ -152,17 +153,21 @@ class AllEmployeesScreen extends StatelessWidget {
   }
 
   Widget buildAllEmployees() {
-    return GetBuilder<AllEmployeesController>(builder: (controller) {
-      controller.allEmployeesList = [];
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          ...List.generate(
-              43, (index) => buildListTile((index + 1).toString())),
-        ],
-      );
-    });
+    logic.controller.allEmployeesList = [];
+    getCount() {
+      if (counterModel != null && counterModel.employee != null)
+        return counterModel.employee;
+      return 46;
+    }
+
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ...List.generate(
+            getCount(), (index) => buildListTile((index + 1).toString())),
+      ],
+    );
   }
 
   FutureBuilder<DocumentSnapshot<Map<String, dynamic>>> buildListTile(
@@ -198,7 +203,9 @@ class AllEmployeesScreen extends StatelessWidget {
           Map<String, dynamic> employeeData = snapshot.data.data();
           var e = Employee.fromMap(employeeData);
           logic.controller.allEmployeesList.add(e);
-          print(logic.controller.allEmployeesList);
+          print(e.id);
+          // print("=============${logic.controller.allEmployeesList.length}");
+          // print(e);
           return buildEmployeeNames(e);
         });
   }
@@ -207,7 +214,7 @@ class AllEmployeesScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         // print("clicked");
-        Get.toNamed(EmployeeDetailsScreen.id, arguments: [e]);
+        Get.toNamed(EmployeeDetailsScreen.id, arguments: e);
       },
       child: Container(
         height: 47,

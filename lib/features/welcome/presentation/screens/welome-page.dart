@@ -63,7 +63,7 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
-  Widget buildHii() {
+ Widget buildHii() {
     return Container(
       width: Get.size.width,
       child: Text(

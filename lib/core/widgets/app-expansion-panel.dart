@@ -18,9 +18,10 @@ class BookingsExpansionPanel extends StatelessWidget {
   final ExpansionPanelLogic logic = ExpansionPanelLogic();
 
   final List<ItemModel> items;
+  Function onDeletePressed;
   List<Widget> expansions = [];
 
-  BookingsExpansionPanel({this.items}) {
+  BookingsExpansionPanel({this.items, this.onDeletePressed}) {
     logic.controller.isExpanded = [];
     for (int i = 0; i < items.length; i++) {
       logic.controller.isExpanded.add(false);
@@ -63,26 +64,31 @@ class BookingsExpansionPanel extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             // border: Border.all(color: AppColors.text.grey),
           ),
-          child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 6),
-            child: Column(
-              children: [
-                Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        itemModel.name.capitalizeFirst +
-                            " x " +
-                            (itemModel.pax.toString()),
-                        style: TextStyle(
-                            color: AppColors.text.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600),
-                      ),
-                      Spacer(),
-                      Material(
-                        color: getColor(),
-                        child: IconButton(
+          child: Container(
+            // color: getColor(),
+            decoration: BoxDecoration(
+              color: getColor(),
+              borderRadius: BorderRadius.circular(10),
+              // border: Border.all(color: AppColors.text.grey),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20),
+              child: Column(
+                children: [
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          itemModel.name.capitalizeFirst +
+                              " x " +
+                              (itemModel.pax.toString()),
+                          style: TextStyle(
+                              color: AppColors.text.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600),
+                        ),
+                        Spacer(),
+                        IconButton(
                           splashRadius: 20,
                           icon: Icon(Icons.call_rounded,
                               color: AppColors.background.black),
@@ -91,11 +97,8 @@ class BookingsExpansionPanel extends StatelessWidget {
                             makingPhoneCall(itemModel.phone);
                           },
                         ),
-                      ),
-                      EmployeeAccess(
-                        access: AccessRights.editBookings,
-                        child: Material(
-                          color: getColor(),
+                        EmployeeAccess(
+                          access: AccessRights.editBookings,
                           child: IconButton(
                             splashRadius: 20,
                             icon: Icon(Icons.delete,
@@ -137,6 +140,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                             .doc(itemModel.bookingModel.id)
                                             .delete();
                                         Get.back();
+                                        onDeletePressed();
                                         BookingsCalenderWidgetLogic
                                             bookingCalenderLogic =
                                             BookingsCalenderWidgetLogic();
@@ -153,27 +157,21 @@ class BookingsExpansionPanel extends StatelessWidget {
                             },
                           ),
                         ),
-                      ),
-                      EmployeeAccess(
-                        access: AccessRights.editBookings,
-                        child: Material(
-                          color: getColor(),
+                        EmployeeAccess(
+                          access: AccessRights.editBookings,
                           child: IconButton(
                             splashRadius: 20,
                             icon: Icon(Icons.edit,
                                 color: AppColors.background.black),
                             iconSize: 15,
                             onPressed: () {
-                               var model = itemModel.bookingModel;
+                              var model = itemModel.bookingModel;
                               Get.toNamed(EditBookingDetailsScreen.id,
                                   arguments: model);
                             },
                           ),
                         ),
-                      ),
-                      Material(
-                        color: getColor(),
-                        child: IconButton(
+                        IconButton(
                           splashRadius: 20,
                           icon: Icon(controller.isExpanded[i]
                               ? Icons.keyboard_arrow_up_rounded
@@ -185,36 +183,39 @@ class BookingsExpansionPanel extends StatelessWidget {
                             controller.update();
                           },
                         ),
-                      ),
-                    ]),
-                controller.isExpanded[i]
-                    ? FutureBuilder(
-                        future: Future.delayed(Duration(milliseconds: 200)),
-                        initialData: SizedBox(),
-                        builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done)
-                            return Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                buildKeyValuePairs(
-                                    "Activity", items[i].activity),
-                                buildKeyValuePairs("Deposit", items[i].paid),
-                                buildKeyValuePairs("Balance", items[i].balance),
-                                buildKeyValuePairs(
-                                    "PAX", items[i].pax.toString()),
-                                buildKeyValuePairs(
-                                    "Remarks", items[i].remarks.toString()),
-                                buildKeyValuePairs("Phone", items[i].phone),
-                                buildKeyValuePairs("Email", items[i].email),
-                                buildKeyValuePairs("Time", items[i].time),
-                                buildKeyValuePairs("Session", items[i].session),
-                              ],
-                            );
-                          return SizedBox();
-                        })
-                    : SizedBox(),
-              ],
+                      ]),
+                  controller.isExpanded[i]
+                      ? FutureBuilder(
+                          future: Future.delayed(Duration(milliseconds: 200)),
+                          initialData: SizedBox(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done)
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  buildKeyValuePairs(
+                                      "Activity", items[i].activity),
+                                  buildKeyValuePairs("Deposit", items[i].paid),
+                                  buildKeyValuePairs(
+                                      "Balance", items[i].balance),
+                                  buildKeyValuePairs(
+                                      "PAX", items[i].pax.toString()),
+                                  buildKeyValuePairs(
+                                      "Remarks", items[i].remarks.toString()),
+                                  buildKeyValuePairs("Phone", items[i].phone),
+                                  buildKeyValuePairs("Email", items[i].email),
+                                  buildKeyValuePairs("Time", items[i].time),
+                                  buildKeyValuePairs(
+                                      "Session", items[i].session),
+                                ],
+                              );
+                            return SizedBox();
+                          })
+                      : SizedBox(),
+                ],
+              ),
             ),
           ),
         ),
