@@ -1,3 +1,6 @@
+import 'dart:developer';
+import 'dart:math' as math;
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,7 +11,6 @@ import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/dummy.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
 
 class BookingsCalenderWidget extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
@@ -17,6 +19,8 @@ class BookingsCalenderWidget extends StatelessWidget {
   DateTime startDate;
   final bool highlightInvalidTime;
   final FilterType calenderType;
+  final AutoScrollController autoScrollController;
+
 
   BookingsCalenderWidget({
     @required this.onDateTimeSelected,
@@ -25,6 +29,7 @@ class BookingsCalenderWidget extends StatelessWidget {
     this.startDate,
     this.highlightInvalidTime = false,
     this.calenderType,
+    @required this.autoScrollController,
   }) {
     print("new instance");
     if (startDate == null) startDate = DateTime.now();
@@ -36,16 +41,31 @@ class BookingsCalenderWidget extends StatelessWidget {
     logic.getDates();
     if (showDetails)
       EmployeeAccess.run(
-          function: autoCenter, access: AccessRights.viewBookings);
+          function: autoCenterDaySelector, access: AccessRights.viewBookings);
+    else
+      EmployeeAccess.run(
+          function: scrollToSelectedDate, access: AccessRights.viewBookings);
   }
 
-  Future<void> autoCenter() async {
-    await Future.delayed(Duration(microseconds: 500));
-    logic.scrollToIndex(50);
-    logic.onDateSelected(50);
+  scrollToIndex(int index) {
+  autoScrollController
+        .scrollToIndex(index, preferPosition: AutoScrollPosition.middle);
   }
 
   final BookingsCalenderWidgetLogic logic = BookingsCalenderWidgetLogic();
+
+  Future<void> autoCenterDaySelector() async {
+    await Future.delayed(Duration(microseconds: 500));
+    scrollToIndex(50);
+    logic.onDateSelected(50);
+  }
+
+  Future<void> scrollToSelectedDate() async {
+    await Future.delayed(Duration(microseconds: 500));
+    int index = startDate.difference(logic.controller.selectedDate).inDays;
+    log("index === ${index.abs()}");
+    scrollToIndex(index.abs());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -396,12 +416,12 @@ class BookingsCalenderWidget extends StatelessWidget {
         width: Get.width,
         child: ListView.builder(
             itemCount: 400,
-            controller: controller.autoScrollController,
+            controller: autoScrollController,
             scrollDirection: Axis.horizontal,
             physics: BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               return AutoScrollTag(
-                controller: controller.autoScrollController,
+                controller: autoScrollController,
                 key: ValueKey(index),
                 index: index,
                 child: Padding(

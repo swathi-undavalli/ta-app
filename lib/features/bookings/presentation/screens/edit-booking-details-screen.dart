@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
@@ -21,6 +22,10 @@ class EditBookingDetailsScreen extends StatelessWidget {
   EditBookingDetailsLogic logic = EditBookingDetailsLogic();
   final BookingModel bookingArg = Get.arguments;
   ExpansionPanelLogic expansionPanelLogic = ExpansionPanelLogic();
+  final AutoScrollController autoScrollControllerThoery =
+      AutoScrollController();
+  final AutoScrollController autoScrollControllerPool = AutoScrollController();
+  final AutoScrollController autoScrollControllerDive = AutoScrollController();
 
   EditBookingDetailsScreen() {
     expansionPanelLogic.controller.bookingModel = bookingArg;
@@ -214,8 +219,12 @@ class EditBookingDetailsScreen extends StatelessWidget {
       {@required DateType type}) {
     String title = "";
     List<Widget> dates = [];
+    FilterType filterType;
+    AutoScrollController scrollController;
     if (type == DateType.Theory) {
       title = "Theory";
+      filterType = FilterType.Theory;
+      scrollController = autoScrollControllerThoery;
       dates = controller.bookingModel.theoryDate
           .map(
             (e) => buildDateButton(
@@ -243,6 +252,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                           ),
                         ),
                         BookingsCalenderWidget(
+                          autoScrollController: autoScrollControllerThoery,
                           highlightInvalidTime: true,
                           startDate: DateTime.now(),
                           calenderType: FilterType.Theory,
@@ -296,8 +306,11 @@ class EditBookingDetailsScreen extends StatelessWidget {
             ),
           )
           .toList();
-    } else if (type == DateType.Pool) {
+    }
+    if (type == DateType.Pool) {
       title = "Pool";
+      filterType = FilterType.Pool;
+      scrollController = autoScrollControllerPool;
       dates = controller.bookingModel.poolDate
           .map(
             (e) => buildDateButton(
@@ -325,6 +338,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                           ),
                         ),
                         BookingsCalenderWidget(
+                          autoScrollController: scrollController,
                           highlightInvalidTime: true,
                           startDate: DateTime.now(),
                           calenderType: FilterType.Pool,
@@ -378,8 +392,11 @@ class EditBookingDetailsScreen extends StatelessWidget {
             ),
           )
           .toList();
-    } else if (type == DateType.Dive) {
+    }
+    if (type == DateType.Dive) {
       title = "Dive";
+      filterType = FilterType.Dive;
+      scrollController = autoScrollControllerDive;
       dates = controller.bookingModel.diveDate
           .map(
             (e) => buildDateButton(
@@ -408,6 +425,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                         ),
                         BookingsCalenderWidget(
                           highlightInvalidTime: true,
+                          autoScrollController: scrollController,
                           startDate: DateTime.now(),
                           calenderType: FilterType.Dive,
                           onDateTimeSelected: (date) {
@@ -496,13 +514,14 @@ class EditBookingDetailsScreen extends StatelessWidget {
                           ),
                         ),
                         BookingsCalenderWidget(
+                          autoScrollController: scrollController,
                           highlightInvalidTime: true,
                           startDate: DateTime.now(),
-                          calenderType: FilterType.Pool,
+                          calenderType: filterType,
                           onDateTimeSelected: (date) {
                             selectedDate = date;
                           },
-                          isDiveSession: false,
+                          isDiveSession: filterType == FilterType.Dive,
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,

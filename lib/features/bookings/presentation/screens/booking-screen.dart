@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
@@ -13,11 +14,23 @@ import 'dart:developer';
 class BookingScreen extends StatelessWidget {
   static const String id = "BookingPage";
   final BookingScreenLogic logic = BookingScreenLogic();
+  final AutoScrollController autoScrollController = AutoScrollController();
   var bookings = [DateTime.now()];
   BookingsCalenderWidgetLogic calenderLogic = BookingsCalenderWidgetLogic();
 
+  BookingsCalenderWidget bookingsCalenderWidget;
+
   @override
   Widget build(BuildContext context) {
+    bookingsCalenderWidget = BookingsCalenderWidget(
+      onDateTimeSelected: (DateTime selectedDate) {
+        print(selectedDate.toString());
+      },
+      autoScrollController: autoScrollController,
+      showDetails: true,
+      startDate: DateTime.now().subtract(Duration(days: 50)),
+      isDiveSession: true,
+    );
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
       floatingActionButton: EmployeeAccess(
@@ -36,7 +49,7 @@ class BookingScreen extends StatelessWidget {
         onRefresh: () async {
           if (calenderLogic.controller.lastSelectedIndex == null)
             calenderLogic.controller.lastSelectedIndex = 50;
-          calenderLogic
+          bookingsCalenderWidget
               .scrollToIndex(calenderLogic.controller.lastSelectedIndex);
           await calenderLogic
               .onDateSelected(calenderLogic.controller.lastSelectedIndex);
@@ -67,6 +80,7 @@ class BookingScreen extends StatelessWidget {
                     onDateTimeSelected: (DateTime selectedDate) {
                       print(selectedDate.toString());
                     },
+                    autoScrollController: autoScrollController,
                     showDetails: true,
                     startDate: DateTime.now().subtract(Duration(days: 50)),
                     isDiveSession: true,
@@ -145,10 +159,10 @@ class BookingScreen extends StatelessWidget {
       var dif = controller.startDate.difference(selected).inDays;
       if (dif < 0) {
         dif = dif * -1;
-        calenderLogic.scrollToIndex(dif);
+        // calenderLogic.scrollToIndex(dif);
       } else
-        calenderLogic.scrollToIndex(dif);
-      calenderLogic.onDateSelected(dif);
+        // calenderLogic.scrollToIndex(dif);
+        calenderLogic.onDateSelected(dif);
 
       log("=============$dif");
       controller.selectedDate = selected;

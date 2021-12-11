@@ -150,10 +150,7 @@ class BookingsCalenderWidgetLogic {
   // AppExpansionPanelController appExpansionPanelController =
   //     Get.put(AppExpansionPanelController());
 
-  scrollToIndex(int index) {
-    controller.autoScrollController
-        .scrollToIndex(index, preferPosition: AutoScrollPosition.middle);
-  }
+
 
   getBookings(DateTime date) async {
     print("getBookings");
@@ -425,7 +422,9 @@ class BookingsCalenderWidgetController extends GetxController {
   bool isDiveSession;
 
   FilterType calenderType;
-  AutoScrollController autoScrollController = AutoScrollController();
+
+  // AutoScrollController autoScrollController = AutoScrollController();
+  // AutoScrollController autoScrollController;
 
   get selectedDate => _selectedDate;
 
