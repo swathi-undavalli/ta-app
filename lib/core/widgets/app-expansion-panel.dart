@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -11,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/edit-booking-details-screen.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -166,7 +168,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                             iconSize: 15,
                             onPressed: () {
                               var model = itemModel.bookingModel;
-                              Get.toNamed(EditBookingDetailsScreen.id,
+                              Get.toNamed(EditBookingNewScreen.id,
                                   arguments: model);
                             },
                           ),
@@ -202,6 +204,11 @@ class BookingsExpansionPanel extends StatelessWidget {
                                       "Balance", items[i].balance),
                                   buildKeyValuePairs(
                                       "PAX", items[i].pax.toString()),
+                                  ((items[i] != null) &&
+                                          (items[i].receiptNo != null))
+                                      ? buildKeyValuePairs(
+                                          "Invoice no", items[i].receiptNo)
+                                      : buildKeyValuePairs("Invoice no", "-"),
                                   buildKeyValuePairs(
                                       "Remarks", items[i].remarks.toString()),
                                   buildKeyValuePairs("Phone", items[i].phone),
@@ -236,7 +243,7 @@ class BookingsExpansionPanel extends StatelessWidget {
     return Row(
       children: [
         SizedBox(
-          width: 70,
+          width: 80,
           child: Text(
             key,
             style: TextStyle(
@@ -290,6 +297,7 @@ class ItemModel {
   final String remarks;
   final int pax;
   final bool registration;
+  final String receiptNo;
   BookingModel bookingModel;
 
   ItemModel(
@@ -302,6 +310,7 @@ class ItemModel {
       @required this.date,
       @required this.cost,
       @required this.paid,
+      @required this.receiptNo,
       @required this.balance,
       @required this.remarks,
       @required this.registration,
@@ -365,6 +374,7 @@ class ItemModel {
       return d.substring(0, d.length - 2);
     }
 
+    log(bookingModel.balance.toString());
     return ItemModel(
       phone: bookingModel.pax[0]["countryCode"] +
           bookingModel.pax[0]["phoneNumber"],
@@ -376,6 +386,7 @@ class ItemModel {
       paid: bookingModel.payingNow.toString(),
       balance: bookingModel.balance.toString(),
       registration: true,
+      receiptNo: bookingModel.receiptNo,
       name: bookingModel.pax[0]["first-name"],
       pax: bookingModel.noOfPersons,
       email: bookingModel.pax[0]["email"],

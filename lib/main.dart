@@ -20,6 +20,7 @@ import 'package:temple_adventures/features/bookings/presentation/screens/paper_w
 import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
 import 'package:temple_adventures/features/compressor/presentation/compressor.dart';
 import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
+import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
@@ -89,6 +90,7 @@ class MyApp extends StatelessWidget {
           NewBookingScreen.id: (context) => NewBookingScreen(),
           AttendancePage.id: (context) => AttendancePage(),
           LoginScreen.id: (context) => LoginScreen(),
+          EditBookingNewScreen.id: (context) => EditBookingNewScreen(),
           WelcomeScreen.id: (context) => WelcomeScreen(),
           DashBoardScreen.id: (context) => DashBoardScreen(),
           AddAnUser.id: (context) => AddAnUser(),

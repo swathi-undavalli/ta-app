@@ -29,21 +29,40 @@ class AllBookingsScreen extends StatelessWidget {
             elevation: 0,
             backgroundColor: AppColors.background.white,
           ),
-          body: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: SafeArea(
-              child: GetBuilder<AllBookingsController>(builder: (controller) {
-                return Column(
+          body: SafeArea(
+            child: Stack(
+              children: [
+                Column(
                   children: [
                     SizedBox(height: 20),
+                    buildSearchBar(),
                     // buildAllBookings(),
-                    buildBookings(),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          logic.controller.showSuggestions = false;
+                        },
+                        child: SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 20, bottom: 20),
+                            child: Column(
+                              children: [
+                                SizedBox(height: 10),
+                                buildBookings(),
+                                SizedBox(height: 10),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
                     // Spacer(),
                     // buildAllPages(),
-                    SizedBox(height: 30)
                   ],
-                );
-              }),
+                ),
+                buildSuggestions(),
+              ],
             ),
           ),
         ),
@@ -105,6 +124,60 @@ class AllBookingsScreen extends StatelessWidget {
   //         }
   //       });
   // }
+  Widget buildSuggestions() {
+    return GetBuilder<AllBookingsController>(builder: (controller) {
+      if (controller.showSuggestions)
+        return Positioned(
+          child: Container(
+            constraints: BoxConstraints(
+              minHeight: 100,
+              maxHeight: 300,
+              minWidth: 328,
+              maxWidth: 328,
+            ),
+            margin: EdgeInsets.only(
+              top: 65,
+              left: (Get.width - 328) / 2,
+              // right: 100,
+            ),
+            decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(10),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.grey.withOpacity(0.5),
+                    spreadRadius: 2,
+                    blurRadius: 10,
+                    offset: Offset(0, 5), // changes position of shadow
+                  ),
+                ]),
+            padding: const EdgeInsets.only(top: 10),
+            child: controller.suggestionsList.isEmpty
+                ? Container(
+                    height: 100,
+                    child: Center(
+                      child: Text("No results found"),
+                    ),
+                  )
+                : SingleChildScrollView(
+                    child: Column(
+                      children: controller.suggestionsList
+                          .map(
+                            (e) => BookingsExpansionPanel(
+                              items: [e],
+                              onDeletePressed: () {
+                                logic.getBookings();
+                              },
+                            ),
+                          )
+                          .toList(),
+                    ),
+                  ),
+          ),
+        );
+      return SizedBox();
+    });
+  }
 
   Widget buildBookings() {
     return GetBuilder<AllBookingsController>(builder: (controller) {
@@ -168,6 +241,50 @@ class AllBookingsScreen extends StatelessWidget {
         ),
       );
     });
+  }
+
+  Widget buildSearchBar() {
+    return Container(
+      width: 328,
+      height: 47,
+      decoration: BoxDecoration(
+          color: AppColors.background.white,
+          borderRadius: BorderRadius.circular(5)),
+      child: Container(
+        margin: EdgeInsets.only(left: 15, right: 15),
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            Icon(Icons.search, color: AppColors.text.darkgrey),
+            SizedBox(width: 15),
+            Container(
+              width: 240,
+              child: TextField(
+                decoration: InputDecoration(
+                    enabledBorder:
+                        OutlineInputBorder(borderSide: BorderSide.none),
+                    focusedBorder:
+                        OutlineInputBorder(borderSide: BorderSide.none),
+                    disabledBorder:
+                        OutlineInputBorder(borderSide: BorderSide.none),
+                    hintText: 'Search...',
+                    hintStyle:
+                        TextStyle(fontSize: FontSize.textSize, height: 1)),
+                controller: logic.controller.searchTED,
+                onChanged: (text) {
+                  if (text.isNotEmpty) {
+                    logic.controller.showSuggestions = true;
+                    logic.updateSearchList(text);
+                  } else {
+                    logic.controller.showSuggestions = false;
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   Widget buildShowLoading() {

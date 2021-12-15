@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:get/get_utils/src/extensions/double_extensions.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 
 BookingModel bookingModelFromMap(String str) =>
@@ -112,43 +113,43 @@ class BookingModel {
     /// Deduct Discount
     if (discountType != null) {
       if (discountType == "%")
-        balance -= balance * discount / 100;
+        balance -= balance * (discount / 100);
       else
         balance = balance - discount;
     }
 
     /// Add Tax
     if (tax != null && tax != 0) {
-      balance += balance * tax / 100;
+      balance += balance * (tax / 100);
     }
 
     /// Deduct paying now
     if (payingNow != null) {
       balance -= payingNow;
     }
-    return balance;
+    return balance.toPrecision(2);
   }
 
   double get totalCost {
     print("================");
-    // print(price);
-    // print(noOfPersons);
-    // print(discountType);
-    // print(discount);
-    // print(tax);
+    print(price);
+    print(noOfPersons);
+    print(discountType);
+    print(discount);
+    print(tax);
     double total = price;
     total = total * (noOfPersons ?? 1);
-    // print("================");
-    // print(price);
-    // print(noOfPersons);
-    // print(discountType);
-    // print(discount);
-    // print(tax);
+    print("================ended");
+    print(price);
+    print(noOfPersons);
+    print(discountType);
+    print(discount);
+    print(tax);
 
     /// Deduct Discount
     if (discountType != null) {
       if (discountType == "%")
-        total -= total * discount / 100;
+        total -= total * (discount / 100);
       else
         total = total - discount;
       print("total $total");
@@ -157,8 +158,9 @@ class BookingModel {
 
     /// Add Tax
     if (tax != null && tax != 0) {
-      total += total * tax / 100;
+      total += total * (tax / 100);
     }
+    print(tax);
     print(total);
     return total;
   }

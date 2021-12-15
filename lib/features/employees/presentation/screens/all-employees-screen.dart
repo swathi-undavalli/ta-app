@@ -165,7 +165,11 @@ class AllEmployeesScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ...List.generate(
-            getCount(), (index) => buildListTile((index + 1).toString())),
+          getCount(),
+          (index) => buildListTile(
+            (index + 1).toString(),
+          ),
+        ),
       ],
     );
   }

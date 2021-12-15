@@ -49,7 +49,6 @@ class EditBookingDetailsLogic {
               onDateTimeSelected: (date) {
                 print("updated");
                 selectedDiveDate = date;
-
               },
             ),
             Row(
@@ -452,21 +451,7 @@ class EditBookingDetailsController extends GetxController {
     remarksTED.text = "";
     emailTED.text = "";
     _isoCode = null;
-    phoneTED.text = "";}
-
-  allReset() {
-    activityNAmeTED.text = "";
-    priceTED.text = "";
-    paxTED.text = "";
-    discountTED.text = "";
-    discountSwitch = true;
-    taxable = false;
-    totalAmountTED.text = "";
-    depositTED.text = "";
-    balanceTED.text = "";
-    remarksTED.text = "";
-    // emailTED.text = "";
-    // _isoCode = null;
-    // phoneTED.text = "";
+    phoneTED.text = "";
   }
+
 }

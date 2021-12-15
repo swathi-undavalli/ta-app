@@ -433,7 +433,12 @@ class NewBookingScreen extends StatelessWidget {
                   switchValue: controller.taxable,
                   onChanged: (value) {
                     controller.taxable = value;
-                    logic.getPrice();
+                    if (value)
+                      controller.bookingModel.tax = 18;
+                    else
+                      controller.bookingModel.tax = 0;
+                    print("ajxbkk");
+                    controller.update();
                   }),
             ),
           ],

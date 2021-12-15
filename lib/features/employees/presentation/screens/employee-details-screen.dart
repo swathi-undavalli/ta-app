@@ -7,6 +7,7 @@ import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
+import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/employees/controllers/add-an-employee-controller.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
@@ -107,6 +108,11 @@ class EmployeeDetailsScreen extends StatelessWidget {
                                         .collection("employeeFullInformation")
                                         .doc("employeeData")
                                         .delete();
+                                    counterModel.employee--;
+                                    FirebaseFirestore.instance
+                                        .collection("counter")
+                                        .doc("count")
+                                        .set(counterModel.toMap());
                                     Get.back();
                                   },
                                 ),

@@ -10,6 +10,7 @@ import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
+import 'package:temple_adventures/features/all-bookings/controller/all-bookings-controller.dart';
 import 'package:temple_adventures/features/bookings/controller/edit-booking-details-controller.dart';
 import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
@@ -22,13 +23,13 @@ class EditBookingDetailsScreen extends StatelessWidget {
   EditBookingDetailsLogic logic = EditBookingDetailsLogic();
   final BookingModel bookingArg = Get.arguments;
   ExpansionPanelLogic expansionPanelLogic = ExpansionPanelLogic();
-  final AutoScrollController autoScrollControllerThoery =
+  final AutoScrollController autoScrollControllerTheory =
       AutoScrollController();
   final AutoScrollController autoScrollControllerPool = AutoScrollController();
   final AutoScrollController autoScrollControllerDive = AutoScrollController();
-
+  // AllBookingsLogic allBookingsLogic = AllBookingsLogic();
   EditBookingDetailsScreen() {
-    expansionPanelLogic.controller.bookingModel = bookingArg;
+    // expansionPanelLogic.controller.bookingModel = bookingArg;
     logic.controller.bookingModel = bookingArg;
     logic.controller.activityNAmeTED.text =
         bookingArg.activity[0].name.toString();
@@ -69,6 +70,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
         physics: BouncingScrollPhysics(),
         child: WillPopScope(
           onWillPop: () async {
+            logic.controller.reset();
             logic.controller.startDate =
                 logic.controller.startDate.subtract(Duration(days: 50));
             return true;
@@ -224,7 +226,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
     if (type == DateType.Theory) {
       title = "Theory";
       filterType = FilterType.Theory;
-      scrollController = autoScrollControllerThoery;
+      scrollController = autoScrollControllerTheory;
       dates = controller.bookingModel.theoryDate
           .map(
             (e) => buildDateButton(
@@ -252,7 +254,7 @@ class EditBookingDetailsScreen extends StatelessWidget {
                           ),
                         ),
                         BookingsCalenderWidget(
-                          autoScrollController: autoScrollControllerThoery,
+                          autoScrollController: autoScrollControllerTheory,
                           highlightInvalidTime: true,
                           startDate: DateTime.now(),
                           calenderType: FilterType.Theory,
@@ -683,6 +685,114 @@ class EditBookingDetailsScreen extends StatelessWidget {
         nextFocus: controller.firstNameNode);
   }
 
+  // Widget buildDiscount() {
+  //   return Container(
+  //     width: 320,
+  //     child: GetBuilder<EditBookingDetailsController>(builder: (controller) {
+  //       return Row(
+  //         children: [
+  //           Expanded(
+  //             child: Container(
+  //               child: AppTextField(
+  //                 hintText: "Discount",
+  //                 controller: logic.controller.discountTED,
+  //                 focusNode: logic.controller.discountNode,
+  //                 nextFocusNode: logic.controller.depositNode,
+  //                 onChanged: logic.getPrice,
+  //                 keyboardType: TextInputType.number,
+  //                 required: false,
+  //                 errorValidator: () {
+  //                   return null;
+  //                 },
+  //                 onChangedCallBack: (discount) {
+  //                   try {
+  //                     controller.bookingModel.discount = double.parse(discount);
+  //                   } catch (e) {
+  //                     controller.bookingModel.discount = 0;
+  //                   }
+  //                 },
+  //                 validator: (firstName) {
+  //                   return null;
+  //                   // return Validator.validateName(firstName);
+  //                 },
+  //               ),
+  //             ),
+  //           ),
+  //           SizedBox(
+  //             width: 30,
+  //           ),
+  //           Row(
+  //             children: [
+  //               Text(
+  //                 "₹",
+  //                 style: TextStyle(
+  //                     fontSize: 17,
+  //                     color: !controller.discountSwitch
+  //                         ? AppColors.text.skyBlue
+  //                         : AppColors.text.grey),
+  //               ),
+  //               Container(
+  //                 width: 70,
+  //                 height: 75,
+  //                 child: buildSwitch(
+  //                     text: "",
+  //                     switchValue: controller.discountSwitch,
+  //                     onChanged: (value) {
+  //                       controller.discountSwitch = value;
+  //                       logic.getPrice();
+  //                       controller.bookingModel.discount =
+  //                           double.parse(controller.discountTED.text);
+  //                       controller.bookingModel.discountType =
+  //                           controller.discountSwitch ? "%" : "₹";
+  //                       print("VALUE : ${controller.discountSwitch}");
+  //                       controller.update();
+  //                     }),
+  //               ),
+  //               Text(
+  //                 "%",
+  //                 style: TextStyle(
+  //                     fontSize: 15,
+  //                     color: controller.discountSwitch
+  //                         ? AppColors.text.skyBlue
+  //                         : AppColors.text.grey),
+  //               ),
+  //             ],
+  //           ),
+  //         ],
+  //       );
+  //     }),
+  //   );
+  // }
+  //
+  // Widget buildTax() {
+  //   return Container(
+  //     width: 320,
+  //     child: GetBuilder<EditBookingDetailsController>(builder: (controller) {
+  //       return Row(
+  //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //         children: [
+  //           Text(
+  //             "Tax",
+  //             style: TextStyle(fontSize: 12, color: AppColors.text.darkgrey),
+  //           ),
+  //           Container(
+  //             width: 70,
+  //             height: 75,
+  //             child: buildSwitch(
+  //                 text: "",
+  //                 switchValue: controller.taxable,
+  //                 onChanged: (value) {
+  //                   controller.bookingModel.tax = value ? 18 : 0;
+  //                   controller.taxable = value;
+  //                   logic.getPrice();
+  //                 }),
+  //           ),
+  //         ],
+  //       );
+  //     }),
+  //   );
+  // }
+
   Widget buildDiscount() {
     return Container(
       width: 320,
@@ -695,8 +805,8 @@ class EditBookingDetailsScreen extends StatelessWidget {
                   hintText: "Discount",
                   controller: logic.controller.discountTED,
                   focusNode: logic.controller.discountNode,
-                  nextFocusNode: logic.controller.depositNode,
-                  onChanged: logic.getPrice,
+                  nextFocusNode: logic.controller.totalAmountNode,
+                  // onChanged: logic.getPrice,
                   keyboardType: TextInputType.number,
                   required: false,
                   errorValidator: () {
@@ -704,7 +814,9 @@ class EditBookingDetailsScreen extends StatelessWidget {
                   },
                   onChangedCallBack: (discount) {
                     try {
+                      controller.discount = double.parse(controller.discountTED.text);
                       controller.bookingModel.discount = double.parse(discount);
+                      print(discount);
                     } catch (e) {
                       controller.bookingModel.discount = 0;
                     }
@@ -762,6 +874,35 @@ class EditBookingDetailsScreen extends StatelessWidget {
     );
   }
 
+  Widget buildTax() {
+    return Container(
+      width: 320,
+      child: GetBuilder<EditBookingDetailsController>(builder: (controller) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "Tax",
+              style: TextStyle(fontSize: 12, color: AppColors.text.darkgrey),
+            ),
+            Container(
+              width: 70,
+              height: 75,
+              child: buildSwitch(
+                  text: "",
+                  switchValue: controller.taxable,
+                  onChanged: (value) {
+                    controller.bookingModel.tax = value ? 18 : 0;
+                    controller.taxable = value;
+                    logic.getPrice();
+                  }),
+            ),
+          ],
+        );
+      }),
+    );
+  }
+
   Widget buildTitle() {
     return GetBuilder<EditBookingDetailsController>(builder: (controller) {
       return Text(
@@ -794,35 +935,6 @@ class EditBookingDetailsScreen extends StatelessWidget {
           inactiveThumbColor: AppColors.text.grey,
         ),
       ],
-    );
-  }
-
-  Widget buildTax() {
-    return Container(
-      width: 320,
-      child: GetBuilder<EditBookingDetailsController>(builder: (controller) {
-        return Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "Tax",
-              style: TextStyle(fontSize: 12, color: AppColors.text.darkgrey),
-            ),
-            Container(
-              width: 70,
-              height: 75,
-              child: buildSwitch(
-                  text: "",
-                  switchValue: controller.taxable,
-                  onChanged: (value) {
-                    controller.bookingModel.tax = value ? 18 : 0;
-                    controller.taxable = value;
-                    logic.getPrice();
-                  }),
-            ),
-          ],
-        );
-      }),
     );
   }
 
@@ -1026,8 +1138,8 @@ class EditBookingDetailsScreen extends StatelessWidget {
               text: "Update",
               textColor: AppColors.text.white,
               onTap: () async {
-                print(controller.discount);
-                print(controller.taxableAmount);
+                print("=======================${controller.discount}");
+                print("=======================${controller.taxableAmount}");
                 controller.bookingModel.bookingDate = [];
 
                 if (controller.bookingModel.poolDate != null &&
@@ -1051,8 +1163,11 @@ class EditBookingDetailsScreen extends StatelessWidget {
                         .add(getStringDate(date));
                   });
                 }
-                controller.bookingModel.tax = controller.taxableAmount;
-                controller.bookingModel.discount = controller.discount;
+                // controller.bookingModel.tax = controller.taxableAmount;
+                // controller.bookingModel.discount = controller.discount;
+                controller.bookingModel.tax = controller.bookingModel.tax;
+                controller.bookingModel.discount =
+                    controller.bookingModel.discount;
                 controller.bookingModel.discountType =
                     controller.discountSwitch ? "%" : "₹";
                 controller.bookingModel.price =
@@ -1077,8 +1192,11 @@ class EditBookingDetailsScreen extends StatelessWidget {
                     .collection("bookings")
                     .doc(controller.bookingModel.id)
                     .set(controller.bookingModel.toMap());
+                print("=======================${controller.discount}");
+                print("=======================${controller.taxableAmount}");
                 Get.back();
                 controller.reset();
+                // allBookingsLogic.getBookings();
                 BookingsCalenderWidgetLogic bookingCalenderLogic =
                     BookingsCalenderWidgetLogic();
                 bookingCalenderLogic.onDateSelected(

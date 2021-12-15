@@ -27,6 +27,10 @@ class NewBookingLogic {
   }
 
   NewBookingController controller = Get.put(NewBookingController());
+  final AutoScrollController autoScrollControllerTheory =
+      AutoScrollController();
+  final AutoScrollController autoScrollControllerPool = AutoScrollController();
+  final AutoScrollController autoScrollControllerDive = AutoScrollController();
 
   getDataFromFireBase() async {
     QuerySnapshot<Map<String, dynamic>> catalogue =
@@ -162,9 +166,9 @@ class NewBookingLogic {
       } catch (e) {
         controller.bookingModel.payingNow = 0;
       }
-      controller.bookingModel.price = controller.cost;
+      controller.bookingModel.price = double.parse(controller.priceTED.text);
       controller.bookingModel.remarks = controller.remarksTED.text.toString();
-      controller.bookingModel.tax = 18;
+      // controller.bookingModel.tax = controller.taxableAmount;
       controller.bookingModel.discountType =
           controller.discountSwitch ? "%" : "₹";
       // controller.bookingModel.pax = [];
@@ -236,7 +240,10 @@ class NewBookingLogic {
       controller.bookingModel.paymentMode = controller.paymentModeTED.text;
       controller.bookingModel.paymentTransactionId =
           controller.paymentReferenceTED.text;
-      controller.bookingModel.receiptNo = controller.receiptNoTED.text;
+      if (controller.receiptNoTED.text == "") {
+        controller.bookingModel.receiptNo = "";
+      } else
+        controller.bookingModel.receiptNo = controller.receiptNoTED.text;
       // Get.toNamed(AddCustomerDetailsScreen.id);
       createBooking();
       Get.defaultDialog(
@@ -346,6 +353,7 @@ class NewBookingLogic {
               ),
             ),
             BookingsCalenderWidget(
+              autoScrollController: autoScrollControllerPool,
               highlightInvalidTime: true,
               calenderType: FilterType.Pool,
               startDate: DateTime.now(),
@@ -409,6 +417,7 @@ class NewBookingLogic {
               ),
             ),
             BookingsCalenderWidget(
+              autoScrollController: autoScrollControllerDive,
               highlightInvalidTime: true,
               startDate: DateTime.now(),
               calenderType: FilterType.Dive,
@@ -473,6 +482,7 @@ class NewBookingLogic {
               ),
             ),
             BookingsCalenderWidget(
+              autoScrollController: autoScrollControllerTheory,
               highlightInvalidTime: true,
               calenderType: FilterType.Theory,
               startDate: DateTime.now(),

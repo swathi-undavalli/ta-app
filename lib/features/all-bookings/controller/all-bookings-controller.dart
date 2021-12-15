@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
@@ -32,7 +33,21 @@ class AllBookingsLogic {
     controller.showLoading = false;
   }
 
-  // getBookingsCount() async {
+  void updateSearchList(String text) {
+    // controller.allEmployeesList = [];
+    controller.suggestionsList = [];
+    print(
+        controller.bookings[controller.bookings.length - 1].name);
+    controller.bookings.forEach((booking) {
+      if (booking.name.toLowerCase().contains(text.toLowerCase())) {
+        controller.suggestionsList.add(booking);
+      }
+    });
+    controller.update();
+  }
+
+
+// getBookingsCount() async {
   //   var fact = 1;
   //   var pageCount = 0;
   //   controller.pages = [];
@@ -58,6 +73,13 @@ class AllBookingsLogic {
 class AllBookingsController extends GetxController {
   List<ItemModel> bookings;
 
+  bool _showSuggestions = false;
+
+  List<ItemModel> suggestionsList = [];
+
+
+  TextEditingController searchTED = TextEditingController();
+
   bool _showLoading = true;
 
   bool _onSelected = false;
@@ -76,6 +98,12 @@ class AllBookingsController extends GetxController {
 
   int get bookingCount => _bookingCount;
 
+  bool get showSuggestions => _showSuggestions;
+
+  set showSuggestions(bool value) {
+    _showSuggestions = value;
+    update();
+  }
   set bookingCount(int value) {
     _bookingCount = value;
     update();

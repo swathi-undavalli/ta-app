@@ -363,6 +363,7 @@ class AddAnUser extends StatelessWidget {
         controller: logic.controller.employeeIdTED,
         focusNode: logic.controller.employeeIdNode,
         nextFocusNode: logic.controller.firstNameNode,
+        keyboardType: TextInputType.number,
         required: true,
         errorValidator: () {
           return null;

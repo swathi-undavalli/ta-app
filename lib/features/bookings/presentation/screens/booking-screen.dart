@@ -11,6 +11,8 @@ import 'package:temple_adventures/features/bookings/presentation/screens/add_cus
 import 'package:intl/intl.dart';
 import 'dart:developer';
 
+import 'package:temple_adventures/features/bookings/presentation/screens/customer-registration-screen.dart';
+
 class BookingScreen extends StatelessWidget {
   static const String id = "BookingPage";
   final BookingScreenLogic logic = BookingScreenLogic();
@@ -39,6 +41,7 @@ class BookingScreen extends StatelessWidget {
           elevation: 0,
           onPressed: () {
             Get.toNamed(AddCustomerDetailsScreen.id);
+            // Get.toNamed(CustomerRegistrationScreen.id);
           },
           backgroundColor: AppColors.background.black,
           child: Icon(Icons.add),
@@ -159,10 +162,12 @@ class BookingScreen extends StatelessWidget {
       var dif = controller.startDate.difference(selected).inDays;
       if (dif < 0) {
         dif = dif * -1;
+        bookingsCalenderWidget.scrollToIndex(dif);
         // calenderLogic.scrollToIndex(dif);
       } else
         // calenderLogic.scrollToIndex(dif);
-        calenderLogic.onDateSelected(dif);
+        bookingsCalenderWidget.scrollToIndex(dif);
+      calenderLogic.onDateSelected(dif);
 
       log("=============$dif");
       controller.selectedDate = selected;

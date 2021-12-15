@@ -1,7 +1,5 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/dummy.dart';
@@ -9,7 +7,6 @@ import 'package:temple_adventures/features/Activities/controller/all-activities-
 import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
 
 class AllActivitiesScreen extends StatelessWidget {
   static const String id = "PriceEditingScreen";

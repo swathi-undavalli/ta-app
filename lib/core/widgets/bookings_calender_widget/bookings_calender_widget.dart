@@ -21,7 +21,6 @@ class BookingsCalenderWidget extends StatelessWidget {
   final FilterType calenderType;
   final AutoScrollController autoScrollController;
 
-
   BookingsCalenderWidget({
     @required this.onDateTimeSelected,
     this.isDiveSession = false,
@@ -48,8 +47,8 @@ class BookingsCalenderWidget extends StatelessWidget {
   }
 
   scrollToIndex(int index) {
-  autoScrollController
-        .scrollToIndex(index, preferPosition: AutoScrollPosition.middle);
+    autoScrollController.scrollToIndex(index,
+        preferPosition: AutoScrollPosition.middle);
   }
 
   final BookingsCalenderWidgetLogic logic = BookingsCalenderWidgetLogic();
@@ -273,6 +272,7 @@ class BookingsCalenderWidget extends StatelessWidget {
       if (showDetails)
         return BookingsExpansionPanel(
           items: expansionList,
+          onDeletePressed: () {},
         );
       return SizedBox();
     });
@@ -431,7 +431,7 @@ class BookingsCalenderWidget extends StatelessWidget {
                       print("======Started");
                       logic.controller.lastSelectedIndex = index;
                       logic.onDateSelected(index);
-                      // logic.scrollToIndex(index);
+                      scrollToIndex(index);
                     },
                     child: Container(
                       width: 60,

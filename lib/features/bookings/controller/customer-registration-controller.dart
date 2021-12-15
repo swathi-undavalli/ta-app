@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/services/firebase_api.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
-import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
 import 'package:temple_adventures/features/bookings/models/customer-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/customer-registration-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/paper_work_screen.dart';
