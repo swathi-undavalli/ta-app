@@ -89,9 +89,10 @@ class EditBookingNewScreen extends StatelessWidget {
                             buildPAXTF(controller),
                             buildDiscount(),
                             buildTax(),
-                            buildTotalAmount(),
                             buildDepositTF(controller),
-                            SizedBox(height: 20),
+                            SizedBox(height: 25),
+                            buildTotalAmount(),
+                            SizedBox(height: 25),
                             buildBalanceAmount(),
                             buildReceiptNo(controller),
                             buildRemarksTF(controller),
@@ -154,8 +155,6 @@ class EditBookingNewScreen extends StatelessWidget {
               text: "Update",
               textColor: AppColors.text.white,
               onTap: () async {
-                print("=======================${controller.discount}");
-                print("=======================${controller.taxableAmount}");
                 controller.bookingModel.bookingDate = [];
 
                 if (controller.bookingModel.poolDate != null &&
@@ -179,48 +178,18 @@ class EditBookingNewScreen extends StatelessWidget {
                         .add(getStringDate(date));
                   });
                 }
-                // controller.bookingModel.tax = controller.taxableAmount;
-                // controller.bookingModel.discount = controller.discount;
-                controller.bookingModel.tax = controller.bookingModel.tax;
-                controller.bookingModel.discount =
-                    controller.bookingModel.discount;
-                controller.bookingModel.discountType =
-                    controller.discountSwitch ? "%" : "₹";
-                controller.bookingModel.price =
-                    double.parse(controller.priceTED.text);
-                controller.bookingModel.payingNow =
-                    double.parse(controller.depositTED.text);
-                controller.bookingModel.noOfPersons =
-                    int.parse(controller.paxTED.text);
-                controller.bookingModel.remarks = controller.remarksTED.text;
-                controller.bookingModel.receiptNo = controller.invoiceTED.text;
-                controller.bookingModel.pax[0]["phoneNumber"] =
-                    controller.phoneTED.text;
-                controller.bookingModel.pax[0]["countryCode"] =
-                    controller.countryCodeTED.text;
-                controller.bookingModel.pax[0]["email"] =
-                    controller.emailTED.text;
-                controller.bookingModel.pax[0]["first-name"] =
-                    controller.firstNameTED.text;
-                controller.bookingModel.pax[0]["last-name"] =
-                    controller.lastNameTED.text;
-                controller.bookingModel.pax[0]["isoCode"] = controller.isoCode;
                 await FirebaseFirestore.instance
                     .collection("bookings")
                     .doc(controller.bookingModel.id)
                     .set(controller.bookingModel.toMap());
-                print("=======================${controller.discount}");
-                print("=======================${controller.taxableAmount}");
                 Get.back();
                 controller.reset();
-                // allBookingsLogic.getBookings();
                 BookingsCalenderWidgetLogic bookingCalenderLogic =
                     BookingsCalenderWidgetLogic();
                 bookingCalenderLogic.onDateSelected(
                     bookingCalenderLogic.controller.lastDateIndex);
                 controller.startDate =
                     controller.startDate.subtract(Duration(days: 50));
-                // controller.update();
               }),
         ],
       );
@@ -670,10 +639,7 @@ class EditBookingNewScreen extends StatelessWidget {
                       print(activity.name);
                       controller.bookingModel.activity[0] = activity;
                       controller.priceTED.text = activity.price.toString();
-                      // logic.getPrice();
-                      print(controller.bookingModel.activity[0].name);
                       controller.bookingModel.price = activity.price * 1.0;
-                      print(controller.bookingModel.balance);
                       controller.update();
                     },
                     items:
@@ -721,14 +687,9 @@ class EditBookingNewScreen extends StatelessWidget {
         searchText: "Search",
         onSubmitted: (_) {},
         onChanged: (phone) {
-          controller.phoneTED.text = phone.number;
-          controller.countryCodeTED.text = phone.countryCode;
-          controller.isoCode = phone.countryISOCode;
-          print(phone.number);
-          print(phone.countryCode);
-          print(phone.countryISOCode);
-          print(controller.isoCode);
-          // print(controller.isoCode);
+          controller.bookingModel.pax[0]["isoCode"] = phone.countryISOCode;
+          controller.bookingModel.pax[0]["phoneNumber"] = phone.number;
+          controller.bookingModel.pax[0]["countryCode"] = phone.countryCode;
         },
       );
     });
@@ -736,19 +697,27 @@ class EditBookingNewScreen extends StatelessWidget {
 
   Widget buildEmailTF(EditBookingNewController controller) {
     return buildTextFields(
-        text: "Email",
-        textEditingController: controller.emailTED,
-        keyBoardType: TextInputType.emailAddress,
-        focus: controller.emailNode,
-        nextFocus: controller.phoneNode);
+      text: "Email",
+      textEditingController: controller.emailTED,
+      keyBoardType: TextInputType.emailAddress,
+      focus: controller.emailNode,
+      nextFocus: controller.phoneNode,
+      onChangedCallBack: (email) {
+        controller.bookingModel.pax[0]["email"] = email;
+      },
+    );
   }
 
   Widget buildRemarksTF(EditBookingNewController controller) {
     return buildTextFields(
-        text: "Remarks",
-        textEditingController: controller.remarksTED,
-        focus: controller.remarksNode,
-        nextFocus: controller.emailNode);
+      text: "Remarks",
+      textEditingController: controller.remarksTED,
+      focus: controller.remarksNode,
+      nextFocus: controller.emailNode,
+      onChangedCallBack: (email) {
+        controller.bookingModel.remarks = email;
+      },
+    );
   }
 
   Widget buildReceiptNo(EditBookingNewController controller) {
@@ -757,8 +726,8 @@ class EditBookingNewScreen extends StatelessWidget {
         textEditingController: controller.invoiceTED,
         focus: controller.invoiceNoNode,
         nextFocus: controller.remarksNode,
-        onChangedCallBack: (_) {
-          return "";
+        onChangedCallBack: (invoice) {
+          controller.bookingModel.receiptNo = invoice;
         });
   }
 
@@ -768,12 +737,7 @@ class EditBookingNewScreen extends StatelessWidget {
       textEditingController: controller.depositTED,
       keyBoardType: TextInputType.number,
       onChangedCallBack: (payingNow) {
-        try {
-          controller.bookingModel.payingNow =
-              double.parse(controller.depositTED.text);
-        } catch (e) {
-          controller.bookingModel.payingNow = 0;
-        }
+        controller.bookingModel.payingNow = getInt(payingNow) * 1.0;
         controller.update();
       },
       focus: controller.depositNode,
@@ -860,8 +824,6 @@ class EditBookingNewScreen extends StatelessWidget {
                   onChangedCallBack: (discount) {
                     try {
                       controller.bookingModel.discount = double.parse(discount);
-                      log(discount.toString());
-                      log(controller.bookingModel.totalCost.toString());
                     } catch (e) {
                       controller.bookingModel.discount = 0;
                     }
@@ -891,12 +853,11 @@ class EditBookingNewScreen extends StatelessWidget {
                       text: "",
                       switchValue: controller.discountSwitch,
                       onChanged: (value) {
+                        if (value)
+                          controller.bookingModel.discountType = "%";
+                        else
+                          controller.bookingModel.discountType = "₹";
                         controller.discountSwitch = value;
-                        controller.bookingModel.discountType =
-                            controller.discountSwitch ? "%" : "₹";
-                        print(
-                            "discount================${controller.discountSwitch}");
-                        controller.update();
                       }),
                 ),
                 Text(
@@ -935,8 +896,6 @@ class EditBookingNewScreen extends StatelessWidget {
                   onChanged: (value) {
                     controller.bookingModel.tax = value ? 18 : 0;
                     controller.taxable = value;
-                    log("tax==================${controller.taxable}");
-                    // logic.getPrice();
                   }),
             ),
           ],
@@ -971,7 +930,11 @@ class EditBookingNewScreen extends StatelessWidget {
         textEditingController: controller.paxTED,
         keyBoardType: TextInputType.number,
         focus: controller.paxNode,
-        nextFocus: controller.discountNode);
+        nextFocus: controller.discountNode,
+        onChangedCallBack: (newNumber) {
+          controller.bookingModel.noOfPersons = getInt(newNumber);
+          controller.update();
+        });
   }
 
   Widget buildNameFields(EditBookingNewController controller) {
@@ -997,7 +960,10 @@ class EditBookingNewScreen extends StatelessWidget {
         text: "First Name",
         textEditingController: controller.firstNameTED,
         focus: controller.firstNameNode,
-        nextFocus: controller.lastNameNode);
+        nextFocus: controller.lastNameNode,
+        onChangedCallBack: (newName) {
+          controller.bookingModel.pax[0]["first-name"] = newName;
+        });
   }
 
   Widget buildLastName(EditBookingNewController controller) {
@@ -1005,7 +971,10 @@ class EditBookingNewScreen extends StatelessWidget {
         text: "Last Name",
         textEditingController: controller.lastNameTED,
         focus: controller.lastNameNode,
-        nextFocus: controller.paxNode);
+        nextFocus: controller.paxNode,
+        onChangedCallBack: (newName) {
+          controller.bookingModel.pax[0]["last-name"] = newName;
+        });
   }
 
   Widget buildTitle() {
@@ -1036,11 +1005,16 @@ class EditBookingNewScreen extends StatelessWidget {
 
   Widget buildPriceTF(EditBookingNewController controller) {
     return buildTextFields(
-        text: "Price",
-        textEditingController: controller.priceTED,
-        keyBoardType: TextInputType.number,
-        focus: controller.priceNode,
-        nextFocus: controller.firstNameNode);
+      text: "Price",
+      textEditingController: controller.priceTED,
+      keyBoardType: TextInputType.number,
+      focus: controller.priceNode,
+      nextFocus: controller.firstNameNode,
+      onChangedCallBack: (newPrice) {
+        controller.bookingModel.price = getInt(newPrice) * 1.0;
+        controller.update();
+      },
+    );
   }
 
   Widget buildTextFields({
@@ -1049,7 +1023,6 @@ class EditBookingNewScreen extends StatelessWidget {
     TextInputType keyBoardType,
     FocusNode focus,
     FocusNode nextFocus,
-    Function onChanged,
     Function(String) onChangedCallBack,
   }) {
     return Container(
@@ -1060,7 +1033,6 @@ class EditBookingNewScreen extends StatelessWidget {
         keyboardType: keyBoardType,
         focusNode: focus,
         nextFocusNode: nextFocus,
-        onChanged: onChanged,
         onChangedCallBack: (_) {
           onChangedCallBack(_);
         },

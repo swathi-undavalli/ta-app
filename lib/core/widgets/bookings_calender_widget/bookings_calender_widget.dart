@@ -316,7 +316,7 @@ class BookingsCalenderWidget extends StatelessWidget {
           return AppColors.background.grey;
       }
 
-      Widget num = buildEvents(controller, date);
+      Widget num = getEventsCount(controller, date);
       if (num == null && showDetails) return SizedBox();
       return GestureDetector(
         onTap: () {
@@ -479,7 +479,7 @@ class BookingsCalenderWidget extends StatelessWidget {
     });
   }
 
-  Widget buildEvents(
+  Widget getEventsCount(
       BookingsCalenderWidgetController controller, DateTime date) {
     var show = false;
     int count = 0;

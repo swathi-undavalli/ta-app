@@ -13,11 +13,11 @@ class BookingModel {
     this.activity,
     this.pax,
     this.noOfPersons,
-    this.location,
-    this.discount,
-    this.price,
-    this.tax,
-    this.payingNow,
+    this.location = "Pondicherry",
+    this.discount = 0,
+    this.price = 0,
+    this.tax = 18,
+    this.payingNow = 0,
     this.id,
     this.paymentMode,
     this.paymentTransactionId,
@@ -26,7 +26,7 @@ class BookingModel {
     this.theoryDate,
     this.bookingDate,
     this.receiptNo,
-    this.discountType,
+    this.discountType = "%",
     this.remarks,
   });
 
@@ -131,20 +131,8 @@ class BookingModel {
   }
 
   double get totalCost {
-    print("================");
-    print(price);
-    print(noOfPersons);
-    print(discountType);
-    print(discount);
-    print(tax);
     double total = price;
     total = total * (noOfPersons ?? 1);
-    print("================ended");
-    print(price);
-    print(noOfPersons);
-    print(discountType);
-    print(discount);
-    print(tax);
 
     /// Deduct Discount
     if (discountType != null) {

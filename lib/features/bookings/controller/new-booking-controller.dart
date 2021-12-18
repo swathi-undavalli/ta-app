@@ -45,194 +45,64 @@ class NewBookingLogic {
     }
   }
 
-  getPrice() {
-    var tax;
-    print("getPrice");
-    controller.cost = 0;
-    for (int i = 0; i < controller.selectedActivity.length; i++) {
-      controller.selectedActivity.forEach((activity) {
-        print(activity.price);
-        try {
-          controller.cost += int.parse(controller.priceTED.text);
-        } catch (e) {
-          controller.cost += 0;
-          showToast("Invalid Input");
-        }
-      });
-    }
-    print(controller.cost);
-    if (controller.paxTED.text != null) {
-      try {
-        controller.cost = int.parse(controller.paxTED.text) * controller.cost;
-      } catch (e) {
-        controller.cost = 1 * controller.cost;
-      }
-    }
-    getDiscount();
-    getDiscountAmount();
-    getTotalAmount();
-    getBalanceAmount();
-  }
-
-  getDiscountAmount() {
-    double discountAmount;
-    if (controller.discountSwitch) {
-      try {
-        discountAmount = controller.cost *
-            (double.parse(controller.discountTED.text) / 100.0);
-      } catch (e) {
-        discountAmount = 0;
-      }
-      return controller.totalCost = controller.cost - discountAmount;
-    } else {
-      try {
-        discountAmount = double.parse(controller.discountTED.text);
-      } catch (e) {
-        discountAmount = 0;
-      }
-      return controller.totalCost = controller.cost - discountAmount;
-    }
-  }
-
-  getTotalAmount() {
-    if (controller.taxable) {
-      controller.taxableAmount = controller.totalCost * 0.18;
-      return controller.totalCost =
-          controller.totalCost + controller.taxableAmount;
-    } else {
-      controller.taxableAmount = 0;
-      return controller.totalCost =
-          controller.totalCost + controller.taxableAmount;
-    }
-  }
-
-  getDiscount() {
-    if (controller.discountSwitch) {
-      getDiscountInPercent();
-    } else {
-      getDiscountInINR();
-    }
-  }
-
-  getDiscountInPercent() {
-    print("getDiscountPercent");
-    try {
-      controller.discount =
-          controller.cost * (int.parse(controller.discountTED.text) / 100.0);
-    } catch (e) {
-      controller.discount = 0;
-    }
-  }
-
-  getDiscountInINR() {
-    print("getDiscountINPNR");
-    try {
-      controller.discount = double.parse(controller.discountTED.text);
-    } catch (e) {
-      controller.discount = 0;
-    }
-  }
-
-  getBalanceAmount() {
-    int payingNow;
-    try {
-      payingNow = int.parse(controller.payingNowTED.text);
-    } catch (e) {
-      payingNow = 0;
-    }
-    controller.balance = (controller.totalCost - payingNow).toPrecision(2);
-  }
-
   onContinuePressedBookingForm() {
-    if (controller.selectedActivity.length != 0 && controller.balance > 0) {
-      controller.bookingModel.activity = controller.selectedActivity;
-      controller.bookingModel.location = controller.diveLocation;
-      try {
-        controller.bookingModel.noOfPersons = int.parse(controller.paxTED.text);
-      } catch (e) {
-        controller.bookingModel.noOfPersons = 1;
-      }
-
-      try {
-        controller.bookingModel.discount =
-            double.parse(controller.discountTED.text);
-      } catch (e) {
-        controller.bookingModel.discount = 0.0;
-      }
-
-      try {
-        controller.bookingModel.payingNow =
-            int.parse(controller.payingNowTED.text).toDouble();
-      } catch (e) {
-        controller.bookingModel.payingNow = 0;
-      }
-      controller.bookingModel.price = double.parse(controller.priceTED.text);
-      controller.bookingModel.remarks = controller.remarksTED.text.toString();
-      // controller.bookingModel.tax = controller.taxableAmount;
-      controller.bookingModel.discountType =
-          controller.discountSwitch ? "%" : "₹";
-      // controller.bookingModel.pax = [];
-      if (controller.payingNowTED.text == "" ||
-          controller.payingNowTED.text == 0.toString())
-      // Get.toNamed(AddCustomerDetailsScreen.id);
-      {
-        createBooking();
-        Get.defaultDialog(
-          barrierDismissible: false,
-          title: "",
-          titlePadding: EdgeInsets.all(0),
-          titleStyle: TextStyle(fontSize: 0),
-          content: GetBuilder<NewBookingController>(builder: (controller) {
-            if (controller.bookingId != null)
-              return Column(
-                children: [
-                  SizedBox(height: 50),
-                  Icon(
-                    Icons.check_circle_outline_rounded,
-                    color: AppColors.background.skyBlue,
-                    size: 30,
-                  ),
-                  SizedBox(height: 20),
-                  Text(
-                    controller.bookingId,
-                    style: TextStyle(fontSize: FontSize.title),
-                  ),
-                  Text("Booking Created Successfully"),
-                  SizedBox(height: 20),
-                  AppButton.miniFlat(
-                    text: "Okay",
-                    bgColor: AppColors.background.black,
-                    textColor: AppColors.text.white,
-                    onTap: () async {
-                      Get.offAllNamed(DashBoardScreen.id);
-                      DashBoardScreenLogic dashboardlogic =
-                          DashBoardScreenLogic();
-                      dashboardlogic.controller.currentIndex = 2;
-                      controller.reset();
-                      BookingsCalenderWidgetLogic bookingCalenderLogic =
-                          BookingsCalenderWidgetLogic();
-                      bookingCalenderLogic.onDateSelected(
-                          bookingCalenderLogic.controller.lastDateIndex);
-                    },
-                  )
-                ],
-              );
-            return Container(
-              height: 150,
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
-                  strokeWidth: 1,
+    controller.bookingModel.remarks = controller.remarksTED.text.toString();
+    if (controller.payingNowTED.text == "" ||
+        controller.payingNowTED.text == 0.toString()) {
+      createBooking();
+      Get.defaultDialog(
+        barrierDismissible: false,
+        title: "",
+        titlePadding: EdgeInsets.all(0),
+        titleStyle: TextStyle(fontSize: 0),
+        content: GetBuilder<NewBookingController>(builder: (controller) {
+          if (controller.bookingId != null)
+            return Column(
+              children: [
+                SizedBox(height: 50),
+                Icon(
+                  Icons.check_circle_outline_rounded,
+                  color: AppColors.background.skyBlue,
+                  size: 30,
                 ),
-              ),
+                SizedBox(height: 20),
+                Text(
+                  controller.bookingId,
+                  style: TextStyle(fontSize: FontSize.title),
+                ),
+                Text("Booking Created Successfully"),
+                SizedBox(height: 20),
+                AppButton.miniFlat(
+                  text: "Okay",
+                  bgColor: AppColors.background.black,
+                  textColor: AppColors.text.white,
+                  onTap: () async {
+                    Get.offAllNamed(DashBoardScreen.id);
+                    DashBoardScreenLogic dashboardlogic =
+                        DashBoardScreenLogic();
+                    dashboardlogic.controller.currentIndex = 2;
+                    controller.reset();
+                    BookingsCalenderWidgetLogic bookingCalenderLogic =
+                        BookingsCalenderWidgetLogic();
+                    bookingCalenderLogic.onDateSelected(
+                        bookingCalenderLogic.controller.lastDateIndex);
+                  },
+                )
+              ],
             );
-          }),
-        );
-      } else
-        Get.toNamed(PaymentDetailsScreen.id);
-      log((controller.bookingModel.pax).toString());
+          return Container(
+            height: 150,
+            child: Center(
+              child: CircularProgressIndicator(
+                color: Colors.black,
+                strokeWidth: 1,
+              ),
+            ),
+          );
+        }),
+      );
     } else
-      showToast("Invalid Balance");
+      Get.toNamed(PaymentDetailsScreen.id);
   }
 
   onPaymentDetailsFilled() {
@@ -625,7 +495,6 @@ class NewBookingLogic {
       log(controller.phoneNumberTED.text);
       log(controller.countryCodeTED.text);
       log(controller.isoCode);
-      // if (controller.bookingModel.pax == null)
       controller.bookingModel.pax = [];
       controller.bookingModel.pax.add({
         "email": controller.emailTED.text,
@@ -635,9 +504,12 @@ class NewBookingLogic {
         "phoneNumber": controller.phoneNumberTED.text,
         "isoCode": controller.isoCode,
       });
+      controller.bookingModel.noOfPersons = getInt(controller.paxTED.text);
       disposeKeyboard();
       Get.toNamed(BookDateTime.id);
       log((controller.bookingModel.pax).toString());
+    } else {
+      showToast("Invalid Input");
     }
   }
 }

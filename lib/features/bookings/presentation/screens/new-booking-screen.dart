@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/util/validator.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
@@ -244,13 +245,15 @@ class NewBookingScreen extends StatelessWidget {
       focusNode: logic.controller.priceNode,
       nextFocusNode: logic.controller.discountNode,
       keyboardType: TextInputType.number,
-      onChanged: () {
-        try {
-          logic.getPrice();
-        } catch (e) {
-          print("error");
-          print(e);
-        }
+      onChangedCallBack: (value) {
+        logic.controller.bookingModel.price = getInt(value) * 1.0;
+        logic.controller.update();
+        // try {
+        //   logic.getPrice();
+        // } catch (e) {
+        //   print("error");
+        //   print(e);
+        // }
       },
       required: false,
       errorValidator: () {
@@ -274,16 +277,34 @@ class NewBookingScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              buildAmountSummary(text: "Price", amount: controller.cost),
-              buildAmountSummary(text: "Discount", amount: controller.discount),
               buildAmountSummary(
-                  text: "Total Amount", amount: controller.totalCost),
-              buildAmountSummary(text: "Balance", amount: controller.balance),
+                  text: "Price",
+                  amount: getInt(controller.priceTED.text) *
+                      controller.bookingModel.noOfPersons *
+                      1.0),
+              buildAmountSummary(
+                text: "Discount",
+                amount: getDiscount(controller),
+              ),
+              buildAmountSummary(
+                  text: "Total Amount",
+                  amount: controller.bookingModel.totalCost),
+              buildAmountSummary(
+                  text: "Balance", amount: controller.bookingModel.balance),
             ],
           );
         }),
       ),
     );
+  }
+
+  getDiscount(NewBookingController controller) {
+    double price = getInt(controller.priceTED.text) *
+        controller.bookingModel.noOfPersons *
+        1.0;
+    if (controller.bookingModel.discountType == "%")
+      return price * (controller.bookingModel.discount / 100);
+    return (controller.bookingModel.discount) ?? 0.0;
   }
 
   Widget buildAmountSummary({String text, double amount}) {
@@ -353,7 +374,6 @@ class NewBookingScreen extends StatelessWidget {
                   controller: logic.controller.discountTED,
                   focusNode: logic.controller.discountNode,
                   nextFocusNode: logic.controller.payingNowNode,
-                  onChanged: logic.getPrice,
                   keyboardType: TextInputType.number,
                   required: false,
                   errorValidator: () {
@@ -365,6 +385,7 @@ class NewBookingScreen extends StatelessWidget {
                     } catch (e) {
                       controller.bookingModel.discount = 0;
                     }
+                    controller.update();
                   },
                   validator: (firstName) {
                     return null;
@@ -393,9 +414,11 @@ class NewBookingScreen extends StatelessWidget {
                       text: "",
                       switchValue: controller.discountSwitch,
                       onChanged: (value) {
+                        if (value)
+                          controller.bookingModel.discountType = "%";
+                        else
+                          controller.bookingModel.discountType = "₹";
                         controller.discountSwitch = value;
-                        logic.getPrice();
-                        print("VALUE : ${controller.discountSwitch}");
                       }),
                 ),
                 Text(
@@ -432,13 +455,11 @@ class NewBookingScreen extends StatelessWidget {
                   text: "",
                   switchValue: controller.taxable,
                   onChanged: (value) {
-                    controller.taxable = value;
                     if (value)
                       controller.bookingModel.tax = 18;
                     else
                       controller.bookingModel.tax = 0;
-                    print("ajxbkk");
-                    controller.update();
+                    controller.taxable = value;
                   }),
             ),
           ],
@@ -458,7 +479,6 @@ class NewBookingScreen extends StatelessWidget {
             focusNode: logic.controller.payingNowNode,
             nextFocusNode: logic.controller.remarksNode,
             isStrictNumber: true,
-            onChanged: logic.getPrice,
             keyboardType: TextInputType.number,
             required: false,
             errorValidator: () {
@@ -472,6 +492,7 @@ class NewBookingScreen extends StatelessWidget {
               } catch (e) {
                 controller.bookingModel.payingNow = 0;
               }
+              controller.update();
             },
             validator: (firstName) {
               print(firstName);

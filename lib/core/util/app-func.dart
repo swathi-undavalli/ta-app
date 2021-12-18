@@ -24,4 +24,10 @@ isSameHour(DateTime a, DateTime b) {
   return ((a.difference(b).inDays == 0) && checkDate(a, b) && a.hour == b.hour);
 }
 
-getDate() {}
+int getInt(String number) {
+  try {
+    return int.parse(number);
+  } catch (e) {
+    return 0;
+  }
+}

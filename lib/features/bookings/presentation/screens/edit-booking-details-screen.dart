@@ -1226,7 +1226,6 @@ class EditBookingDetailsScreen extends StatelessWidget {
         keyboardType: keyBoardType,
         focusNode: focus,
         nextFocusNode: nextFocus,
-        onChanged: onChanged,
         onChangedCallBack: (_) {
           onChangedCallBack(_);
         },

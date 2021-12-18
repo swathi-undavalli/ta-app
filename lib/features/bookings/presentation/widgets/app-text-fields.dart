@@ -20,7 +20,7 @@ class AppTextField extends StatefulWidget {
   TextInputAction textInputAction;
   bool enableSuggestions;
   Function finalSubmit;
-  Function onChanged;
+  // Function onChanged;
   String labelText;
   bool isStrictNumber;
 
@@ -38,7 +38,7 @@ class AppTextField extends StatefulWidget {
     this.enableSuggestions = true,
     this.finalSubmit,
     this.validator,
-    this.onChanged,
+    // this.onChanged,
     this.errorValidator,
     this.onChangedCallBack,
     this.width = 320,
@@ -101,7 +101,6 @@ class _AppTextFieldsState extends State<AppTextField> {
             if (widget.maxLimit != null && value.length == widget.maxLimit)
               widget.nextFocusNode.requestFocus();
             setState(() {});
-            if (widget.onChanged != null) widget.onChanged();
           },
           onFieldSubmitted: (value) {
             if (widget.finalSubmit == null)

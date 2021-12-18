@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
@@ -62,6 +63,8 @@ class BookDateTime extends StatelessWidget {
     );
   }
 
+  ///==================UI=================///
+
   Widget buildActivityDropDown() {
     return Container(
       width: 320,
@@ -98,8 +101,11 @@ class BookDateTime extends StatelessWidget {
                     } else
                       controller.selectedActivity[0] = activity;
                     controller.priceTED.text = activity.price.toString();
-                    logic.getPrice();
-                    controller.update();
+                    controller.bookingModel.price = activity.price * 1.0;
+                    log("S");
+                    controller.bookingModel.activity = controller.selectedActivity;
+                    logic.controller.update();
+                    log("E");
                   },
                   items: controller.activities.toSet().toList().map((activity) {
                     return DropdownMenuItem(
@@ -120,8 +126,6 @@ class BookDateTime extends StatelessWidget {
       ),
     );
   }
-
-  ///==================UI=================///
 
   Widget buildPoolSession() {
     return GetBuilder<NewBookingController>(builder: (controller) {
