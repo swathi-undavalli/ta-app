@@ -554,22 +554,39 @@ class BookingsCalenderWidget extends StatelessWidget {
       BookingsCalenderWidgetController controller, DateTime date) {
     var show = false;
     int totalBookings = 0;
-    int totalPax = 0;
-    for (DateTime booking in logic.controller.bookingTimings) {
-      if (controller.isDiveSession) {
-        if (booking.hour == date.hour &&
-            booking.day == date.day &&
-            booking.minute == date.minute) {
-          totalBookings++;
+
+    controller.bookings.forEach((booking) {
+      var allBookingsList = [];
+      allBookingsList.addAll(booking.diveDate);
+      allBookingsList.addAll(booking.poolDate);
+      allBookingsList.addAll(booking.theoryDate);
+      allBookingsList.forEach((bookingDate) {
+        if (isSameMinute(date, bookingDate)) {
+          print("++++++++++++++++++++:)");
+          print(booking.id);
+          print(booking.noOfPersons);
+          totalBookings += booking.noOfPersons;
           show = true;
         }
-      } else {
-        if (booking.hour == date.hour && booking.day == date.day) {
-          totalBookings++;
-          show = true;
-        }
-      }
-    }
+      });
+    });
+
+    // int totalPax = 0;
+    // for (DateTime booking in logic.controller.bookingTimings) {
+    //   if (controller.isDiveSession) {
+    //     if (booking.hour == date.hour &&
+    //         booking.day == date.day &&
+    //         booking.minute == date.minute) {
+    //       totalBookings++;
+    //       show = true;
+    //     }
+    //   } else {
+    //     if (booking.hour == date.hour && booking.day == date.day) {
+    //       totalBookings++;
+    //       show = true;
+    //     }
+    //   }
+    // }
     if (show)
       return Container(
         height: 12,

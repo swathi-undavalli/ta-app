@@ -136,7 +136,7 @@ class BookingsCalenderWidgetLogic {
           print("+++++++++++");
           print(date);
           print(controller.selectedDate);
-          if (isSameHour(date, controller.selectedDate)) {
+          if (isSameMinute(date, controller.selectedDate)) {
             im.session = "Theory";
             im.time = DateFormat("hh:mm").format(date);
             print("im.time ${im.time}");
@@ -150,7 +150,7 @@ class BookingsCalenderWidgetLogic {
           print("+++++++++++");
           print(date);
           print(controller.selectedDate);
-          if (isSameHour(date, controller.selectedDate)) {
+          if (isSameMinute(date, controller.selectedDate)) {
             im.session = "Pool";
             im.time = DateFormat("hh:mm").format(date);
             print("im.time ${im.time}");
@@ -164,7 +164,7 @@ class BookingsCalenderWidgetLogic {
           print("+++++++++++");
           print(date);
           print(controller.selectedDate);
-          if (isSameHour(date, controller.selectedDate)) {
+          if (isSameMinute(date, controller.selectedDate)) {
             im.session = "Dive";
             im.time = DateFormat("hh:mm").format(date);
             print("im.time ${im.time}");
