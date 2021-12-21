@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 class AddLog extends StatelessWidget {

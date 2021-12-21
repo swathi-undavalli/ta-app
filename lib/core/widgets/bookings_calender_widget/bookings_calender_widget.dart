@@ -203,6 +203,7 @@ class BookingsCalenderWidget extends StatelessWidget {
                   Row(
                     children: [
                       buildTitle("Bookings"),
+                      SizedBox(width: 3),
                       controller.showLoading
                           ? SizedBox(
                               width: 10,
@@ -215,22 +216,23 @@ class BookingsCalenderWidget extends StatelessWidget {
                           : SizedBox(),
                     ],
                   ),
-                  Row(
-                    children: [
-                      buildSessionCount(
-                          session: "T",
-                          count: controller.totalTheoryPax,
-                          color: Colors.orangeAccent),
-                      buildSessionCount(
-                          session: "P",
-                          count: controller.totalPoolPax,
-                          color: Colors.green),
-                      buildSessionCount(
-                          session: "D",
-                          count: controller.totalDivePax,
-                          color: Colors.lightBlueAccent),
-                    ],
-                  ),
+
+                  // Row(
+                  //   children: [
+                  //     buildSessionCount(
+                  //         session: "T",
+                  //         count: controller.totalTheoryPax,
+                  //         color: Colors.orangeAccent),
+                  //     buildSessionCount(
+                  //         session: "P",
+                  //         count: controller.totalPoolPax,
+                  //         color: Colors.green),
+                  //     buildSessionCount(
+                  //         session: "D",
+                  //         count: controller.totalDivePax,
+                  //         color: Colors.lightBlueAccent),
+                  //   ],
+                  // ),
                 ],
               ),
             ),

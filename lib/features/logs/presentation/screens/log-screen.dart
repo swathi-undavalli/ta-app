@@ -249,5 +249,11 @@ enum LogType {
   signedOut,
   bookingCreated,
   bookingDeleted,
-  bookingEdited
+  bookingEdited,
+  addActivity,
+  editActivity,
+  editEmployee,
+  addEmployee,
+  deleteEmployee,
+
 }
