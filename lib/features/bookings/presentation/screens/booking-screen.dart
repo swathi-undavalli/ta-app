@@ -101,7 +101,7 @@ class BookingScreen extends StatelessWidget {
   }
 
   ///===============UI==============///
-  ///
+
   Widget buildCalendarIcon(
       BuildContext context, BookingsCalenderWidgetController controller) {
     return IconButton(
@@ -175,69 +175,3 @@ class BookingScreen extends StatelessWidget {
     controller.update();
   }
 }
-
-// class BookingPage extends StatelessWidget {
-//   static const String id = "BookingPage";
-//   final BookingScreenLogic logic = BookingScreenLogic();
-//   var bookings = [DateTime.now()];
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: AppColors.background.lightBlue,
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: () {
-//           Get.toNamed(NewBookingScreen.id);
-//         },
-//         backgroundColor: AppColors.background.black,
-//         child: Icon(Icons.add),
-//       ),
-//       body: RefreshIndicator(
-//         color: AppColors.IconColor.black,
-//         onRefresh: () async {
-//           await Future.delayed(Duration(seconds: 2));
-//         },
-//         child: SafeArea(
-//           child: SingleChildScrollView(
-//             physics: BouncingScrollPhysics(),
-//             child: Padding(
-//               padding: const EdgeInsets.only(left: 20, right: 20, top: 40),
-//               child: Padding(
-//                 padding: const EdgeInsets.only(bottom: 50),
-//                 child: Column(
-//                   children: [
-//                     buildTitle("Calendar"),
-//                     BookingsCalenderWidget(
-//                       onDateTimeSelected: (DateTime selectedDate) {
-//                         print(selectedDate.toString());
-//                       },
-//                       showDetails: true,
-//                       startDate: DateTime.now().subtract(Duration(days: 4)),
-//                     ),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-//
-//   ///===============UI==============///
-//
-//   Widget buildTitle(String text) {
-//     return Container(
-//       padding: const EdgeInsets.only(left: 20, right: 20),
-//       alignment: Alignment.centerLeft,
-//       child: Text(
-//         text,
-//         style: TextStyle(
-//             fontSize: 16,
-//             color: AppColors.text.black,
-//             fontWeight: FontWeight.bold,
-//             fontFamily: AppFonts.nunito),
-//       ),
-//     );
-//   }
-// }

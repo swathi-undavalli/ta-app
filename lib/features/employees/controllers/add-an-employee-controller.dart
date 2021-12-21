@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
+import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:intl/intl.dart';
@@ -21,6 +22,34 @@ class AddAnUserLogic {
         .doc("count")
         .get();
     CounterModel counterModel = CounterModel.fromMap(data.data());
+    if (int.parse(controller.employeeIdTED.text) <= counterModel.employee) {
+      Get.defaultDialog(
+        contentPadding:
+            EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 40),
+        title: "\n Oops!",
+        middleText: "You Entered Existing Employee ID.",
+        backgroundColor: Colors.white,
+        titleStyle: TextStyle(
+            color: AppColors.text.black,
+            fontFamily: AppFonts.nunito,
+            fontSize: 16,
+            fontWeight: FontWeight.bold),
+        middleTextStyle: TextStyle(
+            color: AppColors.text.black,
+            fontFamily: AppFonts.nunito,
+            fontSize: 16,
+            fontWeight: FontWeight.bold),
+        cancel: AppButton.miniFlat(
+          text: 'OK',
+          onTap: () {
+            Get.back();
+          },
+        ),
+        barrierDismissible: false,
+        radius: 10,
+      );
+      return;
+    }
     if (controller.firstNameTED.text != "" &&
         controller.employeeIdTED.text != "" &&
         controller.shiftTimeTED.text != "" &&
@@ -148,6 +177,8 @@ class AddAnUserLogic {
           ),
         ));
   }
+
+
 }
 
 class AddAnUserController extends GetxController {
@@ -186,7 +217,6 @@ class AddAnUserController extends GetxController {
   ///Switches
   bool _viewBookings = false;
   bool _weatherReport = false;
-
   bool _createBookings = false;
   bool _editBookings = false;
   bool _personalAttendanceReport = false;
@@ -221,6 +251,7 @@ class AddAnUserController extends GetxController {
   }
 
   reset() {
+    employeeIdTED.text = "";
     firstNameTED.text = "";
     lastNameTED.text = "";
     phoneNumberTED.text = "";

@@ -8,6 +8,7 @@ import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
+import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/employees/controllers/add-an-employee-controller.dart';
 
 class AddAnUser extends StatelessWidget {
@@ -45,6 +46,12 @@ class AddAnUser extends StatelessWidget {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
+                        SizedBox(height: 10),
+                        Text(
+                          "Last Employee ID : ${counterModel.employee.toString()}",
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
                         buildEmployeeID(),
                         Row(
                           children: [
@@ -466,6 +473,7 @@ class AddAnUser extends StatelessWidget {
         color: AppColors.background.white,
         onTap: () {
           Get.back();
+          logic.controller.reset();
         },
       ),
     );

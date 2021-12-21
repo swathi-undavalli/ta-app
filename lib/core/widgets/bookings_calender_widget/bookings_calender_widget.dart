@@ -11,6 +11,7 @@ import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/dummy.dart';
+import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
 class BookingsCalenderWidget extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
@@ -195,20 +196,41 @@ class BookingsCalenderWidget extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
-              padding: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  buildTitle("Bookings"),
-                  controller.showLoading
-                      ? SizedBox(
-                          width: 10,
-                          height: 10,
-                          child: CircularProgressIndicator(
-                            color: AppColors.background.black,
-                            strokeWidth: 1,
-                          ),
-                        )
-                      : SizedBox(),
+                  Row(
+                    children: [
+                      buildTitle("Bookings"),
+                      controller.showLoading
+                          ? SizedBox(
+                              width: 10,
+                              height: 10,
+                              child: CircularProgressIndicator(
+                                color: AppColors.background.black,
+                                strokeWidth: 1,
+                              ),
+                            )
+                          : SizedBox(),
+                    ],
+                  ),
+                  Row(
+                    children: [
+                      buildSessionCount(
+                          session: "T",
+                          count: controller.totalTheoryPax,
+                          color: Colors.orangeAccent),
+                      buildSessionCount(
+                          session: "P",
+                          count: controller.totalPoolPax,
+                          color: Colors.green),
+                      buildSessionCount(
+                          session: "D",
+                          count: controller.totalDivePax,
+                          color: Colors.lightBlueAccent),
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -247,24 +269,46 @@ class BookingsCalenderWidget extends StatelessWidget {
     });
   }
 
+  Widget buildSessionCount({String session, int count, Color color}) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 5.0, right: 5),
+      child: Row(
+        children: [
+          Text(
+            "$session: ",
+            style: TextStyle(
+                color: AppColors.text.black,
+                fontSize: 12,
+                fontWeight: FontWeight.normal),
+          ),
+          Text(
+            "$count ",
+            style: TextStyle(
+                color: color, fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget buildBookingsList() {
     return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
       print(controller.bookings);
       List<ItemModel> expansionList = [];
       if (controller.selectedType == null)
-        expansionList = controller.expansionBookings;
+        expansionList = controller.expansionItemModels;
       else if (controller.selectedType == FilterType.Theory) {
-        controller.expansionBookings.forEach((element) {
+        controller.expansionItemModels.forEach((element) {
           if (element.session.contains("Theory")) expansionList.add(element);
           controller.theoryCount = expansionList.length;
         });
       } else if (controller.selectedType == FilterType.Pool) {
-        controller.expansionBookings.forEach((element) {
+        controller.expansionItemModels.forEach((element) {
           if (element.session.contains("Pool")) expansionList.add(element);
           controller.poolCount = expansionList.length;
         });
       } else if (controller.selectedType == FilterType.Dive) {
-        controller.expansionBookings.forEach((element) {
+        controller.expansionItemModels.forEach((element) {
           if (element.session.contains("Dive")) expansionList.add(element);
           controller.diveCount = expansionList.length;
         });
@@ -293,7 +337,7 @@ class BookingsCalenderWidget extends StatelessWidget {
 
   Widget buildTitle(String text) {
     return Container(
-      padding: const EdgeInsets.only(left: 20, right: 20),
+      // padding: const EdgeInsets.only(left: 20, right: 10),
       alignment: Alignment.centerLeft,
       child: Text(
         text,
@@ -329,6 +373,33 @@ class BookingsCalenderWidget extends StatelessWidget {
             logic.filterBookingsList();
             onDateTimeSelected(controller.selectedDate);
           }
+
+          //   controller.theoryCount = 0;
+          //   controller.poolCount = 0;
+          //   controller.diveCount = 0;
+          //
+          //   controller.bookings.forEach(
+          //     (booking) {
+          //       booking.theoryDate.forEach((date) {
+          //         print("theory loop");
+          //         if (checkDate(date, controller.selectedDate)) {
+          //           controller.theoryCount += booking.noOfPersons;
+          //         }
+          //       });
+          //       booking.poolDate.forEach((date) {
+          //         print("theory loop");
+          //         if (checkDate(date, controller.selectedDate)) {
+          //           controller.poolCount += booking.noOfPersons;
+          //         }
+          //       });
+          //       booking.diveDate.forEach((date) {
+          //         print("theory loop");
+          //         if (checkDate(date, controller.selectedDate)) {
+          //           controller.theoryCount += booking.noOfPersons;
+          //         }
+          //       });
+          //     },
+          //   );
         },
         child: Stack(
           children: [
@@ -482,18 +553,19 @@ class BookingsCalenderWidget extends StatelessWidget {
   Widget getEventsCount(
       BookingsCalenderWidgetController controller, DateTime date) {
     var show = false;
-    int count = 0;
+    int totalBookings = 0;
+    int totalPax = 0;
     for (DateTime booking in logic.controller.bookingTimings) {
       if (controller.isDiveSession) {
         if (booking.hour == date.hour &&
             booking.day == date.day &&
             booking.minute == date.minute) {
-          count++;
+          totalBookings++;
           show = true;
         }
       } else {
         if (booking.hour == date.hour && booking.day == date.day) {
-          count++;
+          totalBookings++;
           show = true;
         }
       }
@@ -507,7 +579,67 @@ class BookingsCalenderWidget extends StatelessWidget {
             border: Border.all(color: AppColors.background.skyBlue)),
         child: Center(
           child: Text(
-            count.toString(),
+            totalBookings.toString(),
+            style: TextStyle(fontSize: 8),
+          ),
+        ),
+      );
+    else
+      return null;
+  }
+
+  Widget getPAXCount(
+      BookingsCalenderWidgetController controller, DateTime date) {
+    var show = false;
+    int totalBookings = 0;
+    int totalPax = 0;
+
+    for (BookingModel booking in controller.bookings) {
+      print("=====================hell");
+      var list = [];
+      if (booking.diveDate != null) {
+        list.addAll(booking.diveDate);
+      }
+      if (booking.poolDate != null) {
+        list.addAll(booking.poolDate);
+      }
+      if (booking.theoryDate != null) {
+        list.addAll(booking.theoryDate);
+      }
+
+      for (DateTime date in list) {
+        if (isSameHour(date, controller.selectedDate)) {
+          print(booking.toMap());
+        }
+      }
+    }
+
+    for (DateTime bookingTime in logic.controller.bookingTimings) {
+      print("=====================hell");
+      if (controller.isDiveSession) {
+        if (bookingTime.hour == date.hour &&
+            bookingTime.day == date.day &&
+            bookingTime.minute == date.minute) {
+          totalBookings++;
+          show = true;
+        }
+      } else {
+        if (bookingTime.hour == date.hour && bookingTime.day == date.day) {
+          totalBookings++;
+          show = true;
+        }
+      }
+    }
+    if (show)
+      return Container(
+        height: 12,
+        width: 12,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(color: AppColors.background.skyBlue)),
+        child: Center(
+          child: Text(
+            totalBookings.toString(),
             style: TextStyle(fontSize: 8),
           ),
         ),

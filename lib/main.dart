@@ -11,7 +11,6 @@ import 'package:temple_adventures/features/Activities/presentation/screens/add-n
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/edit-booking-details-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-customer-screen.dart';
@@ -24,6 +23,7 @@ import 'package:temple_adventures/features/edit-booking/presentation/screens/edi
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
 import 'features/Activities/presentation/screens/all-activities-screen.dart';
 import 'features/dashboard/controller/dashboard-controller.dart';
@@ -80,7 +80,7 @@ class MyApp extends StatelessWidget {
               CustomerRegistrationScreen(),
           NewCustomerScreen.id: (context) => NewCustomerScreen(),
           AllActivitiesScreen.id: (context) => AllActivitiesScreen(),
-          EditBookingDetailsScreen.id: (context) => EditBookingDetailsScreen(),
+          // EditBookingDetailsScreen.id: (context) => EditBookingDetailsScreen(),
           AddNewActivityScreen.id: (context) => AddNewActivityScreen(),
           ActivityEditScreen.id: (context) => ActivityEditScreen(),
           AllBookingsScreen.id: (context) => AllBookingsScreen(),
@@ -97,6 +97,7 @@ class MyApp extends StatelessWidget {
           PaperWorkScreen.id: (context) => PaperWorkScreen(),
           AddCustomerDetailsScreen.id: (context) => AddCustomerDetailsScreen(),
           AllEmployeesScreen.id: (context) => AllEmployeesScreen(),
+          LogScreen.id: (context) => LogScreen(),
           EmployeeProfileScreen.id: (context) => EmployeeProfileScreen(),
           EmployeeDetailsScreen.id: (context) => EmployeeDetailsScreen(),
           CompressorScreen.id: (context) => CompressorScreen(),

@@ -9,7 +9,6 @@ import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings
 import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/edit-booking-details-screen.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
@@ -203,7 +202,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   buildKeyValuePairs(
                                       "Balance", items[i].balance),
                                   buildKeyValuePairs(
-                                      "PAX", items[i].pax.toString()),
+                                      "Pax", items[i].pax.toString()),
                                   ((items[i] != null) &&
                                           (items[i].receiptNo != null))
                                       ? buildKeyValuePairs(

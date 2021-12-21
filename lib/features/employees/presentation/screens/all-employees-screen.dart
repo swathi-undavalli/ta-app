@@ -42,42 +42,52 @@ class AllEmployeesScreen extends StatelessWidget {
           elevation: 0,
           backgroundColor: AppColors.background.white,
         ),
-        body: SafeArea(
-          child: Stack(
-            children: [
-              Column(
-                children: [
-                  SizedBox(height: 10),
-                  buildSearchBar(),
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        logic.controller.showSuggestions = false;
-                      },
-                      child: SingleChildScrollView(
-                        physics: BouncingScrollPhysics(),
-                        child: Padding(
-                          padding: const EdgeInsets.only(
-                              top: 0, bottom: 20, left: 25, right: 20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // buildRoles(),
-                              // SizedBox(height: 10).
-                              SizedBox(height: 10),
-                              buildAllEmployees(),
-                              SizedBox(height: 10),
-                            ],
+        body: RefreshIndicator(
+          color: AppColors.IconColor.black,
+          onRefresh: () async {
+            logic.controller.update();
+          },
+          child: SafeArea(
+            child: Stack(
+              children: [
+                Column(
+                  children: [
+                    SizedBox(height: 10),
+                    buildSearchBar(),
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () {
+                          logic.controller.showSuggestions = false;
+                        },
+                        child: SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
+                          child: Padding(
+                            padding: const EdgeInsets.only(
+                                top: 0, bottom: 20, left: 25, right: 20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // buildRoles(),
+                                // SizedBox(height: 10).
+                                SizedBox(height: 10),
+                                GetBuilder<AllEmployeesController>(
+                                    builder: (controller) {
+                                  print(controller.data);
+                                  return buildAllEmployees();
+                                }),
+                                SizedBox(height: 10),
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              buildSuggestions(),
-            ],
+                  ],
+                ),
+                buildSuggestions(),
+              ],
+            ),
           ),
         ),
       ),
@@ -99,6 +109,7 @@ class AllEmployeesScreen extends StatelessWidget {
   }
 
   ///===============UI=============///
+
   Widget buildSuggestions() {
     return GetBuilder<AllEmployeesController>(builder: (controller) {
       if (controller.showSuggestions)
@@ -245,70 +256,6 @@ class AllEmployeesScreen extends StatelessWidget {
       ),
     );
   }
-
-  // Widget buildOptions() {
-  //   return GetBuilder<AllEmployeesController>(builder: (controller) {
-  //     return PopupMenuButton<String>(
-  //         icon: Icon(
-  //           Icons.more_vert_rounded,
-  //           size: 25,
-  //           color: AppColors.IconColor.black,
-  //         ),
-  //         onSelected: handleClick,
-  //         itemBuilder: (BuildContext context) {
-  //           return {'Call', 'Delete', "Info"}.map((String choice) {
-  //             return PopupMenuItem<String>(
-  //               value: choice,
-  //               child: Text(choice),
-  //             );
-  //           }).toList();
-  //         });
-  //   });
-  // }
-
-  void handleClick(String value) {
-    switch (value) {
-      case 'Call':
-        Get.toNamed(AddAnUser.id);
-        break;
-      case 'Delete':
-        break;
-      case 'Info':
-        break;
-    }
-  }
-
-  // Widget buildRoles() {
-  //   return GetBuilder<AllEmployeesController>(builder: (controller) {
-  //     return SingleChildScrollView(
-  //       scrollDirection: Axis.horizontal,
-  //       physics: BouncingScrollPhysics(),
-  //       child: Row(
-  //         children: [
-  //           ...controller.roles.map((e) => Padding(
-  //                 padding: const EdgeInsets.all(10.0),
-  //                 child: Container(
-  //                   height: 35,
-  //                   width: 120,
-  //                   decoration: BoxDecoration(
-  //                     borderRadius: BorderRadius.circular(10),
-  //                     color: Colors.black12,
-  //                   ),
-  //                   child: Center(
-  //                       child: Text(
-  //                     e,
-  //                     style: TextStyle(
-  //                         color: AppColors.text.black,
-  //                         fontSize: 13,
-  //                         fontWeight: FontWeight.w600),
-  //                   )),
-  //                 ),
-  //               ))
-  //         ],
-  //       ),
-  //     );
-  //   });
-  // }
 
   Widget buildSearchBar() {
     return Container(

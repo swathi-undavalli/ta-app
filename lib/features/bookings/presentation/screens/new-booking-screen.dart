@@ -103,64 +103,6 @@ class NewBookingScreen extends StatelessWidget {
     });
   }
 
-  // Widget buildActivityDropDown() {
-  //   return Container(
-  //     width: 320,
-  //     child: Row(
-  //       children: [
-  //         Expanded(
-  //           child: Padding(
-  //             padding: const EdgeInsets.only(right: 12, top: 12),
-  //             child: Container(
-  //               width: Get.width,
-  //               alignment: Alignment.centerLeft,
-  //               child: buildSubTitle(text: "Activities"),
-  //             ),
-  //           ),
-  //         ),
-  //         Container(
-  //           width: 215,
-  //           child: GetBuilder<NewBookingController>(builder: (controller) {
-  //             return Padding(
-  //               padding: const EdgeInsets.only(left: 13),
-  //               child: DropdownButton(
-  //                 // focusNode: controller.locationNode,
-  //                 underline: Container(height: 1, color: Colors.black45),
-  //                 isExpanded: true,
-  //                 value: (controller.selectedActivity == null ||
-  //                         controller.selectedActivity.length == 0)
-  //                     ? null
-  //                     : controller.selectedActivity[0],
-  //                 onChanged: (activity) {
-  //                   if (controller.selectedActivity == null ||
-  //                       controller.selectedActivity.length == 0) {
-  //                     controller.selectedActivity = [];
-  //                     controller.selectedActivity.add(activity);
-  //                   } else
-  //                     controller.selectedActivity[0] = activity;
-  //                   controller.priceTED.text = activity.price.toString();
-  //                   logic.getPrice();
-  //                   controller.update();
-  //                 },
-  //                 items: controller.activities.toSet().toList().map((activity) {
-  //                   return DropdownMenuItem(
-  //                     child: new Text(
-  //                       activity.name,
-  //                       style: TextStyle(
-  //                         fontWeight: FontWeight.normal,
-  //                       ),
-  //                     ),
-  //                     value: activity,
-  //                   );
-  //                 }).toList(),
-  //               ),
-  //             );
-  //           }),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
 
   Widget buildAppBar() {
     return AppBar(

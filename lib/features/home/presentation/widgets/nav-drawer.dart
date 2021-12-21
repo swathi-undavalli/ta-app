@@ -9,6 +9,7 @@ import 'package:temple_adventures/features/employees/presentation/screens/employ
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/all-activities-screen.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 class NavDrawer extends StatelessWidget {
   static const String id = "sideMenuWidget";
@@ -34,7 +35,7 @@ class NavDrawer extends StatelessWidget {
           EmployeeAccess(
             access: AccessRights.personalAttendanceReport,
             child: buildMenuItem(
-                icon: Icons.book_rounded,
+                icon: Icons.collections_bookmark_rounded,
                 text: 'Attendance',
                 onTap: () {
                   Get.offAndToNamed(AttendancePage.id);
@@ -50,6 +51,7 @@ class NavDrawer extends StatelessWidget {
               },
             ),
           ),
+
           // buildMenuItem(
           //   icon: Icons.local_gas_station,
           //   text: 'Compressor',
@@ -57,15 +59,23 @@ class NavDrawer extends StatelessWidget {
           //     Get.offAndToNamed(CompressorScreen.id);
           //   },
           // ),
+
           EmployeeAccess(
             access: AccessRights.viewBookings,
             child: buildMenuItem(
-              icon: Icons.collections_bookmark_rounded,
+              icon: Icons.add_to_photos_sharp,
               text: 'All Bookings',
               onTap: () {
                 Get.offAndToNamed(AllBookingsScreen.id);
               },
             ),
+          ),
+          buildMenuItem(
+            icon: Icons.book_rounded,
+            text: 'Logs',
+            onTap: () {
+              Get.offAndToNamed(LogScreen.id);
+            },
           ),
           Spacer(),
           buildLine(),
