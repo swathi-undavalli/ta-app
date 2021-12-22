@@ -15,6 +15,8 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/edit-booking/controller/edit-booking-new-controller.dart';
+import 'package:temple_adventures/features/logs/models/log-model.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 class EditBookingNewScreen extends StatelessWidget {
   static const String id = "EditBookingNewScreen";
@@ -182,6 +184,13 @@ class EditBookingNewScreen extends StatelessWidget {
                     .collection("bookings")
                     .doc(controller.bookingModel.id)
                     .set(controller.bookingModel.toMap());
+                LogModel logModel = LogModel(
+                    type: LogType.bookingEdited,
+                    bookingId: controller.bookingModel.id);
+                FirebaseFirestore.instance
+                    .collection("logs")
+                    .doc()
+                    .set(logModel.toMap());
                 Get.back();
                 controller.reset();
                 BookingsCalenderWidgetLogic bookingCalenderLogic =

@@ -6,6 +6,8 @@ import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/features/Activities/controller/activity-edit-controller.dart';
 import 'package:temple_adventures/features/Activities/controller/all-activities-controller.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
+import 'package:temple_adventures/features/logs/models/log-model.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 import '../../counter-model.dart';
 
@@ -40,6 +42,9 @@ class AddNewActivityLogic {
           .collection("counter")
           .doc("count")
           .set(counterModel.toMap());
+      LogModel logModel =
+          LogModel(type: LogType.addActivity, activityName: activityModel.name);
+      FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
       Fluttertoast.showToast(msg: "Saved");
       disposeKeyboard();
       controller.reset();
@@ -66,6 +71,7 @@ class AddNewActivityController extends GetxController {
     priorityTED.text = "";
     colorTED.text = "";
   }
+
   List<String> priority = ['0', '1'];
 
   List<String> colorCode = ['Blue', 'Green', 'Purple', 'Red', 'White'];

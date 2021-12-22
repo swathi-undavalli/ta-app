@@ -5,6 +5,9 @@ import 'package:temple_adventures/features/attendance/attendance-model.dart';
 import 'package:intl/intl.dart';
 import 'dart:math' as math;
 
+import 'package:temple_adventures/features/logs/models/log-model.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
+
 class AttendanceRepo {
   static Attendance attendance;
 
@@ -32,6 +35,8 @@ class AttendanceRepo {
     attendance.checkInLocation = getCurrentLocation();
     attendance.checkInInput = "TA-Mobile App";
     await updateAttendance(attendance);
+    LogModel logModel = LogModel(type: LogType.signedIn);
+    FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
   }
 
   static checkOut() async {
@@ -40,6 +45,8 @@ class AttendanceRepo {
     attendance.checkOutLocation = getCurrentLocation();
     attendance.checkOutInput = "TA-Mobile App";
     await updateAttendance(attendance);
+    LogModel logModel = LogModel(type: LogType.signedOut);
+    FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
   }
 
   static getCurrentLocation() {

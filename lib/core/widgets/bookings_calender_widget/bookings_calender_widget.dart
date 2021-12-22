@@ -375,33 +375,6 @@ class BookingsCalenderWidget extends StatelessWidget {
             logic.filterBookingsList();
             onDateTimeSelected(controller.selectedDate);
           }
-
-          //   controller.theoryCount = 0;
-          //   controller.poolCount = 0;
-          //   controller.diveCount = 0;
-          //
-          //   controller.bookings.forEach(
-          //     (booking) {
-          //       booking.theoryDate.forEach((date) {
-          //         print("theory loop");
-          //         if (checkDate(date, controller.selectedDate)) {
-          //           controller.theoryCount += booking.noOfPersons;
-          //         }
-          //       });
-          //       booking.poolDate.forEach((date) {
-          //         print("theory loop");
-          //         if (checkDate(date, controller.selectedDate)) {
-          //           controller.poolCount += booking.noOfPersons;
-          //         }
-          //       });
-          //       booking.diveDate.forEach((date) {
-          //         print("theory loop");
-          //         if (checkDate(date, controller.selectedDate)) {
-          //           controller.theoryCount += booking.noOfPersons;
-          //         }
-          //       });
-          //     },
-          //   );
         },
         child: Stack(
           children: [

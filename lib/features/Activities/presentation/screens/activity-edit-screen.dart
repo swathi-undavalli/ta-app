@@ -9,6 +9,8 @@ import 'package:temple_adventures/features/Activities/controller/activity-edit-c
 import 'package:temple_adventures/features/Activities/controller/all-activities-controller.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
+import 'package:temple_adventures/features/logs/models/log-model.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 class ActivityEditScreen extends StatelessWidget {
   static const String id = "PriceEditScreen";
@@ -80,6 +82,9 @@ class ActivityEditScreen extends StatelessWidget {
                     .collection("catalogue")
                     .doc(activityArg.id)
                     .set(activityArg.toMap());
+                LogModel logModel = LogModel(type: LogType.editActivity,activityName: activityArg.name);
+                FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
+
                 Get.back();
                 controller.reset();
                 allActivitiesLogic.controller.allActivitiesList = [];

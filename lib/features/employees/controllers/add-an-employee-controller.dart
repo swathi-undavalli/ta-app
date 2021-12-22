@@ -9,6 +9,8 @@ import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_adventures/features/logs/models/log-model.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 class AddAnUserLogic {
   AddAnUserController controller = Get.put(AddAnUserController());
@@ -95,6 +97,9 @@ class AddAnUserLogic {
           .doc("count")
           .set(counterModel.toMap());
       Fluttertoast.showToast(msg: "Saved");
+      LogModel logModel = LogModel(type: LogType.addEmployee,employeeName: employee.name);
+      FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
+
       disposeKeyboard();
       Get.back();
       controller.reset();
@@ -139,6 +144,9 @@ class AddAnUserLogic {
           .collection('employeeFullInformation')
           .doc('employeeData')
           .set(employee.toMap());
+      LogModel logModel = LogModel(type: LogType.editEmployee,employeeName: employee.name);
+      FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
+
       Fluttertoast.showToast(msg: "Saved");
       disposeKeyboard();
       Get.back();

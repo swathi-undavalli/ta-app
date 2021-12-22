@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
+import 'package:temple_adventures/features/logs/models/log-model.dart';
+import 'package:intl/intl.dart';
 
 class LogScreen extends StatelessWidget {
   static const String id = "LogScreen";
@@ -73,44 +75,148 @@ class LogScreen extends StatelessWidget {
           }
           return Column(
             children: snapshot.data.docs.map((document) {
+              LogModel logModel = LogModel.fromMap(document.data());
               print("Started");
               return buildLog(
-                logType: convertToEnum(document["type"]),
-              );
-              return Center(
-                child: Container(
-                  width: MediaQuery.of(context).size.width / 1.2,
-                  height: MediaQuery.of(context).size.height / 6,
-                  child: Text(
-                    "Type: " + document["type"],
-                  ),
-                ),
+                log: logModel,
               );
             }).toList(),
           );
         });
   }
 
-  convertToEnum(String e) {
-    switch (e) {
-      case "bookingCreated":
-        return LogType.bookingCreated;
-      case "bookingEdited":
-        return LogType.bookingEdited;
-      case "bookingDeleted":
-        return LogType.bookingDeleted;
-      case "signedIn":
-        return LogType.signedIn;
-      case "signedOut":
-        return LogType.signedOut;
+  Widget buildLog({LogModel log}) {
+    getIcon() {
+      switch (log.type) {
+        case LogType.bookingCreated:
+        case LogType.bookingDeleted:
+        case LogType.bookingEdited:
+          return Text(
+            log.bookingId,
+            style: TextStyle(
+              color: AppColors.text.white,
+              fontSize: 15,
+              fontWeight: FontWeight.w600,
+              fontFamily: AppFonts.nunito,
+            ),
+          );
+        case LogType.signedIn:
+          return Icon(
+            Icons.login_outlined,
+            color: AppColors.text.white,
+            size: 23,
+          );
+        case LogType.signedOut:
+          return Icon(
+            Icons.logout_outlined,
+            color: AppColors.text.white,
+            size: 23,
+          );
+        case LogType.addActivity:
+          return Image.asset(
+            "images/outline_scuba_diving_black_24dp.png",
+            color: AppColors.background.white,
+            height: 23,
+            width: 23,
+          );
+        case LogType.editActivity:
+          return Image.asset(
+            "images/outline_scuba_diving_black_24dp.png",
+            color: AppColors.background.white,
+            height: 23,
+            width: 23,
+          );
+        case LogType.addEmployee:
+          return Icon(
+            Icons.account_circle_rounded,
+            color: AppColors.text.white,
+            size: 23,
+          );
+        case LogType.editEmployee:
+          return Icon(
+            Icons.account_circle_rounded,
+            color: AppColors.text.white,
+            size: 23,
+          );
+        case LogType.deleteEmployee:
+          return Icon(
+            Icons.account_circle_rounded,
+            color: AppColors.text.white,
+            size: 23,
+          );
+      }
     }
-  }
 
-  Widget buildLog(
-      {LogType logType = LogType.bookingCreated,
-      String title = "Booking Created",
-      String name = "Sahitha",
-      String bookingId = "119"}) {
+    getColor() {
+      switch (log.type) {
+        case LogType.bookingCreated:
+        case LogType.bookingEdited:
+        case LogType.bookingDeleted:
+          // return Color(0xff454444);
+          return AppColors.text.skyBlue;
+        case LogType.signedIn:
+          // return AppColors.text.black;
+          // return Color(0xff94FAC0);
+          return AppColors.text.skyBlue;
+        // return Color(0xff454444);
+        case LogType.signedOut:
+          // return AppColors.text.black;
+          // return Color(0xffEC748C);
+          return AppColors.text.skyBlue;
+        // return Color(0xff454444);
+        case LogType.addActivity:
+          // return AppColors.text.black;
+          // return Color(0xff7DA2B4);
+          return AppColors.text.skyBlue;
+        // return Color(0xff454444);
+        case LogType.editActivity:
+          // return AppColors.text.black;
+          // return Color(0xff7DA2B4);
+          return AppColors.text.skyBlue;
+        // return Color(0xff454444);
+        case LogType.addEmployee:
+          // return AppColors.text.black;
+          // return Color(0xff707070);
+          return AppColors.text.skyBlue;
+        // return Color(0xff454444);
+        case LogType.editEmployee:
+          // return AppColors.text.black;
+          // return Color(0xff707070);
+          return AppColors.text.skyBlue;
+        // return Color(0xff454444);
+        case LogType.deleteEmployee:
+          // return AppColors.text.black;
+          // return Color(0xff707070);
+          return AppColors.text.skyBlue;
+        // return Color(0xff454444);
+      }
+    }
+
+    getTitle() {
+      switch (log.type) {
+        case LogType.bookingCreated:
+          return "Booking Created";
+        case LogType.bookingEdited:
+          return "Booking Edited";
+        case LogType.bookingDeleted:
+          return "Booking Deleted";
+        case LogType.signedIn:
+          return "Signed In";
+        case LogType.signedOut:
+          return "Signed Out";
+        case LogType.addActivity:
+          return "Added ${log.activityName} ";
+        case LogType.editActivity:
+          return "Edited ${log.activityName} ";
+        case LogType.addEmployee:
+          return "Added ${log.employeeName}";
+        case LogType.editEmployee:
+          return "Edited ${log.employeeName}";
+        case LogType.deleteEmployee:
+          return "Deleted ${log.employeeName}";
+      }
+    }
+
     return Column(
       children: [
         Row(
@@ -118,32 +224,35 @@ class LogScreen extends StatelessWidget {
             Container(
               height: 40,
               width: 40,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle, color: getColor(logType)),
+              decoration:
+                  BoxDecoration(shape: BoxShape.circle, color: getColor()),
               child: Center(
-                child: getIcon(logType, bookingId),
+                child: getIcon(),
               ),
             ),
             SizedBox(width: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  title,
-                  style: TextStyle(
-                    color: AppColors.text.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: AppFonts.nunito,
+                Container(
+                  width: 150,
+                  child: Text(
+                    getTitle(),
+                    style: TextStyle(
+                      color: AppColors.text.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: AppFonts.nunito,
+                    ),
                   ),
                 ),
                 SizedBox(height: 2),
                 Text(
-                  name,
+                  "${log.createdBy}",
                   style: TextStyle(
-                    color: AppColors.text.black,
+                    color: AppColors.text.darkgrey,
                     fontSize: 12,
-                    fontWeight: FontWeight.bold,
+                    fontWeight: FontWeight.w600,
                     fontFamily: AppFonts.nunito,
                   ),
                 ),
@@ -154,9 +263,9 @@ class LogScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "25 Sep, 2020",
+                  DateFormat("dd MMM, yyyy").format(log.timeStamp.toDate()),
                   style: TextStyle(
-                    color: Color(0xff66B700),
+                    color: AppColors.text.black,
                     fontSize: 12,
                     fontWeight: FontWeight.bold,
                     fontFamily: AppFonts.nunito,
@@ -164,9 +273,9 @@ class LogScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 5),
                 Text(
-                  "12:00 AM",
+                  DateFormat("hh:mm a").format(log.timeStamp.toDate()),
                   style: TextStyle(
-                    color: Color(0xff1CC900),
+                    color: AppColors.text.skyBlue,
                     fontSize: 16,
                     fontWeight: FontWeight.bold,
                     fontFamily: AppFonts.nunito,
@@ -201,47 +310,6 @@ class LogScreen extends StatelessWidget {
       ),
     );
   }
-
-  getIcon(LogType type, String bookingId) {
-    switch (type) {
-      case LogType.bookingCreated:
-      case LogType.bookingDeleted:
-      case LogType.bookingEdited:
-        return Text(
-          bookingId,
-          style: TextStyle(
-            color: AppColors.text.white,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            fontFamily: AppFonts.nunito,
-          ),
-        );
-      case LogType.signedIn:
-        return Icon(
-          Icons.check,
-          color: AppColors.text.white,
-        );
-
-      case LogType.signedOut:
-        return Icon(
-          Icons.clear,
-          color: AppColors.text.white,
-        );
-    }
-  }
-
-  getColor(LogType type) {
-    switch (type) {
-      case LogType.bookingCreated:
-      case LogType.bookingEdited:
-      case LogType.bookingDeleted:
-        return AppColors.text.skyBlue;
-      case LogType.signedIn:
-        return Colors.greenAccent;
-      case LogType.signedOut:
-        return Colors.redAccent;
-    }
-  }
 }
 
 enum LogType {
@@ -255,5 +323,4 @@ enum LogType {
   editEmployee,
   addEmployee,
   deleteEmployee,
-
 }

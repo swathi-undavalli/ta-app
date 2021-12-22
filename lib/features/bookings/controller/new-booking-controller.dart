@@ -20,6 +20,9 @@ import 'package:temple_adventures/features/bookings/presentation/screens/new-boo
 import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
 import 'package:temple_adventures/features/dashboard/controller/dashboard-controller.dart';
 import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/logs/models/log-model.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 class NewBookingLogic {
   NewBookingLogic() {
@@ -47,6 +50,7 @@ class NewBookingLogic {
 
   onContinuePressedBookingForm() {
     controller.bookingModel.remarks = controller.remarksTED.text.toString();
+    controller.bookingModel.employeeName = currentEmployee.firstName + currentEmployee.lastName;
     if (controller.payingNowTED.text == "" ||
         controller.payingNowTED.text == 0.toString()) {
       createBooking();
@@ -423,6 +427,8 @@ class NewBookingLogic {
     controller.bookingId =
         await FirebaseApi.addNewBooking(controller.bookingModel);
     print(controller.bookingId);
+    LogModel logModel = LogModel(type: LogType.bookingCreated,bookingId:controller.bookingId);
+    FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
     controller.update();
   }
 

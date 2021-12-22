@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:meta/meta.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 import 'dart:convert';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
@@ -9,22 +11,27 @@ String logModelToMap(LogModel data) => json.encode(data.toMap());
 class LogModel {
   LogModel({
     @required this.type,
-    @required this.createdBy,
-    @required this.timeStamp,
-    @required this.bookingId,
-    @required this.activityName,
-    @required this.employeeName,
-  });
+     this.createdBy,
+     this.timeStamp,
+     this.bookingId,
+     this.activityName,
+     this.employeeName,
+  }){
+    if(timeStamp == null)
+     timeStamp = Timestamp.fromDate(DateTime.now());
+    if(createdBy == null)
+   createdBy = currentEmployee.name;
+  }
 
   LogType type;
   String createdBy;
-  String timeStamp;
+  Timestamp timeStamp;
   String bookingId;
   String activityName;
   String employeeName;
 
   factory LogModel.fromMap(Map<String, dynamic> json) => LogModel(
-        type: json["type"],
+        type: convertToEnum(json["type"]),
         createdBy: json["createdBy"],
         timeStamp: json["timeStamp"],
         bookingId: json["bookingId"],
@@ -33,7 +40,7 @@ class LogModel {
       );
 
   Map<String, dynamic> toMap() => {
-        "type": type,
+        "type": convertToString(type),
         "createdBy": createdBy,
         "timeStamp": timeStamp,
         "bookingId": bookingId,

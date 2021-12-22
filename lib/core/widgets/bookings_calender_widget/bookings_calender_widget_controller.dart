@@ -140,7 +140,7 @@ class BookingsCalenderWidgetLogic {
             im.session = "Theory";
             im.time = DateFormat("hh:mm").format(date);
             print("im.time ${im.time}");
-            controller.theoryCount++;
+            controller.theoryCount += booking.noOfPersons;
             newItemsList.add(im);
           }
         });
@@ -154,7 +154,7 @@ class BookingsCalenderWidgetLogic {
             im.session = "Pool";
             im.time = DateFormat("hh:mm").format(date);
             print("im.time ${im.time}");
-            controller.poolCount++;
+            controller.poolCount += booking.noOfPersons;
             newItemsList.add(im);
           }
         });
@@ -168,7 +168,7 @@ class BookingsCalenderWidgetLogic {
             im.session = "Dive";
             im.time = DateFormat("hh:mm").format(date);
             print("im.time ${im.time}");
-            controller.diveCount++;
+            controller.diveCount += booking.noOfPersons;
             newItemsList.add(im);
           }
         });
@@ -283,6 +283,7 @@ class BookingsCalenderWidgetController extends GetxController {
   FilterType _selectedType;
 
   int theoryCount = 0, poolCount = 0, diveCount = 0;
+  // int theoryCountN = 0, poolCountN = 0, diveCountN = 0;
 
   bool showDetails;
 

@@ -28,6 +28,7 @@ class BookingModel {
     this.receiptNo,
     this.discountType = "%",
     this.remarks,
+    this.employeeName,
   });
 
   List<ActivityModel> activity;
@@ -43,6 +44,7 @@ class BookingModel {
   String remarks;
   String paymentTransactionId;
   String receiptNo;
+  String employeeName;
   List<DateTime> poolDate;
   List<DateTime> diveDate;
   List<DateTime> theoryDate;
@@ -68,6 +70,7 @@ class BookingModel {
       paymentMode: json["paymentMode"],
       receiptNo: json["receiptNo"],
       remarks: json["remarks"],
+      employeeName: json["employeeName"],
       id: json["id"],
       location: json["location"],
       paymentTransactionId: json["paymentTransactionId"],
@@ -89,6 +92,7 @@ class BookingModel {
         "price": price,
         "id": id,
         "remarks": remarks,
+        "employeeName": employeeName,
         "discountSwitch": discountType,
         "tax": tax,
         "paid": payingNow,

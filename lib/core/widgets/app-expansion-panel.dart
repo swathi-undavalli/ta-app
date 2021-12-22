@@ -9,10 +9,9 @@ import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings
 import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/logs/models/log-model.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class BookingsExpansionPanel extends StatelessWidget {
@@ -58,7 +57,7 @@ class BookingsExpansionPanel extends StatelessWidget {
           duration: Duration(milliseconds: 200),
           curve: Curves.easeInCubic,
           alignment: Alignment.topCenter,
-          height: controller.isExpanded[i] ? 240 : 50,
+          height: controller.isExpanded[i] ? 260 : 50,
           width: 350,
           decoration: BoxDecoration(
             color: getColor(),
@@ -140,6 +139,15 @@ class BookingsExpansionPanel extends StatelessWidget {
                                             .collection("bookings")
                                             .doc(itemModel.bookingModel.id)
                                             .delete();
+                                        LogModel logModel = LogModel(
+                                            type: LogType.bookingDeleted,
+                                            bookingId:
+                                                itemModel.bookingModel.id);
+                                        FirebaseFirestore.instance
+                                            .collection("logs")
+                                            .doc()
+                                            .set(logModel.toMap());
+
                                         Get.back();
                                         onDeletePressed();
                                         BookingsCalenderWidgetLogic
@@ -215,6 +223,33 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   buildKeyValuePairs("Time", items[i].time),
                                   buildKeyValuePairs(
                                       "Session", items[i].session),
+                                  SizedBox(height: 10),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Container(
+                                      alignment: Alignment.centerRight,
+                                      child: RichText(
+                                        text: TextSpan(
+                                          text: "Created By : ",
+                                          style: TextStyle(
+                                            fontFamily: AppFonts.nunito,
+                                            color: AppColors.text.darkgrey,
+                                            fontSize: 10,
+                                          ),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text: items[i].employeeName,
+                                              style: TextStyle(
+                                                color: Color(0xff484646),
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 10,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
                                 ],
                               );
                             return SizedBox();
@@ -297,6 +332,7 @@ class ItemModel {
   final int pax;
   final bool registration;
   final String receiptNo;
+  final String employeeName;
   BookingModel bookingModel;
 
   ItemModel(
@@ -315,6 +351,7 @@ class ItemModel {
       @required this.registration,
       this.expanded = false,
       @required this.name,
+      @required this.employeeName,
       @required this.pax,
       @required this.email,
       this.bookingModel});
@@ -392,6 +429,7 @@ class ItemModel {
       remarks: bookingModel.remarks,
       time: getTime(),
       session: getSessions(),
+      employeeName: bookingModel.employeeName,
       bookingModel: bookingModel,
     );
   }
