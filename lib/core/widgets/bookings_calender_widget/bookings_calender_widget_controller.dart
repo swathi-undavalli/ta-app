@@ -49,9 +49,9 @@ class BookingsCalenderWidgetLogic {
         controller.theoryCount = 0;
         controller.poolCount = 0;
         controller.diveCount = 0;
-        controller.totalDivePax = 0;
-        controller.totalPoolPax = 0;
-        controller.totalTheoryPax = 0;
+        controller.theoryCountN = 0;
+        controller.poolCountN = 0;
+        controller.diveCountN = 0;
 
         print("===================wb1");
         controller.bookings.forEach((booking) {
@@ -70,7 +70,7 @@ class BookingsCalenderWidgetLogic {
           booking.theoryDate.forEach((date) {
             print("theory loop");
             if (checkDate(date, controller.selectedDate)) {
-              controller.totalTheoryPax += booking.noOfPersons;
+              controller.theoryCountN += booking.noOfPersons;
               controller.theoryCount++;
               im.session = im.session + "Theory, ";
               im.time = im.time + DateFormat("hh:mm ").format(date) + ", ";
@@ -81,7 +81,7 @@ class BookingsCalenderWidgetLogic {
             print("pool loop");
             print("date $date");
             if (checkDate(date, controller.selectedDate)) {
-              controller.totalPoolPax += booking.noOfPersons;
+              controller.poolCountN += booking.noOfPersons;
               controller.poolCount++;
               im.session = im.session + "Pool, ";
               im.time = im.time + DateFormat("hh:mm ").format(date) + ", ";
@@ -92,7 +92,7 @@ class BookingsCalenderWidgetLogic {
             print("dive loop");
             if (checkDate(date, controller.selectedDate)) {
               controller.diveCount++;
-              controller.totalDivePax += booking.noOfPersons;
+              controller.diveCountN += booking.noOfPersons;
               im.session = im.session + "Dive, ";
               im.time = im.time + DateFormat("hh:mm ").format(date) + ", ";
             }
@@ -140,7 +140,8 @@ class BookingsCalenderWidgetLogic {
             im.session = "Theory";
             im.time = DateFormat("hh:mm").format(date);
             print("im.time ${im.time}");
-            controller.theoryCount += booking.noOfPersons;
+            controller.theoryCount++;
+            controller.theoryCountN += booking.noOfPersons;
             newItemsList.add(im);
           }
         });
@@ -253,7 +254,11 @@ class BookingsCalenderWidgetLogic {
     controller.poolCount = 0;
     controller.theoryCount = 0;
     controller.diveCount = 0;
+    controller.poolCountN = 0;
+    controller.theoryCountN = 0;
+    controller.diveCountN = 0;
     controller.selectedDate = controller.calenderDates[index];
+    controller.selectedType = null;
     getBookings(controller.calenderDates[index]);
     getTime();
   }
@@ -283,15 +288,9 @@ class BookingsCalenderWidgetController extends GetxController {
   FilterType _selectedType;
 
   int theoryCount = 0, poolCount = 0, diveCount = 0;
-  // int theoryCountN = 0, poolCountN = 0, diveCountN = 0;
+  int theoryCountN = 0, poolCountN = 0, diveCountN = 0;
 
   bool showDetails;
-
-  int _totalDivePax = 0;
-
-  int _totalTheoryPax = 0;
-
-  int _totalPoolPax = 0;
 
   int lastDateIndex;
 
@@ -315,13 +314,6 @@ class BookingsCalenderWidgetController extends GetxController {
   List<ItemModel> get expansionItemModels => _expansionBookings;
 
   FilterType get selectedType => _selectedType;
-
-  int get totalDivePax => _totalDivePax;
-
-  set totalDivePax(int value) {
-    _totalDivePax = value;
-    update();
-  }
 
   set selectedType(FilterType value) {
     _selectedType = value;
@@ -350,20 +342,6 @@ class BookingsCalenderWidgetController extends GetxController {
 
   set selectedDate(value) {
     _selectedDate = value;
-    update();
-  }
-
-  int get totalTheoryPax => _totalTheoryPax;
-
-  set totalTheoryPax(int value) {
-    _totalTheoryPax = value;
-    update();
-  }
-
-  int get totalPoolPax => _totalPoolPax;
-
-  set totalPoolPax(int value) {
-    _totalPoolPax = value;
     update();
   }
 }

@@ -100,19 +100,19 @@ class BookingsCalenderWidget extends StatelessWidget {
                 buildTabButton("Theory", () {
                   controller.selectedType = FilterType.Theory;
                 },
-                    count: controller.theoryCount,
+                    count: controller.theoryCountN,
                     enable: controller.selectedType == FilterType.Theory,
                     color: Colors.orangeAccent),
                 buildTabButton("Pool", () {
                   controller.selectedType = FilterType.Pool;
                 },
-                    count: controller.poolCount,
+                    count: controller.poolCountN,
                     enable: controller.selectedType == FilterType.Pool,
                     color: Colors.green),
                 buildTabButton("Dive", () {
                   controller.selectedType = FilterType.Dive;
                 },
-                    count: controller.diveCount,
+                    count: controller.diveCountN,
                     enable: controller.selectedType == FilterType.Dive,
                     color: Colors.lightBlueAccent),
               ],
@@ -216,7 +216,6 @@ class BookingsCalenderWidget extends StatelessWidget {
                           : SizedBox(),
                     ],
                   ),
-
                   // Row(
                   //   children: [
                   //     buildSessionCount(
@@ -302,16 +301,31 @@ class BookingsCalenderWidget extends StatelessWidget {
       else if (controller.selectedType == FilterType.Theory) {
         controller.expansionItemModels.forEach((element) {
           if (element.session.contains("Theory")) expansionList.add(element);
+          var count = 0;
+          expansionList.forEach((element) {
+            count += element.pax;
+          });
+          controller.theoryCountN = count;
           controller.theoryCount = expansionList.length;
         });
       } else if (controller.selectedType == FilterType.Pool) {
         controller.expansionItemModels.forEach((element) {
           if (element.session.contains("Pool")) expansionList.add(element);
+          var count = 0;
+          expansionList.forEach((element) {
+            count += element.pax;
+          });
+          controller.poolCountN = count;
           controller.poolCount = expansionList.length;
         });
       } else if (controller.selectedType == FilterType.Dive) {
         controller.expansionItemModels.forEach((element) {
           if (element.session.contains("Dive")) expansionList.add(element);
+          var count = 0;
+          expansionList.forEach((element) {
+            count += element.pax;
+          });
+          controller.diveCountN = count;
           controller.diveCount = expansionList.length;
         });
       }
