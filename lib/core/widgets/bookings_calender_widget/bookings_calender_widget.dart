@@ -97,24 +97,33 @@ class BookingsCalenderWidget extends StatelessWidget {
             SizedBox(height: 20),
             Row(
               children: [
-                buildTabButton("Theory", () {
-                  controller.selectedType = FilterType.Theory;
-                },
-                    count: controller.theoryCountN,
-                    enable: controller.selectedType == FilterType.Theory,
-                    color: Colors.orangeAccent),
-                buildTabButton("Pool", () {
-                  controller.selectedType = FilterType.Pool;
-                },
-                    count: controller.poolCountN,
-                    enable: controller.selectedType == FilterType.Pool,
-                    color: Colors.green),
-                buildTabButton("Dive", () {
-                  controller.selectedType = FilterType.Dive;
-                },
-                    count: controller.diveCountN,
-                    enable: controller.selectedType == FilterType.Dive,
-                    color: Colors.lightBlueAccent),
+                buildTabButton(
+                  "Theory",
+                  () {
+                    controller.selectedType = FilterType.Theory;
+                  },
+                  count: controller.theoryCountN,
+                  enable: controller.selectedType == FilterType.Theory,
+                  color: Colors.orangeAccent,
+                ),
+                buildTabButton(
+                  "Pool",
+                  () {
+                    controller.selectedType = FilterType.Pool;
+                  },
+                  count: controller.poolCountN,
+                  enable: controller.selectedType == FilterType.Pool,
+                  color: Colors.green,
+                ),
+                buildTabButton(
+                  "Dive",
+                  () {
+                    controller.selectedType = FilterType.Dive;
+                  },
+                  count: controller.diveCountN,
+                  enable: controller.selectedType == FilterType.Dive,
+                  color: Colors.lightBlueAccent,
+                ),
               ],
             ),
             SizedBox(height: 20),
