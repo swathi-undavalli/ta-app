@@ -22,41 +22,39 @@ class BookDateTime extends StatelessWidget {
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 30, right: 30),
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                SizedBox(height: 20),
-                buildActivityDropDown(),
-                SizedBox(height: 30),
-                Container(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    "Add Dates",
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: FontSize.message,
-                      color: AppColors.text.skyBlue,
-                    ),
+          child: Column(
+            children: [
+              SizedBox(height: 20),
+              buildActivityDropDown(),
+              SizedBox(height: 30),
+              Container(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  "Add Dates",
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: FontSize.message,
+                    color: AppColors.text.skyBlue,
                   ),
                 ),
-                SizedBox(height: 30),
-                buildTheorySession(),
-                SizedBox(height: 30),
-                buildPoolSession(),
-                SizedBox(height: 30),
-                buildDiveSession(),
-                // Spacer(),
-                // Spacer(),
-                // Spacer(),
-                SizedBox(height: 30),
-                buildContinueButton(),
-                SizedBox(height: 30),
-                // SizedBox(
-                //   height: 30,
-                // ),
-              ],
-            ),
+              ),
+              SizedBox(height: 30),
+              buildTheorySession(),
+              SizedBox(height: 30),
+              buildPoolSession(),
+              SizedBox(height: 30),
+              buildDiveSession(),
+              // Spacer(),
+              // Spacer(),
+              Spacer(),
+              // SizedBox(height: 30),
+              buildContinueButton(),
+              // SizedBox(height: 30),
+              Spacer(),
+              // SizedBox(
+              //   height: 30,
+              // ),
+            ],
           ),
         ),
       ),
@@ -103,7 +101,8 @@ class BookDateTime extends StatelessWidget {
                     controller.priceTED.text = activity.price.toString();
                     controller.bookingModel.price = activity.price * 1.0;
                     log("S");
-                    controller.bookingModel.activity = controller.selectedActivity;
+                    controller.bookingModel.activity =
+                        controller.selectedActivity;
                     logic.controller.update();
                     log("E");
                   },

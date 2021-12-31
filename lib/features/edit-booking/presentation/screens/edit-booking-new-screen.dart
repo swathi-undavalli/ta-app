@@ -197,8 +197,6 @@ class EditBookingNewScreen extends StatelessWidget {
                     BookingsCalenderWidgetLogic();
                 bookingCalenderLogic.onDateSelected(
                     bookingCalenderLogic.controller.lastDateIndex);
-                controller.startDate =
-                    controller.startDate.subtract(Duration(days: 50));
               }),
         ],
       );

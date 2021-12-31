@@ -10,6 +10,7 @@ import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/employees/controllers/add-an-employee-controller.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
+import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
@@ -123,7 +124,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                                         .collection("logs")
                                         .doc()
                                         .set(logModel.toMap());
-
+                                    Get.back();
                                     Get.back();
                                   },
                                 ),

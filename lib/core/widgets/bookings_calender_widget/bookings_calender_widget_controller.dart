@@ -209,6 +209,17 @@ class BookingsCalenderWidgetLogic {
   }
 
   getTime() {
+    getLimit() {
+      if (controller.isDiveSession && controller.showDetails)
+        return 18 + 12;
+      else if (controller.isDiveSession && controller.showDetails == false)
+        return 18 + 2;
+      else
+        return 18;
+
+      // (controller.isDiveSession ? 18 + 10 : 18)
+    }
+
     controller.timeTable = [];
     var hour = 3;
     if (controller.calenderType == null)
@@ -236,7 +247,7 @@ class BookingsCalenderWidgetLogic {
       controller.selectedDate.day,
       hour - 1,
     );
-    for (int i = 0; i < (controller.isDiveSession ? 18 + 2 : 18); i++) {
+    for (int i = 0; i < getLimit(); i++) {
       if (controller.isDiveSession)
         temp = temp.add(Duration(minutes: 30));
       else

@@ -66,7 +66,10 @@ class LogScreen extends StatelessWidget {
 
   Widget checkFireBase() {
     return StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('logs').snapshots(),
+        stream: FirebaseFirestore.instance
+            .collection('logs')
+            .orderBy('timeStamp', descending: true)
+            .snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
