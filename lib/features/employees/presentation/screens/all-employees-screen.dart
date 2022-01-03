@@ -7,7 +7,6 @@ import 'package:shimmer/shimmer.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/dummy.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/employees/controllers/all-employees-controller.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/employee-details-screen.dart';
@@ -94,20 +93,6 @@ class AllEmployeesScreen extends StatelessWidget {
     );
   }
 
-  Widget buildFloatingActionButton() {
-    return EmployeeAccess(
-      access: AccessRights.createEmployees,
-      child: FloatingActionButton(
-        onPressed: () {
-          Get.toNamed(AddAnUser.id);
-        },
-        backgroundColor: AppColors.background.black,
-        child: Icon(Icons.add),
-        elevation: 0,
-      ),
-    );
-  }
-
   ///===============UI=============///
 
   Widget buildSuggestions() {
@@ -163,12 +148,26 @@ class AllEmployeesScreen extends StatelessWidget {
     });
   }
 
+  Widget buildFloatingActionButton() {
+    return EmployeeAccess(
+      access: AccessRights.createEmployees,
+      child: FloatingActionButton(
+        onPressed: () {
+          Get.toNamed(AddAnUser.id);
+        },
+        backgroundColor: AppColors.background.black,
+        child: Icon(Icons.add),
+        elevation: 0,
+      ),
+    );
+  }
+
   Widget buildAllEmployees() {
     logic.controller.allEmployeesList = [];
     getCount() {
       if (counterModel != null && counterModel.employee != null)
         return counterModel.employee;
-      return 46;
+      return 50;
     }
 
     return Column(
@@ -195,33 +194,37 @@ class AllEmployeesScreen extends StatelessWidget {
             .doc("employeeData")
             .get(),
         builder: (BuildContext context, snapshot) {
-          if (!snapshot.hasData) {
-            return Padding(
-              padding: const EdgeInsets.all(10),
-              child: Container(
-                height: 30,
-                width: Get.width,
-                child: Shimmer.fromColors(
-                  child: Container(
-                    height: 20,
-                    width: Get.width,
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.grey),
+          try {
+            if (!snapshot.hasData) {
+              return Padding(
+                padding: const EdgeInsets.all(10),
+                child: Container(
+                  height: 30,
+                  width: Get.width,
+                  child: Shimmer.fromColors(
+                    child: Container(
+                      height: 20,
+                      width: Get.width,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5),
+                          color: Colors.grey),
+                    ),
+                    baseColor: Colors.grey[300],
+                    highlightColor: Colors.grey[100],
                   ),
-                  baseColor: Colors.grey[300],
-                  highlightColor: Colors.grey[100],
                 ),
-              ),
-            );
+              );
+            }
+            Map<String, dynamic> employeeData = snapshot.data.data();
+            var e = Employee.fromMap(employeeData);
+            logic.controller.allEmployeesList.add(e);
+            print(e.id);
+            // print("=============${logic.controller.allEmployeesList.length}");
+            // print(e);
+            return buildEmployeeNames(e);
+          } catch (e) {
+            return SizedBox();
           }
-          Map<String, dynamic> employeeData = snapshot.data.data();
-          var e = Employee.fromMap(employeeData);
-          logic.controller.allEmployeesList.add(e);
-          print(e.id);
-          // print("=============${logic.controller.allEmployeesList.length}");
-          // print(e);
-          return buildEmployeeNames(e);
         });
   }
 

@@ -111,11 +111,11 @@ class EmployeeDetailsScreen extends StatelessWidget {
                                         .collection("employeeFullInformation")
                                         .doc("employeeData")
                                         .delete();
-                                    counterModel.employee--;
-                                    FirebaseFirestore.instance
-                                        .collection("counter")
-                                        .doc("count")
-                                        .set(counterModel.toMap());
+                                    // counterModel.employee--;
+                                    // FirebaseFirestore.instance
+                                    //     .collection("counter")
+                                    //     .doc("count")
+                                    //     .set(counterModel.toMap());
                                     LogModel logModel = LogModel(
                                       type: LogType.deleteEmployee,
                                       employeeName: employeeArgument.name,

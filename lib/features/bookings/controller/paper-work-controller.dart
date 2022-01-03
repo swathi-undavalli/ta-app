@@ -31,6 +31,7 @@ class PaperWorkLogic {
     CustomerModel customer = registration.controller.customer;
 
     String api = "https://templeadventures.com/api/v1/generatePdf/";
+
     var body = {
       "email": "sidd.jha1@gmail.com",
       "Activity": ["Open Water"],
@@ -48,23 +49,6 @@ class PaperWorkLogic {
       "Gender": "Male",
     };
 
-    var nosid = {
-      "email": customer.email,
-      "Activity":
-          booking.controller.selectedActivity.map((e) => e.name).toList(),
-      "Location": booking.controller.locationTED.text,
-      "first-name": customer.fistName,
-      "last-name": customer.lastName,
-      "Birthday": customer.dob,
-      "Address-1": customer.addressLine1,
-      "Address-2": customer.addressLine2,
-      "Country": customer.country,
-      "State": customer.state,
-      "City": customer.city,
-      "Pin-Code": customer.pinCode,
-      "Phone": customer.phoneNumber,
-      "Gender": customer.gender,
-    };
     print(body);
 
     var dio = d.Dio();

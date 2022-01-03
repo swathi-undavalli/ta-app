@@ -17,11 +17,10 @@ class BookingsCalenderWidgetLogic {
       Get.put(BookingsCalenderWidgetController());
 
   getBookings(DateTime date) async {
-    print("getBookings");
+    log("getBookings");
     controller.bookingTimings = [];
     controller.bookings = [];
     controller.showLoading = true;
-
     try {
       var data = await FirebaseFirestore.instance
           .collection("bookings")
@@ -29,8 +28,13 @@ class BookingsCalenderWidgetLogic {
               arrayContains:
                   "${date.day < 10 ? "0${date.day}" : date.day}-${date.month < 10 ? "0${date.month}" : date.month}-${date.year}")
           .get();
+
+      // var data = await FirebaseFirestore.instance
+      //     .collection("bookings")
+      //     .get();
+      // log("count=====${count.toString()}");
       data.docs.forEach((element) {
-        log(element.data().toString());
+        log("===========s${element.data().toString()}");
         BookingModel booking = BookingModel.fromMap(element.data());
         if (booking.diveDate != null) {
           controller.bookingTimings.addAll(booking.diveDate);
@@ -45,7 +49,6 @@ class BookingsCalenderWidgetLogic {
         controller.bookings.add(booking);
 
         List<ItemModel> newItemsList = [];
-        List<ItemModel> newBookingsList = [];
         controller.theoryCount = 0;
         controller.poolCount = 0;
         controller.diveCount = 0;
@@ -53,7 +56,7 @@ class BookingsCalenderWidgetLogic {
         controller.poolCountN = 0;
         controller.diveCountN = 0;
 
-        print("===================wb1");
+        log("===================wb1");
         controller.bookings.forEach((booking) {
           var im = ItemModel.fromBookings(booking);
           im.session = "";
@@ -68,7 +71,7 @@ class BookingsCalenderWidgetLogic {
           // }
 
           booking.theoryDate.forEach((date) {
-            print("theory loop");
+            log("theory loop");
             if (checkDate(date, controller.selectedDate)) {
               controller.theoryCountN += booking.noOfPersons;
               controller.theoryCount++;
@@ -78,7 +81,7 @@ class BookingsCalenderWidgetLogic {
           });
 
           booking.poolDate.forEach((date) {
-            print("pool loop");
+            log("pool loop");
             print("date $date");
             if (checkDate(date, controller.selectedDate)) {
               controller.poolCountN += booking.noOfPersons;
@@ -89,7 +92,7 @@ class BookingsCalenderWidgetLogic {
           });
 
           booking.diveDate.forEach((date) {
-            print("dive loop");
+            log("dive loop");
             if (checkDate(date, controller.selectedDate)) {
               controller.diveCount++;
               controller.diveCountN += booking.noOfPersons;
@@ -216,8 +219,6 @@ class BookingsCalenderWidgetLogic {
         return 18 + 2;
       else
         return 18;
-
-      // (controller.isDiveSession ? 18 + 10 : 18)
     }
 
     controller.timeTable = [];
@@ -270,7 +271,9 @@ class BookingsCalenderWidgetLogic {
     controller.diveCountN = 0;
     controller.selectedDate = controller.calenderDates[index];
     controller.selectedType = null;
+    print("===========started${controller.calenderDates[index]}");
     getBookings(controller.calenderDates[index]);
+    print("===========ended${controller.calenderDates[index]}");
     getTime();
   }
 }
