@@ -11,8 +11,6 @@ import 'package:temple_adventures/features/bookings/presentation/screens/add_cus
 import 'package:intl/intl.dart';
 import 'dart:developer';
 
-import 'package:temple_adventures/features/bookings/presentation/screens/customer-registration-screen.dart';
-
 class BookingScreen extends StatelessWidget {
   static const String id = "BookingPage";
   final BookingScreenLogic logic = BookingScreenLogic();
@@ -24,6 +22,7 @@ class BookingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("building bro");
     bookingsCalenderWidget = BookingsCalenderWidget(
       onDateTimeSelected: (DateTime selectedDate) {
         print(selectedDate.toString());
@@ -79,15 +78,16 @@ class BookingScreen extends StatelessWidget {
                       ],
                     );
                   }),
-                  BookingsCalenderWidget(
-                    onDateTimeSelected: (DateTime selectedDate) {
-                      print(selectedDate.toString());
-                    },
-                    autoScrollController: autoScrollController,
-                    showDetails: true,
-                    startDate: DateTime.now().subtract(Duration(days: 50)),
-                    isDiveSession: true,
-                  ),
+                  bookingsCalenderWidget,
+                  // BookingsCalenderWidget(
+                  //   onDateTimeSelected: (DateTime selectedDate) {
+                  //     print(selectedDate.toString());
+                  //   },
+                  //   autoScrollController: autoScrollController,
+                  //   showDetails: true,
+                  //   startDate: DateTime.now().subtract(Duration(days: 50)),
+                  //   isDiveSession: true,
+                  // ),
                   SizedBox(
                     height: 200,
                   ),

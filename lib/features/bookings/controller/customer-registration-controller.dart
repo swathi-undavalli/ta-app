@@ -1,5 +1,4 @@
 import 'dart:io';
-import 'package:pspdfkit_flutter/src/main.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -112,13 +111,13 @@ class CustomerRegistrationLogic {
         await DefaultAssetBundle.of(context).load("assets/PDFs/Document.pdf");
     final list = bytes.buffer.asUint8List();
 
-    final tempDir = await Pspdfkit.getTemporaryDirectory();
-    final tempDocumentPath = '${tempDir.path}/${"assets/PDFs/Document.pdf"}';
+    // final tempDir = await Pspdfkit.getTemporaryDirectory();
+    // final tempDocumentPath = '${tempDir.path}/${"assets/PDFs/Document.pdf"}';
 
-    final file = await File(tempDocumentPath).create(recursive: true);
-    file.writeAsBytesSync(list);
+    // final file = await File(tempDocumentPath).create(recursive: true);
+    // file.writeAsBytesSync(list);
 
-    await Pspdfkit.present(tempDocumentPath);
+    // await Pspdfkit.present(tempDocumentPath);
   }
 
   onArrowPressed() async {

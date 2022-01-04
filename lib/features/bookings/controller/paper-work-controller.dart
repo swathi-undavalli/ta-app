@@ -15,7 +15,7 @@ import 'package:temple_adventures/core/services/firebase_api.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/bookings/controller/customer-registration-controller.dart';
 import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
-import 'package:pspdfkit_flutter/src/main.dart';
+// import 'package:pspdfkit_flutter/src/main.dart';
 import 'package:temple_adventures/features/bookings/models/customer-model.dart';
 
 class PaperWorkLogic {
@@ -101,7 +101,7 @@ class PaperWorkLogic {
   }
 
   showDocument() async {
-    await Pspdfkit.present(controller.Pdf.path);
+    // await Pspdfkit.present(controller.Pdf.path);
     showFab();
   }
 

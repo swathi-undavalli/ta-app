@@ -464,13 +464,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "4.2.4"
-  pspdfkit_flutter:
-    dependency: "direct main"
-    description:
-      name: pspdfkit_flutter
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "3.0.0"
   scroll_to_index:
     dependency: "direct main"
     description:
@@ -625,4 +618,4 @@ packages:
     version: "0.2.0"
 sdks:
   dart: ">=2.14.0 <3.0.0"
-  flutter: ">=2.5.1"
+  flutter: ">=2.5.0"

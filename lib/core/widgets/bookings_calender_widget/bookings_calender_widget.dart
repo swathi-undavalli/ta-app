@@ -39,12 +39,15 @@ class BookingsCalenderWidget extends StatelessWidget {
     logic.controller.isDiveSession = isDiveSession;
     logic.controller.calenderType = calenderType;
     logic.getDates();
-    if (showDetails)
+    if (showDetails) {
+      print("1");
       EmployeeAccess.run(
           function: autoCenterDaySelector, access: AccessRights.viewBookings);
-    else
+    } else {
+      print("2");
       EmployeeAccess.run(
           function: scrollToSelectedDate, access: AccessRights.viewBookings);
+    }
   }
 
   scrollToIndex(int index) {
