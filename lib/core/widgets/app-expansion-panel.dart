@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
@@ -57,7 +59,7 @@ class BookingsExpansionPanel extends StatelessWidget {
           duration: Duration(milliseconds: 200),
           curve: Curves.easeInCubic,
           alignment: Alignment.topCenter,
-          height: controller.isExpanded[i] ? 260 : 50,
+          height: controller.isExpanded[i] ? 310 : 50,
           width: 350,
           decoration: BoxDecoration(
             color: getColor(),
@@ -81,7 +83,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                         Text(
                           itemModel.name.capitalizeFirst +
                               " x " +
-                              (itemModel.pax.toString()),
+                              (itemModel.bookingModel.noOfPersons.toString()),
                           style: TextStyle(
                               color: AppColors.text.black,
                               fontSize: 14,
@@ -210,7 +212,11 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   buildKeyValuePairs(
                                       "Balance", items[i].balance),
                                   buildKeyValuePairs(
-                                      "Pax", items[i].pax.toString()),
+                                      "Pax",
+                                      items[i]
+                                          .bookingModel
+                                          .noOfPersons
+                                          .toString()),
                                   ((items[i] != null) &&
                                           (items[i].receiptNo != null))
                                       ? buildKeyValuePairs(
@@ -221,34 +227,69 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   buildKeyValuePairs("Phone", items[i].phone),
                                   buildKeyValuePairs("Email", items[i].email),
                                   buildKeyValuePairs("Time", items[i].time),
+                                  buildKeyValuePairs("Date", items[i].date),
                                   buildKeyValuePairs(
                                       "Session", items[i].session),
-                                  SizedBox(height: 10),
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Container(
-                                      alignment: Alignment.centerRight,
-                                      child: RichText(
-                                        text: TextSpan(
-                                          text: "Created By : ",
-                                          style: TextStyle(
-                                            fontFamily: AppFonts.nunito,
-                                            color: AppColors.text.darkgrey,
-                                            fontSize: 10,
-                                          ),
-                                          children: <TextSpan>[
-                                            TextSpan(
-                                              text: items[i].employeeName,
-                                              style: TextStyle(
-                                                color: Color(0xff484646),
-                                                fontWeight: FontWeight.bold,
-                                                fontSize: 10,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
+                                  buildKeyValuePairs(
+                                    "Registred",
+                                    "${items[i].bookingModel.pax.length - 1} / ${items[i].bookingModel.noOfPersons}",
+                                    isDanger: ((items[i]
+                                                .bookingModel
+                                                .pax
+                                                .length -
+                                            1) !=
+                                        (items[i].bookingModel.noOfPersons)),
+                                  ),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: (items[i].employeeName != null)
+                                            ? Container(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: RichText(
+                                                  text: TextSpan(
+                                                    text: "Created By : ",
+                                                    style: TextStyle(
+                                                      fontFamily:
+                                                          AppFonts.nunito,
+                                                      color: AppColors
+                                                          .text.darkgrey,
+                                                      fontSize: 10,
+                                                    ),
+                                                    children: <TextSpan>[
+                                                      TextSpan(
+                                                        text: items[i]
+                                                            .employeeName,
+                                                        style: TextStyle(
+                                                          color:
+                                                              Color(0xff484646),
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          fontSize: 10,
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
+                                            : SizedBox(),
                                       ),
-                                    ),
+                                      AppButton.miniFlat(
+                                        text: "Get Link",
+                                        onTap: () async {
+                                          String link =
+                                              "https://seismic-glow-283418.web.app/?booking=${items[i].bookingModel.id}";
+                                          await Clipboard.setData(
+                                              ClipboardData(text: link));
+                                          Fluttertoast.showToast(
+                                              msg: "Link copied to Clipboard");
+                                        },
+                                      ).paddingOnly(right: 20),
+                                    ],
                                   ),
                                 ],
                               );
@@ -273,7 +314,7 @@ class BookingsExpansionPanel extends StatelessWidget {
     }
   }
 
-  Widget buildKeyValuePairs(String key, String value) {
+  Widget buildKeyValuePairs(String key, String value, {bool isDanger = false}) {
     return Row(
       children: [
         SizedBox(
@@ -292,7 +333,7 @@ class BookingsExpansionPanel extends StatelessWidget {
           child: Text(
             value,
             style: TextStyle(
-                color: Colors.black,
+                color: isDanger ? Colors.red : Colors.black,
                 fontSize: 13,
                 fontWeight: FontWeight.w600,
                 letterSpacing: 0.3,
