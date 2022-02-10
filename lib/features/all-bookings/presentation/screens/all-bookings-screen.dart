@@ -1,14 +1,10 @@
 import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/all-bookings/controller/all-bookings-controller.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
 class AllBookingsScreen extends StatelessWidget {
   static const String id = "AllBookingsScreen";
@@ -138,7 +134,6 @@ class AllBookingsScreen extends StatelessWidget {
             margin: EdgeInsets.only(
               top: 65,
               left: (Get.width - 328) / 2,
-              // right: 100,
             ),
             decoration: BoxDecoration(
                 color: Colors.white,
@@ -274,7 +269,7 @@ class AllBookingsScreen extends StatelessWidget {
                 onChanged: (text) {
                   if (text.isNotEmpty) {
                     logic.controller.showSuggestions = true;
-                    logic.updateSearchList(text);
+                    logic.updateSearchListByID(text);
                   } else {
                     logic.controller.showSuggestions = false;
                   }

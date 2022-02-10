@@ -59,7 +59,7 @@ class BookingsExpansionPanel extends StatelessWidget {
           duration: Duration(milliseconds: 200),
           curve: Curves.easeInCubic,
           alignment: Alignment.topCenter,
-          height: controller.isExpanded[i] ? 310 : 50,
+          height: controller.isExpanded[i] ? 340 : 50,
           width: 350,
           decoration: BoxDecoration(
             color: getColor(),
@@ -207,6 +207,8 @@ class BookingsExpansionPanel extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   buildKeyValuePairs(
+                                      "Booking Id", items[i].bookingID),
+                                  buildKeyValuePairs(
                                       "Activity", items[i].activity),
                                   buildKeyValuePairs("Deposit", items[i].paid),
                                   buildKeyValuePairs(
@@ -244,40 +246,35 @@ class BookingsExpansionPanel extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: (items[i].employeeName != null)
-                                            ? Container(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: RichText(
-                                                  text: TextSpan(
-                                                    text: "Created By : ",
-                                                    style: TextStyle(
-                                                      fontFamily:
-                                                          AppFonts.nunito,
-                                                      color: AppColors
-                                                          .text.darkgrey,
-                                                      fontSize: 10,
-                                                    ),
-                                                    children: <TextSpan>[
-                                                      TextSpan(
-                                                        text: items[i]
-                                                            .employeeName,
-                                                        style: TextStyle(
-                                                          color:
-                                                              Color(0xff484646),
-                                                          fontWeight:
-                                                              FontWeight.bold,
-                                                          fontSize: 10,
-                                                        ),
-                                                      ),
-                                                    ],
+                                      (items[i].employeeName != null)
+                                          ? Container(
+                                              alignment: Alignment.centerRight,
+                                              child: RichText(
+                                                text: TextSpan(
+                                                  text: "Created By : ",
+                                                  style: TextStyle(
+                                                    fontFamily: AppFonts.nunito,
+                                                    color:
+                                                        AppColors.text.darkgrey,
+                                                    fontSize: 10,
                                                   ),
+                                                  children: <TextSpan>[
+                                                    TextSpan(
+                                                      text:
+                                                          items[i].employeeName,
+                                                      style: TextStyle(
+                                                        color:
+                                                            Color(0xff484646),
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 10,
+                                                      ),
+                                                    ),
+                                                  ],
                                                 ),
-                                              )
-                                            : SizedBox(),
-                                      ),
+                                              ),
+                                            )
+                                          : SizedBox(),
                                       AppButton.miniFlat(
                                         text: "Get Link",
                                         onTap: () async {
@@ -288,7 +285,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                           Fluttertoast.showToast(
                                               msg: "Link copied to Clipboard");
                                         },
-                                      ).paddingOnly(right: 20),
+                                      ).paddingOnly(right: 15),
                                     ],
                                   ),
                                 ],
@@ -361,6 +358,7 @@ class ItemModel {
   String time;
   String session;
   final String email;
+  final String bookingID;
   final String phone;
   final String activity;
   final String colorCode;
@@ -379,6 +377,7 @@ class ItemModel {
   ItemModel(
       {@required this.phone,
       @required this.activity,
+      @required this.bookingID,
       @required this.colorCode,
       @required this.price,
       @required this.time,
@@ -455,6 +454,7 @@ class ItemModel {
     return ItemModel(
       phone: bookingModel.pax[0]["countryCode"] +
           bookingModel.pax[0]["phoneNumber"],
+      bookingID: bookingModel.id,
       activity: bookingModel.activity[0].name.toString(),
       price: bookingModel.activity[0].price.toString(),
       colorCode: bookingModel.activity[0].color.toString(),

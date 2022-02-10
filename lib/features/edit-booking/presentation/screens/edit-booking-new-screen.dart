@@ -85,6 +85,8 @@ class EditBookingNewScreen extends StatelessWidget {
                       builder: (controller) {
                         return Column(
                           children: [
+                            buildBookingID(),
+                            SizedBox(height: 20),
                             buildActivityDropDown(),
                             buildPriceTF(controller),
                             buildNameFields(controller),
@@ -881,6 +883,15 @@ class EditBookingNewScreen extends StatelessWidget {
         );
       }),
     );
+  }
+
+  Widget buildBookingID() {
+    return GetBuilder<EditBookingNewController>(builder: (controller) {
+      return Text(
+        "Booking ID : ${controller.bookingModel.id}",
+        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+      );
+    });
   }
 
   Widget buildTax() {

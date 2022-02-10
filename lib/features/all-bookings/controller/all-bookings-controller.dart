@@ -46,6 +46,17 @@ class AllBookingsLogic {
     controller.update();
   }
 
+  void updateSearchListByID(String text) {
+    controller.suggestionsList = [];
+    // print(
+    //     controller.bookings[controller.bookings.length - 1].bookingID);
+    controller.bookings.forEach((booking) {
+      if (booking.bookingID.toLowerCase().contains(text.toLowerCase()) || booking.name.toLowerCase().contains(text.toLowerCase())) {
+        controller.suggestionsList.add(booking);
+      }
+    });
+    controller.update();
+  }
 
 // getBookingsCount() async {
   //   var fact = 1;
@@ -68,6 +79,7 @@ class AllBookingsLogic {
   //   log(controller.pages.toString());
   //   controller.bookingCount = int.parse(totalCount);
   // }
+
 }
 
 class AllBookingsController extends GetxController {
