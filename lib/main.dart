@@ -26,6 +26,7 @@ import 'package:temple_adventures/features/employees/presentation/screens/all-em
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
+import 'package:temple_adventures/kd_login.dart';
 import 'features/Activities/presentation/screens/all-activities-screen.dart';
 import 'features/dashboard/controller/dashboard-controller.dart';
 import 'features/employees/presentation/screens/employee-details-screen.dart';
@@ -58,7 +59,6 @@ class MyApp extends StatelessWidget {
             ? DashBoardScreen.id
             : LoginScreen.id,
 
-        // initialRoute: AddAnUser.id,
         theme: ThemeData(
           textTheme: TextTheme(
             headline1: TextStyle(fontFamily: AppFonts.nunito),

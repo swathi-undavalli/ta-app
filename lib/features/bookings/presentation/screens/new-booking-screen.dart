@@ -120,12 +120,10 @@ class NewBookingScreen extends StatelessWidget {
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            // buildActivityDropDown(),
             SizedBox(height: 30),
             buildDiveLocation(),
             SizedBox(height: 20),
             buildPriceField(),
-            // buildPAXField(),
             buildDiscount(),
             buildTax(),
             buildPayingNow(),
@@ -422,7 +420,7 @@ class NewBookingScreen extends StatelessWidget {
             keyboardType: TextInputType.number,
             required: false,
             errorValidator: () {
-              if (controller.balance < 0) return "Invalid Amount";
+              if (controller.bookingModel.balance < 0) return "Invalid Amount";
               return null;
             },
             onChangedCallBack: (payingNow) {

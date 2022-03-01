@@ -7,18 +7,11 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/login/controller/login-controller.dart';
 import 'package:temple_adventures/features/weather/controller/weather-controller.dart';
 
-class WeatherPage extends StatefulWidget {
+class WeatherPage extends StatelessWidget {
   WeatherPageLogic logic = WeatherPageLogic();
-
-  @override
-  State<WeatherPage> createState() => _WeatherPageState();
-}
-
-class _WeatherPageState extends State<WeatherPage> {
-  Position pos = Position();
-  List<String> windDetails = ["Tide", "Time", "Height"];
 
   @override
   Widget build(BuildContext context) {
@@ -246,7 +239,7 @@ class _WeatherPageState extends State<WeatherPage> {
                       padding: const EdgeInsets.only(left: 15, right: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: windDetails
+                        children: controller.windDetails
                             .map((e) => Text(
                                   e,
                                   style: TextStyle(
@@ -323,6 +316,9 @@ class _WeatherPageState extends State<WeatherPage> {
           text: "Today",
           textColor: AppColors.text.white,
           bgColor: AppColors.background.black,
+          onTap: (){
+            logic.getWeatherData();
+          },
         ),
         AppButton.miniFlat(
           text: "Tomorrow",

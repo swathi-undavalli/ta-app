@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
@@ -80,14 +81,18 @@ class BookingsExpansionPanel extends StatelessWidget {
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          itemModel.name.capitalizeFirst +
-                              " x " +
-                              (itemModel.bookingModel.noOfPersons.toString()),
-                          style: TextStyle(
-                              color: AppColors.text.black,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w600),
+                        Container(
+                          width: 100,
+                          child: Text(
+                            itemModel.name.capitalizeFirst +
+                                " x " +
+                                (itemModel.bookingModel.noOfPersons.toString()),
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                                color: AppColors.text.black,
+                                fontSize: 14,
+                                fontWeight: FontWeight.w600),
+                          ),
                         ),
                         Spacer(),
                         IconButton(
