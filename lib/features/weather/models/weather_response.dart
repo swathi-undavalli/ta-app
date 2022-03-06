@@ -32,12 +32,26 @@ class WeatherResponse {
 
   factory WeatherResponse.fromMap(Map<String, dynamic> json) {
     try {
+      // int timestamp = json["timestamp"];
+      // int localTimestamp = json["localTimestamp"];
+      // int issueTimestamp = json["issueTimestamp"];
+      // print(json["fadedRating"]);
+      // double fadedRating = json["fadedRating"];
+      // double solidRating = json["solidRating"];
+      //
+      // return null;
+      //
+      // Swell swell = json["swell"];
+      // Wind wind = json["wind"];
+      // Condition condition = json["condition"];
+      // Charts charts = json["charts"];
+
       return WeatherResponse(
         timestamp: json["timestamp"],
         localTimestamp: json["localTimestamp"],
         issueTimestamp: json["issueTimestamp"],
-        fadedRating: json["fadedRating"],
-        solidRating: json["solidRating"],
+        fadedRating: (json["fadedRating"] ?? 0) * 1.0,
+        solidRating: (json["solidRating"] ?? 0) * 1.0,
         swell: Swell.fromMap(json["swell"]),
         wind: Wind.fromMap(json["wind"]),
         condition: Condition.fromMap(json["condition"]),
@@ -45,6 +59,7 @@ class WeatherResponse {
       );
     } catch (e) {
       print(e);
+      print("debbindi mowa");
       return null;
     }
   }
@@ -108,8 +123,8 @@ class Condition {
   String unit;
 
   factory Condition.fromMap(Map<String, dynamic> json) => Condition(
-        pressure: json["pressure"],
-        temperature: json["temperature"],
+        pressure: (json["pressure"] ?? 0) * 1.0,
+        temperature: (json["temperature"] ?? 0) * 1.0,
         unitPressure: json["unitPressure"],
         unit: json["unit"],
       );
@@ -142,10 +157,10 @@ class Swell {
   factory Swell.fromMap(Map<String, dynamic> json) {
     try {
       return Swell(
-        minBreakingHeight: json["minBreakingHeight"],
-        absMinBreakingHeight: json["absMinBreakingHeight"].toDouble(),
-        maxBreakingHeight: json["maxBreakingHeight"],
-        absMaxBreakingHeight: json["absMaxBreakingHeight"].toDouble(),
+        minBreakingHeight: (json["minBreakingHeight"] ?? 0) * 1.0,
+        absMinBreakingHeight: (json["absMinBreakingHeight"] ?? 0) * 1.0,
+        maxBreakingHeight: (json["maxBreakingHeight"] ?? 0) * 1.0,
+        absMaxBreakingHeight: (json["absMaxBreakingHeight"] ?? 0) * 1.0,
         unit: json["unit"],
         components: Components.fromMap(json["components"]),
       );
@@ -188,6 +203,7 @@ class Components {
         tertiary: Combined.fromMap(json["tertiary"]),
       );
     } catch (e) {
+      print(e);
       print("Red sheep");
       return null;
     }
@@ -214,12 +230,15 @@ class Combined {
   double direction;
   String compassDirection;
 
-  factory Combined.fromMap(Map<String, dynamic> json) => Combined(
-        height: json["height"].toDouble(),
-        period: json["period"],
-        direction: json["direction"].toDouble(),
-        compassDirection: json["compassDirection"],
-      );
+  factory Combined.fromMap(Map<String, dynamic> json) {
+    if (json == null) return null;
+    return Combined(
+      height: (json["height"] ?? 0) * 1.0,
+      period: (json["period"] ?? 0) * 1.0,
+      direction: (json["direction"] ?? 0) * 1.0,
+      compassDirection: json["compassDirection"],
+    );
+  }
 
   Map<String, dynamic> toMap() => {
         "height": height,
@@ -247,11 +266,11 @@ class Wind {
   String unit;
 
   factory Wind.fromMap(Map<String, dynamic> json) => Wind(
-        speed: json["speed"],
-        direction: json["direction"],
+        speed: (json["speed"] ?? 0) * 1.0,
+        direction: (json["direction"] ?? 0) * 1.0,
         compassDirection: json["compassDirection"],
-        chill: json["chill"],
-        gusts: json["gusts"],
+        chill: (json["chill"] ?? 0) * 1.0,
+        gusts: (json["gusts"] ?? 0) * 1.0,
         unit: json["unit"],
       );
 
@@ -264,3 +283,9 @@ class Wind {
         "unit": unit,
       };
 }
+
+
+
+
+
+

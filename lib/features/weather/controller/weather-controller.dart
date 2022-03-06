@@ -1,54 +1,58 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'package:get/get.dart';
-import 'package:temple_adventures/features/weather/models/weather_response.dart';
-import 'package:http/http.dart' as http;
+import 'package:temple_adventures/features/weather/models/tide_response.dart';
+import 'package:temple_adventures/features/weather/models/weatherPage_model.dart';
+import 'package:temple_adventures/features/weather/repository/weather_repository.dart';
+import 'package:intl/intl.dart';
 
 class WeatherPageLogic {
   WeatherPageController controller = Get.put(WeatherPageController());
+  WeatherRepository weatherRepository = WeatherRepository();
 
-  Future<WeatherResponse> getWeatherData() async {
-    // api.openweathermap.org/data/2.5/weather?q={city name}&appid={API key}
-    //magicseaweed.com/api/YOURAPIKEY/forecast/?spot_id=10
-
-    final params = {'spot_id': "957", 'units': "eu"};
-    print("=======================");
-    print("started");
-
-    final uri = Uri.https('magicseaweed.com',
-        '/api/795541b5e25309cf68f4463e88b8daa6/forecast/', params);
-
-    final response = await http.get(uri);
-    log(response.body);
-    print("==========================");
-    print("middle");
-
-    final List<dynamic> json = jsonDecode(response.body);
-    print("==========================");
-    print("In between");
-
-    try {
-      json.forEach((element) {
-        print(element);
-        WeatherResponse weatherResponse = WeatherResponse.fromMap(element);
-        // controller.newList.add(weatherResponse);
-        // print(element);
-        // print(weatherResponse);
-      });
-    } catch (e) {
-      print(e);
-      return null;
-    }
-    print("controller.newList");
-    print(controller.newList);
+  WeatherPageLogic() {
+    onTodayPressed();
   }
+
+  getWeatherData(DateTime date) async {
+    controller.showLoading = true;
+    controller.weatherPageModel = await weatherRepository.getWeatherData(date);
+    print(controller.weatherPageModel.waveHeight);
+    print(controller.weatherPageModel.heightUnits);
+    print(controller.weatherPageModel.windSpeed);
+    print(controller.weatherPageModel.speedUnits);
+    controller.showLoading = false;
+  }
+
+  onTodayPressed() async {
+    getWeatherData(DateTime.now());
+  }
+
+  onTomorrowPressed() {
+    getWeatherData(DateTime.now().add(Duration(days: 1)));
+  }
+
+  onNextDayPressed() {
+    getWeatherData(DateTime.now().add(Duration(days: 2)));
+  }
+
 }
 
 class WeatherPageController extends GetxController {
-  List<String> tides = ["Low Tide", "High Tide", "Low Tide"];
-  List<String> tideTiming = ["5:41 AM", "11:27 AM", "2:30 PM"];
-  List<String> tideHeight = ["0.5 m", "0.96 m", "0.45 m"];
+  List<String> tideType = [];
+  List<String> tideTimingToday = [];
+  List<String> tideTimingTom = [];
+  List<String> tideHeight = [];
   List<String> windDetails = ["Tide", "Time", "Height"];
 
-  List<dynamic> newList = [];
+
+
+  WeatherPageModel weatherPageModel;
+
+  bool _showLoading = false;
+
+  bool get showLoading => _showLoading;
+
+  set showLoading(bool value) {
+    _showLoading = value;
+    update();
+  }
 }
