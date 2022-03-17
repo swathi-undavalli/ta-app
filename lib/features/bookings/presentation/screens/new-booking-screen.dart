@@ -186,12 +186,6 @@ class NewBookingScreen extends StatelessWidget {
       onChangedCallBack: (value) {
         logic.controller.bookingModel.price = getInt(value) * 1.0;
         logic.controller.update();
-        // try {
-        //   logic.getPrice();
-        // } catch (e) {
-        //   print("error");
-        //   print(e);
-        // }
       },
       required: false,
       errorValidator: () {
@@ -425,10 +419,10 @@ class NewBookingScreen extends StatelessWidget {
             },
             onChangedCallBack: (payingNow) {
               try {
-                controller.bookingModel.payingNow =
+                controller.bookingModel.paid =
                     double.parse(controller.payingNowTED.text);
               } catch (e) {
-                controller.bookingModel.payingNow = 0;
+                controller.bookingModel.paid = 0;
               }
               controller.update();
             },

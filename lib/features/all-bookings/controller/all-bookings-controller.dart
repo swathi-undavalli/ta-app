@@ -33,25 +33,13 @@ class AllBookingsLogic {
     controller.showLoading = false;
   }
 
-  void updateSearchList(String text) {
-    // controller.allEmployeesList = [];
-    controller.suggestionsList = [];
-    print(
-        controller.bookings[controller.bookings.length - 1].name);
-    controller.bookings.forEach((booking) {
-      if (booking.name.toLowerCase().contains(text.toLowerCase())) {
-        controller.suggestionsList.add(booking);
-      }
-    });
-    controller.update();
-  }
 
-  void updateSearchListByID(String text) {
+  void updateSearchListByIDorName(String text) {
     controller.suggestionsList = [];
     // print(
     //     controller.bookings[controller.bookings.length - 1].bookingID);
     controller.bookings.forEach((booking) {
-      if (booking.bookingID.toLowerCase().contains(text.toLowerCase()) || booking.name.toLowerCase().contains(text.toLowerCase())) {
+      if (booking.bookingID.contains(text) || booking.name.toLowerCase().contains(text.toLowerCase())) {
         controller.suggestionsList.add(booking);
       }
     });

@@ -34,7 +34,7 @@ class EditBookingNewScreen extends StatelessWidget {
     logic.controller.discountTED.text = (bookingArg.discount).toString();
     logic.controller.totalAmountTED.text = (bookingArg.totalCost).toString();
     logic.controller.priceTED.text = bookingArg.price.toString();
-    logic.controller.depositTED.text = bookingArg.payingNow.toString();
+    logic.controller.depositTED.text = bookingArg.paid.toString();
     logic.controller.balanceTED.text = bookingArg.balance.toString();
     logic.controller.paxTED.text = bookingArg.noOfPersons.toString();
     logic.controller.remarksTED.text = bookingArg.remarks;
@@ -746,7 +746,7 @@ class EditBookingNewScreen extends StatelessWidget {
       textEditingController: controller.depositTED,
       keyBoardType: TextInputType.number,
       onChangedCallBack: (payingNow) {
-        controller.bookingModel.payingNow = getInt(payingNow) * 1.0;
+        controller.bookingModel.paid = getInt(payingNow) * 1.0;
         controller.update();
       },
       focus: controller.depositNode,

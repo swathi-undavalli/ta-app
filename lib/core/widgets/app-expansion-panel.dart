@@ -12,6 +12,7 @@ import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings
 import 'package:temple_adventures/dummy.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
@@ -23,6 +24,7 @@ class BookingsExpansionPanel extends StatelessWidget {
   final List<ItemModel> items;
   Function onDeletePressed;
   List<Widget> expansions = [];
+  TextEditingController amount = TextEditingController();
 
   BookingsExpansionPanel({this.items, this.onDeletePressed}) {
     logic.controller.isExpanded = [];
@@ -42,7 +44,7 @@ class BookingsExpansionPanel extends StatelessWidget {
   Widget buildExpansion({ItemModel itemModel, int i}) {
     getColor() {
       if (itemModel.colorCode == "Blue")
-        return Color(0xffA9EBF8);
+        return Color(0xffA9EBF8).withOpacity(0.3);
       else if (itemModel.colorCode == "Purple")
         return Color(0xffBCB8F5);
       else if (itemModel.colorCode == "Red")
@@ -60,7 +62,7 @@ class BookingsExpansionPanel extends StatelessWidget {
           duration: Duration(milliseconds: 200),
           curve: Curves.easeInCubic,
           alignment: Alignment.topCenter,
-          height: controller.isExpanded[i] ? 340 : 50,
+          height: controller.isExpanded[i] ? 470 : 50,
           width: 350,
           decoration: BoxDecoration(
             color: getColor(),
@@ -68,11 +70,9 @@ class BookingsExpansionPanel extends StatelessWidget {
             // border: Border.all(color: AppColors.text.grey),
           ),
           child: Container(
-            // color: getColor(),
             decoration: BoxDecoration(
               color: getColor(),
               borderRadius: BorderRadius.circular(10),
-              // border: Border.all(color: AppColors.text.grey),
             ),
             child: Padding(
               padding: const EdgeInsets.only(left: 20),
@@ -215,6 +215,8 @@ class BookingsExpansionPanel extends StatelessWidget {
                                       "Booking Id", items[i].bookingID),
                                   buildKeyValuePairs(
                                       "Activity", items[i].activity),
+                                  buildKeyValuePairs(
+                                      "Total Cost", items[i].cost),
                                   buildKeyValuePairs("Deposit", items[i].paid),
                                   buildKeyValuePairs(
                                       "Balance", items[i].balance),
@@ -229,8 +231,10 @@ class BookingsExpansionPanel extends StatelessWidget {
                                       ? buildKeyValuePairs(
                                           "Invoice no", items[i].receiptNo)
                                       : buildKeyValuePairs("Invoice no", "-"),
-                                  buildKeyValuePairs(
-                                      "Remarks", items[i].remarks.toString()),
+                                  (items[i].remarks == "")
+                                      ? buildKeyValuePairs("Remarks", "-")
+                                      : buildKeyValuePairs("Remarks",
+                                          items[i].remarks.toString()),
                                   buildKeyValuePairs("Phone", items[i].phone),
                                   buildKeyValuePairs("Email", items[i].email),
                                   buildKeyValuePairs("Time", items[i].time),
@@ -238,7 +242,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   buildKeyValuePairs(
                                       "Session", items[i].session),
                                   buildKeyValuePairs(
-                                    "Registred",
+                                    "Registered",
                                     "${items[i].bookingModel.pax.length - 1} / ${items[i].bookingModel.noOfPersons}",
                                     isDanger: ((items[i]
                                                 .bookingModel
@@ -247,6 +251,148 @@ class BookingsExpansionPanel extends StatelessWidget {
                                             1) !=
                                         (items[i].bookingModel.noOfPersons)),
                                   ),
+                                  SizedBox(height: 20),
+                                  SizedBox(
+                                    width: Get.width - 100,
+                                    child: buildPaymentStatus(
+                                        totalAmount: items[i].cost.toString(),
+                                        payments:
+                                            items[i].bookingModel.payments),
+                                  ),
+                                  SizedBox(
+                                      height:
+                                          (double.parse(items[i].balance) == 0)
+                                              ? 30
+                                              : 10),
+                                  (double.parse(items[i].balance) == 0)
+                                      ? SizedBox()
+                                      : Container(
+                                          child: AppButton.miniFlat(
+                                            text: "Add Payment",
+                                            onTap: () {
+                                              Get.defaultDialog(
+                                                contentPadding: EdgeInsets.only(
+                                                    left: 30,
+                                                    right: 30,
+                                                    top: 20,
+                                                    bottom: 30),
+                                                title:
+                                                    "\n ${itemModel.name.capitalizeFirst + " x " + (itemModel.bookingModel.noOfPersons.toString())} ",
+                                                content: Column(
+                                                  children: [
+                                                    TextField(
+                                                      decoration:
+                                                          InputDecoration(
+                                                        labelText:
+                                                            'Enter Amount',
+                                                      ),
+                                                      controller: amount,
+                                                    ),
+                                                    SizedBox(height: 30),
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      children: [
+                                                        Text(
+                                                          "Balance :",
+                                                          style: TextStyle(
+                                                              fontSize: FontSize
+                                                                  .small,
+                                                              color: AppColors
+                                                                  .text
+                                                                  .darkgrey),
+                                                        ),
+                                                        Text(
+                                                          "${items[i].balance}/-",
+                                                          style: TextStyle(
+                                                              fontSize: FontSize
+                                                                  .textSize,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w600),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                ),
+                                                backgroundColor: Colors.white,
+                                                titleStyle: TextStyle(
+                                                    color: AppColors.text.black,
+                                                    fontFamily: AppFonts.nunito,
+                                                    fontSize: 16,
+                                                    fontWeight:
+                                                        FontWeight.bold),
+                                                confirm: Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
+                                                  children: [
+                                                    AppButton.miniText(
+                                                      text: 'Cancel',
+                                                      onTap: () {
+                                                        Get.back();
+                                                      },
+                                                    ),
+                                                    AppButton.miniFlat(
+                                                      text: 'OK',
+                                                      onTap: () {
+                                                        items[i]
+                                                            .bookingModel
+                                                            .payments
+                                                            .add(double.parse(
+                                                                amount.text));
+
+                                                        var list = items[i]
+                                                            .bookingModel
+                                                            .payments;
+
+                                                        double totalDeposit = 0;
+                                                        list.forEach((element) {
+                                                          totalDeposit +=
+                                                              element;
+                                                        });
+
+                                                        FirebaseFirestore
+                                                            .instance
+                                                            .collection(
+                                                                "bookings")
+                                                            .doc(items[i]
+                                                                .bookingModel
+                                                                .id)
+                                                            .set(
+                                                                {
+                                                              "payments": items[
+                                                                      i]
+                                                                  .bookingModel
+                                                                  .payments,
+                                                              "paid":
+                                                                  totalDeposit,
+                                                            },
+                                                                SetOptions(
+                                                                    merge:
+                                                                        true));
+                                                        Get.back();
+                                                        amount.text = "";
+                                                        BookingsCalenderWidgetLogic
+                                                            bookingCalenderLogic =
+                                                            BookingsCalenderWidgetLogic();
+                                                        bookingCalenderLogic
+                                                            .onDateSelected(
+                                                                bookingCalenderLogic
+                                                                    .controller
+                                                                    .lastDateIndex);
+                                                      },
+                                                    ),
+                                                  ],
+                                                ),
+                                                barrierDismissible: false,
+                                                radius: 10,
+                                              );
+                                            },
+                                          ).paddingOnly(right: 15),
+                                          alignment: Alignment.centerRight,
+                                        ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -316,7 +462,8 @@ class BookingsExpansionPanel extends StatelessWidget {
     }
   }
 
-  Widget buildKeyValuePairs(String key, String value, {bool isDanger = false}) {
+  Widget buildKeyValuePairs(String key, String value,
+      {bool isDanger = false, TextOverflow overflow}) {
     return Row(
       children: [
         SizedBox(
@@ -332,17 +479,158 @@ class BookingsExpansionPanel extends StatelessWidget {
           ),
         ),
         Expanded(
-          child: Text(
-            value,
-            style: TextStyle(
-                color: isDanger ? Colors.red : Colors.black,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.3,
-                height: 1.3),
+          child: Container(
+            height: 15,
+            child: Text(
+              value,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: isDanger ? Colors.red : Colors.black,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.3,
+                  height: 1.3),
+            ),
           ),
         ),
       ],
+    );
+  }
+
+  Widget buildPaymentStatus({String totalAmount, List<double> payments}) {
+    var list = payments;
+    var total = totalAmount;
+    double bal = 0.0;
+    list.forEach((element) {
+      bal += element;
+    });
+    int n = list.length;
+    return Stack(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              // flex: n,
+              child: Container(
+                height: 1,
+                color: (double.parse(total) <= bal)
+                    ? Colors.green.shade400
+                    : Colors.black,
+              ),
+            ),
+          ],
+        ).paddingOnly(top: 6, left: 16, right: 16),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Expanded(
+            flex: n,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List<Widget>.generate(n, (i) {
+                return Row(
+                  children: [
+                    buildCircle(color: Colors.black),
+                  ],
+                );
+              }),
+            ),
+          ),
+          (double.parse(total) <= bal)
+              ? SizedBox()
+              : Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      buildCircle(color: Colors.red.shade300),
+                    ],
+                  ),
+                ),
+          Expanded(
+              flex: 2,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: 39,
+                    child: Container(
+                      width: 15,
+                      height: 15,
+                      decoration: BoxDecoration(
+                          color: AppColors.text.skyBlue,
+                          shape: BoxShape.circle),
+                      child: Icon(
+                        Icons.circle,
+                        size: 10,
+                        color: AppColors.text.black,
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+        ]),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: n,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List<Widget>.generate(n, (i) {
+                  return buildNumber(
+                      text: list[i].toString(),
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black);
+                }),
+              ),
+            ),
+            (double.parse(total) <= bal)
+                ? SizedBox()
+                : Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        buildNumber(
+                            text: (double.parse(total) - bal).toString(),
+                            color: Colors.red.shade300,
+                            fontWeight: FontWeight.normal),
+                      ],
+                    )),
+            Expanded(
+                flex: 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    buildNumber(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        text: totalAmount),
+                  ],
+                )),
+          ],
+        ).paddingOnly(top: 20),
+      ],
+    );
+  }
+
+  Widget buildCircle({Color color}) {
+    return SizedBox(
+      width: 39,
+      child: Icon(
+        Icons.circle,
+        size: 10,
+        color: color,
+      ),
+    );
+  }
+
+  Widget buildNumber({FontWeight fontWeight, Color color, String text}) {
+    return SizedBox(
+      width: 39,
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 10, fontWeight: fontWeight, color: color),
+      ),
     );
   }
 }
@@ -379,27 +667,28 @@ class ItemModel {
   final String employeeName;
   BookingModel bookingModel;
 
-  ItemModel(
-      {@required this.phone,
-      @required this.activity,
-      @required this.bookingID,
-      @required this.colorCode,
-      @required this.price,
-      @required this.time,
-      @required this.session,
-      @required this.date,
-      @required this.cost,
-      @required this.paid,
-      @required this.receiptNo,
-      @required this.balance,
-      @required this.remarks,
-      @required this.registration,
-      this.expanded = false,
-      @required this.name,
-      @required this.employeeName,
-      @required this.pax,
-      @required this.email,
-      this.bookingModel});
+  ItemModel({
+    @required this.phone,
+    @required this.activity,
+    @required this.bookingID,
+    @required this.colorCode,
+    @required this.price,
+    @required this.time,
+    @required this.session,
+    @required this.date,
+    @required this.cost,
+    @required this.paid,
+    @required this.receiptNo,
+    @required this.balance,
+    @required this.remarks,
+    @required this.registration,
+    this.expanded = false,
+    @required this.name,
+    @required this.employeeName,
+    @required this.pax,
+    @required this.email,
+    this.bookingModel,
+  });
 
   // factory ItemModel.fromBookings(BookingModel bookingModel) {
   //   getSessions() {
@@ -465,7 +754,7 @@ class ItemModel {
       colorCode: bookingModel.activity[0].color.toString(),
       date: bookingModel.bookingDate[0],
       cost: bookingModel.totalCost.toString(),
-      paid: bookingModel.payingNow.toString(),
+      paid: bookingModel.paid.toString(),
       balance: bookingModel.balance.toString(),
       registration: true,
       receiptNo: bookingModel.receiptNo,

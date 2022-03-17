@@ -17,7 +17,7 @@ class BookingModel {
     this.discount = 0,
     this.price = 0,
     this.tax = 18,
-    this.payingNow = 0,
+    this.paid = 0,
     this.id,
     this.paymentMode,
     this.paymentTransactionId,
@@ -29,15 +29,17 @@ class BookingModel {
     this.discountType = "%",
     this.remarks,
     this.employeeName,
+    this.payments,
   });
 
   List<ActivityModel> activity;
   List<Map<String, dynamic>> pax;
+  List<double>payments;
   int noOfPersons;
   double discount;
   double price;
   double tax;
-  double payingNow;
+  double paid;
   String id;
   String paymentMode;
   String location;
@@ -66,7 +68,7 @@ class BookingModel {
       discountType: json["discountSwitch"],
       price: json["price"].toDouble(),
       tax: json["tax"].toDouble(),
-      payingNow: json["paid"].toDouble(),
+      paid: json["paid"].toDouble(),
       paymentMode: json["paymentMode"],
       receiptNo: json["receiptNo"],
       remarks: json["remarks"],
@@ -75,6 +77,7 @@ class BookingModel {
       location: json["location"],
       paymentTransactionId: json["paymentTransactionId"],
       bookingDate: List<String>.from(json["bookingDate"].map((x) => x)),
+      payments: List<double>.from(json["payments"]??[].map((x) => x)),
       theoryDate: List<DateTime>.from(
           json["theoryDate"].map((x) => parseDateOrNull(x))),
       poolDate:
@@ -95,10 +98,11 @@ class BookingModel {
         "employeeName": employeeName,
         "discountSwitch": discountType,
         "tax": tax,
-        "paid": payingNow,
+        "paid": paid,
         "paymentMode": paymentMode,
         "receiptNo": receiptNo,
         "bookingDate": List<String>.from(bookingDate.map((x) => x)),
+        "payments": List<double>.from(payments??[].map((x) => x)),
         "location": location,
         "paymentTransactionId": paymentTransactionId,
         "theoryDate":
@@ -127,8 +131,8 @@ class BookingModel {
     }
 
     /// Deduct paying now
-    if (payingNow != null) {
-      balance -= payingNow;
+    if (paid != null) {
+      balance -= paid;
     }
     return balance.toPrecision(2);
   }

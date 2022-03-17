@@ -229,22 +229,6 @@ class BookingsCalenderWidget extends StatelessWidget {
                           : SizedBox(),
                     ],
                   ),
-                  // Row(
-                  //   children: [
-                  //     buildSessionCount(
-                  //         session: "T",
-                  //         count: controller.totalTheoryPax,
-                  //         color: Colors.orangeAccent),
-                  //     buildSessionCount(
-                  //         session: "P",
-                  //         count: controller.totalPoolPax,
-                  //         color: Colors.green),
-                  //     buildSessionCount(
-                  //         session: "D",
-                  //         count: controller.totalDivePax,
-                  //         color: Colors.lightBlueAccent),
-                  //   ],
-                  // ),
                 ],
               ),
             ),

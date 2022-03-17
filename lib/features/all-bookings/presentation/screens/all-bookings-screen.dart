@@ -269,7 +269,7 @@ class AllBookingsScreen extends StatelessWidget {
                 onChanged: (text) {
                   if (text.isNotEmpty) {
                     logic.controller.showSuggestions = true;
-                    logic.updateSearchListByID(text);
+                    logic.updateSearchListByIDorName(text);
                   } else {
                     logic.controller.showSuggestions = false;
                   }

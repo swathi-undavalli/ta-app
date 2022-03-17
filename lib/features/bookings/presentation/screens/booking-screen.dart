@@ -25,6 +25,7 @@ class BookingScreen extends StatelessWidget {
     print("building bro");
     bookingsCalenderWidget = BookingsCalenderWidget(
       onDateTimeSelected: (DateTime selectedDate) {
+        print("=========================Am chestunnav mowa");
         print(selectedDate.toString());
       },
       autoScrollController: autoScrollController,

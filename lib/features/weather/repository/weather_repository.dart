@@ -8,8 +8,11 @@ import 'package:temple_adventures/features/weather/models/weather_response.dart'
 import 'package:http/http.dart' as http;
 
 class WeatherRepository {
+
   Future<List<WeatherResponse>> getWeatherResponse() async {
+
     final params = {'spot_id': "957", 'units': "eu"};
+
     print("=======================");
     print("started");
 

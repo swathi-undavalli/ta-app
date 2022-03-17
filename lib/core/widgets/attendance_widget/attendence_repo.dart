@@ -71,20 +71,20 @@ class AttendanceRepo {
 
   static Future<String> getUserPosition() async {
     Position position = await GeolocatorPlatform.instance
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
     print("+++++++++++++++++++++++");
     print(position.latitude);
     print(position.longitude);
     position = await GeolocatorPlatform.instance
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
     position = await GeolocatorPlatform.instance
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
     position = await GeolocatorPlatform.instance
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
     position = await GeolocatorPlatform.instance
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
     position = await GeolocatorPlatform.instance
-        .getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+        .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
     Position currentPosition = position;
 
     Position templeAdventuresPondicherry =

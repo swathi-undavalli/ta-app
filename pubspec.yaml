@@ -3,7 +3,7 @@ description: A new Flutter project.
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.1.0+15
+version: 1.1.0+21
 
 environment:
   sdk: ">=2.9.0 <3.0.0"
@@ -26,15 +26,17 @@ dependencies:
   #------------------------------------------
   #           UI and Animations
 
+
+
   font_awesome_flutter: ^9.0.0
   cupertino_icons: ^1.0.2
   image_picker: ^0.8.4+2
   step_progress_indicator: ^1.0.1
   image_cropper: ^1.4.1
   http: ^0.13.3
-  permission_handler: ^8.2.5
-  file_picker: ^3.0.4
-  geolocator: ^7.7.0
+  permission_handler: ^9.0.2
+  file_picker: ^4.4.0
+  geolocator: ^8.0.5
   location: ^4.3.0
   fluttertoast:
   flutter_datetime_picker: ^1.5.1
@@ -47,6 +49,9 @@ dependencies:
   scroll_to_index:
   animated_splash_screen: ^1.1.0
   flutter_native_splash:
+  flutter_launcher_icons:
+  separated_row: ^2.0.0
+
 
   #------------------------------------------
   #------------------------------------------
@@ -54,17 +59,12 @@ dependencies:
 
   firebase_auth: ^3.0.1
   firebase_core: ^1.4.0
-  cloud_firestore: ^2.5.0
+  cloud_firestore: ^3.1.9
   firebase_storage: ^10.0.1
+  firebase_messaging: ^11.2.7
+  flutter_local_notifications: ^9.4.0
 
   #------------------------------------------
-#dependency_overrides:
-#  firebase_messaging_platform_interface: 3.1.6
-#  firebase_storage_platform_interface: 4.0.14
-#  cloud_functions_platform_interface: 5.0.21
-#  cloud_firestore_platform_interface: 5.4.13
-#  firebase_auth_platform_interface: 6.1.11
-#  firebase_database_platform_interface: 0.2.0+5
 
 
 dev_dependencies:

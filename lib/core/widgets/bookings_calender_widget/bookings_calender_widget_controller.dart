@@ -18,6 +18,7 @@ class BookingsCalenderWidgetLogic {
 
   getBookings(DateTime date) async {
     log("getBookings");
+    log("Started");
     controller.bookingTimings = [];
     controller.bookings = [];
     controller.showLoading = true;
@@ -29,25 +30,36 @@ class BookingsCalenderWidgetLogic {
                   "${date.day < 10 ? "0${date.day}" : date.day}-${date.month < 10 ? "0${date.month}" : date.month}-${date.year}")
           .get();
 
-      // var data = await FirebaseFirestore.instance
-      //     .collection("bookings")
-      //     .get();
-      // log("count=====${count.toString()}");
       data.docs.forEach((element) {
         log("===========s${element.data().toString()}");
+
+        try {
+          BookingModel booking = BookingModel.fromMap(element.data());
+        } catch (e) {
+          print(e);
+        }
         BookingModel booking = BookingModel.fromMap(element.data());
+
+        print(booking.toMap());
+        print("=============");
+
         if (booking.diveDate != null) {
           controller.bookingTimings.addAll(booking.diveDate);
+          print(booking.diveDate);
         }
         if (booking.poolDate != null) {
           controller.bookingTimings.addAll(booking.poolDate);
+          print(booking.poolDate);
         }
         if (booking.theoryDate != null) {
           controller.bookingTimings.addAll(booking.theoryDate);
+          print(booking.theoryDate);
         }
 
         controller.bookings.add(booking);
 
+        log("================================================");
+        log(booking.toString());
         List<ItemModel> newItemsList = [];
         controller.theoryCount = 0;
         controller.poolCount = 0;

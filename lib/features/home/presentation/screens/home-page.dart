@@ -1,30 +1,15 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/services/firebase_api.dart';
-import 'package:temple_adventures/core/util/app-func.dart';
-import 'package:temple_adventures/core/widgets/add_employee_widget/add_employee_widget.dart';
-import 'package:temple_adventures/core/widgets/attendance_report_widget/attendance_report_widget.dart';
-import 'package:temple_adventures/core/widgets/attendance_widget/attandence_widget_controller.dart';
-import 'package:temple_adventures/core/widgets/attendance_widget/attendence_widget.dart';
-import 'package:temple_adventures/dummy.dart';
-import 'package:temple_adventures/features/bookings/models/activity-model.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:temple_adventures/features/counter-model.dart';
-import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
-import 'package:temple_adventures/features/home/controller/home-page-controller.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
-import 'package:temple_adventures/features/home/presentation/widgets/nav-drawer.dart';
-// import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
-// import 'package:pspdfkit_flutter/src/main.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
+import '../../../../core/widgets/attendance_report_widget/attendance_report_widget.dart';
+import '../../../../core/widgets/attendance_widget/attandence_widget_controller.dart';
+import '../../../../core/widgets/attendance_widget/attendence_widget.dart';
+import '../../../bookings/models/booking-model.dart';
+import '../../controller/home-page-controller.dart';
 
 class HomePage extends StatelessWidget {
   final HomePageLogic logic = HomePageLogic();
@@ -72,29 +57,32 @@ class HomePage extends StatelessWidget {
                   SizedBox(height: 20),
                   AttendanceReportWidget(),
                   SizedBox(height: 100),
+
                   // ElevatedButton(
-                  //   onPressed: () {
-                  //     for (int i = 1; i < 47; i++) {
-                  //       var map = {
-                  //         "firstName": (employees[i - 1][1]).split(" ")[0],
-                  //         "lastName": getString(
-                  //             (employees[i - 1][1]).split(" ").sublist(1)),
-                  //       };
-                  //       print(map);
-                  //       FirebaseFirestore.instance
-                  //           .collection("employees")
+                  //   onPressed: () async {
+                  //     for (int i = 411; i < 412; i++) {
+                  //       log(i.toString());
+                  //       var data = await FirebaseFirestore.instance
+                  //           .collection("bookings")
                   //           .doc(i.toString())
-                  //           .collection("employeeFullInformation")
-                  //           .doc("employeeData")
-                  //           .set({
-                  //         "firstName": (employees[i - 1][1]).split(" ")[0],
-                  //         "lastName": getString(
-                  //             (employees[i - 1][1]).split(" ").sublist(1)),
-                  //       }, SetOptions(merge: true));
+                  //           .get();
+                  //
+                  //       if (data.data() == null) continue;
+                  //       BookingModel booking =
+                  //           BookingModel.fromMap(data.data());
+                  //       booking.payments.add(booking.paid);
+                  //       log(booking.payments.toString());
+                  //
+                  //       FirebaseFirestore.instance
+                  //           .collection("bookings")
+                  //           .doc(booking.id)
+                  //           .set({"payments": booking.payments},
+                  //               SetOptions(merge: true));
                   //     }
                   //   },
                   //   child: Text("Do"),
                   // ),
+
                   // ElevatedButton(
                   //   onPressed: () async {
                   //     log("clicked");
@@ -159,6 +147,25 @@ class HomePage extends StatelessWidget {
                   //       log(rawData.data().toString());
                   //     },
                   //     child: Text("DO"))
+
+                  // ElevatedButton(
+                  //   onPressed: () async {
+                  //     var token = await FirebaseMessaging.instance.getToken();
+                  //     print(token);
+                  //   },
+                  //   child: Text("DO"),
+                  // ),
+
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     Get.toNamed(Search.id);
+                  //   },
+                  //   child: Text("Do"),
+                  // ),
+
+                  SizedBox(
+                    height: 50,
+                  )
                 ],
               ),
             ),
@@ -262,27 +269,3 @@ getString(List<String> sublist) {
 // To parse this JSON data, do
 //
 //     final bookingModel = bookingModelFromMap(jsonString);
-
-class BookingModel {
-  BookingModel({
-    this.activity,
-    this.booking,
-    this.employee,
-  });
-
-  int activity;
-  int booking;
-  int employee;
-
-  factory BookingModel.fromMap(Map<String, dynamic> json) => BookingModel(
-        activity: json["activity"],
-        booking: json["booking"],
-        employee: json["employee"],
-      );
-
-  Map<String, dynamic> toMap() => {
-        "activity": activity,
-        "booking": booking,
-        "employee": employee,
-      };
-}

@@ -1,7 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:temple_adventures/core/authentication/firebase-authentication.dart';
@@ -24,6 +26,7 @@ import 'package:temple_adventures/features/employees/presentation/screens/add-an
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
+import 'package:temple_adventures/features/messaging/firebase_messaging_demo.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
 import 'features/Activities/presentation/screens/all-activities-screen.dart';
 import 'features/dashboard/controller/dashboard-controller.dart';
@@ -31,9 +34,39 @@ import 'features/employees/presentation/screens/employee-details-screen.dart';
 import 'features/employees/presentation/screens/employee-profile-screen.dart';
 import 'features/login/presentation/screens/login-page.dart';
 
+final FlutterLocalNotificationsPlugin notificationsPlugin =
+    FlutterLocalNotificationsPlugin();
+
+const AndroidNotificationChannel channel = AndroidNotificationChannel(
+  'high_importance_channel', // id
+  'High Importance Notifications', // title
+  importance: Importance.high,
+  playSound: true,
+);
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
+  var data = notificationsPlugin.resolvePlatformSpecificImplementation<
+      AndroidFlutterLocalNotificationsPlugin>();
+
+  if (data != null) data.createNotificationChannel(channel);
+
+  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
+    alert: true,
+    badge: true,
+    sound: true,
+  );
+
+  await FirebaseMessaging.instance.subscribeToTopic('admin');
+
+  // FirebaseMessaging.onBackgroundMessage(
+  //   (_) {
+  //     print("message");
+  //     return ;
+  //   },
+  // );
 
   await GetStorage.init();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -54,10 +87,11 @@ class MyApp extends StatelessWidget {
     Get.put(DashBoardScreenController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: FirebaseAuthentication.isUserLoggedIn()
-          ? DashBoardScreen.id
-          : LoginScreen.id,
-      theme: ThemeData(
+      // initialRoute: FirebaseAuthentication.isUserLoggedIn()
+      //     ? DashBoardScreen.id
+      //     : LoginScreen.id,
+      initialRoute: FirebaseMessagingDemo.id,
+      theme: ThemeData(   
         textTheme: TextTheme(
           headline1: TextStyle(fontFamily: AppFonts.nunito),
           headline2: TextStyle(fontFamily: AppFonts.nunito),
@@ -79,7 +113,8 @@ class MyApp extends StatelessWidget {
             CustomerRegistrationScreen(),
         NewCustomerScreen.id: (context) => NewCustomerScreen(),
         AllActivitiesScreen.id: (context) => AllActivitiesScreen(),
-        // EditBookingDetailsScreen.id: (context) => EditBookingDetailsScreen(),
+        FirebaseMessagingDemo.id: (context) => FirebaseMessagingDemo(),
+        // Search.id: (context) => Search(),
         AddNewActivityScreen.id: (context) => AddNewActivityScreen(),
         ActivityEditScreen.id: (context) => ActivityEditScreen(),
         AllBookingsScreen.id: (context) => AllBookingsScreen(),

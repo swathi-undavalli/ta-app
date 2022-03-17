@@ -14,10 +14,11 @@ class IDProofPicker {
 
   IDProofPicker();
   browseImage(ImageSource source) async {
-    PickedFile pickedFile =
-        await imagePicker.getImage(source: source, imageQuality: 50);
+    XFile pickedFile =
+        await imagePicker.pickImage(source: source, imageQuality: 50);
     if (pickedFile != null) {
-      File file = await ImageCropper.cropImage(
+      ImageCropper imageCropper = ImageCropper();
+      File file = await imageCropper.cropImage(
         sourcePath: pickedFile.path,
         aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
         compressQuality: 100,

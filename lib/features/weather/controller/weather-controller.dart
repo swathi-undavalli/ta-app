@@ -33,7 +33,6 @@ class WeatherPageLogic {
   onNextDayPressed() {
     getWeatherData(DateTime.now().add(Duration(days: 2)));
   }
-
 }
 
 class WeatherPageController extends GetxController {
@@ -42,8 +41,6 @@ class WeatherPageController extends GetxController {
   List<String> tideTimingTom = [];
   List<String> tideHeight = [];
   List<String> windDetails = ["Tide", "Time", "Height"];
-
-
 
   WeatherPageModel weatherPageModel;
 
