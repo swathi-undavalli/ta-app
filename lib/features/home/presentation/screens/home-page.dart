@@ -61,16 +61,19 @@ class HomePage extends StatelessWidget {
                   AttendanceReportWidget(),
                   SizedBox(height: 100),
 
-                  ElevatedButton(
-                      onPressed: () {
-                        Get.toNamed(D.id);
-                      },
-                      child: Text("DO")),
+                  // ElevatedButton(
+                  //     onPressed: () {
+                  //
+                  //
+                  //
+                  //     },
+                  //     child: Text("DO")),
 
                   // ElevatedButton(
                   //   onPressed: () async {
-                  //     for (int i = 496; i < 497; i++) {
+                  //     for (int i = 109; i < 520; i++) {
                   //       log(i.toString());
+                  //       // if (i == 111) break;
                   //       var data = await FirebaseFirestore.instance
                   //           .collection("bookings")
                   //           .doc(i.toString())
@@ -79,14 +82,13 @@ class HomePage extends StatelessWidget {
                   //       if (data.data() == null) continue;
                   //       BookingModel booking =
                   //           BookingModel.fromMap(data.data());
-                  //       booking.payments.add(booking.paid);
-                  //       log(booking.payments.toString());
+                  //       booking.payments = [booking.paid];
                   //
                   //       FirebaseFirestore.instance
                   //           .collection("bookings")
                   //           .doc(booking.id)
-                  //           .set({"payments": booking.payments},
-                  //               SetOptions(merge: true));
+                  //           .set(booking.toMap())
+                  //           .whenComplete(() => log("done"));
                   //     }
                   //   },
                   //   child: Text("Do"),

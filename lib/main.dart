@@ -1,11 +1,9 @@
 import 'dart:developer';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:temple_adventures/D/d.dart';
@@ -30,7 +28,6 @@ import 'package:temple_adventures/features/employees/presentation/screens/all-em
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:temple_adventures/features/messaging/firebase_messaging_controller.dart';
-import 'package:temple_adventures/features/messaging/firebase_messaging_demo.dart';
 import 'package:temple_adventures/features/messaging/notification_service.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
 import 'features/Activities/presentation/screens/all-activities-screen.dart';
