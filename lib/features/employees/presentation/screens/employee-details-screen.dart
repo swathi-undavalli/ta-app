@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
-import 'package:temple_adventures/dummy.dart';
+import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/employees/controllers/add-an-employee-controller.dart';
@@ -315,6 +315,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
       logic.controller.viewEmployees = employee.accessLevels.viewEmployees;
       logic.controller.createEmployees = employee.accessLevels.createEmployees;
       logic.controller.editEmployees = employee.accessLevels.editEmployees;
+      logic.controller.notifications = employee.accessLevels.notifications;
       logic.controller.personalProfileEdit =
           employee.accessLevels.personalProfileEdit;
       logic.controller.personalAttendanceReport =

@@ -38,6 +38,7 @@ class Employee {
         weatherReport: false,
         editActivityPrices: false,
         addActivity: false,
+        notifications: false,
       );
   }
 
@@ -104,6 +105,7 @@ class AccessLevels {
     @required this.weatherReport,
     @required this.editActivityPrices,
     @required this.addActivity,
+    @required this.notifications,
   });
 
   bool viewBookings;
@@ -118,6 +120,7 @@ class AccessLevels {
   bool weatherReport;
   bool editActivityPrices;
   bool addActivity;
+  bool notifications;
 
   factory AccessLevels.fromMap(Map<String, dynamic> json) => AccessLevels(
         viewBookings: json["viewBookings"],
@@ -132,6 +135,7 @@ class AccessLevels {
         weatherReport: json["weatherReport"],
         editActivityPrices: json["editActivityPrices"],
         addActivity: json["addActivity"],
+        notifications: json["notifications"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -147,5 +151,6 @@ class AccessLevels {
         "weatherReport": weatherReport,
         "editActivityPrices": editActivityPrices,
         "addActivity": addActivity,
+        "notifications": notifications,
       };
 }

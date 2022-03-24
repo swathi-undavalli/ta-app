@@ -82,6 +82,7 @@ class AddAnUserLogic {
           weatherReport: controller.weatherReport,
           editActivityPrices: controller.editActivityPrices,
           addActivity: controller.addActivity,
+          notifications: controller.notifications,
         ),
       );
       // viewBookings: controller.viewBookings,
@@ -97,7 +98,8 @@ class AddAnUserLogic {
           .doc("count")
           .set(counterModel.toMap());
       Fluttertoast.showToast(msg: "Saved");
-      LogModel logModel = LogModel(type: LogType.addEmployee,employeeName: employee.name);
+      LogModel logModel =
+          LogModel(type: LogType.addEmployee, employeeName: employee.name);
       FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
 
       disposeKeyboard();
@@ -135,6 +137,7 @@ class AddAnUserLogic {
           weatherReport: controller.weatherReport,
           editActivityPrices: controller.editActivityPrices,
           addActivity: controller.addActivity,
+          notifications: controller.notifications,
         ),
       );
       // viewBookings: controller.viewBookings,
@@ -144,7 +147,8 @@ class AddAnUserLogic {
           .collection('employeeFullInformation')
           .doc('employeeData')
           .set(employee.toMap());
-      LogModel logModel = LogModel(type: LogType.editEmployee,employeeName: employee.name);
+      LogModel logModel =
+          LogModel(type: LogType.editEmployee, employeeName: employee.name);
       FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
 
       Fluttertoast.showToast(msg: "Saved");
@@ -185,8 +189,6 @@ class AddAnUserLogic {
           ),
         ));
   }
-
-
 }
 
 class AddAnUserController extends GetxController {
@@ -223,6 +225,7 @@ class AddAnUserController extends GetxController {
   ];
 
   ///Switches
+
   bool _viewBookings = false;
   bool _weatherReport = false;
   bool _createBookings = false;
@@ -235,6 +238,14 @@ class AddAnUserController extends GetxController {
   bool _attendanceReport = false;
   bool _createEmployees = false;
   bool _viewEmployees = false;
+  bool _notifications = false;
+
+  bool get notifications => _notifications;
+
+  set notifications(bool value) {
+    _notifications = value;
+    update();
+  }
 
   bool get viewBookings => _viewBookings;
 
@@ -280,6 +291,7 @@ class AddAnUserController extends GetxController {
     weatherReport = false;
     editActivityPrices = false;
     addActivity = false;
+    notifications = false;
   }
 
   bool get createBookings => _createBookings;

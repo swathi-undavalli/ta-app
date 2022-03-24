@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
-import 'package:temple_adventures/dummy.dart';
+import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
@@ -480,7 +480,7 @@ class BookingsExpansionPanel extends StatelessWidget {
         ),
         Expanded(
           child: Container(
-            height: 15,
+            height: 16,
             child: Text(
               value,
               overflow: TextOverflow.ellipsis,
@@ -500,9 +500,9 @@ class BookingsExpansionPanel extends StatelessWidget {
   Widget buildPaymentStatus({String totalAmount, List<double> payments}) {
     var list = payments;
     var total = totalAmount;
-    double bal = 0.0;
+    double deposits = 0.0;
     list.forEach((element) {
-      bal += element;
+      deposits += element;
     });
     int n = list.length;
     return Stack(
@@ -513,7 +513,7 @@ class BookingsExpansionPanel extends StatelessWidget {
               // flex: n,
               child: Container(
                 height: 1,
-                color: (double.parse(total) <= bal)
+                color: (double.parse(total) == deposits)
                     ? Colors.green.shade400
                     : Colors.black,
               ),
@@ -534,7 +534,7 @@ class BookingsExpansionPanel extends StatelessWidget {
               }),
             ),
           ),
-          (double.parse(total) <= bal)
+          (double.parse(total) == deposits)
               ? SizedBox()
               : Expanded(
                   flex: 1,
@@ -583,7 +583,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                 }),
               ),
             ),
-            (double.parse(total) <= bal)
+            (double.parse(total) == deposits)
                 ? SizedBox()
                 : Expanded(
                     flex: 1,
@@ -591,7 +591,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         buildNumber(
-                            text: (double.parse(total) - bal).toString(),
+                            text: (double.parse(total) - deposits).toString(),
                             color: Colors.red.shade300,
                             fontWeight: FontWeight.normal),
                       ],

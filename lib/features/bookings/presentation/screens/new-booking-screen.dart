@@ -9,7 +9,6 @@ import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-customer-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/activity-selector.dart';
@@ -421,6 +420,7 @@ class NewBookingScreen extends StatelessWidget {
               try {
                 controller.bookingModel.paid =
                     double.parse(controller.payingNowTED.text);
+
               } catch (e) {
                 controller.bookingModel.paid = 0;
               }

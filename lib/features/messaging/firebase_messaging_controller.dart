@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/features/messaging/notification_service.dart';
 
 class FirebaseMessagingLogic {
   FirebaseMessagingController controller =
@@ -21,25 +22,27 @@ class FirebaseMessagingLogic {
   }
 
   configureFirebaseListeners() {
-    ///app is open
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      log("Hello mawa notification ochinda");
-      log("onMessage data: ${message}");
-    });
 
     ///completely terminated
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null) {
+        log('onLaunch data: ${message}');
+      }
+    });
 
-    FirebaseMessaging.instance
-        .getInitialMessage()
-        .then((RemoteMessage message) async {
-      log('onLaunch data: ${message}');
+    ///app is open
+    FirebaseMessaging.onMessage.listen((message) {
+      if (message.notification != null) {
+        log("Hello mawa notification ochindi");
+        log("onMessage data: ${message.notification.body}");
+      }
+      LocalNotificationService.display(message);
     });
 
     ///app is in Background
 
-    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) async {
-      print('onMessageOpenedApp data:${message}');
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      print('onMessageOpenedApp data:${message.data}');
     });
   }
 }

@@ -3,6 +3,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/D/d.dart';
+import 'package:temple_adventures/access_levels.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
 import '../../../../core/widgets/attendance_report_widget/attendance_report_widget.dart';
@@ -58,9 +61,15 @@ class HomePage extends StatelessWidget {
                   AttendanceReportWidget(),
                   SizedBox(height: 100),
 
+                  ElevatedButton(
+                      onPressed: () {
+                        Get.toNamed(D.id);
+                      },
+                      child: Text("DO")),
+
                   // ElevatedButton(
                   //   onPressed: () async {
-                  //     for (int i = 411; i < 412; i++) {
+                  //     for (int i = 496; i < 497; i++) {
                   //       log(i.toString());
                   //       var data = await FirebaseFirestore.instance
                   //           .collection("bookings")
@@ -86,52 +95,39 @@ class HomePage extends StatelessWidget {
                   // ElevatedButton(
                   //   onPressed: () async {
                   //     log("clicked");
-                  //     for (int i = 44; i < 47; i++) {
+                  //     for (int i = 47; i < 54; i++) {
                   //       var accessLevels = AccessLevels(
-                  //           viewBookings: true,
-                  //           createBookings: true,
-                  //           editBookings: true,
-                  //           viewEmployees: true,
-                  //           createEmployees: true,
-                  //           editEmployees: true,
-                  //           personalProfileEdit: true,
-                  //           personalAttendanceReport: true,
-                  //           attendanceReport: true,
-                  //           weatherReport: true,
-                  //           editActivityPrices: true,
-                  //           addActivity: true);
-                  //       for (var employee in employees) {
-                  //         var id = employee[0];
-                  //         var name = employee[1];
-                  //         var phone = employee[2];
-                  //         var names = name.split(" ");
-                  //         Employee emp = Employee(
-                  //           id: id,
-                  //           firstName: names[0],
-                  //           lastName: getString(names.sublist(1)),
-                  //           phoneNumber: phone,
-                  //           role: "Office Staff",
-                  //           countryIsoCode: "IN",
-                  //           countryCode: "+91",
-                  //           shiftTiming: DateTime(0, 0, 0, 9),
-                  //           accessLevels: accessLevels,
-                  //         );
-                  //         FirebaseFirestore.instance
-                  //             .collection("employees")
-                  //             .doc(id)
-                  //             .collection("employeeFullInformation")
-                  //             .doc("employeeData")
-                  //             .set(emp.toMap())
-                  //             .whenComplete(() => log(emp.toMap().toString()));
-                  //         log(emp.toMap().toString());
-                  //       }
+                  //         viewBookings: true,
+                  //         createBookings: true,
+                  //         editBookings: true,
+                  //         viewEmployees: true,
+                  //         createEmployees: true,
+                  //         editEmployees: true,
+                  //         personalProfileEdit: true,
+                  //         personalAttendanceReport: true,
+                  //         attendanceReport: true,
+                  //         weatherReport: true,
+                  //         editActivityPrices: true,
+                  //         addActivity: true,
+                  //         notifications: false,
+                  //       );
                   //
-                  //       // FirebaseFirestore.instance
-                  //       //     .collection("employees")
-                  //       //     .doc(i.toString())
-                  //       //     .collection("employeeFullInformation")
-                  //       //     .doc("employeeData")
-                  //       //     .set(accessLevels.toMap(), SetOptions(merge: true));
+                  //       var data = await FirebaseFirestore.instance
+                  //           .collection("employees")
+                  //           .doc(i.toString())
+                  //           .collection("employeeFullInformation")
+                  //           .doc("employeeData")
+                  //           .get();
+                  //
+                  //       var employee = Employee.fromMap(data.data());
+                  //       employee.accessLevels = accessLevels;
+                  //
+                  //       FirebaseFirestore.instance
+                  //           .collection("employees")
+                  //           .doc(i.toString())
+                  //           .collection("employeeFullInformation")
+                  //           .doc("employeeData")
+                  //           .set(employee.toMap());
                   //     }
                   //   },
                   //   child: Text("Do"),

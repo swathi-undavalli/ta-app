@@ -34,7 +34,7 @@ class BookingModel {
 
   List<ActivityModel> activity;
   List<Map<String, dynamic>> pax;
-  List<double>payments;
+  List<double> payments;
   int noOfPersons;
   double discount;
   double price;
@@ -77,7 +77,7 @@ class BookingModel {
       location: json["location"],
       paymentTransactionId: json["paymentTransactionId"],
       bookingDate: List<String>.from(json["bookingDate"].map((x) => x)),
-      payments: List<double>.from(json["payments"]??[].map((x) => x)),
+      payments: List<double>.from(json["payments"] ?? [].map((x) => x)),
       theoryDate: List<DateTime>.from(
           json["theoryDate"].map((x) => parseDateOrNull(x))),
       poolDate:
@@ -102,7 +102,7 @@ class BookingModel {
         "paymentMode": paymentMode,
         "receiptNo": receiptNo,
         "bookingDate": List<String>.from(bookingDate.map((x) => x)),
-        "payments": List<double>.from(payments??[].map((x) => x)),
+        "payments": List<double>.from(payments ?? [].map((x) => x)),
         "location": location,
         "paymentTransactionId": paymentTransactionId,
         "theoryDate":
@@ -122,6 +122,7 @@ class BookingModel {
     if (tax != null && tax != 0) {
       balance += balance * (tax / 100);
     }
+
     /// Deduct Discount
     if (discountType != null) {
       if (discountType == "%")

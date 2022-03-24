@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/validator.dart';
+import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
 import 'package:temple_adventures/features/bookings/controller/customer-registration-controller.dart';
 import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
@@ -17,6 +18,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: buildAppBar(),
       floatingActionButton: buildFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor: AppColors.background.lightBlue,
@@ -122,6 +124,16 @@ class AddCustomerDetailsScreen extends StatelessWidget {
   }
 
   ///======================UI==============///
+
+  Widget buildAppBar() {
+    return AppBar(
+      toolbarHeight: 70,
+      centerTitle: true,
+      leading: BackNavigationIcon(),
+      elevation: 0,
+      backgroundColor: Colors.transparent,
+    );
+  }
 
   Widget buildPhoneNumber() {
     return GetBuilder<NewBookingController>(builder: (controller) {

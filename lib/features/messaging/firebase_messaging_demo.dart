@@ -1,5 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:temple_adventures/core/util/app-func.dart';
+import 'package:temple_adventures/features/bookings/models/activity-model.dart';
+import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/messaging/firebase_messaging_controller.dart';
 
 class FirebaseMessagingDemo extends StatelessWidget {
@@ -16,7 +21,56 @@ class FirebaseMessagingDemo extends StatelessWidget {
         title: Text("Firebase Messaging Demo"),
       ),
       body: SafeArea(
-        child: Container(),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      FirebaseMessaging.instance
+                          .subscribeToTopic("newBooking")
+                          .whenComplete(() => showToast("Subscribed"));
+                    },
+                    child: Text("Subscribe"),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      FirebaseMessaging.instance
+                          .unsubscribeFromTopic("newBooking")
+                          .whenComplete(() => showToast("UnSubscribed"));
+                    },
+                    child: Text("UnSubscribe"),
+                  ),
+                ],
+              ),
+              // Spacer(),
+              SizedBox(
+                height: 50,
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  FirebaseFirestore.instance
+                      .collection("bookings")
+                      .doc("106")
+                      .set({
+                    "id": "106",
+                    "employeeName": "sahitha",
+                    "activity": [
+                      {
+                        "name": "Discover Scuba Diving",
+                      }
+                    ]
+                  });
+                },
+                child: Text("DO"),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

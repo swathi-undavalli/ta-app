@@ -50,7 +50,8 @@ class NewBookingLogic {
 
   onContinuePressedBookingForm() {
     controller.bookingModel.remarks = controller.remarksTED.text.toString();
-    controller.bookingModel.employeeName = currentEmployee.firstName + currentEmployee.lastName;
+    controller.bookingModel.employeeName =
+        currentEmployee.firstName + currentEmployee.lastName;
     if (controller.payingNowTED.text == "" ||
         controller.payingNowTED.text == 0.toString()) {
       createBooking();
@@ -423,11 +424,12 @@ class NewBookingLogic {
         controller.bookingModel.bookingDate.add(getStringDate(element));
       });
     }
-    // controller.bookingModel.activity = controller.selectedActivity;
+    controller.bookingModel.payments = [controller.bookingModel.paid];
     controller.bookingId =
         await FirebaseApi.addNewBooking(controller.bookingModel);
     print(controller.bookingId);
-    LogModel logModel = LogModel(type: LogType.bookingCreated,bookingId:controller.bookingId);
+    LogModel logModel =
+        LogModel(type: LogType.bookingCreated, bookingId: controller.bookingId);
     FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
     controller.update();
   }

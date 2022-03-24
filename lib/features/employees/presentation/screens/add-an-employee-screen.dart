@@ -1,9 +1,11 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
@@ -230,6 +232,13 @@ class AddAnUser extends StatelessWidget {
             switchValue: controller.addActivity,
             onChanged: (value) {
               controller.addActivity = value;
+            },
+          ),
+          buildSwitch(
+            text: "Subscribe Notifications",
+            switchValue: controller.notifications,
+            onChanged: (value) {
+              controller.notifications = value;
             },
           ),
         ],

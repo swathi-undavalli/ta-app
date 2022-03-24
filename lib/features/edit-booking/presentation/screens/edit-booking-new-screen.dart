@@ -45,14 +45,9 @@ class EditBookingNewScreen extends StatelessWidget {
     logic.controller.firstNameTED.text = bookingArg.pax[0]["first-name"];
     logic.controller.lastNameTED.text = bookingArg.pax[0]["last-name"];
     logic.controller.isoCode = bookingArg.pax[0]["isoCode"];
-    // logic.controller.taxableAmount = bookingArg.tax;
-    // logic.controller.discount = bookingArg.discount;
     logic.controller.discountTED.text = bookingArg.discount.toString();
-    // logic.controller.totalCost = bookingArg.totalCost;
-    // logic.controller.cost = bookingArg.price;
     logic.controller.taxable = bookingArg.tax != 0;
     logic.controller.discountSwitch = bookingArg.discountType == "%";
-    // logic.getPrice();
   }
 
   @override
@@ -195,10 +190,13 @@ class EditBookingNewScreen extends StatelessWidget {
                     .set(logModel.toMap());
                 Get.back();
                 controller.reset();
+
                 BookingsCalenderWidgetLogic bookingCalenderLogic =
                     BookingsCalenderWidgetLogic();
                 bookingCalenderLogic.onDateSelected(
                     bookingCalenderLogic.controller.lastDateIndex);
+                // bookingCalenderLogic.controller.selectedDate
+                //     .subtract(Duration(days: 10));
               }),
         ],
       );

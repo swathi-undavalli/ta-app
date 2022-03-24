@@ -26,38 +26,6 @@ class LogScreen extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: checkFireBase(),
-            // child: Column(
-            //   children: [
-            //     buildLog(
-            //         bookingId: "115",
-            //         title: "Booking Created",
-            //         name: "Sahitha Chowdary",
-            //         logType: LogType.bookingCreated),
-            //     buildLog(
-            //         title: "Signed In",
-            //         name: "Vendhan",
-            //         logType: LogType.signedIn),
-            //     buildLog(
-            //         bookingId: "116",
-            //         title: "Booking Created",
-            //         name: "Donaran Das",
-            //         logType: LogType.bookingCreated),
-            //     buildLog(
-            //         bookingId: "116",
-            //         title: "Booking Edited",
-            //         name: "Donaran Das",
-            //         logType: LogType.bookingEdited),
-            //     buildLog(
-            //         title: "Signed Out",
-            //         name: "Rosy",
-            //         logType: LogType.signedOut),
-            //     buildLog(
-            //         bookingId: "117",
-            //         title: "Booking Deleted",
-            //         name: "Kamesh",
-            //         logType: LogType.bookingEdited),
-            //   ],
-            // ),
           ),
         ),
       ),

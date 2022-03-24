@@ -555,3 +555,1083 @@
 //     );
 //   }
 // }
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:temple_adventures/access_levels.dart';
+import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
+import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
+import 'package:temple_adventures/features/logs/models/log-model.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../core/constants/constants.dart';
+import '../core/widgets/app-button.dart';
+import '../core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
+import '../features/logs/presentation/screens/log-screen.dart';
+
+class D extends StatefulWidget {
+  const D({Key key}) : super(key: key);
+  static const String id = "D";
+
+  @override
+  State<D> createState() => _DState();
+}
+
+class _DState extends State<D> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
+          height: Get.height,
+          width: Get.width,
+          child: StreamBuilder(
+              stream:
+                  FirebaseFirestore.instance.collection('bookings').snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData || snapshot.hasError) {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+
+                return SingleChildScrollView(
+                  child: Column(
+                    children:
+                        snapshot.data.docs.map(buildExpansionPanel).toList(),
+                  ),
+                );
+              }),
+        ),
+      ),
+    );
+  }
+
+  Widget buildExpansionPanel(document) {
+    return Exp(document);
+
+    bool i = false;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            i = !i;
+            print(i);
+          });
+        },
+        child: Container(
+          height: 100,
+          width: 100,
+          color: (i) ? Colors.red : Colors.yellow,
+        ),
+      ),
+    );
+    BookingModel booking = BookingModel.fromMap(document.data());
+
+    ItemModel itemModel = ItemModel.fromBookings(booking);
+
+    bool isExpanded = false;
+
+    TextEditingController amountTED = TextEditingController();
+
+    getColor() {
+      if (itemModel.colorCode == "Blue")
+        return Color(0xffA9EBF8).withOpacity(0.3);
+      else if (itemModel.colorCode == "Purple")
+        return Color(0xffBCB8F5);
+      else if (itemModel.colorCode == "Red")
+        return Color(0xffF6B2B2);
+      else if (itemModel.colorCode == "Green")
+        return Color(0xff96F1BD);
+      else
+        return Colors.white;
+    }
+
+    onDeletePressed() {}
+
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: AnimatedContainer(
+        duration: Duration(milliseconds: 200),
+        curve: Curves.easeInCubic,
+        alignment: Alignment.topCenter,
+        height: isExpanded ? 470 : 50,
+        width: 350,
+        decoration: BoxDecoration(
+          color: getColor(),
+          borderRadius: BorderRadius.circular(10),
+          // border: Border.all(color: AppColors.text.grey),
+        ),
+        child: Container(
+          decoration: BoxDecoration(
+            color: getColor(),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20),
+            child: Column(
+              children: [
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Container(
+                        width: 100,
+                        child: Text(
+                          itemModel.name.capitalizeFirst +
+                              " x " +
+                              (itemModel.bookingModel.noOfPersons.toString()),
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              color: AppColors.text.black,
+                              fontSize: 14,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      Spacer(),
+                      IconButton(
+                        splashRadius: 20,
+                        icon: Icon(Icons.call_rounded,
+                            color: AppColors.background.black),
+                        iconSize: 15,
+                        onPressed: () {
+                          callToNumber(itemModel.phone);
+                        },
+                      ),
+                      EmployeeAccess(
+                        access: AccessRights.editBookings,
+                        child: IconButton(
+                          splashRadius: 20,
+                          icon: Icon(Icons.delete,
+                              color: AppColors.background.black),
+                          iconSize: 15,
+                          onPressed: () {
+                            Get.defaultDialog(
+                              contentPadding: EdgeInsets.only(
+                                  left: 30, right: 30, top: 20, bottom: 30),
+                              title: "\nAre You Sure ? ",
+                              middleText:
+                                  "Booking will Be Deleted Permanently.",
+                              backgroundColor: Colors.white,
+                              titleStyle: TextStyle(
+                                  color: AppColors.text.black,
+                                  fontFamily: AppFonts.nunito,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                              middleTextStyle: TextStyle(
+                                  color: AppColors.text.black,
+                                  fontFamily: AppFonts.nunito,
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w500),
+                              confirm: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  AppButton.miniText(
+                                    text: 'Cancel',
+                                    onTap: () {
+                                      Get.back();
+                                    },
+                                  ),
+                                  AppButton.miniFlat(
+                                    text: 'OK',
+                                    onTap: () {
+                                      FirebaseFirestore.instance
+                                          .collection("bookings")
+                                          .doc(itemModel.bookingModel.id)
+                                          .delete();
+                                      LogModel logModel = LogModel(
+                                          type: LogType.bookingDeleted,
+                                          bookingId: itemModel.bookingModel.id);
+                                      FirebaseFirestore.instance
+                                          .collection("logs")
+                                          .doc()
+                                          .set(logModel.toMap());
+
+                                      Get.back();
+                                      onDeletePressed();
+                                    },
+                                  ),
+                                ],
+                              ),
+                              barrierDismissible: false,
+                              radius: 10,
+                            );
+                          },
+                        ),
+                      ),
+                      EmployeeAccess(
+                        access: AccessRights.editBookings,
+                        child: IconButton(
+                          splashRadius: 20,
+                          icon: Icon(Icons.edit,
+                              color: AppColors.background.black),
+                          iconSize: 15,
+                          onPressed: () {
+                            var model = itemModel.bookingModel;
+                            Get.toNamed(EditBookingNewScreen.id,
+                                arguments: model);
+                          },
+                        ),
+                      ),
+                      IconButton(
+                        splashRadius: 20,
+                        icon: Icon(isExpanded
+                            ? Icons.keyboard_arrow_up_rounded
+                            : Icons.keyboard_arrow_down_rounded),
+                        onPressed: () {
+                          print("clicked");
+                          setState(() {
+                            isExpanded = !isExpanded;
+                          });
+                        },
+                      ),
+                    ]),
+                isExpanded
+                    ? FutureBuilder(
+                        future: Future.delayed(Duration(milliseconds: 200)),
+                        initialData: SizedBox(),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState == ConnectionState.done)
+                            return Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                buildKeyValuePairs(
+                                    "Booking Id", itemModel.bookingID),
+                                buildKeyValuePairs(
+                                    "Activity", itemModel.activity),
+                                buildKeyValuePairs(
+                                    "Total Cost", itemModel.cost),
+                                buildKeyValuePairs("Deposit", itemModel.paid),
+                                buildKeyValuePairs(
+                                    "Balance", itemModel.balance),
+                                buildKeyValuePairs(
+                                    "Pax",
+                                    itemModel.bookingModel.noOfPersons
+                                        .toString()),
+                                ((itemModel != null) &&
+                                        (itemModel.receiptNo != null))
+                                    ? buildKeyValuePairs(
+                                        "Invoice no", itemModel.receiptNo)
+                                    : buildKeyValuePairs("Invoice no", "-"),
+                                (itemModel.remarks == "")
+                                    ? buildKeyValuePairs("Remarks", "-")
+                                    : buildKeyValuePairs("Remarks",
+                                        itemModel.remarks.toString()),
+                                buildKeyValuePairs("Phone", itemModel.phone),
+                                buildKeyValuePairs("Email", itemModel.email),
+                                buildKeyValuePairs("Time", itemModel.time),
+                                buildKeyValuePairs("Date", itemModel.date),
+                                buildKeyValuePairs(
+                                    "Session", itemModel.session),
+                                buildKeyValuePairs(
+                                  "Registered",
+                                  "${itemModel.bookingModel.pax.length - 1} / ${itemModel.bookingModel.noOfPersons}",
+                                  isDanger:
+                                      ((itemModel.bookingModel.pax.length -
+                                              1) !=
+                                          (itemModel.bookingModel.noOfPersons)),
+                                ),
+                                SizedBox(height: 20),
+                                SizedBox(
+                                  width: Get.width - 100,
+                                  child: buildPaymentStatus(
+                                      totalAmount: itemModel.cost.toString(),
+                                      payments:
+                                          itemModel.bookingModel.payments),
+                                ),
+                                SizedBox(
+                                    height:
+                                        (double.parse(itemModel.balance) == 0)
+                                            ? 30
+                                            : 10),
+                                (double.parse(itemModel.balance) == 0)
+                                    ? SizedBox()
+                                    : Container(
+                                        child: AppButton.miniFlat(
+                                          text: "Add Payment",
+                                          onTap: () {
+                                            Get.defaultDialog(
+                                              contentPadding: EdgeInsets.only(
+                                                  left: 30,
+                                                  right: 30,
+                                                  top: 20,
+                                                  bottom: 30),
+                                              title:
+                                                  "\n ${itemModel.name.capitalizeFirst + " x " + (itemModel.bookingModel.noOfPersons.toString())} ",
+                                              content: Column(
+                                                children: [
+                                                  TextField(
+                                                    decoration: InputDecoration(
+                                                      labelText: 'Enter Amount',
+                                                    ),
+                                                    controller: amountTED,
+                                                  ),
+                                                  SizedBox(height: 30),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        "Balance :",
+                                                        style: TextStyle(
+                                                            fontSize:
+                                                                FontSize.small,
+                                                            color: AppColors
+                                                                .text.darkgrey),
+                                                      ),
+                                                      Text(
+                                                        "${itemModel.balance}/-",
+                                                        style: TextStyle(
+                                                            fontSize: FontSize
+                                                                .textSize,
+                                                            fontWeight:
+                                                                FontWeight
+                                                                    .w600),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              ),
+                                              backgroundColor: Colors.white,
+                                              titleStyle: TextStyle(
+                                                  color: AppColors.text.black,
+                                                  fontFamily: AppFonts.nunito,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                              confirm: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  AppButton.miniText(
+                                                    text: 'Cancel',
+                                                    onTap: () {
+                                                      Get.back();
+                                                    },
+                                                  ),
+                                                  AppButton.miniFlat(
+                                                    text: 'OK',
+                                                    onTap: () {
+                                                      itemModel
+                                                          .bookingModel.payments
+                                                          .add(double.parse(
+                                                              amountTED.text));
+
+                                                      var list = itemModel
+                                                          .bookingModel
+                                                          .payments;
+
+                                                      double totalDeposit = 0;
+                                                      list.forEach((element) {
+                                                        totalDeposit += element;
+                                                      });
+
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              "bookings")
+                                                          .doc(itemModel
+                                                              .bookingModel.id)
+                                                          .set(
+                                                              {
+                                                            "payments": itemModel
+                                                                .bookingModel
+                                                                .payments,
+                                                            "paid":
+                                                                totalDeposit,
+                                                          },
+                                                              SetOptions(
+                                                                  merge: true));
+                                                      Get.back();
+                                                      amountTED.text = "";
+                                                      BookingsCalenderWidgetLogic
+                                                          bookingCalenderLogic =
+                                                          BookingsCalenderWidgetLogic();
+                                                      bookingCalenderLogic
+                                                          .onDateSelected(
+                                                              bookingCalenderLogic
+                                                                  .controller
+                                                                  .lastDateIndex);
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                              barrierDismissible: false,
+                                              radius: 10,
+                                            );
+                                          },
+                                        ).paddingOnly(right: 15),
+                                        alignment: Alignment.centerRight,
+                                      ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    (itemModel.employeeName != null)
+                                        ? Container(
+                                            alignment: Alignment.centerRight,
+                                            child: RichText(
+                                              text: TextSpan(
+                                                text: "Created By : ",
+                                                style: TextStyle(
+                                                  fontFamily: AppFonts.nunito,
+                                                  color:
+                                                      AppColors.text.darkgrey,
+                                                  fontSize: 10,
+                                                ),
+                                                children: <TextSpan>[
+                                                  TextSpan(
+                                                    text:
+                                                        itemModel.employeeName,
+                                                    style: TextStyle(
+                                                      color: Color(0xff484646),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 10,
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            ),
+                                          )
+                                        : SizedBox(),
+                                    AppButton.miniFlat(
+                                      text: "Get Link",
+                                      onTap: () async {
+                                        String link =
+                                            "https://seismic-glow-283418.web.app/?booking=${itemModel.bookingModel.id}";
+                                        await Clipboard.setData(
+                                            ClipboardData(text: link));
+                                        Fluttertoast.showToast(
+                                            msg: "Link copied to Clipboard");
+                                      },
+                                    ).paddingOnly(right: 15),
+                                  ],
+                                ),
+                              ],
+                            );
+                          return SizedBox();
+                        })
+                    : SizedBox(),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildKeyValuePairs(String key, String value,
+      {bool isDanger = false, TextOverflow overflow}) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 80,
+          child: Text(
+            key,
+            style: TextStyle(
+                color: Colors.grey[700],
+                fontSize: 13,
+                letterSpacing: 0.3,
+                fontWeight: FontWeight.w600,
+                height: 1.3),
+          ),
+        ),
+        Expanded(
+          child: Container(
+            height: 15,
+            child: Text(
+              value,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                  color: isDanger ? Colors.red : Colors.black,
+                  fontSize: 13,
+                  fontWeight: FontWeight.w600,
+                  letterSpacing: 0.3,
+                  height: 1.3),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  callToNumber(String phoneNumber) async {
+    String url = 'tel:$phoneNumber';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Widget buildPaymentStatus({String totalAmount, List<double> payments}) {
+    var list = payments;
+    var total = totalAmount;
+    double deposits = 0.0;
+    list.forEach((element) {
+      deposits += element;
+    });
+    int n = list.length;
+    return Stack(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              // flex: n,
+              child: Container(
+                height: 1,
+                color: (double.parse(total) == deposits)
+                    ? Colors.green.shade400
+                    : Colors.black,
+              ),
+            ),
+          ],
+        ).paddingOnly(top: 6, left: 16, right: 16),
+        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Expanded(
+            flex: n,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: List<Widget>.generate(n, (i) {
+                return Row(
+                  children: [
+                    buildCircle(color: Colors.black),
+                  ],
+                );
+              }),
+            ),
+          ),
+          (double.parse(total) == deposits)
+              ? SizedBox()
+              : Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      buildCircle(color: Colors.red.shade300),
+                    ],
+                  ),
+                ),
+          Expanded(
+              flex: 2,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(
+                    width: 39,
+                    child: Container(
+                      width: 15,
+                      height: 15,
+                      decoration: BoxDecoration(
+                          color: AppColors.text.skyBlue,
+                          shape: BoxShape.circle),
+                      child: Icon(
+                        Icons.circle,
+                        size: 10,
+                        color: AppColors.text.black,
+                      ),
+                    ),
+                  ),
+                ],
+              )),
+        ]),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Expanded(
+              flex: n,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: List<Widget>.generate(n, (i) {
+                  return buildNumber(
+                      text: list[i].toString(),
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black);
+                }),
+              ),
+            ),
+            (double.parse(total) == deposits)
+                ? SizedBox()
+                : Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        buildNumber(
+                            text: (double.parse(total) - deposits).toString(),
+                            color: Colors.red.shade300,
+                            fontWeight: FontWeight.normal),
+                      ],
+                    )),
+            Expanded(
+                flex: 2,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    buildNumber(
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        text: totalAmount),
+                  ],
+                )),
+          ],
+        ).paddingOnly(top: 20),
+      ],
+    );
+  }
+
+  Widget buildCircle({Color color}) {
+    return SizedBox(
+      width: 39,
+      child: Icon(
+        Icons.circle,
+        size: 10,
+        color: color,
+      ),
+    );
+  }
+
+  Widget buildNumber({FontWeight fontWeight, Color color, String text}) {
+    return SizedBox(
+      width: 39,
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 10, fontWeight: fontWeight, color: color),
+      ),
+    );
+  }
+}
+
+class Exp extends StatefulWidget {
+  final document;
+
+  Exp(this.document);
+
+  @override
+  State<Exp> createState() => _ExpState();
+}
+
+class _ExpState extends State<Exp> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: buildExpansion(widget.document),
+    );
+  }
+
+  Widget buildExpansion(document) {
+    bool i = false;
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        height: 100,
+        width: 100,
+        color: (i == true) ? Colors.blue : Colors.red,
+        child: Text("$document"),
+      ),
+    );
+
+//     BookingModel booking = BookingModel.fromMap(document.data());
+//
+//     ItemModel itemModel = ItemModel.fromBookings(booking);
+//
+//     bool isExpanded = false;
+//
+//     TextEditingController amountTED = TextEditingController();
+//
+//     getColor() {
+//       if (itemModel.colorCode == "Blue")
+//         return Color(0xffA9EBF8).withOpacity(0.3);
+//       else if (itemModel.colorCode == "Purple")
+//         return Color(0xffBCB8F5);
+//       else if (itemModel.colorCode == "Red")
+//         return Color(0xffF6B2B2);
+//       else if (itemModel.colorCode == "Green")
+//         return Color(0xff96F1BD);
+//       else
+//         return Colors.white;
+//     }
+//
+//     onDeletePressed() {}
+//
+//     return Padding(
+//       padding: const EdgeInsets.only(bottom: 10),
+//       child: AnimatedContainer(
+//         duration: Duration(milliseconds: 200),
+//         curve: Curves.easeInCubic,
+//         alignment: Alignment.topCenter,
+//         height: isExpanded ? 470 : 50,
+//         width: 350,
+//         decoration: BoxDecoration(
+//           color: getColor(),
+//           borderRadius: BorderRadius.circular(10),
+//           // border: Border.all(color: AppColors.text.grey),
+//         ),
+//         child: Container(
+//           decoration: BoxDecoration(
+//             color: getColor(),
+//             borderRadius: BorderRadius.circular(10),
+//           ),
+//           child: Padding(
+//             padding: const EdgeInsets.only(left: 20),
+//             child: Column(
+//               children: [
+//                 Row(
+//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                     children: [
+//                       Container(
+//                         width: 100,
+//                         child: Text(
+//                           itemModel.name.capitalizeFirst +
+//                               " x " +
+//                               (itemModel.bookingModel.noOfPersons.toString()),
+//                           overflow: TextOverflow.ellipsis,
+//                           style: TextStyle(
+//                               color: AppColors.text.black,
+//                               fontSize: 14,
+//                               fontWeight: FontWeight.w600),
+//                         ),
+//                       ),
+//                       Spacer(),
+//                       IconButton(
+//                         splashRadius: 20,
+//                         icon: Icon(Icons.call_rounded,
+//                             color: AppColors.background.black),
+//                         iconSize: 15,
+//                         onPressed: () {
+//                           callToNumber(itemModel.phone);
+//                         },
+//                       ),
+//                       EmployeeAccess(
+//                         access: AccessRights.editBookings,
+//                         child: IconButton(
+//                           splashRadius: 20,
+//                           icon: Icon(Icons.delete,
+//                               color: AppColors.background.black),
+//                           iconSize: 15,
+//                           onPressed: () {
+//                             Get.defaultDialog(
+//                               contentPadding: EdgeInsets.only(
+//                                   left: 30, right: 30, top: 20, bottom: 30),
+//                               title: "\nAre You Sure ? ",
+//                               middleText:
+//                                   "Booking will Be Deleted Permanently.",
+//                               backgroundColor: Colors.white,
+//                               titleStyle: TextStyle(
+//                                   color: AppColors.text.black,
+//                                   fontFamily: AppFonts.nunito,
+//                                   fontSize: 16,
+//                                   fontWeight: FontWeight.bold),
+//                               middleTextStyle: TextStyle(
+//                                   color: AppColors.text.black,
+//                                   fontFamily: AppFonts.nunito,
+//                                   fontSize: 15,
+//                                   fontWeight: FontWeight.w500),
+//                               confirm: Row(
+//                                 mainAxisAlignment:
+//                                     MainAxisAlignment.spaceBetween,
+//                                 children: [
+//                                   AppButton.miniText(
+//                                     text: 'Cancel',
+//                                     onTap: () {
+//                                       Get.back();
+//                                     },
+//                                   ),
+//                                   AppButton.miniFlat(
+//                                     text: 'OK',
+//                                     onTap: () {
+//                                       FirebaseFirestore.instance
+//                                           .collection("bookings")
+//                                           .doc(itemModel.bookingModel.id)
+//                                           .delete();
+//                                       LogModel logModel = LogModel(
+//                                           type: LogType.bookingDeleted,
+//                                           bookingId: itemModel.bookingModel.id);
+//                                       FirebaseFirestore.instance
+//                                           .collection("logs")
+//                                           .doc()
+//                                           .set(logModel.toMap());
+//
+//                                       Get.back();
+//                                       onDeletePressed();
+//                                     },
+//                                   ),
+//                                 ],
+//                               ),
+//                               barrierDismissible: false,
+//                               radius: 10,
+//                             );
+//                           },
+//                         ),
+//                       ),
+//                       EmployeeAccess(
+//                         access: AccessRights.editBookings,
+//                         child: IconButton(
+//                           splashRadius: 20,
+//                           icon: Icon(Icons.edit,
+//                               color: AppColors.background.black),
+//                           iconSize: 15,
+//                           onPressed: () {
+//                             var model = itemModel.bookingModel;
+//                             Get.toNamed(EditBookingNewScreen.id,
+//                                 arguments: model);
+//                           },
+//                         ),
+//                       ),
+//                       IconButton(
+//                         splashRadius: 20,
+//                         icon: Icon(isExpanded
+//                             ? Icons.keyboard_arrow_up_rounded
+//                             : Icons.keyboard_arrow_down_rounded),
+//                         onPressed: () {
+//                           print("clicked");
+//                           setState(() {
+//                             isExpanded = !isExpanded;
+//                           });
+//                         },
+//                       ),
+//                     ]),
+//                 isExpanded
+//                     ? FutureBuilder(
+//                         future: Future.delayed(Duration(milliseconds: 200)),
+//                         initialData: SizedBox(),
+//                         builder: (context, snapshot) {
+//                           if (snapshot.connectionState == ConnectionState.done)
+//                             return Column(
+//                               mainAxisAlignment: MainAxisAlignment.start,
+//                               crossAxisAlignment: CrossAxisAlignment.start,
+//                               children: <Widget>[
+//                                 buildKeyValuePairs(
+//                                     "Booking Id", itemModel.bookingID),
+//                                 buildKeyValuePairs(
+//                                     "Activity", itemModel.activity),
+//                                 buildKeyValuePairs(
+//                                     "Total Cost", itemModel.cost),
+//                                 buildKeyValuePairs("Deposit", itemModel.paid),
+//                                 buildKeyValuePairs(
+//                                     "Balance", itemModel.balance),
+//                                 buildKeyValuePairs(
+//                                     "Pax",
+//                                     itemModel.bookingModel.noOfPersons
+//                                         .toString()),
+//                                 ((itemModel != null) &&
+//                                         (itemModel.receiptNo != null))
+//                                     ? buildKeyValuePairs(
+//                                         "Invoice no", itemModel.receiptNo)
+//                                     : buildKeyValuePairs("Invoice no", "-"),
+//                                 (itemModel.remarks == "")
+//                                     ? buildKeyValuePairs("Remarks", "-")
+//                                     : buildKeyValuePairs("Remarks",
+//                                         itemModel.remarks.toString()),
+//                                 buildKeyValuePairs("Phone", itemModel.phone),
+//                                 buildKeyValuePairs("Email", itemModel.email),
+//                                 buildKeyValuePairs("Time", itemModel.time),
+//                                 buildKeyValuePairs("Date", itemModel.date),
+//                                 buildKeyValuePairs(
+//                                     "Session", itemModel.session),
+//                                 buildKeyValuePairs(
+//                                   "Registered",
+//                                   "${itemModel.bookingModel.pax.length - 1} / ${itemModel.bookingModel.noOfPersons}",
+//                                   isDanger:
+//                                       ((itemModel.bookingModel.pax.length -
+//                                               1) !=
+//                                           (itemModel.bookingModel.noOfPersons)),
+//                                 ),
+//                                 SizedBox(height: 20),
+//                                 SizedBox(
+//                                   width: Get.width - 100,
+//                                   child: buildPaymentStatus(
+//                                       totalAmount: itemModel.cost.toString(),
+//                                       payments:
+//                                           itemModel.bookingModel.payments),
+//                                 ),
+//                                 SizedBox(
+//                                     height:
+//                                         (double.parse(itemModel.balance) == 0)
+//                                             ? 30
+//                                             : 10),
+//                                 (double.parse(itemModel.balance) == 0)
+//                                     ? SizedBox()
+//                                     : Container(
+//                                         child: AppButton.miniFlat(
+//                                           text: "Add Payment",
+//                                           onTap: () {
+//                                             Get.defaultDialog(
+//                                               contentPadding: EdgeInsets.only(
+//                                                   left: 30,
+//                                                   right: 30,
+//                                                   top: 20,
+//                                                   bottom: 30),
+//                                               title:
+//                                                   "\n ${itemModel.name.capitalizeFirst + " x " + (itemModel.bookingModel.noOfPersons.toString())} ",
+//                                               content: Column(
+//                                                 children: [
+//                                                   TextField(
+//                                                     decoration: InputDecoration(
+//                                                       labelText: 'Enter Amount',
+//                                                     ),
+//                                                     controller: amountTED,
+//                                                   ),
+//                                                   SizedBox(height: 30),
+//                                                   Row(
+//                                                     mainAxisAlignment:
+//                                                         MainAxisAlignment
+//                                                             .spaceBetween,
+//                                                     children: [
+//                                                       Text(
+//                                                         "Balance :",
+//                                                         style: TextStyle(
+//                                                             fontSize:
+//                                                                 FontSize.small,
+//                                                             color: AppColors
+//                                                                 .text.darkgrey),
+//                                                       ),
+//                                                       Text(
+//                                                         "${itemModel.balance}/-",
+//                                                         style: TextStyle(
+//                                                             fontSize: FontSize
+//                                                                 .textSize,
+//                                                             fontWeight:
+//                                                                 FontWeight
+//                                                                     .w600),
+//                                                       )
+//                                                     ],
+//                                                   )
+//                                                 ],
+//                                               ),
+//                                               backgroundColor: Colors.white,
+//                                               titleStyle: TextStyle(
+//                                                   color: AppColors.text.black,
+//                                                   fontFamily: AppFonts.nunito,
+//                                                   fontSize: 16,
+//                                                   fontWeight: FontWeight.bold),
+//                                               confirm: Row(
+//                                                 mainAxisAlignment:
+//                                                     MainAxisAlignment
+//                                                         .spaceBetween,
+//                                                 children: [
+//                                                   AppButton.miniText(
+//                                                     text: 'Cancel',
+//                                                     onTap: () {
+//                                                       Get.back();
+//                                                     },
+//                                                   ),
+//                                                   AppButton.miniFlat(
+//                                                     text: 'OK',
+//                                                     onTap: () {
+//                                                       itemModel
+//                                                           .bookingModel.payments
+//                                                           .add(double.parse(
+//                                                               amountTED.text));
+//
+//                                                       var list = itemModel
+//                                                           .bookingModel
+//                                                           .payments;
+//
+//                                                       double totalDeposit = 0;
+//                                                       list.forEach((element) {
+//                                                         totalDeposit += element;
+//                                                       });
+//
+//                                                       FirebaseFirestore.instance
+//                                                           .collection(
+//                                                               "bookings")
+//                                                           .doc(itemModel
+//                                                               .bookingModel.id)
+//                                                           .set(
+//                                                               {
+//                                                             "payments": itemModel
+//                                                                 .bookingModel
+//                                                                 .payments,
+//                                                             "paid":
+//                                                                 totalDeposit,
+//                                                           },
+//                                                               SetOptions(
+//                                                                   merge: true));
+//                                                       Get.back();
+//                                                       amountTED.text = "";
+//                                                       BookingsCalenderWidgetLogic
+//                                                           bookingCalenderLogic =
+//                                                           BookingsCalenderWidgetLogic();
+//                                                       bookingCalenderLogic
+//                                                           .onDateSelected(
+//                                                               bookingCalenderLogic
+//                                                                   .controller
+//                                                                   .lastDateIndex);
+//                                                     },
+//                                                   ),
+//                                                 ],
+//                                               ),
+//                                               barrierDismissible: false,
+//                                               radius: 10,
+//                                             );
+//                                           },
+//                                         ).paddingOnly(right: 15),
+//                                         alignment: Alignment.centerRight,
+//                                       ),
+//                                 Row(
+//                                   mainAxisAlignment:
+//                                       MainAxisAlignment.spaceBetween,
+//                                   children: [
+//                                     (itemModel.employeeName != null)
+//                                         ? Container(
+//                                             alignment: Alignment.centerRight,
+//                                             child: RichText(
+//                                               text: TextSpan(
+//                                                 text: "Created By : ",
+//                                                 style: TextStyle(
+//                                                   fontFamily: AppFonts.nunito,
+//                                                   color:
+//                                                       AppColors.text.darkgrey,
+//                                                   fontSize: 10,
+//                                                 ),
+//                                                 children: <TextSpan>[
+//                                                   TextSpan(
+//                                                     text:
+//                                                         itemModel.employeeName,
+//                                                     style: TextStyle(
+//                                                       color: Color(0xff484646),
+//                                                       fontWeight:
+//                                                           FontWeight.bold,
+//                                                       fontSize: 10,
+//                                                     ),
+//                                                   ),
+//                                                 ],
+//                                               ),
+//                                             ),
+//                                           )
+//                                         : SizedBox(),
+//                                     AppButton.miniFlat(
+//                                       text: "Get Link",
+//                                       onTap: () async {
+//                                         String link =
+//                                             "https://seismic-glow-283418.web.app/?booking=${itemModel.bookingModel.id}";
+//                                         await Clipboard.setData(
+//                                             ClipboardData(text: link));
+//                                         Fluttertoast.showToast(
+//                                             msg: "Link copied to Clipboard");
+//                                       },
+//                                     ).paddingOnly(right: 15),
+//                                   ],
+//                                 ),
+//                               ],
+//                             );
+//                           return SizedBox();
+//                         })
+//                     : SizedBox(),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ),
+//     );
+  }
+}
