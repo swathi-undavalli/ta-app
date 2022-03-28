@@ -22,10 +22,8 @@ class BookingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("building bro");
     bookingsCalenderWidget = BookingsCalenderWidget(
       onDateTimeSelected: (DateTime selectedDate) {
-        print("=========================Am chestunnav mowa");
         print(selectedDate.toString());
       },
       autoScrollController: autoScrollController,
@@ -51,10 +49,8 @@ class BookingScreen extends StatelessWidget {
         onRefresh: () async {
           if (calenderLogic.controller.lastSelectedIndex == null)
             calenderLogic.controller.lastSelectedIndex = 50;
-          bookingsCalenderWidget
-              .scrollToIndex(calenderLogic.controller.lastSelectedIndex);
-          await calenderLogic
-              .onDateSelected(calenderLogic.controller.lastSelectedIndex);
+          bookingsCalenderWidget.scrollToIndex(calenderLogic.controller.lastSelectedIndex);
+          await calenderLogic.onDateSelected(calenderLogic.controller.lastSelectedIndex);
         },
         child: SafeArea(
           child: SingleChildScrollView(

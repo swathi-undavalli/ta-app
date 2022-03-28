@@ -1,4 +1,4 @@
-package com.example.temple_adventures
+package com.temple_adventures.scubadiving
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -62,7 +62,8 @@ class BookingsExpansionPanel extends StatelessWidget {
           duration: Duration(milliseconds: 200),
           curve: Curves.easeInCubic,
           alignment: Alignment.topCenter,
-          height: controller.isExpanded[i] ? 470 : 50,
+          height: controller.isExpanded[i] ? 380 : 50,
+          // height: controller.isExpanded[i] ? 470 : 50,
           width: 350,
           decoration: BoxDecoration(
             color: getColor(),
@@ -252,147 +253,150 @@ class BookingsExpansionPanel extends StatelessWidget {
                                         (items[i].bookingModel.noOfPersons)),
                                   ),
                                   SizedBox(height: 20),
-                                  SizedBox(
-                                    width: Get.width - 100,
-                                    child: buildPaymentStatus(
-                                        totalAmount: items[i].cost.toString(),
-                                        payments:
-                                            items[i].bookingModel.payments),
-                                  ),
-                                  SizedBox(
-                                      height:
-                                          (double.parse(items[i].balance) == 0)
-                                              ? 30
-                                              : 10),
-                                  (double.parse(items[i].balance) == 0)
-                                      ? SizedBox()
-                                      : Container(
-                                          child: AppButton.miniFlat(
-                                            text: "Add Payment",
-                                            onTap: () {
-                                              Get.defaultDialog(
-                                                contentPadding: EdgeInsets.only(
-                                                    left: 30,
-                                                    right: 30,
-                                                    top: 20,
-                                                    bottom: 30),
-                                                title:
-                                                    "\n ${itemModel.name.capitalizeFirst + " x " + (itemModel.bookingModel.noOfPersons.toString())} ",
-                                                content: Column(
-                                                  children: [
-                                                    TextField(
-                                                      decoration:
-                                                          InputDecoration(
-                                                        labelText:
-                                                            'Enter Amount',
-                                                      ),
-                                                      controller: amount,
-                                                    ),
-                                                    SizedBox(height: 30),
-                                                    Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .spaceBetween,
-                                                      children: [
-                                                        Text(
-                                                          "Balance :",
-                                                          style: TextStyle(
-                                                              fontSize: FontSize
-                                                                  .small,
-                                                              color: AppColors
-                                                                  .text
-                                                                  .darkgrey),
-                                                        ),
-                                                        Text(
-                                                          "${items[i].balance}/-",
-                                                          style: TextStyle(
-                                                              fontSize: FontSize
-                                                                  .textSize,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w600),
-                                                        )
-                                                      ],
-                                                    )
-                                                  ],
-                                                ),
-                                                backgroundColor: Colors.white,
-                                                titleStyle: TextStyle(
-                                                    color: AppColors.text.black,
-                                                    fontFamily: AppFonts.nunito,
-                                                    fontSize: 16,
-                                                    fontWeight:
-                                                        FontWeight.bold),
-                                                confirm: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment
-                                                          .spaceBetween,
-                                                  children: [
-                                                    AppButton.miniText(
-                                                      text: 'Cancel',
-                                                      onTap: () {
-                                                        Get.back();
-                                                      },
-                                                    ),
-                                                    AppButton.miniFlat(
-                                                      text: 'OK',
-                                                      onTap: () {
-                                                        items[i]
-                                                            .bookingModel
-                                                            .payments
-                                                            .add(double.parse(
-                                                                amount.text));
+                                  //TODO ::
 
-                                                        var list = items[i]
-                                                            .bookingModel
-                                                            .payments;
-
-                                                        double totalDeposit = 0;
-                                                        list.forEach((element) {
-                                                          totalDeposit +=
-                                                              element;
-                                                        });
-
-                                                        FirebaseFirestore
-                                                            .instance
-                                                            .collection(
-                                                                "bookings")
-                                                            .doc(items[i]
-                                                                .bookingModel
-                                                                .id)
-                                                            .set(
-                                                                {
-                                                              "payments": items[
-                                                                      i]
-                                                                  .bookingModel
-                                                                  .payments,
-                                                              "paid":
-                                                                  totalDeposit,
-                                                            },
-                                                                SetOptions(
-                                                                    merge:
-                                                                        true));
-                                                        Get.back();
-                                                        amount.text = "";
-                                                        BookingsCalenderWidgetLogic
-                                                            bookingCalenderLogic =
-                                                            BookingsCalenderWidgetLogic();
-                                                        bookingCalenderLogic
-                                                            .onDateSelected(
-                                                                bookingCalenderLogic
-                                                                    .controller
-                                                                    .lastDateIndex);
-                                                      },
-                                                    ),
-                                                  ],
-                                                ),
-                                                barrierDismissible: false,
-                                                radius: 10,
-                                              );
-                                            },
-                                          ).paddingOnly(right: 15),
-                                          alignment: Alignment.centerRight,
-                                        ),
+                                  // SizedBox(
+                                  //   width: Get.width - 100,
+                                  //   child: buildPaymentStatus(
+                                  //       totalAmount: items[i].cost.toString(),
+                                  //       payments:
+                                  //           items[i].bookingModel.payments),
+                                  // ),
+                                  // SizedBox(
+                                  //     height:
+                                  //         (double.parse(items[i].balance) == 0)
+                                  //             ? 30
+                                  //             : 10),
+                                  // (double.parse(items[i].balance) == 0)
+                                  //     ? SizedBox()
+                                  //     : Container(
+                                  //         child: AppButton.miniFlat(
+                                  //           text: "Add Payment",
+                                  //           onTap: () {
+                                  //             Get.defaultDialog(
+                                  //               contentPadding: EdgeInsets.only(
+                                  //                   left: 30,
+                                  //                   right: 30,
+                                  //                   top: 20,
+                                  //                   bottom: 30),
+                                  //               title:
+                                  //                   "\n ${itemModel.name.capitalizeFirst + " x " + (itemModel.bookingModel.noOfPersons.toString())} ",
+                                  //               content: Column(
+                                  //                 children: [
+                                  //                   TextField(
+                                  //                     decoration:
+                                  //                         InputDecoration(
+                                  //                       labelText:
+                                  //                           'Enter Amount',
+                                  //                     ),
+                                  //                     controller: amount,
+                                  //                   ),
+                                  //                   SizedBox(height: 30),
+                                  //                   Row(
+                                  //                     mainAxisAlignment:
+                                  //                         MainAxisAlignment
+                                  //                             .spaceBetween,
+                                  //                     children: [
+                                  //                       Text(
+                                  //                         "Balance :",
+                                  //                         style: TextStyle(
+                                  //                             fontSize: FontSize
+                                  //                                 .small,
+                                  //                             color: AppColors
+                                  //                                 .text
+                                  //                                 .darkgrey),
+                                  //                       ),
+                                  //                       Text(
+                                  //                         "${items[i].balance}/-",
+                                  //                         style: TextStyle(
+                                  //                             fontSize: FontSize
+                                  //                                 .textSize,
+                                  //                             fontWeight:
+                                  //                                 FontWeight
+                                  //                                     .w600),
+                                  //                       )
+                                  //                     ],
+                                  //                   )
+                                  //                 ],
+                                  //               ),
+                                  //               backgroundColor: Colors.white,
+                                  //               titleStyle: TextStyle(
+                                  //                   color: AppColors.text.black,
+                                  //                   fontFamily: AppFonts.nunito,
+                                  //                   fontSize: 16,
+                                  //                   fontWeight:
+                                  //                       FontWeight.bold),
+                                  //               confirm: Row(
+                                  //                 mainAxisAlignment:
+                                  //                     MainAxisAlignment
+                                  //                         .spaceBetween,
+                                  //                 children: [
+                                  //                   AppButton.miniText(
+                                  //                     text: 'Cancel',
+                                  //                     onTap: () {
+                                  //                       Get.back();
+                                  //                     },
+                                  //                   ),
+                                  //                   //TODO ::
+                                  //                   // AppButton.miniFlat(
+                                  //                   //   text: 'OK',
+                                  //                   //   onTap: () {
+                                  //                   //     items[i]
+                                  //                   //         .bookingModel
+                                  //                   //         .payments
+                                  //                   //         .add(double.parse(
+                                  //                   //             amount.text));
+                                  //                   //
+                                  //                   //     var list = items[i]
+                                  //                   //         .bookingModel
+                                  //                   //         .payments;
+                                  //                   //
+                                  //                   //     double totalDeposit = 0;
+                                  //                   //     list.forEach((element) {
+                                  //                   //       totalDeposit +=
+                                  //                   //           element;
+                                  //                   //     });
+                                  //                   //
+                                  //                   //     FirebaseFirestore
+                                  //                   //         .instance
+                                  //                   //         .collection(
+                                  //                   //             "bookings")
+                                  //                   //         .doc(items[i]
+                                  //                   //             .bookingModel
+                                  //                   //             .id)
+                                  //                   //         .set(
+                                  //                   //             {
+                                  //                   //           "payments": items[
+                                  //                   //                   i]
+                                  //                   //               .bookingModel
+                                  //                   //               .payments,
+                                  //                   //           "paid":
+                                  //                   //               totalDeposit,
+                                  //                   //         },
+                                  //                   //             SetOptions(
+                                  //                   //                 merge:
+                                  //                   //                     true));
+                                  //                   //     Get.back();
+                                  //                   //     amount.text = "";
+                                  //                   //     BookingsCalenderWidgetLogic
+                                  //                   //         bookingCalenderLogic =
+                                  //                   //         BookingsCalenderWidgetLogic();
+                                  //                   //     bookingCalenderLogic
+                                  //                   //         .onDateSelected(
+                                  //                   //             bookingCalenderLogic
+                                  //                   //                 .controller
+                                  //                   //                 .lastDateIndex);
+                                  //                   //   },
+                                  //                   // ),
+                                  //                 ],
+                                  //               ),
+                                  //               barrierDismissible: false,
+                                  //               radius: 10,
+                                  //             );
+                                  //           },
+                                  //         ).paddingOnly(right: 15),
+                                  //         alignment: Alignment.centerRight,
+                                  //       ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,

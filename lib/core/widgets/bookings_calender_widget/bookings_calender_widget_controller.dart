@@ -36,6 +36,9 @@ class BookingsCalenderWidgetLogic {
         try {
           BookingModel booking = BookingModel.fromMap(element.data());
         } catch (e) {
+          log("Error in getting booking model");
+          log("$e");
+          log(element.data().toString());
           print(e);
         }
         BookingModel booking = BookingModel.fromMap(element.data());

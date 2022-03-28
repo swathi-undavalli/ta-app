@@ -424,7 +424,7 @@ class NewBookingLogic {
         controller.bookingModel.bookingDate.add(getStringDate(element));
       });
     }
-    controller.bookingModel.payments = [controller.bookingModel.paid];
+    // controller.bookingModel.payments = [controller.bookingModel.paid];
     controller.bookingId =
         await FirebaseApi.addNewBooking(controller.bookingModel);
     print(controller.bookingId);

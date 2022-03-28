@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:temple_adventures/D/d.dart';
+import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/authentication/firebase-authentication.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
@@ -118,10 +119,10 @@ class MyApp extends StatelessWidget {
     Get.put(DashBoardScreenController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: FirebaseAuthentication.isUserLoggedIn()
-          ? DashBoardScreen.id
-          : LoginScreen.id,
-      // initialRoute: FirebaseMessagingDemo.id,
+      // initialRoute: FirebaseAuthentication.isUserLoggedIn()
+      //     ? DashBoardScreen.id
+      //     : LoginScreen.id,
+      initialRoute: AutoUpdateView.id,
       theme: ThemeData(
         textTheme: TextTheme(
           headline1: TextStyle(fontFamily: AppFonts.nunito),
@@ -145,7 +146,7 @@ class MyApp extends StatelessWidget {
         NewCustomerScreen.id: (context) => NewCustomerScreen(),
         AllActivitiesScreen.id: (context) => AllActivitiesScreen(),
         // FirebaseMessagingDemo.id: (context) => FirebaseMessagingDemo(),
-        D.id: (context) => D(),
+        // D.id: (context) => D(),
         AddNewActivityScreen.id: (context) => AddNewActivityScreen(),
         ActivityEditScreen.id: (context) => ActivityEditScreen(),
         AllBookingsScreen.id: (context) => AllBookingsScreen(),
@@ -166,6 +167,7 @@ class MyApp extends StatelessWidget {
         EmployeeProfileScreen.id: (context) => EmployeeProfileScreen(),
         EmployeeDetailsScreen.id: (context) => EmployeeDetailsScreen(),
         CompressorScreen.id: (context) => CompressorScreen(),
+        AutoUpdateView.id: (context) => AutoUpdateView(),
       },
     );
   }
