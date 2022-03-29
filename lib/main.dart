@@ -119,10 +119,9 @@ class MyApp extends StatelessWidget {
     Get.put(DashBoardScreenController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // initialRoute: FirebaseAuthentication.isUserLoggedIn()
-      //     ? DashBoardScreen.id
-      //     : LoginScreen.id,
-      initialRoute: AutoUpdateView.id,
+      initialRoute: FirebaseAuthentication.isUserLoggedIn()
+          ? DashBoardScreen.id
+          : LoginScreen.id,
       theme: ThemeData(
         textTheme: TextTheme(
           headline1: TextStyle(fontFamily: AppFonts.nunito),
