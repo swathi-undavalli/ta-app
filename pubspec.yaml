@@ -66,6 +66,7 @@ dependencies:
   ota_update: ^4.0.1
   flutter_app_installer: ^0.0.3
   in_app_update: ^3.0.0
+  package_info_plus: ^1.4.0
 
   #------------------------------------------
 

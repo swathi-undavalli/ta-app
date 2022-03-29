@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/boat-page.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
@@ -21,6 +22,8 @@ class DashBoardScreen extends StatelessWidget {
 
   DashBoardScreen() {
     dashboardLogic = DashBoardScreenLogic();
+    AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
+    autoUpdateLogic.checkForUpdate();
   }
 
   @override
