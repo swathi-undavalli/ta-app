@@ -30,6 +30,14 @@ class BookingScreenController extends GetxController {
   DateTime _selectedDate = DateTime.now();
   List<DateTime> calenderDates = [];
   List<DateTime> timeTable = [];
+  // bool _showSearchField = false;
+  //
+  // bool get showSearchField => _showSearchField;
+  //
+  // set showSearchField(bool value) {
+  //   _showSearchField = value;
+  //   update();
+  // }
 
   get selectedDate => _selectedDate;
 

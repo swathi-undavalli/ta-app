@@ -20,25 +20,108 @@ import 'package:url_launcher/url_launcher.dart';
 
 class BookingsExpansionPanel extends StatelessWidget {
   final ExpansionPanelLogic logic = ExpansionPanelLogic();
-
+  final SearchController searchController = Get.put(SearchController());
   final List<ItemModel> items;
+  bool searchBar = true;
   Function onDeletePressed;
+  Function onSearchTap;
   List<Widget> expansions = [];
-  TextEditingController amount = TextEditingController();
+  TextEditingController searchTED = TextEditingController();
 
-  BookingsExpansionPanel({this.items, this.onDeletePressed}) {
+  BookingsExpansionPanel(
+      {this.items,
+      this.onDeletePressed,
+      this.onSearchTap,
+      @required this.searchBar});
+
+  generateList(List<ItemModel> itemsList) {
+    if (itemsList.isEmpty) return [Text("No Results Found")];
     logic.controller.isExpanded = [];
-    for (int i = 0; i < items.length; i++) {
+    expansions = [];
+    for (int i = 0; i < itemsList.length; i++) {
       logic.controller.isExpanded.add(false);
-      expansions.add(buildExpansion(itemModel: items[i], i: i));
+      expansions.add(buildExpansion(itemModel: itemsList[i], i: i));
     }
+    return expansions;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: expansions,
-    );
+    return GetBuilder<SearchController>(builder: (controller) {
+      return Column(
+        children: [
+          if (searchBar == true) buildSearchBar(),
+          if (controller.showSearchField)
+            ...generateList(items.where((ItemModel item) {
+              if (item.bookingID.contains(searchTED.text.trim())) return true;
+              if (item.name
+                  .toLowerCase()
+                  .contains(searchTED.text.trim().toLowerCase())) return true;
+              return false;
+            }).toList())
+          else
+            ...generateList(items)
+        ],
+      );
+    });
+  }
+
+  Widget buildSearchBar() {
+    return GetBuilder<SearchController>(builder: (controller) {
+      return (controller.showSearchField && items.length > 5)
+          ? Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: AnimatedContainer(
+                width: controller.showSearchField ? 380 : 0,
+                duration: const Duration(milliseconds: 500),
+                height: 47,
+                decoration: BoxDecoration(
+                    color: AppColors.background.white,
+                    // border: Border.all(color: Colors.black, width: 0.50),
+                    borderRadius: BorderRadius.circular(10)),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(Icons.search,
+                        size: 20, color: AppColors.text.darkgrey),
+                    SizedBox(width: 15),
+                    Container(
+                      width: controller.showSearchField ? 240 : 0,
+                      child: TextField(
+                        onTap: () {
+                          onSearchTap();
+                        },
+                        decoration: InputDecoration(
+                            enabledBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            focusedBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            disabledBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            hintText: 'Search...',
+                            hintStyle: TextStyle(fontSize: 14, height: 1)),
+                        controller: searchTED,
+                        onChanged: (text) {
+                          searchController.update();
+                        },
+                      ),
+                    ),
+                    (searchTED.text != "")
+                        ? GestureDetector(
+                            onTap: () {
+                              searchTED.text = "";
+                              searchController.update();
+                            },
+                            child: Icon(Icons.close_outlined,
+                                size: 20, color: AppColors.text.darkgrey),
+                          )
+                        : SizedBox(),
+                  ],
+                ),
+              ),
+            )
+          : SizedBox();
+    });
   }
 
   Widget buildExpansion({ItemModel itemModel, int i}) {
@@ -194,9 +277,10 @@ class BookingsExpansionPanel extends StatelessWidget {
                               ? Icons.keyboard_arrow_up_rounded
                               : Icons.keyboard_arrow_down_rounded),
                           onPressed: () {
-                            print("tapped");
+                            log("tapped");
                             controller.isExpanded[i] =
                                 !controller.isExpanded[i];
+                            log(controller.isExpanded.toString());
                             controller.update();
                           },
                         ),
@@ -253,150 +337,6 @@ class BookingsExpansionPanel extends StatelessWidget {
                                         (items[i].bookingModel.noOfPersons)),
                                   ),
                                   SizedBox(height: 20),
-                                  //TODO ::
-
-                                  // SizedBox(
-                                  //   width: Get.width - 100,
-                                  //   child: buildPaymentStatus(
-                                  //       totalAmount: items[i].cost.toString(),
-                                  //       payments:
-                                  //           items[i].bookingModel.payments),
-                                  // ),
-                                  // SizedBox(
-                                  //     height:
-                                  //         (double.parse(items[i].balance) == 0)
-                                  //             ? 30
-                                  //             : 10),
-                                  // (double.parse(items[i].balance) == 0)
-                                  //     ? SizedBox()
-                                  //     : Container(
-                                  //         child: AppButton.miniFlat(
-                                  //           text: "Add Payment",
-                                  //           onTap: () {
-                                  //             Get.defaultDialog(
-                                  //               contentPadding: EdgeInsets.only(
-                                  //                   left: 30,
-                                  //                   right: 30,
-                                  //                   top: 20,
-                                  //                   bottom: 30),
-                                  //               title:
-                                  //                   "\n ${itemModel.name.capitalizeFirst + " x " + (itemModel.bookingModel.noOfPersons.toString())} ",
-                                  //               content: Column(
-                                  //                 children: [
-                                  //                   TextField(
-                                  //                     decoration:
-                                  //                         InputDecoration(
-                                  //                       labelText:
-                                  //                           'Enter Amount',
-                                  //                     ),
-                                  //                     controller: amount,
-                                  //                   ),
-                                  //                   SizedBox(height: 30),
-                                  //                   Row(
-                                  //                     mainAxisAlignment:
-                                  //                         MainAxisAlignment
-                                  //                             .spaceBetween,
-                                  //                     children: [
-                                  //                       Text(
-                                  //                         "Balance :",
-                                  //                         style: TextStyle(
-                                  //                             fontSize: FontSize
-                                  //                                 .small,
-                                  //                             color: AppColors
-                                  //                                 .text
-                                  //                                 .darkgrey),
-                                  //                       ),
-                                  //                       Text(
-                                  //                         "${items[i].balance}/-",
-                                  //                         style: TextStyle(
-                                  //                             fontSize: FontSize
-                                  //                                 .textSize,
-                                  //                             fontWeight:
-                                  //                                 FontWeight
-                                  //                                     .w600),
-                                  //                       )
-                                  //                     ],
-                                  //                   )
-                                  //                 ],
-                                  //               ),
-                                  //               backgroundColor: Colors.white,
-                                  //               titleStyle: TextStyle(
-                                  //                   color: AppColors.text.black,
-                                  //                   fontFamily: AppFonts.nunito,
-                                  //                   fontSize: 16,
-                                  //                   fontWeight:
-                                  //                       FontWeight.bold),
-                                  //               confirm: Row(
-                                  //                 mainAxisAlignment:
-                                  //                     MainAxisAlignment
-                                  //                         .spaceBetween,
-                                  //                 children: [
-                                  //                   AppButton.miniText(
-                                  //                     text: 'Cancel',
-                                  //                     onTap: () {
-                                  //                       Get.back();
-                                  //                     },
-                                  //                   ),
-                                  //                   //TODO ::
-                                  //                   // AppButton.miniFlat(
-                                  //                   //   text: 'OK',
-                                  //                   //   onTap: () {
-                                  //                   //     items[i]
-                                  //                   //         .bookingModel
-                                  //                   //         .payments
-                                  //                   //         .add(double.parse(
-                                  //                   //             amount.text));
-                                  //                   //
-                                  //                   //     var list = items[i]
-                                  //                   //         .bookingModel
-                                  //                   //         .payments;
-                                  //                   //
-                                  //                   //     double totalDeposit = 0;
-                                  //                   //     list.forEach((element) {
-                                  //                   //       totalDeposit +=
-                                  //                   //           element;
-                                  //                   //     });
-                                  //                   //
-                                  //                   //     FirebaseFirestore
-                                  //                   //         .instance
-                                  //                   //         .collection(
-                                  //                   //             "bookings")
-                                  //                   //         .doc(items[i]
-                                  //                   //             .bookingModel
-                                  //                   //             .id)
-                                  //                   //         .set(
-                                  //                   //             {
-                                  //                   //           "payments": items[
-                                  //                   //                   i]
-                                  //                   //               .bookingModel
-                                  //                   //               .payments,
-                                  //                   //           "paid":
-                                  //                   //               totalDeposit,
-                                  //                   //         },
-                                  //                   //             SetOptions(
-                                  //                   //                 merge:
-                                  //                   //                     true));
-                                  //                   //     Get.back();
-                                  //                   //     amount.text = "";
-                                  //                   //     BookingsCalenderWidgetLogic
-                                  //                   //         bookingCalenderLogic =
-                                  //                   //         BookingsCalenderWidgetLogic();
-                                  //                   //     bookingCalenderLogic
-                                  //                   //         .onDateSelected(
-                                  //                   //             bookingCalenderLogic
-                                  //                   //                 .controller
-                                  //                   //                 .lastDateIndex);
-                                  //                   //   },
-                                  //                   // ),
-                                  //                 ],
-                                  //               ),
-                                  //               barrierDismissible: false,
-                                  //               radius: 10,
-                                  //             );
-                                  //           },
-                                  //         ).paddingOnly(right: 15),
-                                  //         alignment: Alignment.centerRight,
-                                  //       ),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -466,8 +406,7 @@ class BookingsExpansionPanel extends StatelessWidget {
     }
   }
 
-  Widget buildKeyValuePairs(String key, String value,
-      {bool isDanger = false, TextOverflow overflow}) {
+  Widget buildKeyValuePairs(String key, String value, {bool isDanger = false}) {
     return Row(
       children: [
         SizedBox(
@@ -637,6 +576,8 @@ class BookingsExpansionPanel extends StatelessWidget {
       ),
     );
   }
+
+  void filterItems(String text) {}
 }
 
 class ExpansionPanelLogic {
@@ -771,5 +712,16 @@ class ItemModel {
       employeeName: bookingModel.employeeName,
       bookingModel: bookingModel,
     );
+  }
+}
+
+class SearchController extends GetxController {
+  bool _showSearchField = true;
+
+  bool get showSearchField => _showSearchField;
+
+  set showSearchField(bool value) {
+    _showSearchField = value;
+    update();
   }
 }

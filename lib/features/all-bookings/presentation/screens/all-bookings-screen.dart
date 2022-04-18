@@ -12,6 +12,7 @@ class AllBookingsScreen extends StatelessWidget {
 
   final ScrollController scrollController = ScrollController();
 
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -67,59 +68,6 @@ class AllBookingsScreen extends StatelessWidget {
     );
   }
 
-  // Widget buildAllBookings() {
-  //   return GetBuilder<AllBookingsController>(builder: (controller) {
-  //     controller.bookings = [];
-  //     return Padding(
-  //       padding: const EdgeInsets.all(8.0),
-  //       child: Column(
-  //         mainAxisAlignment: MainAxisAlignment.start,
-  //         crossAxisAlignment: CrossAxisAlignment.start,
-  //         children: [
-  //           ...List.generate(108,
-  //               (index) => buildListTile((index + 1).toString())),
-  //         ],
-  //       ),
-  //     );
-  //   });
-  // }
-
-  // FutureBuilder<DocumentSnapshot<Map<String, dynamic>>> buildListTile(
-  //     String id) {
-  //   return FutureBuilder(
-  //       future: FirebaseFirestore.instance.collection("bookings").doc(id).get(),
-  //       builder: (BuildContext context, snapshot) {
-  //         if (!snapshot.hasData) {
-  //           return Padding(
-  //             padding: const EdgeInsets.all(10.0),
-  //             child: Container(
-  //               height: 50,
-  //               width: Get.width,
-  //               child: Shimmer.fromColors(
-  //                 child: Container(
-  //                   height: 50,
-  //                   width: Get.width,
-  //                   decoration: BoxDecoration(
-  //                       borderRadius: BorderRadius.circular(5),
-  //                       color: Colors.grey),
-  //                 ),
-  //                 baseColor: Colors.grey[300],
-  //                 highlightColor: Colors.grey[100],
-  //               ),
-  //             ),
-  //           );
-  //         }
-  //         try {
-  //           Map<String, dynamic> bookingData = snapshot.data.data();
-  //           BookingModel booking = BookingModel.fromMap(bookingData);
-  //           var e = ItemModel.fromBookings(booking);
-  //           // logic.controller.bookings.add(e);
-  //           return buildBookings(e);
-  //         } catch (e) {
-  //           return SizedBox();
-  //         }
-  //       });
-  // }
   Widget buildSuggestions() {
     return GetBuilder<AllBookingsController>(builder: (controller) {
       if (controller.showSuggestions)
@@ -160,6 +108,7 @@ class AllBookingsScreen extends StatelessWidget {
                           .map(
                             (e) => BookingsExpansionPanel(
                               items: [e],
+                              searchBar: false,
                               onDeletePressed: () {
                                 logic.getBookings();
                               },
@@ -183,6 +132,7 @@ class AllBookingsScreen extends StatelessWidget {
           onDeletePressed: () {
             logic.getBookings();
           },
+          searchBar: false,
         ),
       );
     });
@@ -239,47 +189,59 @@ class AllBookingsScreen extends StatelessWidget {
   }
 
   Widget buildSearchBar() {
-    return Container(
-      width: 328,
-      height: 47,
-      decoration: BoxDecoration(
-          color: AppColors.background.white,
-          borderRadius: BorderRadius.circular(5)),
-      child: Container(
-        margin: EdgeInsets.only(left: 15, right: 15),
-        alignment: Alignment.centerLeft,
-        child: Row(
-          children: [
-            Icon(Icons.search, color: AppColors.text.darkgrey),
-            SizedBox(width: 15),
-            Container(
-              width: 240,
-              child: TextField(
-                decoration: InputDecoration(
-                    enabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    focusedBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    disabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    hintText: 'Search...',
-                    hintStyle:
-                        TextStyle(fontSize: FontSize.textSize, height: 1)),
-                controller: logic.controller.searchTED,
-                onChanged: (text) {
-                  if (text.isNotEmpty) {
-                    logic.controller.showSuggestions = true;
-                    logic.updateSearchListByIDorName(text);
-                  } else {
-                    logic.controller.showSuggestions = false;
-                  }
-                },
+    return GetBuilder<AllBookingsController>(builder: (controller) {
+      return Container(
+        width: 328,
+        height: 47,
+        decoration: BoxDecoration(
+            color: AppColors.background.white,
+            borderRadius: BorderRadius.circular(5)),
+        child: Container(
+          margin: EdgeInsets.only(left: 15, right: 15),
+          alignment: Alignment.centerLeft,
+          child: Row(
+            children: [
+              Icon(Icons.search, size: 20, color: AppColors.text.darkgrey),
+              SizedBox(width: 15),
+              Container(
+                width: 240,
+                child: TextField(
+                  decoration: InputDecoration(
+                      enabledBorder:
+                          OutlineInputBorder(borderSide: BorderSide.none),
+                      focusedBorder:
+                          OutlineInputBorder(borderSide: BorderSide.none),
+                      disabledBorder:
+                          OutlineInputBorder(borderSide: BorderSide.none),
+                      hintText: 'Search...',
+                      hintStyle:
+                          TextStyle(fontSize: FontSize.textSize, height: 1)),
+                  controller: controller.searchTED,
+                  onChanged: (text) {
+                    if (text.isNotEmpty) {
+                      controller.showSuggestions = true;
+                      logic.updateSearchListByIDorName(text);
+                    } else {
+                      controller.showSuggestions = false;
+                    }
+                  },
+                ),
               ),
-            ),
-          ],
+              (controller.searchTED.text != "")
+                  ? GestureDetector(
+                      onTap: () {
+                        controller.searchTED.text = "";
+                        controller.showSuggestions = false;
+                      },
+                      child: Icon(Icons.close_outlined,
+                          size: 20, color: AppColors.text.darkgrey),
+                    )
+                  : SizedBox(),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Widget buildShowLoading() {

@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
@@ -19,6 +22,7 @@ class DashBoardScreen extends StatelessWidget {
     BookingScreen(),
     BoatPage(),
   ];
+  DateTime currentBackPressTime;
 
   DashBoardScreen() {
     dashboardLogic = DashBoardScreenLogic();
@@ -28,18 +32,39 @@ class DashBoardScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          bottomNavigationBar: buildBottomNavigationBar(),
-          drawer: NavDrawer(),
-          key: dashboardDrawerKey,
-          body: SafeArea(
-            child: buildSelectedPage(),
+    return WillPopScope(
+      onWillPop: () async {
+        if (dashboardLogic.controller.currentIndex == 2) {
+          FocusScope.of(context).unfocus();
+          new TextEditingController().clear();
+          FocusNode().requestFocus();
+          log("back pressed");
+          DateTime now = DateTime.now();
+          if (currentBackPressTime == null ||
+              now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+            currentBackPressTime = now;
+            Fluttertoast.showToast(msg: "Press Double tap to exit");
+            return Future.value(false);
+          }
+          return Future.value(true);
+          return false;
+        } else {
+          return true;
+        }
+      },
+      child: Stack(
+        children: [
+          Scaffold(
+            bottomNavigationBar: buildBottomNavigationBar(),
+            drawer: NavDrawer(),
+            key: dashboardDrawerKey,
+            body: SafeArea(
+              child: buildSelectedPage(),
+            ),
           ),
-        ),
-        buildShowLoading(),
-      ],
+          buildShowLoading(),
+        ],
+      ),
     );
   }
 
@@ -103,7 +128,7 @@ class DashBoardScreen extends StatelessWidget {
             label: 'bookings',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('images/boat.png')),
+            icon: ImageIcon(AssetImage('images/boatWhite.png')),
             activeIcon: buildActiveIcon('images/boat_black.png'),
             label: 'boat',
           ),

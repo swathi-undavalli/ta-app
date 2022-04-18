@@ -1,17 +1,11 @@
 import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/D/d.dart';
-import 'package:temple_adventures/access_levels.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
 import '../../../../core/widgets/attendance_report_widget/attendance_report_widget.dart';
 import '../../../../core/widgets/attendance_widget/attandence_widget_controller.dart';
 import '../../../../core/widgets/attendance_widget/attendence_widget.dart';
-import '../../../bookings/models/booking-model.dart';
 import '../../controller/home-page-controller.dart';
 
 class HomePage extends StatelessWidget {

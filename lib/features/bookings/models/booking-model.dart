@@ -68,45 +68,6 @@ class BookingModel {
       }
     }
 
-    // try {
-    //   log("fromMap -try ${json["id"]}");
-      // List<ActivityModel> activity = List<ActivityModel>.from(
-      //     json["activity"].map((x) => ActivityModel.fromMap(x)));
-      // List<Map<String, dynamic>> pax =
-      //     List<Map<String, dynamic>>.from(json["PAX"].map((x) => x));
-      // log(json["payments"].toString());
-      // for (int i = 0; i < json["payments"]; i++) {
-      //   log("==${json["payments"]}");
-        // log(json["payments"][i].runtimeType.toString());
-      // }
-      // List<double> payments =
-      //     List<double>.from(json["payments"] ?? [].map((x) => checkDouble(x)));
-      // int noOfPersons = json["noOfPersons"];
-      // double discount = json["discount"] * 1.0;
-      // double price = json["price"] * 1.0;
-      // double tax = json["tax"] * 1.0;
-      // double paid = json["paid"] * 1.0;
-      // String id = json["id"];
-      // String paymentMode = json["paymentMode"];
-      // String location = json["location"];
-      // String remarks = json["remarks"];
-      // String paymentTransactionId = json["paymentTransactionId"];
-      // String receiptNo = json["receiptNo"];
-      // String employeeName = json["employeeName"];
-      // List<DateTime> poolDate =
-      //     List<DateTime>.from(json["poolDate"].map((x) => parseDateOrNull(x)));
-      // List<DateTime> diveDate =
-      //     List<DateTime>.from(json["diveDate"].map((x) => parseDateOrNull(x)));
-      // List<DateTime> theoryDate = List<DateTime>.from(
-      //     json["theoryDate"].map((x) => parseDateOrNull(x)));
-      // List<String> bookingDate =
-      //     List<String>.from(json["bookingDate"].map((x) => x));
-      // String discountType = json["discountType"];
-      // log("fromMap -tried");
-    // } catch (e) {
-    //   log(e.toString());
-    //   log("at here bujji");
-    // }
 
     return BookingModel(
       activity: List<ActivityModel>.from(

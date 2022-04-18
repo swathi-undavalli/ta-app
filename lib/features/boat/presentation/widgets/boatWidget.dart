@@ -444,7 +444,7 @@
 // //                 ),
 // //               ),
 // //               SizedBox(height: 10),
-// //               RichText(
+// //               itemModelText(
 // //                 textAlign: TextAlign.center,
 // //                 text: TextSpan(
 // //                   text: "Already have an account? ",
@@ -1635,3 +1635,448 @@
 // //     );
 //   }
 // }
+
+import 'dart:developer';
+import 'package:intl/intl.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:temple_adventures/access_levels.dart';
+import 'package:temple_adventures/core/constants/assets.dart';
+import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/util/ta-image.dart';
+import 'package:temple_adventures/features/boat/models/boat-model.dart';
+import 'package:temple_adventures/features/boat/models/boat-passengers-model.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/editBoat-page.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class BoatWidget extends StatefulWidget {
+  static const String id = "BoatWidget";
+  final int boatID;
+
+  BoatWidget(this.boatID);
+
+  @override
+  State<BoatWidget> createState() => _BoatWidgetState();
+}
+
+class _BoatWidgetState extends State<BoatWidget> {
+  // DateTime date = DateTime.now().subtract(Duration(days: 1));
+
+  bool isExpanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    try {
+      return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+          stream: FirebaseFirestore.instance
+              .collection("boats")
+              .doc(widget.boatID.toString())
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData) {
+              BoatsModel boat = BoatsModel.fromMap(snapshot.data.data());
+              return buildExpansion(boatsModel: boat);
+            }
+            return Container();
+          });
+    } catch (e) {
+      return SizedBox();
+    }
+  }
+
+  Widget buildExpansion({BoatsModel boatsModel}) {
+    // String bookingDate = DateFormat('dd-MM-yyyy').format(date);
+    try {
+      return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+          stream: FirebaseFirestore.instance
+              .collection("boats")
+              .doc(widget.boatID.toString())
+              .collection("allocation")
+              .doc("14-04-2022")
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (snapshot.hasData && snapshot.data.data() != null) {
+              BoatPassengersModel passengerModel =
+                  BoatPassengersModel.fromMap(snapshot.data.data());
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 15),
+                child: AnimatedContainer(
+                  duration: Duration(milliseconds: 200),
+                  curve: Curves.easeInCubic,
+                  alignment: Alignment.topCenter,
+                  height: isExpanded ? 400 : 50,
+                  width: 350,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    // border: Border.all(color: AppColors.text.grey),
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(left: 25.0),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Container(
+                                  width: 100,
+                                  child: Text(
+                                    boatsModel.boatName,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: TextStyle(
+                                        color: AppColors.text.black,
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                ),
+                                Spacer(),
+                                EmployeeAccess(
+                                  access: AccessRights.editBookings,
+                                  child: IconButton(
+                                    splashRadius: 20,
+                                    icon: Icon(Icons.edit,
+                                        color: AppColors.background.black),
+                                    iconSize: 12,
+                                    onPressed: () {
+                                      Get.toNamed(EditBoatPage.id,
+                                          arguments: boatsModel);
+                                    },
+                                  ),
+                                ),
+                                IconButton(
+                                  splashRadius: 20,
+                                  iconSize: 23,
+                                  icon: Icon(isExpanded
+                                      ? Icons.keyboard_arrow_up_rounded
+                                      : Icons.keyboard_arrow_down_rounded),
+                                  onPressed: () {
+                                    setState(() {
+                                      isExpanded = !isExpanded;
+                                      log(isExpanded.toString());
+                                    });
+                                  },
+                                ),
+                              ]),
+                          isExpanded
+                              ? FutureBuilder(
+                                  future: Future.delayed(
+                                      Duration(milliseconds: 200)),
+                                  initialData: SizedBox(),
+                                  builder: (context, snapshot) {
+                                    if (snapshot.connectionState ==
+                                        ConnectionState.done)
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          SizedBox(height: 30),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.start,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Stack(
+                                                children: [
+                                                  TAImage(AppImages.icon.boat),
+                                                  Positioned(
+                                                    left: 10,
+                                                    top: 6,
+                                                    child: Container(
+                                                      height: 400,
+                                                      width: 105,
+                                                      child: Wrap(
+                                                          direction:
+                                                              Axis.horizontal,
+                                                          verticalDirection:
+                                                              VerticalDirection
+                                                                  .down,
+                                                          children: [
+                                                            ...List.generate(
+                                                                passengerModel
+                                                                    .passengers
+                                                                    .length,
+                                                                (index) {
+                                                              return buildSeat(
+                                                                  borderColor:
+                                                                      AppColors
+                                                                          .text
+                                                                          .skyBlue,
+                                                                  color: AppColors
+                                                                      .text
+                                                                      .lightSkyBlue);
+                                                            }),
+                                                            ...List.generate(
+                                                                (boatsModel
+                                                                        .capacity -
+                                                                    passengerModel
+                                                                        .passengers
+                                                                        .length),
+                                                                (index) {
+                                                              return buildSeat(
+                                                                  borderColor:
+                                                                      Color(
+                                                                          0xff5BFF62),
+                                                                  color: Color(
+                                                                      0xffD1FFBB));
+                                                            }),
+                                                          ]),
+                                                    ),
+                                                  )
+                                                ],
+                                              ),
+                                              SizedBox(width: 15),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  SizedBox(height: 10),
+                                                  buildCaptainName(
+                                                      icon: AppImages
+                                                          .icon.captain,
+                                                      name: boatsModel
+                                                          .captainName),
+                                                  SizedBox(height: 20),
+                                                  buildCaptainPhone(
+                                                      icon: Icons.phone,
+                                                      phoneNumber: boatsModel
+                                                          .phoneNumber),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 40),
+                                          buildBoatStatus(),
+                                          SizedBox(height: 10),
+                                          buildStatusHistory(),
+                                          SizedBox(height: 40),
+                                          seatsAvailability(
+                                              name: "Filled : ",
+                                              value: passengerModel
+                                                  .passengers.length
+                                                  .toString(),
+                                              fontSize: 13,
+                                              valueColour:
+                                                  AppColors.text.skyBlue),
+                                          SizedBox(height: 10),
+                                          seatsAvailability(
+                                              name: "Available : ",
+                                              value: (boatsModel.capacity -
+                                                      passengerModel
+                                                          .passengers.length)
+                                                  .toString(),
+                                              fontSize: 13,
+                                              valueColour: Color(0xff00CF2E)),
+                                          SizedBox(height: 40),
+                                          seatsAvailability(
+                                              name: "Status : ",
+                                              value: "About to Start in 15 min",
+                                              valueColour: Color(0xff00CF2E),
+                                              fontSize: 15),
+                                        ],
+                                      );
+                                    return SizedBox();
+                                  })
+                              : SizedBox(),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            }
+            return Container();
+          });
+    } catch (e) {
+      SizedBox();
+    }
+  }
+
+  Widget buildStatusHistory() {
+    return Row(
+      children: [
+        buildStatusName(title: "Started"),
+        SizedBox(width: 80),
+        buildStatusName(title: "Diving"),
+        SizedBox(width: 80),
+        buildStatusName(title: "Reached"),
+      ],
+    );
+  }
+
+  Widget buildStatusName({@required String title}) {
+    return Text(
+      title,
+      style: TextStyle(
+          fontSize: FontSize.small,
+          fontWeight: FontWeight.w600,
+          color: Colors.grey),
+    );
+  }
+
+  Widget buildSeat({Color borderColor, Color color}) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 3.5, top: 6),
+      child: Container(
+        height: 12,
+        width: 7,
+        decoration: BoxDecoration(
+            borderRadius: BorderRadiusDirectional.circular(2),
+            border: Border.all(color: borderColor, width: 1),
+            color: color),
+      ),
+    );
+  }
+
+  Widget buildCaptainName({@required String icon, @required String name}) {
+    return Row(
+      children: [
+        TAImage(
+          icon,
+          height: 20,
+          width: 20,
+        ),
+        SizedBox(width: 10),
+        Container(
+          width: 85,
+          child: Text(
+            name,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                fontSize: FontSize.small, fontWeight: FontWeight.w700),
+          ),
+        )
+      ],
+    );
+  }
+
+  Widget buildCaptainPhone(
+      {@required IconData icon, @required String phoneNumber}) {
+    return GestureDetector(
+      onTap: () {
+        makingPhoneCall(phoneNumber);
+      },
+      child: Row(
+        children: [
+          Icon(icon, size: 15),
+          SizedBox(width: 10),
+          Text(
+            phoneNumber,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                fontSize: FontSize.small, fontWeight: FontWeight.w700),
+          )
+        ],
+      ),
+    );
+  }
+
+  makingPhoneCall(String phoneNumber) async {
+    String url = 'tel:$phoneNumber';
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
+
+  Widget buildBoatStatus({String totalAmount, List<double> payments}) {
+    return Row(
+      children: [
+        buildCircle(),
+        buildLine(),
+        buildCircle(),
+        buildLine(),
+        buildCircle(),
+      ],
+    );
+  }
+
+  Widget buildCircle({Color color}) {
+    return Icon(
+      Icons.circle,
+      size: 10,
+      color: Colors.grey,
+    );
+  }
+
+  Widget buildLine() {
+    return Center(
+      child: Stack(
+        children: [
+          Container(
+            height: 2,
+            width: 120,
+            decoration: BoxDecoration(
+              color: AppColors.text.grey,
+            ),
+          ),
+          // AnimatedContainer(
+          //   duration: Duration(seconds: 1),
+          //   height: 2,
+          //   // height: (color == AppColors.background.black) ? 50 : 0,
+          //   width: 100,
+          //   decoration: BoxDecoration(
+          //     color: Colors.black,
+          //   ),
+          // ),
+        ],
+      ),
+    );
+  }
+
+  Widget seatsAvailability(
+      {@required String name,
+      @required String value,
+      @required double fontSize,
+      @required Color valueColour}) {
+    return Text.rich(
+      TextSpan(
+        children: [
+          TextSpan(
+            text: name,
+            style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.w700,
+                color: AppColors.text.black),
+          ),
+          TextSpan(
+            text: value,
+            style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.w600,
+                color: valueColour),
+          ),
+        ],
+      ),
+      textAlign: TextAlign.center,
+    );
+  }
+
+  Widget buildText({@required String text, @required String value}) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          Text(
+            text,
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+          ),
+          SizedBox(width: 20),
+          Text(
+            value,
+            style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+    );
+  }
+}

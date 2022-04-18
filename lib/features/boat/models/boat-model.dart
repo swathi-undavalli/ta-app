@@ -1,17 +1,37 @@
-import 'package:flutter/material.dart';
+import 'dart:convert';
 
-class ItemModel {
-  bool expanded;
-  String headerItem;
-  String description;
-  Color colorsItem;
-  String img;
+BoatsModel boatsModelFromMap(String str) => BoatsModel.fromMap(json.decode(str));
 
-  ItemModel({
-    this.expanded: false,
-    this.headerItem,
-    this.description,
-    this.colorsItem,
-    this.img,
+String boatsModelToMap(BoatsModel data) => json.encode(data.toMap());
+
+class BoatsModel {
+  BoatsModel({
+    this.id,
+    this.boatName,
+    this.captainName,
+    this.phoneNumber,
+    this.capacity,
   });
+
+  String id;
+  String boatName;
+  String captainName;
+  String phoneNumber;
+  int capacity;
+
+  factory BoatsModel.fromMap(Map<String, dynamic> json) => BoatsModel(
+    id: json["id"],
+    boatName: json["boatName"],
+    captainName: json["captainName"],
+    phoneNumber: json["phoneNumber"],
+    capacity: json["capacity"],
+  );
+
+  Map<String, dynamic> toMap() => {
+    "id": id,
+    "boatName": boatName,
+    "captainName": captainName,
+    "phoneNumber": phoneNumber,
+    "capacity": capacity,
+  };
 }

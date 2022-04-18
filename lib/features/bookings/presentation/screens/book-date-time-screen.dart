@@ -110,9 +110,7 @@ class BookDateTime extends StatelessWidget {
                     return DropdownMenuItem(
                       child: new Text(
                         activity.name,
-                        style: TextStyle(
-                          fontWeight: FontWeight.normal,
-                        ),
+                        style: TextStyle(fontWeight: FontWeight.normal),
                       ),
                       value: activity,
                     );

@@ -17,86 +17,122 @@ class BookingScreen extends StatelessWidget {
   final AutoScrollController autoScrollController = AutoScrollController();
   var bookings = [DateTime.now()];
   BookingsCalenderWidgetLogic calenderLogic = BookingsCalenderWidgetLogic();
-
+  ScrollController scrollController = ScrollController();
   BookingsCalenderWidget bookingsCalenderWidget;
 
   @override
   Widget build(BuildContext context) {
-    bookingsCalenderWidget = BookingsCalenderWidget(
-      onDateTimeSelected: (DateTime selectedDate) {
-        print(selectedDate.toString());
-      },
-      autoScrollController: autoScrollController,
-      showDetails: true,
-      startDate: DateTime.now().subtract(Duration(days: 50)),
-      isDiveSession: true,
-    );
-    return Scaffold(
-      backgroundColor: AppColors.background.lightBlue,
-      floatingActionButton: EmployeeAccess(
-        access: AccessRights.createBookings,
-        child: FloatingActionButton(
+    return GetBuilder<BookingScreenController>(builder: (controller) {
+      bookingsCalenderWidget = BookingsCalenderWidget(
+        onDateTimeSelected: (DateTime selectedDate) {
+          print(selectedDate.toString());
+        },
+        onSearchTap: () {
+          scrollController.jumpTo(200);
+          log("working=======");
+        },
+        // showSearch: controller.showSearchField,
+        autoScrollController: autoScrollController,
+        showDetails: true,
+        startDate: DateTime.now().subtract(Duration(days: 50)),
+        isDiveSession: true,
+      );
+      return Scaffold(
+        backgroundColor: AppColors.background.lightBlue,
+        floatingActionButton: EmployeeAccess(
+          access: AccessRights.createBookings,
+          child: buildFloatingActionButton(),
+        ),
+        body: RefreshIndicator(
+          color: AppColors.IconColor.black,
+          onRefresh: () async {
+            if (calenderLogic.controller.lastSelectedIndex == null)
+              calenderLogic.controller.lastSelectedIndex = 50;
+            bookingsCalenderWidget
+                .scrollToIndex(calenderLogic.controller.lastSelectedIndex);
+            await calenderLogic
+                .onDateSelected(calenderLogic.controller.lastSelectedIndex);
+          },
+          child: SafeArea(
+            child: SingleChildScrollView(
+              controller: scrollController,
+              physics: BouncingScrollPhysics(),
+              child: Padding(
+                padding: const EdgeInsets.only(
+                    left: 20, right: 20, top: 40, bottom: 50),
+                child: Column(
+                  children: [
+                    GetBuilder<BookingsCalenderWidgetController>(
+                        builder: (controller) {
+                      DateTime date = controller.selectedDate;
+                      String formattedDate =
+                          DateFormat('dd-MMM-yyyy').format(date);
+                      return Row(
+                        children: [
+                          buildTitle("Calendar"),
+                          Spacer(),
+                          Text(formattedDate),
+                          buildCalendarIcon(context, controller),
+                        ],
+                      );
+                    }),
+                    bookingsCalenderWidget,
+                    SizedBox(
+                      height: 200,
+                    ),
+                  ],
+                ),
+              ),
+
+            ),
+          ),
+        ),
+      );
+    });
+  }
+
+  ///===============UI==============///
+
+  Widget buildFloatingActionButton() {
+    // return GetBuilder<BookingScreenController>(builder: (controller) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        // Container(
+        //   height: 50,
+        //   width: 50,
+        //   child: FittedBox(
+        //     child: FloatingActionButton(
+        //       elevation: 0,
+        //       onPressed: () {
+        //         controller.showSearchField = !controller.showSearchField;
+        //         log(controller.showSearchField.toString());
+        //       },
+        //       heroTag: null,
+        //       backgroundColor: AppColors.background.black,
+        //       child: Icon(
+        //         controller.showSearchField
+        //             ? Icons.search_off_outlined
+        //             : Icons.search_rounded,
+        //         size: 22,
+        //       ),
+        //     ),
+        //   ),
+        // ),
+        // SizedBox(height: 10),
+        FloatingActionButton(
           elevation: 0,
           onPressed: () {
             Get.toNamed(AddCustomerDetailsScreen.id);
           },
+          // heroTag: null,
           backgroundColor: AppColors.background.black,
           child: Icon(Icons.add),
         ),
-      ),
-      body: RefreshIndicator(
-        color: AppColors.IconColor.black,
-        onRefresh: () async {
-          if (calenderLogic.controller.lastSelectedIndex == null)
-            calenderLogic.controller.lastSelectedIndex = 50;
-          bookingsCalenderWidget.scrollToIndex(calenderLogic.controller.lastSelectedIndex);
-          await calenderLogic.onDateSelected(calenderLogic.controller.lastSelectedIndex);
-        },
-        child: SafeArea(
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 40, bottom: 50),
-              child: Column(
-                children: [
-                  GetBuilder<BookingsCalenderWidgetController>(
-                      builder: (controller) {
-                    DateTime date = controller.selectedDate;
-                    String formattedDate =
-                        DateFormat('dd-MMM-yyyy').format(date);
-                    return Row(
-                      children: [
-                        buildTitle("Calendar"),
-                        Spacer(),
-                        Text(formattedDate),
-                        buildCalendarIcon(context, controller),
-                      ],
-                    );
-                  }),
-                  bookingsCalenderWidget,
-                  // BookingsCalenderWidget(
-                  //   onDateTimeSelected: (DateTime selectedDate) {
-                  //     print(selectedDate.toString());
-                  //   },
-                  //   autoScrollController: autoScrollController,
-                  //   showDetails: true,
-                  //   startDate: DateTime.now().subtract(Duration(days: 50)),
-                  //   isDiveSession: true,
-                  // ),
-                  SizedBox(
-                    height: 200,
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),
-      ),
+      ],
     );
+    // });
   }
-
-  ///===============UI==============///
 
   Widget buildCalendarIcon(
       BuildContext context, BookingsCalenderWidgetController controller) {
@@ -133,7 +169,7 @@ class BookingScreen extends StatelessWidget {
       context: context,
       initialDate: controller.selectedDate,
       firstDate: DateTime(2010),
-      lastDate: DateTime(2050),
+      lastDate: DateTime(2090),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(

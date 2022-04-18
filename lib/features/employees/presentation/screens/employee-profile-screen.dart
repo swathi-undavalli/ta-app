@@ -55,25 +55,6 @@ class EmployeeProfileScreen extends StatelessWidget {
             child: GetBuilder<EmployeeProfileController>(builder: (controller) {
               return Column(
                 children: [
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Container(
-                  //       alignment: Alignment.centerLeft,
-                  //       child: TextButton(
-                  //         onPressed: () {
-                  //           onBackPressed();
-                  //         },
-                  //         child: Icon(
-                  //           Icons.arrow_back_ios,
-                  //           color: AppColors.text.black,
-                  //           size: 17,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //     buildEditButton(),
-                  //   ],
-                  // ),
                   Padding(
                     padding: const EdgeInsets.all(20),
                     child: Column(

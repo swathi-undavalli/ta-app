@@ -17,13 +17,14 @@ class BookingsCalenderWidget extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
   final bool isDiveSession;
   final bool showDetails;
+  final Function onSearchTap;
   DateTime startDate;
   final bool highlightInvalidTime;
   final FilterType calenderType;
   final AutoScrollController autoScrollController;
-
   BookingsCalenderWidget({
     @required this.onDateTimeSelected,
+    this.onSearchTap,
     this.isDiveSession = false,
     this.showDetails = false,
     this.startDate,
@@ -330,6 +331,10 @@ class BookingsCalenderWidget extends StatelessWidget {
         return BookingsExpansionPanel(
           items: expansionList,
           onDeletePressed: () {},
+          searchBar: true,
+          onSearchTap: () {
+            if (onSearchTap != null) onSearchTap();
+          },
         );
       return SizedBox();
     });
@@ -650,6 +655,8 @@ class BookingsCalenderWidget extends StatelessWidget {
     else
       return null;
   }
+
+  void clearSearch() {}
 }
 
 enum FilterType { Theory, Pool, Dive }

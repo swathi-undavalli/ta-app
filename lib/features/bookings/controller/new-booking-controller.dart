@@ -651,8 +651,6 @@ class NewBookingController extends GetxController {
 
   String _isoCode = "IN";
 
-  String _isoode = "IN";
-
   String get isoCode => _isoCode;
 
   String get diveLocation => _diveLocation;

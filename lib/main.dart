@@ -6,13 +6,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:temple_adventures/D/d.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/boatWidget.dart';
 import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/authentication/firebase-authentication.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/d1.dart';
+import 'package:temple_adventures/d2.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/editBoat-page.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/newBoat-page.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
@@ -36,16 +40,6 @@ import 'features/dashboard/controller/dashboard-controller.dart';
 import 'features/employees/presentation/screens/employee-details-screen.dart';
 import 'features/employees/presentation/screens/employee-profile-screen.dart';
 import 'features/login/presentation/screens/login-page.dart';
-
-// final FlutterLocalNotificationsPlugin notificationsPlugin =
-//     FlutterLocalNotificationsPlugin();
-//
-// const AndroidNotificationChannel channel = AndroidNotificationChannel(
-//   'high_importance_channel', // id
-//   'High Importance Notifications', // title
-//   importance: Importance.high,
-//   playSound: true,
-// );
 
 Future<void> backgroundHandler(RemoteMessage message) async {
   print(message.data);
@@ -74,30 +68,9 @@ void main() async {
   });
 
   ///app is in Background
-
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
     print('onMessageOpenedApp data:${message.data}');
   });
-
-  // var data = notificationsPlugin.resolvePlatformSpecificImplementation<
-  //     AndroidFlutterLocalNotificationsPlugin>();
-  //
-  // if (data != null) data.createNotificationChannel(channel);
-  //
-  // await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(
-  //   alert: true,
-  //   badge: true,
-  //   sound: true,
-  // );
-
-  // await FirebaseMessaging.instance.subscribeToTopic('admin');
-
-  // FirebaseMessaging.onBackgroundMessage(
-  //   (_) {
-  //     print("message");
-  //     return ;
-  //   },
-  // );
 
   await GetStorage.init();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -144,8 +117,8 @@ class MyApp extends StatelessWidget {
             CustomerRegistrationScreen(),
         NewCustomerScreen.id: (context) => NewCustomerScreen(),
         AllActivitiesScreen.id: (context) => AllActivitiesScreen(),
-        // FirebaseMessagingDemo.id: (context) => FirebaseMessagingDemo(),
-        // D.id: (context) => D(),
+        EditBoatPage.id: (context) => EditBoatPage(),
+        NewBoatPage.id: (context) => NewBoatPage(),
         AddNewActivityScreen.id: (context) => AddNewActivityScreen(),
         ActivityEditScreen.id: (context) => ActivityEditScreen(),
         AllBookingsScreen.id: (context) => AllBookingsScreen(),
@@ -167,6 +140,7 @@ class MyApp extends StatelessWidget {
         EmployeeDetailsScreen.id: (context) => EmployeeDetailsScreen(),
         CompressorScreen.id: (context) => CompressorScreen(),
         AutoUpdateView.id: (context) => AutoUpdateView(),
+        W2.id: (context) => W2(),
       },
     );
   }

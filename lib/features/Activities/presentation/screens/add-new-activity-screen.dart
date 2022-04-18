@@ -158,7 +158,6 @@ class AddNewActivityScreen extends StatelessWidget {
       style: TextStyle(
         color: AppColors.text.black,
         fontSize: 20,
-        fontFamily: AppFonts.nunito,
         fontWeight: FontWeight.normal,
         letterSpacing: 1.2,
       ),
