@@ -6,6 +6,7 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/access_levels.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
 import 'package:temple_adventures/features/bookings/controller/booking-controller.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:intl/intl.dart';
@@ -83,7 +84,6 @@ class BookingScreen extends StatelessWidget {
                   ],
                 ),
               ),
-
             ),
           ),
         ),
@@ -94,44 +94,15 @@ class BookingScreen extends StatelessWidget {
   ///===============UI==============///
 
   Widget buildFloatingActionButton() {
-    // return GetBuilder<BookingScreenController>(builder: (controller) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      children: [
-        // Container(
-        //   height: 50,
-        //   width: 50,
-        //   child: FittedBox(
-        //     child: FloatingActionButton(
-        //       elevation: 0,
-        //       onPressed: () {
-        //         controller.showSearchField = !controller.showSearchField;
-        //         log(controller.showSearchField.toString());
-        //       },
-        //       heroTag: null,
-        //       backgroundColor: AppColors.background.black,
-        //       child: Icon(
-        //         controller.showSearchField
-        //             ? Icons.search_off_outlined
-        //             : Icons.search_rounded,
-        //         size: 22,
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // SizedBox(height: 10),
-        FloatingActionButton(
-          elevation: 0,
-          onPressed: () {
-            Get.toNamed(AddCustomerDetailsScreen.id);
-          },
-          // heroTag: null,
-          backgroundColor: AppColors.background.black,
-          child: Icon(Icons.add),
-        ),
-      ],
+    return FloatingActionButton(
+      elevation: 0,
+      onPressed: () {
+        Get.toNamed(ChooseBoatPage.id);
+        // Get.toNamed(AddCustomerDetailsScreen.id);
+      },
+      backgroundColor: AppColors.background.black,
+      child: Icon(Icons.add),
     );
-    // });
   }
 
   Widget buildCalendarIcon(

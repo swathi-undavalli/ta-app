@@ -32,6 +32,7 @@ class EmployeeRepo {
 
   /// Get user information form local data persistance.
   /// Should call at the start of the App.
+
   static synchronise() async {
     var notificationStatus = await Permission.notification.status;
     log(notificationStatus.toString());

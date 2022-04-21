@@ -62,7 +62,6 @@ class AttendanceWidget extends StatelessWidget {
                 Text(
                   "Are you at office please Check-in.",
                   style: TextStyle(
-                    fontFamily: AppFonts.nunito,
                     color: AppColors.text.black,
                     fontSize: 13,
                   ),

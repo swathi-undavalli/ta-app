@@ -162,14 +162,12 @@ class CustomerRegistrationLogic {
 
   onChooseFilePressed() async {
     iDProofPicker.showBottomSheet();
-    iDProofPicker.  onImagePicked = () async {
+    iDProofPicker.onImagePicked = () async {
       print("=============picked");
       controller.iDProofPicked = true;
     };
   }
-
-
-  }
+}
 
 class CustomerRegistrationController extends GetxController {
   CustomerModel _customer;

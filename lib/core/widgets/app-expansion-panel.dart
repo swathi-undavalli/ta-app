@@ -10,8 +10,11 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/access_levels.dart';
+import 'package:temple_adventures/d2.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/upload-idProof-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
@@ -145,7 +148,7 @@ class BookingsExpansionPanel extends StatelessWidget {
           duration: Duration(milliseconds: 200),
           curve: Curves.easeInCubic,
           alignment: Alignment.topCenter,
-          height: controller.isExpanded[i] ? 380 : 50,
+          height: controller.isExpanded[i] ? 400 : 50,
           // height: controller.isExpanded[i] ? 470 : 50,
           width: 350,
           decoration: BoxDecoration(
@@ -336,7 +339,19 @@ class BookingsExpansionPanel extends StatelessWidget {
                                             1) !=
                                         (items[i].bookingModel.noOfPersons)),
                                   ),
-                                  SizedBox(height: 20),
+                                  // SizedBox(height: 20),
+                                  Container(
+                                    child: AppButton.miniFlat(
+                                      text: "Upload ID",
+                                      onTap: () {
+                                        Get.toNamed(IDProofScreen.id,
+                                            arguments: items[i].bookingModel);
+                                        // Get.toNamed(W2.id);
+                                      },
+                                    ).paddingOnly(right: 15),
+                                    alignment: Alignment.centerRight,
+                                  ),
+
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,

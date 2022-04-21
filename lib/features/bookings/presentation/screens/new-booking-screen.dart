@@ -420,7 +420,6 @@ class NewBookingScreen extends StatelessWidget {
               try {
                 controller.bookingModel.paid =
                     double.parse(controller.payingNowTED.text);
-
               } catch (e) {
                 controller.bookingModel.paid = 0;
               }

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/boatWidget.dart';
 import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/authentication/firebase-authentication.dart';
@@ -17,7 +18,9 @@ import 'package:temple_adventures/features/Activities/presentation/screens/add-n
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/editBoat-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/newBoat-page.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/all-idProofs-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
@@ -25,6 +28,7 @@ import 'package:temple_adventures/features/bookings/presentation/screens/new-cus
 import 'package:temple_adventures/features/bookings/presentation/screens/customer-registration-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/paper_work_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/upload-idProof-screen.dart';
 import 'package:temple_adventures/features/compressor/presentation/compressor.dart';
 import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
@@ -76,7 +80,7 @@ void main() async {
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.black,
     statusBarColor: Colors.white,
-    statusBarBrightness: Brightness.dark,
+    statusBarBrightness: Brightness.light,
     statusBarIconBrightness: Brightness.dark,
     systemNavigationBarIconBrightness: Brightness.light,
   ));
@@ -140,7 +144,11 @@ class MyApp extends StatelessWidget {
         EmployeeDetailsScreen.id: (context) => EmployeeDetailsScreen(),
         CompressorScreen.id: (context) => CompressorScreen(),
         AutoUpdateView.id: (context) => AutoUpdateView(),
-        W2.id: (context) => W2(),
+        // W2.id: (context) => W2(),
+        ChooseBoatPage.id: (context) => ChooseBoatPage(),
+        // UploadIDProofScreen.id: (context) => UploadIDProofScreen(),
+        IDProofScreen.id: (context) => IDProofScreen(),
+        AllIDProofsScreen.id: (context) => AllIDProofsScreen(),
       },
     );
   }

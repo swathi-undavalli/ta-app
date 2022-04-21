@@ -36,7 +36,7 @@ dependencies:
   image_picker: ^0.8.4+2
   step_progress_indicator: ^1.0.1
   image_cropper: ^1.4.1
-  http: ^0.13.3
+  http:
   permission_handler: ^9.0.2
   file_picker: ^4.4.0
   geolocator: ^8.0.5
@@ -54,7 +54,7 @@ dependencies:
   flutter_native_splash:
   flutter_launcher_icons:
   separated_row: ^2.0.0
-
+  gallery_saver:
 
   #------------------------------------------
   #------------------------------------------
@@ -63,7 +63,7 @@ dependencies:
   firebase_auth: ^3.0.1
   firebase_core: ^1.4.0
   cloud_firestore: ^3.1.9
-  firebase_storage: ^10.0.1
+  firebase_storage:
   firebase_messaging: ^11.2.7
   flutter_local_notifications: ^9.4.0
   ota_update: ^4.0.1
