@@ -5,38 +5,66 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
 class FileUploader {
+  static final storage = FirebaseStorage.instance;
+  static final storageRef = FirebaseStorage.instance.ref();
+
   static Future<String> uploadIDProof({
     File file,
     String bookingID,
   }) async {
     String fileExtension = file.path.split('.').last;
-    String fileName =
-        DateTime.now().millisecondsSinceEpoch.toString() + "." + fileExtension;
-
+    String firebaseLocation =
+        "IdProofs/$bookingID/${DateTime.now().millisecondsSinceEpoch}.$fileExtension";
+    final idProofsRef = storageRef.child(firebaseLocation);
     final metadata = SettableMetadata(
         contentType: lookupMimeType(file.path),
         customMetadata: {'picked-file-path': file.path});
 
-    UploadTask task = FirebaseStorage.instance
-        .ref("IdProofs")
-        .child("/${bookingID}")
-        .child("/$fileName")
-        .putFile(file, metadata);
-    task.then((p0) {
-      return p0.ref.getDownloadURL().toString()
-       ;
-    });
-    // .then((TaskSnapshot v) async {
-    //   return await v.ref.getDownloadURL();
-    // })
-    //       .whenComplete(() => showToast("Image Upload SuccessFull".tr))
-    //       .onError((dynamic error, stackTrace) async {
-    //         showToast(error.toString());
-    //       })
-    //       .catchError((error) => showToast(error.toString()));
+    try {
+      await idProofsRef.putFile(file, metadata);
+      String link = await idProofsRef.getDownloadURL();
+      if (link != null && link.isNotEmpty) {
+        return link;
+      } else {
+        showToast("Error occurred while uploading image");
+      }
+    } catch (e) {
+      showToast("Error occurred while uploading image");
+    }
   }
+
+  // static Future<String> uploadIDProof({
+  //   File file,
+  //   String bookingID,
+  // }) async {
+  //   String fileExtension = file.path.split('.').last;
+  //   String fileName =
+  //       DateTime.now().millisecondsSinceEpoch.toString() + "." + fileExtension;
+  //
+  //   final metadata = SettableMetadata(
+  //       contentType: lookupMimeType(file.path),
+  //       customMetadata: {'picked-file-path': file.path});
+  //
+  //   UploadTask task = FirebaseStorage.instance
+  //       .ref("IdProofs")
+  //       .child("/${bookingID}")
+  //       .child("/$fileName")
+  //       .putFile(file, metadata);
+  //   task.then((p0) {
+  //     return p0.ref.getDownloadURL().toString();
+  //   });
+  //   // .then((TaskSnapshot v) async {
+  //   //   return await v.ref.getDownloadURL();
+  //   // })
+  //   //       .whenComplete(() => showToast("Image Upload SuccessFull".tr))
+  //   //       .onError((dynamic error, stackTrace) async {
+  //   //         showToast(error.toString());
+  //   //       })
+  //   //       .catchError((error) => showToast(error.toString()));
+  // }
 
   // static Future<String> uploadIDProofs(Uint8List image) async {
   //   log("started.....");

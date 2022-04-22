@@ -82,9 +82,7 @@ class IDProofLogic {
   }
 
   uploadImage(XFile file) async {
-    var link = await FileUploader.uploadIDProof(
-        file: File(file.path), bookingID: "101");
-
+    var link = await FileUploader.uploadIDProof(file: File(file.path), bookingID: "101");
     print(bookingID);
     print(link);
     return link;
