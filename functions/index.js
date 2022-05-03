@@ -131,8 +131,9 @@ exports.addAttendanceLog = functions.https.onRequest(async (req, res) => {
 
                 let employeeShiftData = await db.collection('employees')
                     .doc(data.UserId)
-                    .collection('employeeFullInformation')
-                    .doc('employeeData').get();
+//                    .collection('employeeFullInformation')
+//                    .doc('employeeData')
+                    .get();
 
                     var shiftTime = moment(employeeShiftData.data().shiftTiming,'HH:mm:ss');
 
