@@ -89,8 +89,8 @@ class AddAnUserLogic {
       FirebaseFirestore.instance
           .collection('employees')
           .doc(employee.id)
-          .collection('employeeFullInformation')
-          .doc('employeeData')
+          // .collection('employeeFullInformation')
+          // .doc('employeeData')
           .set(employee.toMap());
       counterModel.employee++;
       FirebaseFirestore.instance
@@ -144,8 +144,8 @@ class AddAnUserLogic {
       FirebaseFirestore.instance
           .collection('employees')
           .doc(employee.id)
-          .collection('employeeFullInformation')
-          .doc('employeeData')
+          // .collection('employeeFullInformation')
+          // .doc('employeeData')
           .set(employee.toMap());
       LogModel logModel =
           LogModel(type: LogType.editEmployee, employeeName: employee.name);

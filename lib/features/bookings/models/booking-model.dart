@@ -29,12 +29,13 @@ class BookingModel {
     this.discountType = "%",
     this.remarks,
     this.employeeName,
+    this.idProofs,
     // this.payments,
   });
 
   List<ActivityModel> activity;
   List<Map<String, dynamic>> pax;
-  // List<dynamic> payments;
+  List<String> idProofs;
   int noOfPersons;
   double discount;
   double price;
@@ -87,6 +88,7 @@ class BookingModel {
       location: json["location"],
       paymentTransactionId: json["paymentTransactionId"],
       bookingDate: List<String>.from(json["bookingDate"].map((x) => x)),
+      idProofs: List<String>.from(json["idProofs"] ?? [].map((x) => x)),
       // payments: List<dynamic>.from(json["payments"] ?? [].map((x) => x * 1.0)),
       theoryDate: List<DateTime>.from(
           json["theoryDate"].map((x) => parseDateOrNull(x))),
@@ -112,6 +114,7 @@ class BookingModel {
         "paymentMode": paymentMode,
         "receiptNo": receiptNo,
         "bookingDate": List<String>.from(bookingDate.map((x) => x)),
+        "idProofs": List<String>.from(idProofs.map((x) => x)),
         // "payments": List<dynamic>.from(payments ?? [].map((x) => x)),
         "location": location,
         "paymentTransactionId": paymentTransactionId,

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:gallery_saver/gallery_saver.dart';
@@ -44,7 +43,7 @@ class AllIDProofsScreen extends StatelessWidget {
                       child: PageView(
                         controller: controller,
                         children: <Widget>[
-                          ...idProofController.pickedIDProofs.map(
+                          ...idProofController.idProofs.map(
                             (e) {
                               return buildIDProof(image: e);
                             },
@@ -66,7 +65,7 @@ class AllIDProofsScreen extends StatelessWidget {
                             onTap: () async {
                               idProofController.shareLoading = true;
                               final urlImage = idProofController
-                                  .pickedIDProofs[controller.page.toInt()];
+                                  .idProofs[controller.page.toInt()];
                               final url = Uri.parse(urlImage);
                               final response = await http.get(url);
                               final bytes = response.bodyBytes;
@@ -97,7 +96,7 @@ class AllIDProofsScreen extends StatelessWidget {
                               //   await Permission.storage.request();
                               // }
                               String url = idProofController
-                                  .pickedIDProofs[controller.page.toInt()];
+                                  .idProofs[controller.page.toInt()];
                               // String url =
                               //     "https://media.wired.com/photos/5fb70f2ce7b75db783b7012c/master/pass/Gear-Photos-597589287.jpg";
                               GallerySaver.saveImage(url).then((value) {

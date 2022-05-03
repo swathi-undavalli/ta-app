@@ -18,7 +18,8 @@ class IDProofScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    IDProofLogic(bookingID: bookingArg.id);
+    logic.bookingModel = bookingArg;
+    logic.controller.idProofs = bookingArg.idProofs;
     return Stack(
       children: [
         Scaffold(
@@ -44,7 +45,7 @@ class IDProofScreen extends StatelessWidget {
                               runSpacing: 20,
                               children: [
                                 buildAddID(),
-                                ...controller.pickedIDProofs.map((e) {
+                                ...controller.idProofs.map((e) {
                                   // log(controller.pickedIDProofs.toString());
                                   return buildIDProofs(image: e);
                                 })
@@ -99,19 +100,19 @@ class IDProofScreen extends StatelessWidget {
       return GestureDetector(
         onTap: () {
           Get.toNamed(AllIDProofsScreen.id,
-              arguments: controller.pickedIDProofs.indexOf(image));
-          print(controller.pickedIDProofs.indexOf(image));
+              arguments: controller.idProofs.indexOf(image));
+          print(controller.idProofs.indexOf(image));
         },
         child: Container(
           height: 110,
           width: 80,
           decoration: BoxDecoration(
-            // image: image != null
-            //     ? DecorationImage(
-            //         image: MemoryImage(image),
-            //         fit: BoxFit.cover,
-            //       )
-            //     : null,
+            image: image != null
+                ? DecorationImage(
+                    image: NetworkImage(image),
+                    fit: BoxFit.cover,
+                  )
+                : null,
             boxShadow: [
               BoxShadow(
                 color: Color(0x19000000),
@@ -122,7 +123,7 @@ class IDProofScreen extends StatelessWidget {
             color: AppColors.text.white,
             borderRadius: BorderRadius.circular(15),
           ),
-          child: TAImage(image.toString()),
+          // child: TAImage(image.toString(), fit: BoxFit.cover),
         ),
       );
     });
@@ -157,7 +158,12 @@ class IDProofScreen extends StatelessWidget {
           letterSpacing: 1.2,
         ),
       ),
-      leading: BackNavigationIcon(),
+      leading: GestureDetector(
+        onTap: () {
+          logic.controller.reset();
+        },
+        child: BackNavigationIcon(),
+      ),
       elevation: 0,
       backgroundColor: AppColors.background.white,
     );

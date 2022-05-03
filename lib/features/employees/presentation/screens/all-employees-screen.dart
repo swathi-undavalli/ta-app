@@ -70,11 +70,7 @@ class AllEmployeesScreen extends StatelessWidget {
                                 // buildRoles(),
                                 // SizedBox(height: 10).
                                 SizedBox(height: 10),
-                                GetBuilder<AllEmployeesController>(
-                                    builder: (controller) {
-                                  print(controller.data);
-                                  return buildAllEmployees();
-                                }),
+                                buildAllEmployees(),
                                 SizedBox(height: 10),
                               ],
                             ),
@@ -167,7 +163,7 @@ class AllEmployeesScreen extends StatelessWidget {
     getCount() {
       if (counterModel != null && counterModel.employee != null)
         return counterModel.employee;
-      return 50;
+      return 54;
     }
 
     return Column(

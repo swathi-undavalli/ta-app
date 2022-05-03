@@ -16,8 +16,8 @@ class FirebaseApi {
     return await FirebaseFirestore.instance
         .collection('employees')
         .doc(employeeID)
-        .collection('employeeFullInformation')
-        .doc('employeeData')
+        // .collection('employeeFullInformation')
+        // .doc('employeeData')
         .get();
   }
 
@@ -25,8 +25,8 @@ class FirebaseApi {
     return await FirebaseFirestore.instance
         .collection('employees')
         .doc(employee.id)
-        .collection('employeeFullInformation')
-        .doc('employeeData')
+        // .collection('employeeFullInformation')
+        // .doc('employeeData')
         .set(employee.toMap());
   }
 

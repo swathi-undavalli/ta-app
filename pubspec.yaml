@@ -55,6 +55,7 @@ dependencies:
   flutter_launcher_icons:
   separated_row: ^2.0.0
   gallery_saver:
+  story_view:
 
   #------------------------------------------
   #------------------------------------------

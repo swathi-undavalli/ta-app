@@ -73,7 +73,7 @@ class Employee {
         lastName: json["lastName"],
       );
 
-  get name => firstName + " " + (lastName ?? "");
+  String get name => firstName + " " + (lastName ?? "");
   get authPhone => countryCode + phoneNumber;
 
   Map<String, dynamic> toMap() => {
