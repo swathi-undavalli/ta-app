@@ -214,9 +214,9 @@ class AllEmployeesScreen extends StatelessWidget {
             Map<String, dynamic> employeeData = snapshot.data.data();
             var e = Employee.fromMap(employeeData);
             logic.controller.allEmployeesList.add(e);
-            print(e.id);
-            // print("=============${logic.controller.allEmployeesList.length}");
-            // print(e);
+            //print(e.id);
+            // //print("=============${logic.controller.allEmployeesList.length}");
+            // //print(e);
             return buildEmployeeNames(e);
           } catch (e) {
             return SizedBox();
@@ -227,7 +227,7 @@ class AllEmployeesScreen extends StatelessWidget {
   Widget buildEmployeeNames(Employee e) {
     return GestureDetector(
       onTap: () {
-        // print("clicked");
+        // //print("clicked");
         Get.toNamed(EmployeeDetailsScreen.id, arguments: e);
       },
       child: Container(
@@ -492,7 +492,7 @@ class AllEmployeesScreen extends StatelessWidget {
 //           Map<String, dynamic> employeeData = snapshot.data.data();
 //           var e = Employee.fromMap(employeeData);
 //           logic.controller.allEmployeesList.add(e);
-//           print(logic.controller.allEmployeesList);
+//           //print(logic.controller.allEmployeesList);
 //           return buildEmployeeNames(e);
 //         });
 //   }
@@ -500,7 +500,7 @@ class AllEmployeesScreen extends StatelessWidget {
 //   Widget buildEmployeeNames(Employee e) {
 //     return GestureDetector(
 //       onTap: () {
-//         // print("clicked");
+//         // //print("clicked");
 //         Get.toNamed(EmployeeDetailsScreen.id, arguments: [e]);
 //       },
 //       child: Container(

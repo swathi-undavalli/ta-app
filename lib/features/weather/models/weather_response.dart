@@ -35,7 +35,7 @@ class WeatherResponse {
       // int timestamp = json["timestamp"];
       // int localTimestamp = json["localTimestamp"];
       // int issueTimestamp = json["issueTimestamp"];
-      // print(json["fadedRating"]);
+      // //print(json["fadedRating"]);
       // double fadedRating = json["fadedRating"];
       // double solidRating = json["solidRating"];
       //
@@ -58,8 +58,8 @@ class WeatherResponse {
         charts: Charts.fromMap(json["charts"]),
       );
     } catch (e) {
-      print(e);
-      print("debbindi mowa");
+      //print(e);
+      //print("debbindi mowa");
       return null;
     }
   }
@@ -165,8 +165,8 @@ class Swell {
         components: Components.fromMap(json["components"]),
       );
     } catch (e) {
-      print("black sheep");
-      print(e);
+      //print("black sheep");
+      //print(e);
       return null;
     }
   }
@@ -203,8 +203,8 @@ class Components {
         tertiary: Combined.fromMap(json["tertiary"]),
       );
     } catch (e) {
-      print(e);
-      print("Red sheep");
+      //print(e);
+      //print("Red sheep");
       return null;
     }
   }

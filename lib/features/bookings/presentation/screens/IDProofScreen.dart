@@ -46,7 +46,7 @@ class IDProofScreen extends StatelessWidget {
                               children: [
                                 buildAddID(),
                                 ...controller.idProofs.map((e) {
-                                  // log(controller.pickedIDProofs.toString());
+                                  // //log(controller.pickedIDProofs.toString());
                                   return buildIDProofs(image: e);
                                 })
                               ],
@@ -70,7 +70,7 @@ class IDProofScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         logic.showBottomSheet(true);
-        log(bookingArg.id);
+        //log(bookingArg.id);
       },
       child: Container(
         height: 110,
@@ -101,7 +101,7 @@ class IDProofScreen extends StatelessWidget {
         onTap: () {
           Get.toNamed(AllIDProofsScreen.id,
               arguments: controller.idProofs.indexOf(image));
-          print(controller.idProofs.indexOf(image));
+          //print(controller.idProofs.indexOf(image));
         },
         child: Container(
           height: 110,

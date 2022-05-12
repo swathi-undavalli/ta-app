@@ -65,7 +65,7 @@ class LoginScreenLogic {
                       try {
                         int a = int.parse(
                             controller.textEditingControllersOTP[i].text);
-                        print(a);
+                        //print(a);
                         isNum = true;
                       } catch (e) {
                         isNum = false;
@@ -158,13 +158,13 @@ class LoginScreenLogic {
   }
 
   verifyEmployeeID() async {
-    print("verifyEmployeeID");
+    //print("verifyEmployeeID");
     try {
       currentEmployee = await EmployeeRepo.getEmployee(getEmployeeId());
       controller.phoneNumberTED.text = currentEmployee.authPhone;
       getPhoneNumber();
       EmployeeRepo.employeeID = getEmployeeId();
-      print("Done");
+      //print("Done");
       return true;
     } catch (e) {
       return false;
@@ -187,11 +187,11 @@ class LoginScreenLogic {
               EmployeeRepo.initiateRepo(currentEmployee.id);
               Get.offAndToNamed(WelcomeScreen.id);
             } else {
-              log('Failed');
+              //log('Failed');
             }
           },
           verificationFailed: (FirebaseAuthException e) {
-            log(e.toString());
+            //log(e.toString());
           },
           codeSent: (String verificationId, int resendToken) async {
             controller.otpStatus = "OTP has been sent to ${getPhoneNumber()}";
@@ -204,7 +204,7 @@ class LoginScreenLogic {
               EmployeeRepo.initiateRepo(currentEmployee.id);
               Get.offAndToNamed(WelcomeScreen.id);
             } else {
-              log('Failed');
+              //log('Failed');
             }
           },
           codeAutoRetrievalTimeout: (String verificationId) {},
@@ -254,11 +254,11 @@ class LoginScreenLogic {
         if (FirebaseAuth.instance.currentUser != null) {
           Get.offAndToNamed(WelcomeScreen.id);
         } else {
-          log('Failed');
+          //log('Failed');
         }
       },
       verificationFailed: (FirebaseAuthException e) {
-        log(e.toString());
+        //log(e.toString());
       },
       codeSent: (String verificationId, int resendToken) async {
         controller.otpStatus = "OTP has been Resent";
@@ -269,7 +269,7 @@ class LoginScreenLogic {
         if (FirebaseAuth.instance.currentUser != null) {
           Get.offAndToNamed(WelcomeScreen.id);
         } else {
-          log('Failed');
+          //log('Failed');
         }
       },
       codeAutoRetrievalTimeout: (String verificationId) {},

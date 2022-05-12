@@ -194,7 +194,7 @@ class EditBoatPage extends StatelessWidget {
                 .collection("boats")
                 .doc(boatsArg.id)
                 .set(boatsModel.toMap());
-            print(boat);
+            //print(boat);
             controller.reset();
             Get.back();
             BoatLogic boatLogic = BoatLogic();

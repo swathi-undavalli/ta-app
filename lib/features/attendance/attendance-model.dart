@@ -22,7 +22,7 @@ class Attendance {
   String punctual;
 
   factory Attendance.fromMap(Map<String, dynamic> json) {
-    print(json);
+    //print(json);
     return Attendance(
       checkInTime: json["checkInTime"],
       checkInLocation: json["checkInLocation"],

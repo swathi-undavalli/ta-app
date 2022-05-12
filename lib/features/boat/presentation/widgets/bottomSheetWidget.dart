@@ -1,17 +1,19 @@
+// import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/counter-model.dart';
+import '../../../home/model/employee.dart' as emp;
 
-import '../../../home/model/employee.dart';
+import '../../models/boat-passengers-model.dart';
 
-class BottomSheetWidget extends StatelessWidget {
+class EmployeeSelectorBottomSheet extends StatelessWidget {
   final BottomSheetLogic logic = BottomSheetLogic();
-  TextEditingController searchTED = TextEditingController();
+  final TextEditingController searchTED = TextEditingController();
 
-  BottomSheetWidget({this.onEmployeeTapped, @required this.selectedEmployees});
+  EmployeeSelectorBottomSheet(
+      {this.onEmployeeTapped, @required this.selectedEmployees});
 
   final List<Employee> selectedEmployees;
 
@@ -103,7 +105,7 @@ class BottomSheetWidget extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              Employee employee = Employee.fromMap(snapshot.data.data());
+              emp.Employee employee = emp.Employee.fromMap(snapshot.data.data());
               if (searchTED.text.isNotEmpty) {
                 if (employee.id.contains(searchTED.text) ||
                     employee.name
@@ -119,13 +121,17 @@ class BottomSheetWidget extends StatelessWidget {
     });
   }
 
-  Widget buildEmployeeNames({Employee e}) {
+  Widget buildEmployeeNames({emp.Employee e}) {
     return Container(
       child: Material(
         child: InkWell(
           onTap: () {
-            onEmployeeTapped(e);
-            // selectedEmployees.add(e);
+            onEmployeeTapped(Employee(
+              name: e.name,
+              phone: e.phoneNumber,
+              id: e.id,
+              gender: e.gender,
+            ));
             logic.controller.update();
           },
           child: Container(

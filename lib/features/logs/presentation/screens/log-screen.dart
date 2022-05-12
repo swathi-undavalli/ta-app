@@ -47,8 +47,8 @@ class LogScreen extends StatelessWidget {
           return Column(
             children: snapshot.data.docs.map((document) {
               LogModel logModel = LogModel.fromMap(document.data());
-              print("Started");
-              return buildLog(
+              //print("Started");
+              return buildlog(
                 log: logModel,
               );
             }).toList(),
@@ -56,7 +56,7 @@ class LogScreen extends StatelessWidget {
         });
   }
 
-  Widget buildLog({LogModel log}) {
+  Widget buildlog({LogModel log}) {
     getIcon() {
       switch (log.type) {
         case LogType.bookingCreated:

@@ -16,10 +16,10 @@ class IDProofLogic {
   Function onImagePicked;
 
   browseImage(bool isFront, ImageSource source) async {
-    print("==========started");
+    //print("==========started");
     XFile pickedFile =
         await imagePicker.pickImage(source: source, imageQuality: 50);
-    print("==========ended");
+    //print("==========ended");
     if (pickedFile != null) {
       // ImageCropper imageCropper = ImageCropper();
       // File file = await imageCropper.cropImage(
@@ -86,8 +86,8 @@ class IDProofLogic {
     var link = await FileUploader.uploadIDProof(
         file: File(file.path), bookingID: bookingModel.id);
 
-    print(bookingModel.id);
-    print(link);
+    //print(bookingModel.id);
+    //print(link);
     return link;
   }
 

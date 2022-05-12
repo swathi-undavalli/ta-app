@@ -90,8 +90,8 @@ class AllIDProofsScreen extends StatelessWidget {
                               // showToast("Downloaded Successfully");
                               // var storagePermission =
                               //     await Permission.storage.status;
-                              // log(storagePermission.toStr;
-                              // log("storageeeeee");
+                              // //log(storagePermission.toStr;
+                              // //log("storageeeeee");
                               // if (storagePermission.isGranted) {
                               //   await Permission.storage.request();
                               // }

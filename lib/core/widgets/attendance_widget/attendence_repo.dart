@@ -18,7 +18,7 @@ class AttendanceRepo {
     try {
       attendance = await getAttendance(DateTime.now());
     } catch (e) {
-      print("No attendance data found");
+      //print("No attendance data found");
       attendance = Attendance();
       attendance.checkInLocation = null;
       attendance.checkOutLocation = null;
@@ -60,8 +60,8 @@ class AttendanceRepo {
 
   static getAttendance(DateTime date) async {
     var data = await FirebaseApi.getAttendance(date);
-    print(data.data());
-    print("=======================");
+    //print(data.data());
+    //print("=======================");
     return Attendance.fromMap(data.data());
   }
 
@@ -72,9 +72,9 @@ class AttendanceRepo {
   static Future<String> getUserPosition() async {
     Position position = await GeolocatorPlatform.instance
         .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
-    print("+++++++++++++++++++++++");
-    print(position.latitude);
-    print(position.longitude);
+    //print("+++++++++++++++++++++++");
+    //print(position.latitude);
+    //print(position.longitude);
     position = await GeolocatorPlatform.instance
         .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
     position = await GeolocatorPlatform.instance
@@ -100,8 +100,7 @@ class AttendanceRepo {
 
     Position kameshHome = Position(latitude: 16.9041354, longitude: 81.6711417);
 
-    print(
-        Geo.getDistance(currentPosition, templeAdventuresPondicherryClassRoom));
+    //print(Geo.getDistance(currentPosition, templeAdventuresPondicherryClassRoom));
 
     if (Geo.getDistance(currentPosition, templeAdventuresPondicherry) <= 150) {
       return "Pondicherry";

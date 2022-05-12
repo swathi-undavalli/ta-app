@@ -55,7 +55,7 @@ class BookingModel {
   String discountType;
 
   factory BookingModel.fromMap(Map<String, dynamic> json) {
-    log("fromMap");
+    //log("fromMap");
     parseDateOrNull(date) {
       if (date == null) return null;
       return DateTime.parse(date);
@@ -166,12 +166,12 @@ class BookingModel {
         total -= total * (discount / 100);
       else
         total = total - discount;
-      print("total $total");
+      //print("total $total");
     }
-    print(total);
+    //print(total);
 
-    print(tax);
-    print(total);
+    //print(tax);
+    //print(total);
     return total;
   }
 

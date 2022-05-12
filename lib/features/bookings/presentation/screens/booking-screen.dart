@@ -28,11 +28,11 @@ class BookingScreen extends StatelessWidget {
     return GetBuilder<BookingScreenController>(builder: (controller) {
       bookingsCalenderWidget = BookingsCalenderWidget(
         onDateTimeSelected: (DateTime selectedDate) {
-          print(selectedDate.toString());
+          //print(selectedDate.toString());
         },
         onSearchTap: () {
           scrollController.jumpTo(200);
-          log("working=======");
+          //log("working=======");
         },
         // showSearch: controller.showSearchField,
         autoScrollController: autoScrollController,
@@ -175,7 +175,7 @@ class BookingScreen extends StatelessWidget {
         bookingsCalenderWidget.scrollToIndex(dif);
       calenderLogic.onDateSelected(dif);
 
-      log("=============$dif");
+      //log("=============$dif");
       controller.selectedDate = selected;
     }
     controller.update();

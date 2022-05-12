@@ -17,8 +17,8 @@ class BookingsCalenderWidgetLogic {
       Get.put(BookingsCalenderWidgetController());
 
   getBookings(DateTime date) async {
-    log("getBookings");
-    log("Started");
+    //log("getBookings");
+    //log("Started");
     controller.bookingTimings = [];
     controller.bookings = [];
     controller.showLoading = true;
@@ -31,38 +31,38 @@ class BookingsCalenderWidgetLogic {
           .get();
 
       data.docs.forEach((element) {
-        log("===========s${element.data().toString()}");
+        //log("===========s${element.data().toString()}");
 
         try {
           BookingModel booking = BookingModel.fromMap(element.data());
         } catch (e) {
-          log("Error in getting booking model");
-          log("$e");
-          log(element.data().toString());
-          print(e);
+          //log("Error in getting booking model");
+          //log("$e");
+          //log(element.data().toString());
+          //print(e);
         }
         BookingModel booking = BookingModel.fromMap(element.data());
 
-        print(booking.toMap());
-        print("=============");
+        //print(booking.toMap());
+        //print("=============");
 
         if (booking.diveDate != null) {
           controller.bookingTimings.addAll(booking.diveDate);
-          print(booking.diveDate);
+          //print(booking.diveDate);
         }
         if (booking.poolDate != null) {
           controller.bookingTimings.addAll(booking.poolDate);
-          print(booking.poolDate);
+          //print(booking.poolDate);
         }
         if (booking.theoryDate != null) {
           controller.bookingTimings.addAll(booking.theoryDate);
-          print(booking.theoryDate);
+          //print(booking.theoryDate);
         }
 
         controller.bookings.add(booking);
 
-        log("================================================");
-        log(booking.toString());
+        //log("================================================");
+        //log(booking.toString());
         List<ItemModel> newItemsList = [];
         controller.theoryCount = 0;
         controller.poolCount = 0;
@@ -71,7 +71,7 @@ class BookingsCalenderWidgetLogic {
         controller.poolCountN = 0;
         controller.diveCountN = 0;
 
-        log("===================wb1");
+        //log("===================wb1");
         controller.bookings.forEach((booking) {
           var im = ItemModel.fromBookings(booking);
           im.session = "";
@@ -86,7 +86,7 @@ class BookingsCalenderWidgetLogic {
           // }
 
           booking.theoryDate.forEach((date) {
-            log("theory loop");
+            //log("theory loop");
             if (checkDate(date, controller.selectedDate)) {
               controller.theoryCountN += booking.noOfPersons;
               controller.theoryCount++;
@@ -96,8 +96,8 @@ class BookingsCalenderWidgetLogic {
           });
 
           booking.poolDate.forEach((date) {
-            log("pool loop");
-            print("date $date");
+            //log("pool loop");
+            //print("date $date");
             if (checkDate(date, controller.selectedDate)) {
               controller.poolCountN += booking.noOfPersons;
               controller.poolCount++;
@@ -107,7 +107,7 @@ class BookingsCalenderWidgetLogic {
           });
 
           booking.diveDate.forEach((date) {
-            log("dive loop");
+            //log("dive loop");
             if (checkDate(date, controller.selectedDate)) {
               controller.diveCount++;
               controller.diveCountN += booking.noOfPersons;
@@ -129,19 +129,19 @@ class BookingsCalenderWidgetLogic {
   }
 
   filterBookingsList() {
-    print('==============================');
-    print("seleted Time : ${controller.selectedDate}");
+    //print('==============================');
+    //print("seleted Time : ${controller.selectedDate}");
 
     controller.bookings.forEach((element) {
-      print(".........");
-      print(element.activity[0].name);
-      print(element.theoryDate);
-      print(element.poolDate);
-      print(element.diveDate);
-      print(".........");
+      //print(".........");
+      //print(element.activity[0].name);
+      //print(element.theoryDate);
+      //print(element.poolDate);
+      //print(element.diveDate);
+      //print(".........");
     });
 
-    print("filtering started........\n\n");
+    //print("filtering started........\n\n");
     List<ItemModel> newItemsList = [];
     controller.poolCount = 0;
     controller.theoryCount = 0;
@@ -151,13 +151,13 @@ class BookingsCalenderWidgetLogic {
 
       if (booking.theoryDate != null && booking.theoryDate.isNotEmpty) {
         booking.theoryDate.forEach((date) {
-          print("+++++++++++");
-          print(date);
-          print(controller.selectedDate);
+          //print("+++++++++++");
+          //print(date);
+          //print(controller.selectedDate);
           if (isSameMinute(date, controller.selectedDate)) {
             im.session = "Theory";
             im.time = DateFormat("hh:mm").format(date);
-            print("im.time ${im.time}");
+            //print("im.time ${im.time}");
             controller.theoryCount++;
             controller.theoryCountN += booking.noOfPersons;
             newItemsList.add(im);
@@ -166,13 +166,13 @@ class BookingsCalenderWidgetLogic {
       }
       if (booking.poolDate != null && booking.poolDate.isNotEmpty) {
         booking.poolDate.forEach((date) {
-          print("+++++++++++");
-          print(date);
-          print(controller.selectedDate);
+          //print("+++++++++++");
+          //print(date);
+          //print(controller.selectedDate);
           if (isSameMinute(date, controller.selectedDate)) {
             im.session = "Pool";
             im.time = DateFormat("hh:mm").format(date);
-            print("im.time ${im.time}");
+            //print("im.time ${im.time}");
             controller.poolCount += booking.noOfPersons;
             newItemsList.add(im);
           }
@@ -180,27 +180,27 @@ class BookingsCalenderWidgetLogic {
       }
       if (booking.diveDate != null && booking.diveDate.isNotEmpty) {
         booking.diveDate.forEach((date) {
-          print("+++++++++++");
-          print(date);
-          print(controller.selectedDate);
+          //print("+++++++++++");
+          //print(date);
+          //print(controller.selectedDate);
           if (isSameMinute(date, controller.selectedDate)) {
             im.session = "Dive";
             im.time = DateFormat("hh:mm").format(date);
-            print("im.time ${im.time}");
+            //print("im.time ${im.time}");
             controller.diveCount += booking.noOfPersons;
             newItemsList.add(im);
           }
         });
       }
     });
-    print("filtering done........");
+    //print("filtering done........");
 
     newItemsList.forEach((element) {
-      print(".........");
-      print(element.activity);
-      print(element.time);
-      print(element.session);
-      print(".........");
+      //print(".........");
+      //print(element.activity);
+      //print(element.time);
+      //print(element.session);
+      //print(".........");
     });
 
     if (controller.theoryCount != 0)
@@ -213,11 +213,11 @@ class BookingsCalenderWidgetLogic {
     controller.expansionItemModels = newItemsList;
     controller.update();
 
-    print('==============================');
+    //print('==============================');
   }
 
   getDates() {
-    log("getDates");
+    //log("getDates");
     controller.calenderDates = [];
     var temp = controller.startDate;
     for (int i = 0; i < 400; i++) {
@@ -286,9 +286,9 @@ class BookingsCalenderWidgetLogic {
     controller.diveCountN = 0;
     controller.selectedDate = controller.calenderDates[index];
     controller.selectedType = null;
-    print("===========started${controller.calenderDates[index]}");
+    //print("===========started${controller.calenderDates[index]}");
     getBookings(controller.calenderDates[index]);
-    print("===========ended${controller.calenderDates[index]}");
+    //print("===========ended${controller.calenderDates[index]}");
     getTime();
   }
 }

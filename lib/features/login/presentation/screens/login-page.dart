@@ -111,8 +111,8 @@ class LoginScreen extends StatelessWidget {
       onChanged: (phone) {
         logic.controller.phoneNumberTED.text = phone.number;
         logic.controller.countryCodeTED.text = phone.countryCode;
-        print(phone.number);
-        print(phone.countryCode);
+        //print(phone.number);
+        //print(phone.countryCode);
       },
     );
   }

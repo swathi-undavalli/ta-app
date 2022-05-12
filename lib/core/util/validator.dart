@@ -2,7 +2,7 @@ import 'package:temple_adventures/core/constants/constants.dart';
 
 class Validator {
   static String validateName(String name) {
-    // print('validateName');
+    // //print('validateName');
     if (name.isEmpty) return null;
     if (name.length > 15) return '15 characters only';
     return null;
@@ -65,7 +65,7 @@ class Validator {
     if (password.length < 8) return 'Should be more than 8';
     bool isPasswordValid =
         RegularExpressions.passwordRegularExpression.hasMatch(password);
-    // print(isPasswordValid);
+    // //print(isPasswordValid);
     return isPasswordValid ? null : 'Missing uppercase / number';
   }
 

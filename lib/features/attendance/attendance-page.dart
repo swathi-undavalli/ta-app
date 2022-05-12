@@ -215,7 +215,7 @@ class AttendancePage extends StatelessWidget {
   Widget buildCalender() {
     var now = DateTime.now();
     return GetBuilder<AttendancePageController>(builder: (controller) {
-      print(controller.selectedDate);
+      //print(controller.selectedDate);
       return Center(
         child: Column(
           children: [

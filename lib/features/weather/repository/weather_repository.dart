@@ -13,83 +13,83 @@ class WeatherRepository {
 
     final params = {'spot_id': "957", 'units': "eu"};
 
-    print("=======================");
-    print("started");
+    //print("=======================");
+    //print("started");
 
     final uri = Uri.https('magicseaweed.com',
         '/api/795541b5e25309cf68f4463e88b8daa6/forecast/', params);
 
     final response = await http.get(uri);
-    log(response.body);
-    print("==========================");
-    print("middle");
+    //log(response.body);
+    //print("==========================");
+    //print("middle");
 
     final List<dynamic> json = jsonDecode(response.body);
-    print("==========================");
-    print("In between");
-    print(json);
+    //print("==========================");
+    //print("In between");
+    //print(json);
 
     List<WeatherResponse> li = [];
     json.forEach((element) {
-      // print(element);
+      // //print(element);
       WeatherResponse weatherResponse = WeatherResponse.fromMap(element);
       li.add(weatherResponse);
     });
-    print(li[0].localTimestamp);
-    // print(DateTime.now().microsecondsSinceEpoch);
-    // print(DateTime.now().millisecondsSinceEpoch)
+    //print(li[0].localTimestamp);
+    // //print(DateTime.now().microsecondsSinceEpoch);
+    // //print(DateTime.now().millisecondsSinceEpoch)
     return li;
   }
 
   Future<TideResponse> getTideResponse() async {
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
-    log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
+    //log("Calling Tides API");
 
     // return TideResponse.fromMap({
     //   "extremes": [
@@ -129,9 +129,9 @@ class WeatherRepository {
       },
     );
     final Map<String, dynamic> json = jsonDecode(response);
-    print(json);
+    //print(json);
     TideResponse tideResponse = TideResponse.fromMap(json);
-    print(tideResponse);
+    //print(tideResponse);
     return tideResponse;
   }
 
@@ -141,11 +141,11 @@ class WeatherRepository {
         .collection("weather")
         .doc("weather")
         .get();
-    print(data.data());
-    print(data.data().isEmpty);
+    //print(data.data());
+    //print(data.data().isEmpty);
     if (data.data() != null && data.data().isNotEmpty) {
       //if data exist.
-      print("admkasmdkmkds");
+      //print("admkasmdkmkds");
       WeatherPageModel weatherPageModel = WeatherPageModel.fromMap(data.data());
 
       if (DateTime.now().difference(weatherPageModel.timeStamp).inHours >= 12) {

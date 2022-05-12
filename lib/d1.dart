@@ -40,13 +40,13 @@
 // // //     res = res + arr[i];
 // // //   }
 // // //
-// // //   print(res);
+// // //   //print(res);
 // // // }
 // //
 // // // void main() {
 // // //   var n = 5025;
 // // //   var value = convertFive(n);
-// // //   print(value);
+// // //   //print(value);
 // // // }
 // // //
 // // // int convertFive(int n) {
@@ -76,7 +76,7 @@
 // // //   String hii;
 // // //
 // // //   printHelloWorld() {
-// // //     print("Hello World");
+// // //     //print("Hello World");
 // // //   }
 // // // }
 // // //
@@ -84,7 +84,7 @@
 // // //   Solution solution = Solution();
 // // //   solution.printHelloWorld();
 // // //   solution.hii = "Sahitha";
-// // //   print(solution.hii);
+// // //   //print(solution.hii);
 // // // }
 // //
 // // // void main() {
@@ -94,7 +94,7 @@
 // // //
 // // //   var count = countOfElements(arr, x);
 // // //
-// // //   print(count);
+// // //   //print(count);
 // // // }
 // // //
 // // // int countOfElements(List<int> arr, int x) {
@@ -116,7 +116,7 @@
 // // //
 // // //   var sum = seriesNum(n);
 // // //
-// // //   print(sum);
+// // //   //print(sum);
 // // //
 // // // }
 // // //
@@ -159,7 +159,7 @@
 // // //         }
 // // //     }
 // // //
-// // //       print(big);
+// // //       //print(big);
 // // //
 // // // }
 // //
@@ -167,7 +167,7 @@
 // // //
 // // //   var str = "ABCddE";
 // // //
-// // //   print(str.toLowerCase());
+// // //   //print(str.toLowerCase());
 // // //
 // // // }
 // //
@@ -177,7 +177,7 @@
 // // //
 // // //   var product = multiplication(a, b);
 // // //
-// // //   print(product);
+// // //   //print(product);
 // // // }
 // // //
 // // // int multiplication(int a, int b) {
@@ -194,8 +194,8 @@
 // // //
 // // //   var end = arr.last - (k - 1);
 // // //
-// // //   print(start);
-// // //   print(end);
+// // //   //print(start);
+// // //   //print(end);
 // // // }
 // //
 // // // void main() {
@@ -203,7 +203,7 @@
 // // //
 // // //   var res = armstrongNumber(n);
 // // //
-// // //   print(res);
+// // //   //print(res);
 // // // }
 // // //
 // // // String armstrongNumber(int n) {
@@ -244,7 +244,7 @@
 // // //           r[i][j] += l1[i][k] * l2[k][j];
 // // //
 // // //       }
-// // //       print(r);
+// // //       //print(r);
 // // //
 // // //     }
 // // //   }
@@ -399,9 +399,9 @@
 //               Map<String, dynamic> employeeData = snapshot.data.data();
 //               var e = Employee.fromMap(employeeData);
 //               allEmployeesList.add(e);
-//               print(e.id);
-//               // print("=============${logic.controller.allEmployeesList.length}");
-//               // print(e);
+//               //print(e.id);
+//               // //print("=============${logic.controller.allEmployeesList.length}");
+//               // //print(e);
 //               return buildEmployeeNames(e);
 //             } catch (e) {
 //               return SizedBox();
@@ -537,7 +537,7 @@
 //       .collection("employeeFullInformation")
 //       .doc("employeeData")
 //       .get();
-//   print(data.data());
+//   //print(data.data());
 //   Map<String, dynamic> employeeData = data.data();
 //   FirebaseFirestore.instance
 //       .collection("employees")
@@ -672,7 +672,7 @@ class _DummyState extends State<Dummy> {
       });
     } else {
       _timer.cancel();
-      print(_timer.isActive);
+      //print(_timer.isActive);
     }
   }
 

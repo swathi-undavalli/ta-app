@@ -334,22 +334,22 @@ class AttendanceReportWidgetLogic {
   }
 
   getAbsents() async {
-    print("getAbsents");
+    //print("getAbsents");
 
     var data = await FirebaseFirestore.instance
         .collection("dailyAttendanceLogs")
         .doc(DateFormat("dd-MM-yyyy").format(DateTime.now()))
         .get();
 
-    print(data);
+    //print(data);
 
     Map<String, dynamic> fData = data.data();
     // fData.forEach((key, value) {
-    //   log(value.toString());
-    //   // if (value["loginTime"] != null) log(fData[key].toString());
+    //   //log(value.toString());
+    //   // if (value["loginTime"] != null) //log(fData[key].toString());
     // });
 
-    print("------------------------------");
+    //print("------------------------------");
     controller.employeesList = [];
     controller.lateEmployeesList = [];
     controller.onTimeEmployeesList = [];
@@ -357,7 +357,7 @@ class AttendanceReportWidgetLogic {
     controller.absentEmployeesList = [];
     controller.notYetSignedInEmployeesList = [];
     var now = DateTime.now();
-    log(fData.toString());
+    //log(fData.toString());
 
     fData.forEach((key, value) {
       if (value.runtimeType != String) {
@@ -371,22 +371,22 @@ class AttendanceReportWidgetLogic {
           int.parse(employee.shiftTime.split(":")[2]),
         );
         if (employee.loginTime == null) {
-          log(DateTime.now().difference(empShiftTime).inHours.toString());
+          //log(DateTime.now().difference(empShiftTime).inHours.toString());
           if (DateTime.now().difference(empShiftTime).inHours >= 6) {
             employee.punctual = "Absent";
           }
-          log(employee.punctual);
+          //log(employee.punctual);
         }
         controller.employeesList.add(employee);
       }
     });
-    print(controller.employeesList);
+    //print(controller.employeesList);
 
     controller.employeesList
         .sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
 
     controller.employeesList.forEach((element) {
-      // print(element.punctual);
+      // //print(element.punctual);
 
       if (element.punctual == "Late")
         controller.lateEmployeesList.add(element);
@@ -403,7 +403,7 @@ class AttendanceReportWidgetLogic {
             int.parse(element.shiftTime.split(":")[2]),
           ).difference(DateTime.now()).inMinutes <
           0) {
-        // log(DateTime(
+        // //log(DateTime(
         //   now.year,
         //   now.month,
         //   now.day,
@@ -411,17 +411,17 @@ class AttendanceReportWidgetLogic {
         //   int.parse(element.shiftTime.split(":")[1]),
         //   int.parse(element.shiftTime.split(":")[2]),
         // ).difference(DateTime.now()).inMinutes.toString());
-        // log(element.name);
-        // log(element.shiftTime);
+        // //log(element.name);
+        // //log(element.shiftTime);
         controller.notYetSignedInEmployeesList.add(element);
       }
     });
-    log("====================");
-    log(controller.lateEmployeesList.toString());
-    log(controller.onTimeEmployeesList.toString());
-    log(controller.absentEmployeesList.toString());
-    log(controller.notYetSignedInEmployeesList.toString());
-    log("====================");
+    //log("====================");
+    //log(controller.lateEmployeesList.toString());
+    //log(controller.onTimeEmployeesList.toString());
+    //log(controller.absentEmployeesList.toString());
+    //log(controller.notYetSignedInEmployeesList.toString());
+    //log("====================");
     controller.notYetSignedInEmployeesList =
         controller.absentEmployeesList + controller.notYetSignedInEmployeesList;
     controller.selectedList = controller.lateEmployeesList;

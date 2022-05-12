@@ -29,7 +29,7 @@ class AttendancePageLogic {
   getAbsentDates() async {
     controller.absentDates = [];
     controller.showLoading = true;
-    print("started=====================");
+    //print("started=====================");
     QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore.instance
         .collection("employees")
         .doc(controller.currentEmployee.id)
@@ -40,19 +40,19 @@ class AttendancePageLogic {
     for (int i = 0; i < data.docs.length; i++) {
       Map<String, dynamic> attendanceData = data.docs[i].data();
       var attandence = Attendance.fromMap(attendanceData);
-      print("============== ${data.docs[i].id}");
+      //print("============== ${data.docs[i].id}");
       if (attandence.LogTime != null)
         controller.absentDates.add(attandence.LogTime.toDate());
     }
-    print(controller.absentDates);
+    //print(controller.absentDates);
     controller.update();
     controller.showLoading = false;
 
-    print("ended=====================");
+    //print("ended=====================");
   }
 
   getDates() {
-    log("getDates");
+    //log("getDates");
     controller.calenderDates = [];
     DateTime firstDay = DateTime(
         controller.selectedDate.year, controller.selectedDate.month, 1);
@@ -64,7 +64,7 @@ class AttendancePageLogic {
   }
 
   getOrderOfDates() {
-    log("getOrderOfDates");
+    //log("getOrderOfDates");
     DateTime firstDay = DateTime(
         controller.selectedDate.year, controller.selectedDate.month, 1);
     for (int i = 0; i < controller.days.length; i++) {
@@ -80,10 +80,10 @@ class AttendancePageLogic {
         showTitleActions: true,
         minTime: DateTime(2021, 10, 27),
         maxTime: DateTime(2022, 10, 27), onChanged: (date) {
-      print('change $date');
+      //print('change $date');
       controller.selectedDate = date;
     }, onConfirm: (date) {
-      print('confirm $date');
+      //print('confirm $date');
       controller.selectedDate = date;
       // getAbsentDates();
       getDates();
@@ -109,7 +109,7 @@ class AttendancePageLogic {
   }
 
   getClockData() async {
-    print("getClockData");
+    //print("getClockData");
     var data = await FirebaseFirestore.instance
         .collection("employees")
         .doc(controller.currentEmployee.id)
@@ -122,7 +122,7 @@ class AttendancePageLogic {
     else
       controller.clockData = null;
 
-    print(controller.clockData);
+    //print(controller.clockData);
   }
 
   getPositiveNumber(int num) {

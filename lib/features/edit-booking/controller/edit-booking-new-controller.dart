@@ -12,7 +12,7 @@ class EditBookingNewLogic {
   EditBookingNewController controller = Get.put(EditBookingNewController());
 
   getDataFromFireBase() async {
-    print("Strated");
+    //print("Strated");
     QuerySnapshot<Map<String, dynamic>> catalogue =
         await FirebaseFirestore.instance.collection('catalogue').get();
     controller.activities = [];
@@ -23,8 +23,8 @@ class EditBookingNewLogic {
           .sort((a1, a2) => a2.priority.compareTo(a1.priority));
       controller.showLoading = false;
     }
-    print(controller.activities);
-    print("ended");
+    //print(controller.activities);
+    //print("ended");
   }
 }
 

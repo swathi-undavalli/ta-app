@@ -1,30 +1,16 @@
-import 'dart:developer';
+import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:intl/intl.dart';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
-import 'package:temple_adventures/features/boat/controller/newBoat-controller.dart';
+import 'package:temple_adventures/features/boat/controller/choose-boat-controller.dart';
 import 'package:temple_adventures/features/boat/models/boat-passengers-model.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/seatsAvailabiltyWidget.dart';
-import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:temple_adventures/features/counter-model.dart';
 
 class ChooseBoatPage extends StatelessWidget {
   static const String id = "ChooseBoatPage";
 
-  SeatsAvailabilityExpansionPanel boat1 = SeatsAvailabilityExpansionPanel(1);
-  SeatsAvailabilityExpansionPanel boat2 = SeatsAvailabilityExpansionPanel(2);
-  SeatsAvailabilityExpansionPanel boat3 = SeatsAvailabilityExpansionPanel(3);
-  SeatsAvailabilityExpansionPanel boat4 = SeatsAvailabilityExpansionPanel(4);
-
-  ChooseBoatPage({this.selectedSeatsCount});
-
-  int selectedSeatsCount = 0;
+  final ChooseBoatLogic logic = ChooseBoatLogic();
 
   @override
   Widget build(BuildContext context) {
@@ -33,61 +19,7 @@ class ChooseBoatPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         elevation: 0,
         onPressed: () async {
-          print("boat1:${boat1.selectedSeats}");
-          print("boat2:${boat2.selectedSeats}");
-          print("boat3:${boat3.selectedSeats}");
-          print("boat4:${boat4.selectedSeats}");
-          print("boat1:${boat1.selectedEmployees}");
-          print("boat2:${boat2.selectedEmployees}");
-          print("boat3:${boat3.selectedEmployees}");
-          print("boat4:${boat4.selectedEmployees}");
-
-          BoatPassengersModel boatPassengersModel = BoatPassengersModel();
-          NewBookingLogic newBookingLogic = NewBookingLogic();
-
-          newBookingLogic.controller.bookingModel = BookingModel(pax: [
-            {
-              "first-name": "sahitha",
-              "email": "sahitha@kcn.com",
-              "phoneNumber": "5646848487",
-            }
-          ], diveDate: [
-            DateTime.now()
-          ]);
-
-          var boats = [boat1, boat2, boat3, boat4];
-          for (int j = 0; j < boats.length; j++) {
-            var boat = boats[j];
-            boatPassengersModel.passengers = [];
-            boatPassengersModel.employees = [];
-            for (int i = 0; i < boat.selectedSeats.length; i++) {
-              boatPassengersModel.passengers.add(Passenger(
-                  name: newBookingLogic.controller.bookingModel.pax[0]
-                      ["first-name"],
-                  gender: "male",
-                  phone: newBookingLogic.controller.bookingModel.pax[0]
-                      ["phoneNumber"],
-                  email: newBookingLogic.controller.bookingModel.pax[0]
-                      ["email"]));
-            }
-            for (int i = 0; i < boat.selectedEmployees.length; i++) {
-              var e = boat.selectedEmployees[i];
-              boatPassengersModel.employees.add(Employee(
-                  id: e.id,
-                  name: e.name,
-                  gender: e.gender,
-                  phone: e.phoneNumber));
-            }
-            await FirebaseFirestore.instance
-                .collection("boats")
-                .doc((1 + j).toString())
-                .collection("allocation")
-                .doc(DateFormat("dd-MM-yyyy").format(
-                    newBookingLogic.controller.bookingModel.diveDate[0]))
-                .set(boatPassengersModel.toMap());
-          }
-
-          // Get.toNamed(ChooseBoatPage.id);
+          logic.onCheckPressed();
         },
         backgroundColor: AppColors.background.black,
         child: Icon(Icons.arrow_forward_ios_rounded),
@@ -100,17 +32,9 @@ class ChooseBoatPage extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Column(
               children: [
-                SizedBox(height: 10),
-                buildSeatsSelected(),
-                SizedBox(height: 40),
-                boat1,
-                boat2,
-                boat3,
-                boat4,
-                // ...List.generate(counterModel.boat, (index) {
-                //   log(index.toString());
-                //   return SeatsAvailabilityExpansionPanel(index + 1);
-                // }),
+                buildDateSelector(),
+                SizedBox(height: 15),
+                buildBoatSelector(),
                 SizedBox(height: 20),
               ],
             ),
@@ -120,33 +44,157 @@ class ChooseBoatPage extends StatelessWidget {
     );
   }
 
-  Widget buildSeatsSelected() {
+  GetBuilder<ChooseBoatController> buildDateSelector() {
+    return GetBuilder<ChooseBoatController>(builder: (controller) {
+      if (controller.showLoading) return SizedBox();
+      return Row(
+        children: [
+          SizedBox(
+            width: 23,
+          ),
+          Text(
+            DateFormat('dd-MM-yyyy')
+                .format(controller.diveDates[controller.currentDiveDateIndex]),
+            style: TextStyle(
+                fontSize: 16,
+                fontFamily: AppFonts.nunito,
+                color: AppColors.text.black,
+                fontWeight: FontWeight.bold),
+          ),
+          SizedBox(
+            width: 10,
+          ),
+          Spacer(),
+          IconButton(
+            onPressed: (controller.currentDiveDateIndex != 0)
+                ? () {
+                    if (controller.currentDiveDateIndex != 0)
+                      controller.currentDiveDateIndex--;
+                  }
+                : null,
+            icon: Icon(
+              Icons.navigate_before_rounded,
+              color: (controller.currentDiveDateIndex != 0)
+                  ? Colors.black87
+                  : Colors.grey,
+            ),
+          ),
+          IconButton(
+            onPressed: (controller.currentDiveDateIndex !=
+                    controller.diveDates.length - 1)
+                ? () {
+                    if (controller.currentDiveDateIndex !=
+                        controller.diveDates.length - 1)
+                      controller.currentDiveDateIndex++;
+                  }
+                : null,
+            icon: Icon(
+              Icons.navigate_next_rounded,
+              color: (controller.currentDiveDateIndex !=
+                      controller.diveDates.length - 1)
+                  ? Colors.black87
+                  : Colors.grey,
+            ),
+          ),
+        ],
+      );
+    });
+  }
+
+  Widget buildBoatSelector() {
+    return GetBuilder<ChooseBoatController>(builder: (controller) {
+      if (controller.showLoading) return SizedBox();
+      return Column(
+        children: [
+          buildSeatsSelected(controller.currentDiveDateIndex),
+          SizedBox(height: 40),
+          Column(
+            children: [
+              if (controller.boatsList.isEmpty)
+                SizedBox(
+                  child: Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.black,
+                    ),
+                  ),
+                  height: 300,
+                ),
+              if (controller.boatsList.isNotEmpty)
+                ...List.generate(
+                    controller.boatsList.length,
+                    (index) => SeatsAvailabilityExpansionPanel(
+                          boat: controller.boatsList[index],
+                          fixedSeats: controller.fixedSeatCount[
+                              controller.currentDiveDateIndex][index],
+                          selectedSeats: controller.selectedSeatsCount[
+                              controller.currentDiveDateIndex][index],
+                          selectedEmployees: controller.selectedEmployees[
+                              controller.currentDiveDateIndex][index],
+                          maxSeats: controller.boatsList[index].capacity,
+                          enableSelection: controller.selectedSeatsCount[
+                                      controller.currentDiveDateIndex]
+                                  .reduce((v, e) => v + e) !=
+                              controller.requiredCount[
+                                  controller.currentDiveDateIndex],
+                          onSeatSelected: (bool isSelected) {
+                            if (isSelected) {
+                              controller.selectedSeatsCount[
+                                  controller.currentDiveDateIndex][index]++;
+                            } else {
+                              controller.selectedSeatsCount[
+                                  controller.currentDiveDateIndex][index]--;
+                            }
+                            controller.update();
+                          },
+                          onEmployeesModified: (List<Employee> employees) {
+                            controller.selectedEmployees[controller
+                                .currentDiveDateIndex][index] = employees;
+                            controller.update();
+                          },
+                        )),
+            ],
+          ),
+        ],
+      );
+    });
+  }
+
+  Widget buildSeatsSelected(dateIndex) {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0),
       child: Row(
         children: [
-          Text.rich(
-            TextSpan(
-              children: [
-                TextSpan(
-                  text: "$selectedSeatsCount",
-                  style: TextStyle(
+          GetBuilder<ChooseBoatController>(builder: (controller) {
+            return Text.rich(
+              TextSpan(
+                children: [
+                  TextSpan(
+                    text: controller.selectedSeatsCount[dateIndex]
+                        .reduce((v, e) => v + e)
+                        .toString(),
+                    style: TextStyle(
                       fontSize: 30,
                       fontFamily: AppFonts.nunito,
-                      color: AppColors.text.black,
-                      fontWeight: FontWeight.w600),
-                ),
-                TextSpan(
-                  text: '/6',
-                  style: TextStyle(
-                      fontSize: 10,
-                      fontFamily: AppFonts.nunito,
-                      color: AppColors.text.black,
-                      fontWeight: FontWeight.w600),
-                ),
-              ],
-            ),
-          ),
+                      color: controller.selectedSeatsCount[dateIndex]
+                                  .reduce((v, e) => v + e) !=
+                              controller.requiredCount[dateIndex]
+                          ? Colors.red
+                          : Colors.lightGreenAccent.shade700,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  TextSpan(
+                    text: '/${controller.requiredCount[dateIndex]}',
+                    style: TextStyle(
+                        fontSize: 10,
+                        fontFamily: AppFonts.nunito,
+                        color: AppColors.text.black,
+                        fontWeight: FontWeight.w600),
+                  ),
+                ],
+              ),
+            );
+          }),
           SizedBox(width: 10),
           Container(
             alignment: Alignment.bottomCenter,
@@ -154,7 +202,7 @@ class ChooseBoatPage extends StatelessWidget {
             child: Text(
               "Selected",
               style: TextStyle(
-                color: AppColors.text.skyBlue,
+                color: AppColors.text.black,
                 fontSize: 10,
               ),
             ),

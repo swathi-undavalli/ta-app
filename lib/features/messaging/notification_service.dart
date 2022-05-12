@@ -33,7 +33,7 @@ class  LocalNotificationService {
         notificationDetails,
       );
     } catch (e) {
-      print(e);
+      //print(e);
     }
   }
 }

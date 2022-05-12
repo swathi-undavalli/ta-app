@@ -240,8 +240,8 @@ class CustomerRegistrationScreen extends StatelessWidget {
         onChanged: (phone) {
           controller.phoneNumberTED.text = phone.number;
           controller.countryCodeTED.text = phone.countryCode;
-          print(phone.number);
-          print(phone.countryCode);
+          //print(phone.number);
+          //print(phone.countryCode);
         },
       );
     });
@@ -646,8 +646,8 @@ class CustomerRegistrationScreen extends StatelessWidget {
 //         onChanged: (phone) {
 //           controller.phoneNumberTED.text = phone.number;
 //           controller.countryCodeTED.text = phone.countryCode;
-//           print(phone.number);
-//           print(phone.countryCode);
+//           //print(phone.number);
+//           //print(phone.countryCode);
 //         },
 //       );
 //     });

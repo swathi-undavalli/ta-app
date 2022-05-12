@@ -162,7 +162,7 @@ class AllBookingsScreen extends StatelessWidget {
                 child: GestureDetector(
                   onTap: () {
                     controller.selectedPage = controller.pages[index];
-                    log(controller.selectedPage);
+                    //log(controller.selectedPage);
                   },
                   child: Container(
                     height: 25,

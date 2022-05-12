@@ -38,7 +38,7 @@ class DashBoardScreen extends StatelessWidget {
           FocusScope.of(context).unfocus();
           new TextEditingController().clear();
           FocusNode().requestFocus();
-          log("back pressed");
+          //log("back pressed");
           DateTime now = DateTime.now();
           if (currentBackPressTime == null ||
               now.difference(currentBackPressTime) > Duration(seconds: 2)) {

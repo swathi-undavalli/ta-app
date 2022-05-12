@@ -7,8 +7,7 @@ class AllEmployeesLogic {
 
   void updateSearchList(String text) {
     controller.suggestionsList = [];
-    print(
-        controller.allEmployeesList[controller.allEmployeesList.length - 1].id);
+    //print(controller.allEmployeesList[controller.allEmployeesList.length - 1].id);
     controller.allEmployeesList.forEach((employee) {
       if (employee.firstName.toLowerCase().contains(text.toLowerCase()) ||
           employee.lastName.toLowerCase().contains(text.toLowerCase()) ||
@@ -20,15 +19,15 @@ class AllEmployeesLogic {
   }
 
   // count() async {
-  //   log("Finiding count");
+  //   //log("Finiding count");
   //   var rawData = await FirebaseFirestore.instance
   //       .collection("counter")
   //       .doc("employee")
   //       .get();
   //   var data = rawData.data();
-  //   log(rawData.data().toString());
+  //   //log(rawData.data().toString());
   //   // controller.data = data["count"];
-  //   // print("===================${controller.data}");
+  //   // //print("===================${controller.data}");
   // }
 
 }

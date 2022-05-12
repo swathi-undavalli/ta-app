@@ -25,7 +25,7 @@ class HomePage extends StatelessWidget {
         futures.add(attendanceWidgetLogic.reloadData());
         futures.add(attendanceReportWidgetLogic.reloadData());
 
-        await Future.wait(futures).whenComplete(() => log("all done"));
+        await Future.wait(futures);
       },
       child: Scaffold(
         backgroundColor: AppColors.background.lightBlue,
@@ -66,7 +66,7 @@ class HomePage extends StatelessWidget {
                   // ElevatedButton(
                   //   onPressed: () async {
                   //     for (int i = 109; i < 520; i++) {
-                  //       log(i.toString());
+                  //       //log(i.toString());
                   //       // if (i == 111) break;
                   //       var data = await FirebaseFirestore.instance
                   //           .collection("bookings")
@@ -82,7 +82,7 @@ class HomePage extends StatelessWidget {
                   //           .collection("bookings")
                   //           .doc(booking.id)
                   //           .set(booking.toMap())
-                  //           .whenComplete(() => log("done"));
+                  //           .whenComplete(() => //log("done"));
                   //     }
                   //   },
                   //   child: Text("Do"),
@@ -90,7 +90,7 @@ class HomePage extends StatelessWidget {
 
                   // ElevatedButton(
                   //   onPressed: () async {
-                  //     log("clicked");
+                  //     //log("clicked");
                   //     for (int i = 47; i < 54; i++) {
                   //       var accessLevels = AccessLevels(
                   //         viewBookings: true,
@@ -130,20 +130,20 @@ class HomePage extends StatelessWidget {
                   // ),
                   // ElevatedButton(
                   //     onPressed: () async {
-                  //       log("Finiding count");
+                  //       //log("Finiding count");
                   //       var rawData = await FirebaseFirestore.instance
                   //           .collection("counter")
                   //           .doc("employee")
                   //           .get();
                   //       var data = rawData.data();
-                  //       log(rawData.data().toString());
+                  //       //log(rawData.data().toString());
                   //     },
                   //     child: Text("DO"))
 
                   // ElevatedButton(
                   //   onPressed: () async {
                   //     var token = await FirebaseMessaging.instance.getToken();
-                  //     print(token);
+                  //     //print(token);
                   //   },
                   //   child: Text("DO"),
                   // ),
@@ -211,22 +211,22 @@ getString(List<String> sublist) {
 //
 //   var dio = Dio();
 //   try {
-//     print("started");
+//     //print("started");
 //     FormData formData = new FormData.fromMap(body);
 //     var response = await dio.post(api, data: formData);
 //     var data = jsonDecode(response.data);
-//     print(response.data);
-//     print(data[0]);
+//     //print(response.data);
+//     //print(data[0]);
 //     return data[0];
-//     print("ended");
+//     //print("ended");
 //   } catch (e) {
-//     print(e);
+//     //print(e);
 //   }
 //   return "no data found";
 // }
 //
 // Future<File> showPDFh() async {
-//   print("getting url");
+//   //print("getting url");
 //   String link = await getPDFlink(
 //     email: "kamesh.wb@gmail.com",
 //     activity: ["Open Water"],
@@ -251,9 +251,9 @@ getString(List<String> sublist) {
 //       documentDirectory.path, '${DateTime.now().micr
 //   osecondsSinceEpoch}.pdf'));
 //
-//   print(1);
+//   //print(1);
 //   file.writeAsBytesSync(response.bodyBytes);
-//   print(2);
+//   //print(2);
 //   await Pspdfkit.present(file.path);
 //   return file;
 // }

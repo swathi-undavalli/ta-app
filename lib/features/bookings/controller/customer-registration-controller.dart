@@ -29,11 +29,11 @@ class CustomerRegistrationLogic {
         showTitleActions: true,
         minTime: DateTime.now().subtract(Duration(days: 36500)),
         maxTime: DateTime.now(), onChanged: (date) {
-      print('change $date');
+      //print('change $date');
       dob = date;
       controller.dateOfBirthTED.text = DateFormat("d MMM yyyy").format(date);
     }, onConfirm: (date) {
-      print('confirm $date');
+      //print('confirm $date');
       dob = date;
       controller.dateOfBirthTED.text = DateFormat("d MMM yyyy").format(date);
     },
@@ -163,7 +163,7 @@ class CustomerRegistrationLogic {
   onChooseFilePressed() async {
     iDProofPicker.showBottomSheet();
     iDProofPicker.onImagePicked = () async {
-      print("=============picked");
+      //print("=============picked");
       controller.iDProofPicked = true;
     };
   }
@@ -302,11 +302,11 @@ class CustomerRegistrationLogic {
         showTitleActions: true,
         minTime: DateTime.now().subtract(Duration(days: 36500)),
         maxTime: DateTime.now(), onChanged: (date) {
-      print('change $date');
+      //print('change $date');
       dob = date;
       controller.dateOfBirthTED.text = DateFormat("d MMM yyyy").format(date);
     }, onConfirm: (date) {
-      print('confirm $date');
+      //print('confirm $date');
       dob = date;
       controller.dateOfBirthTED.text = DateFormat("d MMM yyyy").format(date);
     },
@@ -436,7 +436,7 @@ class CustomerRegistrationLogic {
   onChooseFilePressed() async {
     iDProofPicker.showBottomSheet();
     iDProofPicker.onImagePicked = () async {
-      print("=============picked");
+      //print("=============picked");
       controller.iDProofPicked = true;
     };
   }

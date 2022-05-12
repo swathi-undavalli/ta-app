@@ -49,25 +49,25 @@ class PaperWorkLogic {
       "Gender": "Male",
     };
 
-    print(body);
+    //print(body);
 
     var dio = d.Dio();
     try {
-      print("started");
+      //print("started");
       d.FormData formData = new d.FormData.fromMap(body);
       var response = await dio.post(api, data: formData);
       var data = jsonDecode(response.data);
-      print(data[0]);
+      //print(data[0]);
       return data[0];
-      print("ended");
+      //print("ended");
     } catch (e) {
-      print(e);
+      //print(e);
     }
     return "no data found";
   }
 
   Future<File> _fileFromUrl(Uri uri) async {
-    print("_fileFromUrl");
+    //print("_fileFromUrl");
 
     var response = await http.get(uri);
 
@@ -76,14 +76,14 @@ class PaperWorkLogic {
     var file = File(join(documentDirectory.path,
         '${DateTime.now().microsecondsSinceEpoch}.pdf'));
 
-    print(1);
+    //print(1);
     file.writeAsBytesSync(response.bodyBytes);
-    print(2);
+    //print(2);
     return file;
   }
 
   uploadPDF() async {
-    print("uploadPDF");
+    //print("uploadPDF");
     await FirebaseApi.uploadPDF(
         controller.Pdf, registration.controller.customer.email, (link) {
       // if (booking.controller.bookingModel.paperWork == null)
@@ -93,7 +93,7 @@ class PaperWorkLogic {
   }
 
   downloadPDF() async {
-    print("downloadPDF");
+    //print("downloadPDF");
     controller.pdfDownloaded = false;
     String link = await getPDFlink();
     controller.Pdf = await _fileFromUrl(Uri.parse(link));
@@ -111,7 +111,7 @@ class PaperWorkLogic {
   }
 
   onCheckFABPressed() async {
-    print("onCheckFABPressed");
+    //print("onCheckFABPressed");
     createCustomer();
     Get.defaultDialog(
       contentPadding: EdgeInsets.only(left: 20, right: 20),
@@ -155,7 +155,7 @@ class PaperWorkLogic {
   }
 
   createCustomer() async {
-    print("createCustomer");
+    //print("createCustomer");
     controller.customerCreated = false;
     await uploadPDF();
     await FirebaseFirestore.instance
@@ -248,25 +248,25 @@ class PaperWorkController extends GetxController {
       "Phone": customer.phoneNumber,
       "Gender": customer.gender,
     };
-    print(body);
+    //print(body);
 
     var dio = d.Dio();
     try {
-      print("started");
+      //print("started");
       d.FormData formData = new d.FormData.fromMap(body);
       var response = await dio.post(api, data: formData);
       var data = jsonDecode(response.data);
-      print(data[0]);
+      //print(data[0]);
       return data[0];
-      print("ended");
+      //print("ended");
     } catch (e) {
-      print(e);
+      //print(e);
     }
     return "no data found";
   }
 
   Future<File> _fileFromUrl(Uri uri) async {
-    print("_fileFromUrl");
+    //print("_fileFromUrl");
 
     var response = await http.get(uri);
 
@@ -275,14 +275,14 @@ class PaperWorkController extends GetxController {
     var file = File(join(documentDirectory.path,
         '${DateTime.now().microsecondsSinceEpoch}.pdf'));
 
-    print(1);
+    //print(1);
     file.writeAsBytesSync(response.bodyBytes);
-    print(2);
+    //print(2);
     return file;
   }
 
   uploadPDF() async {
-    print("uploadPDF");
+    //print("uploadPDF");
     await FirebaseApi.uploadPDF(
         controller.Pdf, registration.controller.customer.email, (link) {
       // if (booking.controller.bookingModel.paperWork == null)
@@ -292,7 +292,7 @@ class PaperWorkController extends GetxController {
   }
 
   downloadPDF() async {
-    print("downloadPDF");
+    //print("downloadPDF");
     controller.pdfDownloaded = false;
     String link = await getPDFlink();
     controller.Pdf = await _fileFromUrl(Uri.parse(link));
@@ -310,7 +310,7 @@ class PaperWorkController extends GetxController {
   }
 
   onCheckFABPressed() async {
-    print("onCheckFABPressed");
+    //print("onCheckFABPressed");
     createCustomer();
     Get.defaultDialog(
       contentPadding: EdgeInsets.only(left: 20, right: 20),
@@ -354,7 +354,7 @@ class PaperWorkController extends GetxController {
   }
 
   createCustomer() async {
-    print("createCustomer");
+    //print("createCustomer");
     controller.customerCreated = false;
     await uploadPDF();
     await FirebaseFirestore.instance

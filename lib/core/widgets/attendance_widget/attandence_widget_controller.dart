@@ -20,11 +20,11 @@ class AttendanceWidgetLogic {
   }
 
   getAttendanceData() async {
-    print("getAttendanceData");
+    //print("getAttendanceData");
     controller.showCheckIn = false;
     controller.showCheckOut = false;
     await AttendanceRepo.synchronize();
-    print(AttendanceRepo.attendance.toMap());
+    //print(AttendanceRepo.attendance.toMap());
     if (AttendanceRepo.attendance.checkInLocation == null)
       controller.showCheckIn = true;
     else if (AttendanceRepo.attendance.checkOutLocation == null)
@@ -32,10 +32,10 @@ class AttendanceWidgetLogic {
   }
 
   getLocation() async {
-    print("getLocation....");
+    //print("getLocation....");
     controller.currentLocation = "Fetching.....";
     controller.currentLocation = await AttendanceRepo.getUserPosition();
-    print(DateTime.now());
+    //print(DateTime.now());
   }
 
   startTimer() async {
@@ -61,7 +61,7 @@ class AttendanceWidgetLogic {
         now.minute,
       );
 
-      print(present.difference(shift).inMinutes);
+      //print(present.difference(shift).inMinutes);
 
       if (present.difference(shift).inMinutes > 10) {
         Get.defaultDialog(

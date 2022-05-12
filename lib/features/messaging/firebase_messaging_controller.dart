@@ -15,10 +15,10 @@ class FirebaseMessagingLogic {
 
   getToken() async {
     // firebaseMessaging.getToken().then((deviceToken) {
-    //   print("Device Token : $deviceToken");
+    //   //print("Device Token : $deviceToken");
     // });
     var deviceToken = await FirebaseMessaging.instance.getToken();
-    log("DeviceToken : $deviceToken");
+    //log("DeviceToken : $deviceToken");
   }
 
   configureFirebaseListeners() {
@@ -26,15 +26,15 @@ class FirebaseMessagingLogic {
     ///completely terminated
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
-        log('onLaunch data: ${message}');
+        //log('onLaunch data: ${message}');
       }
     });
 
     ///app is open
     FirebaseMessaging.onMessage.listen((message) {
       if (message.notification != null) {
-        log("Hello mawa notification ochindi");
-        log("onMessage data: ${message.notification.body}");
+        //log("Hello mawa notification ochindi");
+        //log("onMessage data: ${message.notification.body}");
       }
       LocalNotificationService.display(message);
     });
@@ -42,7 +42,7 @@ class FirebaseMessagingLogic {
     ///app is in Background
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      print('onMessageOpenedApp data:${message.data}');
+      //print('onMessageOpenedApp data:${message.data}');
     });
   }
 }

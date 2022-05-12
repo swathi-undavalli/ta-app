@@ -295,7 +295,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
         .get();
     if (info.data() != null) {
       Employee employee = Employee.fromMap(info.data());
-      print(info.data());
+      //print(info.data());
       final DateTime date = employee.shiftTiming;
       final DateFormat formatter = DateFormat('HH-mm-ss');
       final String shiftTiming = formatter.format(date);
@@ -592,7 +592,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
 //         .get();
 //     if (info.data() != null) {
 //       Employee employee = Employee.fromMap(info.data());
-//       print(info.data());
+//       //print(info.data());
 //       final DateTime date = employee.shiftTiming;
 //       final DateFormat formatter = DateFormat('HH-mm-ss');
 //       final String shiftTiming = formatter.format(date);

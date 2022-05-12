@@ -277,10 +277,10 @@ class BookingsExpansionPanel extends StatelessWidget {
                               ? Icons.keyboard_arrow_up_rounded
                               : Icons.keyboard_arrow_down_rounded),
                           onPressed: () {
-                            log("tapped");
+                            //log("tapped");
                             controller.isExpanded[i] =
                                 !controller.isExpanded[i];
-                            log(controller.isExpanded.toString());
+                            //log(controller.isExpanded.toString());
                             controller.update();
                           },
                         ),
@@ -701,7 +701,7 @@ class ItemModel {
       return d.substring(0, d.length - 2);
     }
 
-    log(bookingModel.balance.toString());
+    //log(bookingModel.balance.toString());
     return ItemModel(
       phone: bookingModel.pax[0]["countryCode"] +
           bookingModel.pax[0]["phoneNumber"],

@@ -67,7 +67,7 @@ class FileUploader {
   // }
 
   // static Future<String> uploadIDProofs(Uint8List image) async {
-  //   log("started.....");
+  //   //log("started.....");
   //   var request = http.MultipartRequest(
   //     "POST",
   //     Uri.parse("https://staging-api.diversdashboard.com/Kd/api/image_upload"),
@@ -85,7 +85,7 @@ class FileUploader {
   // }
 
   // static Future<String> uploadVideo(Uint8List video) async {
-  //   log("started.....");
+  //   //log("started.....");
   //   var request = http.MultipartRequest(
   //     "POST",
   //     Uri.parse("https://staging-api.diversdashboard.com/Kd/api/video_upload"),
@@ -95,8 +95,8 @@ class FileUploader {
   //   request.files.add(picture);
   //   var response = await request.send();
   //   var responseData = await response.stream.toBytes();
-  //   print("------------------------");
-  //   print(responseData);
+  //   //print("------------------------");
+  //   //print(responseData);
   //   Map<String, dynamic> result =
   //   json.decode(String.fromCharCodes(responseData));
   //   return result["file_name"];
@@ -127,13 +127,13 @@ class FileUploader {
   //     Utils.showToast(error.toString());
   //   })
   //       .catchError((error) {
-  //     log(error.toString());
+  //     //log(error.toString());
   //     Utils.showToast(error.toString());
   //   });
   // }
 
   // static uploadPDF(Uint8List mediaFile) async {
-  //   log("started.....");
+  //   //log("started.....");
   //   var request = http.MultipartRequest(
   //     "POST",
   //     Uri.parse(
@@ -144,8 +144,8 @@ class FileUploader {
   //   request.files.add(picture);
   //   var response = await request.send();
   //   var responseData = await response.stream.toBytes();
-  //   print("------------------------");
-  //   print(responseData);
+  //   //print("------------------------");
+  //   //print(responseData);
   //   Map<String, dynamic> result =
   //   json.decode(String.fromCharCodes(responseData));
   //   return result["file_name"];

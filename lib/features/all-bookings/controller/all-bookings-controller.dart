@@ -12,23 +12,23 @@ class AllBookingsLogic {
   }
   AllBookingsController controller = Get.put(AllBookingsController());
   getBookings() async {
-    print("getBookings");
+    //print("getBookings");
     controller.showLoading = true;
     controller.bookings = [];
     List<ItemModel> bookingList = [];
 
     var data = await FirebaseFirestore.instance.collection("bookings").get();
-    print(data.docs.length);
+    //print(data.docs.length);
     data.docs.forEach((element) {
-      log(element.data().toString());
+      //log(element.data().toString());
       BookingModel booking = BookingModel.fromMap(element.data());
       var i = ItemModel.fromBookings(booking);
       bookingList.add(i);
-      log(bookingList.toString());
+      //log(bookingList.toString());
     });
-    print("ended=========");
+    //print("ended=========");
     controller.bookings = bookingList;
-    print(controller.bookings);
+    //print(controller.bookings);
     controller.update();
     controller.showLoading = false;
   }
@@ -36,7 +36,7 @@ class AllBookingsLogic {
 
   void updateSearchListByIDorName(String text) {
     controller.suggestionsList = [];
-    // print(
+    // //print(
     //     controller.bookings[controller.bookings.length - 1].bookingID);
     controller.bookings.forEach((booking) {
       if (booking.bookingID.contains(text) || booking.name.toLowerCase().contains(text.toLowerCase())) {
@@ -54,7 +54,7 @@ class AllBookingsLogic {
   //       .collection("counter")
   //       .doc("booking")
   //       .get();
-  //   // log("==========" + data["count"].toString());
+  //   // //log("==========" + data["count"].toString());
   //   Map<String, dynamic> count = data.data();
   //   var totalCount = count["count"].toString();
   //   // var myCount = int.parse(totalCount) / 10;
@@ -64,7 +64,7 @@ class AllBookingsLogic {
   //   //   controller.pages.add(fact.toString());
   //   //   fact = 1;
   //   // }
-  //   log(controller.pages.toString());
+  //   //log(controller.pages.toString());
   //   controller.bookingCount = int.parse(totalCount);
   // }
 

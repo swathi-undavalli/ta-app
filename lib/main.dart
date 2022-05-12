@@ -46,7 +46,7 @@ import 'features/employees/presentation/screens/employee-profile-screen.dart';
 import 'features/login/presentation/screens/login-page.dart';
 
 Future<void> backgroundHandler(RemoteMessage message) async {
-  print(message.data);
+  //print(message.data);
 }
 
 void main() async {
@@ -58,22 +58,22 @@ void main() async {
   ///completely terminated
   FirebaseMessaging.instance.getInitialMessage().then((message) {
     if (message != null) {
-      log('onLaunch data: ${message}');
+      //log('onLaunch data: ${message}');
     }
   });
 
   ///app is open
   FirebaseMessaging.onMessage.listen((message) {
     if (message.notification != null) {
-      log("Hello mawa notification ochindi");
-      log("onMessage data: ${message.notification.body}");
+      //log("Hello mawa notification ochindi");
+      //log("onMessage data: ${message.notification.body}");
     }
     LocalNotificationService.display(message);
   });
 
   ///app is in Background
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
-    print('onMessageOpenedApp data:${message.data}');
+    //print('onMessageOpenedApp data:${message.data}');
   });
 
   await GetStorage.init();
@@ -92,7 +92,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    print(FirebaseAuth.instance.currentUser == null);
+    //print(FirebaseAuth.instance.currentUser == null);
     Get.put(DashBoardScreenController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,

@@ -11,10 +11,10 @@
 //
 //   /// Used to initiate DataPersistence and updates the HomeLogicController [showCheckIn & showCheckOut] with recent values
 //   static initiateDataPersistence() async {
-//     print("initiateDataPersistence");
+//     //print("initiateDataPersistence");
 //     await GetStorage.init();
 //     var attendance = _getStorage.read(_attendanceKey);
-//     print("=============$attendance");
+//     //print("=============$attendance");
 //     if (attendance == null) {
 //       _attendancePersistence = AttendancePersistenceModel(
 //           lastUpdated: DateTime.now(), showCheckIn: true, showCheckOut: false);
@@ -22,7 +22,7 @@
 //     } else {
 //       _attendancePersistence = AttendancePersistenceModel.fromJson(attendance);
 //     }
-//     print(_attendancePersistence.toJson());
+//     //print(_attendancePersistence.toJson());
 //   }
 //
 //   /// Used to getAttendance from DataPersistence and updates the HomeLogicController [showCheckIn & showCheckOut].

@@ -271,7 +271,7 @@ class EditBookingNewScreen extends StatelessWidget {
                                       .indexOf(e);
                                   controller.bookingModel.theoryDate[index] =
                                       selectedTheoryDate;
-                                  print(controller.bookingModel.theoryDate);
+                                  //print(controller.bookingModel.theoryDate);
                                   controller.update();
                                   Get.back();
                                 } else {
@@ -357,7 +357,7 @@ class EditBookingNewScreen extends StatelessWidget {
                                       .indexOf(e);
                                   controller.bookingModel.poolDate[index] =
                                       selectedPoolDate;
-                                  print(controller.bookingModel.poolDate);
+                                  //print(controller.bookingModel.poolDate);
                                   controller.update();
                                   Get.back();
                                 } else {
@@ -443,7 +443,7 @@ class EditBookingNewScreen extends StatelessWidget {
                                       .indexOf(e);
                                   controller.bookingModel.diveDate[index] =
                                       selectedDiveDate;
-                                  print(controller.bookingModel.diveDate);
+                                  //print(controller.bookingModel.diveDate);
                                   controller.update();
                                   Get.back();
                                 } else {
@@ -643,7 +643,7 @@ class EditBookingNewScreen extends StatelessWidget {
                     isExpanded: true,
                     value: controller.bookingModel.activity[0],
                     onChanged: (activity) {
-                      print(activity.name);
+                      //print(activity.name);
                       controller.bookingModel.activity[0] = activity;
                       controller.priceTED.text = activity.price.toString();
                       controller.bookingModel.price = activity.price * 1.0;

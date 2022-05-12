@@ -32,7 +32,7 @@ class BookingsCalenderWidget extends StatelessWidget {
     this.calenderType,
     @required this.autoScrollController,
   }) {
-    print("new instance");
+    //print("new instance");
     if (startDate == null) startDate = DateTime.now();
     startDate = startDate.subtract(Duration(days: 1));
     logic.controller.startDate = startDate;
@@ -41,11 +41,11 @@ class BookingsCalenderWidget extends StatelessWidget {
     logic.controller.calenderType = calenderType;
     logic.getDates();
     if (showDetails) {
-      print("1");
+      //print("1");
       EmployeeAccess.run(
           function: autoCenterDaySelector, access: AccessRights.viewBookings);
     } else {
-      print("2");
+      //print("2");
       EmployeeAccess.run(
           function: scrollToSelectedDate, access: AccessRights.viewBookings);
     }
@@ -68,7 +68,7 @@ class BookingsCalenderWidget extends StatelessWidget {
     await Future.delayed(Duration(microseconds: 500));
     int index = startDate.difference(logic.controller.selectedDate).inDays;
     // int index = startDate;
-    log("index === ${index.abs()}");
+    //log("index === ${index.abs()}");
     scrollToIndex(index.abs());
   }
 
@@ -292,7 +292,7 @@ class BookingsCalenderWidget extends StatelessWidget {
 
   Widget buildBookingsList() {
     return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
-      print(controller.bookings);
+      //print(controller.bookings);
       List<ItemModel> expansionList = [];
       if (controller.selectedType == null)
         expansionList = controller.expansionItemModels;
@@ -387,7 +387,7 @@ class BookingsCalenderWidget extends StatelessWidget {
             showToast("Invalid Date");
           } else {
             controller.selectedDate = date;
-            print("Selected Date : ${controller.selectedDate}");
+            //print("Selected Date : ${controller.selectedDate}");
             logic.filterBookingsList();
             onDateTimeSelected(controller.selectedDate);
           }
@@ -490,7 +490,7 @@ class BookingsCalenderWidget extends StatelessWidget {
                   padding: const EdgeInsets.all(8.0),
                   child: GestureDetector(
                     onTap: () {
-                      print("======Started");
+                      //print("======Started");
                       logic.controller.lastSelectedIndex = index;
                       logic.onDateSelected(index);
                       scrollToIndex(index);
@@ -553,9 +553,9 @@ class BookingsCalenderWidget extends StatelessWidget {
       allBookingsList.addAll(booking.theoryDate);
       allBookingsList.forEach((bookingDate) {
         if (isSameMinute(date, bookingDate)) {
-          print("++++++++++++++++++++:)");
-          print(booking.id);
-          print(booking.noOfPersons);
+          //print("++++++++++++++++++++:)");
+          //print(booking.id);
+          //print(booking.noOfPersons);
           totalBookings += booking.noOfPersons;
           show = true;
         }
@@ -603,7 +603,7 @@ class BookingsCalenderWidget extends StatelessWidget {
     int totalPax = 0;
 
     for (BookingModel booking in controller.bookings) {
-      print("=====================hell");
+      //print("=====================hell");
       var list = [];
       if (booking.diveDate != null) {
         list.addAll(booking.diveDate);
@@ -617,13 +617,13 @@ class BookingsCalenderWidget extends StatelessWidget {
 
       for (DateTime date in list) {
         if (isSameHour(date, controller.selectedDate)) {
-          print(booking.toMap());
+          //print(booking.toMap());
         }
       }
     }
 
     for (DateTime bookingTime in logic.controller.bookingTimings) {
-      print("=====================hell");
+      //print("=====================hell");
       if (controller.isDiveSession) {
         if (bookingTime.hour == date.hour &&
             bookingTime.day == date.day &&

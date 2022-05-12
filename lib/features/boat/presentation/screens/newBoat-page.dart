@@ -145,9 +145,9 @@ class NewBoatPage extends StatelessWidget {
             controller.countryCodeTED.text = phone.countryCode;
             controller.phoneTED.text = phone.number;
             controller.isoCode = phone.countryISOCode;
-            print(phone.number);
-            print(phone.countryCode);
-            print(phone.countryISOCode);
+            //print(phone.number);
+            //print(phone.countryCode);
+            //print(phone.countryISOCode);
           },
         ),
       );

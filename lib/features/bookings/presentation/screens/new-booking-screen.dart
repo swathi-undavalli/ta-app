@@ -159,8 +159,8 @@ class NewBookingScreen extends StatelessWidget {
   //       try {
   //         logic.getPrice();
   //       } catch (e) {
-  //         print("error");
-  //         print(e);
+  //         //print("error");
+  //         //print(e);
   //       }
   //     },
   //     required: false,
@@ -426,7 +426,7 @@ class NewBookingScreen extends StatelessWidget {
               controller.update();
             },
             validator: (firstName) {
-              print(firstName);
+              //print(firstName);
               return null;
               // return Validator.validateName(firstName);
             },

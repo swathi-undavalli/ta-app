@@ -63,10 +63,10 @@
 // //         imagefiles = pickedfiles;
 // //         setState(() {});
 // //       } else {
-// //         print("No image is selected.");
+// //         //print("No image is selected.");
 // //       }
 // //     } catch (e) {
-// //       print("error while picking file.");
+// //       //print("error while picking file.");
 // //     }
 // //   }
 // //
@@ -237,10 +237,10 @@ class _D2State extends State<D2> {
           ),
         ],
         onStoryShow: (s) {
-          print("Showing a story");
+          //print("Showing a story");
         },
         onComplete: () {
-          print("Completed a cycle");
+          //print("Completed a cycle");
         },
         progressPosition: ProgressPosition.top,
         repeat: true,

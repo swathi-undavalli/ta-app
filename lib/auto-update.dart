@@ -142,48 +142,48 @@ class AutoUpdateLogic {
   //     });
   //     // ignore: avoid_catches_without_on_clauses
   //   } catch (e) {
-  //     print('Failed to make OTA update. Details: $e');
+  //     //print('Failed to make OTA update. Details: $e');
   //   }
   // }
   //
   // try2() async {
-  //   log("loading");
+  //   //log("loading");
   //   final byteData =
   //       await rootBundle.load('images/assets/flutter_hello_world.apk');
-  //   log("1");
+  //   //log("1");
   //   final buffer = byteData.buffer;
-  //   log("2");
+  //   //log("2");
   //   Directory tempDir = await getTemporaryDirectory();
   //   String tempPath = tempDir.path;
-  //   log("3");
+  //   //log("3");
   //   var filePath = tempPath + '/app.apk';
-  //   log("writing");
+  //   //log("writing");
   //   await File(filePath).writeAsBytes(
   //       buffer.asUint8List(byteData.offsetInBytes, byteData.lengthInBytes));
-  //   log("installing");
+  //   //log("installing");
   //   try {
   //     FlutterAppInstaller.installApk(filePath: filePath);
   //   } catch (e) {
-  //     log(e);
+  //     //log(e);
   //   }
   // }
   //
   // @override
   // void checkForUpdate() async {
-  //   log("checking");
+  //   //log("checking");
   //   try {
-  //     log("started");
+  //     //log("started");
   //     final AppUpdateInfo response = await InAppUpdate.checkForUpdate();
   //
-  //     log(response.toString());
+  //     //log(response.toString());
   //     if (response.updateAvailability == 2) {
-  //       log("update available");
+  //       //log("update available");
   //       await InAppUpdate.performImmediateUpdate();
   //     }
-  //     log("done");
+  //     //log("done");
   //   } catch (e) {
-  //     log("Got an error");
-  //     log(e.toString());
+  //     //log("Got an error");
+  //     //log(e.toString());
   //   }
   // }
 }

@@ -100,11 +100,11 @@ class BookDateTime extends StatelessWidget {
                       controller.selectedActivity[0] = activity;
                     controller.priceTED.text = activity.price.toString();
                     controller.bookingModel.price = activity.price * 1.0;
-                    log("S");
+                    //log("S");
                     controller.bookingModel.activity =
                         controller.selectedActivity;
                     logic.controller.update();
-                    log("E");
+                    //log("E");
                   },
                   items: controller.activities.toSet().toList().map((activity) {
                     return DropdownMenuItem(

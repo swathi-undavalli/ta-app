@@ -55,17 +55,17 @@ class WeatherPageModel {
       List<WeatherResponse> weatherRes, TideResponse tideRes, DateTime date) {
     double waveH = 0, waveS = 0, gusts = 0, temp = 0, press = 0, tot = 0;
     weatherRes.forEach((element) {
-      print("====");
-      print(date.day);
-      // print(DateTime.fromMillisecondsSinceEpoch(element.timestamp));
-      // print(DateTime.fromMicrosecondsSinceEpoch(element.timestamp));
-      print(DateTime.fromMillisecondsSinceEpoch(element.localTimestamp * 1000));
-      // print(DateTime.fromMillisecondsSinceEpoch(element.issueTimestamp));
-      // print(DateTime.fromMicrosecondsSinceEpoch(element.issueTimestamp));
-      print("====");
+      //print("====");
+      //print(date.day);
+      // //print(DateTime.fromMillisecondsSinceEpoch(element.timestamp));
+      // //print(DateTime.fromMicrosecondsSinceEpoch(element.timestamp));
+      //print(DateTime.fromMillisecondsSinceEpoch(element.localTimestamp * 1000));
+      // //print(DateTime.fromMillisecondsSinceEpoch(element.issueTimestamp));
+      // //print(DateTime.fromMicrosecondsSinceEpoch(element.issueTimestamp));
+      //print("====");
       if (date.day ==
           DateTime.fromMillisecondsSinceEpoch(element.timestamp * 1000).day) {
-        print("Hello");
+        //print("Hello");
         waveH += element.swell.components.combined.height;
         waveS += element.wind.speed;
         gusts += element.wind.gusts;

@@ -99,9 +99,9 @@ class AddAnUser extends StatelessWidget {
                                 phone.countryCode;
                             logic.controller.countryISoCOde =
                                 phone.countryISOCode;
-                            print(phone.number);
-                            print(phone.countryISOCode);
-                            print(phone.countryCode);
+                            //print(phone.number);
+                            //print(phone.countryISOCode);
+                            //print(phone.countryCode);
                           },
                         ),
                         buildSubtitle("Role *"),
@@ -296,9 +296,9 @@ class AddAnUser extends StatelessWidget {
         logic.controller.phoneNumberTED.text = phone.number;
         logic.controller.countryCodeTED.text = phone.countryCode;
         logic.controller.countryISoCOde = phone.countryISOCode;
-        print(phone.number);
-        print(phone.countryISOCode);
-        print(phone.countryCode);
+        //print(phone.number);
+        //print(phone.countryISOCode);
+        //print(phone.countryCode);
       },
     );
   }

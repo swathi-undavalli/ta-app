@@ -42,7 +42,7 @@ class FirebaseApi {
   }
 
   static addNewBooking(BookingModel booking) async {
-    print("addNewBooking");
+    //print("addNewBooking");
 
     DocumentReference counterRef =
         FirebaseFirestore.instance.collection('counter').doc("count");
@@ -76,18 +76,18 @@ class FirebaseApi {
 
     ///convert to seconds:
     int shiftSeconds = (shiftHour * 60 * 60) + (shiftMin * 60) + shiftSec;
-    print(shiftSeconds);
+    //print(shiftSeconds);
 
     int nowSeconds = (nowHour * 60 * 60) + (nowMin * 60) + nowSec;
-    print(nowSeconds);
+    //print(nowSeconds);
 
     int diffInSeconds = shiftSeconds - nowSeconds;
     if (diffInSeconds < 0) {
-      print("Late");
+      //print("Late");
     } else if (diffInSeconds == 0) {
-      print("On Time");
+      //print("On Time");
     } else {
-      print("Early");
+      //print("Early");
     }
     return diffInSeconds;
   }

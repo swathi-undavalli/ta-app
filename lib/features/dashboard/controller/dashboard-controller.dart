@@ -23,10 +23,10 @@ class DashBoardScreenLogic {
         .get();
     counterModel = CounterModel.fromMap(data.data());
     var count = counterModel.employee;
-    print(count);
+    //print(count);
   }
   reloadAfter1Sec() {
-    log("reloadAfter1Sec");
+    //log("reloadAfter1Sec");
     Future.delayed(Duration(seconds: 1))
         .whenComplete(() => controller.update());
   }

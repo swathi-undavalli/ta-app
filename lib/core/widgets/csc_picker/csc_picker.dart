@@ -581,11 +581,11 @@ class _CSCPickerState extends State<CSCPicker> {
     // _selectedState = widget.statePlaceHolder;
     // _selectedCountry = widget.countryPlaceHolder;
     getCounty().then((value) {
-      print("Getting Country Data==================================:)");
-      print(_selectedCountry);
-      print(_selectedState);
-      print(_selectedCity);
-      print(_country);
+      //print("Getting Country Data==================================:)");
+      //print(_selectedCountry);
+      //print(_selectedState);
+      //print(_selectedCity);
+      //print(_country);
       if (widget.countryPlaceHolder != null) {
         _onSelectedCountry(widget.countryPlaceHolder);
         _selectedCountry = widget.countryPlaceHolder;
@@ -594,8 +594,8 @@ class _CSCPickerState extends State<CSCPicker> {
         setState(() {
           _states = _states;
         });
-        print(_states);
-        print('State Data is found');
+        //print(_states);
+        //print('State Data is found');
         if (widget.statePlaceHolder != null){
           _onSelectedState(widget.statePlaceHolder);
           _selectedState = widget.statePlaceHolder;
@@ -604,18 +604,18 @@ class _CSCPickerState extends State<CSCPicker> {
         setState(() {
           _states = _states;
         });
-        print(_states);
+        //print(_states);
         getCity().then((value) {
           setState(() {
             _cities = _cities;
-            print(_cities);
+            //print(_cities);
           });
-          print('City Data is found');
+          //print('City Data is found');
           if (widget.cityPlaceHolder != null)
             _onSelectedCity(widget.cityPlaceHolder);
           setState(() {
             _cities = _cities;
-            print(_cities);
+            //print(_cities);
           });
         });
       });
@@ -628,14 +628,14 @@ class _CSCPickerState extends State<CSCPicker> {
 
   void _setDefaultCountry() {
     if (widget.defaultCountry != null) {
-      print(_country[DefaultCountries[widget.defaultCountry]]);
+      //print(_country[DefaultCountries[widget.defaultCountry]]);
       _onSelectedCountry(_country[DefaultCountries[widget.defaultCountry]]);
     }
   }
 
   ///Read JSON country data from assets
   Future getResponse() async {
-    print("getResponse");
+    //print("getResponse");
     var res = await rootBundle
         .loadString('images/assets/country.json');
     return jsonDecode(res);
@@ -643,7 +643,7 @@ class _CSCPickerState extends State<CSCPicker> {
 
   ///get countries from json response
   Future getCounty() async {
-    print("getCounty");
+    //print("getCounty");
     _country.clear();
     var countries = await getResponse() as List;
     countries.forEach((data) {
@@ -669,9 +669,9 @@ class _CSCPickerState extends State<CSCPicker> {
 
   ///get states from json response
   Future getState() async {
-    print("getState");
+    //print("getState");
     _states.clear();
-    //print(_selectedCountry);
+    ////print(_selectedCountry);
     var response = await getResponse();
     var takeState = widget.flagState == CountryFlag.ENABLE ||
             widget.flagState == CountryFlag.SHOW_IN_DROP_DOWN_ONLY
@@ -692,7 +692,7 @@ class _CSCPickerState extends State<CSCPicker> {
       setState(() {
         var name = f.map((item) => item.name).toList();
         for (var stateName in name) {
-          //print(stateName.toString());
+          ////print(stateName.toString());
           _states.add(stateName.toString());
         }
       });
@@ -706,7 +706,7 @@ class _CSCPickerState extends State<CSCPicker> {
 
   ///get cities from json response
   Future getCity() async {
-    print("getCity");
+    //print("getCity");
     _cities.clear();
     var response = await getResponse();
     var takeCity = widget.flagState == CountryFlag.ENABLE ||
@@ -731,7 +731,7 @@ class _CSCPickerState extends State<CSCPicker> {
         setState(() {
           var citiesName = ci.map((item) => item.name).toList();
           for (var cityName in citiesName) {
-            //print(cityName.toString());
+            ////print(cityName.toString());
             _cities.add(cityName.toString());
           }
         });
@@ -746,7 +746,7 @@ class _CSCPickerState extends State<CSCPicker> {
 
   ///get methods to catch newly selected country state and city and populate state based on country, and city based on state
   void _onSelectedCountry(String value) {
-    print("_onSelectedCountry");
+    //print("_onSelectedCountry");
     if (!mounted) return;
     setState(() {
       if (widget.flagState == CountryFlag.SHOW_IN_DROP_DOWN_ONLY) {
@@ -883,7 +883,7 @@ class _CSCPickerState extends State<CSCPicker> {
 
   ///Country Dropdown Widget
   Widget countryDropdown() {
-    print("countryDropdown");
+    //print("countryDropdown");
     return DropdownWithSearch(
       title: "Country",
       placeHolder: "Search Country",
@@ -903,7 +903,7 @@ class _CSCPickerState extends State<CSCPicker> {
       //selected: _selectedCountry != null ? _selectedCountry : "Country",
       //onChanged: (value) => _onSelectedCountry(value),
       onChanged: (value) {
-        print("countryChanged $value $_selectedCountry");
+        //print("countryChanged $value $_selectedCountry");
         if (value != null) {
           _onSelectedCountry(value);
         }
@@ -931,7 +931,7 @@ class _CSCPickerState extends State<CSCPicker> {
       selected: _selectedState,
       //onChanged: (value) => _onSelectedState(value),
       onChanged: (value) {
-        //print("stateChanged $value $_selectedState");
+        ////print("stateChanged $value $_selectedState");
         value != null
             ? _onSelectedState(value)
             : _onSelectedState(_selectedState);
@@ -959,7 +959,7 @@ class _CSCPickerState extends State<CSCPicker> {
       selected: _selectedCity,
       //onChanged: (value) => _onSelectedCity(value),
       onChanged: (value) {
-        //print("cityChanged $value $_selectedCity");
+        ////print("cityChanged $value $_selectedCity");
         value != null ? _onSelectedCity(value) : _onSelectedCity(_selectedCity);
       },
     );

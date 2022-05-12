@@ -163,11 +163,11 @@ class AddAnUserLogic {
   timePicker(context) {
     DatePicker.showTimePicker(context, showTitleActions: true,
         onChanged: (time) {
-      print('change $time');
+      //print('change $time');
       pickedTime = time;
       controller.shiftTimeTED.text = DateFormat.Hm().format(time);
     }, onConfirm: (newTime) {
-      print('confirm $pickedTime');
+      //print('confirm $pickedTime');
       pickedTime = newTime;
       controller.shiftTimeTED.text = DateFormat.Hm().format(pickedTime);
     },

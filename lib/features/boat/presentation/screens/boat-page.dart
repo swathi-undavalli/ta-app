@@ -20,7 +20,6 @@ import 'package:url_launcher/url_launcher.dart';
 
 class BoatPage extends StatelessWidget {
   final BoatLogic logic = BoatLogic();
-  final DateTime date = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -42,50 +41,81 @@ class BoatPage extends StatelessWidget {
               left: 20.0,
               right: 20,
             ),
-            // child: Column(
-            //   crossAxisAlignment: CrossAxisAlignment.end,
-            //   children: [
-            //     SizedBox(height: 35),
-            //     Text(
-            //       DateFormat('dd-MMM-yyyy').format(date),
-            //       style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-            //     ),
-            //     SizedBox(height: 20),
-            //     ...List.generate(
-            //       logic.controller.boatsList.length,
-            //       (index) {
-            //         print(index);
-            //         return buildExpansion(
-            //             i: index,
-            //             name: logic.controller.boatsList[index].boatName,
-            //             boatsModel: logic.controller.boatsList[index]);
-            //       },
-            //     ).toList(),
-            //     SizedBox(height: 50),
-            //   ],
-            // ),
             child: GetBuilder<BoatController>(builder: (controller) {
+              if (controller.showLoading)
+                return Center(child: CircularProgressIndicator());
+              if (controller.showLoading) return CircularProgressIndicator();
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   SizedBox(height: 50),
-                  Container(
-                    width: 103,
-                    child: Text(
-                      DateFormat('dd-MMM-yyyy').format(date),
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
+                  Row(
+                    children: [
+                      Spacer(),
+                      Container(
+                        width: 103,
+                        child: Text(
+                          DateFormat('dd-MMM-yyyy')
+                              .format(controller.selectedDate),
+                          style: TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w600),
+                        ),
+                      ),
+                      IconButton(
+                        splashRadius: 20,
+                        onPressed: () {
+                          selectDate(context);
+                        },
+                        icon: Icon(
+                          Icons.calendar_today_outlined,
+                          size: 17,
+                        ),
+                      ),
+                    ],
                   ),
                   SizedBox(height: 20),
-                  ...List.generate(controller.boatsCount.boat, (index) {
-                    log(index.toString());
-                    return BoatWidget(index + 1);
-                  }),
-                  // BoatWidget(1),
-                  // BoatWidget(2),
-                  // BoatWidget(3),
-                  // BoatWidget(4),
+                  ...List.generate(
+                    controller.timeList.length,
+                    (i) => Column(
+                      children: [
+                        Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(
+                                left: 200,
+                                right: 10,
+                              ),
+                              child: Text(
+                                DateFormat('hh : mm')
+                                    .format(controller.timeList.reversed.toList()[i]),
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                height: 1,
+                                margin: EdgeInsets.only(left: 0, right: 10),
+                                color: AppColors.text.skyBlue,
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        ...List.generate(controller.boatsList.length, (index) {
+                          return BoatWidget(
+                            boat: controller.boatsList[index],
+                            boatPassengersModel: controller.bookedPassengers.reversed.toList()[i],
+                          );
+                        }),
+                        SizedBox(
+                          height: 50,
+                        ),
+                      ],
+                    ),
+                  ),
                   SizedBox(height: 50),
                 ],
               );
@@ -164,7 +194,7 @@ class BoatPage extends StatelessWidget {
 //                         onPressed: () {
 //                           controller.isExpanded[i] =
 //                               !controller.isExpanded[i];
-//                           log(controller.isExpanded.toString());
+//                           //log(controller.isExpanded.toString());
 //                           controller.update();
 //                         },
 //                       ),
@@ -463,4 +493,35 @@ class BoatPage extends StatelessWidget {
 //   );
 // }
 
+  selectDate(BuildContext context) async {
+    DateTime date = await showDatePicker(
+      context: context,
+      initialDate: logic.controller.selectedDate,
+      firstDate: DateTime(2010),
+      lastDate: DateTime(2090),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: ColorScheme.light(
+              primary: AppColors.text.black,
+              onPrimary: Colors.white, // header text color
+              onSurface: AppColors.text.black, // body text color
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                primary: AppColors.text.black,
+                textStyle:
+                    TextStyle(fontWeight: FontWeight.w500), // button text color
+              ),
+            ),
+          ),
+          child: child,
+        );
+      },
+    );
+
+    if (date != null) {
+      logic.controller.selectedDate = date;
+    }
+  }
 }

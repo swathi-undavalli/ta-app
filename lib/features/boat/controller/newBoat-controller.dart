@@ -29,7 +29,7 @@ class NewBoatLogic {
     else {
       controller.employeeCount = 54;
     }
-    print(controller.employeeCount);
+    //print(controller.employeeCount);
   }
 
   getData() async {
@@ -46,9 +46,9 @@ class NewBoatLogic {
       controller.allEmployeesList.add(e);
     }
     controller.showLoading = false;
-    log(controller.employeeCount.toString());
-    log("snjdnjsdnk ksd kxjs kns ksdf nk ");
-    log(controller.allEmployeesList.length.toString());
+    //log(controller.employeeCount.toString());
+    //log("snjdnjsdnk ksd kxjs kns ksdf nk ");
+    //log(controller.allEmployeesList.length.toString());
   }
 
   onSubmit() async {

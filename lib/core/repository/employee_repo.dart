@@ -19,10 +19,10 @@ class EmployeeRepo {
   }
 
   static getEmployee(String employeeID) async {
-    print("getEmployee");
-    print(employeeID);
+    //print("getEmployee");
+    //print(employeeID);
     var data = await FirebaseApi.getEmployeeFullInformation(employeeID);
-    print(data.data());
+    //print(data.data());
     return Employee.fromMap(data.data());
   }
 
@@ -35,14 +35,14 @@ class EmployeeRepo {
 
   static synchronise() async {
     var notificationStatus = await Permission.notification.status;
-    log(notificationStatus.toString());
-    log("Notification check");
-    print("synchronise EmployeeRepo");
+    //log(notificationStatus.toString());
+    //log("Notification check");
+    //print("synchronise EmployeeRepo");
     if(notificationStatus.isGranted){
       await Permission.notification.request();
     }
     var empID = _getStorage.read(_employeeKey);
-    print(empID);
+    //print(empID);
     if (empID != null) {
       currentEmployee = await getEmployee(empID);
       NotificationSettings settings =
@@ -57,12 +57,12 @@ class EmployeeRepo {
       );
 
       if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-        print('User granted permission');
+        //print('User granted permission');
       } else if (settings.authorizationStatus ==
           AuthorizationStatus.provisional) {
-        print('User granted provisional permission');
+        //print('User granted provisional permission');
       } else {
-        print('User declined or has not accepted permission');
+        //print('User declined or has not accepted permission');
       }
       if (currentEmployee.accessLevels.notifications == true) {
         FirebaseMessaging.instance

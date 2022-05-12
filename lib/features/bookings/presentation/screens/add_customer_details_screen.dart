@@ -161,9 +161,9 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           controller.countryCodeTED.text = phone.countryCode;
           controller.phoneNumberTED.text = phone.number;
           controller.isoCode = phone.countryISOCode;
-          print(phone.number);
-          print(phone.countryCode);
-          print(phone.countryISOCode);
+          //print(phone.number);
+          //print(phone.countryCode);
+          //print(phone.countryISOCode);
         },
       );
     });
@@ -187,7 +187,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
   Widget buildFloatingActionButton() {
     return FloatingActionButton(
       onPressed: () {
-        print("clicked");
+        //print("clicked");
         logic.onCheckPressed();
       },
       elevation: 0,

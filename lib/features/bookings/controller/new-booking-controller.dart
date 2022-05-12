@@ -180,10 +180,10 @@ class NewBookingLogic {
         showTitleActions: true,
         minTime: DateTime.now().subtract(Duration(days: 36500)),
         maxTime: DateTime.now(), onChanged: (date) {
-      print('change $date');
+      // //print('change $date');
       controller.paymentDate = date;
     }, onConfirm: (date) {
-      print('confirm $date');
+      // //print('confirm $date');
       controller.paymentDate = date;
       controller.update();
     },
@@ -233,7 +233,7 @@ class NewBookingLogic {
               calenderType: FilterType.Pool,
               startDate: DateTime.now(),
               onDateTimeSelected: (date) {
-                print("updated");
+                // //print("updated");
                 selectedPoolDate = date;
               },
             ),
@@ -256,7 +256,7 @@ class NewBookingLogic {
                     controller.bookingModel.poolDate.add(selectedPoolDate);
                     controller.bookingModel.poolDate =
                         controller.bookingModel.poolDate.toSet().toList();
-                    print(controller.bookingModel.poolDate);
+                    // //print(controller.bookingModel.poolDate);
                     controller.update();
                     Get.back();
                   },
@@ -321,7 +321,7 @@ class NewBookingLogic {
                     controller.bookingModel.diveDate =
                         controller.bookingModel.diveDate.toSet().toList();
 
-                    print(controller.bookingModel.diveDate);
+                    //print(controller.bookingModel.diveDate);
                     controller.update();
                     Get.back();
                   },
@@ -385,7 +385,7 @@ class NewBookingLogic {
                     controller.bookingModel.theoryDate.add(selectedTheoryDate);
                     controller.bookingModel.theoryDate =
                         controller.bookingModel.theoryDate.toSet().toList();
-                    log(controller.bookingModel.theoryDate.toString());
+                    //log(controller.bookingModel.theoryDate.toString());
                     controller.update();
                     Get.back();
                   },
@@ -400,34 +400,34 @@ class NewBookingLogic {
   }
 
   createBooking() async {
-    print("createBooking");
+    //print("createBooking");
     controller.bookingModel.bookingDate = [];
 
     if (controller.bookingModel.theoryDate != null &&
         controller.bookingModel.theoryDate.isNotEmpty) {
       controller.bookingModel.theoryDate.forEach((element) {
-        print(getStringDate(element));
+        //print(getStringDate(element));
         controller.bookingModel.bookingDate.add(getStringDate(element));
       });
     }
     if (controller.bookingModel.poolDate != null &&
         controller.bookingModel.poolDate.isNotEmpty) {
       controller.bookingModel.poolDate.forEach((element) {
-        print(getStringDate(element));
+        //print(getStringDate(element));
         controller.bookingModel.bookingDate.add(getStringDate(element));
       });
     }
     if (controller.bookingModel.diveDate != null &&
         controller.bookingModel.diveDate.isNotEmpty) {
       controller.bookingModel.diveDate.forEach((element) {
-        print(getStringDate(element));
+        //print(getStringDate(element));
         controller.bookingModel.bookingDate.add(getStringDate(element));
       });
     }
     // controller.bookingModel.payments = [controller.bookingModel.paid];
     controller.bookingId =
         await FirebaseApi.addNewBooking(controller.bookingModel);
-    print(controller.bookingId);
+    //print(controller.bookingId);
     LogModel logModel =
         LogModel(type: LogType.bookingCreated, bookingId: controller.bookingId);
     FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
@@ -439,7 +439,7 @@ class NewBookingLogic {
         controller.bookingModel.poolDate != null ||
         controller.bookingModel.diveDate != null) {
       Get.toNamed(NewBookingScreen.id);
-      log((controller.bookingModel.pax).toString());
+      //log((controller.bookingModel.pax).toString());
       // createBooking();
       // Get.defaultDialog(
       //   title: "",
@@ -495,14 +495,14 @@ class NewBookingLogic {
     if (controller.emailTED.text != "" &&
         controller.fNameTED.text != "" &&
         controller.phoneNumberTED.text != "") {
-      log("started");
-      log(controller.emailTED.text);
-      log(controller.lNameTED.text);
-      log(controller.fNameTED.text);
-      log(controller.paxTED.text);
-      log(controller.phoneNumberTED.text);
-      log(controller.countryCodeTED.text);
-      log(controller.isoCode);
+      //log("started");
+      //log(controller.emailTED.text);
+      //log(controller.lNameTED.text);
+      //log(controller.fNameTED.text);
+      //log(controller.paxTED.text);
+      //log(controller.phoneNumberTED.text);
+      //log(controller.countryCodeTED.text);
+      //log(controller.isoCode);
       controller.bookingModel.pax = [];
       controller.bookingModel.pax.add({
         "email": controller.emailTED.text,
@@ -515,7 +515,7 @@ class NewBookingLogic {
       controller.bookingModel.noOfPersons = getInt(controller.paxTED.text);
       disposeKeyboard();
       Get.toNamed(BookDateTime.id);
-      log((controller.bookingModel.pax).toString());
+      //log((controller.bookingModel.pax).toString());
     } else {
       showToast("Invalid Input");
     }
@@ -616,7 +616,7 @@ class NewBookingController extends GetxController {
   List<ActivityModel> activities = [];
 
   reset() {
-    print("reset data");
+    //print("reset data");
     _bookingId = null;
     _diveLocation = "Pondicherry";
     _discountSwitch = true;
@@ -739,17 +739,17 @@ class NewBookingLogic {
 
   getPrice() {
     var tax;
-    print("getPrice");
+    //print("getPrice");
     controller.cost = 0;
     for (int i = 0; i < controller.selectedActivity.length; i++) {
       controller.selectedActivity.forEach((activity) {
-        print(activity.price);
+        //print(activity.price);
         controller.cost += activity.price;
         tax = controller.cost * 0.18;
         controller.cost = controller.cost + tax;
       });
     }
-    print(controller.cost);
+    //print(controller.cost);
     if (controller.paxTED.text != null) {
       try {
         controller.cost = int.parse(controller.paxTED.text) * controller.cost;
@@ -791,7 +791,7 @@ class NewBookingLogic {
   }
 
   getDiscountInPercent() {
-    print("getDiscountPercent");
+    //print("getDiscountPercent");
     try {
       controller.discount =
           controller.cost * (int.parse(controller.discountTED.text) / 100.0);
@@ -801,7 +801,7 @@ class NewBookingLogic {
   }
 
   getDiscountInINR() {
-    print("getDiscountINPNR");
+    //print("getDiscountINPNR");
     try {
       controller.discount = double.parse(controller.discountTED.text);
     } catch (e) {
@@ -878,10 +878,10 @@ class NewBookingLogic {
         showTitleActions: true,
         minTime: DateTime.now().subtract(Duration(days: 36500)),
         maxTime: DateTime.now(), onChanged: (date) {
-      print('change $date');
+      //print('change $date');
       controller.paymentDate = date;
     }, onConfirm: (date) {
-      print('confirm $date');
+      //print('confirm $date');
       controller.paymentDate = date;
       controller.update();
     },
@@ -905,9 +905,9 @@ class NewBookingLogic {
   }
 
   // onContinuePressedPaymentSuccessfulPage() async {
-  //   // print(controller.bookingModel.toMap());
+  //   // //print(controller.bookingModel.toMap());
   //   // var id = await FirebaseApi.addNewBooking(controller.bookingModel);
-  //   // print(id);
+  //   // //print(id);
   //   Get.toNamed(BookDateTime.id);
   // }
 
@@ -936,7 +936,7 @@ class NewBookingLogic {
               highlightInvalidTime: true,
               startDate: DateTime.now(),
               onDateTimeSelected: (date) {
-                print("updated");
+                //print("updated");
                 selectedPoolDate = date;
               },
             ),
@@ -955,7 +955,7 @@ class NewBookingLogic {
                   textColor: AppColors.text.white,
                   onTap: () {
                     controller.bookingModel.poolDate = selectedPoolDate;
-                    print(controller.bookingModel.poolDate);
+                    //print(controller.bookingModel.poolDate);
                     controller.update();
                     Get.back();
                   },
@@ -1013,7 +1013,7 @@ class NewBookingLogic {
                   textColor: AppColors.text.white,
                   onTap: () {
                     controller.bookingModel.diveDate = selectedDiveDate;
-                    print(controller.bookingModel.diveDate);
+                    //print(controller.bookingModel.diveDate);
                     controller.update();
                     Get.back();
                   },
@@ -1071,7 +1071,7 @@ class NewBookingLogic {
                   textColor: AppColors.text.white,
                   onTap: () {
                     controller.bookingModel.theoryDate = selectedDiveDate;
-                    print(controller.bookingModel.theoryDate);
+                    //print(controller.bookingModel.theoryDate);
                     controller.update();
                     Get.back();
                   },
@@ -1086,7 +1086,7 @@ class NewBookingLogic {
   }
 
   createBooking() async {
-    print("createBooking");
+    //print("createBooking");
     controller.bookingModel.bookingDate = [];
     if (controller.bookingModel.theoryDate != null)
       controller.bookingModel.bookingDate
@@ -1101,7 +1101,7 @@ class NewBookingLogic {
     // controller.bookingModel.activity = controller.selectedActivity;
     controller.bookingId =
         await FirebaseApi.addNewBooking(controller.bookingModel);
-    print(controller.bookingId);
+    //print(controller.bookingId);
     controller.update();
   }
 
@@ -1260,7 +1260,7 @@ class NewBookingController extends GetxController {
   List<ActivityModel> activities = [];
 
   reset() {
-    print("reset data");
+    //print("reset data");
     _bookingId = null;
     _diveLocation = "Pondicherry";
     _discountSwitch = true;

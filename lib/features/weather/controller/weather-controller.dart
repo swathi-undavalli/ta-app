@@ -15,10 +15,10 @@ class WeatherPageLogic {
   getWeatherData(DateTime date) async {
     controller.showLoading = true;
     controller.weatherPageModel = await weatherRepository.getWeatherData(date);
-    print(controller.weatherPageModel.waveHeight);
-    print(controller.weatherPageModel.heightUnits);
-    print(controller.weatherPageModel.windSpeed);
-    print(controller.weatherPageModel.speedUnits);
+    //print(controller.weatherPageModel.waveHeight);
+    //print(controller.weatherPageModel.heightUnits);
+    //print(controller.weatherPageModel.windSpeed);
+    //print(controller.weatherPageModel.speedUnits);
     controller.showLoading = false;
   }
 
