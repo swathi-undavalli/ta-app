@@ -7,7 +7,7 @@ import 'package:temple_adventures/features/boat/models/boat-passengers-model.dar
 
 class BoatLogic {
   BoatLogic() {
-    init();
+    // init();
   }
 
   BoatController controller = Get.put(BoatController());
@@ -80,12 +80,12 @@ class BoatController extends GetxController {
     update();
   }
 
-  // DateTime _selectedDate = DateTime.now();
-  DateTime _selectedDate = DateTime(
-    2022,
-    5,
-    5,
-  );
+  DateTime _selectedDate = DateTime.now();
+  // DateTime _selectedDate = DateTime(
+  //   2022,
+  //   5,
+  //   5,
+  // );
   DateTime get selectedDate => _selectedDate;
   set selectedDate(DateTime value) {
     _selectedDate = value;

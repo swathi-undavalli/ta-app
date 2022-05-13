@@ -14,10 +14,12 @@ class BoatPassengersModel {
   BoatPassengersModel({
     this.passenger,
     this.employees,
+    this.freelancer,
   });
 
   List<Passenger> passenger;
   List<Employee> employees;
+  List<Freelancer> freelancer;
 
   factory BoatPassengersModel.fromMap(Map<String, dynamic> json) =>
       BoatPassengersModel(
@@ -25,11 +27,14 @@ class BoatPassengersModel {
             json["passenger"].map((x) => Passenger.fromMap(x))),
         employees: List<Employee>.from(
             json["employees"].map((x) => Employee.fromMap(x))),
+        freelancer: List<Freelancer>.from(
+            json["freelancer"].map((x) => Freelancer.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
         "passenger": List<dynamic>.from(passenger.map((x) => x.toMap())),
         "employees": List<dynamic>.from(employees.map((x) => x.toMap())),
+        "freelancer": List<dynamic>.from(freelancer.map((x) => x.toMap())),
       };
 }
 
@@ -74,6 +79,48 @@ class Employee {
   @override
   int get hashCode {
     return id.hashCode ^ boatID.hashCode;
+  }
+}
+
+class Freelancer {
+  Freelancer({
+    this.name,
+    this.gender,
+    this.phone,
+    this.boatID,
+  });
+
+  String name;
+  String boatID;
+  String gender;
+  String phone;
+
+  factory Freelancer.fromMap(Map<String, dynamic> json) => Freelancer(
+        name: json["name"],
+        gender: json["gender"],
+        phone: json["phone"],
+        boatID: json["boatID"],
+      );
+
+  Map<String, dynamic> toMap() => {
+        "name": name,
+        "gender": gender,
+        "phone": phone,
+        "boatID": boatID,
+      };
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Freelancer &&
+        other.phone == phone &&
+        other.boatID == boatID;
+  }
+
+  @override
+  int get hashCode {
+    return phone.hashCode ^ boatID.hashCode;
   }
 }
 

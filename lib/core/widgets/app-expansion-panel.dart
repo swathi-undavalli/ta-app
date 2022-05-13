@@ -10,6 +10,8 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/access_levels.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/select-seats-widget.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
@@ -17,6 +19,8 @@ import 'package:temple_adventures/features/edit-booking/presentation/screens/edi
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'bookings_calender_widget/bookings_calender_widget.dart';
 
 class BookingsExpansionPanel extends StatelessWidget {
   final ExpansionPanelLogic logic = ExpansionPanelLogic();
@@ -27,6 +31,8 @@ class BookingsExpansionPanel extends StatelessWidget {
   Function onSearchTap;
   List<Widget> expansions = [];
   TextEditingController searchTED = TextEditingController();
+  BookingsCalenderWidgetLogic bookingCalenderLogic =
+      BookingsCalenderWidgetLogic();
 
   BookingsExpansionPanel(
       {this.items,
@@ -145,7 +151,10 @@ class BookingsExpansionPanel extends StatelessWidget {
           duration: Duration(milliseconds: 200),
           curve: Curves.easeInCubic,
           alignment: Alignment.topCenter,
-          height: controller.isExpanded[i] ? 400 : 50,
+          // height: controller.isExpanded[i] ? 400 : 50,
+          constraints: BoxConstraints(
+            minHeight: controller.isExpanded[i] ? 400 : 50,
+          ),
           // height: controller.isExpanded[i] ? 470 : 50,
           width: 350,
           decoration: BoxDecoration(
@@ -154,6 +163,9 @@ class BookingsExpansionPanel extends StatelessWidget {
             // border: Border.all(color: AppColors.text.grey),
           ),
           child: Container(
+            constraints: BoxConstraints(
+              minHeight: controller.isExpanded[i] ? 400 : 50,
+            ),
             decoration: BoxDecoration(
               color: getColor(),
               borderRadius: BorderRadius.circular(10),
@@ -336,19 +348,74 @@ class BookingsExpansionPanel extends StatelessWidget {
                                             1) !=
                                         (items[i].bookingModel.noOfPersons)),
                                   ),
-                                  // SizedBox(height: 20),
-                                  Container(
-                                    child: AppButton.miniFlat(
-                                      text: "Upload ID",
-                                      onTap: () {
-                                        Get.toNamed(IDProofScreen.id,
-                                            arguments: items[i].bookingModel);
-                                        // Get.toNamed(W2.id);
-                                      },
-                                    ).paddingOnly(right: 15),
-                                    alignment: Alignment.centerRight,
+                                  SizedBox(height: 20),
+                                  Row(
+                                    children: [
+                                      if (bookingCalenderLogic
+                                              .controller.selectedType ==
+                                          FilterType.Dive)
+                                        // Container(
+                                        //   child: AppButton.miniFlat(
+                                        //     text: "Select Seats",
+                                        //     onTap: () {
+                                        //       // Get.toNamed(IDProofScreen.id,
+                                        //       //     arguments: items[i].bookingModel);
+                                        //       bool isSame(DateTime date1,
+                                        //           DateTime date2) {
+                                        //         return (date1.day ==
+                                        //                 date2.day &&
+                                        //             date1.month ==
+                                        //                 date2.month &&
+                                        //             date1.year == date2.year);
+                                        //       }
+                                        //
+                                        //       BookingModel model =
+                                        //           items[i].bookingModel;
+                                        //       log(model.diveDate.length
+                                        //           .toString());
+                                        //       for (int i = 0;
+                                        //           i < model.diveDate.length;
+                                        //           i++) {
+                                        //         if (isSame(
+                                        //             model.diveDate[i],
+                                        //             bookingCalenderLogic
+                                        //                 .controller
+                                        //                 .selectedDate)) {
+                                        //           print("Leaving");
+                                        //         } else {
+                                        //           model.diveDate.removeAt(i);
+                                        //         }
+                                        //       }
+                                        //
+                                        //       log(model.diveDate.length
+                                        //           .toString());
+                                        //
+                                        //       Get.toNamed(
+                                        //         ChooseBoatPage.id,
+                                        //         arguments: model,
+                                        //       );
+                                        //       //
+                                        //       // Get.toNamed(W2.id);
+                                        //     },
+                                        //   ).paddingOnly(right: 15),
+                                        // ),
+                                        SelectSeatsWidget(items[i].bookingModel),
+                                      Spacer(),
+                                      Container(
+                                        child: AppButton.miniFlat(
+                                          text: "Upload ID",
+                                          onTap: () {
+                                            Get.toNamed(IDProofScreen.id,
+                                                arguments:
+                                                    items[i].bookingModel);
+                                            // Get.toNamed(W2.id);
+                                          },
+                                        ).paddingOnly(right: 15),
+                                        // alignment: Alignment.centerRight,
+                                      ),
+                                    ],
                                   ),
-
+                                  SizedBox(height: 20),
                                   Row(
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
@@ -395,6 +462,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                       ).paddingOnly(right: 15),
                                     ],
                                   ),
+                                  SizedBox(height: 20),
                                 ],
                               );
                             return SizedBox();

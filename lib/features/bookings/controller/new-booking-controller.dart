@@ -425,9 +425,14 @@ class NewBookingLogic {
       });
     }
     // controller.bookingModel.payments = [controller.bookingModel.paid];
+    try {
+      log(controller.bookingModel.toMap().toString());
+    } catch (e) {
+      print(e);
+    }
+    log(controller.bookingModel.noOfPersons.toString());
     controller.bookingId =
         await FirebaseApi.addNewBooking(controller.bookingModel);
-    //print(controller.bookingId);
     LogModel logModel =
         LogModel(type: LogType.bookingCreated, bookingId: controller.bookingId);
     FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());

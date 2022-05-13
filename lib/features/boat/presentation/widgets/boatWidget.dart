@@ -1666,22 +1666,31 @@ class BoatWidget extends StatefulWidget {
 
 class _BoatWidgetState extends State<BoatWidget> {
   bool isExpanded = false;
-  int bookedSeats = 0;
 
   @override
   Widget build(BuildContext context) {
+    int bookedSeats = 0;
+    List<Employee> employees = [];
     widget.boatPassengersModel.passenger.forEach((passenger) {
       if (passenger.boatID == widget.boat.id) {
         bookedSeats++;
       }
     });
+    widget.boatPassengersModel.employees.forEach((employee) {
+      if (employee.boatID == widget.boat.id) {
+        employees.add(employee);
+      }
+    });
+    if (bookedSeats == 0 && employees.isEmpty) return SizedBox();
     return Padding(
       padding: const EdgeInsets.only(bottom: 15),
       child: AnimatedContainer(
         duration: Duration(milliseconds: 200),
         curve: Curves.easeInCubic,
         alignment: Alignment.topCenter,
-        height: isExpanded ? 400 : 50,
+        constraints: BoxConstraints(
+          minHeight: isExpanded ? 400 : 50,
+        ),
         width: 350,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -1746,11 +1755,15 @@ class _BoatWidgetState extends State<BoatWidget> {
                         future: Future.delayed(Duration(milliseconds: 200)),
                         initialData: SizedBox(),
                         builder: (context, snapshot) {
+                          log(bookedSeats.toString());
+                          log(widget.boat.capacity.toString());
+                          log(widget.boatPassengersModel.passenger.length
+                              .toString());
                           if (snapshot.connectionState == ConnectionState.done)
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                SizedBox(height: 30),
+                                SizedBox(height: 40),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -1779,10 +1792,7 @@ class _BoatWidgetState extends State<BoatWidget> {
                                                   }),
                                                   ...List.generate(
                                                       (widget.boat.capacity -
-                                                          widget
-                                                              .boatPassengersModel
-                                                              .passenger
-                                                              .length),
+                                                          bookedSeats),
                                                       (index) {
                                                     return buildSeat(
                                                         borderColor:
@@ -1814,17 +1824,61 @@ class _BoatWidgetState extends State<BoatWidget> {
                                   ],
                                 ),
                                 SizedBox(height: 40),
-                                buildBoatStatus(),
+                                // buildBoatStatus(),
+                                // SizedBox(height: 10),
+                                // buildStatusHistory(),
+                                // SizedBox(height: 40),
+                                buildSideHeading(text: "Employees"),
                                 SizedBox(height: 10),
-                                buildStatusHistory(),
+                                Container(
+                                  width: 350,
+                                  child: Wrap(
+                                    direction: Axis.horizontal,
+                                    verticalDirection: VerticalDirection.down,
+                                    children: [
+                                      ...employees
+                                          .map((e) => Padding(
+                                                padding:
+                                                    const EdgeInsets.all(5.0),
+                                                child: Text(
+                                                  e.name,
+                                                  style:
+                                                      TextStyle(fontSize: 12),
+                                                ),
+                                              ))
+                                          .toList(),
+
+                                      // ...List.generate(
+                                      //   10,
+                                      //   (index) {
+                                      //     return buildEmployeeChip();
+                                      //   },
+                                      // )
+
+                                      // employees.map((e) => buildEmployeeChip())
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(height: 30),
+                                buildSideHeading(text: "Freelancers"),
+
                                 SizedBox(height: 40),
-                                SizedBox(height: 10),
+                                buildSeatColorRepresentation(
+                                    borderColor: AppColors.text.skyBlue,
+                                    color: AppColors.text.lightSkyBlue,
+                                    text: "Selected"),
+                                SizedBox(height: 15),
+                                buildSeatColorRepresentation(
+                                    borderColor: Color(0xff5BFF62),
+                                    color: Color(0xffD1FFBB),
+                                    text: "Available"),
                                 SizedBox(height: 40),
-                                seatsAvailability(
-                                    name: "Status : ",
-                                    value: "About to Start in 15 min",
-                                    valueColour: Color(0xff00CF2E),
-                                    fontSize: 15),
+                                // seatsAvailability(
+                                //     name: "Status : ",
+                                //     value: "About to Start in 15 min",
+                                //     valueColour: Color(0xff00CF2E),
+                                //     fontSize: 15),
+                                SizedBox(height: 20),
                               ],
                             );
                           return SizedBox();
@@ -1834,6 +1888,16 @@ class _BoatWidgetState extends State<BoatWidget> {
             ),
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildEmployeeChip() {
+    return Padding(
+      padding: const EdgeInsets.all(5.0),
+      child: Text(
+        "Das",
+        style: TextStyle(fontSize: 12),
       ),
     );
   }
@@ -1968,6 +2032,65 @@ class _BoatWidgetState extends State<BoatWidget> {
           // ),
         ],
       ),
+    );
+  }
+
+  Widget buildSideHeading({String text}) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          text,
+          style: TextStyle(
+            color: Colors.black.withOpacity(0.80),
+            fontSize: 10,
+            fontWeight: FontWeight.w300,
+            letterSpacing: 0.75,
+          ),
+        ),
+        SizedBox(height: 5),
+        Padding(
+          padding: const EdgeInsets.only(right: 20),
+          child: Container(
+            width: Get.width,
+            height: 1,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black.withOpacity(0.1)),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildSeatColorRepresentation(
+      {Color borderColor, Color color, String text}) {
+    return Row(
+      children: [
+        Container(
+          height: 22,
+          width: 17,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadiusDirectional.circular(4),
+              border: Border.all(color: borderColor, width: 1),
+              color: color),
+          child: Center(
+            child: Icon(
+              Icons.star,
+              size: 8,
+              color: AppColors.text.black.withOpacity(0.5),
+            ),
+          ),
+        ),
+        SizedBox(width: 10),
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        )
+      ],
     );
   }
 

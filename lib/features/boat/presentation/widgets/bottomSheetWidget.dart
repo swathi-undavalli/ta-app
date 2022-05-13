@@ -12,10 +12,14 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
   final BottomSheetLogic logic = BottomSheetLogic();
   final TextEditingController searchTED = TextEditingController();
 
-  EmployeeSelectorBottomSheet(
-      {this.onEmployeeTapped, @required this.selectedEmployees});
+  EmployeeSelectorBottomSheet({
+    this.onEmployeeTapped,
+    @required this.selectedEmployees,
+    @required this.commonEmployees,
+  });
 
   final List<Employee> selectedEmployees;
+  final List<Employee> commonEmployees;
 
   final Function(Employee) onEmployeeTapped;
 
@@ -105,7 +109,8 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
               .snapshots(),
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              emp.Employee employee = emp.Employee.fromMap(snapshot.data.data());
+              emp.Employee employee =
+                  emp.Employee.fromMap(snapshot.data.data());
               if (searchTED.text.isNotEmpty) {
                 if (employee.id.contains(searchTED.text) ||
                     employee.name
@@ -154,6 +159,15 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
                       .toList()
                       .contains(e.name))
                     Icon(Icons.check, color: Colors.green, size: 25),
+                  if (!selectedEmployees
+                          .map((e) => e.name)
+                          .toList()
+                          .contains(e.name) &&
+                      commonEmployees
+                          .map((e) => e.name)
+                          .toList()
+                          .contains(e.name))
+                    Icon(Icons.check, color: Colors.orange, size: 25),
                 ],
               );
             }),

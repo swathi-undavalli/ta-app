@@ -24,6 +24,7 @@ class AddNewActivityScreen extends StatelessWidget {
             child: GetBuilder<AddNewActivityController>(builder: (controller) {
               return Center(
                 child: Padding(
+
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:mime/mime.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -42,23 +43,31 @@ class FirebaseApi {
   }
 
   static addNewBooking(BookingModel booking) async {
-    //print("addNewBooking");
+    log("addNewBooking");
 
     DocumentReference counterRef =
         FirebaseFirestore.instance.collection('counter').doc("count");
+    log("addNewBooking1");
 
     var bookingId;
     await FirebaseFirestore.instance.runTransaction((transaction) async {
+      log("addNewBooking2");
       DocumentSnapshot counterSnapshot = await transaction.get(counterRef);
       Map<String, dynamic> data = counterSnapshot.data();
+      log("addNewBooking3");
       int newBookingID = data["booking"] + 1;
       DocumentReference bookingRef = FirebaseFirestore.instance
           .collection('bookings')
           .doc(newBookingID.toString());
+      log("addNewBooking4");
       booking.id = newBookingID.toString();
+      log("addNewBooking4adf");
+      log(booking.toMap().toString());
       transaction.set(bookingRef, booking.toMap());
+      log("addNewBooking5");
       transaction.update(counterRef, {'booking': newBookingID});
       bookingId = newBookingID;
+      log("addNewBooking6");
       return newBookingID;
     });
     return bookingId.toString();

@@ -10,6 +10,7 @@ import 'package:temple_adventures/features/boat/presentation/widgets/bottomSheet
 import 'package:temple_adventures/features/boat/presentation/widgets/seat.dart';
 import '../../../../core/widgets/app-expansion-panel.dart';
 import '../../models/boat-passengers-model.dart';
+import 'freelanceDiverBottomSheetWidget.dart';
 
 class SeatsAvailabilityExpansionPanel extends StatefulWidget {
   final BoatsModel boat;
@@ -18,16 +19,22 @@ class SeatsAvailabilityExpansionPanel extends StatefulWidget {
   final int maxSeats;
   final bool enableSelection;
   final List<Employee> selectedEmployees;
+  final List<Freelancer> selectedFreelancers;
+  final List<Employee> commonEmployees;
   final Function(bool) onSeatSelected;
-  final Function(List<Employee>) onEmployeesModified;
+  final Function(List<Employee>, List<Employee>) onEmployeesModified;
+  final Function(Freelancer) onFreelanceAdded;
 
   SeatsAvailabilityExpansionPanel({
     @required this.boat,
     @required this.selectedSeats,
+    @required this.commonEmployees,
     @required this.fixedSeats,
     @required this.maxSeats,
     @required this.enableSelection,
     @required this.selectedEmployees,
+    @required this.selectedFreelancers,
+    @required this.onFreelanceAdded,
     @required this.onSeatSelected,
     @required this.onEmployeesModified,
   });
@@ -37,7 +44,8 @@ class SeatsAvailabilityExpansionPanel extends StatefulWidget {
       _SeatsAvailabilityExpansionPanelState();
 }
 
-class _SeatsAvailabilityExpansionPanelState extends State<SeatsAvailabilityExpansionPanel> {
+class _SeatsAvailabilityExpansionPanelState
+    extends State<SeatsAvailabilityExpansionPanel> {
   bool isExpanded = false;
 
   double bottomSheetHeight;
@@ -205,16 +213,25 @@ class _SeatsAvailabilityExpansionPanelState extends State<SeatsAvailabilityExpan
                           onTap: () {
                             Get.bottomSheet(EmployeeSelectorBottomSheet(
                               selectedEmployees: widget.selectedEmployees,
+                              commonEmployees: widget.commonEmployees,
                               onEmployeeTapped: (Employee e) {
                                 for (Employee emp in widget.selectedEmployees) {
                                   if (emp.id == e.id) {
                                     return;
                                   }
                                 }
+                                for (Employee emp in widget.commonEmployees) {
+                                  if (emp.id == e.id) {
+                                    return;
+                                  }
+                                }
                                 e.boatID = widget.boat.id;
                                 widget.selectedEmployees.add(e);
+                                widget.commonEmployees.add(e);
                                 widget.onEmployeesModified(
-                                    widget.selectedEmployees);
+                                  widget.selectedEmployees,
+                                  widget.commonEmployees,
+                                );
                               },
                             ));
                             //log("clicked");
@@ -222,7 +239,38 @@ class _SeatsAvailabilityExpansionPanelState extends State<SeatsAvailabilityExpan
                           text: "Add",
                         ),
                         alignment: Alignment.centerRight,
-                      )
+                      ),
+                      buildSideHeading(text: "Freelance Divers"),
+                      SizedBox(height: 20),
+                      Container(
+                        width: 350,
+                        child: Wrap(
+                          direction: Axis.horizontal,
+                          verticalDirection: VerticalDirection.down,
+                          children: [
+                            ...widget.selectedFreelancers
+                                .map((e) => buildFreelanceChip(e))
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Container(
+                        width: Get.width,
+                        child: AppButton.miniFlat(
+                          onTap: () {
+                            Get.bottomSheet(FreelanceDiverBottomSheet(
+                              onFreelanceAdded: (Freelancer freelance) {
+                                freelance.boatID = widget.boat.id;
+                                widget.onFreelanceAdded(freelance);
+                              },
+                            ));
+                            //log("clicked");
+                          },
+                          text: "Add",
+                        ),
+                        alignment: Alignment.centerRight,
+                      ),
+                      SizedBox(height: 20),
                     ],
                   ),
                 )
@@ -262,6 +310,55 @@ class _SeatsAvailabilityExpansionPanelState extends State<SeatsAvailabilityExpan
                 onTap: () {
                   setState(() {
                     widget.selectedEmployees.remove(e);
+                    widget.commonEmployees.remove(e);
+                  });
+                },
+                child: Container(
+                  height: 16,
+                  width: 16,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.black.withOpacity(0.1)),
+                  child: Icon(Icons.clear_rounded,
+                      size: 12, color: Colors.black.withOpacity(0.6)),
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildFreelanceChip(Freelancer f) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, right: 4, top: 5, bottom: 5),
+      child: Container(
+        height: 22,
+        decoration: BoxDecoration(
+            border: Border.all(color: Colors.black.withOpacity(0.2), width: 1),
+            borderRadius: BorderRadius.circular(11)),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.all(4.0),
+                child: Text(
+                  f.name,
+                  style: TextStyle(fontSize: 10),
+                ),
+              ),
+            ),
+            SizedBox(width: 1),
+            Padding(
+              padding: const EdgeInsets.only(right: 2.0, top: 2, bottom: 2),
+              child: GestureDetector(
+                onTap: () {
+                  setState(() {
+                    widget.selectedFreelancers.remove(f);
                   });
                 },
                 child: Container(

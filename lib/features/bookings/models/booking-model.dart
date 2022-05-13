@@ -114,7 +114,7 @@ class BookingModel {
         "paymentMode": paymentMode,
         "receiptNo": receiptNo,
         "bookingDate": List<String>.from(bookingDate.map((x) => x)),
-        "idProofs": List<String>.from(idProofs.map((x) => x)),
+        "idProofs": List<String>.from(idProofs ?? [].map((x) => x)),
         // "payments": List<dynamic>.from(payments ?? [].map((x) => x)),
         "location": location,
         "paymentTransactionId": paymentTransactionId,

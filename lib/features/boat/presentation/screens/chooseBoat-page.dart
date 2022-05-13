@@ -1,3 +1,4 @@
+import 'package:get/get.dart';
 import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/boat/controller/choose-boat-controller.dart';
 import 'package:temple_adventures/features/boat/models/boat-passengers-model.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/seatsAvailabiltyWidget.dart';
+import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
 class ChooseBoatPage extends StatelessWidget {
   static const String id = "ChooseBoatPage";
@@ -22,21 +24,27 @@ class ChooseBoatPage extends StatelessWidget {
           logic.onCheckPressed();
         },
         backgroundColor: AppColors.background.black,
-        child: Icon(Icons.arrow_forward_ios_rounded),
+        child: Icon(Icons.check),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                buildDateSelector(),
-                SizedBox(height: 15),
-                buildBoatSelector(),
-                SizedBox(height: 20),
-              ],
+        child: WillPopScope(
+          onWillPop: () async {
+            logic.controller.reset();
+            return true;
+          },
+          child: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                children: [
+                  buildDateSelector(),
+                  SizedBox(height: 15),
+                  buildBoatSelector(),
+                  SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         ),
@@ -44,7 +52,7 @@ class ChooseBoatPage extends StatelessWidget {
     );
   }
 
-  GetBuilder<ChooseBoatController> buildDateSelector() {
+  Widget buildDateSelector() {
     return GetBuilder<ChooseBoatController>(builder: (controller) {
       if (controller.showLoading) return SizedBox();
       return Row(
@@ -64,38 +72,38 @@ class ChooseBoatPage extends StatelessWidget {
           SizedBox(
             width: 10,
           ),
-          Spacer(),
-          IconButton(
-            onPressed: (controller.currentDiveDateIndex != 0)
-                ? () {
-                    if (controller.currentDiveDateIndex != 0)
-                      controller.currentDiveDateIndex--;
-                  }
-                : null,
-            icon: Icon(
-              Icons.navigate_before_rounded,
-              color: (controller.currentDiveDateIndex != 0)
-                  ? Colors.black87
-                  : Colors.grey,
-            ),
-          ),
-          IconButton(
-            onPressed: (controller.currentDiveDateIndex !=
-                    controller.diveDates.length - 1)
-                ? () {
-                    if (controller.currentDiveDateIndex !=
-                        controller.diveDates.length - 1)
-                      controller.currentDiveDateIndex++;
-                  }
-                : null,
-            icon: Icon(
-              Icons.navigate_next_rounded,
-              color: (controller.currentDiveDateIndex !=
-                      controller.diveDates.length - 1)
-                  ? Colors.black87
-                  : Colors.grey,
-            ),
-          ),
+          // Spacer(),
+          // IconButton(
+          //   onPressed: (controller.currentDiveDateIndex != 0)
+          //       ? () {
+          //           if (controller.currentDiveDateIndex != 0)
+          //             controller.currentDiveDateIndex--;
+          //         }
+          //       : null,
+          //   icon: Icon(
+          //     Icons.navigate_before_rounded,
+          //     color: (controller.currentDiveDateIndex != 0)
+          //         ? Colors.black87
+          //         : Colors.grey,
+          //   ),
+          // ),
+          // IconButton(
+          //   onPressed: (controller.currentDiveDateIndex !=
+          //           controller.diveDates.length - 1)
+          //       ? () {
+          //           if (controller.currentDiveDateIndex !=
+          //               controller.diveDates.length - 1)
+          //             controller.currentDiveDateIndex++;
+          //         }
+          //       : null,
+          //   icon: Icon(
+          //     Icons.navigate_next_rounded,
+          //     color: (controller.currentDiveDateIndex !=
+          //             controller.diveDates.length - 1)
+          //         ? Colors.black87
+          //         : Colors.grey,
+          //   ),
+          // ),
         ],
       );
     });
@@ -130,6 +138,9 @@ class ChooseBoatPage extends StatelessWidget {
                               controller.currentDiveDateIndex][index],
                           selectedEmployees: controller.selectedEmployees[
                               controller.currentDiveDateIndex][index],
+                          selectedFreelancers: controller.selectedFreelancers[
+                              controller.currentDiveDateIndex][index],
+                          commonEmployees: controller.commonEmployees,
                           maxSeats: controller.boatsList[index].capacity,
                           enableSelection: controller.selectedSeatsCount[
                                       controller.currentDiveDateIndex]
@@ -146,9 +157,19 @@ class ChooseBoatPage extends StatelessWidget {
                             }
                             controller.update();
                           },
-                          onEmployeesModified: (List<Employee> employees) {
+                          onFreelanceAdded: (Freelancer freelancer) {
+                            controller.selectedFreelancers[
+                                    controller.currentDiveDateIndex][index]
+                                .add(freelancer);
+                            controller.update();
+                          },
+                          onEmployeesModified: (
+                            List<Employee> employees,
+                            List<Employee> commonEmployees,
+                          ) {
                             controller.selectedEmployees[controller
                                 .currentDiveDateIndex][index] = employees;
+                            controller.commonEmployees = commonEmployees;
                             controller.update();
                           },
                         )),
@@ -224,7 +245,12 @@ class ChooseBoatPage extends StatelessWidget {
           letterSpacing: 1.2,
         ),
       ),
-      leading: BackNavigationIcon(),
+      leading: GestureDetector(
+        onTap: () {
+          logic.controller.reset();
+        },
+        child: BackNavigationIcon(),
+      ),
       elevation: 0,
       backgroundColor: AppColors.background.white,
     );

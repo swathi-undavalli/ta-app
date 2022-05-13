@@ -14,7 +14,6 @@ class ChooseBoatLogic {
   }
 
   ChooseBoatController controller = Get.put(ChooseBoatController());
-  NewBookingLogic bookingLogic = NewBookingLogic();
 
   init() async {
     controller.showLoading = true;
@@ -38,32 +37,53 @@ class ChooseBoatLogic {
     log("2");
 
     controller.boatsList.forEach((boat) {
-      controller.selectedSeatsCount
-          .add(List.generate(controller.boatsList.length, (index) => 0));
+      controller.selectedSeatsCount.add(
+        List.generate(
+          controller.boatsList.length,
+          (index) {
+            return 0;
+          },
+        ),
+      );
+      controller.firebaseSeatsCount.add(
+        List.generate(
+          controller.boatsList.length,
+          (index) {
+            return 0;
+          },
+        ),
+      );
     });
+
     log("3");
 
-    bookingLogic.controller.bookingModel = BookingModel(
-      noOfPersons: 1,
-      pax: [
-        {
-          "first-name": "praveen",
-          "email": "praveen@kcn.com",
-          "phoneNumber": "564684848712",
-        },
-      ],
-      diveDate: [
-        DateTime(2022, 10, 10, 6, 00),
-        DateTime(2022, 10, 11, 6, 00),
-      ],
-    );
-    controller.diveDates = bookingLogic.controller.bookingModel.diveDate;
+    // controller.bookingModel = BookingModel(
+    //   noOfPersons: 1,
+    //   pax: [
+    //     {
+    //       "first-name": "praveen",
+    //       "email": "praveen@kcn.com",
+    //       "phoneNumber": "564684848712",
+    //     },
+    //   ],
+    //   diveDate: [
+    //     DateTime(2022, 10, 10, 6, 00),
+    //     DateTime(2022, 10, 11, 6, 00),
+    //   ],
+    // );
+    controller.bookingModel = Get.arguments as BookingModel;
+    controller.diveDates = controller.bookingModel.diveDate;
     controller.fixedSeatCount = List.generate(controller.diveDates.length,
         (index) => List.generate(controller.boatsList.length, (index) => 0));
 
     controller.selectedEmployees = List.generate(controller.diveDates.length,
         (index) => List.generate(controller.boatsList.length, (index) => []));
-
+    controller.selectedFreelancers = List.generate(controller.diveDates.length,
+        (index) => List.generate(controller.boatsList.length, (index) => []));
+    controller.commonEmployees = List.generate(
+        controller.boatsList.length,
+        (index) => controller.selectedEmployees[controller.currentDiveDateIndex]
+            [index]).expand((x) => x).toList();
     log("4");
 
     for (int dateIndex = 0;
@@ -79,6 +99,12 @@ class ChooseBoatLogic {
       log("4.2");
       if (data != null && data.containsKey(diveDate.toIso8601String())) {
         log("4.2.1");
+        try {
+          BoatPassengersModel boatModel =
+              BoatPassengersModel.fromMap(data[diveDate.toIso8601String()]);
+        } catch (e) {
+          log("issue here $e");
+        }
         BoatPassengersModel boatModel =
             BoatPassengersModel.fromMap(data[diveDate.toIso8601String()]);
         log("4.2.2");
@@ -87,6 +113,14 @@ class ChooseBoatLogic {
         log("4.2.3");
         controller.selectedEmployees[dateIndex] =
             getEmployees(boatModel.employees);
+        controller.selectedFreelancers[dateIndex] =
+            getFreelancers(boatModel.freelancer);
+
+        controller.selectedSeatsCount[dateIndex] =
+            getSelectedSeatsCount(boatModel.passenger);
+        controller.firebaseSeatsCount[dateIndex] =
+            getSelectedSeatsCount(boatModel.passenger);
+
         log("4.2.4");
       }
       log("4.3");
@@ -97,8 +131,12 @@ class ChooseBoatLogic {
     log(controller.fixedSeatCount.toString());
 
     controller.requiredCount = List.generate(
-        bookingLogic.controller.bookingModel.diveDate.length,
-        (index) => bookingLogic.controller.bookingModel.noOfPersons);
+        controller.bookingModel.diveDate.length,
+        (index) => controller.bookingModel.noOfPersons);
+    controller.commonEmployees = List.generate(
+        controller.boatsList.length,
+        (index) => controller.selectedEmployees[controller.currentDiveDateIndex]
+            [index]).expand((x) => x).toList();
 
     log("6");
   }
@@ -109,10 +147,25 @@ class ChooseBoatLogic {
       int fixedSeats = 0;
       for (Passenger p in passenger) {
         if (p.boatID == (i + 1).toString()) {
-          fixedSeats++;
+          if (p.email != controller.bookingModel.pax[0]["email"]) fixedSeats++;
         }
       }
       list[i] = fixedSeats;
+    }
+    return list;
+  }
+
+  List<int> getSelectedSeatsCount(List<Passenger> passenger) {
+    List<int> list = List.generate(controller.boatsList.length, (index) => 0);
+    for (int i = 0; i < controller.boatsList.length; i++) {
+      int selectedSeats = 0;
+      for (Passenger p in passenger) {
+        if (p.boatID == (i + 1).toString()) {
+          if (p.email == controller.bookingModel.pax[0]["email"])
+            selectedSeats++;
+        }
+      }
+      list[i] = selectedSeats;
     }
     return list;
   }
@@ -133,19 +186,38 @@ class ChooseBoatLogic {
     return list;
   }
 
+  List<List<Freelancer>> getFreelancers(List<Freelancer> freelancers) {
+    List<List<Freelancer>> list =
+        List.generate(controller.boatsList.length, (index) => []);
+
+    for (int i = 0; i < controller.boatsList.length; i++) {
+      List<Freelancer> fls = [];
+      for (Freelancer f in freelancers) {
+        if (f.boatID == (i + 1).toString()) {
+          fls.add(f);
+        }
+      }
+      list[i] = fls;
+    }
+    return list;
+  }
+
   onCheckPressed() async {
     // Map<String, Map<String, dynamic>> data = {};
 
     //! Validation of seat selection.
-    for (int i = 0; i < controller.diveDates.length; i++) {
-      if (controller.selectedSeatsCount[i].reduce((v, e) => v + e) ==
-          controller.requiredCount[i]) {
-      } else {
-        Fluttertoast.showToast(msg: "Please Select Seats");
-        return;
-      }
-    }
 
+    // return;
+    // for (int i = 0; i < controller.diveDates.length; i++) {
+    //   if (controller.selectedSeatsCount[i].reduce((v, e) => v + e) ==
+    //       controller.requiredCount[i]) {
+    //   } else {
+    //     Fluttertoast.showToast(msg: "Please Select Seats");
+    //     return;
+    //   }
+    // }
+
+    controller.showLoading = true;
     for (int diveIndex = 0;
         diveIndex < controller.diveDates.length;
         diveIndex++) {
@@ -160,34 +232,94 @@ class ChooseBoatLogic {
       }
       log(data.toString());
       BoatPassengersModel boatModel;
+
       if (data.containsKey(diveDate.toIso8601String())) {
         boatModel =
             BoatPassengersModel.fromMap(data[diveDate.toIso8601String()]);
       } else {
-        boatModel = BoatPassengersModel(passenger: [], employees: []);
+        boatModel =
+            BoatPassengersModel(passenger: [], employees: [], freelancer: []);
       }
-      List<int> selectedSeats = controller.selectedSeatsCount[diveIndex];
 
-      for (int i = 0; i < selectedSeats.length; i++) {
-        int boatID = i + 1;
-        int selectedSeatCount = selectedSeats[i];
-        boatModel.passenger.addAll(List.generate(
-            selectedSeatCount,
-            (index) => Passenger(
-                  name: bookingLogic.controller.bookingModel.pax[0]
-                      ["first-name"],
-                  email: bookingLogic.controller.bookingModel.pax[0]["email"],
-                  phone: bookingLogic.controller.bookingModel.pax[0]
-                      ["phoneNumber"],
+      List<int> selectedSeats = controller.selectedSeatsCount[diveIndex];
+      log(boatModel.passenger.length.toString());
+
+      for (int dateIndex = 0;
+          dateIndex < controller.diveDates.length;
+          dateIndex++) {
+        for (int boatIndex = 0;
+            boatIndex < controller.boatsList.length;
+            boatIndex++) {
+          if (controller.firebaseSeatsCount[dateIndex][boatIndex] -
+                  controller.selectedSeatsCount[dateIndex][boatIndex] ==
+              0) {
+          } else if (controller.firebaseSeatsCount[dateIndex][boatIndex] -
+                  controller.selectedSeatsCount[dateIndex][boatIndex] >
+              0) {
+            log("a");
+            int diff = controller.firebaseSeatsCount[dateIndex][boatIndex] -
+                controller.selectedSeatsCount[dateIndex][boatIndex];
+
+            for (int i = 0; i < diff; i++) {
+              for (int p = 0; p < boatModel.passenger.length; p++) {
+                if (boatModel.passenger[p].email ==
+                        controller.bookingModel.pax[0]["email"] &&
+                    boatModel.passenger[p].boatID ==
+                        (boatIndex + 1).toString()) {
+                  log("found");
+                  boatModel.passenger.removeAt(p);
+                  break;
+                }
+              }
+            }
+          } else {
+            int diff = controller.selectedSeatsCount[dateIndex][boatIndex] -
+                controller.firebaseSeatsCount[dateIndex][boatIndex];
+            for (int i = 0; i < diff; i++) {
+              boatModel.passenger.add(
+                Passenger(
+                  name: controller.bookingModel.pax[0]["first-name"],
+                  email: controller.bookingModel.pax[0]["email"],
+                  phone: controller.bookingModel.pax[0]["phoneNumber"],
                   gender: "Male",
-                  boatID: boatID.toString(),
-                )));
+                  boatID: (boatIndex + 1).toString(),
+                ),
+              );
+            }
+          }
+        }
       }
+      log(boatModel.passenger.length.toString());
+
+      // for (int i = 0; i < selectedSeats.length; i++) {
+      //   int boatID = i + 1;
+      //   int selectedSeatCount = selectedSeats[i];
+      //   boatModel.passenger.addAll(
+      //     List.generate(
+      //       selectedSeatCount,
+      //       (index) => Passenger(
+      //         name: controller.bookingModel.pax[0]["first-name"],
+      //         email: controller.bookingModel.pax[0]["email"],
+      //         phone: controller.bookingModel.pax[0]["phoneNumber"],
+      //         gender: "Male",
+      //         boatID: boatID.toString(),
+      //       ),
+      //     ),
+      //   );
+      // }
+      log(boatModel.passenger.length.toString());
+      // log("------------------------");
+
       // List<List<Employee>> selectedEmployee = controller.selectedEmployees[diveIndex];
       // log(controller.selectedEmployees[diveIndex].toString());
       boatModel.employees = [];
       for (int i = 0; i < controller.boatsList.length; i++) {
         boatModel.employees.addAll(controller.selectedEmployees[diveIndex][i]);
+      }
+      boatModel.freelancer = [];
+      for (int i = 0; i < controller.boatsList.length; i++) {
+        boatModel.freelancer
+            .addAll(controller.selectedFreelancers[diveIndex][i]);
       }
 
       log(boatModel.employees.toString());
@@ -199,19 +331,38 @@ class ChooseBoatLogic {
           .doc(DateFormat("dd-MM-yyyy").format(diveDate))
           .set(data);
     }
+    controller.showLoading = false;
+    Get.back();
   }
 }
 
 class ChooseBoatController extends GetxController {
   List<List<int>> selectedSeatsCount = [];
+  List<List<int>> firebaseSeatsCount = [];
   List<List<int>> fixedSeatCount = [];
   List<List<List<Employee>>> selectedEmployees = [];
+  List<List<List<Freelancer>>> selectedFreelancers = [];
+  List<Employee> commonEmployees = [];
   List<BoatsModel> boatsList = [];
   List<DateTime> diveDates = [];
   List<int> requiredCount = [];
   int _currentDiveDateIndex = 0;
 
-  bool _showLoading = false;
+  BookingModel bookingModel;
+
+  reset() {
+    selectedSeatsCount = [];
+    firebaseSeatsCount = [];
+    fixedSeatCount = [];
+    selectedEmployees = [];
+    boatsList = [];
+    diveDates = [];
+    requiredCount = [];
+    currentDiveDateIndex = 0;
+    showLoading = true;
+  }
+
+  bool _showLoading = true;
 
   bool get showLoading => _showLoading;
 

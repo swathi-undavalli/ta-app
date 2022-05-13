@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/boatWidget.dart';
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/core/constants/assets.dart';
@@ -21,9 +22,14 @@ import 'package:url_launcher/url_launcher.dart';
 class BoatPage extends StatelessWidget {
   final BoatLogic logic = BoatLogic();
 
+  BoatPage() {
+    logic.init();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // appBar: buildAppBar(),
       floatingActionButton: FloatingActionButton(
         elevation: 0,
         onPressed: () {
@@ -33,93 +39,148 @@ class BoatPage extends StatelessWidget {
         backgroundColor: AppColors.background.black,
         child: Icon(Icons.add),
       ),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+      body: RefreshIndicator(
+        color: AppColors.IconColor.black,
+        onRefresh: () async {
+          await logic.init();
+        },
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.only(
-              left: 20.0,
-              right: 20,
-            ),
-            child: GetBuilder<BoatController>(builder: (controller) {
-              if (controller.showLoading)
-                return Center(child: CircularProgressIndicator());
-              if (controller.showLoading) return CircularProgressIndicator();
-              return Column(
-                children: [
-                  SizedBox(height: 50),
-                  Row(
-                    children: [
-                      Spacer(),
-                      Container(
-                        width: 103,
-                        child: Text(
-                          DateFormat('dd-MMM-yyyy')
-                              .format(controller.selectedDate),
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                      ),
-                      IconButton(
-                        splashRadius: 20,
-                        onPressed: () {
-                          selectDate(context);
-                        },
-                        icon: Icon(
-                          Icons.calendar_today_outlined,
-                          size: 17,
-                        ),
-                      ),
-                    ],
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(
+                    left: 20.0,
+                    right: 20,
                   ),
-                  SizedBox(height: 20),
-                  ...List.generate(
-                    controller.timeList.length,
-                    (i) => Column(
+                  child: GetBuilder<BoatController>(builder: (controller) {
+                    if (controller.showLoading)
+                      return SizedBox(
+                          height: Get.height - 100,
+                          child: Center(
+                              child: CircularProgressIndicator(
+                            color: Colors.black,
+                          )));
+
+                    return Column(
                       children: [
+                        SizedBox(height: 50),
+                        Text(
+                          'Coast Guard Slips',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            // letterSpacing: 1.2,
+                          ),
+                        ),
+                        SizedBox(height: 40),
                         Row(
                           children: [
-                            Padding(
-                              padding: const EdgeInsets.only(
-                                left: 200,
-                                right: 10,
-                              ),
+                            Spacer(),
+                            Container(
+                              width: 103,
                               child: Text(
-                                DateFormat('hh : mm')
-                                    .format(controller.timeList.reversed.toList()[i]),
+                                DateFormat('dd-MMM-yyyy')
+                                    .format(controller.selectedDate),
                                 style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                    fontSize: 16, fontWeight: FontWeight.w600),
                               ),
                             ),
-                            Expanded(
-                              child: Container(
-                                height: 1,
-                                margin: EdgeInsets.only(left: 0, right: 10),
-                                color: AppColors.text.skyBlue,
+                            IconButton(
+                              splashRadius: 20,
+                              onPressed: () {
+                                selectDate(context);
+                              },
+                              icon: Icon(
+                                Icons.calendar_today_outlined,
+                                size: 17,
                               ),
-                            )
+                            ),
                           ],
                         ),
-                        SizedBox(
-                          height: 20,
-                        ),
-                        ...List.generate(controller.boatsList.length, (index) {
-                          return BoatWidget(
-                            boat: controller.boatsList[index],
-                            boatPassengersModel: controller.bookedPassengers.reversed.toList()[i],
-                          );
-                        }),
-                        SizedBox(
-                          height: 50,
-                        ),
+                        SizedBox(height: 20),
+                        // Row(
+                        //   children: [
+                        //     Text(
+                        //       'Coast Guard Slips',
+                        //       style: TextStyle(
+                        //         fontSize: 20,
+                        //         fontWeight: FontWeight.w600,
+                        //         // letterSpacing: 1.2,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        // SizedBox(height: 20),
+                        if (controller.noDataFound)
+                          SizedBox(
+                            height: 300,
+                            child: Center(
+                              child: Text(
+                                "No Boats Found 😔",
+                                style: TextStyle(
+                                    fontSize: 20, fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                          )
+                        else
+                          ...List.generate(
+                            controller.timeList.length,
+                            (i) => Column(
+                              children: [
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: Container(
+                                        height: 1,
+                                        margin: EdgeInsets.only(
+                                            left: 10, right: 10),
+                                        color: AppColors.text.skyBlue,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(
+                                        // left: 200,
+                                        right: 220,
+                                      ),
+                                      child: Text(
+                                        DateFormat('hh : mm')
+                                            .format(controller.timeList[i]),
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
+                                ...List.generate(controller.boatsList.length,
+                                    (index) {
+                                  return BoatWidget(
+                                    boat: controller.boatsList[index],
+                                    boatPassengersModel:
+                                        controller.bookedPassengers[i],
+                                  );
+                                }),
+                                SizedBox(
+                                  height: 50,
+                                ),
+                              ],
+                            ),
+                          ),
+                        SizedBox(height: 50),
                       ],
-                    ),
-                  ),
-                  SizedBox(height: 50),
-                ],
-              );
-            }),
+                    );
+                  }),
+                ),
+                Container(
+                  height: 300,
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -128,370 +189,29 @@ class BoatPage extends StatelessWidget {
 
   ///================UI=============///
 
-// Widget buildExpansion(
-//     {@required int i,
-//     @required String name,
-//     @required BoatsModel boatsModel}) {
-//   return GetBuilder<BoatController>(builder: (controller) {
-//     return Padding(
-//       padding: const EdgeInsets.only(bottom: 10),
-//       child: AnimatedContainer(
-//         duration: Duration(milliseconds: 200),
-//         curve: Curves.easeInCubic,
-//         alignment: Alignment.topCenter,
-//         height: controller.isExpanded[i] ? 400 : 50,
-//         width: 350,
-//         decoration: BoxDecoration(
-//           color: Colors.white,
-//           borderRadius: BorderRadius.circular(12),
-//           // border: Border.all(color: AppColors.text.grey),
-//         ),
-//         child: Container(
-//           decoration: BoxDecoration(
-//             color: Colors.white,
-//             borderRadius: BorderRadius.circular(12),
-//           ),
-//           child: Padding(
-//             padding: const EdgeInsets.only(left: 25),
-//             child: Column(
-//               mainAxisAlignment: MainAxisAlignment.start,
-//               crossAxisAlignment: CrossAxisAlignment.start,
-//               children: [
-//                 Row(
-//                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                     children: [
-//                       Container(
-//                         width: 100,
-//                         child: Text(
-//                           name,
-//                           overflow: TextOverflow.ellipsis,
-//                           style: TextStyle(
-//                               color: AppColors.text.black,
-//                               fontSize: 16,
-//                               fontWeight: FontWeight.w600),
-//                         ),
-//                       ),
-//                       Spacer(),
-//                       EmployeeAccess(
-//                         access: AccessRights.editBookings,
-//                         child: IconButton(
-//                           splashRadius: 20,
-//                           icon: Icon(Icons.edit,
-//                               color: AppColors.background.black),
-//                           iconSize: 12,
-//                           onPressed: () {
-//                             Get.toNamed(EditBoatPage.id,
-//                                 arguments: boatsModel);
-//                           },
-//                         ),
-//                       ),
-//                       IconButton(
-//                         splashRadius: 20,
-//                         iconSize: 23,
-//                         icon: Icon(controller.isExpanded[i]
-//                             ? Icons.keyboard_arrow_up_rounded
-//                             : Icons.keyboard_arrow_down_rounded),
-//                         onPressed: () {
-//                           controller.isExpanded[i] =
-//                               !controller.isExpanded[i];
-//                           //log(controller.isExpanded.toString());
-//                           controller.update();
-//                         },
-//                       ),
-//                     ]),
-//                 controller.isExpanded[i]
-//                     ? FutureBuilder(
-//                         future: Future.delayed(Duration(milliseconds: 200)),
-//                         initialData: SizedBox(),
-//                         builder: (context, snapshot) {
-//                           if (snapshot.connectionState ==
-//                               ConnectionState.done)
-//                             return Column(
-//                               crossAxisAlignment: CrossAxisAlignment.start,
-//                               children: <Widget>[
-//                                 SizedBox(height: 30),
-//                                 Row(
-//                                   mainAxisAlignment: MainAxisAlignment.start,
-//                                   crossAxisAlignment:
-//                                       CrossAxisAlignment.start,
-//                                   children: [
-//                                     Stack(
-//                                       children: [
-//                                         TAImage(AppImages.icon.boat),
-//                                         Positioned(
-//                                           left: 10,
-//                                           top: 6,
-//                                           child: Container(
-//                                             height: 400,
-//                                             width: 105,
-//                                             child: Wrap(
-//                                                 direction: Axis.horizontal,
-//                                                 verticalDirection:
-//                                                     VerticalDirection.down,
-//                                                 children: [
-//                                                   ...List.generate(
-//                                                       controller
-//                                                           .passengerModel[i]
-//                                                           .passengers
-//                                                           .length, (index) {
-//                                                     return buildSeat(
-//                                                         borderColor: AppColors
-//                                                             .text.skyBlue,
-//                                                         color: AppColors.text
-//                                                             .lightSkyBlue);
-//                                                   }),
-//                                                   ...List.generate(
-//                                                       (controller.boatsList[i]
-//                                                               .capacity -
-//                                                           controller
-//                                                               .passengerModel[
-//                                                                   i]
-//                                                               .passengers
-//                                                               .length),
-//                                                       (index) {
-//                                                     return buildSeat(
-//                                                         borderColor:
-//                                                             Color(0xff5BFF62),
-//                                                         color: Color(
-//                                                             0xffD1FFBB));
-//                                                   }),
-//                                                 ]),
-//                                           ),
-//                                         )
-//                                       ],
-//                                     ),
-//                                     SizedBox(width: 15),
-//                                     Column(
-//                                       crossAxisAlignment:
-//                                           CrossAxisAlignment.start,
-//                                       children: [
-//                                         SizedBox(height: 10),
-//                                         buildCaptainName(
-//                                             icon: AppImages.icon.captain,
-//                                             name: controller
-//                                                 .boatsList[i].captainName),
-//                                         SizedBox(height: 20),
-//                                         buildCaptainPhone(
-//                                             icon: Icons.phone,
-//                                             phoneNumber: controller
-//                                                 .boatsList[i].phoneNumber),
-//                                       ],
-//                                     ),
-//                                   ],
-//                                 ),
-//                                 SizedBox(height: 40),
-//                                 buildBoatStatus(),
-//                                 SizedBox(height: 10),
-//                                 buildStatusHistory(),
-//                                 SizedBox(height: 40),
-//                                 seatsAvailability(
-//                                     name: "Filled : ",
-//                                     value: controller
-//                                         .passengerModel[i].passengers.length
-//                                         .toString(),
-//                                     fontSize: 13,
-//                                     valueColour: AppColors.text.skyBlue),
-//                                 SizedBox(height: 10),
-//                                 seatsAvailability(
-//                                     name: "Available : ",
-//                                     value: (controller.boatsList[i].capacity -
-//                                             controller.passengerModel[i]
-//                                                 .passengers.length)
-//                                         .toString(),
-//                                     fontSize: 13,
-//                                     valueColour: Color(0xff00CF2E)),
-//                                 SizedBox(height: 40),
-//                                 seatsAvailability(
-//                                     name: "Status : ",
-//                                     value: "About to Start in 15 min",
-//                                     valueColour: Color(0xff00CF2E),
-//                                     fontSize: 15),
-//                               ],
-//                             );
-//                           return SizedBox();
-//                         })
-//                     : SizedBox(),
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   });
-// }
-//
-// Widget buildSeat({Color borderColor, Color color}) {
-//   return Padding(
-//     padding: const EdgeInsets.only(left: 3.5, top: 6),
-//     child: Container(
-//       height: 12,
-//       width: 7,
-//       decoration: BoxDecoration(
-//           borderRadius: BorderRadiusDirectional.circular(2),
-//           border: Border.all(color: borderColor, width: 1),
-//           color: color),
-//     ),
-//   );
-// }
-//
-// Widget buildStatusHistory() {
-//   return Row(
-//     children: [
-//       buildStatusName(title: "Started"),
-//       SizedBox(width: 80),
-//       buildStatusName(title: "Diving"),
-//       SizedBox(width: 80),
-//       buildStatusName(title: "Reached"),
-//     ],
-//   );
-// }
-//
-// Widget buildStatusName({@required String title}) {
-//   return Text(
-//     title,
-//     style: TextStyle(
-//         fontSize: FontSize.small,
-//         fontWeight: FontWeight.w600,
-//         color: Colors.grey),
-//   );
-// }
-//
-// Widget seatsAvailability(
-//     {@required String name,
-//     @required String value,
-//     @required double fontSize,
-//     @required Color valueColour}) {
-//   return Text.rich(
-//     TextSpan(
-//       children: [
-//         TextSpan(
-//           text: name,
-//           style: TextStyle(
-//               fontSize: fontSize,
-//               fontWeight: FontWeight.w700,
-//               color: AppColors.text.black),
-//         ),
-//         TextSpan(
-//           text: value,
-//           style: TextStyle(
-//               fontSize: fontSize,
-//               fontWeight: FontWeight.w600,
-//               color: valueColour),
-//         ),
-//       ],
-//     ),
-//     textAlign: TextAlign.center,
-//   );
-// }
-//
-// Widget buildUpdateButton() {
-//   return Container(
-//     child: AppButton.miniFlat(
-//       onTap: () {},
-//       text: "Update",
-//     ),
-//     alignment: Alignment.centerRight,
-//   );
-// }
-//
-// Widget buildCaptainName({@required String icon, @required String name}) {
-//   return Row(
-//     children: [
-//       TAImage(
-//         icon,
-//         height: 20,
-//         width: 20,
-//       ),
-//       SizedBox(width: 10),
-//       Container(
-//         width: 85,
-//         child: Text(
-//           name,
-//           overflow: TextOverflow.ellipsis,
-//           style: TextStyle(
-//               fontSize: FontSize.small, fontWeight: FontWeight.w700),
-//         ),
-//       )
-//     ],
-//   );
-// }
-//
-// Widget buildCaptainPhone(
-//     {@required IconData icon, @required String phoneNumber}) {
-//   return GestureDetector(
-//     onTap: () {
-//       makingPhoneCall(phoneNumber);
-//     },
-//     child: Row(
-//       children: [
-//         Icon(icon, size: 15),
-//         SizedBox(width: 10),
-//         Text(
-//           phoneNumber,
-//           overflow: TextOverflow.ellipsis,
-//           style: TextStyle(
-//               fontSize: FontSize.small, fontWeight: FontWeight.w700),
-//         )
-//       ],
-//     ),
-//   );
-// }
-//
-// makingPhoneCall(String phoneNumber) async {
-//   String url = 'tel:$phoneNumber';
-//   if (await canLaunch(url)) {
-//     await launch(url);
-//   } else {
-//     throw 'Could not launch $url';
-//   }
-// }
-//
-// Widget buildBoatStatus({String totalAmount, List<double> payments}) {
-//   return GetBuilder<BoatController>(builder: (controller) {
-//     return Row(
-//       children: [
-//         buildCircle(),
-//         buildLine(),
-//         buildCircle(),
-//         buildLine(),
-//         buildCircle(),
-//       ],
-//     );
-//   });
-// }
-//
-// Widget buildCircle({Color color}) {
-//   return Icon(
-//     Icons.circle,
-//     size: 10,
-//     color: Colors.grey,
-//   );
-// }
-//
-// Widget buildLine() {
-//   return Center(
-//     child: Stack(
-//       children: [
-//         Container(
-//           height: 2,
-//           width: 120,
-//           decoration: BoxDecoration(
-//             color: AppColors.text.grey,
-//           ),
-//         ),
-//         // AnimatedContainer(
-//         //   duration: Duration(seconds: 1),
-//         //   height: 2,
-//         //   // height: (color == AppColors.background.black) ? 50 : 0,
-//         //   width: 100,
-//         //   decoration: BoxDecoration(
-//         //     color: Colors.black,
-//         //   ),
-//         // ),
-//       ],
-//     ),
-//   );
-// }
+  Widget buildAppBar() {
+    return AppBar(
+      toolbarHeight: 70,
+      centerTitle: true,
+      title: buildTitle(),
+      leading: BackNavigationIcon(),
+      elevation: 0,
+      backgroundColor: AppColors.background.white,
+    );
+  }
+
+  Widget buildTitle() {
+    return Text(
+      'CoastGuardSlips',
+      style: TextStyle(
+        color: AppColors.text.black,
+        fontSize: 20,
+        fontFamily: AppFonts.nunito,
+        fontWeight: FontWeight.normal,
+        letterSpacing: 1.2,
+      ),
+    );
+  }
 
   selectDate(BuildContext context) async {
     DateTime date = await showDatePicker(
@@ -522,6 +242,9 @@ class BoatPage extends StatelessWidget {
 
     if (date != null) {
       logic.controller.selectedDate = date;
+      logic.controller.showLoading = true;
+      await logic.getData();
+      logic.controller.showLoading = false;
     }
   }
 }

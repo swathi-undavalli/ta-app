@@ -99,8 +99,8 @@ class BookingScreen extends StatelessWidget {
     return FloatingActionButton(
       elevation: 0,
       onPressed: () {
-        Get.toNamed(ChooseBoatPage.id);
-        // Get.toNamed(AddCustomerDetailsScreen.id);
+        // Get.toNamed(ChooseBoatPage.id);
+        Get.toNamed(AddCustomerDetailsScreen.id);
         // Get.toNamed(D2.id);
       },
       backgroundColor: AppColors.background.black,
