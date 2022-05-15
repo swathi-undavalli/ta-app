@@ -19,6 +19,7 @@ import 'package:temple_adventures/features/all-bookings/presentation/screens/all
 import 'package:temple_adventures/features/boat/presentation/screens/editBoat-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/newBoat-page.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/add-guest-details-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/all-idProofs-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
@@ -117,9 +118,9 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
-        CustomerRegistrationScreen.id: (context) =>
-            CustomerRegistrationScreen(),
-        NewCustomerScreen.id: (context) => NewCustomerScreen(),
+        // CustomerRegistrationScreen.id: (context) =>
+        //     CustomerRegistrationScreen(),
+        // NewCustomerScreen.id: (context) => NewCustomerScreen(),
         AllActivitiesScreen.id: (context) => AllActivitiesScreen(),
         EditBoatPage.id: (context) => EditBoatPage(),
         NewBoatPage.id: (context) => NewBoatPage(),
@@ -136,7 +137,7 @@ class MyApp extends StatelessWidget {
         WelcomeScreen.id: (context) => WelcomeScreen(),
         DashBoardScreen.id: (context) => DashBoardScreen(),
         AddAnUser.id: (context) => AddAnUser(),
-        PaperWorkScreen.id: (context) => PaperWorkScreen(),
+        // PaperWorkScreen.id: (context) => PaperWorkScreen(),
         AddCustomerDetailsScreen.id: (context) => AddCustomerDetailsScreen(),
         AllEmployeesScreen.id: (context) => AllEmployeesScreen(),
         LogScreen.id: (context) => LogScreen(),
@@ -149,6 +150,7 @@ class MyApp extends StatelessWidget {
         D2.id: (context) => D2(),
         IDProofScreen.id: (context) => IDProofScreen(),
         AllIDProofsScreen.id: (context) => AllIDProofsScreen(),
+        GuestDetailsScreen.id: (context) => GuestDetailsScreen(),
       },
     );
   }

@@ -67,6 +67,7 @@ class NewBoatLogic {
         captainName: controller.captainNameTED.text,
         phoneNumber: controller.phoneTED.text,
         id: (counterModel.boat + 1).toString(),
+        ocean: (controller.diveType) ? true : false,
       );
       FirebaseFirestore.instance
           .collection('boats')
@@ -102,11 +103,21 @@ class NewBoatController extends GetxController {
   FocusNode captainNameNode = FocusNode();
   FocusNode phoneNode = FocusNode();
 
+  bool _diveType = true;
+
+  bool get diveType => _diveType;
+
+  set diveType(bool value) {
+    _diveType = value;
+    update();
+  }
+
   reset() {
     boatNameTED.text = "";
     boatCapacityTED.text = "";
     captainNameTED.text = "";
     phoneTED.text = "";
+    diveType = true;
   }
 
   int _employeeCount;

@@ -1,155 +1,73 @@
-// To parse this JSON data, do
-//
-//     final customerModel = customerModelFromMap(jsonString);
-
 import 'dart:convert';
 
-CustomerModel customerModelFromMap(String str) =>
-    CustomerModel.fromMap(json.decode(str));
+CustomerModel customerModelFromMap(String str) => CustomerModel.fromMap(json.decode(str));
 
 String customerModelToMap(CustomerModel data) => json.encode(data.toMap());
 
 class CustomerModel {
   CustomerModel({
-    this.email,
-    this.fistName,
-    this.middleName,
-    this.lastName,
-    this.dob,
     this.addressLine1,
     this.addressLine2,
-    this.country,
-    this.state,
     this.city,
-    this.pinCode,
+    this.country,
     this.countryCode,
-    this.phoneNumber,
-    this.idProof,
+    this.dob,
+    this.email,
     this.gender,
+    this.location,
+    this.name,
+    this.idProof,
+    this.phoneNumber,
+    this.pinCode,
+    this.state,
   });
 
-  String email;
-  String fistName;
-  String middleName;
-  String lastName;
-  String dob;
   String addressLine1;
   String addressLine2;
-  String country;
-  String state;
   String city;
-  String pinCode;
+  String country;
   String countryCode;
-  String phoneNumber;
-  String idProof;
+  String dob;
+  String email;
   String gender;
+  String location;
+  String name;
+  String idProof;
+  String phoneNumber;
+  String pinCode;
+  String state;
 
   factory CustomerModel.fromMap(Map<String, dynamic> json) => CustomerModel(
-        email: json["email"],
-        fistName: json["fistName"],
-        middleName: json["middleName"],
+    addressLine1: json["addressLine1"],
+    addressLine2: json["addressLine2"],
+    city: json["city"],
+    country: json["country"],
+    countryCode: json["countryCode"],
+    dob: json["dob"],
+    email: json["email"],
+    gender: json["gender"],
+    location: json["location"],
+    name: json["name"],
     idProof: json["idProof"],
-        lastName: json["lastName"],
-        dob: json["dob"],
-        addressLine1: json["addressLine1"],
-        addressLine2: json["addressLine2"],
-        country: json["country"],
-        state: json["state"],
-        city: json["city"],
-        pinCode: json["pinCode"],
-        countryCode: json["countryCode"],
-        phoneNumber: json["phoneNumber"],
-        gender: json["gender"],
-      );
+    phoneNumber: json["phoneNumber"],
+    pinCode: json["pinCode"],
+    state: json["state"],
+  );
 
   Map<String, dynamic> toMap() => {
-        "email": email,
-        "fistName": fistName,
-        "middleName": middleName,
-        "lastName": lastName,
-        "dob": dob,
-        "addressLine1": addressLine1,
-        "addressLine2": addressLine2,
-        "idProof": idProof,
-        "country": country,
-        "state": state,
-        "city": city,
-        "pinCode": pinCode,
-        "countryCode": countryCode,
-        "phoneNumber": phoneNumber,
-        "gender": gender,
-      };
+    "addressLine1": addressLine1,
+    "addressLine2": addressLine2,
+    "city": city,
+    "country": country,
+    "countryCode": countryCode,
+    "dob": dob,
+    "email": email,
+    "gender": gender,
+    "location": location,
+    "name": name,
+    "idProof": idProof,
+    "phoneNumber": phoneNumber,
+    "pinCode": pinCode,
+    "state": state,
+  };
 }
-
-
-/*class CustomerModel {
-  CustomerModel({
-    this.email,
-    this.fistName,
-    this.middleName,
-    this.lastName,
-    this.dob,
-    this.addressLine1,
-    this.addressLine2,
-    this.country,
-    this.state,
-    this.city,
-    this.pinCode,
-    this.countryCode,
-    this.phoneNumber,
-    this.idProof,
-    this.gender,
-  });
-
-  String email;
-  String fistName;
-  String middleName;
-  String lastName;
-  String dob;
-  String addressLine1;
-  String addressLine2;
-  String country;
-  String state;
-  String city;
-  String pinCode;
-  String countryCode;
-  String phoneNumber;
-  String idProof;
-  String gender;
-
-  factory CustomerModel.fromMap(Map<String, dynamic> json) => CustomerModel(
-        email: json["email"],
-        fistName: json["fistName"],
-        middleName: json["middleName"],
-    idProof: json["idProof"],
-        lastName: json["lastName"],
-        dob: json["dob"],
-        addressLine1: json["addressLine1"],
-        addressLine2: json["addressLine2"],
-        country: json["country"],
-        state: json["state"],
-        city: json["city"],
-        pinCode: json["pinCode"],
-        countryCode: json["countryCode"],
-        phoneNumber: json["phoneNumber"],
-        gender: json["gender"],
-      );
-
-  Map<String, dynamic> toMap() => {
-        "email": email,
-        "fistName": fistName,
-        "middleName": middleName,
-        "lastName": lastName,
-        "dob": dob,
-        "addressLine1": addressLine1,
-        "addressLine2": addressLine2,
-        "idProof": idProof,
-        "country": country,
-        "state": state,
-        "city": city,
-        "pinCode": pinCode,
-        "countryCode": countryCode,
-        "phoneNumber": phoneNumber,
-        "gender": gender,
-      };
-}*/

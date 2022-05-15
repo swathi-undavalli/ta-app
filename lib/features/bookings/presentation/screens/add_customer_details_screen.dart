@@ -78,41 +78,8 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                AppTextField(
-                  hintText: "Enter Customer Email ID",
-                  controller: logic.controller.emailTED,
-                  focusNode: logic.controller.emailNode,
-                  nextFocusNode: logic.controller.noOfPersonsNode,
-                  keyboardType: TextInputType.emailAddress,
-                  onChangedCallBack: (_) {},
-                  required: false,
-                  errorValidator: () {
-                    return Validator.validateEmail(
-                        logic.controller.emailTED.text);
-                  },
-                  validator: (email) {
-                    return Validator.validateEmail(email);
-                  },
-                ),
-                AppTextField(
-                  hintText: "No of Persons",
-                  controller: logic.controller.paxTED,
-                  focusNode: logic.controller.noOfPersonsNode,
-                  nextFocusNode: logic.controller.phoneNumberNode,
-                  keyboardType: TextInputType.number,
-                  required: false,
-                  onChangedCallBack: (_) {},
-                  isStrictNumber: true,
-                  errorValidator: () {
-                    return null;
-                    // return Validator.validateEmail(
-                    //     logic.controller.emailTED.text);
-                  },
-                  validator: (email) {
-                    return null;
-                    // return Validator.validateEmail(email);
-                  },
-                ),
+                buildEmailID(),
+                buildNoOfPersons(),
                 buildPhoneNumber(),
                 SizedBox(height: 40),
               ],
@@ -120,6 +87,46 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildNoOfPersons() {
+    return AppTextField(
+      hintText: "No of Persons",
+      controller: logic.controller.paxTED,
+      focusNode: logic.controller.noOfPersonsNode,
+      nextFocusNode: logic.controller.phoneNumberNode,
+      keyboardType: TextInputType.number,
+      required: false,
+      onChangedCallBack: (_) {},
+      isStrictNumber: true,
+      errorValidator: () {
+        return null;
+        // return Validator.validateEmail(
+        //     logic.controller.emailTED.text);
+      },
+      validator: (email) {
+        return null;
+        // return Validator.validateEmail(email);
+      },
+    );
+  }
+
+  Widget buildEmailID() {
+    return AppTextField(
+      hintText: "Enter Customer Email ID",
+      controller: logic.controller.emailTED,
+      focusNode: logic.controller.emailNode,
+      nextFocusNode: logic.controller.noOfPersonsNode,
+      keyboardType: TextInputType.emailAddress,
+      onChangedCallBack: (_) {},
+      required: false,
+      errorValidator: () {
+        return Validator.validateEmail(logic.controller.emailTED.text);
+      },
+      validator: (email) {
+        return Validator.validateEmail(email);
+      },
     );
   }
 
@@ -198,17 +205,17 @@ class AddCustomerDetailsScreen extends StatelessWidget {
     //   return Container();
   }
 
-  Widget buildMessage() {
-    return GetBuilder<CustomerRegistrationController>(builder: (controller) {
-      return Container(
-        width: Get.width,
-        child: Text(
-          controller.statusMsg,
-          style: TextStyle(
-              color: AppColors.text.skyBlue, fontSize: FontSize.textSize),
-          textAlign: TextAlign.center,
-        ),
-      );
-    });
-  }
+  // Widget buildMessage() {
+  //   return GetBuilder<CustomerRegistrationController>(builder: (controller) {
+  //     return Container(
+  //       width: Get.width,
+  //       child: Text(
+  //         controller.statusMsg,
+  //         style: TextStyle(
+  //             color: AppColors.text.skyBlue, fontSize: FontSize.textSize),
+  //         textAlign: TextAlign.center,
+  //       ),
+  //     );
+  //   });
+  // }
 }

@@ -88,13 +88,26 @@ class _SeatsAvailabilityExpansionPanelState
                     children: [
                       Container(
                         width: 100,
-                        child: Text(
-                          widget.boat.boatName,
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
-                              color: AppColors.text.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600),
+                        child: Row(
+                          children: [
+                            Text(
+                              widget.boat.boatName,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(
+                                  color: AppColors.text.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                            if (!widget.boat.ocean)
+                              Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Icon(
+                                  Icons.directions_bus_rounded,
+                                  size: 20,
+                                  color: AppColors.text.darkgrey,
+                                ),
+                              )
+                          ],
                         ),
                       ),
                       Spacer(),

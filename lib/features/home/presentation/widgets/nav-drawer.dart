@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/newBoat-page.dart';
 import 'package:temple_adventures/features/compressor/presentation/compressor.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/employee-profile-screen.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
@@ -75,6 +76,13 @@ class NavDrawer extends StatelessWidget {
             text: 'Logs',
             onTap: () {
               Get.offAndToNamed(LogScreen.id);
+            },
+          ),
+          buildMenuItem(
+            icon: Icons.directions_boat_sharp,
+            text: 'Add Boats',
+            onTap: () {
+              Get.toNamed(NewBoatPage.id);
             },
           ),
           Spacer(),

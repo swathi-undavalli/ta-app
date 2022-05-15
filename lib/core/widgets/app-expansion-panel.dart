@@ -15,6 +15,7 @@ import 'package:temple_adventures/features/boat/presentation/widgets/select-seat
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/add-guest-details-screen.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
@@ -50,7 +51,6 @@ class BookingsExpansionPanel extends StatelessWidget {
     }
     return expansions;
   }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SearchController>(builder: (controller) {
@@ -171,26 +171,53 @@ class BookingsExpansionPanel extends StatelessWidget {
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
-              padding: const EdgeInsets.only(left: 20),
+              padding: const EdgeInsets.only(left: 15),
               child: Column(
                 children: [
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
-                          width: 100,
-                          child: Text(
-                            itemModel.name.capitalizeFirst +
+                          height: 7,
+                          width: 7,
+                          decoration: BoxDecoration(
+                              color: (double.parse(items[i].paid) ==
+                                      double.parse(items[i].cost))
+                                  ? Colors.green
+                                  : Colors.red,
+                              borderRadius: BorderRadius.circular(5)),
+                        ),
+                        SizedBox(width: 5),
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  itemModel.name
+                                      .trim()
+                                      .toLowerCase()
+                                      .capitalizeFirst,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: AppColors.text.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ),
+                              Text(
                                 " x " +
-                                (itemModel.bookingModel.noOfPersons.toString()),
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                color: AppColors.text.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600),
+                                    (itemModel.bookingModel.noOfPersons
+                                        .toString()),
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: AppColors.text.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                            ],
                           ),
                         ),
-                        Spacer(),
+                        // Spacer(),
                         IconButton(
                           splashRadius: 20,
                           icon: Icon(Icons.call_rounded,
@@ -354,52 +381,8 @@ class BookingsExpansionPanel extends StatelessWidget {
                                       if (bookingCalenderLogic
                                               .controller.selectedType ==
                                           FilterType.Dive)
-                                        // Container(
-                                        //   child: AppButton.miniFlat(
-                                        //     text: "Select Seats",
-                                        //     onTap: () {
-                                        //       // Get.toNamed(IDProofScreen.id,
-                                        //       //     arguments: items[i].bookingModel);
-                                        //       bool isSame(DateTime date1,
-                                        //           DateTime date2) {
-                                        //         return (date1.day ==
-                                        //                 date2.day &&
-                                        //             date1.month ==
-                                        //                 date2.month &&
-                                        //             date1.year == date2.year);
-                                        //       }
-                                        //
-                                        //       BookingModel model =
-                                        //           items[i].bookingModel;
-                                        //       log(model.diveDate.length
-                                        //           .toString());
-                                        //       for (int i = 0;
-                                        //           i < model.diveDate.length;
-                                        //           i++) {
-                                        //         if (isSame(
-                                        //             model.diveDate[i],
-                                        //             bookingCalenderLogic
-                                        //                 .controller
-                                        //                 .selectedDate)) {
-                                        //           print("Leaving");
-                                        //         } else {
-                                        //           model.diveDate.removeAt(i);
-                                        //         }
-                                        //       }
-                                        //
-                                        //       log(model.diveDate.length
-                                        //           .toString());
-                                        //
-                                        //       Get.toNamed(
-                                        //         ChooseBoatPage.id,
-                                        //         arguments: model,
-                                        //       );
-                                        //       //
-                                        //       // Get.toNamed(W2.id);
-                                        //     },
-                                        //   ).paddingOnly(right: 15),
-                                        // ),
-                                        SelectSeatsWidget(items[i].bookingModel),
+                                        SelectSeatsWidget(
+                                            items[i].bookingModel),
                                       Spacer(),
                                       Container(
                                         child: AppButton.miniFlat(
@@ -449,15 +432,21 @@ class BookingsExpansionPanel extends StatelessWidget {
                                               ),
                                             )
                                           : SizedBox(),
+                                      // AppButton.miniFlat(
+                                      //   text: "Get Link",
+                                      //   onTap: () async {
+                                      //     String link =
+                                      //         "https://seismic-glow-283418.web.app/?booking=${items[i].bookingModel.id}";
+                                      //     await Clipboard.setData(
+                                      //         ClipboardData(text: link));
+                                      //     Fluttertoast.showToast(
+                                      //         msg: "Link copied to Clipboard");
+                                      //   },
+                                      // ).paddingOnly(right: 15),
                                       AppButton.miniFlat(
-                                        text: "Get Link",
-                                        onTap: () async {
-                                          String link =
-                                              "https://seismic-glow-283418.web.app/?booking=${items[i].bookingModel.id}";
-                                          await Clipboard.setData(
-                                              ClipboardData(text: link));
-                                          Fluttertoast.showToast(
-                                              msg: "Link copied to Clipboard");
+                                        text: "Add Info",
+                                        onTap: () {
+                                          Get.toNamed(GuestDetailsScreen.id);
                                         },
                                       ).paddingOnly(right: 15),
                                     ],

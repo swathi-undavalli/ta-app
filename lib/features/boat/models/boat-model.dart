@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-BoatsModel boatsModelFromMap(String str) => BoatsModel.fromMap(json.decode(str));
+BoatsModel boatsModelFromMap(String str) =>
+    BoatsModel.fromMap(json.decode(str));
 
 String boatsModelToMap(BoatsModel data) => json.encode(data.toMap());
 
@@ -11,6 +12,7 @@ class BoatsModel {
     this.captainName,
     this.phoneNumber,
     this.capacity,
+    this.ocean,
   });
 
   String id;
@@ -18,20 +20,23 @@ class BoatsModel {
   String captainName;
   String phoneNumber;
   int capacity;
+  bool ocean;
 
   factory BoatsModel.fromMap(Map<String, dynamic> json) => BoatsModel(
-    id: json["id"],
-    boatName: json["boatName"],
-    captainName: json["captainName"],
-    phoneNumber: json["phoneNumber"],
-    capacity: json["capacity"],
-  );
+        id: json["id"],
+        boatName: json["boatName"],
+        captainName: json["captainName"],
+        phoneNumber: json["phoneNumber"],
+        capacity: json["capacity"],
+        ocean: json["ocean"],
+      );
 
   Map<String, dynamic> toMap() => {
-    "id": id,
-    "boatName": boatName,
-    "captainName": captainName,
-    "phoneNumber": phoneNumber,
-    "capacity": capacity,
-  };
+        "id": id,
+        "boatName": boatName,
+        "captainName": captainName,
+        "phoneNumber": phoneNumber,
+        "capacity": capacity,
+        "ocean": ocean,
+      };
 }

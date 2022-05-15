@@ -275,7 +275,6 @@ class AddAnUser extends StatelessWidget {
       focusNode: logic.controller.phoneNumberNode,
       initialCountryCode: logic.controller.countryISoCOde,
       showCountryFlag: false,
-      controller: logic.controller.phoneNumberTED,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: InputDecoration(
         labelText: "Phone Number",

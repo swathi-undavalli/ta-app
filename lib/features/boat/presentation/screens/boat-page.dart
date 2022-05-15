@@ -30,15 +30,15 @@ class BoatPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       // appBar: buildAppBar(),
-      floatingActionButton: FloatingActionButton(
-        elevation: 0,
-        onPressed: () {
-          Get.toNamed(NewBoatPage.id);
-          // Get.toNamed(W2.id);
-        },
-        backgroundColor: AppColors.background.black,
-        child: Icon(Icons.add),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   elevation: 0,
+      //   onPressed: () {
+      //     Get.toNamed(NewBoatPage.id);
+      //     // Get.toNamed(W2.id);
+      //   },
+      //   backgroundColor: AppColors.background.black,
+      //   child: Icon(Icons.add),
+      // ),
       body: RefreshIndicator(
         color: AppColors.IconColor.black,
         onRefresh: () async {
@@ -100,19 +100,6 @@ class BoatPage extends StatelessWidget {
                           ],
                         ),
                         SizedBox(height: 20),
-                        // Row(
-                        //   children: [
-                        //     Text(
-                        //       'Coast Guard Slips',
-                        //       style: TextStyle(
-                        //         fontSize: 20,
-                        //         fontWeight: FontWeight.w600,
-                        //         // letterSpacing: 1.2,
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        // SizedBox(height: 20),
                         if (controller.noDataFound)
                           SizedBox(
                             height: 300,
@@ -188,6 +175,10 @@ class BoatPage extends StatelessWidget {
   }
 
   ///================UI=============///
+
+
+
+
 
   Widget buildAppBar() {
     return AppBar(

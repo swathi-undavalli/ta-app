@@ -262,6 +262,7 @@ class AddAnUserController extends GetxController {
 
   set countryISoCOde(String value) {
     _countryISoCOde = value;
+    update();
   }
 
   set roles(List<String> value) {

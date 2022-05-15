@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,20 +35,35 @@ class NewBoatPage extends StatelessWidget {
                     SizedBox(
                       height: 50,
                     ),
+                    buildSwitch(
+                      text: (controller.diveType) ? "Ocean" : "Lake",
+                      switchValue: controller.diveType,
+                      onChanged: (value) {
+                        controller.diveType = !controller.diveType;
+                        // controller.diveType = value;
+                        log(value.toString());
+                      },
+                    ),
                     buildTextFields(
-                        name: "Boat Name",
+                        name: (controller.diveType)
+                            ? "Boat Name"
+                            : "Vehicle Name",
                         textEditingController: controller.boatNameTED,
                         focusNode: controller.boatNameNode,
                         nextFocusNode: controller.boatCapacityNode,
                         keyBoardType: TextInputType.text),
                     buildTextFields(
-                        name: "Boat Capacity",
+                        name: (controller.diveType)
+                            ? "Boat Capacity"
+                            : "Vehicle Capacity",
                         textEditingController: controller.boatCapacityTED,
                         focusNode: controller.boatCapacityNode,
                         nextFocusNode: controller.captainNameNode,
                         keyBoardType: TextInputType.number),
                     buildTextFields(
-                        name: "Captain Name",
+                        name: (controller.diveType)
+                            ? "Captain Name"
+                            : "Driver Name",
                         textEditingController: controller.captainNameTED,
                         focusNode: controller.captainNameNode,
                         nextFocusNode: controller.phoneNode,
@@ -129,7 +146,8 @@ class NewBoatPage extends StatelessWidget {
           initialValue: controller.phoneTED.text,
           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
           decoration: InputDecoration(
-            labelText: "Phone Number",
+            labelText:
+                (controller.diveType) ? "Captain Phone No" : "Driver Phone No",
             labelStyle: TextStyle(
               fontSize: FontSize.small,
               fontFamily: AppFonts.nunito,
@@ -177,6 +195,30 @@ class NewBoatPage extends StatelessWidget {
         onTap: () {
           logic.onSubmit();
         },
+      ),
+    );
+  }
+
+  Widget buildSwitch({String text, Function onChanged, bool switchValue}) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 20.0, right: 20),
+      child: Row(
+        children: [
+          Spacer(),
+          Text(
+            text,
+            style: TextStyle(
+                fontSize: FontSize.textSize,
+                fontWeight: FontWeight.w600,
+                color: AppColors.text.darkgrey),
+          ),
+          Switch(
+            value: switchValue,
+            onChanged: onChanged,
+            activeColor: AppColors.text.skyBlue,
+            inactiveThumbColor: AppColors.text.grey,
+          ),
+        ],
       ),
     );
   }

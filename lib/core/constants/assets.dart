@@ -12,6 +12,8 @@ class _IconImages {
   String get captain => "images/captain.svg";
   String get boat => "images/boat.svg";
   String get appLogo => "images/AppLogoPondy.png";
+  String get vehicle => "images/vehicle.svg";
+  String get newBoat => "images/newBoat.svg";
 }
 
 class _LottieImages {

@@ -36,6 +36,35 @@ class FileUploader {
     }
   }
 
+
+
+
+  static Future<String> uploadCustomerID({
+    File file,
+  }) async {
+    String fileExtension = file.path.split('.').last;
+    String firebaseLocation =
+        "CustomerIds/${DateTime.now().millisecondsSinceEpoch}.$fileExtension";
+    final idProofsRef = storageRef.child(firebaseLocation);
+    final metadata = SettableMetadata(
+        contentType: lookupMimeType(file.path),
+        customMetadata: {'picked-file-path': file.path});
+
+    try {
+      await idProofsRef.putFile(file, metadata);
+      String link = await idProofsRef.getDownloadURL();
+      if (link != null && link.isNotEmpty) {
+        return link;
+      } else {
+        showToast("Error occurred while uploading image");
+      }
+    } catch (e) {
+      showToast("Error occurred while uploading image");
+    }
+  }
+
+
+
   // static Future<String> uploadIDProof({
   //   File file,
   //   String bookingID,
