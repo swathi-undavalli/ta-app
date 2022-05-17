@@ -13,18 +13,17 @@ class AddNewActivityScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: WillPopScope(
-          onWillPop: () async {
-            logic.controller.reset();
-            return true;
-          },
-          child: SafeArea(
-            child: GetBuilder<AddNewActivityController>(builder: (controller) {
-              return Center(
+      body: WillPopScope(
+        onWillPop: () async {
+          logic.controller.reset();
+          return true;
+        },
+        child: SafeArea(
+          child: GetBuilder<AddNewActivityController>(builder: (controller) {
+            return SingleChildScrollView(
+              physics: BouncingScrollPhysics(),
+              child: Center(
                 child: Padding(
-
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
@@ -62,9 +61,9 @@ class AddNewActivityScreen extends StatelessWidget {
                     ],
                   ),
                 ),
-              );
-            }),
-          ),
+              ),
+            );
+          }),
         ),
       ),
     );

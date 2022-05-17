@@ -186,8 +186,8 @@ class AllEmployeesScreen extends StatelessWidget {
         future: FirebaseFirestore.instance
             .collection("employees")
             .doc(id)
-            .collection("employeeFullInformation")
-            .doc("employeeData")
+            // .collection("employeeFullInformation")
+            // .doc("employeeData")
             .get(),
         builder: (BuildContext context, snapshot) {
           try {

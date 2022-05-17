@@ -13,6 +13,9 @@ import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 class AddAnUserLogic {
+
+
+
   AddAnUserController controller = Get.put(AddAnUserController());
   Employee employee;
   DateTime pickedTime = DateTime.now();
@@ -215,13 +218,16 @@ class AddAnUserController extends GetxController {
   List<String> gender = ['Male', 'Female'];
 
   List<String> _roles = [
-    'Manager',
     'Office Staff',
     'Admin Team',
-    'Accounts',
-    'Servicing',
-    'Marketing',
-    'Bookings'
+    'Dive Team',
+    'Accounts Team',
+    'Front Desk Team',
+    'Marketing Team',
+    'Captain Team',
+    'Bookings Team',
+    'Social Media',
+    'Freelance Team',
   ];
 
   ///Switches

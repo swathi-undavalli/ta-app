@@ -188,6 +188,7 @@ class EditBoatPage extends StatelessWidget {
               captainName: controller.captainNameTED.text,
               phoneNumber: controller.phoneTED.text,
               boatName: boatsArg.boatName,
+              ocean: boatsArg.ocean,
               id: boatsArg.id,
             );
             var boat = FirebaseFirestore.instance

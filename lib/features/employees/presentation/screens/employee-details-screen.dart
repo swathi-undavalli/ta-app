@@ -108,8 +108,8 @@ class EmployeeDetailsScreen extends StatelessWidget {
                                     FirebaseFirestore.instance
                                         .collection("employees")
                                         .doc(employeeArgument.id)
-                                        .collection("employeeFullInformation")
-                                        .doc("employeeData")
+                                        // .collection("employeeFullInformation")
+                                        // .doc("employeeData")
                                         .delete();
                                     // counterModel.employee--;
                                     // FirebaseFirestore.instance
@@ -290,14 +290,14 @@ class EmployeeDetailsScreen extends StatelessWidget {
     var info = await FirebaseFirestore.instance
         .collection("employees")
         .doc(employeeArgument.id)
-        .collection("employeeFullInformation")
-        .doc("employeeData")
+        // .collection("employeeFullInformation")
+        // .doc("employeeData")
         .get();
     if (info.data() != null) {
       Employee employee = Employee.fromMap(info.data());
       //print(info.data());
       final DateTime date = employee.shiftTiming;
-      final DateFormat formatter = DateFormat('HH-mm-ss');
+      final DateFormat formatter = DateFormat('HH-mm-ss a');
       final String shiftTiming = formatter.format(date);
       logic.controller.employeeIdTED.text = employee.id;
       logic.controller.firstNameTED.text = employee.firstName;

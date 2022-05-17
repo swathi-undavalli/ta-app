@@ -53,7 +53,9 @@ Future<void> backgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LocalNotificationService.initialize();
+
   await Firebase.initializeApp();
+
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
 
   ///completely terminated
@@ -83,7 +85,7 @@ void main() async {
     statusBarColor: Colors.white,
     statusBarBrightness: Brightness.light,
     statusBarIconBrightness: Brightness.dark,
-    systemNavigationBarIconBrightness: Brightness.light,
+    systemNavigationBarIconBrightness: Brightness.dark,
   ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   FirebaseMessagingLogic();

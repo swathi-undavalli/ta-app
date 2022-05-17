@@ -23,68 +23,80 @@ class GuestDetailsScreen extends StatelessWidget {
         toolbarHeight: 70,
         centerTitle: true,
         title: buildTitle(),
-        leading: BackNavigationIcon(),
+        leading: GestureDetector(
+          onTap: () {
+            logic.controller.reset();
+            logic.controller.update();
+          },
+          child: BackNavigationIcon(),
+        ),
         elevation: 0,
         backgroundColor: AppColors.background.white,
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(30.0),
-                child:
-                    GetBuilder<GuestDetailsController>(builder: (controller) {
-                  return Column(
-                    children: [
-                      buildEmailID(),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          AppButton.miniFlat(
-                            text: "Get Details",
-                            onTap: () {
-                              logic.getDetailsPressed();
-                            },
-                          ),
-                        ],
-                      ),
-                      if (controller.getDetailsPressed) ...[
-                        buildName(),
-                        buildPhoneNumber(),
-                        buildSubtitle("Gender  *"),
-                        buildGender(),
-                        SizedBox(height: 30),
-                        buildIDProof()
-                      ],
-                      if (controller.showLoading)
-                        SizedBox(
-                          child: Center(
-                              child: SizedBox(
-                            child: CircularProgressIndicator(
-                              color: Colors.black,
-                              strokeWidth: 2,
+      body: WillPopScope(
+        onWillPop: () async {
+          logic.controller.reset();
+          return true;
+        },
+        child: SafeArea(
+          child: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(30.0),
+                  child:
+                      GetBuilder<GuestDetailsController>(builder: (controller) {
+                    return Column(
+                      children: [
+                        buildEmailID(),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            AppButton.miniFlat(
+                              text: "Get Details",
+                              onTap: () {
+                                logic.getDetailsPressed();
+                              },
                             ),
-                            height: 20,
-                            width: 20,
-                          )),
-                          height: 200,
+                          ],
                         ),
-                    ],
-                  );
-                }),
-              ),
-              SizedBox(height: 70),
-              buildCancelSubmitButtons(),
-            ],
+                        if (controller.getDetailsPressed) ...[
+                          buildName(),
+                          buildPhoneNumber(),
+                          buildSubtitle("Gender  *"),
+                          buildGender(),
+                          SizedBox(height: 30),
+                          buildIDProof()
+                        ],
+                        if (controller.showLoading)
+                          SizedBox(
+                            child: Center(
+                                child: SizedBox(
+                              child: CircularProgressIndicator(
+                                color: Colors.black,
+                                strokeWidth: 2,
+                              ),
+                              height: 20,
+                              width: 20,
+                            )),
+                            height: 200,
+                          ),
+                      ],
+                    );
+                  }),
+                ),
+                SizedBox(height: 70),
+                buildCancelSubmitButtons(),
+              ],
+            ),
           ),
         ),
       ),
     );
   }
 
-  GetBuilder<GuestDetailsController> buildCancelSubmitButtons() {
+  Widget buildCancelSubmitButtons() {
     return GetBuilder<GuestDetailsController>(builder: (controller) {
       if (controller.getDetailsPressed)
         return Row(

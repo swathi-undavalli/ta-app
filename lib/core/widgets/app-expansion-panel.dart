@@ -10,12 +10,14 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/access_levels.dart';
+import 'package:temple_adventures/d1.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/select-seats-widget.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-guest-details-screen.dart';
+import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
@@ -28,12 +30,21 @@ class BookingsExpansionPanel extends StatelessWidget {
   final SearchController searchController = Get.put(SearchController());
   final List<ItemModel> items;
   bool searchBar = true;
+  DateTime date = DateTime.now();
   Function onDeletePressed;
   Function onSearchTap;
   List<Widget> expansions = [];
+  TextEditingController depositTED = TextEditingController();
+
   TextEditingController searchTED = TextEditingController();
   BookingsCalenderWidgetLogic bookingCalenderLogic =
       BookingsCalenderWidgetLogic();
+  List<double> payments = [
+    10000,
+    7000,
+    7000,
+    7000,
+  ];
 
   BookingsExpansionPanel(
       {this.items,
@@ -51,6 +62,7 @@ class BookingsExpansionPanel extends StatelessWidget {
     }
     return expansions;
   }
+
   @override
   Widget build(BuildContext context) {
     return GetBuilder<SearchController>(builder: (controller) {
@@ -280,8 +292,7 @@ class BookingsExpansionPanel extends StatelessWidget {
 
                                         Get.back();
                                         onDeletePressed();
-                                        BookingsCalenderWidgetLogic
-                                            bookingCalenderLogic =
+                                        BookingsCalenderWidgetLogic bookingCalenderLogic =
                                             BookingsCalenderWidgetLogic();
                                         bookingCalenderLogic.onDateSelected(
                                             bookingCalenderLogic
@@ -375,7 +386,12 @@ class BookingsExpansionPanel extends StatelessWidget {
                                             1) !=
                                         (items[i].bookingModel.noOfPersons)),
                                   ),
-                                  SizedBox(height: 20),
+                                  SizedBox(height: 30),
+                                  // Dummy(),
+                                  buildPaymentStatus(
+                                      totalAmount: "100000",
+                                      payments: payments),
+                                  SizedBox(height: 10),
                                   Row(
                                     children: [
                                       if (bookingCalenderLogic
@@ -386,11 +402,82 @@ class BookingsExpansionPanel extends StatelessWidget {
                                       Spacer(),
                                       Container(
                                         child: AppButton.miniFlat(
-                                          text: "Upload ID",
+                                          text: "Add Payment",
                                           onTap: () {
-                                            Get.toNamed(IDProofScreen.id,
-                                                arguments:
-                                                    items[i].bookingModel);
+                                            Get.defaultDialog(
+                                              contentPadding: EdgeInsets.only(
+                                                  left: 30,
+                                                  right: 30,
+                                                  top: 20,
+                                                  bottom: 30),
+                                              title: "\n Add Payment",
+                                              content: TextField(
+                                                controller: depositTED,
+                                                cursorColor:
+                                                    AppColors.text.darkgrey,
+                                                cursorHeight: 17,
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                decoration: InputDecoration(
+                                                  labelText: "Deposit",
+                                                  labelStyle: TextStyle(
+                                                      fontSize: 10,
+                                                      color: Colors.black),
+                                                  enabledBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.grey),
+                                                  ),
+                                                  focusedBorder:
+                                                      UnderlineInputBorder(
+                                                    borderSide: BorderSide(
+                                                        color: Colors.black),
+                                                  ),
+                                                ),
+                                              ),
+                                              backgroundColor: Colors.white,
+                                              titleStyle: TextStyle(
+                                                  color: AppColors.text.black,
+                                                  fontFamily: AppFonts.nunito,
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.bold),
+                                              middleTextStyle: TextStyle(
+                                                  color: AppColors.text.black,
+                                                  fontFamily: AppFonts.nunito,
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.w500),
+                                              confirm: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  AppButton.miniText(
+                                                    text: 'Cancel',
+                                                    onTap: () {
+                                                      Get.back();
+                                                    },
+                                                  ),
+                                                  AppButton.miniFlat(
+                                                    text: 'OK',
+                                                    onTap: () {
+                                                      payments.add(double.parse(
+                                                          depositTED.text));
+                                                      print(payments);
+                                                      Get.back();
+                                                      depositTED.text = "";
+                                                      // ExpansionPanelLogic expansionPanel = ExpansionPanelLogic();
+                                                      
+                                                    },
+                                                  ),
+                                                ],
+                                              ),
+                                              barrierDismissible: false,
+                                              radius: 10,
+                                            );
+
+                                            // Get.toNamed(IDProofScreen.id,
+                                            //     arguments:
+                                            //         items[i].bookingModel);
                                             // Get.toNamed(W2.id);
                                           },
                                         ).paddingOnly(right: 15),
@@ -517,112 +604,154 @@ class BookingsExpansionPanel extends StatelessWidget {
       deposits += element;
     });
     int n = list.length;
-    return Stack(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Row(
+        Stack(
           children: [
-            Expanded(
-              // flex: n,
-              child: Container(
-                height: 1,
-                color: (double.parse(total) == deposits)
-                    ? Colors.green.shade400
-                    : Colors.black,
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 1,
+                    color: (double.parse(total) == deposits)
+                        ? Colors.green.shade400
+                        : Colors.black,
+                  ),
+                ),
+              ],
+            ).paddingOnly(top: 7, left: 16, right: 16),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+              Expanded(
+                flex: n,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: List<Widget>.generate(n, (i) {
+                    return buildCircle(color: Colors.black);
+                  }),
+                ),
               ),
-            ),
-          ],
-        ).paddingOnly(top: 6, left: 16, right: 16),
-        Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          Expanded(
-            flex: n,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: List<Widget>.generate(n, (i) {
-                return Row(
-                  children: [
-                    buildCircle(color: Colors.black),
-                  ],
-                );
-              }),
-            ),
-          ),
-          (double.parse(total) == deposits)
-              ? SizedBox()
-              : Expanded(
+              (double.parse(total) == deposits)
+                  ? SizedBox()
+                  : Expanded(
+                      flex: 1,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          buildCircle(color: Colors.red.shade300),
+                        ],
+                      ),
+                    ),
+              Expanded(
                   flex: 1,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      buildCircle(color: Colors.red.shade300),
+                      SizedBox(
+                        width: 39,
+                        child: Container(
+                          width: 15,
+                          height: 15,
+                          decoration: BoxDecoration(
+                              color: AppColors.text.skyBlue,
+                              shape: BoxShape.circle),
+                          child: Icon(
+                            Icons.circle,
+                            size: 10,
+                            color: AppColors.text.black,
+                          ),
+                        ),
+                      ),
                     ],
+                  )),
+            ]),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: n,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List<Widget>.generate(n, (i) {
+                      return buildNumber(
+                          text: list[i].round().toString(),
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black);
+                    }),
                   ),
                 ),
-          Expanded(
-              flex: 2,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  SizedBox(
-                    width: 39,
-                    child: Container(
-                      width: 15,
-                      height: 15,
-                      decoration: BoxDecoration(
-                          color: AppColors.text.skyBlue,
-                          shape: BoxShape.circle),
-                      child: Icon(
-                        Icons.circle,
-                        size: 10,
-                        color: AppColors.text.black,
-                      ),
-                    ),
-                  ),
-                ],
-              )),
-        ]),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              flex: n,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: List<Widget>.generate(n, (i) {
-                  return buildNumber(
-                      text: list[i].toString(),
-                      fontWeight: FontWeight.normal,
-                      color: Colors.black);
-                }),
-              ),
-            ),
-            (double.parse(total) == deposits)
-                ? SizedBox()
-                : Expanded(
+                (double.parse(total) == deposits)
+                    ? SizedBox()
+                    : Expanded(
+                        flex: 1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            buildNumber(
+                                text: (double.parse(total) - deposits)
+                                    .round()
+                                    .toString(),
+                                // text: "16000",
+                                color: Colors.red.shade300,
+                                fontWeight: FontWeight.normal),
+                          ],
+                        )),
+                Expanded(
                     flex: 1,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         buildNumber(
-                            text: (double.parse(total) - deposits).toString(),
-                            color: Colors.red.shade300,
-                            fontWeight: FontWeight.normal),
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            text: totalAmount),
                       ],
                     )),
-            Expanded(
-                flex: 2,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    buildNumber(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        text: totalAmount),
-                  ],
-                )),
+              ],
+            ).paddingOnly(top: 20),
           ],
-        ).paddingOnly(top: 20),
+        ).paddingOnly(right: 20),
+        SizedBox(height: 20),
+        ...List.generate(
+          payments.length,
+          (index) {
+            return buildTransactions(paidAmount: payments[index]);
+          },
+        )
       ],
     );
+  }
+
+  Widget buildTransactions({double paidAmount}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 8,
+          width: 8,
+          decoration: BoxDecoration(
+              color: Colors.green, borderRadius: BorderRadius.circular(10)),
+        ).paddingOnly(top: 2),
+        SizedBox(width: 10),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Paid ${paidAmount.round()} to Donarun Das",
+              style: TextStyle(
+                  fontSize: 10, fontWeight: FontWeight.w600, wordSpacing: 2),
+            ),
+            SizedBox(height: 2),
+            Text(
+              DateFormat("EEE dd MMM yy - hh:mm a").format(date),
+              style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+            ),
+          ],
+        ),
+      ],
+    ).paddingOnly(bottom: 10);
   }
 
   Widget buildCircle({Color color}) {
@@ -639,14 +768,14 @@ class BookingsExpansionPanel extends StatelessWidget {
   Widget buildNumber({FontWeight fontWeight, Color color, String text}) {
     return SizedBox(
       width: 39,
-      child: Text(
-        text,
-        style: TextStyle(fontSize: 10, fontWeight: fontWeight, color: color),
+      child: Center(
+        child: Text(
+          text,
+          style: TextStyle(fontSize: 10, fontWeight: fontWeight, color: color),
+        ),
       ),
     );
   }
-
-  void filterItems(String text) {}
 }
 
 class ExpansionPanelLogic {

@@ -20,6 +20,7 @@ class ActivityEditScreen extends StatelessWidget {
   ActivityEditScreen() {
     logic.controller.priceTED.text = activityArg.price.toString();
     logic.controller.nameTED.text = activityArg.name;
+    logic.controller.colorTED.text = activityArg.color;
   }
 
   @override
@@ -28,29 +29,75 @@ class ActivityEditScreen extends StatelessWidget {
       appBar: buildAppBar(),
       body: SafeArea(
         child: GetBuilder<ActivityEditController>(builder: (controller) {
-          return Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: GetBuilder<ActivityEditController>(builder: (controller) {
-              return Column(
-                children: [
-                  SizedBox(height: 50),
-                  buildTextFields(
-                      name: "Activity Name",
-                      textEditingController: controller.nameTED,
-                      keyBoardType: TextInputType.name),
-                  buildTextFields(
-                      name: "Price",
-                      textEditingController: controller.priceTED,
-                      keyBoardType: TextInputType.number),
-                  SizedBox(height: 100),
-                  buildButtons()
-                ],
-              );
-            }),
+          return SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: GetBuilder<ActivityEditController>(builder: (controller) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Text(activityArg.id),
+                    SizedBox(height: 50),
+                    buildTextFields(
+                        name: "Activity Name",
+                        textEditingController: controller.nameTED,
+                        keyBoardType: TextInputType.name),
+                    buildTextFields(
+                        name: "Price",
+                        textEditingController: controller.priceTED,
+                        keyBoardType: TextInputType.number),
+                    SizedBox(height: 20),
+                    buildSubtitle("Color"),
+                    buildColorCode(),
+                    SizedBox(height: 100),
+                    buildButtons()
+                  ],
+                );
+              }),
+            ),
           );
         }),
       ),
     );
+  }
+
+  Widget buildSubtitle(String name) {
+    return Container(
+      width: Get.size.width,
+      child: Text(
+        name,
+        style: TextStyle(
+          color: Colors.black54,
+          fontFamily: AppFonts.nunito,
+          fontSize: 10,
+          fontWeight: FontWeight.normal,
+        ),
+      ),
+    );
+  }
+
+  Widget buildColorCode() {
+    return GetBuilder<ActivityEditController>(builder: (controller) {
+      return DropdownButton(
+        underline: Container(height: 1, color: Colors.grey),
+        isExpanded: true,
+        value: controller.colorTED.text.isNotEmpty
+            ? controller.colorTED.text
+            : null,
+        onChanged: (newColor) {
+          controller.colorTED.text = newColor;
+          controller.update();
+        },
+        items: controller.colorCode.map((color) {
+          return DropdownMenuItem(
+            child: new Text(color),
+            value: color,
+          );
+        }).toList(),
+      );
+    });
   }
 
   Widget buildButtons() {
@@ -78,12 +125,17 @@ class ActivityEditScreen extends StatelessWidget {
               onTap: () async {
                 activityArg.name = controller.nameTED.text;
                 activityArg.price = int.parse(controller.priceTED.text);
+                activityArg.color = controller.colorTED.text;
                 await FirebaseFirestore.instance
                     .collection("catalogue")
                     .doc(activityArg.id)
                     .set(activityArg.toMap());
-                LogModel logModel = LogModel(type: LogType.editActivity,activityName: activityArg.name);
-                FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
+                LogModel logModel = LogModel(
+                    type: LogType.editActivity, activityName: activityArg.name);
+                FirebaseFirestore.instance
+                    .collection("logs")
+                    .doc()
+                    .set(logModel.toMap());
 
                 Get.back();
                 controller.reset();
@@ -108,15 +160,75 @@ class ActivityEditScreen extends StatelessWidget {
   }
 
   Widget buildTitle() {
-    return Text(
-      'Edit Activity',
-      style: TextStyle(
-        color: AppColors.text.black,
-        fontSize: 20,
-        fontFamily: AppFonts.nunito,
-        fontWeight: FontWeight.normal,
-        letterSpacing: 1.2,
-      ),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        Spacer(),
+        Text(
+          'Edit Activity',
+          style: TextStyle(
+            color: AppColors.text.black,
+            fontSize: 20,
+            fontFamily: AppFonts.nunito,
+            fontWeight: FontWeight.normal,
+            letterSpacing: 1.2,
+          ),
+        ),
+        Spacer(),
+        GestureDetector(
+          onTap: () {
+            Get.defaultDialog(
+              contentPadding:
+                  EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 30),
+              title: "\nAre You Sure ? ",
+              middleText: "Activity will Be Deleted Permanently.",
+              backgroundColor: Colors.white,
+              titleStyle: TextStyle(
+                  color: AppColors.text.black,
+                  fontFamily: AppFonts.nunito,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold),
+              middleTextStyle: TextStyle(
+                  color: AppColors.text.black,
+                  fontFamily: AppFonts.nunito,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w500),
+              confirm: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  AppButton.miniText(
+                    text: 'Cancel',
+                    onTap: () {
+                      Get.back();
+                    },
+                  ),
+                  AppButton.miniFlat(
+                    text: 'OK',
+                    onTap: () {
+                      FirebaseFirestore.instance
+                          .collection("catalogue")
+                          .doc(activityArg.id)
+                          .delete();
+                      Get.back();
+                      Get.back();
+                      allActivitiesLogic.controller.update();
+                      allActivitiesLogic.getAllActivities();
+                    },
+                  ),
+                ],
+              ),
+              barrierDismissible: false,
+              radius: 10,
+            );
+          },
+          child: Icon(
+            Icons.delete,
+            size: 20,
+            color: Colors.black,
+          ),
+        ),
+        SizedBox(width: 20)
+      ],
     );
   }
 
