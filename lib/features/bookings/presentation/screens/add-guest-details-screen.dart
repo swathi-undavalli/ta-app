@@ -13,87 +13,115 @@ import 'package:temple_adventures/features/bookings/presentation/widgets/app-tex
 
 class GuestDetailsScreen extends StatelessWidget {
   static const String id = "GuestDetailsScreen";
-
   final GuestDetailsLogic logic = GuestDetailsLogic();
+
+  GuestDetailsScreen() {
+    logic.init();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        toolbarHeight: 70,
-        centerTitle: true,
-        title: buildTitle(),
-        leading: GestureDetector(
-          onTap: () {
-            logic.controller.reset();
-            logic.controller.update();
-          },
-          child: BackNavigationIcon(),
-        ),
-        elevation: 0,
-        backgroundColor: AppColors.background.white,
-      ),
-      body: WillPopScope(
-        onWillPop: () async {
-          logic.controller.reset();
-          return true;
-        },
-        child: SafeArea(
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  child:
-                      GetBuilder<GuestDetailsController>(builder: (controller) {
-                    return Column(
-                      children: [
-                        buildEmailID(),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
+    return Stack(
+      children: [
+        Scaffold(
+          appBar: AppBar(
+            toolbarHeight: 70,
+            centerTitle: true,
+            title: buildTitle(),
+            leading: GestureDetector(
+              onTap: () {
+                logic.controller.reset();
+                logic.controller.update();
+              },
+              child: BackNavigationIcon(),
+            ),
+            elevation: 0,
+            backgroundColor: AppColors.background.white,
+          ),
+          body: WillPopScope(
+            onWillPop: () async {
+              logic.controller.reset();
+              return true;
+            },
+            child: SafeArea(
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(30.0),
+                      child: GetBuilder<GuestDetailsController>(
+                          builder: (controller) {
+                        return Column(
                           children: [
-                            AppButton.miniFlat(
-                              text: "Get Details",
-                              onTap: () {
-                                logic.getDetailsPressed();
-                              },
+                            buildEmailID(),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                AppButton.miniFlat(
+                                  text: "Get Details",
+                                  onTap: () {
+                                    logic.getDetailsPressed();
+                                  },
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
-                        if (controller.getDetailsPressed) ...[
-                          buildName(),
-                          buildPhoneNumber(),
-                          buildSubtitle("Gender  *"),
-                          buildGender(),
-                          SizedBox(height: 30),
-                          buildIDProof()
-                        ],
-                        if (controller.showLoading)
-                          SizedBox(
-                            child: Center(
-                                child: SizedBox(
-                              child: CircularProgressIndicator(
-                                color: Colors.black,
-                                strokeWidth: 2,
+                            if (controller.getDetailsPressed) ...[
+                              buildNameFields(),
+                              buildPhoneNumber(),
+                              buildSubtitle("Gender  *"),
+                              buildGender(),
+                              SizedBox(height: 30),
+                              buildIDProof()
+                            ],
+                            if (controller.showLoading)
+                              SizedBox(
+                                child: Center(
+                                    child: SizedBox(
+                                  child: CircularProgressIndicator(
+                                    color: Colors.black,
+                                    strokeWidth: 2,
+                                  ),
+                                  height: 20,
+                                  width: 20,
+                                )),
+                                height: 200,
                               ),
-                              height: 20,
-                              width: 20,
-                            )),
-                            height: 200,
-                          ),
-                      ],
-                    );
-                  }),
+                          ],
+                        );
+                      }),
+                    ),
+                    SizedBox(height: 70),
+                    buildCancelSubmitButtons(),
+                  ],
                 ),
-                SizedBox(height: 70),
-                buildCancelSubmitButtons(),
-              ],
+              ),
             ),
           ),
         ),
-      ),
+        buildShowLoading(),
+      ],
     );
+  }
+
+  Widget buildShowLoading() {
+    return GetBuilder<GuestDetailsController>(builder: (controller) {
+      if (controller.pageLoading)
+        return Material(
+          color: Colors.transparent,
+          child: Container(
+            color: Colors.black54,
+            height: Get.height,
+            width: Get.width,
+            child: Center(
+                child: CircularProgressIndicator(
+              color: Colors.white,
+            )),
+          ),
+        );
+      else
+        return SizedBox();
+    });
   }
 
   Widget buildCancelSubmitButtons() {
@@ -224,7 +252,7 @@ class GuestDetailsScreen extends StatelessWidget {
       hintText: "Enter Customer Email ID",
       controller: logic.controller.emailTED,
       focusNode: logic.controller.emailNode,
-      nextFocusNode: logic.controller.nameNode,
+      nextFocusNode: logic.controller.firstNameNode,
       keyboardType: TextInputType.emailAddress,
       onChangedCallBack: (_) {},
       required: true,
@@ -237,19 +265,41 @@ class GuestDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildName() {
-    return AppTextField(
-      hintText: 'Name',
-      controller: logic.controller.nameTED,
-      focusNode: logic.controller.nameNode,
-      nextFocusNode: logic.controller.phoneNumberNode,
-      required: true,
-      errorValidator: () {
-        return null;
-      },
-      validator: (firstName) {
-        return null;
-      },
+  Widget buildNameFields() {
+    return Row(
+      children: [
+        Expanded(
+          child: AppTextField(
+            // width: Get.width / 2 - 40,
+            hintText: 'First Name',
+            controller: logic.controller.firstNameTED,
+            focusNode: logic.controller.firstNameNode,
+            nextFocusNode: logic.controller.lastNameNode,
+            required: true,
+            errorValidator: () {
+              return null;
+            },
+            validator: (firstName) {
+              return null;
+            },
+          ),
+        ),
+        SizedBox(width: 20),
+        AppTextField(
+          width: Get.width / 2 - 40,
+          hintText: 'Last Name',
+          controller: logic.controller.lastNameTED,
+          focusNode: logic.controller.lastNameNode,
+          nextFocusNode: logic.controller.phoneNumberNode,
+          required: true,
+          errorValidator: () {
+            return null;
+          },
+          validator: (firstName) {
+            return null;
+          },
+        ),
+      ],
     );
   }
 

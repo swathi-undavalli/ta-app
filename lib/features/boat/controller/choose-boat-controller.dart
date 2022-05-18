@@ -203,20 +203,6 @@ class ChooseBoatLogic {
   }
 
   onCheckPressed() async {
-    // Map<String, Map<String, dynamic>> data = {};
-
-    //! Validation of seat selection.
-
-    // return;
-    // for (int i = 0; i < controller.diveDates.length; i++) {
-    //   if (controller.selectedSeatsCount[i].reduce((v, e) => v + e) ==
-    //       controller.requiredCount[i]) {
-    //   } else {
-    //     Fluttertoast.showToast(msg: "Please Select Seats");
-    //     return;
-    //   }
-    // }
-
     controller.showLoading = true;
     for (int diveIndex = 0;
         diveIndex < controller.diveDates.length;

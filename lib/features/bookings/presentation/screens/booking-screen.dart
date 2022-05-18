@@ -100,8 +100,8 @@ class BookingScreen extends StatelessWidget {
       elevation: 0,
       onPressed: () {
         // Get.toNamed(ChooseBoatPage.id);
-        // Get.toNamed(AddCustomerDetailsScreen.id);
-        Get.toNamed(Dummy.id);
+        Get.toNamed(AddCustomerDetailsScreen.id);
+        // Get.toNamed(Dummy.id);
       },
       backgroundColor: AppColors.background.black,
       child: Icon(Icons.add),

@@ -292,7 +292,8 @@ class BookingsExpansionPanel extends StatelessWidget {
 
                                         Get.back();
                                         onDeletePressed();
-                                        BookingsCalenderWidgetLogic bookingCalenderLogic =
+                                        BookingsCalenderWidgetLogic
+                                            bookingCalenderLogic =
                                             BookingsCalenderWidgetLogic();
                                         bookingCalenderLogic.onDateSelected(
                                             bookingCalenderLogic
@@ -387,7 +388,6 @@ class BookingsExpansionPanel extends StatelessWidget {
                                         (items[i].bookingModel.noOfPersons)),
                                   ),
                                   SizedBox(height: 30),
-                                  // Dummy(),
                                   buildPaymentStatus(
                                       totalAmount: "100000",
                                       payments: payments),
@@ -395,8 +395,11 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   Row(
                                     children: [
                                       if (bookingCalenderLogic
-                                              .controller.selectedType ==
-                                          FilterType.Dive)
+                                                  .controller.selectedType ==
+                                              FilterType.Dive &&
+                                          items[i].bookingModel.pax.length -
+                                                  1 ==
+                                              items[i].bookingModel.noOfPersons)
                                         SelectSeatsWidget(
                                             items[i].bookingModel),
                                       Spacer(),
@@ -465,8 +468,15 @@ class BookingsExpansionPanel extends StatelessWidget {
                                                       print(payments);
                                                       Get.back();
                                                       depositTED.text = "";
-                                                      // ExpansionPanelLogic expansionPanel = ExpansionPanelLogic();
-                                                      
+                                                      BookingsCalenderWidgetLogic
+                                                          bookingCalenderLogic =
+                                                          BookingsCalenderWidgetLogic();
+                                                      bookingCalenderLogic
+                                                          .onDateSelected(
+                                                        bookingCalenderLogic
+                                                            .controller
+                                                            .lastDateIndex,
+                                                      );
                                                     },
                                                   ),
                                                 ],
@@ -530,12 +540,20 @@ class BookingsExpansionPanel extends StatelessWidget {
                                       //         msg: "Link copied to Clipboard");
                                       //   },
                                       // ).paddingOnly(right: 15),
-                                      AppButton.miniFlat(
-                                        text: "Add Info",
-                                        onTap: () {
-                                          Get.toNamed(GuestDetailsScreen.id);
-                                        },
-                                      ).paddingOnly(right: 15),
+                                      (items[i].bookingModel.pax.length - 1) !=
+                                              (items[i]
+                                                  .bookingModel
+                                                  .noOfPersons)
+                                          ? AppButton.miniFlat(
+                                              text: "Add Info",
+                                              onTap: () {
+                                                Get.toNamed(
+                                                    GuestDetailsScreen.id,
+                                                    arguments:
+                                                        items[i].bookingModel);
+                                              },
+                                            ).paddingOnly(right: 15)
+                                          : SizedBox(),
                                     ],
                                   ),
                                   SizedBox(height: 20),
