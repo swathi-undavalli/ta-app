@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -7,6 +6,7 @@ import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/all-bookings/controller/all-bookings-controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:temple_adventures/features/bookings/presentation/widgets/all-booking-expansionPanel.dart';
 
 class AllBookingsScreen extends StatelessWidget {
   static const String id = "AllBookingsScreen";
@@ -28,24 +28,13 @@ class AllBookingsScreen extends StatelessWidget {
               backgroundColor: AppColors.background.white,
             ),
             body: SafeArea(
-              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                stream: FirebaseFirestore.instance
-                    .collection("bookings")
-                    .snapshots(),
-                builder: (BuildContext context,
-                    AsyncSnapshot<QuerySnapshot> snapshot) {
-                  if (!snapshot.hasData) {
-                    return CircularProgressIndicator();
-                  }
-
-                  return ListView(
-                    shrinkWrap: true,
-                    children: snapshot.data.docs.map((document) {
-                      BookingModel booking = BookingModel.fromMap(document.data());
-                      return buildBookingExpansionPanel(booking);
-                    }).toList(),
-                  );
-                },
+              child: Column(
+                children: [
+                  SizedBox(height: 20),
+                  buildSearchBar(),
+                  SizedBox(height: 10),
+                  buildCheckFirebase(),
+                ],
               ),
             )
             // body: SafeArea(
@@ -90,7 +79,83 @@ class AllBookingsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildBookingExpansionPanel(BookingModel booking) => Text("hdhdh");
+  Widget buildCheckFirebase() {
+    return Expanded(
+      child: GetBuilder<AllBookingsController>(builder: (controller) {
+        return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: FirebaseFirestore.instance.collection("bookings").snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                  strokeWidth: 3,
+                ),
+              );
+            }
+            return ListView(
+              shrinkWrap: true,
+              children: snapshot.data.docs.map((document) {
+                BookingModel booking = BookingModel.fromMap(document.data());
+                if (controller.searchTED.text.isNotEmpty) {
+                  if (booking.id.contains(controller.searchTED.text) ||
+                      (booking.pax[0]['first-name'] as String)
+                          .toLowerCase()
+                          .contains(
+                              controller.searchTED.text.toLowerCase().trim()))
+                    return AllBookingsExpansionPanel(booking: booking);
+                  return SizedBox();
+                }
+                return AllBookingsExpansionPanel(booking: booking);
+              }).toList(),
+            );
+          },
+        );
+      }),
+    );
+  }
+
+  Widget buildSearchBar() {
+    return Container(
+      width: 328,
+      height: 47,
+      decoration: BoxDecoration(
+          color: AppColors.background.white,
+          borderRadius: BorderRadius.circular(5)),
+      child: Container(
+        margin: EdgeInsets.only(left: 15, right: 15),
+        alignment: Alignment.centerLeft,
+        child: Row(
+          children: [
+            Icon(Icons.search, color: AppColors.text.darkgrey),
+            SizedBox(width: 15),
+            Container(
+              width: 240,
+              child: TextField(
+                decoration: InputDecoration(
+                    enabledBorder:
+                        OutlineInputBorder(borderSide: BorderSide.none),
+                    focusedBorder:
+                        OutlineInputBorder(borderSide: BorderSide.none),
+                    disabledBorder:
+                        OutlineInputBorder(borderSide: BorderSide.none),
+                    hintText: 'Search...',
+                    hintStyle:
+                        TextStyle(fontSize: FontSize.textSize, height: 1)),
+                controller: logic.controller.searchTED,
+                onChanged: (text) {
+                  logic.controller.update();
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget buildBookingExpansionPanel(BookingModel booking) => Text(booking.id);
 
   Widget buildSuggestions() {
     return GetBuilder<AllBookingsController>(builder: (controller) {
@@ -212,61 +277,6 @@ class AllBookingsScreen extends StatelessWidget {
     });
   }
 
-  Widget buildSearchBar() {
-    return GetBuilder<AllBookingsController>(builder: (controller) {
-      return Container(
-        width: 328,
-        height: 47,
-        decoration: BoxDecoration(
-            color: AppColors.background.white,
-            borderRadius: BorderRadius.circular(5)),
-        child: Container(
-          margin: EdgeInsets.only(left: 15, right: 15),
-          alignment: Alignment.centerLeft,
-          child: Row(
-            children: [
-              Icon(Icons.search, size: 20, color: AppColors.text.darkgrey),
-              SizedBox(width: 15),
-              Container(
-                width: 240,
-                child: TextField(
-                  decoration: InputDecoration(
-                      enabledBorder:
-                          OutlineInputBorder(borderSide: BorderSide.none),
-                      focusedBorder:
-                          OutlineInputBorder(borderSide: BorderSide.none),
-                      disabledBorder:
-                          OutlineInputBorder(borderSide: BorderSide.none),
-                      hintText: 'Search...',
-                      hintStyle:
-                          TextStyle(fontSize: FontSize.textSize, height: 1)),
-                  controller: controller.searchTED,
-                  onChanged: (text) {
-                    if (text.isNotEmpty) {
-                      controller.showSuggestions = true;
-                      logic.updateSearchListByIDorName(text);
-                    } else {
-                      controller.showSuggestions = false;
-                    }
-                  },
-                ),
-              ),
-              (controller.searchTED.text != "")
-                  ? GestureDetector(
-                      onTap: () {
-                        controller.searchTED.text = "";
-                        controller.showSuggestions = false;
-                      },
-                      child: Icon(Icons.close_outlined,
-                          size: 20, color: AppColors.text.darkgrey),
-                    )
-                  : SizedBox(),
-            ],
-          ),
-        ),
-      );
-    });
-  }
 
   Widget buildShowLoading() {
     return GetBuilder<AllBookingsController>(builder: (controller) {

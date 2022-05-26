@@ -932,39 +932,6 @@ class ItemModel {
     this.bookingModel,
   });
 
-  // factory ItemModel.fromBookings(BookingModel bookingModel) {
-  //   getSessions() {
-  //     var d = "";
-  //     if (bookingModel.theoryDate != null) d = d + "Theory, ";
-  //     if (bookingModel.poolDate != null) d = d + "Pool, ";
-  //     if (bookingModel.diveDate != null) d = d + "Dive, ";
-  //     return d.substring(0, d.length - 2);
-  //   }
-  //
-  //   getTime() {
-  //     var d = "";
-  //     if (bookingModel.theoryDate != null)
-  //       d = d + DateFormat("HH:mm").format(bookingModel.theoryDate) + ", ";
-  //     if (bookingModel.poolDate != null)
-  //       d = d + DateFormat("HH:mm").format(bookingModel.poolDate) + ", ";
-  //     if (bookingModel.diveDate != null)
-  //       d = d + DateFormat("HH:mm").format(bookingModel.diveDate) + ", ";
-  // ItemModel({
-  //   @required this.phone,
-  //   @required this.activity,
-  //   @required this.time,
-  //   @required this.session,
-  //   @required this.date,
-  //   @required this.cost,
-  //   @required this.paid,
-  //   @required this.balance,
-  //   @required this.remarks,
-  //   @required this.registration,
-  //   this.expanded = false,
-  //   @required this.name,
-  //   @required this.pax,
-  //   @required this.email,
-  // });
 
   factory ItemModel.fromBookings(BookingModel bookingModel) {
     getSessions() {
