@@ -1,10 +1,12 @@
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/all-bookings/controller/all-bookings-controller.dart';
+import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
 class AllBookingsScreen extends StatelessWidget {
   static const String id = "AllBookingsScreen";
@@ -12,61 +14,83 @@ class AllBookingsScreen extends StatelessWidget {
 
   final ScrollController scrollController = ScrollController();
 
-
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         Scaffold(
-          appBar: AppBar(
-            toolbarHeight: 70,
-            centerTitle: true,
-            title: buildTitle(),
-            leading: BackNavigationIcon(),
-            elevation: 0,
-            backgroundColor: AppColors.background.white,
-          ),
-          body: SafeArea(
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    SizedBox(height: 20),
-                    buildSearchBar(),
-                    // buildAllBookings(),
-                    Expanded(
-                      child: GestureDetector(
-                        onTap: () {
-                          logic.controller.showSuggestions = false;
-                        },
-                        child: SingleChildScrollView(
-                          physics: BouncingScrollPhysics(),
-                          child: Padding(
-                            padding: const EdgeInsets.only(top: 20, bottom: 20),
-                            child: Column(
-                              children: [
-                                SizedBox(height: 10),
-                                buildBookings(),
-                                SizedBox(height: 10),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    // Spacer(),
-                    // buildAllPages(),
-                  ],
-                ),
-                buildSuggestions(),
-              ],
+            appBar: AppBar(
+              toolbarHeight: 70,
+              centerTitle: true,
+              title: buildTitle(),
+              leading: BackNavigationIcon(),
+              elevation: 0,
+              backgroundColor: AppColors.background.white,
             ),
-          ),
-        ),
-        buildShowLoading()
+            body: SafeArea(
+              child: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                stream: FirebaseFirestore.instance
+                    .collection("bookings")
+                    .snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return CircularProgressIndicator();
+                  }
+
+                  return ListView(
+                    shrinkWrap: true,
+                    children: snapshot.data.docs.map((document) {
+                      BookingModel booking = BookingModel.fromMap(document.data());
+                      return buildBookingExpansionPanel(booking);
+                    }).toList(),
+                  );
+                },
+              ),
+            )
+            // body: SafeArea(
+            //   child: Stack(
+            //     children: [
+            //       Column(
+            //         children: [
+            //           SizedBox(height: 20),
+            //           buildSearchBar(),
+            //           // buildAllBookings(),
+            //           Expanded(
+            //             child: GestureDetector(
+            //               onTap: () {
+            //                 logic.controller.showSuggestions = false;
+            //               },
+            //               child: SingleChildScrollView(
+            //                 physics: BouncingScrollPhysics(),
+            //                 child: Padding(
+            //                   padding: const EdgeInsets.only(top: 20, bottom: 20),
+            //                   child: Column(
+            //                     children: [
+            //                       SizedBox(height: 10),
+            //                       buildBookings(),
+            //                       SizedBox(height: 10),
+            //                     ],
+            //                   ),
+            //                 ),
+            //               ),
+            //             ),
+            //           ),
+            //           // Spacer(),
+            //           // buildAllPages(),
+            //         ],
+            //       ),
+            //       buildSuggestions(),
+            //     ],
+            //   ),
+            // ),
+            ),
+        // buildShowLoading()
       ],
     );
   }
+
+  Widget buildBookingExpansionPanel(BookingModel booking) => Text("hdhdh");
 
   Widget buildSuggestions() {
     return GetBuilder<AllBookingsController>(builder: (controller) {

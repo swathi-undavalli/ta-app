@@ -1,7 +1,9 @@
 import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
+import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
@@ -49,6 +51,32 @@ class HomePage extends StatelessWidget {
                       icon: Icon(Icons.menu_rounded),
                     ),
                   ),
+                  ElevatedButton(
+                      onPressed: () async {
+                        for (int i = 143; i < 950; i++) {
+                          log(i.toString());
+                          try {
+                            var data = await FirebaseFirestore.instance
+                                .collection("bookings")
+                                .doc("$i")
+                                .get();
+                            if (data != null && data.data() != null) {
+                              var booking = BookingModel.fromMap(data.data());
+
+                              FirebaseFirestore.instance
+                                  .collection("bookings")
+                                  .doc("$i")
+                                  .set(booking.toMap());
+                            }
+                          } catch (e) {
+                            log("error");
+                            log(e);
+                            continue;
+                          }
+                        }
+                      },
+                      child: Text("DO")),
+
                   SizedBox(height: 10),
                   AttendanceWidget(),
                   SizedBox(height: 20),
@@ -70,14 +98,6 @@ class HomePage extends StatelessWidget {
                   SizedBox(height: 20),
                   AttendanceReportWidget(),
                   SizedBox(height: 100),
-
-                  // ElevatedButton(
-                  //     onPressed: () {
-                  //
-                  //
-                  //
-                  //     },
-                  //     child: Text("DO")),
 
                   // ElevatedButton(
                   //   onPressed: () async {

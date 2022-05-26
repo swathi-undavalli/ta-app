@@ -57,20 +57,6 @@ class ChooseBoatLogic {
 
     log("3");
 
-    // controller.bookingModel = BookingModel(
-    //   noOfPersons: 1,
-    //   pax: [
-    //     {
-    //       "first-name": "praveen",
-    //       "email": "praveen@kcn.com",
-    //       "phoneNumber": "564684848712",
-    //     },
-    //   ],
-    //   diveDate: [
-    //     DateTime(2022, 10, 10, 6, 00),
-    //     DateTime(2022, 10, 11, 6, 00),
-    //   ],
-    // );
     controller.bookingModel = Get.arguments as BookingModel;
     controller.diveDates = controller.bookingModel.diveDate;
     controller.fixedSeatCount = List.generate(controller.diveDates.length,
@@ -147,7 +133,7 @@ class ChooseBoatLogic {
       int fixedSeats = 0;
       for (Passenger p in passenger) {
         if (p.boatID == (i + 1).toString()) {
-          if (p.email != controller.bookingModel.pax[0]["email"]) fixedSeats++;
+          if (p.bookingID != controller.bookingModel.id) fixedSeats++;
         }
       }
       list[i] = fixedSeats;
@@ -161,7 +147,7 @@ class ChooseBoatLogic {
       int selectedSeats = 0;
       for (Passenger p in passenger) {
         if (p.boatID == (i + 1).toString()) {
-          if (p.email == controller.bookingModel.pax[0]["email"])
+          if (p.bookingID == controller.bookingModel.id)
             selectedSeats++;
         }
       }
@@ -255,8 +241,8 @@ class ChooseBoatLogic {
 
             for (int i = 0; i < diff; i++) {
               for (int p = 0; p < boatModel.passenger.length; p++) {
-                if (boatModel.passenger[p].email ==
-                        controller.bookingModel.pax[0]["email"] &&
+                if (boatModel.passenger[p].bookingID ==
+                        controller.bookingModel.id &&
                     boatModel.passenger[p].boatID ==
                         (boatIndex + 1).toString()) {
                   log("found");
@@ -283,29 +269,6 @@ class ChooseBoatLogic {
           }
         }
       }
-      log(boatModel.passenger.length.toString());
-
-      // for (int i = 0; i < selectedSeats.length; i++) {
-      //   int boatID = i + 1;
-      //   int selectedSeatCount = selectedSeats[i];
-      //   boatModel.passenger.addAll(
-      //     List.generate(
-      //       selectedSeatCount,
-      //       (index) => Passenger(
-      //         name: controller.bookingModel.pax[0]["first-name"],
-      //         email: controller.bookingModel.pax[0]["email"],
-      //         phone: controller.bookingModel.pax[0]["phoneNumber"],
-      //         gender: "Male",
-      //         boatID: boatID.toString(),
-      //       ),
-      //     ),
-      //   );
-      // }
-      log(boatModel.passenger.length.toString());
-      // log("------------------------");
-
-      // List<List<Employee>> selectedEmployee = controller.selectedEmployees[diveIndex];
-      // log(controller.selectedEmployees[diveIndex].toString());
       boatModel.employees = [];
       for (int i = 0; i < controller.boatsList.length; i++) {
         boatModel.employees.addAll(controller.selectedEmployees[diveIndex][i]);

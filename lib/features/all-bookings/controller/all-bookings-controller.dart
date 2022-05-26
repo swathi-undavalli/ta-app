@@ -8,7 +8,7 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
 class AllBookingsLogic {
   AllBookingsLogic() {
-    getBookings();
+    // getBookings();
   }
   AllBookingsController controller = Get.put(AllBookingsController());
   getBookings() async {
@@ -33,13 +33,13 @@ class AllBookingsLogic {
     controller.showLoading = false;
   }
 
-
   void updateSearchListByIDorName(String text) {
     controller.suggestionsList = [];
     // //print(
     //     controller.bookings[controller.bookings.length - 1].bookingID);
     controller.bookings.forEach((booking) {
-      if (booking.bookingID.contains(text) || booking.name.toLowerCase().contains(text.toLowerCase())) {
+      if (booking.bookingID.contains(text) ||
+          booking.name.toLowerCase().contains(text.toLowerCase())) {
         controller.suggestionsList.add(booking);
       }
     });
@@ -77,7 +77,6 @@ class AllBookingsController extends GetxController {
 
   List<ItemModel> suggestionsList = [];
 
-
   TextEditingController searchTED = TextEditingController();
 
   bool _showLoading = true;
@@ -104,6 +103,7 @@ class AllBookingsController extends GetxController {
     _showSuggestions = value;
     update();
   }
+
   set bookingCount(int value) {
     _bookingCount = value;
     update();

@@ -31,7 +31,6 @@ class BookingModel {
     this.remarks,
     this.employeeName,
     this.idProofs,
-    // this.payments,
   });
 
   List<ActivityModel> activity;

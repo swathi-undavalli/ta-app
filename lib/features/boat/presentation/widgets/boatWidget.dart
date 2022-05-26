@@ -1867,7 +1867,7 @@ class _BoatWidgetState extends State<BoatWidget> {
                                 SizedBox(height: 40),
                                 buildSideHeading(text: "Passengers"),
                                 SizedBox(height: 10),
-                                buildPassengers(),
+                                buildPassengers(widget.boat.id),
                                 SizedBox(height: 30),
                                 buildSideHeading(text: "Employees"),
                                 SizedBox(height: 10),
@@ -2177,7 +2177,7 @@ class _BoatWidgetState extends State<BoatWidget> {
     );
   }
 
-  buildPassengers() {
+  buildPassengers(String boatId) {
     Map<String, List<Passenger>> passengersBasedOnBookingId = {};
 
     widget.boatPassengersModel.passenger.forEach((passenger) {
@@ -2192,7 +2192,7 @@ class _BoatWidgetState extends State<BoatWidget> {
 
     passengersBasedOnBookingId.forEach((key, value) {
       children.add(
-        Demo(key, value),
+        PassengersList(key, boatId, value),
       );
     });
     return Container(
@@ -2204,14 +2204,16 @@ class _BoatWidgetState extends State<BoatWidget> {
   }
 }
 
-class Demo extends StatelessWidget {
+class PassengersList extends StatelessWidget {
   final String bookingId;
+  final String boatId;
   final List<Passenger> passengers;
-  Demo(this.bookingId, this.passengers);
+  PassengersList(this.bookingId, this.boatId, this.passengers);
 
   Color backgroundColor = Colors.white;
 
   Widget build(BuildContext context) {
+    passengers.removeWhere((element) => element.boatID != boatId);
     return Container(
       decoration: BoxDecoration(
         border: Border.all(
@@ -2227,7 +2229,7 @@ class Demo extends StatelessWidget {
                 fontSize: 7,
                 color: AppColors.background.skyBlue,
                 fontWeight: FontWeight.bold),
-          ).paddingOnly(right: 10,top: 3),
+          ).paddingOnly(right: 10, top: 3),
           ...passengers
               .map(
                 (e) => Text(
