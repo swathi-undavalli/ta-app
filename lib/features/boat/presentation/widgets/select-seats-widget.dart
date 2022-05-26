@@ -54,13 +54,14 @@ class _SelectSeatsWidgetState extends State<SelectSeatsWidget> {
         .get();
     Map<String, dynamic> data = d.data();
 
-    if (data != null) {
+    print("hellow");
+    if (data != null && data[date.toIso8601String()] != null) {
       BoatPassengersModel boatModel =
           BoatPassengersModel.fromMap(data[date.toIso8601String()]);
       log(boatModel.toMap().toString());
       int count = 0;
       boatModel.passenger.forEach((p) {
-        if (p.phone == widget.bookingModel.pax[0]["phoneNumber"]) {
+        if (p.bookingID == widget.bookingModel.id) {
           count++;
         }
       });

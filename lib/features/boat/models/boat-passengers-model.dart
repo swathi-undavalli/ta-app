@@ -4,6 +4,8 @@
 
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+
 BoatPassengersModel boatPassengersModelFromMap(String str) =>
     BoatPassengersModel.fromMap(json.decode(str));
 
@@ -130,11 +132,12 @@ class Freelancer {
 
 class Passenger {
   Passenger({
-    this.name,
-    this.gender,
-    this.phone,
-    this.email,
-    this.boatID,
+    @required this.name,
+    @required this.gender,
+    @required this.phone,
+    @required this.email,
+    @required this.boatID,
+    @required this.bookingID,
   });
 
   String name;
@@ -142,6 +145,7 @@ class Passenger {
   String phone;
   String email;
   String boatID;
+  String bookingID;
 
   factory Passenger.fromMap(Map<String, dynamic> json) => Passenger(
         name: json["name"],
@@ -149,11 +153,13 @@ class Passenger {
         phone: json["phone"],
         email: json["email"],
         boatID: json["boatID"],
+    bookingID: json["bookingID"],
       );
 
   Map<String, dynamic> toMap() => {
         "name": name,
         "gender": gender,
+        "bookingID": bookingID,
         "phone": phone,
         "email": email,
         "boatID": boatID,

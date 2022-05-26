@@ -129,50 +129,64 @@ class ChooseBoatPage extends StatelessWidget {
                 ),
               if (controller.boatsList.isNotEmpty)
                 ...List.generate(
-                    controller.boatsList.length,
-                    (index) => SeatsAvailabilityExpansionPanel(
-                          boat: controller.boatsList[index],
-                          fixedSeats: controller.fixedSeatCount[
-                              controller.currentDiveDateIndex][index],
-                          selectedSeats: controller.selectedSeatsCount[
-                              controller.currentDiveDateIndex][index],
-                          selectedEmployees: controller.selectedEmployees[
-                              controller.currentDiveDateIndex][index],
-                          selectedFreelancers: controller.selectedFreelancers[
-                              controller.currentDiveDateIndex][index],
-                          commonEmployees: controller.commonEmployees,
-                          maxSeats: controller.boatsList[index].capacity,
-                          enableSelection: controller.selectedSeatsCount[
-                                      controller.currentDiveDateIndex]
-                                  .reduce((v, e) => v + e) !=
-                              controller.requiredCount[
-                                  controller.currentDiveDateIndex],
-                          onSeatSelected: (bool isSelected) {
-                            if (isSelected) {
-                              controller.selectedSeatsCount[
-                                  controller.currentDiveDateIndex][index]++;
-                            } else {
-                              controller.selectedSeatsCount[
-                                  controller.currentDiveDateIndex][index]--;
-                            }
-                            controller.update();
-                          },
-                          onFreelanceAdded: (Freelancer freelancer) {
-                            controller.selectedFreelancers[
-                                    controller.currentDiveDateIndex][index]
-                                .add(freelancer);
-                            controller.update();
-                          },
-                          onEmployeesModified: (
-                            List<Employees> employees,
-                            List<Employees> commonEmployees,
-                          ) {
-                            controller.selectedEmployees[controller
-                                .currentDiveDateIndex][index] = employees;
-                            controller.commonEmployees = commonEmployees;
-                            controller.update();
-                          },
-                        )),
+                  controller.boatsList.length,
+                  (index) => SeatsAvailabilityExpansionPanel(
+                    boat: controller.boatsList[index],
+                    fixedSeats: controller
+                        .fixedSeatCount[controller.currentDiveDateIndex][index],
+                    selectedSeats: controller
+                            .selectedSeatsCount[controller.currentDiveDateIndex]
+                        [index],
+                    selectedEmployees: controller
+                            .selectedEmployees[controller.currentDiveDateIndex]
+                        [index],
+                    selectedFreelancers: controller.selectedFreelancers[
+                        controller.currentDiveDateIndex][index],
+                    commonEmployees: controller.commonEmployees,
+                    maxSeats: controller.boatsList[index].capacity,
+                    enableSelection: controller
+                            .selectedSeatsCount[controller.currentDiveDateIndex]
+                            .reduce((v, e) => v + e) !=
+                        controller
+                            .requiredCount[controller.currentDiveDateIndex],
+                    onSeatSelected: (bool isSelected) {
+                      if (isSelected) {
+                        controller.selectedSeatsCount[
+                            controller.currentDiveDateIndex][index]++;
+                      } else {
+                        controller.selectedSeatsCount[
+                            controller.currentDiveDateIndex][index]--;
+                      }
+                      controller.update();
+                    },
+                    onFreelanceAdded: (Freelancer freelancer) {
+                      controller
+                          .selectedFreelancers[controller.currentDiveDateIndex]
+                              [index]
+                          .add(freelancer);
+                      controller.update();
+                    },
+                    onEmployeesModified: (
+                      List<Employees> employees,
+                      List<Employees> commonEmployees,
+                    ) {
+                      controller.selectedEmployees[
+                          controller.currentDiveDateIndex][index] = employees;
+                      controller.commonEmployees = commonEmployees;
+                      controller.update();
+                    },
+                    onFreelancerModified: (
+                      List<Freelancer> freelancers,
+                      List<Freelancer> commonFreelancers,
+                    ) {
+                      controller.selectedFreelancers[
+                          controller.currentDiveDateIndex][index] = freelancers;
+                      controller.commonFreelancers = commonFreelancers;
+                      controller.update();
+                    },
+                    commonFreelancers: controller.commonFreelancers,
+                  ),
+                ),
             ],
           ),
         ],

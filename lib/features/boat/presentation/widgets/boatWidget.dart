@@ -1673,6 +1673,7 @@ class _BoatWidgetState extends State<BoatWidget> {
     List<Employees> employees = [];
     List<Passenger> passengers = [];
     List<Freelancer> freelancers = [];
+
     widget.boatPassengersModel.passenger.forEach((passenger) {
       if (passenger.boatID == widget.boat.id) {
         bookedSeats++;
@@ -1866,35 +1867,7 @@ class _BoatWidgetState extends State<BoatWidget> {
                                 SizedBox(height: 40),
                                 buildSideHeading(text: "Passengers"),
                                 SizedBox(height: 10),
-                                Container(
-                                  width: 350,
-                                  child: Wrap(
-                                    direction: Axis.horizontal,
-                                    verticalDirection: VerticalDirection.down,
-                                    children: [
-                                      ...passengers
-                                          .map((e) => Padding(
-                                                padding:
-                                                    const EdgeInsets.all(5.0),
-                                                child: Text(
-                                                  e.name,
-                                                  style:
-                                                      TextStyle(fontSize: 12),
-                                                ),
-                                              ))
-                                          .toList(),
-
-                                      // ...List.generate(
-                                      //   10,
-                                      //   (index) {
-                                      //     return buildEmployeeChip();
-                                      //   },
-                                      // )
-
-                                      // employees.map((e) => buildEmployeeChip())
-                                    ],
-                                  ),
-                                ),
+                                buildPassengers(),
                                 SizedBox(height: 30),
                                 buildSideHeading(text: "Employees"),
                                 SizedBox(height: 10),
@@ -2201,6 +2174,70 @@ class _BoatWidgetState extends State<BoatWidget> {
           ),
         ],
       ),
+    );
+  }
+
+  buildPassengers() {
+    Map<String, List<Passenger>> passengersBasedOnBookingId = {};
+
+    widget.boatPassengersModel.passenger.forEach((passenger) {
+      if (passengersBasedOnBookingId.containsKey(passenger.bookingID)) {
+        passengersBasedOnBookingId[passenger.bookingID].add(passenger);
+      } else {
+        passengersBasedOnBookingId[passenger.bookingID] = [passenger];
+      }
+    });
+
+    List<Widget> children = [];
+
+    passengersBasedOnBookingId.forEach((key, value) {
+      children.add(
+        Demo(key, value),
+      );
+    });
+    return Container(
+      width: 350,
+      child: Wrap(
+        children: children,
+      ),
+    );
+  }
+}
+
+class Demo extends StatelessWidget {
+  final String bookingId;
+  final List<Passenger> passengers;
+  Demo(this.bookingId, this.passengers);
+
+  Color backgroundColor = Colors.white;
+
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(
+          color: Colors.black12,
+        ),
+        borderRadius: BorderRadius.circular(3),
+      ),
+      child: Wrap(
+        children: [
+          Text(
+            bookingId,
+            style: TextStyle(
+                fontSize: 7,
+                color: AppColors.background.skyBlue,
+                fontWeight: FontWeight.bold),
+          ).paddingOnly(right: 10,top: 3),
+          ...passengers
+              .map(
+                (e) => Text(
+                  e.name.capitalizeFirst,
+                  style: TextStyle(fontSize: 12),
+                ).paddingOnly(right: 5),
+              )
+              .toList()
+        ],
+      ).paddingOnly(left: 5),
     );
   }
 }

@@ -103,12 +103,24 @@ class BoatPage extends StatelessWidget {
                         if (controller.noDataFound)
                           SizedBox(
                             height: 300,
-                            child: Center(
-                              child: Text(
-                                "No Boats Found 😔",
-                                style: TextStyle(
-                                    fontSize: 20, fontWeight: FontWeight.bold),
-                              ),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Center(
+                                  child: Text(
+                                    "No Boats Found",
+                                    style: TextStyle(
+                                        fontSize: 20, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                                Center(
+                                  child: Text(
+                                    "😔",
+                                    style: TextStyle(
+                                        fontSize: 20, fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ],
                             ),
                           )
                         else
@@ -157,7 +169,7 @@ class BoatPage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                          ),
+                          ).reversed,
                         SizedBox(height: 50),
                       ],
                     );

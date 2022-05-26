@@ -203,6 +203,13 @@ class ChooseBoatLogic {
   }
 
   onCheckPressed() async {
+    if (controller.selectedSeatsCount[controller.currentDiveDateIndex]
+            .reduce((v, e) => v + e) !=
+        controller.requiredCount[controller.currentDiveDateIndex]) {
+      Fluttertoast.showToast(msg: "Please select seats");
+      return;
+    }
+
     controller.showLoading = true;
     for (int diveIndex = 0;
         diveIndex < controller.diveDates.length;
@@ -264,9 +271,10 @@ class ChooseBoatLogic {
             for (int i = 0; i < diff; i++) {
               boatModel.passenger.add(
                 Passenger(
-                  name: controller.bookingModel.pax[0]["first-name"],
-                  email: controller.bookingModel.pax[0]["email"],
-                  phone: controller.bookingModel.pax[0]["phoneNumber"],
+                  name: controller.bookingModel.pax[i + 1]["first-name"],
+                  email: controller.bookingModel.pax[i + 1]["email"],
+                  phone: controller.bookingModel.pax[i + 1]["phoneNumber"],
+                  bookingID: controller.bookingModel.id,
                   gender: "Male",
                   boatID: (boatIndex + 1).toString(),
                 ),
@@ -333,10 +341,24 @@ class ChooseBoatController extends GetxController {
   List<DateTime> diveDates = [];
   List<int> requiredCount = [];
   int _currentDiveDateIndex = 0;
-
   BookingModel bookingModel;
+  List<Freelancer> commonFreelancers = [];
 
   reset() {
+    // selectedSeatsCount = [];
+    // firebaseSeatsCount = [];
+    // fixedSeatCount = [];
+    //
+    // selectedEmployees = [];
+    // selectedFreelancers = [];
+    // commonFreelancers = [];
+    // commonEmployees = [];
+    //
+    // boatsList = [];
+    // diveDates = [];
+    // requiredCount = [];
+    // currentDiveDateIndex = 0;
+    // showLoading = true;
     selectedSeatsCount = [];
     firebaseSeatsCount = [];
     fixedSeatCount = [];
