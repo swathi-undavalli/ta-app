@@ -19,6 +19,7 @@ import 'package:temple_adventures/features/bookings/presentation/screens/IDProof
 import 'package:temple_adventures/features/bookings/presentation/screens/add-guest-details-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -39,12 +40,6 @@ class BookingsExpansionPanel extends StatelessWidget {
   TextEditingController searchTED = TextEditingController();
   BookingsCalenderWidgetLogic bookingCalenderLogic =
       BookingsCalenderWidgetLogic();
-  List<double> payments = [
-    10000,
-    7000,
-    7000,
-    7000,
-  ];
 
   BookingsExpansionPanel(
       {this.items,
@@ -362,10 +357,14 @@ class BookingsExpansionPanel extends StatelessWidget {
                                           .roundToDouble()
                                           .toString()),
                                   buildKeyValuePairs(
-                                      "Balance",
-                                      double.parse(items[i].balance)
-                                          .roundToDouble()
-                                          .toString()),
+                                    "Balance",
+                                    getBalance(
+                                        items[i].bookingModel.payments,
+                                        double.parse(items[i].paid)
+                                            .roundToDouble(),
+                                        double.parse(items[i].cost)
+                                            .roundToDouble()),
+                                  ),
                                   buildKeyValuePairs(
                                       "Pax",
                                       items[i]
@@ -399,8 +398,22 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   ),
                                   SizedBox(height: 30),
                                   buildPaymentStatus(
-                                      totalAmount: "100000",
-                                      payments: payments),
+                                    totalAmount:
+                                        items[i].bookingModel.totalCost,
+                                    payments: [
+                                      PaymentModel(
+                                        amount: double.parse(items[i].paid)
+                                            .roundToDouble(),
+                                        collectedBy: items[i].employeeName,
+                                        reciptNo: "-",
+                                        referenceNo: "-",
+                                        remarks: "-",
+                                        paymentMode: "-",
+                                        time: items[i].bookingModel.createdAt,
+                                      ),
+                                      ...items[i].bookingModel.payments
+                                    ],
+                                  ),
                                   SizedBox(height: 10),
                                   Row(
                                     children: [
@@ -473,9 +486,38 @@ class BookingsExpansionPanel extends StatelessWidget {
                                                   AppButton.miniFlat(
                                                     text: 'OK',
                                                     onTap: () {
-                                                      payments.add(double.parse(
-                                                          depositTED.text));
-                                                      print(payments);
+                                                      items[i]
+                                                          .bookingModel
+                                                          .payments
+                                                          .add(
+                                                            PaymentModel(
+                                                              amount:
+                                                                  double.parse(
+                                                                      depositTED
+                                                                          .text),
+                                                              collectedBy:
+                                                                  currentEmployee
+                                                                      .name,
+
+                                                              //TODO:: FIX THE BELOW URGENT !!!!!.
+
+                                                              reciptNo: "-",
+                                                              referenceNo: "-",
+                                                              paymentMode: "-",
+                                                              time: DateTime
+                                                                  .now(),
+                                                            ),
+                                                          );
+
+                                                      FirebaseFirestore.instance
+                                                          .collection(
+                                                              "bookings")
+                                                          .doc(items[i]
+                                                              .bookingModel
+                                                              .id)
+                                                          .set(items[i]
+                                                              .bookingModel
+                                                              .toMap());
                                                       Get.back();
                                                       depositTED.text = "";
                                                       BookingsCalenderWidgetLogic
@@ -624,14 +666,18 @@ class BookingsExpansionPanel extends StatelessWidget {
     );
   }
 
-  Widget buildPaymentStatus({String totalAmount, List<double> payments}) {
-    var list = payments;
-    var total = totalAmount;
+  Widget buildPaymentStatus({
+    @required double totalAmount,
+    @required List<PaymentModel> payments,
+  }) {
     double deposits = 0.0;
-    list.forEach((element) {
-      deposits += element;
+
+    payments.forEach((payment) {
+      deposits += payment.amount;
     });
-    int n = list.length;
+
+    int n = payments.length;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -642,57 +688,60 @@ class BookingsExpansionPanel extends StatelessWidget {
                 Expanded(
                   child: Container(
                     height: 1,
-                    color: (double.parse(total) == deposits)
+                    color: (totalAmount == deposits)
                         ? Colors.green.shade400
                         : Colors.black,
                   ),
                 ),
               ],
             ).paddingOnly(top: 7, left: 16, right: 16),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Expanded(
-                flex: n,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List<Widget>.generate(n, (i) {
-                    return buildCircle(color: Colors.black);
-                  }),
-                ),
-              ),
-              (double.parse(total) == deposits)
-                  ? SizedBox()
-                  : Expanded(
-                      flex: 1,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          buildCircle(color: Colors.red.shade300),
-                        ],
-                      ),
-                    ),
-              Expanded(
-                  flex: 1,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: n,
                   child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                        width: 39,
-                        child: Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              color: AppColors.text.skyBlue,
-                              shape: BoxShape.circle),
-                          child: Icon(
-                            Icons.circle,
-                            size: 10,
-                            color: AppColors.text.black,
-                          ),
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List<Widget>.generate(n, (i) {
+                      return buildCircle(color: Colors.black);
+                    }),
+                  ),
+                ),
+                (totalAmount == deposits)
+                    ? SizedBox()
+                    : Expanded(
+                        flex: 1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            buildCircle(color: Colors.red.shade300),
+                          ],
                         ),
                       ),
-                    ],
-                  )),
-            ]),
+                Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          width: 39,
+                          child: Container(
+                            width: 15,
+                            height: 15,
+                            decoration: BoxDecoration(
+                                color: AppColors.text.skyBlue,
+                                shape: BoxShape.circle),
+                            child: Icon(
+                              Icons.circle,
+                              size: 10,
+                              color: AppColors.text.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              ],
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -702,13 +751,13 @@ class BookingsExpansionPanel extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: List<Widget>.generate(n, (i) {
                       return buildNumber(
-                          text: list[i].round().toString(),
+                          text: payments[i].amount.round().toString(),
                           fontWeight: FontWeight.normal,
                           color: Colors.black);
                     }),
                   ),
                 ),
-                (double.parse(total) == deposits)
+                (totalAmount == deposits)
                     ? SizedBox()
                     : Expanded(
                         flex: 1,
@@ -716,9 +765,8 @@ class BookingsExpansionPanel extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             buildNumber(
-                                text: (double.parse(total) - deposits)
-                                    .round()
-                                    .toString(),
+                                text:
+                                    (totalAmount - deposits).round().toString(),
                                 // text: "16000",
                                 color: Colors.red.shade300,
                                 fontWeight: FontWeight.normal),
@@ -732,7 +780,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                         buildNumber(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
-                            text: totalAmount),
+                            text: totalAmount.toString()),
                       ],
                     )),
               ],
@@ -743,14 +791,15 @@ class BookingsExpansionPanel extends StatelessWidget {
         ...List.generate(
           payments.length,
           (index) {
-            return buildTransactions(paidAmount: payments[index]);
+            return buildTransactions(payment: payments[index]);
           },
         )
       ],
     );
   }
 
-  Widget buildTransactions({double paidAmount}) {
+  Widget buildTransactions({PaymentModel payment}) {
+    DateTime now = DateTime.now();
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -767,15 +816,29 @@ class BookingsExpansionPanel extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Paid ${paidAmount.round()} to Donarun Das",
+              "Paid ${payment.amount.round()} to ${payment.collectedBy}",
               style: TextStyle(
                   fontSize: 10, fontWeight: FontWeight.w600, wordSpacing: 2),
             ),
             SizedBox(height: 2),
-            Text(
-              DateFormat("EEE dd MMM yy - hh:mm a").format(date),
-              style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
-            ),
+            if (payment.time != null &&
+                now.day == payment.time.day &&
+                now.month == payment.time.month &&
+                now.year == payment.time.year)
+              Text(
+                "Today - ${DateFormat("hh:mm a").format(payment.time)}",
+                style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+              )
+            else if (payment.time != null)
+              Text(
+                DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time),
+                style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+              )
+            else
+              Text(
+                "Initial Deposit",
+                style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+              ),
           ],
         ),
       ],
@@ -803,6 +866,14 @@ class BookingsExpansionPanel extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String getBalance(List<PaymentModel> payments, double deposit, double total) {
+    double t = deposit;
+    payments.forEach((payment) {
+      t += payment.amount;
+    });
+    return (total - t).toString();
   }
 }
 

@@ -1,7 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get_utils/src/extensions/double_extensions.dart';
+import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 
 BookingModel bookingModelFromMap(String str) =>
@@ -31,10 +33,13 @@ class BookingModel {
     this.remarks,
     this.employeeName,
     this.idProofs,
+    this.payments,
+    @required this.createdAt,
   });
 
   List<ActivityModel> activity;
   List<Map<String, dynamic>> pax;
+  List<PaymentModel> payments;
   List<String> idProofs;
   int noOfPersons;
   double discount;
@@ -53,6 +58,7 @@ class BookingModel {
   List<DateTime> theoryDate;
   List<String> bookingDate;
   String discountType;
+  DateTime createdAt;
 
   factory BookingModel.fromMap(Map<String, dynamic> json) {
     //log("fromMap");
@@ -70,10 +76,13 @@ class BookingModel {
     }
 
     return BookingModel(
+      pax: List<Map<String, dynamic>>.from(json["PAX"].map((x) => x)),
       activity: List<ActivityModel>.from(
           json["activity"].map((x) => ActivityModel.fromMap(x))),
-      pax: List<Map<String, dynamic>>.from(json["PAX"].map((x) => x)),
+      payments: List<PaymentModel>.from(
+          (json["payments"] ?? []).map((x) => PaymentModel.fromMap(x))),
       noOfPersons: json["noOfPersons"],
+      createdAt: parseDateOrNull(json["createdAt"]),
       discount: json["discount"] * 1.0,
       discountType: json["discountSwitch"],
       price: json["price"] * 1.0,
@@ -103,9 +112,11 @@ class BookingModel {
       "activity": List<dynamic>.from((activity ?? []).map((x) => x.toMap())),
       "PAX": List<dynamic>.from((pax ?? []).map((x) => x)),
       "noOfPersons": noOfPersons,
+      "createdAt": toDateOrNull(createdAt),
       "discount": discount,
       "price": price,
       "id": id,
+      "payments": List<dynamic>.from(payments.map((x) => x.toMap())),
       "remarks": remarks,
       "employeeName": employeeName,
       "discountSwitch": discountType,
@@ -182,95 +193,53 @@ class BookingModel {
   }
 }
 
-/*class BookingModel {
-  BookingModel({
-    this.activity,
-    this.pax,
-    this.noOfPersons,
-    this.location,
-    this.discount,
-    this.price,
-    this.tax,
-    this.totalCost,
-    this.paid,
-    this.balance,
+class PaymentModel {
+  PaymentModel({
+    this.amount,
+    this.collectedBy,
+    this.reciptNo,
+    this.referenceNo,
+    this.remarks,
     this.paymentMode,
-    this.paymentTransactionId,
-    this.poolDate,
-    this.diveDate,
-    this.theoryDate,
-    this.bookingDate,
-    this.receiptNo,
+    this.time,
   });
 
-  List<ActivityModel> activity;
-  List<Map<String, dynamic>> pax;
-  int noOfPersons;
-  double discount;
-  double price;
-  double tax;
-  double totalCost;
-  double paid;
-  double balance;
+  double amount;
+  String collectedBy;
+  String reciptNo;
+  String referenceNo;
   String paymentMode;
-  String location;
-  String paymentTransactionId;
-  String receiptNo;
-  DateTime poolDate;
-  DateTime diveDate;
-  DateTime theoryDate;
-  List<String> bookingDate;
+  String remarks;
+  DateTime time;
+  String toDateOrNull(DateTime date) {
+    if (date == null) return null;
+    return date.toIso8601String();
+  }
 
-  factory BookingModel.fromMap(Map<String, dynamic> json) {
+  factory PaymentModel.fromMap(Map<String, dynamic> json) {
     parseDateOrNull(date) {
       if (date == null) return null;
       return DateTime.parse(date);
     }
 
-    return BookingModel(
-      activity: List<ActivityModel>.from(
-          json["activity"].map((x) => ActivityModel.fromMap(x))),
-      pax: List<Map<String, dynamic>>.from(json["PAX"].map((x) => x)),
-      noOfPersons: json["noOfPersons"],
-      discount: json["discount"].toDouble(),
-      price: json["price"].toDouble(),
-      tax: json["tax"].toDouble(),
-      totalCost: json["totalCost"].toDouble(),
-      paid: json["paid"].toDouble(),
-      balance: json["balance"].toDouble(),
+    return PaymentModel(
+      amount: (json["amount"] ?? 0.0) * 1.0,
+      collectedBy: json["collectedBy"],
+      reciptNo: json["reciptNo"],
+      remarks: json["remarks"],
+      referenceNo: json["referenceNo"],
       paymentMode: json["paymentMode"],
-      receiptNo: json["receiptNo"],
-      location: json["location"],
-      paymentTransactionId: json["paymentTransactionId"],
-      bookingDate: List<String>.from(json["bookingDate"].map((x) => x)),
-      poolDate: parseDateOrNull(json["poolDate"]),
-      diveDate: parseDateOrNull(json["diveDate"]),
-      theoryDate: parseDateOrNull(json["theoryDate"]),
+      time: parseDateOrNull(json["time"]),
     );
   }
 
   Map<String, dynamic> toMap() => {
-        "activity": List<dynamic>.from(activity.map((x) => x.toMap())),
-        "PAX": List<dynamic>.from(pax.map((x) => x)),
-        "noOfPersons": noOfPersons,
-        "discount": discount,
-        "price": price,
-        "tax": tax,
-        "totalCost": totalCost,
-        "paid": paid,
-        "balance": balance,
+        "amount": amount,
+        "collectedBy": collectedBy,
+        "time": toDateOrNull(time),
+        "reciptNo": reciptNo,
+        "referenceNo": referenceNo,
+        "remarks": remarks,
         "paymentMode": paymentMode,
-        "receiptNo": receiptNo,
-        "bookingDate": List<String>.from(bookingDate.map((x) => x)),
-        "location": location,
-        "paymentTransactionId": paymentTransactionId,
-        "poolDate": toDateOrNull(poolDate),
-        "theoryDate": toDateOrNull(theoryDate),
-        "diveDate": toDateOrNull(diveDate),
       };
-
-  toDateOrNull(DateTime date) {
-    if (date == null) return null;
-    return date.toIso8601String();
-  }
-}*/
+}

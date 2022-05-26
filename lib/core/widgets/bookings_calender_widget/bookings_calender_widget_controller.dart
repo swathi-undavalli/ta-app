@@ -31,15 +31,15 @@ class BookingsCalenderWidgetLogic {
           .get();
 
       data.docs.forEach((element) {
-        //log("===========s${element.data().toString()}");
+        log("===========s${element.data().toString()}");
 
         try {
           BookingModel booking = BookingModel.fromMap(element.data());
         } catch (e) {
-          //log("Error in getting booking model");
-          //log("$e");
-          //log(element.data().toString());
-          //print(e);
+          log("Error in getting booking model");
+          log("$e");
+          log(element.data().toString());
+          print(e);
         }
         BookingModel booking = BookingModel.fromMap(element.data());
 
