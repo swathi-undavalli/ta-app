@@ -11,6 +11,7 @@ import '../../../../core/widgets/attendance_report_widget/attendance_report_widg
 import '../../../../core/widgets/attendance_widget/attandence_widget_controller.dart';
 import '../../../../core/widgets/attendance_widget/attendence_widget.dart';
 import '../../controller/home-page-controller.dart';
+import '../../model/employee.dart';
 
 class HomePage extends StatelessWidget {
   final HomePageLogic logic = HomePageLogic();
@@ -52,57 +53,6 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
 
-                  // ElevatedButton(
-                  //     onPressed: () async {
-                  //       for (int i = 143; i < 950; i++) {
-                  //         log(i.toString());
-                  //         try {
-                  //           var data = await FirebaseFirestore.instance
-                  //               .collection("bookings")
-                  //               .doc("$i")
-                  //               .get();
-                  //           if (data != null && data.data() != null) {
-                  //             var booking = BookingModel.fromMap(data.data());
-                  //
-                  //             FirebaseFirestore.instance
-                  //                 .collection("bookings")
-                  //                 .doc("$i")
-                  //                 .set(booking.toMap());
-                  //           }
-                  //         } catch (e) {
-                  //           log("error");
-                  //           log(e);
-                  //           continue;
-                  //         }
-                  //       }
-                  //     },
-                  //     child: Text("DO")),
-
-                  // ElevatedButton(
-                  //     onPressed: () async {
-                  //       for (int i = 143; i < 950; i++) {
-                  //         log(i.toString());
-                  //         try {
-                  //           var data = await FirebaseFirestore.instance
-                  //               .collection("bookings")
-                  //               .doc("$i")
-                  //               .get();
-                  //           if (data != null && data.data() != null) {
-                  //             var booking = BookingModel.fromMap(data.data());
-                  //
-                  //             FirebaseFirestore.instance
-                  //                 .collection("bookings")
-                  //                 .doc("$i")
-                  //                 .set(booking.toMap());
-                  //           }
-                  //         } catch (e) {
-                  //           log("error");
-                  //           log(e);
-                  //           continue;
-                  //         }
-                  //       }
-                  //     },
-                  //     child: Text("DO")),
                   SizedBox(height: 10),
                   AttendanceWidget(),
                   SizedBox(height: 20),
@@ -227,6 +177,17 @@ class HomePage extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  getFirstName(String d) {
+    d = d.trim();
+    return d.split(" ").first.trim();
+  }
+
+  getLastName(String d) {
+    d = d.trim();
+
+    return d.replaceAll(getFirstName(d), "").trim();
   }
 }
 

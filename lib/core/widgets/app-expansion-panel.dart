@@ -188,13 +188,16 @@ class BookingsExpansionPanel extends StatelessWidget {
                           height: 7,
                           width: 7,
                           decoration: BoxDecoration(
-                            color: (double.parse(items[i].balance)
-                                        .floorToDouble() ==
-                                    0.0)
-                                ? Colors.green
-                                : Colors.red,
-                            borderRadius: BorderRadius.circular(5),
-                          ),
+                              color: getBalance(
+                                          items[i].bookingModel.payments,
+                                          double.parse(items[i].paid)
+                                              .roundToDouble(),
+                                          double.parse(items[i].cost)
+                                              .roundToDouble()) ==
+                                      "0"
+                                  ? Colors.green
+                                  : Colors.red,
+                              borderRadius: BorderRadius.circular(5)),
                         ),
                         SizedBox(width: 5),
                         Expanded(
@@ -878,7 +881,7 @@ class BookingsExpansionPanel extends StatelessWidget {
     payments.forEach((payment) {
       t += payment.amount;
     });
-    return (total - t).toString();
+    return (total - t).toInt().toString();
   }
 }
 

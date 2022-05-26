@@ -93,7 +93,7 @@ class EditBookingNewScreen extends StatelessWidget {
                             SizedBox(height: 25),
                             buildTotalAmount(),
                             SizedBox(height: 25),
-                            buildBalanceAmount(),
+                            // buildBalanceAmount(),
                             buildReceiptNo(controller),
                             buildRemarksTF(controller),
                             buildEmailTF(controller),
