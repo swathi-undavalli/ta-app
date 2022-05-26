@@ -506,6 +506,7 @@ class NewBookingLogic {
   void onCheckPressed() {
     if (controller.emailTED.text != "" &&
         controller.fNameTED.text != "" &&
+        controller.paxTED.text != "" &&
         controller.phoneNumberTED.text != "") {
       controller.bookingModel.pax = [];
       controller.bookingModel.pax.add({

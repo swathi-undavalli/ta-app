@@ -188,11 +188,13 @@ class BookingsExpansionPanel extends StatelessWidget {
                           height: 7,
                           width: 7,
                           decoration: BoxDecoration(
-                              color: (double.parse(items[i].paid).round() ==
-                                      double.parse(items[i].cost).round())
-                                  ? Colors.green
-                                  : Colors.red,
-                              borderRadius: BorderRadius.circular(5)),
+                            color: (double.parse(items[i].balance)
+                                        .floorToDouble() ==
+                                    0.0)
+                                ? Colors.green
+                                : Colors.red,
+                            borderRadius: BorderRadius.circular(5),
+                          ),
                         ),
                         SizedBox(width: 5),
                         Expanded(
@@ -231,6 +233,9 @@ class BookingsExpansionPanel extends StatelessWidget {
                               color: AppColors.background.black),
                           iconSize: 15,
                           onPressed: () {
+                            log(double.parse(items[i].balance)
+                                .floorToDouble()
+                                .toString());
                             makingPhoneCall(itemModel.phone);
                           },
                         ),
@@ -544,7 +549,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                           },
                                         ).paddingOnly(right: 15),
                                         // alignment: Alignment.centerRight,
-                                      ),
+                                      )
                                     ],
                                   ),
                                   SizedBox(height: 20),
@@ -931,7 +936,6 @@ class ItemModel {
     @required this.email,
     this.bookingModel,
   });
-
 
   factory ItemModel.fromBookings(BookingModel bookingModel) {
     getSessions() {

@@ -116,7 +116,7 @@ class BookingModel {
       "discount": discount,
       "price": price,
       "id": id,
-      "payments": List<dynamic>.from(payments.map((x) => x.toMap())),
+      "payments": List<dynamic>.from((payments ?? []).map((x) => x.toMap())),
       "remarks": remarks,
       "employeeName": employeeName,
       "discountSwitch": discountType,

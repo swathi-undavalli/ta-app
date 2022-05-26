@@ -9,6 +9,7 @@ import 'package:get_storage/get_storage.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/add-freelance-screen.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/freelance-details-screen.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/all-boats-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/boatWidget.dart';
 import 'package:temple_adventures/auto-update.dart';
@@ -154,6 +155,7 @@ class MyApp extends StatelessWidget {
         AllFreelancersScreen.id: (context) => AllFreelancersScreen(),
         AddFreelanceScreen.id: (context) => AddFreelanceScreen(),
         FreelanceDetailsScreen.id: (context) => FreelanceDetailsScreen(),
+        AllBoatsPage.id: (context) => AllBoatsPage(),
       },
     );
   }

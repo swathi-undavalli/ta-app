@@ -10,6 +10,7 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-guest-details-screen.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -269,10 +270,14 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                         .roundToDouble()
                                         .toString()),
                                 buildKeyValuePairs(
-                                    "Balance",
-                                    double.parse(items.balance)
-                                        .roundToDouble()
-                                        .toString()),
+                                  "Balance",
+                                  getBalance(
+                                      items.bookingModel.payments,
+                                      double.parse(items.paid)
+                                          .roundToDouble(),
+                                      double.parse(items.cost)
+                                          .roundToDouble()),
+                                ),
                                 buildKeyValuePairs("Pax",
                                     items.bookingModel.noOfPersons.toString()),
                                 ((items != null) && (items.receiptNo != null))
@@ -297,7 +302,21 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                 ),
                                 SizedBox(height: 30),
                                 buildPaymentStatus(
-                                    totalAmount: "100000", payments: payments),
+                                  totalAmount: items.bookingModel.totalCost,
+                                  payments: [
+                                    PaymentModel(
+                                      amount: double.parse(items.paid)
+                                          .roundToDouble(),
+                                      collectedBy: items.employeeName,
+                                      reciptNo: "-",
+                                      referenceNo: "-",
+                                      remarks: "-",
+                                      paymentMode: "-",
+                                      time: items.bookingModel.createdAt,
+                                    ),
+                                    ...items.bookingModel.payments
+                                  ],
+                                ),
                                 SizedBox(height: 10),
                                 Row(
                                   children: [
@@ -362,20 +381,43 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                                 AppButton.miniFlat(
                                                   text: 'OK',
                                                   onTap: () {
-                                                    payments.add(double.parse(
-                                                        depositTED.text));
-                                                    print(payments);
+                                                    items.bookingModel.payments
+                                                        .add(
+                                                      PaymentModel(
+                                                        amount: double.parse(
+                                                            depositTED.text),
+                                                        collectedBy:
+                                                            currentEmployee
+                                                                .name,
+
+                                                        //TODO:: FIX THE BELOW URGENT !!!!!.
+
+                                                        reciptNo: "-",
+                                                        referenceNo: "-",
+                                                        paymentMode: "-",
+                                                        time: DateTime.now(),
+                                                      ),
+                                                    );
+
+                                                    FirebaseFirestore.instance
+                                                        .collection("bookings")
+                                                        .doc(items
+                                                            .bookingModel.id)
+                                                        .set(items.bookingModel
+                                                            .toMap());
                                                     Get.back();
                                                     depositTED.text = "";
-                                                    BookingsCalenderWidgetLogic
-                                                        bookingCalenderLogic =
-                                                        BookingsCalenderWidgetLogic();
-                                                    bookingCalenderLogic
-                                                        .onDateSelected(
-                                                      bookingCalenderLogic
-                                                          .controller
-                                                          .lastDateIndex,
-                                                    );
+                                                    // BookingsCalenderWidgetLogic
+                                                    // bookingCalenderLogic =
+                                                    // BookingsCalenderWidgetLogic();
+                                                    // bookingCalenderLogic
+                                                    //     .onDateSelected(
+                                                    //   bookingCalenderLogic
+                                                    //       .controller
+                                                    //       .lastDateIndex,
+                                                    // );
+                                                    AllBookingsScreen();
+                                                    setState(() {});
                                                   },
                                                 ),
                                               ],
@@ -391,7 +433,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                         },
                                       ).paddingOnly(right: 15),
                                       // alignment: Alignment.centerRight,
-                                    ),
+                                    )
                                   ],
                                 ),
                                 SizedBox(height: 20),
@@ -464,6 +506,194 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
     );
   }
 
+  Widget buildPaymentStatus({
+    @required double totalAmount,
+    @required List<PaymentModel> payments,
+  }) {
+    double deposits = 0.0;
+
+    payments.forEach((payment) {
+      deposits += payment.amount;
+    });
+
+    int n = payments.length;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Stack(
+          children: [
+            Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    height: 1,
+                    color: (totalAmount == deposits)
+                        ? Colors.green.shade400
+                        : Colors.black,
+                  ),
+                ),
+              ],
+            ).paddingOnly(top: 7, left: 16, right: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: n,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List<Widget>.generate(n, (i) {
+                      return buildCircle(color: Colors.black);
+                    }),
+                  ),
+                ),
+                (totalAmount == deposits)
+                    ? SizedBox()
+                    : Expanded(
+                        flex: 1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            buildCircle(color: Colors.red.shade300),
+                          ],
+                        ),
+                      ),
+                Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          width: 39,
+                          child: Container(
+                            width: 15,
+                            height: 15,
+                            decoration: BoxDecoration(
+                                color: AppColors.text.skyBlue,
+                                shape: BoxShape.circle),
+                            child: Icon(
+                              Icons.circle,
+                              size: 10,
+                              color: AppColors.text.black,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  flex: n,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: List<Widget>.generate(n, (i) {
+                      return buildNumber(
+                          text: payments[i].amount.round().toString(),
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black);
+                    }),
+                  ),
+                ),
+                (totalAmount == deposits)
+                    ? SizedBox()
+                    : Expanded(
+                        flex: 1,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            buildNumber(
+                                text:
+                                    (totalAmount - deposits).round().toString(),
+                                // text: "16000",
+                                color: Colors.red.shade300,
+                                fontWeight: FontWeight.normal),
+                          ],
+                        )),
+                Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        buildNumber(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                            text: totalAmount.toString()),
+                      ],
+                    )),
+              ],
+            ).paddingOnly(top: 20),
+          ],
+        ).paddingOnly(right: 20),
+        SizedBox(height: 20),
+        ...List.generate(
+          payments.length,
+          (index) {
+            return buildTransactions(payment: payments[index]);
+          },
+        )
+      ],
+    );
+  }
+
+  String getBalance(List<PaymentModel> payments, double deposit, double total) {
+    double t = deposit;
+    payments.forEach((payment) {
+      t += payment.amount;
+    });
+    return (total - t).toString();
+  }
+
+
+  Widget buildTransactions({PaymentModel payment}) {
+    DateTime now = DateTime.now();
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+          height: 8,
+          width: 8,
+          decoration: BoxDecoration(
+              color: Colors.green, borderRadius: BorderRadius.circular(10)),
+        ).paddingOnly(top: 2),
+        SizedBox(width: 10),
+        Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Paid ${payment.amount.round()} to ${payment.collectedBy}",
+              style: TextStyle(
+                  fontSize: 10, fontWeight: FontWeight.w600, wordSpacing: 2),
+            ),
+            SizedBox(height: 2),
+            if (payment.time != null &&
+                now.day == payment.time.day &&
+                now.month == payment.time.month &&
+                now.year == payment.time.year)
+              Text(
+                "Today - ${DateFormat("hh:mm a").format(payment.time)}",
+                style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+              )
+            else if (payment.time != null)
+              Text(
+                DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time),
+                style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+              )
+            else
+              Text(
+                "Initial Deposit",
+                style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+              ),
+          ],
+        ),
+      ],
+    ).paddingOnly(bottom: 10);
+  }
+
   makingPhoneCall(String phoneNumber) async {
     String url = 'tel:$phoneNumber';
     if (await canLaunch(url)) {
@@ -505,164 +735,6 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
         ),
       ],
     );
-  }
-
-  Widget buildPaymentStatus({String totalAmount, List<double> payments}) {
-    var list = payments;
-    var total = totalAmount;
-    double deposits = 0.0;
-    list.forEach((element) {
-      deposits += element;
-    });
-    int n = list.length;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Stack(
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    height: 1,
-                    color: (double.parse(total) == deposits)
-                        ? Colors.green.shade400
-                        : Colors.black,
-                  ),
-                ),
-              ],
-            ).paddingOnly(top: 7, left: 16, right: 16),
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-              Expanded(
-                flex: n,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: List<Widget>.generate(n, (i) {
-                    return buildCircle(color: Colors.black);
-                  }),
-                ),
-              ),
-              (double.parse(total) == deposits)
-                  ? SizedBox()
-                  : Expanded(
-                      flex: 1,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          buildCircle(color: Colors.red.shade300),
-                        ],
-                      ),
-                    ),
-              Expanded(
-                  flex: 1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      SizedBox(
-                        width: 39,
-                        child: Container(
-                          width: 15,
-                          height: 15,
-                          decoration: BoxDecoration(
-                              color: AppColors.text.skyBlue,
-                              shape: BoxShape.circle),
-                          child: Icon(
-                            Icons.circle,
-                            size: 10,
-                            color: AppColors.text.black,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )),
-            ]),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  flex: n,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: List<Widget>.generate(n, (i) {
-                      return buildNumber(
-                          text: list[i].round().toString(),
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black);
-                    }),
-                  ),
-                ),
-                (double.parse(total) == deposits)
-                    ? SizedBox()
-                    : Expanded(
-                        flex: 1,
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            buildNumber(
-                                text: (double.parse(total) - deposits)
-                                    .round()
-                                    .toString(),
-                                // text: "16000",
-                                color: Colors.red.shade300,
-                                fontWeight: FontWeight.normal),
-                          ],
-                        )),
-                Expanded(
-                    flex: 1,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        buildNumber(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            text: totalAmount),
-                      ],
-                    )),
-              ],
-            ).paddingOnly(top: 20),
-          ],
-        ).paddingOnly(right: 20),
-        SizedBox(height: 20),
-        ...List.generate(
-          payments.length,
-          (index) {
-            return buildTransactions(paidAmount: payments[index]);
-          },
-        )
-      ],
-    );
-  }
-
-  Widget buildTransactions({double paidAmount}) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          height: 8,
-          width: 8,
-          decoration: BoxDecoration(
-              color: Colors.green, borderRadius: BorderRadius.circular(10)),
-        ).paddingOnly(top: 2),
-        SizedBox(width: 10),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Paid ${paidAmount.round()} to Donarun Das",
-              style: TextStyle(
-                  fontSize: 10, fontWeight: FontWeight.w600, wordSpacing: 2),
-            ),
-            SizedBox(height: 2),
-            Text(
-              DateFormat("EEE dd MMM yy - hh:mm a").format(date),
-              style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
-            ),
-          ],
-        ),
-      ],
-    ).paddingOnly(bottom: 10);
   }
 
   Widget buildCircle({Color color}) {
