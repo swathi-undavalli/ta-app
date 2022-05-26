@@ -164,8 +164,8 @@ class ChooseBoatPage extends StatelessWidget {
                             controller.update();
                           },
                           onEmployeesModified: (
-                            List<Employee> employees,
-                            List<Employee> commonEmployees,
+                            List<Employees> employees,
+                            List<Employees> commonEmployees,
                           ) {
                             controller.selectedEmployees[controller
                                 .currentDiveDateIndex][index] = employees;

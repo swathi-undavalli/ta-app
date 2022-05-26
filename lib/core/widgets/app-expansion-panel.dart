@@ -193,8 +193,8 @@ class BookingsExpansionPanel extends StatelessWidget {
                           height: 7,
                           width: 7,
                           decoration: BoxDecoration(
-                              color: (double.parse(items[i].paid) ==
-                                      double.parse(items[i].cost))
+                              color: (double.parse(items[i].paid).round() ==
+                                      double.parse(items[i].cost).round())
                                   ? Colors.green
                                   : Colors.red,
                               borderRadius: BorderRadius.circular(5)),
@@ -352,10 +352,20 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   buildKeyValuePairs(
                                       "Activity", items[i].activity),
                                   buildKeyValuePairs(
-                                      "Total Cost", items[i].cost),
-                                  buildKeyValuePairs("Deposit", items[i].paid),
+                                      "Total Cost",
+                                      double.parse(items[i].cost)
+                                          .roundToDouble()
+                                          .toString()),
                                   buildKeyValuePairs(
-                                      "Balance", items[i].balance),
+                                      "Deposit",
+                                      double.parse(items[i].paid)
+                                          .roundToDouble()
+                                          .toString()),
+                                  buildKeyValuePairs(
+                                      "Balance",
+                                      double.parse(items[i].balance)
+                                          .roundToDouble()
+                                          .toString()),
                                   buildKeyValuePairs(
                                       "Pax",
                                       items[i]

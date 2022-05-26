@@ -7,6 +7,13 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 import '../app-button.dart';
 
 class AddEmployeeWidget extends StatelessWidget {
+  String text;
+  String subText;
+Function   onTap;
+
+
+  AddEmployeeWidget({@required this.text, @required this.subText,@required this.onTap});
+
   @override
   Widget build(BuildContext context) {
     return EmployeeAccess(
@@ -29,7 +36,7 @@ class AddEmployeeWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Add Employees",
+                    text,
                     style: TextStyle(
                       fontFamily: AppFonts.nunito,
                       color: AppColors.text.black,
@@ -38,7 +45,7 @@ class AddEmployeeWidget extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    "Only admins can modify",
+                    subText,
                     style: TextStyle(
                       fontFamily: AppFonts.nunito,
                       color: AppColors.text.darkgrey,
@@ -52,9 +59,8 @@ class AddEmployeeWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: AppButton.miniFlat(
-                  onTap: () {
-                    Get.toNamed(AllEmployeesScreen.id);
-                  },
+                  onTap: onTap,
+                    // Get.toNamed(AllEmployeesScreen.id);
                   text: 'VIEW',
                 ),
               ),
@@ -64,4 +70,5 @@ class AddEmployeeWidget extends StatelessWidget {
       ),
     );
   }
+
 }

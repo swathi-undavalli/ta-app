@@ -18,17 +18,20 @@ class SeatsAvailabilityExpansionPanel extends StatefulWidget {
   final int selectedSeats;
   final int maxSeats;
   final bool enableSelection;
-  final List<Employee> selectedEmployees;
+  final List<Employees> selectedEmployees;
   final List<Freelancer> selectedFreelancers;
-  final List<Employee> commonEmployees;
+  final List<Employees> commonEmployees;
+  final List<Freelancer> commonFreelancers;
   final Function(bool) onSeatSelected;
-  final Function(List<Employee>, List<Employee>) onEmployeesModified;
+  final Function(List<Employees>, List<Employees>) onEmployeesModified;
+  final Function(List<Freelancer>, List<Freelancer>) onFreelancerModified;
   final Function(Freelancer) onFreelanceAdded;
 
   SeatsAvailabilityExpansionPanel({
     @required this.boat,
     @required this.selectedSeats,
     @required this.commonEmployees,
+    @required this.commonFreelancers,
     @required this.fixedSeats,
     @required this.maxSeats,
     @required this.enableSelection,
@@ -37,6 +40,7 @@ class SeatsAvailabilityExpansionPanel extends StatefulWidget {
     @required this.onFreelanceAdded,
     @required this.onSeatSelected,
     @required this.onEmployeesModified,
+    @required this.onFreelancerModified,
   });
 
   @override
@@ -51,8 +55,8 @@ class _SeatsAvailabilityExpansionPanelState
   double bottomSheetHeight;
   TextEditingController searchTED = TextEditingController();
   final SearchController searchController = Get.put(SearchController());
-  List<Employee> allEmployeesList = [];
-  List<Employee> suggestionsList = [];
+  List<Employees> allEmployeesList = [];
+  List<Employees> suggestionsList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -227,13 +231,14 @@ class _SeatsAvailabilityExpansionPanelState
                             Get.bottomSheet(EmployeeSelectorBottomSheet(
                               selectedEmployees: widget.selectedEmployees,
                               commonEmployees: widget.commonEmployees,
-                              onEmployeeTapped: (Employee e) {
-                                for (Employee emp in widget.selectedEmployees) {
+                              onEmployeeTapped: (Employees e) {
+                                for (Employees emp
+                                    in widget.selectedEmployees) {
                                   if (emp.id == e.id) {
                                     return;
                                   }
                                 }
-                                for (Employee emp in widget.commonEmployees) {
+                                for (Employees emp in widget.commonEmployees) {
                                   if (emp.id == e.id) {
                                     return;
                                   }
@@ -272,11 +277,35 @@ class _SeatsAvailabilityExpansionPanelState
                         child: AppButton.miniFlat(
                           onTap: () {
                             Get.bottomSheet(FreelanceDiverBottomSheet(
-                              onFreelanceAdded: (Freelancer freelance) {
-                                freelance.boatID = widget.boat.id;
-                                widget.onFreelanceAdded(freelance);
-                              },
-                            ));
+                                selectedFreelancers : widget.selectedFreelancers,
+                                commonFreelancers: widget.commonFreelancers,
+                                onFreelanceTapped: (Freelancer f) {
+                                  for (Freelancer flr
+                                  in widget.selectedFreelancers) {
+                                    if (flr.id == f.id) {
+                                      return;
+                                    }
+                                  }
+                                  for (Freelancer flr in widget.commonFreelancers) {
+                                    if (flr.id == f.id) {
+                                      return;
+                                    }
+                                  }
+                                  f.boatID = widget.boat.id;
+                                  widget.selectedFreelancers.add(f);
+                                  widget.commonFreelancers.add(f);
+                                  widget.onFreelancerModified(
+                                    widget.selectedFreelancers,
+                                    widget.commonFreelancers,
+                                  );
+                                },
+                                ));
+                            // Get.bottomSheet(FreelanceDiverBottomSheet(
+                            //   onFreelanceAdded: (Freelancer freelance) {
+                            //     freelance.boatID = widget.boat.id;
+                            //     widget.onFreelanceAdded(freelance);
+                            //   },
+                            // ));
                             //log("clicked");
                           },
                           text: "Add",
@@ -294,7 +323,7 @@ class _SeatsAvailabilityExpansionPanelState
     );
   }
 
-  Widget buildEmployeeChip(Employee e) {
+  Widget buildEmployeeChip(Employees e) {
     return Padding(
       padding: const EdgeInsets.only(left: 4, right: 4, top: 5, bottom: 5),
       child: Container(

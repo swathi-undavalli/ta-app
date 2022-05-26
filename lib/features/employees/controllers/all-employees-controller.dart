@@ -18,17 +18,6 @@ class AllEmployeesLogic {
     controller.update();
   }
 
-  // count() async {
-  //   //log("Finiding count");
-  //   var rawData = await FirebaseFirestore.instance
-  //       .collection("counter")
-  //       .doc("employee")
-  //       .get();
-  //   var data = rawData.data();
-  //   //log(rawData.data().toString());
-  //   // controller.data = data["count"];
-  //   // //print("===================${controller.data}");
-  // }
 
 }
 
@@ -76,66 +65,3 @@ class AllEmployeesController extends GetxController {
 
 ///TODO :: CHECK PLEASE
 
-// class AllEmployeesLogic {
-//   AllEmployeesController controller = Get.put(AllEmployeesController());
-//   void updateSearchList(String text) {
-//     controller.suggestionsList = [];
-//     controller.allEmployeesList.forEach((employee) {
-//       if (employee.firstName.toLowerCase().contains(text.toLowerCase()) ||
-//           employee.lastName.toLowerCase().contains(text.toLowerCase())) {
-//         controller.suggestionsList.add(employee);
-//       }
-//     });
-//     controller.update();
-//   }
-// }
-//
-// class AllEmployeesController extends GetxController {
-//   TextEditingController searchTED = TextEditingController();
-//
-//   List<String> roles = [
-//     "DiveTeam",
-//     "Bookings",
-//     "Servicing",
-//     "AdminTeam",
-//     "Manager",
-//     "Accounts",
-//     "Marketing"
-//   ];
-//
-//   List<Employee> allEmployeesList = [];
-//   List<Employee> suggestionsList = [];
-//
-//   Icon _customIcon = Icon(Icons.search);
-//
-//   Widget _customSearchBar = Text('Search');
-//
-//   TextEditingController optionsTEDDe = TextEditingController();
-//
-//   List<String> options = ['Call', 'Delete', "Info"];
-//
-//   List<Employee> employees = [];
-//
-//   bool _showSuggestions = false;
-//
-//   Icon get customIcon => _customIcon;
-//
-//   Widget get customSearchBar => _customSearchBar;
-//
-//   bool get showSuggestions => _showSuggestions;
-//
-//   set showSuggestions(bool value) {
-//     _showSuggestions = value;
-//     update();
-//   }
-//
-//   set customSearchBar(Widget value) {
-//     _customSearchBar = value;
-//     update();
-//   }
-//
-//   set customIcon(Icon value) {
-//     _customIcon = value;
-//     update();
-//   }
-// }

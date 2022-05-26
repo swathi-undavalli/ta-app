@@ -1,6 +1,8 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
+import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
 import '../../../../core/widgets/attendance_report_widget/attendance_report_widget.dart';
@@ -50,7 +52,21 @@ class HomePage extends StatelessWidget {
                   SizedBox(height: 10),
                   AttendanceWidget(),
                   SizedBox(height: 20),
-                  AddEmployeeWidget(),
+                  AddEmployeeWidget(
+                    text: "Add Employees",
+                    subText: "Only admins can modify",
+                    onTap: () {
+                      Get.toNamed(AllEmployeesScreen.id);
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  AddEmployeeWidget(
+                    text: "Add Freelancers",
+                    subText: "Only admins can modify",
+                    onTap: () {
+                      Get.toNamed(AllFreelancersScreen.id);
+                    },
+                  ),
                   SizedBox(height: 20),
                   AttendanceReportWidget(),
                   SizedBox(height: 100),

@@ -18,15 +18,15 @@ class BoatPassengersModel {
   });
 
   List<Passenger> passenger;
-  List<Employee> employees;
+  List<Employees> employees;
   List<Freelancer> freelancer;
 
   factory BoatPassengersModel.fromMap(Map<String, dynamic> json) =>
       BoatPassengersModel(
         passenger: List<Passenger>.from(
             json["passenger"].map((x) => Passenger.fromMap(x))),
-        employees: List<Employee>.from(
-            json["employees"].map((x) => Employee.fromMap(x))),
+        employees: List<Employees>.from(
+            json["employees"].map((x) => Employees.fromMap(x))),
         freelancer: List<Freelancer>.from(
             json["freelancer"].map((x) => Freelancer.fromMap(x))),
       );
@@ -38,8 +38,8 @@ class BoatPassengersModel {
       };
 }
 
-class Employee {
-  Employee({
+class Employees {
+  Employees({
     this.name,
     this.id,
     this.gender,
@@ -53,7 +53,7 @@ class Employee {
   String gender;
   String phone;
 
-  factory Employee.fromMap(Map<String, dynamic> json) => Employee(
+  factory Employees.fromMap(Map<String, dynamic> json) => Employees(
         name: json["name"],
         id: json["id"],
         gender: json["gender"],
@@ -73,7 +73,7 @@ class Employee {
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Employee && other.id == id && other.boatID == boatID;
+    return other is Employees && other.id == id && other.boatID == boatID;
   }
 
   @override
@@ -88,18 +88,22 @@ class Freelancer {
     this.gender,
     this.phone,
     this.boatID,
+    this.id,
+
   });
 
   String name;
   String boatID;
   String gender;
   String phone;
+  String id;
 
   factory Freelancer.fromMap(Map<String, dynamic> json) => Freelancer(
         name: json["name"],
         gender: json["gender"],
         phone: json["phone"],
         boatID: json["boatID"],
+    id: json["id"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -107,6 +111,7 @@ class Freelancer {
         "gender": gender,
         "phone": phone,
         "boatID": boatID,
+        "id": id,
       };
 
   @override

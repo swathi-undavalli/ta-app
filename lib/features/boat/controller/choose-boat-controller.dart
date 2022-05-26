@@ -170,13 +170,13 @@ class ChooseBoatLogic {
     return list;
   }
 
-  List<List<Employee>> getEmployees(List<Employee> employees) {
-    List<List<Employee>> list =
+  List<List<Employees>> getEmployees(List<Employees> employees) {
+    List<List<Employees>> list =
         List.generate(controller.boatsList.length, (index) => []);
 
     for (int i = 0; i < controller.boatsList.length; i++) {
-      List<Employee> emps = [];
-      for (Employee e in employees) {
+      List<Employees> emps = [];
+      for (Employees e in employees) {
         if (e.boatID == (i + 1).toString()) {
           emps.add(e);
         }
@@ -326,9 +326,9 @@ class ChooseBoatController extends GetxController {
   List<List<int>> selectedSeatsCount = [];
   List<List<int>> firebaseSeatsCount = [];
   List<List<int>> fixedSeatCount = [];
-  List<List<List<Employee>>> selectedEmployees = [];
+  List<List<List<Employees>>> selectedEmployees = [];
   List<List<List<Freelancer>>> selectedFreelancers = [];
-  List<Employee> commonEmployees = [];
+  List<Employees> commonEmployees = [];
   List<BoatsModel> boatsList = [];
   List<DateTime> diveDates = [];
   List<int> requiredCount = [];

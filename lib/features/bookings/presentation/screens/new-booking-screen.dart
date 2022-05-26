@@ -20,26 +20,21 @@ class NewBookingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          appBar: buildAppBar(),
-          body: SafeArea(
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: Column(
-                children: [
-                  buildTextFields(),
-                  buildBreakdown(),
-                  buildButtons(),
-                  SizedBox(height: 30)
-                ],
-              ),
-            ),
+    return Scaffold(
+      appBar: buildAppBar(),
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Column(
+            children: [
+              buildTextFields(),
+              buildBreakdown(),
+              buildButtons(),
+              SizedBox(height: 30)
+            ],
           ),
         ),
-        buildShowLoading(),
-      ],
+      ),
     );
   }
 

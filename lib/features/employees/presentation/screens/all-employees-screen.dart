@@ -15,7 +15,6 @@ import 'add-an-employee-screen.dart';
 
 class AllEmployeesScreen extends StatelessWidget {
   static const String id = "AllEmployeesScreen";
-  final ScrollController scrollController = ScrollController();
 
   final AllEmployeesLogic logic = AllEmployeesLogic();
 

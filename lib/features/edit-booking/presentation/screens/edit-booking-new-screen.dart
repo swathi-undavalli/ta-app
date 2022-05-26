@@ -32,7 +32,8 @@ class EditBookingNewScreen extends StatelessWidget {
     logic.controller.activityNAmeTED.text =
         bookingArg.activity[0].name.toString();
     logic.controller.discountTED.text = (bookingArg.discount).toString();
-    logic.controller.totalAmountTED.text = (bookingArg.totalCost).toString();
+    logic.controller.totalAmountTED.text =
+        ((bookingArg.totalCost).round()).toString();
     logic.controller.priceTED.text = bookingArg.price.toString();
     logic.controller.depositTED.text = bookingArg.paid.toString();
     logic.controller.balanceTED.text = bookingArg.balance.toString();
@@ -770,7 +771,8 @@ class EditBookingNewScreen extends StatelessWidget {
             ),
             Container(
               child: Text(
-                controller.bookingModel.balance.toString() + "/-",
+                controller.bookingModel.balance.roundToDouble().toString() +
+                    "/-",
                 style: TextStyle(
                     fontSize: FontSize.textSize, fontWeight: FontWeight.w600),
               ),
@@ -799,7 +801,8 @@ class EditBookingNewScreen extends StatelessWidget {
             ),
             Container(
               child: Text(
-                controller.bookingModel.totalCost.toString() + "/-",
+                controller.bookingModel.totalCost.roundToDouble().toString() +
+                    "/-",
                 style: TextStyle(
                     fontSize: FontSize.textSize, fontWeight: FontWeight.w600),
               ),

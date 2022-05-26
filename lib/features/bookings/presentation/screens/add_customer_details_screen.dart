@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/validator.dart';
+import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
 import 'package:temple_adventures/features/bookings/controller/customer-registration-controller.dart';
@@ -30,60 +31,92 @@ class AddCustomerDetailsScreen extends StatelessWidget {
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 50),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                // buildHii(),
-                // SizedBox(height: 20),
-                Row(
-                  children: [
-                    AppTextField(
-                      width: (Get.width / 2) - 55,
-                      hintText: "First Name",
-                      controller: logic.controller.fNameTED,
-                      focusNode: logic.controller.fNameNode,
-                      nextFocusNode: logic.controller.lNameNode,
-                      required: false,
-                      onChangedCallBack: (_) {},
-                      errorValidator: () {
-                        return null;
-                        // return Validator.validateName(
-                        //     logic.controller.fNameTED.text);
-                      },
-                      validator: (email) {
-                        return null;
-                        // return Validator.validateName(email);
-                      },
-                    ),
-                    SizedBox(
-                      width: 10,
-                    ),
-                    AppTextField(
-                      width: (Get.width / 2) - 55,
-                      hintText: "Last Name",
-                      controller: logic.controller.lNameTED,
-                      focusNode: logic.controller.lNameNode,
-                      nextFocusNode: logic.controller.emailNode,
-                      required: false,
-                      onChangedCallBack: (_) {},
-                      errorValidator: () {
-                        return null;
-                        // return Validator.validateName(
-                        //     logic.controller.lNameTED.text);
-                      },
-                      validator: (email) {
-                        return null;
-                        // return Validator.validateName(email);
-                      },
+            child: GetBuilder<NewBookingController>(builder: (controller) {
+              return Column(
+                mainAxisAlignment: (controller.getDetailsPressed)
+                    ? MainAxisAlignment.center
+                    : MainAxisAlignment.start,
+                children: [
+                  if (!controller.getDetailsPressed) ...[
+                    buildEmailID(),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        AppButton.miniFlat(
+                          text: "Get Details",
+                          onTap: () {
+                            logic.getDetailsPressed();
+                          },
+                        ),
+                      ],
                     ),
                   ],
-                ),
-                buildEmailID(),
-                buildNoOfPersons(),
-                buildPhoneNumber(),
-                SizedBox(height: 40),
-              ],
-            ),
+                  if (controller.getDetailsPressed) ...[
+                    Row(
+                      children: [
+                        AppTextField(
+                          width: (Get.width / 2) - 55,
+                          hintText: "First Name",
+                          controller: logic.controller.fNameTED,
+                          focusNode: logic.controller.fNameNode,
+                          nextFocusNode: logic.controller.lNameNode,
+                          required: false,
+                          onChangedCallBack: (_) {},
+                          errorValidator: () {
+                            return null;
+                            // return Validator.validateName(
+                            //     logic.controller.fNameTED.text);
+                          },
+                          validator: (email) {
+                            return null;
+                            // return Validator.validateName(email);
+                          },
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        AppTextField(
+                          width: (Get.width / 2) - 55,
+                          hintText: "Last Name",
+                          controller: logic.controller.lNameTED,
+                          focusNode: logic.controller.lNameNode,
+                          nextFocusNode: logic.controller.emailNode,
+                          required: false,
+                          onChangedCallBack: (_) {},
+                          errorValidator: () {
+                            return null;
+                            // return Validator.validateName(
+                            //     logic.controller.lNameTED.text);
+                          },
+                          validator: (email) {
+                            return null;
+                            // return Validator.validateName(email);
+                          },
+                        ),
+                      ],
+                    ),
+                    buildEmailID(),
+                    buildNoOfPersons(),
+                    buildPhoneNumber(),
+                    SizedBox(height: 40),
+                  ],
+                  if (controller.showLoading)
+                    SizedBox(
+                      child: Center(
+                        child: SizedBox(
+                          child: CircularProgressIndicator(
+                            color: Colors.black,
+                            strokeWidth: 2,
+                          ),
+                          height: 20,
+                          width: 20,
+                        ),
+                      ),
+                      height: 200,
+                    ),
+                ],
+              );
+            }),
           ),
         ),
       ),
@@ -192,30 +225,21 @@ class AddCustomerDetailsScreen extends StatelessWidget {
   }
 
   Widget buildFloatingActionButton() {
-    return FloatingActionButton(
-      onPressed: () {
-        //print("clicked");
-        logic.onCheckPressed();
-      },
-      elevation: 0,
-      backgroundColor: AppColors.IconColor.black,
-      child: Icon(Icons.check),
-    );
+    return GetBuilder<NewBookingController>(builder: (controller) {
+      if (controller.getDetailsPressed)
+        return FloatingActionButton(
+          onPressed: () {
+            logic.onCheckPressed();
+          },
+          elevation: 0,
+          backgroundColor: AppColors.IconColor.black,
+          child: Icon(Icons.check),
+        );
+      else
+        return SizedBox();
+    });
     // else
     //   return Container();
   }
 
-  // Widget buildMessage() {
-  //   return GetBuilder<CustomerRegistrationController>(builder: (controller) {
-  //     return Container(
-  //       width: Get.width,
-  //       child: Text(
-  //         controller.statusMsg,
-  //         style: TextStyle(
-  //             color: AppColors.text.skyBlue, fontSize: FontSize.textSize),
-  //         textAlign: TextAlign.center,
-  //       ),
-  //     );
-  //   });
-  // }
 }

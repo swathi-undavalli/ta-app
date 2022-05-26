@@ -6,6 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:temple_adventures/features/Freelancers/presentation/screens/add-freelance-screen.dart';
+import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
+import 'package:temple_adventures/features/Freelancers/presentation/screens/freelance-details-screen.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/boatWidget.dart';
 import 'package:temple_adventures/auto-update.dart';
@@ -47,7 +50,6 @@ import 'features/employees/presentation/screens/employee-profile-screen.dart';
 import 'features/login/presentation/screens/login-page.dart';
 
 Future<void> backgroundHandler(RemoteMessage message) async {
-  //print(message.data);
 }
 
 void main() async {
@@ -95,7 +97,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    //print(FirebaseAuth.instance.currentUser == null);
     Get.put(DashBoardScreenController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
@@ -120,9 +121,6 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
-        // CustomerRegistrationScreen.id: (context) =>
-        //     CustomerRegistrationScreen(),
-        // NewCustomerScreen.id: (context) => NewCustomerScreen(),
         AllActivitiesScreen.id: (context) => AllActivitiesScreen(),
         EditBoatPage.id: (context) => EditBoatPage(),
         NewBoatPage.id: (context) => NewBoatPage(),
@@ -153,6 +151,9 @@ class MyApp extends StatelessWidget {
         IDProofScreen.id: (context) => IDProofScreen(),
         AllIDProofsScreen.id: (context) => AllIDProofsScreen(),
         GuestDetailsScreen.id: (context) => GuestDetailsScreen(),
+        AllFreelancersScreen.id: (context) => AllFreelancersScreen(),
+        AddFreelanceScreen.id: (context) => AddFreelanceScreen(),
+        FreelanceDetailsScreen.id: (context) => FreelanceDetailsScreen(),
       },
     );
   }

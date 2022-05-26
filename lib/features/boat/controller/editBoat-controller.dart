@@ -3,6 +3,8 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/features/boat/models/boat-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 
+import '../../home/model/employee.dart';
+
 class EditBoatLogic {
   EditBoatController controller = Get.put(EditBoatController());
 }

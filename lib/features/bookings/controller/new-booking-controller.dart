@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
@@ -13,6 +12,7 @@ import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:temple_adventures/features/bookings/models/customer-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
@@ -34,6 +34,13 @@ class NewBookingLogic {
       AutoScrollController();
   final AutoScrollController autoScrollControllerPool = AutoScrollController();
   final AutoScrollController autoScrollControllerDive = AutoScrollController();
+
+  Future<void> getDetailsPressed() async {
+    controller.showLoading = true;
+    controller.customerExist = await isCustomerExists();
+    controller.getDetailsPressed = true;
+    controller.showLoading = false;
+  }
 
   getDataFromFireBase() async {
     QuerySnapshot<Map<String, dynamic>> catalogue =
@@ -500,14 +507,6 @@ class NewBookingLogic {
     if (controller.emailTED.text != "" &&
         controller.fNameTED.text != "" &&
         controller.phoneNumberTED.text != "") {
-      //log("started");
-      //log(controller.emailTED.text);
-      //log(controller.lNameTED.text);
-      //log(controller.fNameTED.text);
-      //log(controller.paxTED.text);
-      //log(controller.phoneNumberTED.text);
-      //log(controller.countryCodeTED.text);
-      //log(controller.isoCode);
       controller.bookingModel.pax = [];
       controller.bookingModel.pax.add({
         "email": controller.emailTED.text,
@@ -524,6 +523,22 @@ class NewBookingLogic {
     } else {
       showToast("Invalid Input");
     }
+  }
+
+  Future<bool> isCustomerExists() async {
+    var d = await FirebaseFirestore.instance
+        .collection("customers")
+        .doc(controller.emailTED.text)
+        .get();
+    Map<String, dynamic> data = d.data();
+    if (data == null) return false;
+    controller.customerModel = CustomerModel.fromMap(data);
+    log(controller.customerModel.toMap().toString());
+    controller.fNameTED.text = controller.customerModel.firstName;
+    controller.lNameTED.text = controller.customerModel.lastName;
+    controller.phoneNumberTED.text = controller.customerModel.phoneNumber;
+    controller.countryCodeTED.text = controller.customerModel.countryCode;
+    return true;
   }
 }
 
@@ -545,6 +560,7 @@ class NewBookingController extends GetxController {
   FocusNode remarksNode = FocusNode();
 
   AutoScrollController autoScrollController = AutoScrollController();
+  CustomerModel customerModel = CustomerModel();
 
   String _diveLocation = "Pondicherry";
 
@@ -554,6 +570,10 @@ class NewBookingController extends GetxController {
 
   bool _taxable = true;
 
+  bool customerExist = false;
+
+  bool _getDetailsPressed = false;
+
   DateTime get paymentDate => _paymentDate;
 
   String get bookingId => _bookingId;
@@ -561,6 +581,13 @@ class NewBookingController extends GetxController {
   bool get discountSwitch => _discountSwitch;
 
   bool get taxable => _taxable;
+
+  bool get getDetailsPressed => _getDetailsPressed;
+
+  set getDetailsPressed(bool value) {
+    _getDetailsPressed = value;
+    update();
+  }
 
   set taxable(bool value) {
     _taxable = value;
@@ -650,13 +677,17 @@ class NewBookingController extends GetxController {
     _totalCost = 0;
     activities = [];
     taxable = true;
+    showLoading = false;
+    getDetailsPressed = false;
   }
 
   bool _showLoading = true;
 
   String _isoCode = "IN";
 
-  String get isoCode => _isoCode;
+  String get isoCode {
+    return _isoCode;
+  }
 
   String get diveLocation => _diveLocation;
 

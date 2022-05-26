@@ -18,10 +18,10 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
     @required this.commonEmployees,
   });
 
-  final List<Employee> selectedEmployees;
-  final List<Employee> commonEmployees;
+  final List<Employees> selectedEmployees;
+  final List<Employees> commonEmployees;
 
-  final Function(Employee) onEmployeeTapped;
+  final Function(Employees) onEmployeeTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -131,7 +131,7 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
       child: Material(
         child: InkWell(
           onTap: () {
-            onEmployeeTapped(Employee(
+            onEmployeeTapped(Employees(
               name: e.name,
               phone: e.phoneNumber,
               id: e.id,
@@ -186,16 +186,6 @@ class BottomSheetLogic {
 class BottomSheetController extends GetxController {
   TextEditingController searchTED = TextEditingController();
 
-  List<Employee> allEmployeesList = [];
+  List<Employees> allEmployeesList = [];
 
-  bool _showSuggestions = false;
-
-  bool get showSuggestions => _showSuggestions;
-
-  set showSuggestions(bool value) {
-    _showSuggestions = value;
-    update();
-  }
-
-  List<Employee> suggestionsList = [];
 }

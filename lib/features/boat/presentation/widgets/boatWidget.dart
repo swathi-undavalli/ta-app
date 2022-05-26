@@ -1670,7 +1670,7 @@ class _BoatWidgetState extends State<BoatWidget> {
   @override
   Widget build(BuildContext context) {
     int bookedSeats = 0;
-    List<Employee> employees = [];
+    List<Employees> employees = [];
     List<Passenger> passengers = [];
     List<Freelancer> freelancers = [];
     widget.boatPassengersModel.passenger.forEach((passenger) {
