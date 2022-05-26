@@ -198,13 +198,13 @@
 //     );
 //   }
 // }
+
+import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/boat/models/boat-passengers-model.dart';
-import 'package:temple_adventures/features/counter-model.dart';
-
 import '../../../home/model/employee.dart';
 
 class FreelanceDiverBottomSheet extends StatefulWidget {
@@ -297,7 +297,7 @@ class _FreelanceDiverBottomSheetState extends State<FreelanceDiverBottomSheet> {
 
   Widget checkFireBase() {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-        stream: FirebaseFirestore.instance.collection('freelance').snapshots() ,
+        stream: FirebaseFirestore.instance.collection('freelance').snapshots(),
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (!snapshot.hasData) {
             return Center(
@@ -307,6 +307,8 @@ class _FreelanceDiverBottomSheetState extends State<FreelanceDiverBottomSheet> {
           return Column(
             children: snapshot.data.docs.map((document) {
               Employee employee = Employee.fromMap(document.data());
+              log(employee.toString());
+              log(employee.id.toString());
               if (searchTED.text.isNotEmpty) {
                 if (employee.id.contains(searchTED.text) ||
                     employee.name
@@ -318,59 +320,64 @@ class _FreelanceDiverBottomSheetState extends State<FreelanceDiverBottomSheet> {
               return buildFreelance(
                 e: employee,
               );
-            }
-            ).toList(),
+            }).toList(),
           );
         });
   }
 
   Widget buildFreelance({Employee e}) {
-    return Container(
-      child: Material(
-        child: InkWell(
-          onTap: () {
-            widget.onFreelanceTapped(Freelancer(
-              name: e.name,
-              phone: e.phoneNumber,
-              id: e.id,
-              gender: e.gender,
-            ));
-            setState(() {});
-          },
-          child: Container(
-            height: 47,
-            width: Get.width,
-            child: Row(
-              children: [
-                Icon(Icons.account_circle, color: Colors.black38, size: 25),
-                Text(
-                  "   ${e.name}",
-                  style: TextStyle(color: AppColors.text.black, fontSize: 14),
-                ),
-                Expanded(
-                    child: Container(
-                  color: Colors.transparent,
-                )),
-                if (widget.selectedFreelancers
-                    .map((e) => e.name)
-                    .toList()
-                    .contains(e.name))
-                  Icon(Icons.check, color: Colors.green, size: 25),
-                if (!widget.selectedFreelancers
-                        .map((e) => e.name)
-                        .toList()
-                        .contains(e.name) &&
-                    widget.commonFreelancers
-                        .map((e) => e.name)
-                        .toList()
-                        .contains(e.name))
-                  Icon(Icons.check, color: Colors.orange, size: 25),
-              ],
+    try {
+      return Container(
+        child: Material(
+          child: InkWell(
+            onTap: () {
+              setState(() {
+                widget.onFreelanceTapped(Freelancer(
+                  name: e.name,
+                  phone: e.phoneNumber,
+                  id: e.id,
+                  gender: e.gender,
+                ));
+              });
+            },
+            child: Container(
+              height: 47,
+              width: Get.width,
+              child: Row(
+                children: [
+                  Icon(Icons.account_circle, color: Colors.black38, size: 25),
+                  Text(
+                    "   ${e.name}",
+                    style: TextStyle(color: AppColors.text.black, fontSize: 14),
+                  ),
+                  Expanded(
+                      child: Container(
+                    color: Colors.transparent,
+                  )),
+                  if (widget.selectedFreelancers
+                      .map((e) => e.name)
+                      .toList()
+                      .contains(e.name))
+                    Icon(Icons.check, color: Colors.green, size: 25),
+                  if (!widget.selectedFreelancers
+                          .map((e) => e.name)
+                          .toList()
+                          .contains(e.name) &&
+                      widget.commonFreelancers
+                          .map((e) => e.name)
+                          .toList()
+                          .contains(e.name))
+                    Icon(Icons.check, color: Colors.orange, size: 25),
+                ],
+              ),
             ),
           ),
+          color: Colors.transparent,
         ),
-        color: Colors.transparent,
-      ),
-    );
+      );
+    } catch (e) {
+      log(e);
+      log("helooooooooooooooooooooo");
+    }
   }
 }

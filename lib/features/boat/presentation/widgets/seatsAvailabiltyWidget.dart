@@ -52,12 +52,6 @@ class _SeatsAvailabilityExpansionPanelState
     extends State<SeatsAvailabilityExpansionPanel> {
   bool isExpanded = false;
 
-  double bottomSheetHeight;
-  TextEditingController searchTED = TextEditingController();
-  final SearchController searchController = Get.put(SearchController());
-  List<Employees> allEmployeesList = [];
-  List<Employees> suggestionsList = [];
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -277,29 +271,31 @@ class _SeatsAvailabilityExpansionPanelState
                         child: AppButton.miniFlat(
                           onTap: () {
                             Get.bottomSheet(FreelanceDiverBottomSheet(
-                                selectedFreelancers : widget.selectedFreelancers,
-                                commonFreelancers: widget.commonFreelancers,
-                                onFreelanceTapped: (Freelancer f) {
-                                  for (Freelancer flr
-                                  in widget.selectedFreelancers) {
-                                    if (flr.id == f.id) {
-                                      return;
-                                    }
+                              selectedFreelancers: widget.selectedFreelancers,
+                              commonFreelancers: widget.commonFreelancers,
+                              onFreelanceTapped: (Freelancer f) {
+                                for (Freelancer flr
+                                    in widget.selectedFreelancers) {
+                                  setState(() {});
+                                  if (flr.id == f.id) {
+                                    return;
                                   }
-                                  for (Freelancer flr in widget.commonFreelancers) {
-                                    if (flr.id == f.id) {
-                                      return;
-                                    }
+                                }
+                                for (Freelancer flr
+                                    in widget.commonFreelancers) {
+                                  if (flr.id == f.id) {
+                                    return;
                                   }
-                                  f.boatID = widget.boat.id;
-                                  widget.selectedFreelancers.add(f);
-                                  widget.commonFreelancers.add(f);
-                                  widget.onFreelancerModified(
-                                    widget.selectedFreelancers,
-                                    widget.commonFreelancers,
-                                  );
-                                },
-                                ));
+                                }
+                                f.boatID = widget.boat.id;
+                                widget.selectedFreelancers.add(f);
+                                widget.commonFreelancers.add(f);
+                                widget.onFreelancerModified(
+                                  widget.selectedFreelancers,
+                                  widget.commonFreelancers,
+                                );
+                              },
+                            ));
                             // Get.bottomSheet(FreelanceDiverBottomSheet(
                             //   onFreelanceAdded: (Freelancer freelance) {
                             //     freelance.boatID = widget.boat.id;

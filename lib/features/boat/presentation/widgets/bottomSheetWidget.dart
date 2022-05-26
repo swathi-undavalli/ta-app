@@ -187,5 +187,4 @@ class BottomSheetController extends GetxController {
   TextEditingController searchTED = TextEditingController();
 
   List<Employees> allEmployeesList = [];
-
 }

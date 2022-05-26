@@ -89,7 +89,6 @@ class Freelancer {
     this.phone,
     this.boatID,
     this.id,
-
   });
 
   String name;
@@ -103,7 +102,7 @@ class Freelancer {
         gender: json["gender"],
         phone: json["phone"],
         boatID: json["boatID"],
-    id: json["id"],
+        id: json["id"],
       );
 
   Map<String, dynamic> toMap() => {
