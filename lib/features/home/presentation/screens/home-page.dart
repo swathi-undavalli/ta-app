@@ -51,32 +51,31 @@ class HomePage extends StatelessWidget {
                       icon: Icon(Icons.menu_rounded),
                     ),
                   ),
-                  ElevatedButton(
-                      onPressed: () async {
-                        for (int i = 143; i < 950; i++) {
-                          log(i.toString());
-                          try {
-                            var data = await FirebaseFirestore.instance
-                                .collection("bookings")
-                                .doc("$i")
-                                .get();
-                            if (data != null && data.data() != null) {
-                              var booking = BookingModel.fromMap(data.data());
-
-                              FirebaseFirestore.instance
-                                  .collection("bookings")
-                                  .doc("$i")
-                                  .set(booking.toMap());
-                            }
-                          } catch (e) {
-                            log("error");
-                            log(e);
-                            continue;
-                          }
-                        }
-                      },
-                      child: Text("DO")),
-
+                  // ElevatedButton(
+                  //     onPressed: () async {
+                  //       for (int i = 143; i < 950; i++) {
+                  //         log(i.toString());
+                  //         try {
+                  //           var data = await FirebaseFirestore.instance
+                  //               .collection("bookings")
+                  //               .doc("$i")
+                  //               .get();
+                  //           if (data != null && data.data() != null) {
+                  //             var booking = BookingModel.fromMap(data.data());
+                  //
+                  //             FirebaseFirestore.instance
+                  //                 .collection("bookings")
+                  //                 .doc("$i")
+                  //                 .set(booking.toMap());
+                  //           }
+                  //         } catch (e) {
+                  //           log("error");
+                  //           log(e);
+                  //           continue;
+                  //         }
+                  //       }
+                  //     },
+                  //     child: Text("DO")),
                   SizedBox(height: 10),
                   AttendanceWidget(),
                   SizedBox(height: 20),

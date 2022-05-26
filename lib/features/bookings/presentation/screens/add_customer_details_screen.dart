@@ -30,7 +30,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
         },
         child: SafeArea(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 50),
+            padding: const EdgeInsets.symmetric(horizontal: 40),
             child: GetBuilder<NewBookingController>(builder: (controller) {
               return Column(
                 mainAxisAlignment: (controller.getDetailsPressed)
@@ -52,49 +52,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                     ),
                   ],
                   if (controller.getDetailsPressed) ...[
-                    Row(
-                      children: [
-                        AppTextField(
-                          width: (Get.width / 2) - 55,
-                          hintText: "First Name",
-                          controller: logic.controller.fNameTED,
-                          focusNode: logic.controller.fNameNode,
-                          nextFocusNode: logic.controller.lNameNode,
-                          required: false,
-                          onChangedCallBack: (_) {},
-                          errorValidator: () {
-                            return null;
-                            // return Validator.validateName(
-                            //     logic.controller.fNameTED.text);
-                          },
-                          validator: (email) {
-                            return null;
-                            // return Validator.validateName(email);
-                          },
-                        ),
-                        SizedBox(
-                          width: 10,
-                        ),
-                        AppTextField(
-                          width: (Get.width / 2) - 55,
-                          hintText: "Last Name",
-                          controller: logic.controller.lNameTED,
-                          focusNode: logic.controller.lNameNode,
-                          nextFocusNode: logic.controller.emailNode,
-                          required: false,
-                          onChangedCallBack: (_) {},
-                          errorValidator: () {
-                            return null;
-                            // return Validator.validateName(
-                            //     logic.controller.lNameTED.text);
-                          },
-                          validator: (email) {
-                            return null;
-                            // return Validator.validateName(email);
-                          },
-                        ),
-                      ],
-                    ),
+                    buildNameFields(),
                     buildEmailID(),
                     buildNoOfPersons(),
                     buildPhoneNumber(),
@@ -123,6 +81,8 @@ class AddCustomerDetailsScreen extends StatelessWidget {
     );
   }
 
+  ///======================UI==============///
+
   Widget buildNoOfPersons() {
     return AppTextField(
       hintText: "No of Persons",
@@ -145,6 +105,52 @@ class AddCustomerDetailsScreen extends StatelessWidget {
     );
   }
 
+  Widget buildNameFields() {
+    return Row(
+      children: [
+        AppTextField(
+          width: (Get.width / 2) - 45,
+          hintText: "First Name",
+          controller: logic.controller.fNameTED,
+          focusNode: logic.controller.fNameNode,
+          nextFocusNode: logic.controller.lNameNode,
+          required: false,
+          onChangedCallBack: (_) {},
+          errorValidator: () {
+            return null;
+            // return Validator.validateName(
+            //     logic.controller.fNameTED.text);
+          },
+          validator: (email) {
+            return null;
+            // return Validator.validateName(email);
+          },
+        ),
+        SizedBox(
+          width: 10,
+        ),
+        AppTextField(
+          width: (Get.width / 2) - 45,
+          hintText: "Last Name",
+          controller: logic.controller.lNameTED,
+          focusNode: logic.controller.lNameNode,
+          nextFocusNode: logic.controller.emailNode,
+          required: false,
+          onChangedCallBack: (_) {},
+          errorValidator: () {
+            return null;
+            // return Validator.validateName(
+            //     logic.controller.lNameTED.text);
+          },
+          validator: (email) {
+            return null;
+            // return Validator.validateName(email);
+          },
+        ),
+      ],
+    );
+  }
+
   Widget buildEmailID() {
     return AppTextField(
       hintText: "Enter Customer Email ID",
@@ -163,15 +169,36 @@ class AddCustomerDetailsScreen extends StatelessWidget {
     );
   }
 
-  ///======================UI==============///
-
   Widget buildAppBar() {
     return AppBar(
-      toolbarHeight: 70,
-      centerTitle: true,
-      leading: BackNavigationIcon(),
-      elevation: 0,
-      backgroundColor: Colors.transparent,
+        toolbarHeight: 70,
+        centerTitle: true,
+        title: buildTitle(),
+        leading: TextButton(
+          onPressed: () {
+            logic.controller.reset();
+            Get.back();
+          },
+          child: Icon(
+            Icons.arrow_back_ios,
+            color: AppColors.text.black,
+            size: 17,
+          ),
+        ),
+        elevation: 0,
+        backgroundColor: Colors.white);
+  }
+
+  Widget buildTitle() {
+    return Text(
+      'New Booking',
+      style: TextStyle(
+        color: AppColors.text.black,
+        fontSize: 20,
+        fontFamily: AppFonts.nunito,
+        fontWeight: FontWeight.normal,
+        letterSpacing: 1.0,
+      ),
     );
   }
 
@@ -241,5 +268,4 @@ class AddCustomerDetailsScreen extends StatelessWidget {
     // else
     //   return Container();
   }
-
 }

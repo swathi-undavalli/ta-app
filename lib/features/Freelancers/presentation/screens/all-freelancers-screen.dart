@@ -292,7 +292,8 @@ class AllFreelancersScreen extends StatelessWidget {
                 Employee employee = Employee.fromMap(document.data());
 
                 if (controller.searchTED.text.isNotEmpty) {
-                  if (employee.id.contains(controller.searchTED.text) || employee.name.toLowerCase().contains(
+                  if (employee.id.contains(controller.searchTED.text) ||
+                      employee.name.toLowerCase().contains(
                           controller.searchTED.text.toLowerCase().trim()))
                     return buildFreelance(f: employee);
                   return SizedBox();

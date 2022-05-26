@@ -29,16 +29,6 @@ class BoatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // appBar: buildAppBar(),
-      // floatingActionButton: FloatingActionButton(
-      //   elevation: 0,
-      //   onPressed: () {
-      //     Get.toNamed(NewBoatPage.id);
-      //     // Get.toNamed(W2.id);
-      //   },
-      //   backgroundColor: AppColors.background.black,
-      //   child: Icon(Icons.add),
-      // ),
       body: RefreshIndicator(
         color: AppColors.IconColor.black,
         onRefresh: () async {
