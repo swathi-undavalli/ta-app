@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'dart:io';
+import 'package:intl/intl.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -7,6 +8,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:temple_adventures/core/services/file-uploader.dart';
+import 'package:temple_adventures/features/boat/models/boat-passengers-model.dart';
+import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/models/customer-model.dart';
 
 class GuestsEditLogic {
@@ -68,8 +71,9 @@ class GuestsEditLogic {
         controller.genderTED.text.isNotEmpty &&
         (controller.idProofFile != null || controller.idProofLink.isNotEmpty)) {
       controller.pageLoading = true;
-
       // await addGuest();
+      await updatePassenger();
+      await updateCoastGuardSlip();
       await updateCustomer();
       controller.pageLoading = false;
       Get.back();
@@ -78,7 +82,6 @@ class GuestsEditLogic {
       Fluttertoast.showToast(msg: "Invalid details");
     }
   }
-
 
   Future<bool> isCustomerExists() async {
     var d = await FirebaseFirestore.instance
@@ -101,17 +104,28 @@ class GuestsEditLogic {
   Future<String> getIDProofLink() async {
     if (controller.customerExist) {
       if (controller.idProofFile != null) {
-        if (controller.uploadedImageUrl == null)
-          controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
-              file: File(controller.idProofFile.path));
+        if (controller.uploadedImageUrl == null) {
+          if(controller.idProofFile != null){
+            controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
+                file: File(controller.idProofFile.path));
+          }else{
+            Fluttertoast.showToast(msg: "Image not picked");
+          }
+        }
         return controller.uploadedImageUrl;
       } else {
         return controller.idProofLink;
       }
     } else {
-      if (controller.uploadedImageUrl == null)
-        controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
-            file: File(controller.idProofFile.path));
+      if (controller.uploadedImageUrl == null) {
+        if (controller.idProofFile != null) {
+          controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
+              file: File(controller.idProofFile.path));
+        }
+        else{
+          Fluttertoast.showToast(msg: "Image not picked");
+        }
+      }
       return controller.uploadedImageUrl;
     }
   }
@@ -133,10 +147,68 @@ class GuestsEditLogic {
         .set(controller.customerModel.toMap());
   }
 
+  updatePassenger() async {
+    int i = 1;
+
+    for (i = 1; i < controller.bookingModel.pax.length; i++) {
+      if (controller.bookingModel.pax[i]["email"] ==
+          controller.customerModel.email) {
+        break;
+      }
+    }
+    controller.bookingModel.pax[i]["email"] = controller.emailTED.text;
+    controller.bookingModel.pax[i]["first-name"] = controller.firstNameTED.text;
+    controller.bookingModel.pax[i]["last-name"] = controller.lastNameTED.text;
+    controller.bookingModel.pax[i]["phoneNumber"] = controller.phoneTED.text;
+    controller.bookingModel.pax[i]["countryCode"] =
+        controller.countryCodeTED.text;
+    controller.bookingModel.pax[i]["gender"] = controller.genderTED.text;
+    controller.bookingModel.pax[i]["idProof"] = await getIDProofLink();
+
+    await FirebaseFirestore.instance
+        .collection("bookings")
+        .doc(controller.bookingModel.id)
+        .set(controller.bookingModel.toMap());
+  }
+
+  updateCoastGuardSlip() async {
+    for (int i = 0; i < controller.bookingModel.diveDate.length; i++) {
+      var diveDate = controller.bookingModel.diveDate[i];
+
+      var data = await FirebaseFirestore.instance
+          .collection("coastGuardSlip")
+          .doc(DateFormat("dd-MM-yyyy").format(diveDate))
+          .get();
+
+      Map<String, dynamic> d = data.data();
+
+      BoatPassengersModel boatPassengersModel =
+          BoatPassengersModel.fromMap(d[diveDate.toIso8601String()]);
+      for (i = 0; i < boatPassengersModel.passenger.length; i++) {
+        if (boatPassengersModel.passenger[i].email ==
+            controller.customerModel.email) {
+          break;
+        }
+      }
+      boatPassengersModel.passenger[i].email = controller.emailTED.text;
+      boatPassengersModel.passenger[i].name = controller.firstNameTED.text;
+      boatPassengersModel.passenger[i].phone = controller.phoneTED.text;
+      boatPassengersModel.passenger[i].gender = controller.genderTED.text;
+
+      d[diveDate.toIso8601String()] = boatPassengersModel.toMap();
+      await FirebaseFirestore.instance
+          .collection("coastGuardSlip")
+          .doc(DateFormat("dd-MM-yyyy").format(diveDate))
+          .set(d);
+    }
+
+    print(controller.bookingModel.diveDate);
+  }
 }
 
 class GuestsEditController extends GetxController {
   CustomerModel customerModel;
+  BookingModel bookingModel;
 
   TextEditingController firstNameTED = TextEditingController();
   TextEditingController lastNameTED = TextEditingController();
@@ -150,7 +222,6 @@ class GuestsEditController extends GetxController {
   FocusNode phoneNode = FocusNode();
   FocusNode emailNode = FocusNode();
   FocusNode genderNode = FocusNode();
-
 
   reset() {
     phoneTED.text = "";
@@ -166,7 +237,6 @@ class GuestsEditController extends GetxController {
     idProofLink = null;
     customerModel = null;
   }
-
 
   XFile _idProofFile;
   bool customerExist = false;
@@ -193,7 +263,6 @@ class GuestsEditController extends GetxController {
   set idProofLink(String value) {
     _idProofLink = value;
     update();
-
   }
 
   set idProofFile(XFile value) {

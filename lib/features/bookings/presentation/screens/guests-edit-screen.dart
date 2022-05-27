@@ -6,16 +6,19 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
 import 'package:temple_adventures/features/bookings/controller/guest-edit-controller.dart';
+import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/models/customer-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 
 class GuestsEditScreen extends StatelessWidget {
   static const String id = "GuestsEditScreen";
-  CustomerModel customerArg = Get.arguments;
+  CustomerModel customerArg = Get.arguments[0] as CustomerModel;
+  BookingModel bookingArg = Get.arguments[1] as BookingModel;
   GuestsEditLogic logic = GuestsEditLogic();
 
   GuestsEditScreen() {
     logic.controller.customerModel = customerArg;
+    logic.controller.bookingModel = bookingArg;
     logic.controller.firstNameTED.text = customerArg.firstName;
     logic.controller.lastNameTED.text = customerArg.lastName;
     logic.controller.emailTED.text = customerArg.email;
@@ -60,6 +63,11 @@ class GuestsEditScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         SizedBox(height: 10),
+                        // ElevatedButton(
+                        //     onPressed: () {
+                        //       logic.updateCoastGuardSlip();
+                        //     },
+                        //     child: Text("Do")),
                         buildEmailTF(),
                         Row(
                           children: [

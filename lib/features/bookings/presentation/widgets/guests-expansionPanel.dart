@@ -3,13 +3,15 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/boat/models/boat-passengers-model.dart';
+import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/models/customer-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/guests-edit-screen.dart';
 
 class GuestsExpansionPanel extends StatefulWidget {
-  GuestsExpansionPanel({@required this.customer});
+  GuestsExpansionPanel({@required this.customer,@required this.booking});
 
   CustomerModel customer;
+  BookingModel booking;
 
   @override
   State<GuestsExpansionPanel> createState() => _GuestsExpansionPanelState();
@@ -80,7 +82,7 @@ class _GuestsExpansionPanelState extends State<GuestsExpansionPanel> {
                         onPressed: () {
                           // var model = itemModel.bookingModel;
                           Get.toNamed(GuestsEditScreen.id,
-                              arguments: widget.customer);
+                              arguments: [widget.customer,widget.booking]);
                         },
                       ),
                     ),

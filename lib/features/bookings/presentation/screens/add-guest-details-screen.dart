@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -64,6 +65,22 @@ class GuestDetailsScreen extends StatelessWidget {
                           builder: (controller) {
                         return Column(
                           children: [
+                            (bookingArg.pax.length - 1 != 0)
+                                ? Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 5.0),
+                                    child: Container(
+                                      width: Get.width,
+                                      child: Text(
+                                        "Registered People :",
+                                        style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                    ),
+                                  )
+                                : SizedBox(),
+                            SizedBox(height: 20),
                             ...List.generate(bookingArg.pax.length - 1,
                                 (index) {
                               return Padding(
@@ -71,7 +88,7 @@ class GuestDetailsScreen extends StatelessWidget {
                                     const EdgeInsets.symmetric(vertical: 7.0),
                                 child: GuestsExpansionPanel(
                                     customer: CustomerModel.fromMap(
-                                        bookingArg.pax[index + 1])),
+                                        bookingArg.pax[index + 1]),booking: bookingArg,),
                               );
                             }),
                             if (bookingArg.pax.length - 1 !=

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
@@ -11,29 +12,35 @@ class AddPaymentsLogic {
   AddPaymentsController controller = Get.put(AddPaymentsController());
 
   onPaymentDetailsFilled() {
-    if (controller.depositTED.text != "") {
-      controller.bookingModel.payments.add(
-        PaymentModel(
-          amount: double.parse(controller.depositTED.text),
-          collectedBy: currentEmployee.name,
-          reciptNo: controller.receiptNoTED.text,
-          referenceNo: controller.paymentReferenceTED.text,
-          paymentMode: controller.paymentModeTED.text,
-          time: DateTime.now(),
-        ),
-      );
-      FirebaseFirestore.instance
-          .collection("bookings")
-          .doc(controller.bookingModel.id)
-          .set(controller.bookingModel.toMap());
+    if (controller.paymentModeTED.text != "") {
+      if (controller.depositTED.text != "") {
+        controller.bookingModel.payments.add(
+          PaymentModel(
+            amount: double.parse(controller.depositTED.text),
+            collectedBy: currentEmployee.name,
+            reciptNo: controller.receiptNoTED.text,
+            referenceNo: controller.paymentReferenceTED.text,
+            paymentMode: controller.paymentModeTED.text,
+            time: DateTime.now(),
+          ),
+        );
+        FirebaseFirestore.instance
+            .collection("bookings")
+            .doc(controller.bookingModel.id)
+            .set(controller.bookingModel.toMap());
+        Get.back();
+        controller.reset();
+        BookingsCalenderWidgetLogic bookingCalenderLogic =
+            BookingsCalenderWidgetLogic();
+        bookingCalenderLogic.onDateSelected(
+          bookingCalenderLogic.controller.lastDateIndex,
+        );
+      } else {
+        Fluttertoast.showToast(msg: "Invalid Deposit");
+      }
+    } else {
+      Fluttertoast.showToast(msg: "Invalid PaymentMode");
     }
-    Get.back();
-    controller.reset();
-    BookingsCalenderWidgetLogic bookingCalenderLogic =
-        BookingsCalenderWidgetLogic();
-    bookingCalenderLogic.onDateSelected(
-      bookingCalenderLogic.controller.lastDateIndex,
-    );
   }
 
   datePicker(context) {
