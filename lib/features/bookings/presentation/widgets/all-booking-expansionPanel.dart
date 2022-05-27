@@ -104,8 +104,13 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                         height: 7,
                         width: 7,
                         decoration: BoxDecoration(
-                            color: (double.parse(items.paid).round() ==
-                                    double.parse(items.cost).round())
+                            color: getBalance(
+                                items.bookingModel.payments,
+                                double.parse(items.paid)
+                                    .roundToDouble(),
+                                double.parse(items.cost)
+                                    .roundToDouble()) ==
+                                "0"
                                 ? Colors.green
                                 : Colors.red,
                             borderRadius: BorderRadius.circular(5)),
@@ -643,7 +648,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
     payments.forEach((payment) {
       t += payment.amount;
     });
-    return (total - t).toString();
+    return (total - t).toInt().toString();
   }
 
 

@@ -48,15 +48,14 @@ var employees = [
   ["44", "Nazeem Uddin", "9398418914"],
   ["45", "Deepa", ""],
   ["46", "Paritosh", ""],
-  ["47","Anbu","8122274027"],
-  ["48","Kaviyan","9092613515"],
-  ["49","Aishwary J","8087588865"],
-  ["50","Rosy","8494994919"],
-  ["51","Rajat Tomar","9967212315"],
-  ["52","Satish","1123456789"],
-  ["53","Sanjay","6369874584"],
+  ["47", "Anbu", "8122274027"],
+  ["48", "Kaviyan", "9092613515"],
+  ["49", "Aishwary J", "8087588865"],
+  ["50", "Rosy", "8494994919"],
+  ["51", "Rajat Tomar", "9967212315"],
+  ["52", "Satish", "1123456789"],
+  ["53", "Sanjay", "6369874584"],
 ];
-
 
 //
 //
@@ -112,20 +111,20 @@ class EmployeeAccess extends StatelessWidget {
 class AccessRights {
   static AccessLevels get accessLevel {
     return currentEmployee.accessLevels;
-    return AccessLevels(
-      viewBookings: true,
-      createBookings: true,
-      editBookings: true,
-      viewEmployees: true,
-      createEmployees: true,
-      editEmployees: true,
-      personalProfileEdit: true,
-      personalAttendanceReport: true,
-      attendanceReport: true,
-      weatherReport: true,
-      editActivityPrices: true,
-      addActivity: true,
-    );
+    // return AccessLevels(
+    //   viewBookings: true,
+    //   createBookings: true,
+    //   editBookings: true,
+    //   viewEmployees: true,
+    //   createEmployees: true,
+    //   editEmployees: true,
+    //   personalProfileEdit: true,
+    //   personalAttendanceReport: true,
+    //   attendanceReport: true,
+    //   weatherReport: true,
+    //   editActivityPrices: true,
+    //   addActivity: true,
+    // );
   }
 
   static bool get viewBookings => accessLevel.viewBookings;

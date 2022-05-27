@@ -8,12 +8,18 @@ import 'package:temple_adventures/core/util/validator.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
+import 'package:temple_adventures/features/boat/models/boat-passengers-model.dart';
 import 'package:temple_adventures/features/bookings/controller/guest-details-controller.dart';
+import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:temple_adventures/features/bookings/models/customer-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
+import 'package:temple_adventures/features/bookings/presentation/widgets/guests-expansionPanel.dart';
 
 class GuestDetailsScreen extends StatelessWidget {
   static const String id = "GuestDetailsScreen";
   final GuestDetailsLogic logic = GuestDetailsLogic();
+
+  BookingModel bookingArg = Get.arguments;
 
   GuestDetailsScreen() {
     logic.init();
@@ -28,12 +34,16 @@ class GuestDetailsScreen extends StatelessWidget {
             toolbarHeight: 70,
             centerTitle: true,
             title: buildTitle(),
-            leading: GestureDetector(
-              onTap: () {
+            leading: TextButton(
+              onPressed: () {
                 logic.controller.reset();
-                logic.controller.update();
+                Get.back();
               },
-              child: BackNavigationIcon(),
+              child: Icon(
+                Icons.arrow_back_ios,
+                color: AppColors.text.black,
+                size: 17,
+              ),
             ),
             elevation: 0,
             backgroundColor: AppColors.background.white,
@@ -54,19 +64,39 @@ class GuestDetailsScreen extends StatelessWidget {
                           builder: (controller) {
                         return Column(
                           children: [
-                            buildEmailID(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                AppButton.miniFlat(
-                                  text: "Get Details",
-                                  onTap: () {
-                                    logic.getDetailsPressed();
-                                  },
+                            ...List.generate(bookingArg.pax.length - 1,
+                                (index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 7.0),
+                                child: GuestsExpansionPanel(
+                                    customer: CustomerModel.fromMap(
+                                        bookingArg.pax[index + 1])),
+                              );
+                            }),
+                            if (bookingArg.pax.length - 1 !=
+                                bookingArg.noOfPersons) ...[
+                              if (!controller.getDetailsPressed) ...[
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0),
+                                  child: buildEmailID(),
+                                ),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    AppButton.miniFlat(
+                                      text: "Get Details",
+                                      onTap: () {
+                                        logic.getDetailsPressed();
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ],
-                            ),
+                            ],
                             if (controller.getDetailsPressed) ...[
+                              SizedBox(height: 20),
                               buildNameFields(),
                               buildPhoneNumber(),
                               buildSubtitle("Gender  *"),
@@ -93,6 +123,7 @@ class GuestDetailsScreen extends StatelessWidget {
                     ),
                     SizedBox(height: 70),
                     buildCancelSubmitButtons(),
+                    SizedBox(height: 30),
                   ],
                 ),
               ),

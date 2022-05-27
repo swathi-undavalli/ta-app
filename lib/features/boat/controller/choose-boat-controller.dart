@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/features/boat/models/boat-model.dart';
 import 'package:temple_adventures/features/boat/models/boat-passengers-model.dart';
 import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
@@ -147,8 +148,7 @@ class ChooseBoatLogic {
       int selectedSeats = 0;
       for (Passenger p in passenger) {
         if (p.boatID == (i + 1).toString()) {
-          if (p.bookingID == controller.bookingModel.id)
-            selectedSeats++;
+          if (p.bookingID == controller.bookingModel.id) selectedSeats++;
         }
       }
       list[i] = selectedSeats;
@@ -290,6 +290,10 @@ class ChooseBoatLogic {
     }
     controller.showLoading = false;
     Get.back();
+    BookingsCalenderWidgetLogic bookingCalenderLogic =
+        BookingsCalenderWidgetLogic();
+    bookingCalenderLogic
+        .onDateSelected(bookingCalenderLogic.controller.lastDateIndex);
   }
 }
 
