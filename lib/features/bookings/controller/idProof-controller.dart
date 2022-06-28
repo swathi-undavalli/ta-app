@@ -21,19 +21,6 @@ class IDProofLogic {
         await imagePicker.pickImage(source: source, imageQuality: 50);
     //print("==========ended");
     if (pickedFile != null) {
-      // ImageCropper imageCropper = ImageCropper();
-      // File file = await imageCropper.cropImage(
-      //   sourcePath: pickedFile.path,
-      //   // aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
-      //   compressQuality: 100,
-      //   // maxHeight: 700,
-      //   // maxWidth: 700,
-      //   compressFormat: ImageCompressFormat.jpg,
-      //   androidUiSettings: AndroidUiSettings(
-      //     toolbarColor: Colors.white,
-      //     toolbarTitle: "Image Cropper",
-      //   ),
-      // );
       if (isFront) {
         controller.showLoading = true;
         var link = await uploadImage(pickedFile);
@@ -87,19 +74,17 @@ class IDProofLogic {
         file: File(file.path), bookingID: bookingModel.id);
 
     //print(bookingModel.id);
-    //print(link);
+    // print(link);
     return link;
   }
-
 }
 
 class IDProofController extends GetxController {
-
   List<String> idProofs = [];
   bool _showLoading = false;
   bool _shareLoading = false;
 
-  reset(){
+  reset() {
     idProofs = [];
   }
 
@@ -116,5 +101,4 @@ class IDProofController extends GetxController {
     _showLoading = value;
     update();
   }
-
 }

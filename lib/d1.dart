@@ -236,3 +236,17 @@ class Dummy extends StatelessWidget {
     );
   }
 }
+
+
+// {2022-06-07T07:00:00.000: {passenger: [{gender: Male, phone: 9565694949, name: swathi, email: sahithaundavalli2000@gmail.com,
+// bookingID: 1027, boatID: 1}, {gender: Male, phone: 9494949949, name: kamesh, email: kamesh.wb@gmail.com,
+// bookingID: 1028, boatID: 2}], employees: [{gender: Male, phone: 7569699928, name: Donarun Das, id: 1, boatID: 1},
+// {gender: Male, phone: 9789270958, name: Rob , id: 3, boatID: 1},
+// {gender: Male, phone: 9003122231, name: Aravind , id: 2, boatID: 2},
+// {gender: Male, phone: 9820107428, name: Shaveer , id: 4, boatID: 2}],
+// freelancer: [{gender: Female, phone: 9678738196, name: Priyam , id: 902, boatID: 1},
+// {gender: Male, phone: 8050500014, name: Paritosh , id: 903, boatID: 1},
+// {gender: Male, phone: 8903147126, name: Maran , id: 904, boatID: 2},
+// {gender: Male, phone: 9789270985, name: Akhil Jude, id: 905, boatID: 2}]}}
+//
+//

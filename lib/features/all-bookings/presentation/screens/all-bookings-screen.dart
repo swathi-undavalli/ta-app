@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -18,63 +20,41 @@ class AllBookingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Scaffold(
-            appBar: AppBar(
-              toolbarHeight: 70,
-              centerTitle: true,
-              title: buildTitle(),
-              leading: BackNavigationIcon(),
-              elevation: 0,
-              backgroundColor: AppColors.background.white,
-            ),
-            body: SafeArea(
-              child: Column(
-                children: [
-                  SizedBox(height: 20),
-                  buildSearchBar(),
-                  SizedBox(height: 10),
-                  buildCheckFirebase(),
-                ],
+        WillPopScope(
+          onWillPop: () async {
+            logic.controller.searchTED.text = "";
+            return true;
+          },
+          child: Scaffold(
+              appBar: AppBar(
+                toolbarHeight: 70,
+                centerTitle: true,
+                title: buildTitle(),
+                leading: TextButton(
+                  onPressed: () {
+                    logic.controller.searchTED.text = "";
+                    Get.back();
+                  },
+                  child: Icon(
+                    Icons.arrow_back_ios,
+                    color: AppColors.text.black,
+                    size: 17,
+                  ),
+                ),
+                elevation: 0,
+                backgroundColor: AppColors.background.white,
               ),
-            )
-            // body: SafeArea(
-            //   child: Stack(
-            //     children: [
-            //       Column(
-            //         children: [
-            //           SizedBox(height: 20),
-            //           buildSearchBar(),
-            //           // buildAllBookings(),
-            //           Expanded(
-            //             child: GestureDetector(
-            //               onTap: () {
-            //                 logic.controller.showSuggestions = false;
-            //               },
-            //               child: SingleChildScrollView(
-            //                 physics: BouncingScrollPhysics(),
-            //                 child: Padding(
-            //                   padding: const EdgeInsets.only(top: 20, bottom: 20),
-            //                   child: Column(
-            //                     children: [
-            //                       SizedBox(height: 10),
-            //                       buildBookings(),
-            //                       SizedBox(height: 10),
-            //                     ],
-            //                   ),
-            //                 ),
-            //               ),
-            //             ),
-            //           ),
-            //           // Spacer(),
-            //           // buildAllPages(),
-            //         ],
-            //       ),
-            //       buildSuggestions(),
-            //     ],
-            //   ),
-            // ),
-            ),
-        // buildShowLoading()
+              body: SafeArea(
+                child: Column(
+                  children: [
+                    SizedBox(height: 20),
+                    buildSearchBar(),
+                    SizedBox(height: 10),
+                    buildCheckFirebase(),
+                  ],
+                ),
+              )),
+        ),
       ],
     );
   }
@@ -98,6 +78,7 @@ class AllBookingsScreen extends StatelessWidget {
               shrinkWrap: true,
               children: snapshot.data.docs.map((document) {
                 BookingModel booking = BookingModel.fromMap(document.data());
+                // log(booking.id);
                 if (controller.searchTED.text.isNotEmpty) {
                   if (booking.id.contains(controller.searchTED.text) ||
                       (booking.pax[0]['first-name'] as String)
@@ -157,76 +138,6 @@ class AllBookingsScreen extends StatelessWidget {
 
   Widget buildBookingExpansionPanel(BookingModel booking) => Text(booking.id);
 
-  Widget buildSuggestions() {
-    return GetBuilder<AllBookingsController>(builder: (controller) {
-      if (controller.showSuggestions)
-        return Positioned(
-          child: Container(
-            constraints: BoxConstraints(
-              minHeight: 100,
-              maxHeight: 300,
-              minWidth: 328,
-              maxWidth: 328,
-            ),
-            margin: EdgeInsets.only(
-              top: 65,
-              left: (Get.width - 328) / 2,
-            ),
-            decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.5),
-                    spreadRadius: 2,
-                    blurRadius: 10,
-                    offset: Offset(0, 5), // changes position of shadow
-                  ),
-                ]),
-            padding: const EdgeInsets.only(top: 10),
-            child: controller.suggestionsList.isEmpty
-                ? Container(
-                    height: 100,
-                    child: Center(
-                      child: Text("No results found"),
-                    ),
-                  )
-                : SingleChildScrollView(
-                    child: Column(
-                      children: controller.suggestionsList
-                          .map(
-                            (e) => BookingsExpansionPanel(
-                              items: [e],
-                              searchBar: false,
-                              onDeletePressed: () {
-                                logic.getBookings();
-                              },
-                            ),
-                          )
-                          .toList(),
-                    ),
-                  ),
-          ),
-        );
-      return SizedBox();
-    });
-  }
-
-  Widget buildBookings() {
-    return GetBuilder<AllBookingsController>(builder: (controller) {
-      return Padding(
-        padding: const EdgeInsets.only(left: 15, right: 15, top: 8, bottom: 8),
-        child: BookingsExpansionPanel(
-          items: controller.bookings,
-          onDeletePressed: () {
-            logic.getBookings();
-          },
-          searchBar: false,
-        ),
-      );
-    });
-  }
-
   Widget buildAllPages() {
     getCircleColor(int index, AllBookingsController controller) {
       if (controller.selectedPage == controller.pages[index])
@@ -276,7 +187,6 @@ class AllBookingsScreen extends StatelessWidget {
       );
     });
   }
-
 
   Widget buildShowLoading() {
     return GetBuilder<AllBookingsController>(builder: (controller) {

@@ -8,9 +8,7 @@ import 'package:temple_adventures/features/weather/models/weather_response.dart'
 import 'package:http/http.dart' as http;
 
 class WeatherRepository {
-
   Future<List<WeatherResponse>> getWeatherResponse() async {
-
     final params = {'spot_id': "957", 'units': "eu"};
 
     //print("=======================");
@@ -42,86 +40,9 @@ class WeatherRepository {
   }
 
   Future<TideResponse> getTideResponse() async {
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-    //log("Calling Tides API");
-
-    // return TideResponse.fromMap({
-    //   "extremes": [
-    //     {
-    //       "timestamp": 1646227100,
-    //       "datetime": "2022-03-02T13:18:20+00:00",
-    //       "height": 0.5835172145176015,
-    //       "state": "HIGH TIDE"
-    //     },
-    //     {
-    //       "timestamp": 1646250607,
-    //       "datetime": "2022-03-02T19:50:07+00:00",
-    //       "height": -0.6440050894782114,
-    //       "state": "LOW TIDE"
-    //     },
-    //     {
-    //       "timestamp": 1646272358,
-    //       "datetime": "2022-03-03T01:52:38+00:00",
-    //       "height": 0.4874376243184547,
-    //       "state": "HIGH TIDE"
-    //     },
-    //     {
-    //       "timestamp": 1646294363,
-    //       "datetime": "2022-03-03T07:59:23+00:00",
-    //       "height": -0.5347980659608157,
-    //       "state": "LOW TIDE"
-    //     },
-    //   ],
-    // });
     var response = await API.apiHandler(
       url:
-          'https://tides.p.rapidapi.com/tides?longitude=11.9416&latitude=79.8083&interval=60&duration=1440',
+          'https://tides.p.rapidapi.com/tides?longitude=79.768021&latitude= 11.744699&interval=60&duration=1440',
       requestType: RequestType.Get,
       header: {
         'x-rapidapi-host': 'tides.p.rapidapi.com',

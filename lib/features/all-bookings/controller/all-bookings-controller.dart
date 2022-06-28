@@ -11,62 +11,8 @@ class AllBookingsLogic {
     // getBookings();
   }
   AllBookingsController controller = Get.put(AllBookingsController());
-  getBookings() async {
-    //print("getBookings");
-    controller.showLoading = true;
-    controller.bookings = [];
-    List<ItemModel> bookingList = [];
 
-    var data = await FirebaseFirestore.instance.collection("bookings").get();
-    //print(data.docs.length);
-    data.docs.forEach((element) {
-      //log(element.data().toString());
-      BookingModel booking = BookingModel.fromMap(element.data());
-      var i = ItemModel.fromBookings(booking);
-      bookingList.add(i);
-      //log(bookingList.toString());
-    });
-    //print("ended=========");
-    controller.bookings = bookingList;
-    //print(controller.bookings);
-    controller.update();
-    controller.showLoading = false;
-  }
 
-  void updateSearchListByIDorName(String text) {
-    controller.suggestionsList = [];
-    // //print(
-    //     controller.bookings[controller.bookings.length - 1].bookingID);
-    controller.bookings.forEach((booking) {
-      if (booking.bookingID.contains(text) ||
-          booking.name.toLowerCase().contains(text.toLowerCase())) {
-        controller.suggestionsList.add(booking);
-      }
-    });
-    controller.update();
-  }
-
-// getBookingsCount() async {
-  //   var fact = 1;
-  //   var pageCount = 0;
-  //   controller.pages = [];
-  //   var data = await FirebaseFirestore.instance
-  //       .collection("counter")
-  //       .doc("booking")
-  //       .get();
-  //   // //log("==========" + data["count"].toString());
-  //   Map<String, dynamic> count = data.data();
-  //   var totalCount = count["count"].toString();
-  //   // var myCount = int.parse(totalCount) / 10;
-  //   // pageCount = myCount.ceil();
-  //   // for (int i = 1; i <= pageCount; i++) {
-  //   //   fact = fact * i;
-  //   //   controller.pages.add(fact.toString());
-  //   //   fact = 1;
-  //   // }
-  //   //log(controller.pages.toString());
-  //   controller.bookingCount = int.parse(totalCount);
-  // }
 
 }
 

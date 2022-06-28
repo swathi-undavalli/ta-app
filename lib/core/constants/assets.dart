@@ -15,6 +15,9 @@ class _IconImages {
   String get vehicle => "images/vehicle.svg";
   String get newBoat => "images/newBoat.svg";
   String get messageBox => "images/messageBox.svg";
+  String get folder => "images/folder.svg";
+  String get pdfLogo => "images/pdfLogo.svg";
+  String get pdfLogo1 => "images/PDFLogo.png";
 }
 
 class _LottieImages {

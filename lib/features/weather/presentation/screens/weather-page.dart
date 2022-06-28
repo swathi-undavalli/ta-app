@@ -341,6 +341,16 @@ class WeatherPage extends StatelessWidget {
   }
 
   Widget buildTideDetails(Extreme tide) {
+    getColor() {
+      if (tide.height >= 0.5) {
+        return AppColors.text.green;
+      } else if (tide.height >= 0.2) {
+        return Colors.yellow;
+      } else {
+        return AppColors.text.red.withOpacity(0.8);
+      }
+    }
+
     DateTime time = tide.datetime;
     return Padding(
       padding: const EdgeInsets.only(top: 10),
@@ -384,9 +394,7 @@ class WeatherPage extends StatelessWidget {
               "${tide.height > 0 ? "  " : ""}${tide.height.toStringAsFixed(2)} m" ??
                   "-",
               style: TextStyle(
-                  color: AppColors.text.black,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w700),
+                  color: getColor(), fontSize: 13, fontWeight: FontWeight.w700),
             ),
           ),
         ],

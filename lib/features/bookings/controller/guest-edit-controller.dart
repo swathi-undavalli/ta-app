@@ -73,7 +73,9 @@ class GuestsEditLogic {
       controller.pageLoading = true;
       // await addGuest();
       await updatePassenger();
+      log("heloooooooooooooooooo");
       await updateCoastGuardSlip();
+      log("heloooooooooooooooooo");
       await updateCustomer();
       controller.pageLoading = false;
       Get.back();
@@ -105,10 +107,10 @@ class GuestsEditLogic {
     if (controller.customerExist) {
       if (controller.idProofFile != null) {
         if (controller.uploadedImageUrl == null) {
-          if(controller.idProofFile != null){
+          if (controller.idProofFile != null) {
             controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
                 file: File(controller.idProofFile.path));
-          }else{
+          } else {
             Fluttertoast.showToast(msg: "Image not picked");
           }
         }
@@ -121,8 +123,7 @@ class GuestsEditLogic {
         if (controller.idProofFile != null) {
           controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
               file: File(controller.idProofFile.path));
-        }
-        else{
+        } else {
           Fluttertoast.showToast(msg: "Image not picked");
         }
       }
@@ -174,12 +175,12 @@ class GuestsEditLogic {
   updateCoastGuardSlip() async {
     for (int i = 0; i < controller.bookingModel.diveDate.length; i++) {
       var diveDate = controller.bookingModel.diveDate[i];
-
+      print(diveDate);
       var data = await FirebaseFirestore.instance
           .collection("coastGuardSlip")
           .doc(DateFormat("dd-MM-yyyy").format(diveDate))
           .get();
-
+      log(data.data().toString());
       Map<String, dynamic> d = data.data();
 
       BoatPassengersModel boatPassengersModel =

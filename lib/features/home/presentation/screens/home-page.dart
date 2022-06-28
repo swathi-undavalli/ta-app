@@ -1,21 +1,26 @@
-import 'dart:developer';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'dart:io';
+import 'dart:typed_data';
+import 'package:docx_template/docx_template.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as sync;
 import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
 import '../../../../core/widgets/attendance_report_widget/attendance_report_widget.dart';
 import '../../../../core/widgets/attendance_widget/attandence_widget_controller.dart';
 import '../../../../core/widgets/attendance_widget/attendence_widget.dart';
+import '../../../../pdf_api.dart';
 import '../../controller/home-page-controller.dart';
-import '../../model/employee.dart';
+import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class HomePage extends StatelessWidget {
   final HomePageLogic logic = HomePageLogic();
-
+  final now = DateTime.now();
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -52,7 +57,6 @@ class HomePage extends StatelessWidget {
                       icon: Icon(Icons.menu_rounded),
                     ),
                   ),
-
                   SizedBox(height: 10),
                   AttendanceWidget(),
                   SizedBox(height: 20),
@@ -74,99 +78,6 @@ class HomePage extends StatelessWidget {
                   SizedBox(height: 20),
                   AttendanceReportWidget(),
                   SizedBox(height: 100),
-
-                  // ElevatedButton(
-                  //   onPressed: () async {
-                  //     for (int i = 109; i < 520; i++) {
-                  //       //log(i.toString());
-                  //       // if (i == 111) break;
-                  //       var data = await FirebaseFirestore.instance
-                  //           .collection("bookings")
-                  //           .doc(i.toString())
-                  //           .get();
-                  //
-                  //       if (data.data() == null) continue;
-                  //       BookingModel booking =
-                  //           BookingModel.fromMap(data.data());
-                  //       booking.payments = [booking.paid];
-                  //
-                  //       FirebaseFirestore.instance
-                  //           .collection("bookings")
-                  //           .doc(booking.id)
-                  //           .set(booking.toMap())
-                  //           .whenComplete(() => //log("done"));
-                  //     }
-                  //   },
-                  //   child: Text("Do"),
-                  // ),
-
-                  // ElevatedButton(
-                  //   onPressed: () async {
-                  //     //log("clicked");
-                  //     for (int i = 47; i < 54; i++) {
-                  //       var accessLevels = AccessLevels(
-                  //         viewBookings: true,
-                  //         createBookings: true,
-                  //         editBookings: true,
-                  //         viewEmployees: true,
-                  //         createEmployees: true,
-                  //         editEmployees: true,
-                  //         personalProfileEdit: true,
-                  //         personalAttendanceReport: true,
-                  //         attendanceReport: true,
-                  //         weatherReport: true,
-                  //         editActivityPrices: true,
-                  //         addActivity: true,
-                  //         notifications: false,
-                  //       );
-                  //
-                  //       var data = await FirebaseFirestore.instance
-                  //           .collection("employees")
-                  //           .doc(i.toString())
-                  //           .collection("employeeFullInformation")
-                  //           .doc("employeeData")
-                  //           .get();
-                  //
-                  //       var employee = Employee.fromMap(data.data());
-                  //       employee.accessLevels = accessLevels;
-                  //
-                  //       FirebaseFirestore.instance
-                  //           .collection("employees")
-                  //           .doc(i.toString())
-                  //           .collection("employeeFullInformation")
-                  //           .doc("employeeData")
-                  //           .set(employee.toMap());
-                  //     }
-                  //   },
-                  //   child: Text("Do"),
-                  // ),
-                  // ElevatedButton(
-                  //     onPressed: () async {
-                  //       //log("Finiding count");
-                  //       var rawData = await FirebaseFirestore.instance
-                  //           .collection("counter")
-                  //           .doc("employee")
-                  //           .get();
-                  //       var data = rawData.data();
-                  //       //log(rawData.data().toString());
-                  //     },
-                  //     child: Text("DO"))
-
-                  // ElevatedButton(
-                  //   onPressed: () async {
-                  //     var token = await FirebaseMessaging.instance.getToken();
-                  //     //print(token);
-                  //   },
-                  //   child: Text("DO"),
-                  // ),
-
-                  // ElevatedButton(
-                  //   onPressed: () {
-                  //     Get.toNamed(Search.id);
-                  //   },
-                  //   child: Text("Do"),
-                  // ),
-
                   SizedBox(
                     height: 50,
                   )
@@ -189,6 +100,37 @@ class HomePage extends StatelessWidget {
 
     return d.replaceAll(getFirstName(d), "").trim();
   }
+
+  // Future<void> createPDF() async {
+  //   PdfDocument document = PdfDocument();
+  //   final page = document.pages.add();
+  //
+  //   for (int i = 0; i < 2; i++) {
+  //     final image = document.pages[i];
+  //     print(i);
+  //     image.graphics.drawImage(
+  //         PdfBitmap(await readImages('images/AppLogoPondy.png')),
+  //         Rect.fromLTWH(0, 0, Get.width, Get.height));
+  //   }
+  //
+  //   List<int> bytes = document.save();
+  //   document.dispose();
+  //
+  //   saveLaunchFile(bytes, 'Output.pdf');
+  // }
+  //
+  // Future<void> saveLaunchFile(List<int> bytes, String fileName) async {
+  //   final path = (await getExternalStorageDirectory()).path;
+  //   final file = File('$path/$fileName');
+  //   await file.writeAsBytes(bytes, flush: true);
+  //   OpenFile.open('$path/$fileName');
+  // }
+  //
+  // Future<Uint8List> readImages(String image) async {
+  //   final data = await rootBundle.load('images/AppLogoPondy.png');
+  //   return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
+  // }
+
 }
 
 getString(List<String> sublist) {

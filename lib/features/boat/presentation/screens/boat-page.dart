@@ -1,26 +1,23 @@
 import 'dart:developer';
+import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/boatWidget.dart';
-import 'package:temple_adventures/access_levels.dart';
-import 'package:temple_adventures/core/constants/assets.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/ta-image.dart';
+import 'package:open_file/open_file.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
-import 'package:temple_adventures/d1.dart';
-import 'package:temple_adventures/d2.dart';
-import 'package:temple_adventures/features/boat/controller/boat-controller.dart';
+import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/boat/models/boat-model.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/editBoat-page.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/newBoat-page.dart';
-import 'package:temple_adventures/features/counter-model.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:temple_adventures/features/boat/models/boat-passengers-model.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/boatWidget.dart';
+import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/features/boat/controller/boat-controller.dart';
+import 'package:syncfusion_flutter_xlsio/xlsio.dart' as sync;
 
 class BoatPage extends StatelessWidget {
   final BoatLogic logic = BoatLogic();
+  final now = DateTime.now();
 
   BoatPage() {
     logic.init();
@@ -100,14 +97,16 @@ class BoatPage extends StatelessWidget {
                                   child: Text(
                                     "No Boats Found",
                                     style: TextStyle(
-                                        fontSize: 20, fontWeight: FontWeight.bold),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                                 Center(
                                   child: Text(
                                     "😔",
                                     style: TextStyle(
-                                        fontSize: 20, fontWeight: FontWeight.bold),
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold),
                                   ),
                                 ),
                               ],
@@ -130,8 +129,8 @@ class BoatPage extends StatelessWidget {
                                     ),
                                     Padding(
                                       padding: const EdgeInsets.only(
-                                        // left: 200,
-                                        right: 220,
+                                        // left: 20,
+                                        right: 100,
                                       ),
                                       child: Text(
                                         DateFormat('hh : mm')
@@ -141,6 +140,16 @@ class BoatPage extends StatelessWidget {
                                         ),
                                       ),
                                     ),
+                                    Spacer(),
+                                    AppButton.miniFlat(
+                                      text: "View Slip",
+                                      onTap: () {
+                                        logic.getSlip(
+                                            boatPassengersModel:
+                                                controller.bookedPassengers[i],
+                                            time: controller.timeList[i]);
+                                      },
+                                    )
                                   ],
                                 ),
                                 SizedBox(
@@ -159,7 +168,7 @@ class BoatPage extends StatelessWidget {
                                 ),
                               ],
                             ),
-                          ).reversed,
+                          ),
                         SizedBox(height: 50),
                       ],
                     );
@@ -177,10 +186,6 @@ class BoatPage extends StatelessWidget {
   }
 
   ///================UI=============///
-
-
-
-
 
   Widget buildAppBar() {
     return AppBar(

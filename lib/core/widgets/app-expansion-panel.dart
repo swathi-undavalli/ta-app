@@ -13,11 +13,13 @@ import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/d1.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/select-seats-widget.dart';
+import 'package:temple_adventures/features/bookings/controller/edit-payments-controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-guest-details-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-payments-screen.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/edit-payments-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
@@ -230,7 +232,6 @@ class BookingsExpansionPanel extends StatelessWidget {
                             ],
                           ),
                         ),
-                        // Spacer(),
                         IconButton(
                           splashRadius: 20,
                           icon: Icon(Icons.call_rounded,
@@ -407,6 +408,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   ),
                                   SizedBox(height: 30),
                                   buildPaymentStatus(
+                                    i: i,
                                     totalAmount:
                                         items[i].bookingModel.totalCost,
                                     payments: [
@@ -414,10 +416,13 @@ class BookingsExpansionPanel extends StatelessWidget {
                                         amount: double.parse(items[i].paid)
                                             .roundToDouble(),
                                         collectedBy: items[i].employeeName,
-                                        reciptNo: "-",
-                                        referenceNo: "-",
-                                        remarks: "-",
-                                        paymentMode: "-",
+                                        reciptNo: items[i].receiptNo,
+                                        referenceNo: items[i]
+                                            .bookingModel
+                                            .paymentTransactionId,
+                                        remarks: "",
+                                        paymentMode:
+                                            items[i].bookingModel.paymentMode,
                                         time: items[i].bookingModel.createdAt,
                                       ),
                                       ...items[i].bookingModel.payments
@@ -682,10 +687,10 @@ class BookingsExpansionPanel extends StatelessWidget {
     );
   }
 
-  Widget buildPaymentStatus({
-    @required double totalAmount,
-    @required List<PaymentModel> payments,
-  }) {
+  Widget buildPaymentStatus(
+      {@required double totalAmount,
+      @required List<PaymentModel> payments,
+      @required int i}) {
     double deposits = 0.0;
 
     payments.forEach((payment) {
@@ -804,12 +809,30 @@ class BookingsExpansionPanel extends StatelessWidget {
           ],
         ).paddingOnly(right: 20),
         SizedBox(height: 20),
+        GestureDetector(
+          onTap: () {
+            EditPaymentsLogic editPaymentsLogic = EditPaymentsLogic();
+            editPaymentsLogic.controller.bookingModel = items[i].bookingModel;
+            Get.toNamed(EditPaymentsScreen.id);
+          },
+          child: Row(
+            children: [
+              Text(
+                "Edit Payments",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              ),
+              SizedBox(width: 20),
+              Icon(Icons.edit, size: 15),
+            ],
+          ),
+        ),
+        SizedBox(height: 20),
         ...List.generate(
           payments.length,
           (index) {
             return buildTransactions(payment: payments[index]);
           },
-        )
+        ),
       ],
     );
   }

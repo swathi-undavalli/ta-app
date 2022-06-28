@@ -539,7 +539,7 @@ class _BoatWidgetState extends State<BoatWidget> {
     );
   }
 
-  buildPassengers(String boatId) {
+  Widget buildPassengers(String boatId) {
     Map<String, List<Passenger>> passengersBasedOnBookingId = {};
 
     widget.boatPassengersModel.passenger.forEach((passenger) {
@@ -576,32 +576,34 @@ class PassengersList extends StatelessWidget {
 
   Widget build(BuildContext context) {
     passengers.removeWhere((element) => element.boatID != boatId);
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(
-          color: Colors.black12,
+    if (passengers.isNotEmpty)
+      return Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.black12,
+          ),
+          borderRadius: BorderRadius.circular(3),
         ),
-        borderRadius: BorderRadius.circular(3),
-      ),
-      child: Wrap(
-        children: [
-          Text(
-            bookingId,
-            style: TextStyle(
-                fontSize: 7,
-                color: AppColors.background.skyBlue,
-                fontWeight: FontWeight.bold),
-          ).paddingOnly(right: 10, top: 3),
-          ...passengers
-              .map(
-                (e) => Text(
-                  e.name.capitalizeFirst,
-                  style: TextStyle(fontSize: 12),
-                ).paddingOnly(right: 5),
-              )
-              .toList()
-        ],
-      ).paddingOnly(left: 5),
-    );
+        child: Wrap(
+          children: [
+            Text(
+              bookingId,
+              style: TextStyle(
+                  fontSize: 7,
+                  color: AppColors.background.skyBlue,
+                  fontWeight: FontWeight.bold),
+            ).paddingOnly(right: 10, top: 3),
+            ...passengers
+                .map(
+                  (e) => Text(
+                    e.name.capitalizeFirst,
+                    style: TextStyle(fontSize: 12),
+                  ).paddingOnly(right: 5),
+                )
+                .toList()
+          ],
+        ).paddingOnly(left: 5),
+      );
+    return SizedBox();
   }
 }

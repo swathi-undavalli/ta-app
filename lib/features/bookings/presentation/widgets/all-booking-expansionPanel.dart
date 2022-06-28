@@ -15,6 +15,8 @@ import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../screens/add-payments-screen.dart';
+
 class AllBookingsExpansionPanel extends StatefulWidget {
   BookingModel booking;
 
@@ -28,15 +30,6 @@ class AllBookingsExpansionPanel extends StatefulWidget {
 class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
   bool isExpanded = false;
   DateTime date = DateTime.now();
-  TextEditingController depositTED = TextEditingController();
-  // Function onDeletePressed;
-
-  List<double> payments = [
-    10000,
-    7000,
-    7000,
-    7000,
-  ];
 
   ItemModel items;
 
@@ -105,12 +98,12 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                         width: 7,
                         decoration: BoxDecoration(
                             color: getBalance(
-                                items.bookingModel.payments,
-                                double.parse(items.paid)
-                                    .roundToDouble(),
-                                double.parse(items.cost)
-                                    .roundToDouble()) ==
-                                "0"
+                                        items.bookingModel.payments,
+                                        double.parse(items.paid)
+                                            .roundToDouble(),
+                                        double.parse(items.cost)
+                                            .roundToDouble()) ==
+                                    "0"
                                 ? Colors.green
                                 : Colors.red,
                             borderRadius: BorderRadius.circular(5)),
@@ -278,10 +271,8 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                   "Balance",
                                   getBalance(
                                       items.bookingModel.payments,
-                                      double.parse(items.paid)
-                                          .roundToDouble(),
-                                      double.parse(items.cost)
-                                          .roundToDouble()),
+                                      double.parse(items.paid).roundToDouble(),
+                                      double.parse(items.cost).roundToDouble()),
                                 ),
                                 buildKeyValuePairs("Pax",
                                     items.bookingModel.noOfPersons.toString()),
@@ -313,10 +304,12 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                       amount: double.parse(items.paid)
                                           .roundToDouble(),
                                       collectedBy: items.employeeName,
-                                      reciptNo: "-",
-                                      referenceNo: "-",
-                                      remarks: "-",
-                                      paymentMode: "-",
+                                      reciptNo: items.receiptNo,
+                                      referenceNo: items
+                                          .bookingModel.paymentTransactionId,
+                                      remarks: "",
+                                      paymentMode:
+                                          items.bookingModel.paymentMode,
                                       time: items.bookingModel.createdAt,
                                     ),
                                     ...items.bookingModel.payments
@@ -330,111 +323,115 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                       child: AppButton.miniFlat(
                                         text: "Add Payment",
                                         onTap: () {
-                                          Get.defaultDialog(
-                                            contentPadding: EdgeInsets.only(
-                                                left: 30,
-                                                right: 30,
-                                                top: 20,
-                                                bottom: 30),
-                                            title: "\n Add Payment",
-                                            content: TextField(
-                                              controller: depositTED,
-                                              cursorColor:
-                                                  AppColors.text.darkgrey,
-                                              cursorHeight: 17,
-                                              keyboardType:
-                                                  TextInputType.number,
-                                              decoration: InputDecoration(
-                                                labelText: "Deposit",
-                                                labelStyle: TextStyle(
-                                                    fontSize: 10,
-                                                    color: Colors.black),
-                                                enabledBorder:
-                                                    UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.grey),
-                                                ),
-                                                focusedBorder:
-                                                    UnderlineInputBorder(
-                                                  borderSide: BorderSide(
-                                                      color: Colors.black),
-                                                ),
-                                              ),
-                                            ),
-                                            backgroundColor: Colors.white,
-                                            titleStyle: TextStyle(
-                                                color: AppColors.text.black,
-                                                fontFamily: AppFonts.nunito,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                            middleTextStyle: TextStyle(
-                                                color: AppColors.text.black,
-                                                fontFamily: AppFonts.nunito,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w500),
-                                            confirm: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                AppButton.miniText(
-                                                  text: 'Cancel',
-                                                  onTap: () {
-                                                    Get.back();
-                                                  },
-                                                ),
-                                                AppButton.miniFlat(
-                                                  text: 'OK',
-                                                  onTap: () {
-                                                    items.bookingModel.payments
-                                                        .add(
-                                                      PaymentModel(
-                                                        amount: double.parse(
-                                                            depositTED.text),
-                                                        collectedBy:
-                                                            currentEmployee
-                                                                .name,
+                                          Get.toNamed(AddPaymentsScreen.id,
+                                              arguments: items.bookingModel);
 
-                                                        //TODO:: FIX THE BELOW URGENT !!!!!.
-
-                                                        reciptNo: "-",
-                                                        referenceNo: "-",
-                                                        paymentMode: "-",
-                                                        time: DateTime.now(),
-                                                      ),
-                                                    );
-
-                                                    FirebaseFirestore.instance
-                                                        .collection("bookings")
-                                                        .doc(items
-                                                            .bookingModel.id)
-                                                        .set(items.bookingModel
-                                                            .toMap());
-                                                    Get.back();
-                                                    depositTED.text = "";
-                                                    // BookingsCalenderWidgetLogic
-                                                    // bookingCalenderLogic =
-                                                    // BookingsCalenderWidgetLogic();
-                                                    // bookingCalenderLogic
-                                                    //     .onDateSelected(
-                                                    //   bookingCalenderLogic
-                                                    //       .controller
-                                                    //       .lastDateIndex,
-                                                    // );
-                                                    AllBookingsScreen();
-                                                    setState(() {});
-                                                  },
-                                                ),
-                                              ],
-                                            ),
-                                            barrierDismissible: false,
-                                            radius: 10,
-                                          );
-
-                                          // Get.toNamed(IDProofScreen.id,
-                                          //     arguments:
-                                          //         items[i].bookingModel);
-                                          // Get.toNamed(W2.id);
+                                          // Get.defaultDialog(
+                                          //   contentPadding: EdgeInsets.only(
+                                          //       left: 30,
+                                          //       right: 30,
+                                          //       top: 20,
+                                          //       bottom: 30),
+                                          //   title: "\n Add Payment",
+                                          //   content: TextField(
+                                          //     controller: depositTED,
+                                          //     cursorColor:
+                                          //         AppColors.text.darkgrey,
+                                          //     cursorHeight: 17,
+                                          //     keyboardType:
+                                          //         TextInputType.number,
+                                          //     decoration: InputDecoration(
+                                          //       labelText: "Deposit",
+                                          //       labelStyle: TextStyle(
+                                          //           fontSize: 10,
+                                          //           color: Colors.black),
+                                          //       enabledBorder:
+                                          //           UnderlineInputBorder(
+                                          //         borderSide: BorderSide(
+                                          //             color: Colors.grey),
+                                          //       ),
+                                          //       focusedBorder:
+                                          //           UnderlineInputBorder(
+                                          //         borderSide: BorderSide(
+                                          //             color: Colors.black),
+                                          //       ),
+                                          //     ),
+                                          //   ),
+                                          //   backgroundColor: Colors.white,
+                                          //   titleStyle: TextStyle(
+                                          //       color: AppColors.text.black,
+                                          //       fontFamily: AppFonts.nunito,
+                                          //       fontSize: 16,
+                                          //       fontWeight: FontWeight.bold),
+                                          //   middleTextStyle: TextStyle(
+                                          //       color: AppColors.text.black,
+                                          //       fontFamily: AppFonts.nunito,
+                                          //       fontSize: 15,
+                                          //       fontWeight: FontWeight.w500),
+                                          //   confirm: Row(
+                                          //     mainAxisAlignment:
+                                          //         MainAxisAlignment
+                                          //             .spaceBetween,
+                                          //     children: [
+                                          //       AppButton.miniText(
+                                          //         text: 'Cancel',
+                                          //         onTap: () {
+                                          //           Get.back();
+                                          //         },
+                                          //       ),
+                                          //       AppButton.miniFlat(
+                                          //         text: 'OK',
+                                          //         onTap: () {
+                                          //           items[i]
+                                          //               .bookingModel
+                                          //               .payments
+                                          //               .add(
+                                          //                 PaymentModel(
+                                          //                   amount:
+                                          //                       double.parse(
+                                          //                           depositTED
+                                          //                               .text),
+                                          //                   collectedBy:
+                                          //                       currentEmployee
+                                          //                           .name,
+                                          //
+                                          //                   //TODO:: FIX THE BELOW URGENT !!!!!.
+                                          //
+                                          //                   reciptNo: "-",
+                                          //                   referenceNo: "-",
+                                          //                   paymentMode: "-",
+                                          //                   time: DateTime
+                                          //                       .now(),
+                                          //                 ),
+                                          //               );
+                                          //
+                                          //           FirebaseFirestore.instance
+                                          //               .collection(
+                                          //                   "bookings")
+                                          //               .doc(items[i]
+                                          //                   .bookingModel
+                                          //                   .id)
+                                          //               .set(items[i]
+                                          //                   .bookingModel
+                                          //                   .toMap());
+                                          //           Get.back();
+                                          //           depositTED.text = "";
+                                          //           BookingsCalenderWidgetLogic
+                                          //               bookingCalenderLogic =
+                                          //               BookingsCalenderWidgetLogic();
+                                          //           bookingCalenderLogic
+                                          //               .onDateSelected(
+                                          //             bookingCalenderLogic
+                                          //                 .controller
+                                          //                 .lastDateIndex,
+                                          //           );
+                                          //         },
+                                          //       ),
+                                          //     ],
+                                          //   ),
+                                          //   barrierDismissible: false,
+                                          //   radius: 10,
+                                          // );
                                         },
                                       ).paddingOnly(right: 15),
                                       // alignment: Alignment.centerRight,
@@ -625,7 +622,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                         buildNumber(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
-                            text: totalAmount.toString()),
+                            text: totalAmount.round().toString()),
                       ],
                     )),
               ],
@@ -651,7 +648,6 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
     return (total - t).toInt().toString();
   }
 
-
   Widget buildTransactions({PaymentModel payment}) {
     DateTime now = DateTime.now();
     return Row(
@@ -670,7 +666,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Paid ${payment.amount.round()} to ${payment.collectedBy}",
+              "Paid ${payment.amount.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
               style: TextStyle(
                   fontSize: 10, fontWeight: FontWeight.w600, wordSpacing: 2),
             ),

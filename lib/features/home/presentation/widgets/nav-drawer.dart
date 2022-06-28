@@ -6,12 +6,13 @@ import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/all-boats-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/newBoat-page.dart';
-import 'package:temple_adventures/features/compressor/presentation/compressor.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/employee-profile-screen.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/all-activities-screen.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
+
+import '../../../admin-portal/presentation/admin-portal-screen.dart';
 
 class NavDrawer extends StatelessWidget {
   static const String id = "sideMenuWidget";
@@ -21,12 +22,20 @@ class NavDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          Spacer(),
+          // Spacer(),
+          SizedBox(height: 20),
           buildUserProfile(),
           SizedBox(height: 20),
           buildName(),
           SizedBox(height: 10),
           buildLine(),
+          buildMenuItem(
+            icon: Icons.admin_panel_settings_rounded,
+            text: 'Admin Portal',
+            onTap: () {
+              Get.offAndToNamed(AdminPortalScreen.id);
+            },
+          ),
           buildMenuItem(
             icon: Icons.account_circle,
             text: 'Profile',
@@ -53,14 +62,6 @@ class NavDrawer extends StatelessWidget {
               },
             ),
           ),
-
-          // buildMenuItem(
-          //   icon: Icons.local_gas_station,
-          //   text: 'Compressor',
-          //   onTap: () {
-          //     Get.offAndToNamed(CompressorScreen.id);
-          //   },
-          // ),
 
           EmployeeAccess(
             access: AccessRights.viewBookings,
@@ -93,7 +94,7 @@ class NavDrawer extends StatelessWidget {
               Get.toNamed(AllBoatsPage.id);
             },
           ),
-          Spacer(),
+          // Spacer(),
           buildLine(),
           buildMiniMenuItem(text: 'templeadventures.com'),
           SizedBox(height: 20)
@@ -102,17 +103,17 @@ class NavDrawer extends StatelessWidget {
     );
   }
 
-  SizedBox buildUserProfile() {
+  ///================Business logic==================///
+
+  Widget buildUserProfile() {
     return SizedBox(
-      height: 100,
-      width: 100,
+      height: 80,
+      width: 80,
       child: CircleAvatar(
         backgroundImage: AssetImage('images/AppLogoPondy.png'),
       ),
     );
   }
-
-  ///================Business logic==================///
 
   Widget buildMiniMenuItem({@required text}) {
     return Padding(
@@ -147,9 +148,6 @@ class NavDrawer extends StatelessWidget {
         leading: Icon(
           icon,
           color: color,
-        ),
-        trailing: SizedBox(
-          width: 100,
         ),
         onTap: onTap,
       ),

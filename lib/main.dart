@@ -1,5 +1,3 @@
-import 'dart:developer';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -9,9 +7,9 @@ import 'package:get_storage/get_storage.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/add-freelance-screen.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/freelance-details-screen.dart';
+import 'package:temple_adventures/features/admin-portal/presentation/admin-portal-screen.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/all-boats-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/boatWidget.dart';
 import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/authentication/firebase-authentication.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
@@ -28,15 +26,11 @@ import 'package:temple_adventures/features/bookings/presentation/screens/add-pay
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/all-idProofs-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/edit-payments-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/guests-edit-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/new-customer-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/customer-registration-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/paper_work_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/upload-idProof-screen.dart';
-import 'package:temple_adventures/features/compressor/presentation/compressor.dart';
 import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
@@ -52,8 +46,7 @@ import 'features/employees/presentation/screens/employee-details-screen.dart';
 import 'features/employees/presentation/screens/employee-profile-screen.dart';
 import 'features/login/presentation/screens/login-page.dart';
 
-Future<void> backgroundHandler(RemoteMessage message) async {
-}
+Future<void> backgroundHandler(RemoteMessage message) async {}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -72,17 +65,12 @@ void main() async {
 
   ///app is open
   FirebaseMessaging.onMessage.listen((message) {
-    if (message.notification != null) {
-      //log("Hello mawa notification ochindi");
-      //log("onMessage data: ${message.notification.body}");
-    }
+    if (message.notification != null) {}
     LocalNotificationService.display(message);
   });
 
   ///app is in Background
-  FirebaseMessaging.onMessageOpenedApp.listen((message) {
-    //print('onMessageOpenedApp data:${message.data}');
-  });
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {});
 
   await GetStorage.init();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -146,7 +134,6 @@ class MyApp extends StatelessWidget {
         LogScreen.id: (context) => LogScreen(),
         EmployeeProfileScreen.id: (context) => EmployeeProfileScreen(),
         EmployeeDetailsScreen.id: (context) => EmployeeDetailsScreen(),
-        CompressorScreen.id: (context) => CompressorScreen(),
         AutoUpdateView.id: (context) => AutoUpdateView(),
         Dummy.id: (context) => Dummy(),
         ChooseBoatPage.id: (context) => ChooseBoatPage(),
@@ -159,6 +146,8 @@ class MyApp extends StatelessWidget {
         FreelanceDetailsScreen.id: (context) => FreelanceDetailsScreen(),
         AllBoatsPage.id: (context) => AllBoatsPage(),
         AddPaymentsScreen.id: (context) => AddPaymentsScreen(),
+        EditPaymentsScreen.id: (context) => EditPaymentsScreen(),
+        AdminPortalScreen.id: (context) => AdminPortalScreen(),
       },
     );
   }

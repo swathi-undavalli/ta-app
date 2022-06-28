@@ -1,17 +1,10 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
-import 'package:temple_adventures/core/util/validator.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/new-customer-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/activity-selector.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 
 class NewBookingScreen extends StatelessWidget {
