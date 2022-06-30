@@ -6,7 +6,7 @@ class EmployeeMiniModel {
     this.phone,
     this.name,
     this.difference,
-    this.loginTime,
+    this.logTime,
     this.id,
     this.punctual,
   });
@@ -15,7 +15,7 @@ class EmployeeMiniModel {
   int difference;
   String phone;
   String name;
-  Timestamp loginTime;
+  Timestamp logTime;
   String id;
   String punctual;
 
@@ -24,7 +24,7 @@ class EmployeeMiniModel {
         shiftTime: json["shiftTime"],
         phone: json["phone"],
         name: json["name"],
-        loginTime: json["loginTime"],
+        logTime: json["LogTime"],
         id: json["id"],
         difference: json["difference"],
         punctual: json["punctual"],
@@ -34,7 +34,7 @@ class EmployeeMiniModel {
         "shiftTime": shiftTime,
         "phone": phone,
         "name": name,
-        "loginTime": loginTime,
+        "LogTime": logTime,
         "id": id,
         "difference": difference,
         "punctual": punctual,

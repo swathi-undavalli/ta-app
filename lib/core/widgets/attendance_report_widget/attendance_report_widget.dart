@@ -104,9 +104,9 @@ class _AttendanceReportWidgetState extends State<AttendanceReportWidget> {
                             Text(e.name),
                             if (e.punctual == "Late")
                               Text(
-                                e.loginTime != null
+                                e.logTime != null
                                     ? DateFormat("hh : mm")
-                                        .format(e.loginTime.toDate())
+                                        .format(e.logTime.toDate())
                                     : "",
                                 style: TextStyle(
                                     color: Colors.red,
@@ -114,9 +114,9 @@ class _AttendanceReportWidgetState extends State<AttendanceReportWidget> {
                               )
                             else if (e.punctual == "On-Time")
                               Text(
-                                e.loginTime != null
+                                e.logTime != null
                                     ? DateFormat("hh : mm")
-                                        .format(e.loginTime.toDate())
+                                        .format(e.logTime.toDate())
                                     : "",
                                 style: TextStyle(
                                     color: Colors.green,
@@ -344,10 +344,11 @@ class AttendanceReportWidgetLogic {
     //print(data);
 
     Map<String, dynamic> fData = data.data();
-    // fData.forEach((key, value) {
-    //   //log(value.toString());
-    //   // if (value["loginTime"] != null) //log(fData[key].toString());
-    // });
+    // log(fData.toString());
+    fData.forEach((key, value) {
+      // log(value.toString());
+      // if (value["loginTime"] != null) //log(fData[key].toString());
+    });
 
     //print("------------------------------");
     controller.employeesList = [];
@@ -370,13 +371,17 @@ class AttendanceReportWidgetLogic {
           int.parse(employee.shiftTime.split(":")[1]),
           int.parse(employee.shiftTime.split(":")[2]),
         );
-        if (employee.loginTime == null) {
+
+        // log(employee.punctual);
+        if (employee.logTime == null) {
+          log(employee.name + "   " + employee.id);
           //log(DateTime.now().difference(empShiftTime).inHours.toString());
           if (DateTime.now().difference(empShiftTime).inHours >= 6) {
             employee.punctual = "Absent";
           }
           //log(employee.punctual);
         }
+        // log(employee.punctual);
         controller.employeesList.add(employee);
       }
     });

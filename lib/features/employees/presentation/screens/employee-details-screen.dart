@@ -17,13 +17,13 @@ import 'package:intl/intl.dart';
 
 class EmployeeDetailsScreen extends StatelessWidget {
   static const String id = "EmployeeDetailsScreen";
-  final employeeArgument = Get.arguments;
+  final Employee employeeArgument = Get.arguments as Employee;
   AddAnUserLogic logic = AddAnUserLogic();
 
   @override
   Widget build(BuildContext context) {
     final DateTime date = employeeArgument.shiftTiming;
-    final DateFormat formatter = DateFormat('HH-mm-ss');
+    final DateFormat formatter = DateFormat('HH:mm');
     final String shiftTiming = formatter.format(date);
     return Scaffold(
       appBar: AppBar(
@@ -295,8 +295,9 @@ class EmployeeDetailsScreen extends StatelessWidget {
       Employee employee = Employee.fromMap(info.data());
       //print(info.data());
       final DateTime date = employee.shiftTiming;
-      final DateFormat formatter = DateFormat('HH-mm-ss a');
+      final DateFormat formatter = DateFormat('HH:mm');
       final String shiftTiming = formatter.format(date);
+      logic.controller.pickedTime = employee.shiftTiming;
       logic.controller.employeeIdTED.text = employee.id;
       logic.controller.firstNameTED.text = employee.firstName;
       logic.controller.lastNameTED.text = employee.lastName;
@@ -330,4 +331,3 @@ class EmployeeDetailsScreen extends StatelessWidget {
     return false;
   }
 }
-

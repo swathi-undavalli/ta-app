@@ -152,7 +152,7 @@ class FirebaseApi {
           shiftTime: DateFormat("hh:mm:ss").format(currentEmployee.shiftTiming),
           phone: currentEmployee.phoneNumber,
           name: currentEmployee.firstName + " " + currentEmployee.lastName,
-          loginTime: Timestamp.now(),
+          logTime: Timestamp.now(),
           id: currentEmployee.id,
           punctual: status,
         );

@@ -13,9 +13,10 @@ import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 class AddAnUserLogic {
+  final DateFormat formatter = DateFormat('HH:mm');
+
   AddAnUserController controller = Get.put(AddAnUserController());
   Employee employee;
-  DateTime pickedTime = DateTime.now();
 
   createEmployee() async {
     //TODO: Change.
@@ -67,7 +68,7 @@ class AddAnUserLogic {
         countryCode: controller.countryCodeTED.text,
         role: controller.roleTED.text,
         gender: controller.genderTED.text,
-        shiftTiming: pickedTime,
+        shiftTiming: controller.pickedTime,
         countryIsoCode: controller.countryISoCOde,
         accessLevels: AccessLevels(
           viewBookings: controller.viewBookings,
@@ -122,7 +123,7 @@ class AddAnUserLogic {
         countryCode: controller.countryCodeTED.text,
         role: controller.roleTED.text,
         gender: controller.genderTED.text,
-        shiftTiming: pickedTime,
+        shiftTiming: controller.pickedTime,
         countryIsoCode: controller.countryISoCOde,
         accessLevels: AccessLevels(
           viewBookings: controller.viewBookings,
@@ -163,17 +164,17 @@ class AddAnUserLogic {
   }
 
   timePicker(context) {
-    DatePicker.showTimePicker(context, showTitleActions: true,
-        onChanged: (time) {
+    DatePicker.showTimePicker(context,
+        showTitleActions: true, showSecondsColumn: false, onChanged: (time) {
       //print('change $time');
-      pickedTime = time;
-      controller.shiftTimeTED.text = DateFormat.Hm().format(time);
+      controller.pickedTime = time;
+      controller.shiftTimeTED.text = formatter.format(time);
     }, onConfirm: (newTime) {
       //print('confirm $pickedTime');
-      pickedTime = newTime;
-      controller.shiftTimeTED.text = DateFormat.Hm().format(pickedTime);
+      controller.pickedTime = newTime;
+      controller.shiftTimeTED.text = formatter.format(newTime);
     },
-        currentTime: pickedTime,
+        currentTime: controller.pickedTime,
         theme: DatePickerTheme(
           cancelStyle: TextStyle(
             fontFamily: AppFonts.nunito,
@@ -194,6 +195,8 @@ class AddAnUserLogic {
 }
 
 class AddAnUserController extends GetxController {
+  DateTime pickedTime = DateTime.now();
+
   TextEditingController firstNameTED = TextEditingController();
   TextEditingController lastNameTED = TextEditingController();
   TextEditingController employeeIdTED = TextEditingController();
