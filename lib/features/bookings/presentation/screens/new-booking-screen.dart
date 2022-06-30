@@ -136,31 +136,6 @@ class NewBookingScreen extends StatelessWidget {
     );
   }
 
-  // Widget buildPAXField() {
-  //   return AppTextField(
-  //     hintText: 'No of Persons',
-  //     controller: logic.controller.paxTED,
-  //     focusNode: logic.controller.noOfPersonsNode,
-  //     nextFocusNode: logic.controller.discountNode,
-  //     keyboardType: TextInputType.number,
-  //     onChanged: () {
-  //       try {
-  //         logic.getPrice();
-  //       } catch (e) {
-  //         //print("error");
-  //         //print(e);
-  //       }
-  //     },
-  //     required: false,
-  //     errorValidator: () {
-  //       return null;
-  //     },
-  //     validator: (noOfPersons) {
-  //       return null;
-  //       // return Validator.validateName(noOfPersons);
-  //     },
-  //   );
-  // }
 
   Widget buildPriceField() {
     return AppTextField(

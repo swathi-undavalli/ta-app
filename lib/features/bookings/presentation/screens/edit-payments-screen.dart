@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -226,6 +225,7 @@ class EditPaymentsScreen extends StatelessWidget {
                                   .set(logic.controller.bookingModel.toMap());
                               Get.back();
                               controller.update();
+                              Get.back();
                             },
                           ),
                         ],

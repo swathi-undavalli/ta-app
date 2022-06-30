@@ -108,19 +108,38 @@ class GuestDetailsScreen extends StatelessWidget {
                                               bookingArg);
                                       PdfAPi.openFile(pdfFile);
                                     },
-                                    child: Container(
-                                      height: 70,
-                                      width: 70,
-                                      child: TAImage(AppImages.icon.folder),
-                                      decoration: BoxDecoration(
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.grey.withOpacity(0.1),
-                                            blurRadius: 10,
-                                            offset: Offset(1, 1),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Container(
+                                          height: 55,
+                                          width: 33,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(5),
+                                                bottomLeft: Radius.circular(5)),
+                                            color: AppColors
+                                                .background.lightSkyBlue
+                                                .withOpacity(0.5),
                                           ),
-                                        ],
-                                      ),
+                                        ),
+                                        Container(
+                                          height: 65,
+                                          width: 33,
+                                          decoration: BoxDecoration(
+                                            borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(5),
+                                                topRight: Radius.circular(5),
+                                                bottomRight:
+                                                    Radius.circular(5)),
+                                            color: AppColors
+                                                .background.lightSkyBlue
+                                                .withOpacity(0.5),
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   )
                                 : SizedBox(),

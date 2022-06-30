@@ -13,9 +13,7 @@ import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/models/customer-model.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
 import 'package:temple_adventures/features/dashboard/controller/dashboard-controller.dart';
@@ -61,6 +59,7 @@ class NewBookingLogic {
         currentEmployee.firstName + currentEmployee.lastName;
     if (controller.payingNowTED.text == "" ||
         controller.payingNowTED.text == 0.toString()) {
+      createCustomer();
       createBooking();
       Get.defaultDialog(
         barrierDismissible: false,
@@ -117,6 +116,22 @@ class NewBookingLogic {
       Get.toNamed(PaymentDetailsScreen.id);
   }
 
+  Future<void> createCustomer() async {
+    CustomerModel customer = CustomerModel(
+      countryCode: controller.countryCodeTED.text,
+      firstName: controller.fNameTED.text,
+      lastName: controller.lNameTED.text,
+      email: controller.emailTED.text,
+      phoneNumber: controller.phoneNumberTED.text,
+      idProof: "",
+      gender: "",
+    );
+    await FirebaseFirestore.instance
+        .collection("customers")
+        .doc(controller.emailTED.text)
+        .set(customer.toMap());
+  }
+
   onPaymentDetailsFilled() {
     if (controller.paymentModeTED.text != "") {
       controller.bookingModel.paymentMode = controller.paymentModeTED.text;
@@ -127,6 +142,7 @@ class NewBookingLogic {
       } else
         controller.bookingModel.receiptNo = controller.receiptNoTED.text;
       // Get.toNamed(AddCustomerDetailsScreen.id);
+      createCustomer();
       createBooking();
       Get.defaultDialog(
         barrierDismissible: false,

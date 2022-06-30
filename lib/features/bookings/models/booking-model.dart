@@ -34,7 +34,7 @@ class BookingModel {
     this.employeeName,
     this.idProofs,
     this.payments,
-    @required this.createdAt,
+    this.createdAt,
   });
 
   List<ActivityModel> activity;

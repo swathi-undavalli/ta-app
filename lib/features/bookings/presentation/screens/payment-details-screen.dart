@@ -57,8 +57,8 @@ class PaymentDetailsScreen extends StatelessWidget {
 
   Widget buildPaymentDate(BuildContext context) {
     return GetBuilder<NewBookingController>(builder: (controller) {
-      DateTime date = controller.paymentDate;
-      String paymentDate = DateFormat("d MMM yyyy").format(date);
+      // String paymentDate =
+      //     DateFormat("d MMM yyyy").format(controller.paymentDate);
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -80,7 +80,9 @@ class PaymentDetailsScreen extends StatelessWidget {
                     color: Colors.black,
                   ),
                   borderRadius: BorderRadius.circular(5)),
-              child: Center(child: Text(paymentDate)),
+              child: Center(
+                  child: Text(
+                      DateFormat("d MMM yyyy").format(controller.paymentDate))),
             ),
           ),
         ],
