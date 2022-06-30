@@ -104,30 +104,12 @@ class GuestsEditLogic {
   }
 
   Future<String> getIDProofLink() async {
-    if (controller.customerExist) {
-      if (controller.idProofFile != null) {
-        if (controller.uploadedImageUrl == null) {
-          if (controller.idProofFile != null) {
-            controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
-                file: File(controller.idProofFile.path));
-          } else {
-            Fluttertoast.showToast(msg: "Image not picked");
-          }
-        }
-        return controller.uploadedImageUrl;
-      } else {
-        return controller.idProofLink;
-      }
-    } else {
-      if (controller.uploadedImageUrl == null) {
-        if (controller.idProofFile != null) {
-          controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
-              file: File(controller.idProofFile.path));
-        } else {
-          Fluttertoast.showToast(msg: "Image not picked");
-        }
-      }
+    if (controller.idProofFile != null) {
+      controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
+          file: File(controller.idProofFile.path));
       return controller.uploadedImageUrl;
+    } else {
+      return controller.idProofLink;
     }
   }
 
@@ -175,32 +157,39 @@ class GuestsEditLogic {
   updateCoastGuardSlip() async {
     for (int i = 0; i < controller.bookingModel.diveDate.length; i++) {
       var diveDate = controller.bookingModel.diveDate[i];
-      print(diveDate);
+      print(DateFormat("dd-MM-yyyy").format(diveDate));
       var data = await FirebaseFirestore.instance
           .collection("coastGuardSlip")
           .doc(DateFormat("dd-MM-yyyy").format(diveDate))
           .get();
+      log("===============================");
       log(data.data().toString());
       Map<String, dynamic> d = data.data();
 
-      BoatPassengersModel boatPassengersModel =
-          BoatPassengersModel.fromMap(d[diveDate.toIso8601String()]);
-      for (i = 0; i < boatPassengersModel.passenger.length; i++) {
-        if (boatPassengersModel.passenger[i].email ==
-            controller.customerModel.email) {
-          break;
+      if (d != null) {
+        BoatPassengersModel boatPassengersModel =
+            BoatPassengersModel.fromMap(d[diveDate.toIso8601String()]);
+        for (i = 0; i < boatPassengersModel.passenger.length; i++) {
+          if (boatPassengersModel.passenger[i].email ==
+              controller.customerModel.email) {
+            break;
+          }
         }
-      }
-      boatPassengersModel.passenger[i].email = controller.emailTED.text;
-      boatPassengersModel.passenger[i].name = controller.firstNameTED.text;
-      boatPassengersModel.passenger[i].phone = controller.phoneTED.text;
-      boatPassengersModel.passenger[i].gender = controller.genderTED.text;
+        log(i.toString());
+        log("========================================");
+        boatPassengersModel.passenger[i].email = controller.emailTED.text;
+        boatPassengersModel.passenger[i].name = controller.firstNameTED.text;
+        boatPassengersModel.passenger[i].phone = controller.phoneTED.text;
+        boatPassengersModel.passenger[i].gender = controller.genderTED.text;
 
-      d[diveDate.toIso8601String()] = boatPassengersModel.toMap();
-      await FirebaseFirestore.instance
-          .collection("coastGuardSlip")
-          .doc(DateFormat("dd-MM-yyyy").format(diveDate))
-          .set(d);
+        d[diveDate.toIso8601String()] = boatPassengersModel.toMap();
+        await FirebaseFirestore.instance
+            .collection("coastGuardSlip")
+            .doc(DateFormat("dd-MM-yyyy").format(diveDate))
+            .set(d);
+      } else {
+        break;
+      }
     }
 
     print(controller.bookingModel.diveDate);

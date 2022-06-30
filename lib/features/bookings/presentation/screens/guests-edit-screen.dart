@@ -63,11 +63,6 @@ class GuestsEditScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         SizedBox(height: 10),
-                        // ElevatedButton(
-                        //     onPressed: () {
-                        //       logic.updateCoastGuardSlip();
-                        //     },
-                        //     child: Text("Do")),
                         buildEmailTF(),
                         Row(
                           children: [
@@ -198,11 +193,12 @@ class GuestsEditScreen extends StatelessWidget {
   }
 
   getImage(GuestsEditController controller) {
-    if (controller.idProofLink != null && controller.idProofLink.isNotEmpty)
+    if (controller.idProofLink != null && controller.idProofLink.isNotEmpty) {
       return DecorationImage(
         image: NetworkImage(controller.idProofLink),
         fit: BoxFit.cover,
       );
+    }
     if (controller.idProofFile != null)
       return DecorationImage(
         image: FileImage(File(controller.idProofFile.path)),

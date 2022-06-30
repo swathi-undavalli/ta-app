@@ -11,21 +11,12 @@ class WeatherRepository {
   Future<List<WeatherResponse>> getWeatherResponse() async {
     final params = {'spot_id': "957", 'units': "eu"};
 
-    //print("=======================");
-    //print("started");
-
     final uri = Uri.https('magicseaweed.com',
         '/api/795541b5e25309cf68f4463e88b8daa6/forecast/', params);
 
     final response = await http.get(uri);
-    //log(response.body);
-    //print("==========================");
-    //print("middle");
 
     final List<dynamic> json = jsonDecode(response.body);
-    //print("==========================");
-    //print("In between");
-    //print(json);
 
     List<WeatherResponse> li = [];
     json.forEach((element) {
@@ -33,9 +24,6 @@ class WeatherRepository {
       WeatherResponse weatherResponse = WeatherResponse.fromMap(element);
       li.add(weatherResponse);
     });
-    //print(li[0].localTimestamp);
-    // //print(DateTime.now().microsecondsSinceEpoch);
-    // //print(DateTime.now().millisecondsSinceEpoch)
     return li;
   }
 

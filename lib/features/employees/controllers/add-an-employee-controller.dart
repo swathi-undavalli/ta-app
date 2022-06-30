@@ -154,6 +154,8 @@ class AddAnUserLogic {
       Fluttertoast.showToast(msg: "Saved");
       disposeKeyboard();
       Get.back();
+      Get.back();
+      Get.back();
       controller.reset();
     } else {
       Fluttertoast.showToast(msg: "Invalid Input");

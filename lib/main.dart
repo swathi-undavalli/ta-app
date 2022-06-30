@@ -8,6 +8,7 @@ import 'package:temple_adventures/features/Freelancers/presentation/screens/add-
 import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/freelance-details-screen.dart';
 import 'package:temple_adventures/features/admin-portal/presentation/admin-portal-screen.dart';
+import 'package:temple_adventures/features/admin-portal/presentation/image-view-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/all-boats-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
 import 'package:temple_adventures/auto-update.dart';
@@ -148,6 +149,7 @@ class MyApp extends StatelessWidget {
         AddPaymentsScreen.id: (context) => AddPaymentsScreen(),
         EditPaymentsScreen.id: (context) => EditPaymentsScreen(),
         AdminPortalScreen.id: (context) => AdminPortalScreen(),
+        ImageViewPage.id: (context) => ImageViewPage(),
       },
     );
   }

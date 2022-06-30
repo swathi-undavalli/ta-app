@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:temple_adventures/core/constants/assets.dart';
 import 'package:temple_adventures/core/util/ta-image.dart';
+import 'package:temple_adventures/features/admin-portal/presentation/image-view-page.dart';
 import 'package:temple_adventures/features/admin-portal/presentation/pdf-viewer-page.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/widgets/app-button.dart';
@@ -48,7 +49,7 @@ class AdminPortalScreen extends StatelessWidget {
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.only(top: 20, bottom: 20),
+          padding: const EdgeInsets.only(left: 20, top: 20, bottom: 20),
           child: SingleChildScrollView(
             child: Column(
               children: [
@@ -58,7 +59,7 @@ class AdminPortalScreen extends StatelessWidget {
                     children: [
                       ...logic.controller.path.map((e) {
                         if (e.endsWith(".pdf")) {
-                          return buildPDFButton(context, File(e));
+                          return buildPDF(context, File(e));
                         }
                         return buildIDProof(image: e);
                       }),
@@ -75,7 +76,7 @@ class AdminPortalScreen extends StatelessWidget {
 
   ///==============UI===============///
 
-  Widget buildPDFButton(BuildContext context, File file) {
+  Widget buildPDF(BuildContext context, File file) {
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
@@ -88,28 +89,33 @@ class AdminPortalScreen extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            SizedBox(width: 30),
             Container(
-              height: 20,
-              width: 20,
+              height: 22,
+              width: 22,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(3),
                   color: AppColors.background.lightSkyBlue),
               child: Center(
-                  child: Text("PDF",
-                      style:
-                          TextStyle(fontSize: 7, fontWeight: FontWeight.bold))),
+                child: Text("PDF",
+                    style: TextStyle(
+                        fontSize: 8,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black)),
+              ),
             ),
-            SizedBox(width: 20),
+            SizedBox(width: 28),
             Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                FittedBox(
-                  fit: BoxFit.contain,
+                Container(
+                  width: Get.width * 0.61,
                   child: Text(
                     "${basename(file.path)}",
-                    // style: TextStyle(overflow: TextOverflow.ellipsis),
+                    style: TextStyle(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                        overflow: TextOverflow.ellipsis),
                   ),
                 ),
                 Text(
@@ -117,16 +123,99 @@ class AdminPortalScreen extends StatelessWidget {
                       DateFormat.yMMMd().format(
                         DateTime.now(),
                       ),
-                  style: TextStyle(fontSize: 10),
+                  style: TextStyle(fontSize: 12),
                 ),
               ],
             ),
-            Expanded(
-                child: Container(
-              color: Colors.transparent,
-            )),
+            Expanded(child: Container(color: Colors.transparent)),
+            IconButton(
+                onPressed: () {
+                  Get.bottomSheet(
+                    buildPDFBottomSheet(file),
+                  );
+                },
+                splashRadius: 20,
+                icon: Icon(Icons.more_vert, size: 22)),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget buildPDFBottomSheet(File file) {
+    return Container(
+      width: 300,
+      height: 300,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: 70,
+            width: Get.width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Row(
+                children: [
+                  Container(
+                    height: 20,
+                    width: 20,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(3),
+                        color: AppColors.background.lightSkyBlue),
+                    child: Center(
+                      child: Text("PDF",
+                          style: TextStyle(
+                              fontSize: 7,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black)),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  Text(
+                    "${basename(file.path)}",
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        fontSize: 14,
+                        overflow: TextOverflow.ellipsis),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(height: 1, color: Colors.grey.shade300),
+          SizedBox(height: 20),
+          Container(
+            height: 60,
+            width: Get.width,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                // mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.share_rounded, size: 19),
+                  SizedBox(width: 20),
+                  Text("Share",
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -161,41 +250,71 @@ class AdminPortalScreen extends StatelessWidget {
         SizedBox(height: 10),
         Text(
           text,
-          style: TextStyle(fontSize: 14),
+          style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
         )
       ],
     );
   }
 
-  Widget buildIDProof({String image}) {
+  Widget buildIDProof({BuildContext context, String image}) {
     return GetBuilder<AdminPortalController>(builder: (controller) {
-      return Center(
+      return GestureDetector(
+        onTap: () {
+          Get.toNamed(ImageViewPage.id, arguments: image);
+        },
         child: Container(
-          height: Get.height * 0.3,
-          width: Get.width - 60,
-          decoration: BoxDecoration(
-            image: image != null
-                ? DecorationImage(
-                    image: FileImage(File(image)),
-                    fit: BoxFit.cover,
-                  )
-                : null,
-            boxShadow: [
-              BoxShadow(
-                color: Color(0x19000000),
-                blurRadius: 15,
-                offset: Offset(4, 4),
+          height: Get.height * 0.075,
+          width: Get.width,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Container(
+                height: 30,
+                width: 30,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(4),
+                  image: image != null
+                      ? DecorationImage(
+                          image: FileImage(File(image)),
+                          fit: BoxFit.cover,
+                        )
+                      : null,
+                ),
               ),
+              SizedBox(width: 20),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  FittedBox(
+                    fit: BoxFit.contain,
+                    child: Text(
+                      // "${basename(image)}",
+                      "Image",
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  Text(
+                    "Modified  " +
+                        DateFormat.yMMMd().format(
+                          DateTime.now(),
+                        ),
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+              Expanded(child: Container(color: Colors.transparent)),
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(Icons.more_vert, size: 22),
+                  splashRadius: 20),
             ],
-            color: AppColors.text.white,
-            borderRadius: BorderRadius.circular(15),
           ),
         ),
       );
     });
   }
-
-  void openPDF(BuildContext context, File file) {}
 
   Widget buildFloatingActionButton() {
     return FloatingActionButton(
@@ -215,7 +334,7 @@ class AdminPortalScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(height: 30),
-              Text("Create New", style: TextStyle(fontSize: 18)),
+              Text("Upload", style: TextStyle(fontSize: 18)),
               SizedBox(height: 20),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -295,12 +414,4 @@ class AdminPortalScreen extends StatelessWidget {
       child: Icon(Icons.add),
     );
   }
-
-// getImage(CreateCircularController controller) {
-//   if (controller.idProofFile != null)
-//     return DecorationImage(
-//       image: FileImage(File(controller.idProofFile.path)),
-//       fit: BoxFit.cover,
-//     );
-// }
 }

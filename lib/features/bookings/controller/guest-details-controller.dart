@@ -71,12 +71,21 @@ class GuestDetailsLogic {
     if (controller.firstNameTED.text.isNotEmpty &&
         controller.emailTED.text.isNotEmpty &&
         controller.phoneNumberTED.text.isNotEmpty &&
-        controller.genderTED.text.isNotEmpty &&
-        (controller.idProofFile != null || controller.idProofLink.isNotEmpty)) {
+        controller.genderTED.text.isNotEmpty) {
       controller.pageLoading = true;
+
       if (!controller.customerExist) {
+        if (controller.idProofFile == null &&
+            (controller.uploadedImageUrl == null ||
+                controller.uploadedImageUrl.isEmpty)) {
+          Fluttertoast.showToast(msg: "Image not Picked");
+          controller.pageLoading = false;
+
+          return;
+        }
         await createCustomer();
       }
+
       await addGuest();
       await updateCustomer();
       controller.pageLoading = false;
@@ -87,7 +96,7 @@ class GuestDetailsLogic {
       bookingCalenderLogic
           .onDateSelected(bookingCalenderLogic.controller.lastDateIndex);
     } else {
-      Fluttertoast.showToast(msg: "Invalid details");
+      Fluttertoast.showToast(msg: "Invalid Details");
     }
   }
 
@@ -191,7 +200,6 @@ class GuestDetailsLogic {
 }
 
 class GuestDetailsController extends GetxController {
-
   TextEditingController firstNameTED = TextEditingController();
   TextEditingController lastNameTED = TextEditingController();
   TextEditingController emailTED = TextEditingController();

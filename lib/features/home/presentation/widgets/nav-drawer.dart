@@ -11,7 +11,6 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/all-activities-screen.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
-
 import '../../../admin-portal/presentation/admin-portal-screen.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -23,19 +22,19 @@ class NavDrawer extends StatelessWidget {
       child: Column(
         children: [
           // Spacer(),
-          SizedBox(height: 50),
+          SizedBox(height: 20),
           buildUserProfile(),
           SizedBox(height: 20),
           buildName(),
           SizedBox(height: 10),
           buildLine(),
-          // buildMenuItem(
-          //   icon: Icons.admin_panel_settings_rounded,
-          //   text: 'Admin Portal',
-          //   onTap: () {
-          //     Get.offAndToNamed(AdminPortalScreen.id);
-          //   },
-          // ),
+          buildMenuItem(
+            icon: Icons.admin_panel_settings_rounded,
+            text: 'Admin Portal',
+            onTap: () {
+              Get.offAndToNamed(AdminPortalScreen.id);
+            },
+          ),
           buildMenuItem(
             icon: Icons.account_circle,
             text: 'Profile',
@@ -94,7 +93,7 @@ class NavDrawer extends StatelessWidget {
               Get.toNamed(AllBoatsPage.id);
             },
           ),
-          Spacer(),
+          // Spacer(),
           buildLine(),
           buildMiniMenuItem(text: 'templeadventures.com'),
           SizedBox(height: 20)

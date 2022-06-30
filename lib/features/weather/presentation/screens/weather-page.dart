@@ -351,7 +351,7 @@ class WeatherPage extends StatelessWidget {
       }
     }
 
-    DateTime time = tide.datetime;
+    DateTime time = tide.datetime.add(Duration(hours: 5, minutes: 30));
     return Padding(
       padding: const EdgeInsets.only(top: 10),
       child: Row(
