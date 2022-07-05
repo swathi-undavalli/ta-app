@@ -37,10 +37,12 @@ import 'package:temple_adventures/features/edit-booking/presentation/screens/edi
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/details-screen.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:temple_adventures/features/messaging/firebase_messaging_controller.dart';
 import 'package:temple_adventures/features/messaging/notification_service.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
+import 'package:temple_adventures/notification-screen.dart';
 import 'features/Activities/presentation/screens/all-activities-screen.dart';
 import 'features/dashboard/controller/dashboard-controller.dart';
 import 'features/employees/presentation/screens/employee-details-screen.dart';
@@ -59,19 +61,24 @@ void main() async {
 
   ///completely terminated
   FirebaseMessaging.instance.getInitialMessage().then((message) {
-    if (message != null) {
-      //log('onLaunch data: ${message}');
+    if (message.notification != null) {
+      Get.toNamed(NotificationsScreen.id, arguments: message);
     }
   });
-
   ///app is open
   FirebaseMessaging.onMessage.listen((message) {
-    if (message.notification != null) {}
+    if (message.notification != null) {
+      Get.toNamed(NotificationsScreen.id, arguments: message);
+    }
     LocalNotificationService.display(message);
   });
 
   ///app is in Background
-  FirebaseMessaging.onMessageOpenedApp.listen((message) {});
+  FirebaseMessaging.onMessageOpenedApp.listen((message) {
+    if (message.notification != null) {
+      Get.toNamed(NotificationsScreen.id, arguments: message);
+    }
+  });
 
   await GetStorage.init();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -150,6 +157,8 @@ class MyApp extends StatelessWidget {
         EditPaymentsScreen.id: (context) => EditPaymentsScreen(),
         AdminPortalScreen.id: (context) => AdminPortalScreen(),
         ImageViewPage.id: (context) => ImageViewPage(),
+        NotificationsScreen.id: (context) => NotificationsScreen(),
+        DetailsScreen.id: (context) => DetailsScreen(),
       },
     );
   }

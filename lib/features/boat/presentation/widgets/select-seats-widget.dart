@@ -54,7 +54,8 @@ class _SelectSeatsWidgetState extends State<SelectSeatsWidget> {
         .get();
     Map<String, dynamic> data = d.data();
 
-    print("hellow");
+    print("hello");
+
     if (data != null && data[date.toIso8601String()] != null) {
       BoatPassengersModel boatModel =
           BoatPassengersModel.fromMap(data[date.toIso8601String()]);

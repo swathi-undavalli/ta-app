@@ -39,7 +39,7 @@ class ChooseBoatPage extends StatelessWidget {
               padding: const EdgeInsets.all(20.0),
               child: Column(
                 children: [
-                  buildDateSelector(),
+                  buildDate(),
                   SizedBox(height: 15),
                   buildBoatSelector(),
                   SizedBox(height: 20),
@@ -52,7 +52,7 @@ class ChooseBoatPage extends StatelessWidget {
     );
   }
 
-  Widget buildDateSelector() {
+  Widget buildDate() {
     return GetBuilder<ChooseBoatController>(builder: (controller) {
       if (controller.showLoading) return SizedBox();
       return Row(

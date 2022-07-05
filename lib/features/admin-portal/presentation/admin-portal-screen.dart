@@ -4,17 +4,24 @@ import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_document_picker/flutter_document_picker.dart';
+import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
 import 'package:temple_adventures/core/constants/assets.dart';
 import 'package:temple_adventures/core/util/ta-image.dart';
+import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/admin-portal/presentation/image-view-page.dart';
 import 'package:temple_adventures/features/admin-portal/presentation/pdf-viewer-page.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 import '../../../core/constants/constants.dart';
+import '../../../core/util/app-func.dart';
 import '../../../core/widgets/app-button.dart';
 import '../controller/admin-portal-controller.dart';
 import 'package:path/path.dart';
 import 'package:intl/intl.dart';
+import 'package:http/http.dart' as http;
 
 class AdminPortalScreen extends StatelessWidget {
   static const String id = "CreateCirculars";
@@ -46,6 +53,14 @@ class AdminPortalScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 70,
+        centerTitle: true,
+        title: buildTitle(),
+        leading: BackNavigationIcon(),
+        elevation: 0,
+        backgroundColor: AppColors.background.white,
+      ),
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(
         child: Padding(
@@ -57,7 +72,7 @@ class AdminPortalScreen extends StatelessWidget {
                 GetBuilder<AdminPortalController>(builder: (controller) {
                   return Column(
                     children: [
-                      ...logic.controller.path.map((e) {
+                      ...logic.controller.pickedFile.map((e) {
                         if (e.endsWith(".pdf")) {
                           return buildPDF(context, File(e));
                         }
@@ -75,6 +90,19 @@ class AdminPortalScreen extends StatelessWidget {
   }
 
   ///==============UI===============///
+
+  Widget buildTitle() {
+    return Text(
+      'Resources',
+      style: TextStyle(
+        color: AppColors.text.black,
+        fontSize: 20,
+        fontFamily: AppFonts.nunito,
+        fontWeight: FontWeight.normal,
+        letterSpacing: 1.2,
+      ),
+    );
+  }
 
   Widget buildPDF(BuildContext context, File file) {
     return GestureDetector(
@@ -131,7 +159,7 @@ class AdminPortalScreen extends StatelessWidget {
             IconButton(
                 onPressed: () {
                   Get.bottomSheet(
-                    buildPDFBottomSheet(file),
+                    buildPDFOptions(file),
                   );
                 },
                 splashRadius: 20,
@@ -142,7 +170,7 @@ class AdminPortalScreen extends StatelessWidget {
     );
   }
 
-  Widget buildPDFBottomSheet(File file) {
+  Widget buildPDFOptions(File file) {
     return Container(
       width: 300,
       height: 300,
@@ -168,6 +196,7 @@ class AdminPortalScreen extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Container(
                     height: 20,
@@ -183,13 +212,35 @@ class AdminPortalScreen extends StatelessWidget {
                               color: Colors.black)),
                     ),
                   ),
-                  SizedBox(width: 10),
-                  Text(
-                    "${basename(file.path)}",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 14,
-                        overflow: TextOverflow.ellipsis),
+                  SizedBox(width: 20),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "${basename(file.path)}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                      SizedBox(height: 3),
+                      Row(
+                        children: [
+                          Text(
+                            "Uploaded By: ",
+                            style: TextStyle(
+                                fontSize: 10, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            currentEmployee.name,
+                            style: TextStyle(
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -197,25 +248,33 @@ class AdminPortalScreen extends StatelessWidget {
           ),
           Container(height: 1, color: Colors.grey.shade300),
           SizedBox(height: 20),
-          Container(
-            height: 60,
-            width: Get.width,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                // mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.share_rounded, size: 19),
-                  SizedBox(width: 20),
-                  Text("Share",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600))
-                ],
-              ),
-            ),
-          ),
+          buildOptions(name: "Share", icon: Icons.share_rounded, onTap: () {}),
+          buildOptions(
+              name: "Download", icon: Icons.file_download, onTap: () {}),
         ],
+      ),
+    );
+  }
+
+  Widget buildOptions({String name, IconData icon, Function onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 60,
+        width: Get.width,
+        child: Padding(
+          padding: const EdgeInsets.only(left: 20, right: 20),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Icon(icon, size: 19),
+              SizedBox(width: 20),
+              Text(name,
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+              Expanded(child: Container(color: Colors.transparent)),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -306,14 +365,135 @@ class AdminPortalScreen extends StatelessWidget {
               ),
               Expanded(child: Container(color: Colors.transparent)),
               IconButton(
-                  onPressed: () {},
-                  icon: Icon(Icons.more_vert, size: 22),
-                  splashRadius: 20),
+                  onPressed: () {
+                    Get.bottomSheet(
+                      buildIDProofOptions(image),
+                    );
+                  },
+                  splashRadius: 20,
+                  icon: Icon(Icons.more_vert, size: 22)),
             ],
           ),
         ),
       );
     });
+  }
+
+  Widget buildIDProofOptions(String image) {
+    return Container(
+      width: 300,
+      height: 300,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            height: 70,
+            width: Get.width,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20),
+                topRight: Radius.circular(20),
+              ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Container(
+                    height: 25,
+                    width: 25,
+                    child: Container(
+                      height: 30,
+                      width: 30,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        image: image != null
+                            ? DecorationImage(
+                                image: FileImage(File(image)),
+                                fit: BoxFit.cover,
+                              )
+                            : null,
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 20),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Image",
+                        // "${basename(image)}",
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 14,
+                            overflow: TextOverflow.ellipsis),
+                      ),
+                      SizedBox(height: 3),
+                      Row(
+                        children: [
+                          Text(
+                            "Uploaded By: ",
+                            style: TextStyle(
+                                fontSize: 10, fontWeight: FontWeight.w600),
+                          ),
+                          Text(
+                            currentEmployee.name,
+                            style: TextStyle(
+                              fontSize: 10,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(height: 1, color: Colors.grey.shade300),
+          SizedBox(height: 20),
+          buildOptions(
+              name: "Share",
+              icon: Icons.share_rounded,
+              onTap: () async {
+                print(image);
+                print("==============================");
+                // idProofController.shareLoading = true;
+                final urlImage = image;
+                final url = Uri.parse(urlImage);
+                print(url);
+                final response = await http.get(url);
+                final bytes = response.bodyBytes;
+
+                final temp = await getTemporaryDirectory();
+                final path = '${temp.path}/image.jpg';
+                File(path).writeAsBytesSync(bytes);
+                await Share.shareFiles([path]);
+                showToast("Sharing");
+
+                // idProofController.shareLoading = false;
+              }),
+          buildOptions(
+              name: "Download",
+              icon: Icons.file_download,
+              onTap: () async {
+                String url = image;
+                GallerySaver.saveImage(url).then((value) {
+                  showToast("Downloaded successfully");
+                });
+              }),
+        ],
+      ),
+    );
   }
 
   Widget buildFloatingActionButton() {
@@ -352,7 +532,7 @@ class AdminPortalScreen extends StatelessWidget {
                         final file = await pickFile();
                         if (file == null) return;
 
-                        logic.controller.path.add(file.path);
+                        logic.controller.pickedFile.add(file.path);
                         logic.controller.update();
 
                         // openPDF(context, file);

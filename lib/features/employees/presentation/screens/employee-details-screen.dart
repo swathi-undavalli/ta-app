@@ -148,6 +148,8 @@ class EmployeeDetailsScreen extends StatelessWidget {
                       buildEmployeeInfo(
                           subHeading: "Name", text: employeeArgument.name),
                       buildEmployeeInfo(
+                          subHeading: "Employee ID", text: employeeArgument.id),
+                      buildEmployeeInfo(
                           subHeading: "Phone Number",
                           text: employeeArgument.countryCode +
                               employeeArgument.phoneNumber),

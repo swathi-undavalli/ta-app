@@ -276,7 +276,6 @@ class _SeatsAvailabilityExpansionPanelState
                               onFreelanceTapped: (Freelancer f) {
                                 for (Freelancer flr
                                     in widget.selectedFreelancers) {
-                                  setState(() {});
                                   if (flr.id == f.id) {
                                     return;
                                   }
@@ -287,13 +286,15 @@ class _SeatsAvailabilityExpansionPanelState
                                     return;
                                   }
                                 }
-                                f.boatID = widget.boat.id;
-                                widget.selectedFreelancers.add(f);
-                                widget.commonFreelancers.add(f);
-                                widget.onFreelancerModified(
-                                  widget.selectedFreelancers,
-                                  widget.commonFreelancers,
-                                );
+                                setState(() {
+                                  f.boatID = widget.boat.id;
+                                  widget.selectedFreelancers.add(f);
+                                  widget.commonFreelancers.add(f);
+                                  widget.onFreelancerModified(
+                                    widget.selectedFreelancers,
+                                    widget.commonFreelancers,
+                                  );
+                                });
                               },
                             ));
                             // Get.bottomSheet(FreelanceDiverBottomSheet(

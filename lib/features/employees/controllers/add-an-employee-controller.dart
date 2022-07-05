@@ -13,6 +13,7 @@ import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 class AddAnUserLogic {
+
   final DateFormat formatter = DateFormat('HH:mm');
 
   AddAnUserController controller = Get.put(AddAnUserController());
@@ -25,34 +26,7 @@ class AddAnUserLogic {
         .doc("count")
         .get();
     CounterModel counterModel = CounterModel.fromMap(data.data());
-    if (int.parse(controller.employeeIdTED.text) <= counterModel.employee) {
-      Get.defaultDialog(
-        contentPadding:
-            EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 40),
-        title: "\n Oops!",
-        middleText: "You Entered Existing Employee ID.",
-        backgroundColor: Colors.white,
-        titleStyle: TextStyle(
-            color: AppColors.text.black,
-            fontFamily: AppFonts.nunito,
-            fontSize: 16,
-            fontWeight: FontWeight.bold),
-        middleTextStyle: TextStyle(
-            color: AppColors.text.black,
-            fontFamily: AppFonts.nunito,
-            fontSize: 16,
-            fontWeight: FontWeight.bold),
-        cancel: AppButton.miniFlat(
-          text: 'OK',
-          onTap: () {
-            Get.back();
-          },
-        ),
-        barrierDismissible: false,
-        radius: 10,
-      );
-      return;
-    }
+
     if (controller.firstNameTED.text != "" &&
         controller.employeeIdTED.text != "" &&
         controller.shiftTimeTED.text != "" &&
@@ -104,6 +78,8 @@ class AddAnUserLogic {
       FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
 
       disposeKeyboard();
+      Get.back();
+      Get.back();
       Get.back();
       controller.reset();
     } else {
@@ -192,6 +168,7 @@ class AddAnUserLogic {
           ),
         ));
   }
+
 }
 
 class AddAnUserController extends GetxController {

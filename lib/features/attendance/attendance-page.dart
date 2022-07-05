@@ -171,7 +171,7 @@ class AttendancePage extends StatelessWidget {
     );
   }
 
-  ///====================UI================///\
+  ///====================UI================///
 
   Widget buildShowLoading() {
     return GetBuilder<AttendancePageController>(builder: (controller) {

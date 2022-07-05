@@ -113,6 +113,7 @@ class BoatLogic {
       boatPassengersModel.passenger.forEach((element) {
         if (element.boatID == i.toString()) {
           log(element.name);
+          log(element.gender);
           totals[i - 1]++;
 
           sheet.getRangeByName('A$currentLine').text = sno.toString();

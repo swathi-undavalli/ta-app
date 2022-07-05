@@ -43,7 +43,6 @@ class PdfAPi {
               childAspectRatio: 1,
               children: [
                 ...list,
-
               ],
             ),
           ];
@@ -51,7 +50,7 @@ class PdfAPi {
       ),
     );
 
-    return saveDocument(name: 'IdProofs.pdf', pdf: pdf);
+    return saveDocument(name: 'ID:${booking.id} IdProofs.pdf', pdf: pdf);
   }
 
   static Future<File> saveDocument({String name, pw.Document pdf}) async {

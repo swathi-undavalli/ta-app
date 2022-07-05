@@ -1,11 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/details-screen.dart';
+
+import '../../../../notification-screen.dart';
 
 class LogScreen extends StatelessWidget {
   static const String id = "LogScreen";
@@ -188,84 +192,108 @@ class LogScreen extends StatelessWidget {
       }
     }
 
-    return Column(
-      children: [
-        Row(
-          children: [
-            Container(
-              height: 40,
-              width: 40,
-              decoration:
-                  BoxDecoration(shape: BoxShape.circle, color: getColor()),
-              child: Center(
-                child: getIcon(),
+    return GestureDetector(
+      onTap: () async {
+        if (getTitle() == "Booking Created") {
+          var data = await FirebaseFirestore.instance
+              .collection("bookings")
+              .doc(log.bookingId.trim())
+              .get();
+          if (data.data() != null) {
+            print(log.bookingId);
+            Get.toNamed(DetailsScreen.id, arguments: data.data());
+          } else {
+            Fluttertoast.showToast(
+                msg: "${log.bookingId} Booking Doesn't Exit");
+          }
+        } else {
+          return;
+        }
+      },
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Container(
+                height: 40,
+                width: 40,
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: getColor()),
+                child: Center(
+                  child: getIcon(),
+                ),
               ),
-            ),
-            SizedBox(width: 20),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Container(
-                  width: 150,
-                  child: Text(
-                    getTitle(),
+              SizedBox(width: 20),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Container(
+                    width: 150,
+                    child: Text(
+                      getTitle(),
+                      style: TextStyle(
+                        color: AppColors.text.black,
+                        fontSize: 15,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: AppFonts.nunito,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: 2),
+                  Text(
+                    "${log.createdBy}",
                     style: TextStyle(
-                      color: AppColors.text.black,
-                      fontSize: 15,
+                      color: AppColors.text.darkgrey,
+                      fontSize: 12,
                       fontWeight: FontWeight.w600,
                       fontFamily: AppFonts.nunito,
                     ),
                   ),
-                ),
-                SizedBox(height: 2),
-                Text(
-                  "${log.createdBy}",
-                  style: TextStyle(
-                    color: AppColors.text.darkgrey,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w600,
-                    fontFamily: AppFonts.nunito,
+                ],
+              ),
+              // Spacer(),
+              Expanded(
+                  child: Container(
+                color: Colors.transparent,
+              )),
+
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    DateFormat("dd MMM, yyyy").format(log.timeStamp.toDate()),
+                    style: TextStyle(
+                      color: AppColors.text.black,
+                      fontSize: 12,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: AppFonts.nunito,
+                    ),
                   ),
-                ),
-              ],
-            ),
-            Spacer(),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  DateFormat("dd MMM, yyyy").format(log.timeStamp.toDate()),
-                  style: TextStyle(
-                    color: AppColors.text.black,
-                    fontSize: 12,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: AppFonts.nunito,
+                  SizedBox(height: 5),
+                  Text(
+                    DateFormat("hh:mm a").format(log.timeStamp.toDate()),
+                    style: TextStyle(
+                      color: AppColors.text.skyBlue,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: AppFonts.nunito,
+                    ),
                   ),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  DateFormat("hh:mm a").format(log.timeStamp.toDate()),
-                  style: TextStyle(
-                    color: AppColors.text.skyBlue,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    fontFamily: AppFonts.nunito,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        Padding(
-          padding:
-              const EdgeInsets.only(left: 1.0, right: 1.0, top: 17, bottom: 17),
-          child: Container(
-            height: 1,
-            width: Get.width,
-            color: AppColors.text.grey,
+                ],
+              ),
+            ],
           ),
-        ),
-      ],
+          Padding(
+            padding: const EdgeInsets.only(
+                left: 1.0, right: 1.0, top: 17, bottom: 17),
+            child: Container(
+              height: 1,
+              width: Get.width,
+              color: AppColors.text.grey,
+            ),
+          ),
+        ],
+      ),
     );
   }
 

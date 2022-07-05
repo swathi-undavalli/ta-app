@@ -71,6 +71,11 @@ class ChooseBoatLogic {
         controller.boatsList.length,
         (index) => controller.selectedEmployees[controller.currentDiveDateIndex]
             [index]).expand((x) => x).toList();
+    controller.commonFreelancers = List.generate(
+        controller.boatsList.length,
+        (index) =>
+            controller.selectedFreelancers[controller.currentDiveDateIndex]
+                [index]).expand((x) => x).toList();
     log("4");
 
     for (int dateIndex = 0;
@@ -120,10 +125,11 @@ class ChooseBoatLogic {
     controller.requiredCount = List.generate(
         controller.bookingModel.diveDate.length,
         (index) => controller.bookingModel.noOfPersons);
-    controller.commonEmployees = List.generate(
-        controller.boatsList.length,
-        (index) => controller.selectedEmployees[controller.currentDiveDateIndex]
-            [index]).expand((x) => x).toList();
+
+    // controller.commonEmployees = List.generate(
+    //     controller.boatsList.length,
+    //     (index) => controller.selectedEmployees[controller.currentDiveDateIndex]
+    //         [index]).expand((x) => x).toList();
 
     log("6");
   }
@@ -261,7 +267,7 @@ class ChooseBoatLogic {
                   email: controller.bookingModel.pax[i + 1]["email"],
                   phone: controller.bookingModel.pax[i + 1]["phoneNumber"],
                   bookingID: controller.bookingModel.id,
-                  gender: "Male",
+                  gender: controller.bookingModel.pax[i + 1]["gender"],
                   boatID: (boatIndex + 1).toString(),
                 ),
               );

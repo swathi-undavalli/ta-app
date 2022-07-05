@@ -60,30 +60,28 @@ class AdminPortalLogic {
   uploadImage(XFile file) async {
     var link = File(file.path);
 
-    controller.path.add(link.path);
+    controller.pickedFile.add(link.path);
     controller.update();
     // print(link);
     // return link;
   }
 
   void removeAtIndex(int index) {
-    controller.path.removeAt(index);
+    controller.pickedFile.removeAt(index);
     controller.update();
   }
-
 }
 
 class AdminPortalController extends GetxController {
   // XFile _idProofFile;
 
-  TextEditingController titleTED =TextEditingController();
-
+  TextEditingController titleTED = TextEditingController();
 
   List<XFile> idProofs = [];
 
   List<File> pdfs = [];
 
-  List<String> path = [];
+  List<String> pickedFile = [];
 
   TextEditingController pdfName = TextEditingController();
 
@@ -94,4 +92,3 @@ class AdminPortalController extends GetxController {
   //   update();
   // }
 }
-

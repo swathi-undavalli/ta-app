@@ -42,8 +42,6 @@ class WeatherPage extends StatelessWidget {
                         ],
                       ),
                     ),
-                    // SizedBox(height: 50),
-                    // buildButtons(),
                   ],
                 ),
               ),
