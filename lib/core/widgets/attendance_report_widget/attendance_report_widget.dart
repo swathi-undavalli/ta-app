@@ -345,10 +345,10 @@ class AttendanceReportWidgetLogic {
 
     Map<String, dynamic> fData = data.data();
     // log(fData.toString());
-    fData.forEach((key, value) {
-      // log(value.toString());
-      // if (value["loginTime"] != null) //log(fData[key].toString());
-    });
+    // fData.forEach((key, value) {
+    //   log(value.toString());
+    //   if (value["loginTime"] != null) //log(fData[key].toString());
+    // });
 
     //print("------------------------------");
     controller.employeesList = [];

@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import 'package:get/get.dart';
 import 'package:ota_update/ota_update.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:url_launcher/url_launcher.dart';
+
+import 'notification-screen.dart';
 
 class AutoUpdateView extends StatelessWidget {
   AutoUpdateView({Key key}) : super(key: key);
@@ -111,6 +114,13 @@ class AutoUpdateLogic {
   }
 
   checkForUpdate() async {
+    ///completely terminated
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null && message.notification != null) {
+        Get.toNamed(NotificationsScreen.id, arguments: message);
+      }
+    });
+
     var data = await FirebaseFirestore.instance
         .collection("ota_update")
         .doc("version")

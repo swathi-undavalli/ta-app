@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
@@ -11,6 +12,8 @@ import 'package:temple_adventures/features/dashboard/controller/dashboard-contro
 import 'package:temple_adventures/features/home/presentation/screens/home-page.dart';
 import 'package:temple_adventures/features/home/presentation/widgets/nav-drawer.dart';
 import 'package:temple_adventures/features/weather/presentation/screens/weather-page.dart';
+
+import '../../../../notification-screen.dart';
 
 DashBoardScreenLogic dashboardLogic;
 
@@ -28,6 +31,8 @@ class DashBoardScreen extends StatelessWidget {
     dashboardLogic = DashBoardScreenLogic();
     AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
     autoUpdateLogic.checkForUpdate();
+
+
   }
 
   @override

@@ -49,7 +49,9 @@ import 'features/employees/presentation/screens/employee-details-screen.dart';
 import 'features/employees/presentation/screens/employee-profile-screen.dart';
 import 'features/login/presentation/screens/login-page.dart';
 
-Future<void> backgroundHandler(RemoteMessage message) async {}
+Future<void> backgroundHandler(RemoteMessage message) async {
+  print("called onBackgroundMessage");
+}
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -59,26 +61,19 @@ void main() async {
 
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
 
-  ///completely terminated
-  FirebaseMessaging.instance.getInitialMessage().then((message) {
-    if (message.notification != null) {
-      Get.toNamed(NotificationsScreen.id, arguments: message);
-    }
-  });
   ///app is open
   FirebaseMessaging.onMessage.listen((message) {
-    if (message.notification != null) {
-      Get.toNamed(NotificationsScreen.id, arguments: message);
-    }
+    FirebaseNotificationService.handleNavigation(message);
     LocalNotificationService.display(message);
   });
 
   ///app is in Background
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
-    if (message.notification != null) {
-      Get.toNamed(NotificationsScreen.id, arguments: message);
-    }
+    print("called onMessageOpenedApp");
+    FirebaseNotificationService.handleNavigation(message);
   });
+
+  // FirebaseMessaging.
 
   await GetStorage.init();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
@@ -162,4 +157,15 @@ class MyApp extends StatelessWidget {
       },
     );
   }
+}
+
+class FirebaseNotificationService {
+  static handleNavigation(RemoteMessage message) {
+    if (message.notification != null) {
+      Get.toNamed(NotificationsScreen.id, arguments: message);
+    }
+    LocalNotificationService.display(message);
+  }
+
+  static backgroundHandler(RemoteMessage message) {}
 }
