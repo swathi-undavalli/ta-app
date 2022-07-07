@@ -21,10 +21,10 @@ class NotificationsScreen extends StatelessWidget {
   }
 
   checkFireBase() async {
-    log(message.notification.body.substring(13, 17));
+    log(message.data["booking_id"]);
     var data = await FirebaseFirestore.instance
         .collection("bookings")
-        .doc(message.notification.body.substring(13, 17))
+        .doc(message.data["booking_id"])
         .get();
     logic.controller.bookingModel = BookingModel.fromMap(data.data());
     logic.controller.update();

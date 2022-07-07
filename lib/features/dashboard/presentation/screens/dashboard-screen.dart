@@ -12,6 +12,7 @@ import 'package:temple_adventures/features/dashboard/controller/dashboard-contro
 import 'package:temple_adventures/features/home/presentation/screens/home-page.dart';
 import 'package:temple_adventures/features/home/presentation/widgets/nav-drawer.dart';
 import 'package:temple_adventures/features/weather/presentation/screens/weather-page.dart';
+import 'package:temple_adventures/main.dart';
 
 import '../../../../notification-screen.dart';
 
@@ -31,6 +32,13 @@ class DashBoardScreen extends StatelessWidget {
     dashboardLogic = DashBoardScreenLogic();
     AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
     autoUpdateLogic.checkForUpdate();
+
+    ///app is in Terminated
+    FirebaseNotificationService.handleTerminatedNavigation();
+    // .listen((message) {
+    //   print("called onMessageOpenedApp");
+    //
+    // });
   }
 
   @override

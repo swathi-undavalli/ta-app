@@ -73,8 +73,6 @@ void main() async {
     FirebaseNotificationService.handleNavigation(message);
   });
 
-  // FirebaseMessaging.
-
   await GetStorage.init();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemNavigationBarColor: Colors.black,
@@ -161,11 +159,21 @@ class MyApp extends StatelessWidget {
 
 class FirebaseNotificationService {
   static handleNavigation(RemoteMessage message) {
-    if (message.notification != null) {
+    if (message.data != null) {
       Get.toNamed(NotificationsScreen.id, arguments: message);
     }
     LocalNotificationService.display(message);
   }
 
-  static backgroundHandler(RemoteMessage message) {}
+  static handleTerminatedNavigation() async {
+    RemoteMessage message = await FirebaseMessaging.instance.getInitialMessage();
+    if (message.data != null) {
+      Get.toNamed(NotificationsScreen.id, arguments: message);
+    }
+    LocalNotificationService.display(message);
+  }
+
+  static backgroundHandler(RemoteMessage message) {
+
+  }
 }
