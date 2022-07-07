@@ -31,8 +31,6 @@ class DashBoardScreen extends StatelessWidget {
     dashboardLogic = DashBoardScreenLogic();
     AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
     autoUpdateLogic.checkForUpdate();
-
-
   }
 
   @override
