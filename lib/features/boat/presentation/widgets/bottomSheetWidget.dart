@@ -13,7 +13,8 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
   final TextEditingController searchTED = TextEditingController();
 
   EmployeeSelectorBottomSheet({
-    this.onEmployeeTapped,
+  @required this.onEmployeeTapped,
+  @required this.onEmployeeDeleted,
     @required this.selectedEmployees,
     @required this.commonEmployees,
   });
@@ -22,6 +23,7 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
   final List<Employees> commonEmployees;
 
   final Function(Employees) onEmployeeTapped;
+  final Function(Employees) onEmployeeDeleted;
 
   @override
   Widget build(BuildContext context) {
@@ -159,14 +161,14 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
                       .toList()
                       .contains(e.name))
                     Icon(Icons.check, color: Colors.green, size: 25),
-                  if (!selectedEmployees
-                          .map((e) => e.name)
-                          .toList()
-                          .contains(e.name) &&
-                      commonEmployees
-                          .map((e) => e.name)
-                          .toList()
-                          .contains(e.name))
+                  // if (!selectedEmployees
+                  //         .map((e) => e.name)
+                  //         .toList()
+                  //         .contains(e.name) &&
+                  if (commonEmployees
+                      .map((e) => e.name)
+                      .toList()
+                      .contains(e.name))
                     Icon(Icons.check, color: Colors.orange, size: 25),
                 ],
               );
@@ -185,5 +187,4 @@ class BottomSheetLogic {
 
 class BottomSheetController extends GetxController {
   TextEditingController searchTED = TextEditingController();
-
 }

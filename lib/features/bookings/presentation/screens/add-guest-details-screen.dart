@@ -101,46 +101,58 @@ class GuestDetailsScreen extends StatelessWidget {
                             SizedBox(height: 20),
                             (bookingArg.pax.length - 1 ==
                                     bookingArg.noOfPersons)
-                                ? GestureDetector(
+                                ? InkWell(
                                     onTap: () async {
                                       final pdfFile =
                                           await PdfAPi.generateImage(
                                               bookingArg);
                                       PdfAPi.openFile(pdfFile);
                                     },
+                                    splashColor: Colors.grey.withOpacity(0.3),
+                                    radius: 40,
                                     child: Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
                                       children: [
-                                        Container(
-                                          height: 55,
-                                          width: 33,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(5),
-                                                bottomLeft: Radius.circular(5)),
-                                            color: AppColors
-                                                .background.lightSkyBlue
-                                                .withOpacity(0.5),
-                                          ),
+                                        Icon(Icons.picture_as_pdf),
+                                        SizedBox(
+                                          width: 10,
+                                          height: 30,
                                         ),
-                                        Container(
-                                          height: 65,
-                                          width: 33,
-                                          decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(5),
-                                                topRight: Radius.circular(5),
-                                                bottomRight:
-                                                    Radius.circular(5)),
-                                            color: AppColors
-                                                .background.lightSkyBlue
-                                                .withOpacity(0.5),
-                                          ),
-                                        ),
+                                        Text("Generate PDF"),
                                       ],
                                     ),
+                                    // child: Row(
+                                    //   mainAxisSize: MainAxisSize.min,
+                                    //   crossAxisAlignment:
+                                    //       CrossAxisAlignment.end,
+                                    //   children: [
+                                    //     Container(
+                                    //       height: 55,
+                                    //       width: 33,
+                                    //       decoration: BoxDecoration(
+                                    //         borderRadius: BorderRadius.only(
+                                    //             topLeft: Radius.circular(5),
+                                    //             bottomLeft: Radius.circular(5)),
+                                    //         color: AppColors
+                                    //             .background.lightSkyBlue
+                                    //             .withOpacity(0.5),
+                                    //       ),
+                                    //     ),
+                                    //     Container(
+                                    //       height: 65,
+                                    //       width: 33,
+                                    //       decoration: BoxDecoration(
+                                    //         borderRadius: BorderRadius.only(
+                                    //             topLeft: Radius.circular(5),
+                                    //             topRight: Radius.circular(5),
+                                    //             bottomRight:
+                                    //                 Radius.circular(5)),
+                                    //         color: AppColors
+                                    //             .background.lightSkyBlue
+                                    //             .withOpacity(0.5),
+                                    //       ),
+                                    //     ),
+                                    //   ],
+                                    // ),
                                   )
                                 : SizedBox(),
                             if (bookingArg.pax.length - 1 !=

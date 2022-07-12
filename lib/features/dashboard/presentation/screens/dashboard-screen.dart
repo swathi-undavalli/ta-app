@@ -35,10 +35,6 @@ class DashBoardScreen extends StatelessWidget {
 
     ///app is in Terminated
     FirebaseNotificationService.handleTerminatedNavigation();
-    // .listen((message) {
-    //   print("called onMessageOpenedApp");
-    //
-    // });
   }
 
   @override

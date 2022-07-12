@@ -23,6 +23,7 @@ class SeatsAvailabilityExpansionPanel extends StatefulWidget {
   final List<Employees> commonEmployees;
   final List<Freelancer> commonFreelancers;
   final Function(bool) onSeatSelected;
+  final Function(Employees) onEmployeeDeleted;
   final Function(List<Employees>, List<Employees>) onEmployeesModified;
   final Function(List<Freelancer>, List<Freelancer>) onFreelancerModified;
   final Function(Freelancer) onFreelanceAdded;
@@ -39,6 +40,7 @@ class SeatsAvailabilityExpansionPanel extends StatefulWidget {
     @required this.selectedFreelancers,
     @required this.onFreelanceAdded,
     @required this.onSeatSelected,
+    @required this.onEmployeeDeleted,
     @required this.onEmployeesModified,
     @required this.onFreelancerModified,
   });
@@ -51,6 +53,9 @@ class SeatsAvailabilityExpansionPanel extends StatefulWidget {
 class _SeatsAvailabilityExpansionPanelState
     extends State<SeatsAvailabilityExpansionPanel> {
   bool isExpanded = false;
+
+  List<Employees> get selectedEmployees => widget.selectedEmployees;
+  List<Employees> get commonEmployees => widget.commonEmployees;
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +217,7 @@ class _SeatsAvailabilityExpansionPanelState
                           direction: Axis.horizontal,
                           verticalDirection: VerticalDirection.down,
                           children: [
-                            ...widget.selectedEmployees
+                            ...selectedEmployees
                                 .map((e) => buildEmployeeChip(e))
                           ],
                         ),
@@ -223,16 +228,15 @@ class _SeatsAvailabilityExpansionPanelState
                         child: AppButton.miniFlat(
                           onTap: () {
                             Get.bottomSheet(EmployeeSelectorBottomSheet(
-                              selectedEmployees: widget.selectedEmployees,
-                              commonEmployees: widget.commonEmployees,
+                              selectedEmployees: selectedEmployees,
+                              commonEmployees: commonEmployees,
                               onEmployeeTapped: (Employees e) {
-                                for (Employees emp
-                                    in widget.selectedEmployees) {
+                                for (Employees emp in selectedEmployees) {
                                   if (emp.id == e.id) {
                                     return;
                                   }
                                 }
-                                for (Employees emp in widget.commonEmployees) {
+                                for (Employees emp in commonEmployees) {
                                   if (emp.id == e.id) {
                                     return;
                                   }
@@ -241,9 +245,30 @@ class _SeatsAvailabilityExpansionPanelState
                                 widget.selectedEmployees.add(e);
                                 widget.commonEmployees.add(e);
                                 widget.onEmployeesModified(
-                                  widget.selectedEmployees,
-                                  widget.commonEmployees,
+                                  selectedEmployees,
+                                  commonEmployees,
                                 );
+                              },
+                              onEmployeeDeleted: (Employees e) {
+                                // widget.selectedEmployees.remove(e);
+                                // widget.commonEmployees.remove(e);
+                                // for (Employees emp in selectedEmployees) {
+                                //   if (emp.id == e.id) {
+                                //     selectedEmployees.remove(e);
+                                //   }
+                                // }
+                                // for (Employees emp in commonEmployees) {
+                                //   if (emp.id == e.id) {
+                                //     commonEmployees.remove(e);
+                                //   }
+                                // }
+                                // e.boatID = widget.boat.id;
+                                // selectedEmployees.add(e);
+                                // commonEmployees.add(e);
+                                // widget.onEmployeesModified(
+                                //   selectedEmployees,
+                                //   commonEmployees,
+                                // );
                               },
                             ));
                             //log("clicked");
@@ -297,13 +322,6 @@ class _SeatsAvailabilityExpansionPanelState
                                 });
                               },
                             ));
-                            // Get.bottomSheet(FreelanceDiverBottomSheet(
-                            //   onFreelanceAdded: (Freelancer freelance) {
-                            //     freelance.boatID = widget.boat.id;
-                            //     widget.onFreelanceAdded(freelance);
-                            //   },
-                            // ));
-                            //log("clicked");
                           },
                           text: "Add",
                         ),
@@ -347,10 +365,7 @@ class _SeatsAvailabilityExpansionPanelState
               padding: const EdgeInsets.only(right: 2.0, top: 2, bottom: 2),
               child: GestureDetector(
                 onTap: () {
-                  setState(() {
-                    widget.selectedEmployees.remove(e);
-                    widget.commonEmployees.remove(e);
-                  });
+                  widget.onEmployeeDeleted(e);
                 },
                 child: Container(
                   height: 16,

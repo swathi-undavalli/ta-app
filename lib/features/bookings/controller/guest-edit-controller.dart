@@ -73,9 +73,7 @@ class GuestsEditLogic {
       controller.pageLoading = true;
       // await addGuest();
       await updatePassenger();
-      log("heloooooooooooooooooo");
-      await updateCoastGuardSlip();
-      log("heloooooooooooooooooo");
+      // await updateCoastGuardSlip();
       await updateCustomer();
       controller.pageLoading = false;
       Get.back();
@@ -170,8 +168,7 @@ class GuestsEditLogic {
         BoatPassengersModel boatPassengersModel =
             BoatPassengersModel.fromMap(d[diveDate.toIso8601String()]);
         for (i = 0; i < boatPassengersModel.passenger.length; i++) {
-          if (boatPassengersModel.passenger[i].email ==
-              controller.customerModel.email) {
+          if (boatPassengersModel.passenger[i].email == controller.customerModel.email) {
             break;
           }
         }

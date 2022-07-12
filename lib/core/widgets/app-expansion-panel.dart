@@ -447,7 +447,6 @@ class BookingsExpansionPanel extends StatelessWidget {
                                             Get.toNamed(AddPaymentsScreen.id,
                                                 arguments:
                                                     items[i].bookingModel);
-
                                             // Get.defaultDialog(
                                             //   contentPadding: EdgeInsets.only(
                                             //       left: 30,

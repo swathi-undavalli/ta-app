@@ -28,13 +28,13 @@ class NavDrawer extends StatelessWidget {
           buildName(),
           SizedBox(height: 10),
           buildLine(),
-          buildMenuItem(
-            icon: Icons.admin_panel_settings_rounded,
-            text: 'Admin Portal',
-            onTap: () {
-              Get.offAndToNamed(AdminPortalScreen.id);
-            },
-          ),
+          // buildMenuItem(
+          //   icon: Icons.admin_panel_settings_rounded,
+          //   text: 'Admin Portal',
+          //   onTap: () {
+          //     Get.offAndToNamed(AdminPortalScreen.id);
+          //   },
+          // ),
           buildMenuItem(
             icon: Icons.account_circle,
             text: 'Profile',
