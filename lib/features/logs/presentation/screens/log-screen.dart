@@ -8,6 +8,7 @@ import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/details-screen.dart';
+import 'dart:developer' as dev;
 
 import '../../../../notification-screen.dart';
 
@@ -24,43 +25,50 @@ class LogScreen extends StatelessWidget {
         elevation: 0,
         backgroundColor: AppColors.background.white,
       ),
-      body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-        child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: checkFireBase(),
-          ),
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.all(20.0),
+          child: StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('logs')
+                  .orderBy('timeStamp', descending: true)
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) {
+                  return Center(
+                    child: CircularProgressIndicator(color: Colors.black),
+                  );
+                }
+                return ListView.builder(
+                  itemBuilder: (BuildContext context, int index) {
+                    LogModel logModel =
+                        LogModel.fromMap(snapshot.data.docs[index].data());
+                    //print("Started");
+                    return buildLog(
+                      log: logModel,
+                    );
+                  },
+                  // children: snapshot.data.docs.map((document) {
+                  //   LogModel logModel = LogModel.fromMap(document.data());
+                  //   //print("Started");
+                  //   return buildLog(
+                  //     log: logModel,
+                  //   );
+                  // }).toList(),
+                );
+              }),
         ),
       ),
     );
   }
 
-  Widget checkFireBase() {
-    return StreamBuilder(
-        stream: FirebaseFirestore.instance
-            .collection('logs')
-            .orderBy('timeStamp', descending: true)
-            .snapshots(),
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (!snapshot.hasData) {
-            return Center(
-              child: CircularProgressIndicator(color: Colors.black),
-            );
-          }
-          return Column(
-            children: snapshot.data.docs.map((document) {
-              LogModel logModel = LogModel.fromMap(document.data());
-              //print("Started");
-              return buildlog(
-                log: logModel,
-              );
-            }).toList(),
-          );
-        });
-  }
+  // Widget checkFireBase() {
+  //   return;
+  // }
 
-  Widget buildlog({LogModel log}) {
+  Widget buildLog({LogModel log}) {
+    dev.log("building .......");
     getIcon() {
       switch (log.type) {
         case LogType.bookingCreated:

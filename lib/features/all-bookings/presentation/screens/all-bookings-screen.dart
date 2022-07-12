@@ -74,22 +74,35 @@ class AllBookingsScreen extends StatelessWidget {
                 ),
               );
             }
-            return ListView(
-              shrinkWrap: true,
-              children: snapshot.data.docs.map((document) {
-                BookingModel booking = BookingModel.fromMap(document.data());
+            return ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                BookingModel booking = BookingModel.fromMap(snapshot.data.docs[index].data());
                 // log(booking.id);
                 if (controller.searchTED.text.isNotEmpty) {
                   if (booking.id.contains(controller.searchTED.text) ||
                       (booking.pax[0]['first-name'] as String)
                           .toLowerCase()
                           .contains(
-                              controller.searchTED.text.toLowerCase().trim()))
+                          controller.searchTED.text.toLowerCase().trim()))
                     return AllBookingsExpansionPanel(booking: booking);
                   return SizedBox();
                 }
                 return AllBookingsExpansionPanel(booking: booking);
-              }).toList(),
+              },
+              // children: snapshot.data.docs.map((document) {
+              //   BookingModel booking = BookingModel.fromMap(document.data());
+              //   // log(booking.id);
+              //   if (controller.searchTED.text.isNotEmpty) {
+              //     if (booking.id.contains(controller.searchTED.text) ||
+              //         (booking.pax[0]['first-name'] as String)
+              //             .toLowerCase()
+              //             .contains(
+              //                 controller.searchTED.text.toLowerCase().trim()))
+              //       return AllBookingsExpansionPanel(booking: booking);
+              //     return SizedBox();
+              //   }
+              //   return AllBookingsExpansionPanel(booking: booking);
+              // }).toList(),
             );
           },
         );
