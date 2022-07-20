@@ -1,23 +1,17 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/assets.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/ta-image.dart';
 import 'package:temple_adventures/core/util/validator.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
-import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
-import 'package:temple_adventures/features/boat/models/boat-passengers-model.dart';
 import 'package:temple_adventures/features/bookings/controller/guest-details-controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/models/customer-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/guests-expansionPanel.dart';
-
 import '../../../../pdf_api.dart';
 
 class GuestDetailsScreen extends StatelessWidget {

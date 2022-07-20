@@ -162,7 +162,7 @@ class AllEmployeesScreen extends StatelessWidget {
     getCount() {
       if (counterModel != null && counterModel.employee != null)
         return counterModel.employee;
-      return 54;
+      return 100;
     }
 
     return Column(

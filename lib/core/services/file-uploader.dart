@@ -1,11 +1,7 @@
 import 'dart:io';
-import 'dart:math';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:mime/mime.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 
 class FileUploader {
   static final storage = FirebaseStorage.instance;
@@ -45,6 +41,56 @@ class FileUploader {
     String fileExtension = file.path.split('.').last;
     String firebaseLocation =
         "CustomerIds/${DateTime.now().millisecondsSinceEpoch}.$fileExtension";
+    final idProofsRef = storageRef.child(firebaseLocation);
+    final metadata = SettableMetadata(
+        contentType: lookupMimeType(file.path),
+        customMetadata: {'picked-file-path': file.path});
+
+    try {
+      await idProofsRef.putFile(file, metadata);
+      String link = await idProofsRef.getDownloadURL();
+      if (link != null && link.isNotEmpty) {
+        return link;
+      } else {
+        showToast("Error occurred while uploading image");
+      }
+    } catch (e) {
+      showToast("Error occurred while uploading image");
+    }
+  }
+
+
+ static Future<String> uploadFile({
+    File file,
+  }) async {
+    String fileExtension = file.path.split('.').last;
+    String firebaseLocation =
+        "Images/${DateTime.now().millisecondsSinceEpoch}.$fileExtension";
+    final idProofsRef = storageRef.child(firebaseLocation);
+    final metadata = SettableMetadata(
+        contentType: lookupMimeType(file.path),
+        customMetadata: {'picked-file-path': file.path});
+
+    try {
+      await idProofsRef.putFile(file, metadata);
+      String link = await idProofsRef.getDownloadURL();
+      if (link != null && link.isNotEmpty) {
+        return link;
+      } else {
+        showToast("Error occurred while uploading image");
+      }
+    } catch (e) {
+      showToast("Error occurred while uploading image");
+    }
+  }
+
+
+  static Future<String> uploadPDFFile({
+    File file,
+  }) async {
+    String fileExtension = file.path.split('.').last;
+    String firebaseLocation =
+        "pdfs/${DateTime.now().millisecondsSinceEpoch}.$fileExtension";
     final idProofsRef = storageRef.child(firebaseLocation);
     final metadata = SettableMetadata(
         contentType: lookupMimeType(file.path),

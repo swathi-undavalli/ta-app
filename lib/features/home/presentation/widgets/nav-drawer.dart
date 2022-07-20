@@ -21,20 +21,20 @@ class NavDrawer extends StatelessWidget {
     return Drawer(
       child: Column(
         children: [
-          // Spacer(),
+          Spacer(),
           SizedBox(height: 20),
           buildUserProfile(),
           SizedBox(height: 20),
           buildName(),
           SizedBox(height: 10),
           buildLine(),
-          // buildMenuItem(
-          //   icon: Icons.admin_panel_settings_rounded,
-          //   text: 'Admin Portal',
-          //   onTap: () {
-          //     Get.offAndToNamed(AdminPortalScreen.id);
-          //   },
-          // ),
+          buildMenuItem(
+            icon: Icons.admin_panel_settings_rounded,
+            text: 'Admin Portal',
+            onTap: () {
+              Get.offAndToNamed(AdminPortalScreen.id);
+            },
+          ),
           buildMenuItem(
             icon: Icons.account_circle,
             text: 'Profile',

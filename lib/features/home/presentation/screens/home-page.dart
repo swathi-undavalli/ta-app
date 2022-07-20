@@ -1,12 +1,5 @@
-import 'dart:io';
-import 'dart:typed_data';
-import 'package:docx_template/docx_template.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:open_file/open_file.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:syncfusion_flutter_xlsio/xlsio.dart' as sync;
 import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import '../../../../core/constants/constants.dart';
@@ -14,9 +7,7 @@ import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
 import '../../../../core/widgets/attendance_report_widget/attendance_report_widget.dart';
 import '../../../../core/widgets/attendance_widget/attandence_widget_controller.dart';
 import '../../../../core/widgets/attendance_widget/attendence_widget.dart';
-import '../../../../pdf_api.dart';
 import '../../controller/home-page-controller.dart';
-import 'package:syncfusion_flutter_pdf/pdf.dart';
 
 class HomePage extends StatelessWidget {
   final HomePageLogic logic = HomePageLogic();
@@ -58,6 +49,10 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10),
+                  // ElevatedButton(
+                  //   onPressed: () {},
+                  //   child: Text("Do"),
+                  // ),
                   AttendanceWidget(),
                   SizedBox(height: 20),
                   AddEmployeeWidget(
@@ -89,6 +84,26 @@ class HomePage extends StatelessWidget {
       ),
     );
   }
+
+  // Future sendEmail() async{
+  //   final email = 'sahithaundavalli2000@gmail.com';
+  //
+  //   final smtpServer = gmailSaslXoauth2(email,token);
+  //
+  //   final message = Message()
+  //   ..from = Address(email,'Sahitha')
+  //   ..recipients = ['swathi.undavalli2003@gmail.com']
+  //   ..subject = 'Hello Sahitha'
+  //   ..text = 'This is a test email!';
+  //   try{
+  //     await send(message, smtpServer);
+  //     showToast("Email Sent Successfully");
+  //   }catch(e){
+  //
+  //     print(e);
+  //
+  //   }
+  // }
 
   getFirstName(String d) {
     d = d.trim();

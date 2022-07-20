@@ -2,17 +2,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:path/path.dart';
+import 'package:temple_adventures/features/admin-portal/models/adminPortal-model.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/widgets/back-navigation-icon.dart';
 
 class ImageViewPage extends StatelessWidget {
-  final String image = Get.arguments;
+  final AdminPortalModel adminPortalModel = Get.arguments;
 
   static const String id = "ImageViewPage";
 
   @override
   Widget build(BuildContext context) {
-    final name = basename(image);
+    final name = basename(adminPortalModel.filename);
 
     return Scaffold(
       appBar: AppBar(
@@ -34,9 +35,10 @@ class ImageViewPage extends StatelessWidget {
               height: Get.height,
               width: Get.width,
               decoration: BoxDecoration(
-                image: image != null
+                image: adminPortalModel.path != null
                     ? DecorationImage(
-                        image: FileImage(File(image)),
+                        image: NetworkImage(adminPortalModel.path),
+                        // FileImage(File(image),
                         fit: BoxFit.contain,
                       )
                     : null,

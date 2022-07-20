@@ -1,54 +1,32 @@
+import 'dart:developer';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:downloads_path_provider_28/downloads_path_provider_28.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_document_picker/flutter_document_picker.dart';
 import 'package:gallery_saver/gallery_saver.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:share/share.dart';
-import 'package:temple_adventures/core/constants/assets.dart';
-import 'package:temple_adventures/core/util/ta-image.dart';
+import 'package:temple_adventures/core/services/file-uploader.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
+import 'package:temple_adventures/features/admin-portal/models/adminPortal-model.dart';
 import 'package:temple_adventures/features/admin-portal/presentation/image-view-page.dart';
 import 'package:temple_adventures/features/admin-portal/presentation/pdf-viewer-page.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/util/app-func.dart';
-import '../../../core/widgets/app-button.dart';
+import '../../../pdf_api.dart';
+import '../../counter-model.dart';
 import '../controller/admin-portal-controller.dart';
 import 'package:path/path.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
+import 'package:dio/dio.dart';
 
 class AdminPortalScreen extends StatelessWidget {
   static const String id = "CreateCirculars";
   AdminPortalLogic logic = AdminPortalLogic();
-
-  Future<firebase_storage.UploadTask> uploadFile(File file) async {
-    if (file == null) {
-      print("No file was picked");
-      return null;
-    }
-
-    firebase_storage.UploadTask uploadTask;
-
-    firebase_storage.Reference ref = firebase_storage.FirebaseStorage.instance
-        .ref()
-        .child('pdfs')
-        .child('/"${logic.controller.pdfName.text}".pdf');
-
-    print(file.path);
-    final metaData = firebase_storage.SettableMetadata(
-        contentType: 'file/pdf',
-        customMetadata: {'picked-file-path': file.path});
-    print("uploading...");
-    uploadTask = ref.putData(await file.readAsBytes(), metaData);
-    print("Done...!");
-    return Future.value(uploadTask);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,16 +46,51 @@ class AdminPortalScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Column(
               children: [
-                SizedBox(height: 30),
+                // SizedBox(height: 20),
                 GetBuilder<AdminPortalController>(builder: (controller) {
                   return Column(
                     children: [
-                      ...logic.controller.pickedFile.map((e) {
-                        if (e.endsWith(".pdf")) {
-                          return buildPDF(context, File(e));
-                        }
-                        return buildIDProof(image: e);
-                      }),
+                      StreamBuilder(
+                        stream: FirebaseFirestore.instance
+                            .collection("adminPortal")
+                            .orderBy("id")
+                            .snapshots(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<QuerySnapshot> snapshot) {
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: CircularProgressIndicator(
+                                  color: Colors.black),
+                            );
+                          }
+                          return Column(
+                            children: [
+                              ...snapshot.data.docs.map(
+                                (document) {
+                                  AdminPortalModel adminPortalModel =
+                                      AdminPortalModel.fromMap(document.data());
+                                  log(adminPortalModel.filename);
+                                  if (adminPortalModel.filename
+                                      .endsWith(".pdf")) {
+                                    return buildPDF(
+                                        context: context,
+                                        adminPortalModel: adminPortalModel);
+                                  }
+                                  return buildIDProof(
+                                      adminPortalModel: adminPortalModel);
+                                },
+                              ).toList(),
+                            ],
+                          );
+                        },
+                      )
+                      // buildCheckFirebase(),
+                      // ...logic.controller.pickedFile.map((e) {
+                      //   if (e.endsWith(".pdf")) {
+                      //     return buildPDF(context: context, file: File(e));
+                      //   }
+                      //   return buildIDProof(image: e);
+                      // }),
                     ],
                   );
                 }),
@@ -89,7 +102,41 @@ class AdminPortalScreen extends StatelessWidget {
     );
   }
 
-  ///==============UI===============///
+  ///==============UI=============== ///
+
+  Widget buildCheckFirebase() {
+    return Expanded(
+      child: GetBuilder<AdminPortalController>(builder: (controller) {
+        return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream:
+              FirebaseFirestore.instance.collection("adminPortal").snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: Colors.black,
+                  strokeWidth: 3,
+                ),
+              );
+            }
+            return ListView.builder(
+              itemBuilder: (BuildContext context, int index) {
+                AdminPortalModel adminPortalModel =
+                    AdminPortalModel.fromMap(snapshot.data.docs[index].data());
+                log(adminPortalModel.path);
+                if (adminPortalModel.path.endsWith(".pdf")) {
+                  return buildPDF(
+                      context: context, adminPortalModel: adminPortalModel);
+                }
+                return buildIDProof(adminPortalModel: adminPortalModel);
+              },
+            );
+          },
+        );
+      }),
+    );
+  }
 
   Widget buildTitle() {
     return Text(
@@ -104,11 +151,15 @@ class AdminPortalScreen extends StatelessWidget {
     );
   }
 
-  Widget buildPDF(BuildContext context, File file) {
+  Widget buildPDF({BuildContext context, AdminPortalModel adminPortalModel}) {
     return GestureDetector(
-      onTap: () {
+      onTap: () async {
+        final file = await PdfAPi.loadNetwork(adminPortalModel.path);
         Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-          return PDFViewerPage(file: file);
+          return PDFViewerPage(
+            adminPortalModel: adminPortalModel,
+            file: file,
+          );
         }));
       },
       child: Container(
@@ -139,7 +190,7 @@ class AdminPortalScreen extends StatelessWidget {
                 Container(
                   width: Get.width * 0.61,
                   child: Text(
-                    "${basename(file.path)}",
+                    adminPortalModel.filename,
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -148,9 +199,8 @@ class AdminPortalScreen extends StatelessWidget {
                 ),
                 Text(
                   "Modified  " +
-                      DateFormat.yMMMd().format(
-                        DateTime.now(),
-                      ),
+                      DateFormat.yMMMd()
+                          .format(adminPortalModel.timeStamp.toDate()),
                   style: TextStyle(fontSize: 12),
                 ),
               ],
@@ -159,7 +209,7 @@ class AdminPortalScreen extends StatelessWidget {
             IconButton(
                 onPressed: () {
                   Get.bottomSheet(
-                    buildPDFOptions(file),
+                    buildPDFOptions(adminPortalModel),
                   );
                 },
                 splashRadius: 20,
@@ -170,7 +220,7 @@ class AdminPortalScreen extends StatelessWidget {
     );
   }
 
-  Widget buildPDFOptions(File file) {
+  Widget buildPDFOptions(AdminPortalModel adminPortalModel) {
     return Container(
       width: 300,
       height: 300,
@@ -218,7 +268,8 @@ class AdminPortalScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "${basename(file.path)}",
+                        adminPortalModel.filename,
+                        // "${basename(file.path)}",
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
                             fontSize: 14,
@@ -233,7 +284,7 @@ class AdminPortalScreen extends StatelessWidget {
                                 fontSize: 10, fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            currentEmployee.name,
+                            adminPortalModel.createdBy,
                             style: TextStyle(
                               fontSize: 10,
                             ),
@@ -248,9 +299,41 @@ class AdminPortalScreen extends StatelessWidget {
           ),
           Container(height: 1, color: Colors.grey.shade300),
           SizedBox(height: 20),
-          buildOptions(name: "Share", icon: Icons.share_rounded, onTap: () {}),
           buildOptions(
-              name: "Download", icon: Icons.file_download, onTap: () {}),
+              name: "Share",
+              icon: Icons.share_rounded,
+              onTap: () async {
+                print(adminPortalModel.path);
+                print("==============================");
+                final urlPath = adminPortalModel.path;
+                final url = Uri.parse(urlPath);
+                print(url);
+                final response = await http.get(url);
+                final bytes = response.bodyBytes;
+
+                final temp = await getTemporaryDirectory();
+                final path = '${temp.path}/${adminPortalModel.filename}';
+                File(path).writeAsBytesSync(bytes);
+                await Share.shareFiles([path]);
+                showToast("Sharing");
+              }),
+          buildOptions(
+              name: "Download",
+              icon: Icons.file_download,
+              onTap: () async {
+                var storage = await Permission.storage.status;
+
+                if(storage.isGranted){
+                  await Permission.storage.request();
+                }
+
+                var appDocDir = await DownloadsPathProvider.downloadsDirectory;
+                String url = adminPortalModel.path;
+                String savePath =
+                    appDocDir.path + "/${adminPortalModel.filename}";
+                await Dio().download(url, savePath);
+                showToast("Downloaded Successfully");
+              }),
         ],
       ),
     );
@@ -315,11 +398,12 @@ class AdminPortalScreen extends StatelessWidget {
     );
   }
 
-  Widget buildIDProof({BuildContext context, String image}) {
+  Widget buildIDProof(
+      {BuildContext context, AdminPortalModel adminPortalModel}) {
     return GetBuilder<AdminPortalController>(builder: (controller) {
       return GestureDetector(
         onTap: () {
-          Get.toNamed(ImageViewPage.id, arguments: image);
+          Get.toNamed(ImageViewPage.id, arguments: adminPortalModel);
         },
         child: Container(
           height: Get.height * 0.075,
@@ -332,9 +416,12 @@ class AdminPortalScreen extends StatelessWidget {
                 width: 30,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
-                  image: image != null
+                  image: adminPortalModel.path != null
                       ? DecorationImage(
-                          image: FileImage(File(image)),
+                          image: NetworkImage(adminPortalModel.path),
+                          // FileImage(
+                          //   File(adminPortalModel.path),
+                          // ),
                           fit: BoxFit.cover,
                         )
                       : null,
@@ -367,7 +454,7 @@ class AdminPortalScreen extends StatelessWidget {
               IconButton(
                   onPressed: () {
                     Get.bottomSheet(
-                      buildIDProofOptions(image),
+                      buildIDProofOptions(adminPortalModel),
                     );
                   },
                   splashRadius: 20,
@@ -379,7 +466,7 @@ class AdminPortalScreen extends StatelessWidget {
     });
   }
 
-  Widget buildIDProofOptions(String image) {
+  Widget buildIDProofOptions(AdminPortalModel adminPortalModel) {
     return Container(
       width: 300,
       height: 300,
@@ -415,9 +502,11 @@ class AdminPortalScreen extends StatelessWidget {
                       width: 30,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        image: image != null
+                        image: adminPortalModel.path != null
                             ? DecorationImage(
-                                image: FileImage(File(image)),
+                                image: NetworkImage(adminPortalModel.path),
+
+                                // FileImage(File(adminPortalModel.path)),
                                 fit: BoxFit.cover,
                               )
                             : null,
@@ -446,7 +535,7 @@ class AdminPortalScreen extends StatelessWidget {
                                 fontSize: 10, fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            currentEmployee.name,
+                            adminPortalModel.createdBy,
                             style: TextStyle(
                               fontSize: 10,
                             ),
@@ -465,10 +554,10 @@ class AdminPortalScreen extends StatelessWidget {
               name: "Share",
               icon: Icons.share_rounded,
               onTap: () async {
-                print(image);
+                print(adminPortalModel.path);
                 print("==============================");
                 // idProofController.shareLoading = true;
-                final urlImage = image;
+                final urlImage = adminPortalModel.path;
                 final url = Uri.parse(urlImage);
                 print(url);
                 final response = await http.get(url);
@@ -486,7 +575,7 @@ class AdminPortalScreen extends StatelessWidget {
               name: "Download",
               icon: Icons.file_download,
               onTap: () async {
-                String url = image;
+                String url = adminPortalModel.path;
                 GallerySaver.saveImage(url).then((value) {
                   showToast("Downloaded successfully");
                 });
@@ -516,76 +605,54 @@ class AdminPortalScreen extends StatelessWidget {
               SizedBox(height: 30),
               Text("Upload", style: TextStyle(fontSize: 18)),
               SizedBox(height: 20),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  buildIcon(
-                      icon: Icons.image,
-                      text: "Image",
-                      onTap: () {
-                        logic.showBottomSheet(true);
-                      }),
-                  buildIcon(
+              GetBuilder<AdminPortalController>(builder: (controller) {
+                return Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    buildIcon(
+                        icon: Icons.image,
+                        text: "Image",
+                        onTap: () {
+                          logic.showBottomSheet(true);
+                        }),
+                    buildIcon(
                       icon: Icons.upload_file,
                       text: "File",
                       onTap: () async {
                         final file = await pickFile();
-                        if (file == null) return;
+                        if (file == null) {
+                          return;
+                        } else {
+                          File pdfFile = File(file.path);
 
-                        logic.controller.pickedFile.add(file.path);
-                        logic.controller.update();
+                          var filePath =
+                              await FileUploader.uploadPDFFile(file: pdfFile);
+                          controller.adminPortalModel = AdminPortalModel(
+                              path: filePath,
+                              filename: basename(file.path),
+                              id: (counterModel.files + 1).toString());
+                          log("aklsnasd");
+                          FirebaseFirestore.instance
+                              .collection("adminPortal")
+                              .doc((counterModel.files + 1).toString())
+                              .set(controller.adminPortalModel.toMap());
 
-                        // openPDF(context, file);
-                        // Get.defaultDialog(
-                        //   title: "\nEnter PdfName",
-                        //   titleStyle: TextStyle(
-                        //       color: AppColors.text.black,
-                        //       fontFamily: AppFonts.nunito,
-                        //       fontSize: 16,
-                        //       fontWeight: FontWeight.bold),
-                        //   content: Padding(
-                        //     padding: const EdgeInsets.all(10.0),
-                        //     child: TextField(
-                        //       controller: logic.controller.pdfName,
-                        //       decoration:
-                        //           InputDecoration(label: Text("name")),
-                        //     ),
-                        //   ),
-                        //   radius: 10,
-                        //   confirm: Row(
-                        //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        //     children: [
-                        //       AppButton.miniText(
-                        //         text: 'Cancel',
-                        //         onTap: () {
-                        //           Get.back();
-                        //         },
-                        //       ),
-                        //       AppButton.miniFlat(
-                        //           text: 'OK',
-                        //           onTap: () async {
-                        //
-                        //             // final path = await FlutterDocumentPicker
-                        //             //     .openDocument();
-                        //             // print(path);
-                        //             // File file = File(path);
-                        //             // if (logic.controller.pdfName.text != "") {
-                        //             //   firebase_storage.UploadTask task =
-                        //             //       await uploadFile(file);
-                        //             //   print(task);
-                        //             //   Get.back();
-                        //
-                        //
-                        //           }
-                        //           // },
-                        //           ),
-                        //     ],
-                        //   ),
-                        // );
-                        // logic.controller.pdfName.text = "";
-                      }),
-                ],
-              ),
+                          counterModel.files++;
+
+                          FirebaseFirestore.instance
+                              .collection("counter")
+                              .doc("count")
+                              .set(counterModel.toMap());
+
+                          controller.update();
+                          controller.pickedFile.add(pdfFile.path);
+                          controller.update();
+                        }
+                      },
+                    ),
+                  ],
+                );
+              }),
             ],
           ),
         ));

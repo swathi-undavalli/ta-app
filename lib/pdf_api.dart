@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -5,6 +6,8 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:open_file/open_file.dart';
 import 'package:printing/printing.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
 class PdfAPi {
   static Future<File> generateImage(BookingModel booking) async {
@@ -67,4 +70,26 @@ class PdfAPi {
     final url = file.path;
     await OpenFile.open(url);
   }
+
+
+  static Future<File> loadNetwork(String url) async {
+    final pdfUrl = Uri.parse(url);
+
+    final response = await http.get(pdfUrl);
+    final bytes = response.bodyBytes;
+
+    return storeFile(url, bytes);
+  }
+
+  static Future<File> storeFile(String url, List<int> bytes) async {
+    final fileName = basename(url);
+    final dir = await getApplicationDocumentsDirectory();
+
+    final file = File('${dir.path}/$fileName');
+    await file.writeAsBytes(bytes, flush: true);
+    log(file.path);
+    return file;
+  }
+
+
 }

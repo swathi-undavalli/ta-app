@@ -7,7 +7,8 @@ class CounterModel {
     this.booking,
     this.employee,
     this.boat,
-    this.freelance
+    this.freelance,
+    this.files,
   });
 
   int activity;
@@ -15,6 +16,7 @@ class CounterModel {
   int employee;
   int boat;
   int freelance;
+  int files;
 
   factory CounterModel.fromMap(Map<String, dynamic> json) => CounterModel(
     activity: json["activity"],
@@ -22,6 +24,7 @@ class CounterModel {
     employee: json["employee"],
     boat: json["boat"],
     freelance: json["freelance"],
+    files: json["files"],
   );
 
   Map<String, dynamic> toMap() => {
@@ -30,5 +33,6 @@ class CounterModel {
     "employee": employee,
     "boat": boat,
     "freelance": freelance,
+    "files": files,
   };
 }

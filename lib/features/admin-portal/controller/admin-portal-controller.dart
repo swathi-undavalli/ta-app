@@ -1,11 +1,20 @@
+import 'dart:developer';
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:temple_adventures/core/services/file-uploader.dart';
+import 'package:temple_adventures/features/admin-portal/models/adminPortal-model.dart';
+import 'package:path/path.dart';
+import 'package:temple_adventures/features/counter-model.dart';
 
 class AdminPortalLogic {
   AdminPortalController controller = Get.put(AdminPortalController());
   ImagePicker imagePicker = ImagePicker();
+  static final storage = FirebaseStorage.instance;
+  static final storageRef = FirebaseStorage.instance.ref();
 
   browseImage(bool isFront, ImageSource source) async {
     print("==========started");
@@ -14,13 +23,7 @@ class AdminPortalLogic {
     print("==========ended");
 
     if (pickedFile != null) {
-      // if (isFront) controller.idProofFile = pickedFile;
-      // var link = await uploadImage(pickedFile);
-      // controller.idProofs.add(pickedFile);
-      // controller.update();
       uploadImage(pickedFile);
-      // controller.idProofLink = null;
-      // controller.uploadedImageUrl = null;
     }
   }
 
@@ -59,7 +62,28 @@ class AdminPortalLogic {
 
   uploadImage(XFile file) async {
     var link = File(file.path);
+    var imageLink = await FileUploader.uploadFile(file: link);
+    log(imageLink);
 
+    controller.adminPortalModel = AdminPortalModel(
+        path: imageLink,
+        filename: basename(file.path),
+        id: (counterModel.files + 1).toString());
+
+    FirebaseFirestore.instance
+        .collection("adminPortal")
+        .doc((counterModel.files + 1).toString())
+        .set(controller.adminPortalModel.toMap());
+
+    counterModel.files++;
+
+    FirebaseFirestore.instance
+        .collection("counter")
+        .doc("count")
+        .set(counterModel.toMap());
+
+    controller.update();
+    log("ended===========");
     controller.pickedFile.add(link.path);
     controller.update();
     // print(link);
@@ -74,6 +98,8 @@ class AdminPortalLogic {
 
 class AdminPortalController extends GetxController {
   // XFile _idProofFile;
+
+  AdminPortalModel adminPortalModel;
 
   TextEditingController titleTED = TextEditingController();
 
