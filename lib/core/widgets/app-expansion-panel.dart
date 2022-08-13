@@ -1,33 +1,36 @@
 import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/access_levels.dart';
-import 'package:temple_adventures/d1.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/select-seats-widget.dart';
 import 'package:temple_adventures/features/bookings/controller/edit-payments-controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:intl/intl.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:temple_adventures/features/bookings/presentation/screens/add-guest-details-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-payments-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/edit-payments-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
+import 'package:temple_adventures/features/bookings/presentation/widgets/share_%20booking_widget.dart';
+import 'package:temple_adventures/features/bookings/presentation/widgets/share_bookingDetails_widget.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'dart:ui' as ui;
 import 'bookings_calender_widget/bookings_calender_widget.dart';
+import 'package:http/http.dart' as http;
+import 'package:path/path.dart';
 
 class BookingsExpansionPanel extends StatelessWidget {
   final ExpansionPanelLogic logic = ExpansionPanelLogic();
@@ -440,123 +443,33 @@ class BookingsExpansionPanel extends StatelessWidget {
                                         SelectSeatsWidget(
                                             items[i].bookingModel),
                                       Spacer(),
-                                      Container(
-                                        child: AppButton.miniFlat(
-                                          text: "Add Payment",
-                                          onTap: () {
-                                            Get.toNamed(AddPaymentsScreen.id,
-                                                arguments:
-                                                    items[i].bookingModel);
-                                            // Get.defaultDialog(
-                                            //   contentPadding: EdgeInsets.only(
-                                            //       left: 30,
-                                            //       right: 30,
-                                            //       top: 20,
-                                            //       bottom: 30),
-                                            //   title: "\n Add Payment",
-                                            //   content: TextField(
-                                            //     controller: depositTED,
-                                            //     cursorColor:
-                                            //         AppColors.text.darkgrey,
-                                            //     cursorHeight: 17,
-                                            //     keyboardType:
-                                            //         TextInputType.number,
-                                            //     decoration: InputDecoration(
-                                            //       labelText: "Deposit",
-                                            //       labelStyle: TextStyle(
-                                            //           fontSize: 10,
-                                            //           color: Colors.black),
-                                            //       enabledBorder:
-                                            //           UnderlineInputBorder(
-                                            //         borderSide: BorderSide(
-                                            //             color: Colors.grey),
-                                            //       ),
-                                            //       focusedBorder:
-                                            //           UnderlineInputBorder(
-                                            //         borderSide: BorderSide(
-                                            //             color: Colors.black),
-                                            //       ),
-                                            //     ),
-                                            //   ),
-                                            //   backgroundColor: Colors.white,
-                                            //   titleStyle: TextStyle(
-                                            //       color: AppColors.text.black,
-                                            //       fontFamily: AppFonts.nunito,
-                                            //       fontSize: 16,
-                                            //       fontWeight: FontWeight.bold),
-                                            //   middleTextStyle: TextStyle(
-                                            //       color: AppColors.text.black,
-                                            //       fontFamily: AppFonts.nunito,
-                                            //       fontSize: 15,
-                                            //       fontWeight: FontWeight.w500),
-                                            //   confirm: Row(
-                                            //     mainAxisAlignment:
-                                            //         MainAxisAlignment
-                                            //             .spaceBetween,
-                                            //     children: [
-                                            //       AppButton.miniText(
-                                            //         text: 'Cancel',
-                                            //         onTap: () {
-                                            //           Get.back();
-                                            //         },
-                                            //       ),
-                                            //       AppButton.miniFlat(
-                                            //         text: 'OK',
-                                            //         onTap: () {
-                                            //           items[i]
-                                            //               .bookingModel
-                                            //               .payments
-                                            //               .add(
-                                            //                 PaymentModel(
-                                            //                   amount:
-                                            //                       double.parse(
-                                            //                           depositTED
-                                            //                               .text),
-                                            //                   collectedBy:
-                                            //                       currentEmployee
-                                            //                           .name,
-                                            //
-                                            //                   //TODO:: FIX THE BELOW URGENT !!!!!.
-                                            //
-                                            //                   reciptNo: "-",
-                                            //                   referenceNo: "-",
-                                            //                   paymentMode: "-",
-                                            //                   time: DateTime
-                                            //                       .now(),
-                                            //                 ),
-                                            //               );
-                                            //
-                                            //           FirebaseFirestore.instance
-                                            //               .collection(
-                                            //                   "bookings")
-                                            //               .doc(items[i]
-                                            //                   .bookingModel
-                                            //                   .id)
-                                            //               .set(items[i]
-                                            //                   .bookingModel
-                                            //                   .toMap());
-                                            //           Get.back();
-                                            //           depositTED.text = "";
-                                            //           BookingsCalenderWidgetLogic
-                                            //               bookingCalenderLogic =
-                                            //               BookingsCalenderWidgetLogic();
-                                            //           bookingCalenderLogic
-                                            //               .onDateSelected(
-                                            //             bookingCalenderLogic
-                                            //                 .controller
-                                            //                 .lastDateIndex,
-                                            //           );
-                                            //         },
-                                            //       ),
-                                            //     ],
-                                            //   ),
-                                            //   barrierDismissible: false,
-                                            //   radius: 10,
-                                            // );
-                                          },
-                                        ).paddingOnly(right: 15),
-                                        // alignment: Alignment.centerRight,
-                                      )
+                                      AppButton.miniFlat(
+                                        text: "Get Link",
+                                        onTap: () async {
+                                          String link =
+                                              "https://seismic-glow-283418.web.app/?booking=${items[i].bookingModel.id}";
+                                          await Clipboard.setData(
+                                              ClipboardData(text: link));
+                                          Fluttertoast.showToast(
+                                              msg: "Link copied to Clipboard");
+                                        },
+                                      ).paddingOnly(right: 15),
+
+                                      // AppButton.miniFlat(
+                                      //   text: "Add Info",
+                                      //   onTap: () {
+                                      //     Get.toNamed(GuestDetailsScreen.id,
+                                      //         arguments: items[i].bookingModel);
+                                      //   },
+                                      //   bgColor:
+                                      //       (items[i].bookingModel.pax.length -
+                                      //                   1) ==
+                                      //               (items[i]
+                                      //                   .bookingModel
+                                      //                   .noOfPersons)
+                                      //           ? Colors.green
+                                      //           : Colors.black,
+                                      // ).paddingOnly(right: 15)
                                     ],
                                   ),
                                   SizedBox(height: 20),
@@ -593,38 +506,17 @@ class BookingsExpansionPanel extends StatelessWidget {
                                               ),
                                             )
                                           : SizedBox(),
-                                      // AppButton.miniFlat(
-                                      //   text: "Get Link",
-                                      //   onTap: () async {
-                                      //     String link =
-                                      //         "https://seismic-glow-283418.web.app/?booking=${items[i].bookingModel.id}";
-                                      //     await Clipboard.setData(
-                                      //         ClipboardData(text: link));
-                                      //     Fluttertoast.showToast(
-                                      //         msg: "Link copied to Clipboard");
-                                      //   },
-                                      // ).paddingOnly(right: 15),
-                                      // (items[i].bookingModel.pax.length - 1) !=
-                                      //         (items[i]
-                                      //             .bookingModel
-                                      //             .noOfPersons)
 
-                                      // ?
                                       AppButton.miniFlat(
-                                        text: "Add Info",
-                                        onTap: () {
-                                          Get.toNamed(GuestDetailsScreen.id,
-                                              arguments: items[i].bookingModel);
+                                        text: "Share",
+                                        onTap: () async {
+                                          File pdfFile =
+                                              await ShareBookingDetails
+                                                  .generatePdf(
+                                                      items[i].bookingModel);
+                                          Share.shareFiles([pdfFile.path]);
                                         },
-                                        bgColor:
-                                            (items[i].bookingModel.pax.length -
-                                                        1) ==
-                                                    (items[i]
-                                                        .bookingModel
-                                                        .noOfPersons)
-                                                ? Colors.green
-                                                : Colors.black,
-                                      ).paddingOnly(right: 15)
+                                      ).paddingOnly(right: 15),
                                       // : SizedBox(),
                                     ],
                                   ),
@@ -822,6 +714,14 @@ class BookingsExpansionPanel extends StatelessWidget {
               ),
               SizedBox(width: 20),
               Icon(Icons.edit, size: 15),
+              Spacer(),
+              AppButton.miniFlat(
+                text: "Add Payment",
+                onTap: () {
+                  Get.toNamed(AddPaymentsScreen.id,
+                      arguments: items[i].bookingModel);
+                },
+              ).paddingOnly(right: 15)
             ],
           ),
         ),
@@ -864,12 +764,12 @@ class BookingsExpansionPanel extends StatelessWidget {
                 now.month == payment.time.month &&
                 now.year == payment.time.year)
               Text(
-                "Today - ${DateFormat("hh:mm a").format(payment.time)}",
+                "Today - ${intl.DateFormat("hh:mm a").format(payment.time)}",
                 style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
               )
             else if (payment.time != null)
               Text(
-                DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time),
+                intl.DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time),
                 style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
               )
             else
@@ -912,6 +812,55 @@ class BookingsExpansionPanel extends StatelessWidget {
       t += payment.amount;
     });
     return (total - t).toInt().toString();
+  }
+
+  Future<Uint8List> _createImageFromWidget(
+    Widget widget, {
+    Duration wait = const Duration(milliseconds: 450),
+  }) async {
+    final RenderRepaintBoundary repaintBoundary = RenderRepaintBoundary();
+    Size logicalSize = ui.window.physicalSize / ui.window.devicePixelRatio;
+    double pixelRatio = ui.window.devicePixelRatio;
+    final RenderView renderView = RenderView(
+      window: ui.window,
+      child: RenderPositionedBox(
+          alignment: Alignment.center,
+          // heightFactor: Get.height,
+          child: repaintBoundary),
+      configuration: ViewConfiguration(
+        size: logicalSize,
+        devicePixelRatio: pixelRatio,
+      ),
+    );
+
+    final PipelineOwner pipelineOwner = PipelineOwner();
+    final BuildOwner buildOwner = BuildOwner(focusManager: FocusManager());
+    pipelineOwner.rootNode = renderView;
+    renderView.prepareInitialFrame();
+    final RenderObjectToWidgetElement<RenderBox> rootElement =
+        RenderObjectToWidgetAdapter<RenderBox>(
+      container: repaintBoundary,
+      child: Directionality(
+        textDirection: TextDirection.ltr,
+        child: widget,
+      ),
+    ).attachToRenderTree(buildOwner);
+    buildOwner.buildScope(rootElement);
+
+    await Future.delayed(wait);
+
+    buildOwner.buildScope(rootElement);
+    buildOwner.finalizeTree();
+    pipelineOwner.flushLayout();
+    pipelineOwner.flushCompositingBits();
+    pipelineOwner.flushPaint();
+
+    final ui.Image image =
+        await repaintBoundary.toImage(pixelRatio: pixelRatio);
+    //final ui.Image image = await repaintBoundary.toImage(pixelRatio: 1);
+    final ByteData byteData =
+        await image.toByteData(format: ui.ImageByteFormat.png);
+    return byteData.buffer.asUint8List();
   }
 }
 
@@ -982,11 +931,17 @@ class ItemModel {
     getTime() {
       var d = "";
       if (bookingModel.theoryDate != null && bookingModel.theoryDate.isNotEmpty)
-        d = d + DateFormat("hh:mm a").format(bookingModel.theoryDate[0]) + ", ";
+        d = d +
+            intl.DateFormat("hh:mm a").format(bookingModel.theoryDate[0]) +
+            ", ";
       if (bookingModel.poolDate != null && bookingModel.poolDate.isNotEmpty)
-        d = d + DateFormat("hh:mm a").format(bookingModel.poolDate[0]) + ", ";
+        d = d +
+            intl.DateFormat("hh:mm a").format(bookingModel.poolDate[0]) +
+            ", ";
       if (bookingModel.diveDate != null && bookingModel.diveDate.isNotEmpty)
-        d = d + DateFormat("hh:mm a").format(bookingModel.diveDate[0]) + ", ";
+        d = d +
+            intl.DateFormat("hh:mm a").format(bookingModel.diveDate[0]) +
+            ", ";
       return d.substring(0, d.length - 2);
     }
 

@@ -32,6 +32,7 @@ import 'package:temple_adventures/features/bookings/presentation/screens/guests-
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
+import 'package:temple_adventures/features/bookings/presentation/widgets/share_%20booking_widget.dart';
 import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';

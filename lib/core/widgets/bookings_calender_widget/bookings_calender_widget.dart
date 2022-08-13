@@ -178,13 +178,15 @@ class BookingsCalenderWidget extends StatelessWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
                   ),
-                  child: Center(
-                    child: Text(
-                      "$count",
-                      style: TextStyle(
-                        color: color,
-                        fontSize: FontSize.small - 2,
-                        fontWeight: FontWeight.bold,
+                  child: FittedBox(
+                    child: Center(
+                      child: Text(
+                        "$count",
+                        style: TextStyle(
+                          color: color,
+                          fontSize: FontSize.small - 2,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),
@@ -280,10 +282,16 @@ class BookingsCalenderWidget extends StatelessWidget {
                 fontSize: 12,
                 fontWeight: FontWeight.normal),
           ),
-          Text(
-            "$count ",
-            style: TextStyle(
-                color: color, fontSize: 12, fontWeight: FontWeight.bold),
+          Container(
+            width: 20,
+            height: 20,
+            child: FittedBox(
+              child: Text(
+                "$count",
+                style: TextStyle(
+                    color: color, fontSize: 12, fontWeight: FontWeight.bold),
+              ),
+            ),
           ),
         ],
       ),

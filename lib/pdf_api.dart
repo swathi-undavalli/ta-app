@@ -71,7 +71,6 @@ class PdfAPi {
     await OpenFile.open(url);
   }
 
-
   static Future<File> loadNetwork(String url) async {
     final pdfUrl = Uri.parse(url);
 
@@ -90,6 +89,4 @@ class PdfAPi {
     log(file.path);
     return file;
   }
-
-
 }

@@ -68,6 +68,11 @@ android {
         }
     }
 
+    lintOptions {
+        disable 'InvalidPackage'
+        checkReleaseBuilds false //<- add this line
+    }
+
 }
 
 flutter {

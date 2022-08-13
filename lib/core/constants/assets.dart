@@ -18,6 +18,7 @@ class _IconImages {
   String get folder => "images/folder.svg";
   String get pdfLogo => "images/pdfLogo.svg";
   String get pdfLogo1 => "images/PDFLogo.png";
+  String get AppLogo => "images/AppLogoPondy.png";
 }
 
 class _LottieImages {

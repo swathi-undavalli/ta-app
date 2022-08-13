@@ -242,4 +242,3 @@ getString(List<String> sublist) {
 //
 //     final bookingModel = bookingModelFromMap(jsonString);
 
-///=======///

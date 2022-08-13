@@ -1,11 +1,6 @@
-import 'dart:developer';
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/assets.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/ta-image.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/bookings/controller/idProof-controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';

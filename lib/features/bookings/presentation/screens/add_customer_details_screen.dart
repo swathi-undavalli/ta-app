@@ -1,14 +1,10 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/validator.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
-import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
-import 'package:temple_adventures/features/bookings/controller/customer-registration-controller.dart';
 import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 

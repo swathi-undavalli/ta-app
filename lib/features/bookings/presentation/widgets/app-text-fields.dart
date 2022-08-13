@@ -38,7 +38,6 @@ class AppTextField extends StatefulWidget {
     this.enableSuggestions = true,
     this.finalSubmit,
     this.validator,
-    // this.onChanged,
     this.errorValidator,
     this.onChangedCallBack,
     this.width = 320,
