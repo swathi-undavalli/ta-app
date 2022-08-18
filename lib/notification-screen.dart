@@ -87,16 +87,15 @@ class NotificationsScreen extends StatelessWidget {
                           buildBookingDetails(
                               title: "Total Amount",
                               text: (controller.bookingModel.totalCost
-                                  .toStringAsFixed(0))),
+                                  .toStringAsFixed(0)) + "/-"),
                           buildBookingDetails(
                               title: "Deposit",
-                              text: controller.bookingModel.paid.toStringAsFixed(
-                                  0)),
+                              text: controller.bookingModel.paid.toStringAsFixed(0) + "/-"),
                           buildBookingDetails(
                               title: "Balance",
                               text: (controller.bookingModel.totalCost -
                                   controller.bookingModel.paid)
-                                  .toStringAsFixed(0)),
+                                  .toStringAsFixed(0) + "/-"),
                           buildBookingDetails(
                               title: "Receipt No",
                               text: controller.bookingModel.receiptNo ?? "-"),
@@ -231,7 +230,7 @@ class NotificationsScreen extends StatelessWidget {
             children: [
               ...dates.map(
                     (e) {
-                  String date = DateFormat('dd-MM-yyyy @ hh-mm-ss').format(e);
+                  String date = DateFormat('dd-MM-yyyy @ hh:mm a').format(e);
                   return Container(
                       width: 150,
                       child: Text(

@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:qr/qr.dart';
 import 'package:share/share.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
@@ -195,10 +196,10 @@ class BookingsExpansionPanel extends StatelessWidget {
                           width: 7,
                           decoration: BoxDecoration(
                               color: getBalance(
-                                          items[i].bookingModel.payments,
-                                          double.parse(items[i].paid)
+                                          itemModel.bookingModel.payments,
+                                          double.parse(itemModel.paid)
                                               .roundToDouble(),
-                                          double.parse(items[i].cost)
+                                          double.parse(itemModel.cost)
                                               .roundToDouble()) ==
                                       "0"
                                   ? Colors.green
@@ -241,7 +242,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                               color: AppColors.background.black),
                           iconSize: 15,
                           onPressed: () {
-                            log(double.parse(items[i].balance)
+                            log(double.parse(itemModel.balance)
                                 .floorToDouble()
                                 .toString());
                             makingPhoneCall(itemModel.phone);
@@ -356,79 +357,75 @@ class BookingsExpansionPanel extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   buildKeyValuePairs(
-                                      "Booking Id", items[i].bookingID),
+                                      "Booking Id", itemModel.bookingID),
                                   buildKeyValuePairs(
-                                      "Activity", items[i].activity),
+                                      "Activity", itemModel.activity),
                                   buildKeyValuePairs(
                                       "Total Cost",
-                                      double.parse(items[i].cost)
+                                      double.parse(itemModel.cost)
                                           .roundToDouble()
                                           .toString()),
                                   buildKeyValuePairs(
                                       "Deposit",
-                                      double.parse(items[i].paid)
+                                      double.parse(itemModel.paid)
                                           .roundToDouble()
                                           .toString()),
                                   buildKeyValuePairs(
                                     "Balance",
                                     getBalance(
-                                        items[i].bookingModel.payments,
-                                        double.parse(items[i].paid)
+                                        itemModel.bookingModel.payments,
+                                        double.parse(itemModel.paid)
                                             .roundToDouble(),
-                                        double.parse(items[i].cost)
+                                        double.parse(itemModel.cost)
                                             .roundToDouble()),
                                   ),
                                   buildKeyValuePairs(
                                       "Pax",
-                                      items[i]
-                                          .bookingModel
-                                          .noOfPersons
+                                      itemModel.bookingModel.noOfPersons
                                           .toString()),
-                                  ((items[i] != null) &&
-                                          (items[i].receiptNo != null))
+                                  ((itemModel != null) &&
+                                          (itemModel.receiptNo != null))
                                       ? buildKeyValuePairs(
-                                          "Invoice no", items[i].receiptNo)
+                                          "Invoice no", itemModel.receiptNo)
                                       : buildKeyValuePairs("Invoice no", "-"),
-                                  (items[i].remarks == "")
+                                  (itemModel.remarks == "")
                                       ? buildKeyValuePairs("Remarks", "-")
                                       : buildKeyValuePairs("Remarks",
-                                          items[i].remarks.toString()),
-                                  buildKeyValuePairs("Phone", items[i].phone),
-                                  buildKeyValuePairs("Email", items[i].email),
-                                  buildKeyValuePairs("Time", items[i].time),
-                                  buildKeyValuePairs("Date", items[i].date),
+                                          itemModel.remarks.toString()),
+                                  buildKeyValuePairs("Phone", itemModel.phone),
+                                  buildKeyValuePairs("Email", itemModel.email),
+                                  buildKeyValuePairs("Time", itemModel.time),
+                                  buildKeyValuePairs("Date", itemModel.date),
                                   buildKeyValuePairs(
-                                      "Session", items[i].session),
+                                      "Session", itemModel.session),
                                   buildKeyValuePairs(
                                     "Registered",
-                                    "${items[i].bookingModel.pax.length - 1} / ${items[i].bookingModel.noOfPersons}",
-                                    isDanger: ((items[i]
-                                                .bookingModel
-                                                .pax
-                                                .length -
+                                    "${itemModel.bookingModel.pax.length - 1} / ${itemModel.bookingModel.noOfPersons}",
+                                    isDanger: ((itemModel
+                                                .bookingModel.pax.length -
                                             1) !=
-                                        (items[i].bookingModel.noOfPersons)),
+                                        (itemModel.bookingModel.noOfPersons)),
                                   ),
                                   SizedBox(height: 30),
                                   buildPaymentStatus(
-                                    i: i,
+                                    // i: i,
+                                    itemModel: itemModel,
                                     totalAmount:
-                                        items[i].bookingModel.totalCost,
+                                        itemModel.bookingModel.totalCost,
                                     payments: [
                                       PaymentModel(
-                                        amount: double.parse(items[i].paid)
+                                        amount: double.parse(itemModel.paid)
                                             .roundToDouble(),
-                                        collectedBy: items[i].employeeName,
-                                        reciptNo: items[i].receiptNo,
-                                        referenceNo: items[i]
-                                            .bookingModel
-                                            .paymentTransactionId,
+                                        collectedBy: itemModel.employeeName,
+                                        reciptNo: itemModel.receiptNo,
+                                        referenceNo: itemModel
+                                            .bookingModel.paymentTransactionId,
                                         remarks: "",
                                         paymentMode:
-                                            items[i].bookingModel.paymentMode,
-                                        time: items[i].bookingModel.createdAt,
+                                            itemModel.bookingModel.paymentMode,
+                                        time: itemModel.bookingModel.createdAt,
                                       ),
-                                      ...items[i].bookingModel.payments
+                                      ...itemModel.bookingModel.payments
                                     ],
                                   ),
                                   SizedBox(height: 10),
@@ -437,17 +434,72 @@ class BookingsExpansionPanel extends StatelessWidget {
                                       if (bookingCalenderLogic
                                                   .controller.selectedType ==
                                               FilterType.Dive &&
-                                          items[i].bookingModel.pax.length -
+                                          itemModel.bookingModel.pax.length -
                                                   1 ==
-                                              items[i].bookingModel.noOfPersons)
+                                              itemModel
+                                                  .bookingModel.noOfPersons)
                                         SelectSeatsWidget(
-                                            items[i].bookingModel),
+                                            itemModel.bookingModel),
                                       Spacer(),
+                                      IconButton(
+                                        icon: Icon(
+                                          Icons.qr_code,
+                                          size: 20,
+                                        ),
+                                        onPressed: () {
+                                          String link =
+                                              "https://seismic-glow-283418.web.app/?booking=${itemModel.bookingModel.id}";
+                                          final qrCode = QrCode(4, QrErrorCorrectLevel.H)
+                                            ..addData(link);
+                                          final qrImage = QrImage(qrCode);
+
+                                          Get.defaultDialog(
+                                            contentPadding: EdgeInsets.only(
+                                                left: 30,
+                                                right: 30,
+                                                top: 20,
+                                                bottom: 30),
+                                            title:
+                                                "\nBooking Id : ${itemModel.bookingID}",
+                                            middleText:
+                                                "Scan this QR Code to complete your paperWork",
+                                            // content:  ,
+                                            backgroundColor: Colors.white,
+                                            titleStyle: TextStyle(
+                                                color: AppColors.text.black,
+                                                fontFamily: AppFonts.nunito,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold),
+                                            middleTextStyle: TextStyle(
+                                                color: AppColors.text.black,
+                                                fontFamily: AppFonts.nunito,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.w500),
+                                            confirm: AppButton.miniFlat(
+                                              text: 'OK',
+                                              onTap: () {
+                                                Get.back();
+                                                BookingsCalenderWidgetLogic
+                                                    bookingCalenderLogic =
+                                                    BookingsCalenderWidgetLogic();
+                                                bookingCalenderLogic
+                                                    .onDateSelected(
+                                                        bookingCalenderLogic
+                                                            .controller
+                                                            .lastDateIndex);
+                                              },
+                                            ),
+                                            barrierDismissible: false,
+                                            radius: 10,
+                                          );
+                                        },
+                                      ),
+                                      SizedBox(width: 5),
                                       AppButton.miniFlat(
                                         text: "Get Link",
                                         onTap: () async {
                                           String link =
-                                              "https://seismic-glow-283418.web.app/?booking=${items[i].bookingModel.id}";
+                                              "https://seismic-glow-283418.web.app/?booking=${itemModel.bookingModel.id}";
                                           await Clipboard.setData(
                                               ClipboardData(text: link));
                                           Fluttertoast.showToast(
@@ -459,12 +511,12 @@ class BookingsExpansionPanel extends StatelessWidget {
                                       //   text: "Add Info",
                                       //   onTap: () {
                                       //     Get.toNamed(GuestDetailsScreen.id,
-                                      //         arguments: items[i].bookingModel);
+                                      //         arguments: itemModel.bookingModel);
                                       //   },
                                       //   bgColor:
-                                      //       (items[i].bookingModel.pax.length -
+                                      //       (itemModel.bookingModel.pax.length -
                                       //                   1) ==
-                                      //               (items[i]
+                                      //               (itemModel
                                       //                   .bookingModel
                                       //                   .noOfPersons)
                                       //           ? Colors.green
@@ -477,7 +529,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                     mainAxisAlignment:
                                         MainAxisAlignment.spaceBetween,
                                     children: [
-                                      (items[i].employeeName != null)
+                                      (itemModel.employeeName != null)
                                           ? Container(
                                               alignment: Alignment.centerRight,
                                               child: RichText(
@@ -491,8 +543,8 @@ class BookingsExpansionPanel extends StatelessWidget {
                                                   ),
                                                   children: <TextSpan>[
                                                     TextSpan(
-                                                      text:
-                                                          items[i].employeeName,
+                                                      text: itemModel
+                                                          .employeeName,
                                                       style: TextStyle(
                                                         color:
                                                             Color(0xff484646),
@@ -513,7 +565,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                           File pdfFile =
                                               await ShareBookingDetails
                                                   .generatePdf(
-                                                      items[i].bookingModel);
+                                                      itemModel.bookingModel);
                                           Share.shareFiles([pdfFile.path]);
                                         },
                                       ).paddingOnly(right: 15),
@@ -581,7 +633,8 @@ class BookingsExpansionPanel extends StatelessWidget {
   Widget buildPaymentStatus(
       {@required double totalAmount,
       @required List<PaymentModel> payments,
-      @required int i}) {
+      // @required int i,
+      @required ItemModel itemModel}) {
     double deposits = 0.0;
 
     payments.forEach((payment) {
@@ -703,7 +756,7 @@ class BookingsExpansionPanel extends StatelessWidget {
         GestureDetector(
           onTap: () {
             EditPaymentsLogic editPaymentsLogic = EditPaymentsLogic();
-            editPaymentsLogic.controller.bookingModel = items[i].bookingModel;
+            editPaymentsLogic.controller.bookingModel = itemModel.bookingModel;
             Get.toNamed(EditPaymentsScreen.id);
           },
           child: Row(
@@ -719,7 +772,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                 text: "Add Payment",
                 onTap: () {
                   Get.toNamed(AddPaymentsScreen.id,
-                      arguments: items[i].bookingModel);
+                      arguments: itemModel.bookingModel);
                 },
               ).paddingOnly(right: 15)
             ],

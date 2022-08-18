@@ -3,7 +3,7 @@ description: Temple Adventures Mobile Admin App
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.1.1+35
+version: 1.1.1+36
 
 environment:
   sdk: ">=2.9.0 <3.0.0"
@@ -26,11 +26,14 @@ dependencies:
   #------------------------------------------
   #           UI and Animations
 
+#  qr_flutter:
+#    git:
+#      url: git://github.com/lukef/qr.flutter.git
   open_file:
   docx_template: ^0.3.2
   flutter_document_picker: ^5.1.0
 #  flutter_plugin_pdf_viewer:
-  pdf: ^3.8.1
+  pdf: ^3.7.1
   printing: ^5.9.1
   syncfusion_flutter_xlsio:
   syncfusion_flutter_pdf:
