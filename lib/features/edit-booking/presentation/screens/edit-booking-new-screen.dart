@@ -487,7 +487,7 @@ class EditBookingNewScreen extends StatelessWidget {
                   titlePadding: EdgeInsets.all(0),
                   titleStyle: TextStyle(fontSize: 0, height: 0),
                   content: Container(
-                    height: 480,
+                    height: 500,
                     width: 400,
                     child: Column(
                       children: [
