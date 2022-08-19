@@ -442,60 +442,60 @@ class BookingsExpansionPanel extends StatelessWidget {
                                         SelectSeatsWidget(
                                             itemModel.bookingModel),
                                       Spacer(),
-                                      IconButton(
-                                        icon: Icon(
-                                          Icons.qr_code,
-                                          size: 20,
-                                        ),
-                                        onPressed: () {
-                                          String link =
-                                              "https://seismic-glow-283418.web.app/?booking=${itemModel.bookingModel.id}";
-                                          final qrCode = QrCode(4, QrErrorCorrectLevel.H)
-                                            ..addData(link);
-                                          final qrImage = QrImage(qrCode);
-
-                                          Get.defaultDialog(
-                                            contentPadding: EdgeInsets.only(
-                                                left: 30,
-                                                right: 30,
-                                                top: 20,
-                                                bottom: 30),
-                                            title:
-                                                "\nBooking Id : ${itemModel.bookingID}",
-                                            middleText:
-                                                "Scan this QR Code to complete your paperWork",
-                                            // content:  ,
-                                            backgroundColor: Colors.white,
-                                            titleStyle: TextStyle(
-                                                color: AppColors.text.black,
-                                                fontFamily: AppFonts.nunito,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
-                                            middleTextStyle: TextStyle(
-                                                color: AppColors.text.black,
-                                                fontFamily: AppFonts.nunito,
-                                                fontSize: 10,
-                                                fontWeight: FontWeight.w500),
-                                            confirm: AppButton.miniFlat(
-                                              text: 'OK',
-                                              onTap: () {
-                                                Get.back();
-                                                BookingsCalenderWidgetLogic
-                                                    bookingCalenderLogic =
-                                                    BookingsCalenderWidgetLogic();
-                                                bookingCalenderLogic
-                                                    .onDateSelected(
-                                                        bookingCalenderLogic
-                                                            .controller
-                                                            .lastDateIndex);
-                                              },
-                                            ),
-                                            barrierDismissible: false,
-                                            radius: 10,
-                                          );
-                                        },
-                                      ),
-                                      SizedBox(width: 5),
+                                      // IconButton(
+                                      //   icon: Icon(
+                                      //     Icons.qr_code,
+                                      //     size: 20,
+                                      //   ),
+                                      //   onPressed: () {
+                                      //     String link =
+                                      //         "https://seismic-glow-283418.web.app/?booking=${itemModel.bookingModel.id}";
+                                      //     final qrCode = QrCode(4, QrErrorCorrectLevel.H)
+                                      //       ..addData(link);
+                                      //     final qrImage = QrImage(qrCode);
+                                      //
+                                      //     Get.defaultDialog(
+                                      //       contentPadding: EdgeInsets.only(
+                                      //           left: 30,
+                                      //           right: 30,
+                                      //           top: 20,
+                                      //           bottom: 30),
+                                      //       title:
+                                      //           "\nBooking Id : ${itemModel.bookingID}",
+                                      //       middleText:
+                                      //           "Scan this QR Code to complete your paperWork",
+                                      //       // content:  ,
+                                      //       backgroundColor: Colors.white,
+                                      //       titleStyle: TextStyle(
+                                      //           color: AppColors.text.black,
+                                      //           fontFamily: AppFonts.nunito,
+                                      //           fontSize: 16,
+                                      //           fontWeight: FontWeight.bold),
+                                      //       middleTextStyle: TextStyle(
+                                      //           color: AppColors.text.black,
+                                      //           fontFamily: AppFonts.nunito,
+                                      //           fontSize: 10,
+                                      //           fontWeight: FontWeight.w500),
+                                      //       confirm: AppButton.miniFlat(
+                                      //         text: 'OK',
+                                      //         onTap: () {
+                                      //           Get.back();
+                                      //           BookingsCalenderWidgetLogic
+                                      //               bookingCalenderLogic =
+                                      //               BookingsCalenderWidgetLogic();
+                                      //           bookingCalenderLogic
+                                      //               .onDateSelected(
+                                      //                   bookingCalenderLogic
+                                      //                       .controller
+                                      //                       .lastDateIndex);
+                                      //         },
+                                      //       ),
+                                      //       barrierDismissible: false,
+                                      //       radius: 10,
+                                      //     );
+                                      //   },
+                                      // ),
+                                      // SizedBox(width: 5),
                                       AppButton.miniFlat(
                                         text: "Get Link",
                                         onTap: () async {
@@ -600,8 +600,7 @@ class BookingsExpansionPanel extends StatelessWidget {
   Widget buildKeyValuePairs(String key, String value, {bool isDanger = false}) {
     return Row(
       children: [
-        SizedBox(
-          width: 80,
+        Expanded(
           child: Text(
             key,
             style: TextStyle(
@@ -612,19 +611,18 @@ class BookingsExpansionPanel extends StatelessWidget {
                 height: 1.3),
           ),
         ),
-        Expanded(
-          child: Container(
-            height: 16,
-            child: Text(
-              value,
-              overflow: TextOverflow.ellipsis,
-              style: TextStyle(
-                  color: isDanger ? Colors.red : Colors.black,
-                  fontSize: 13,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.3,
-                  height: 1.3),
-            ),
+        Container(
+          height: 16,
+          width: 200,
+          child: Text(
+            value,
+            overflow: TextOverflow.ellipsis,
+            style: TextStyle(
+                color: isDanger ? Colors.red : Colors.black,
+                fontSize: 13,
+                fontWeight: FontWeight.w600,
+                letterSpacing: 0.3,
+                height: 1.3),
           ),
         ),
       ],
