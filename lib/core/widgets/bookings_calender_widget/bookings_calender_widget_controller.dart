@@ -13,9 +13,9 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import '../app-expansion-panel.dart';
 import 'package:intl/intl.dart';
 
-class BookingsCalenderWidgetLogic {
-  BookingsCalenderWidgetController controller =
-      Get.put(BookingsCalenderWidgetController());
+class BookingsCalenderWidgetLogicNew {
+  BookingsCalenderWidgetControllerNew controller =
+      Get.put(BookingsCalenderWidgetControllerNew());
 
   Future<void> getBookings(DateTime date) async {
     //log("getBookings");
@@ -351,7 +351,7 @@ class BookingsCalenderWidgetLogic {
   }
 }
 
-class BookingsCalenderWidgetController extends GetxController {
+class BookingsCalenderWidgetControllerNew extends GetxController {
   List<DateTime> bookingTimings = [];
   List<BookingModel> bookings = [];
   List<ItemModel> _expansionBookings = [];

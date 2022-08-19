@@ -9,6 +9,8 @@ import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
+import 'package:temple_adventures/core/widgets/booking_calender_widget_old/booking_calender_old.dart';
+import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
@@ -193,8 +195,7 @@ class EditBookingNewScreen extends StatelessWidget {
                 Get.back();
                 controller.reset();
 
-                BookingsCalenderWidgetLogic bookingCalenderLogic =
-                    BookingsCalenderWidgetLogic();
+                BookingsCalenderWidgetLogic bookingCalenderLogic = BookingsCalenderWidgetLogic();
                 bookingCalenderLogic.onDateSelected(
                     bookingCalenderLogic.controller.lastDateIndex);
                 // bookingCalenderLogic.controller.selectedDate

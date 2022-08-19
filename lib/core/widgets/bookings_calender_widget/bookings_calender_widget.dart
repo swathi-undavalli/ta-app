@@ -14,7 +14,7 @@ import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
-class BookingsCalenderWidget extends StatelessWidget {
+class BookingsCalenderWidgetNew extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
   final bool isDiveSession;
   final bool showDetails;
@@ -23,7 +23,7 @@ class BookingsCalenderWidget extends StatelessWidget {
   final bool highlightInvalidTime;
   final FilterType calenderType;
   final AutoScrollController autoScrollController;
-  BookingsCalenderWidget({
+  BookingsCalenderWidgetNew({
     @required this.onDateTimeSelected,
     this.onSearchTap,
     this.isDiveSession = false,
@@ -57,7 +57,7 @@ class BookingsCalenderWidget extends StatelessWidget {
         preferPosition: AutoScrollPosition.middle);
   }
 
-  final BookingsCalenderWidgetLogic logic = BookingsCalenderWidgetLogic();
+  final BookingsCalenderWidgetLogicNew logic = BookingsCalenderWidgetLogicNew();
 
   Future<void> autoCenterDaySelector() async {
     await Future.delayed(Duration(microseconds: 500));
@@ -79,7 +79,7 @@ class BookingsCalenderWidget extends StatelessWidget {
       access: AccessRights.viewBookings,
       showMessage: true,
       child:
-          GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
+          GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
         return Column(
           children: [
             buildDaySelector(),
@@ -98,7 +98,7 @@ class BookingsCalenderWidget extends StatelessWidget {
   ///==================UI===================///
 
   Widget buildBookingTypeSelector() {
-    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
       if (showDetails)
         return Column(
           children: [
@@ -203,7 +203,7 @@ class BookingsCalenderWidget extends StatelessWidget {
 
   Widget buildTimeTable() {
     logic.getTime();
-    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
       return Container(
         width: Get.width,
         decoration: BoxDecoration(
@@ -262,7 +262,7 @@ class BookingsCalenderWidget extends StatelessWidget {
     });
   }
 
-  Widget buildErrorMessage(BookingsCalenderWidgetController controller) {
+  Widget buildErrorMessage(BookingsCalenderWidgetControllerNew controller) {
     if (controller.selectedType == FilterType.Theory &&
         controller.theoryCountA == 0)
       return Text(
@@ -324,7 +324,7 @@ class BookingsCalenderWidget extends StatelessWidget {
   }
 
   Widget buildBookingsList() {
-    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
       if (!showDetails) return SizedBox();
 
       //print(controller.bookings);
@@ -404,8 +404,8 @@ class BookingsCalenderWidget extends StatelessWidget {
   }
 
   Widget buildTimings(DateTime date) {
-    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
-      getCircleColor(BookingsCalenderWidgetController controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
+      getCircleColor(BookingsCalenderWidgetControllerNew controller) {
         if (controller.selectedDate == date)
           return AppColors.background.skyBlue;
         if (highlightInvalidTime &&
@@ -480,7 +480,7 @@ class BookingsCalenderWidget extends StatelessWidget {
   }
 
   Widget buildDaySelector() {
-    getDotColor(int index, BookingsCalenderWidgetController controller) {
+    getDotColor(int index, BookingsCalenderWidgetControllerNew controller) {
       if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
         return Colors.green;
       return isSameDates(controller.calenderDates[index], DateTime.now())
@@ -488,19 +488,19 @@ class BookingsCalenderWidget extends StatelessWidget {
           : AppColors.background.grey;
     }
 
-    getDateColor(int index, BookingsCalenderWidgetController controller) {
+    getDateColor(int index, BookingsCalenderWidgetControllerNew controller) {
       if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
         return Colors.white;
       return AppColors.background.black;
     }
 
-    getDayColor(int index, BookingsCalenderWidgetController controller) {
+    getDayColor(int index, BookingsCalenderWidgetControllerNew controller) {
       if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
         return Colors.white;
       return AppColors.background.black;
     }
 
-    getBoxColor(int index, BookingsCalenderWidgetController controller) {
+    getBoxColor(int index, BookingsCalenderWidgetControllerNew controller) {
       if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
         return Colors.black;
       return isSameDates(controller.calenderDates[index], DateTime.now())
@@ -508,7 +508,7 @@ class BookingsCalenderWidget extends StatelessWidget {
           : AppColors.background.white;
     }
 
-    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
       return Container(
         height: 100,
         width: Get.width,
@@ -578,7 +578,7 @@ class BookingsCalenderWidget extends StatelessWidget {
   }
 
   Widget getEventsCount(
-    BookingsCalenderWidgetController controller,
+    BookingsCalenderWidgetControllerNew controller,
     DateTime date,
   ) {
     var show = false;
@@ -659,7 +659,7 @@ class BookingsCalenderWidget extends StatelessWidget {
   }
 
   Widget getPAXCount(
-      BookingsCalenderWidgetController controller, DateTime date) {
+      BookingsCalenderWidgetControllerNew controller, DateTime date) {
     var show = false;
     int totalBookings = 0;
     int totalPax = 0;

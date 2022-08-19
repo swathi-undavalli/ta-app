@@ -19,14 +19,14 @@ class BookingScreen extends StatelessWidget {
   final BookingScreenLogic logic = BookingScreenLogic();
   final AutoScrollController autoScrollController = AutoScrollController();
   var bookings = [DateTime.now()];
-  BookingsCalenderWidgetLogic calenderLogic = BookingsCalenderWidgetLogic();
+  BookingsCalenderWidgetLogicNew calenderLogic = BookingsCalenderWidgetLogicNew();
   ScrollController scrollController = ScrollController();
-  BookingsCalenderWidget bookingsCalenderWidget;
+  BookingsCalenderWidgetNew bookingsCalenderWidget;
 
   @override
   Widget build(BuildContext context) {
     return GetBuilder<BookingScreenController>(builder: (controller) {
-      bookingsCalenderWidget = BookingsCalenderWidget(
+      bookingsCalenderWidget = BookingsCalenderWidgetNew(
         onDateTimeSelected: (DateTime selectedDate) {
           //print(selectedDate.toString());
         },
@@ -65,7 +65,7 @@ class BookingScreen extends StatelessWidget {
                     left: 20, right: 20, top: 40, bottom: 50),
                 child: Column(
                   children: [
-                    GetBuilder<BookingsCalenderWidgetController>(
+                    GetBuilder<BookingsCalenderWidgetControllerNew>(
                         builder: (controller) {
                       DateTime date = controller.selectedDate;
                       String formattedDate =
@@ -109,7 +109,7 @@ class BookingScreen extends StatelessWidget {
   }
 
   Widget buildCalendarIcon(
-      BuildContext context, BookingsCalenderWidgetController controller) {
+      BuildContext context, BookingsCalenderWidgetControllerNew controller) {
     return IconButton(
       splashRadius: 20,
       onPressed: () {
@@ -138,7 +138,7 @@ class BookingScreen extends StatelessWidget {
   }
 
   selectDate(
-      BuildContext context, BookingsCalenderWidgetController controller) async {
+      BuildContext context, BookingsCalenderWidgetControllerNew controller) async {
     final DateTime selected = await showDatePicker(
       context: context,
       initialDate: controller.selectedDate,

@@ -14,7 +14,7 @@ import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
-class BookingsCalenderWidgetOld extends StatelessWidget {
+class BookingsCalenderWidget extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
   final bool isDiveSession;
   final bool showDetails;
@@ -23,7 +23,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   final bool highlightInvalidTime;
   final FilterType calenderType;
   final AutoScrollController autoScrollController;
-  BookingsCalenderWidgetOld({
+  BookingsCalenderWidget({
     @required this.onDateTimeSelected,
     this.onSearchTap,
     this.isDiveSession = false,
@@ -57,7 +57,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
         preferPosition: AutoScrollPosition.middle);
   }
 
-  final BookingsCalenderWidgetLogicOld logic = BookingsCalenderWidgetLogicOld();
+  final BookingsCalenderWidgetLogic logic = BookingsCalenderWidgetLogic();
 
   Future<void> autoCenterDaySelector() async {
     await Future.delayed(Duration(microseconds: 500));
@@ -79,7 +79,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
       access: AccessRights.viewBookings,
       showMessage: true,
       child:
-      GetBuilder<BookingsCalenderWidgetControllerOld>(builder: (controller) {
+      GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
         return Column(
           children: [
             buildDaySelector(),
@@ -96,7 +96,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   ///==================UI===================///
 
   Widget buildBookingDetails() {
-    return GetBuilder<BookingsCalenderWidgetControllerOld>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
       if (showDetails)
         return Column(
           children: [
@@ -202,7 +202,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
 
   Widget buildTimeTable() {
     logic.getTime();
-    return GetBuilder<BookingsCalenderWidgetControllerOld>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
       return Container(
         width: Get.width,
         decoration: BoxDecoration(
@@ -300,7 +300,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   }
 
   Widget buildBookingsList() {
-    return GetBuilder<BookingsCalenderWidgetControllerOld>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
       //print(controller.bookings);
       List<ItemModel> expansionList = [];
       if (controller.selectedType == null)
@@ -378,8 +378,8 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   }
 
   Widget buildTimings(DateTime date) {
-    return GetBuilder<BookingsCalenderWidgetControllerOld>(builder: (controller) {
-      getCircleColor(BookingsCalenderWidgetControllerOld controller) {
+    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
+      getCircleColor(BookingsCalenderWidgetController controller) {
         if (controller.selectedDate == date)
           return AppColors.background.skyBlue;
         if (highlightInvalidTime &&
@@ -453,7 +453,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   }
 
   Widget buildDaySelector() {
-    getDotColor(int index, BookingsCalenderWidgetControllerOld controller) {
+    getDotColor(int index, BookingsCalenderWidgetController controller) {
       if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
         return Colors.green;
       return isSameDates(controller.calenderDates[index], DateTime.now())
@@ -461,19 +461,19 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
           : AppColors.background.grey;
     }
 
-    getDateColor(int index, BookingsCalenderWidgetControllerOld controller) {
+    getDateColor(int index, BookingsCalenderWidgetController controller) {
       if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
         return Colors.white;
       return AppColors.background.black;
     }
 
-    getDayColor(int index, BookingsCalenderWidgetControllerOld controller) {
+    getDayColor(int index, BookingsCalenderWidgetController controller) {
       if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
         return Colors.white;
       return AppColors.background.black;
     }
 
-    getBoxColor(int index, BookingsCalenderWidgetControllerOld controller) {
+    getBoxColor(int index, BookingsCalenderWidgetController controller) {
       if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
         return Colors.black;
       return isSameDates(controller.calenderDates[index], DateTime.now())
@@ -481,7 +481,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
           : AppColors.background.white;
     }
 
-    return GetBuilder<BookingsCalenderWidgetControllerOld>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
       return Container(
         height: 100,
         width: Get.width,
@@ -551,7 +551,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   }
 
   Widget getEventsCount(
-      BookingsCalenderWidgetControllerOld controller, DateTime date) {
+      BookingsCalenderWidgetController controller, DateTime date) {
     var show = false;
     int totalBookings = 0;
 
@@ -606,7 +606,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   }
 
   Widget getPAXCount(
-      BookingsCalenderWidgetControllerOld controller, DateTime date) {
+      BookingsCalenderWidgetController controller, DateTime date) {
     var show = false;
     int totalBookings = 0;
     int totalPax = 0;
