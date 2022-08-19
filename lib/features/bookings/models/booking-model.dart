@@ -191,6 +191,11 @@ class BookingModel {
     if (date == null) return null;
     return date.toIso8601String();
   }
+
+  bool get hasTheorySession => theoryDate != null;
+  bool get hasPoolSession => poolDate != null;
+  bool get hasDiveSession => diveDate != null;
+
 }
 
 class PaymentModel {
@@ -242,4 +247,5 @@ class PaymentModel {
         "remarks": remarks,
         "paymentMode": paymentMode,
       };
+
 }
