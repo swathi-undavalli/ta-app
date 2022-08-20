@@ -187,26 +187,31 @@ class NotificationsScreen extends StatelessWidget {
   }
 
   Widget buildHeading({String title, String text}) {
-    return Text.rich(
-      TextSpan(
-        children: [
+    return Container(
+      width: Get.width,
+      child: FittedBox(
+        child: Text.rich(
           TextSpan(
-            text: title,
-            style: TextStyle(
-                fontSize: 16,
-                fontFamily: AppFonts.nunito,
-                color: AppColors.text.black,
-                fontWeight: FontWeight.w600),
+            children: [
+              TextSpan(
+                text: title,
+                style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: AppFonts.nunito,
+                    color: AppColors.text.black,
+                    fontWeight: FontWeight.w600),
+              ),
+              TextSpan(
+                text: "  $text ",
+                style: TextStyle(
+                    fontSize: 16,
+                    fontFamily: AppFonts.nunito,
+                    color: AppColors.text.skyBlue,
+                    fontWeight: FontWeight.bold),
+              ),
+            ],
           ),
-          TextSpan(
-            text: "  $text ",
-            style: TextStyle(
-                fontSize: 16,
-                fontFamily: AppFonts.nunito,
-                color: AppColors.text.skyBlue,
-                fontWeight: FontWeight.bold),
-          ),
-        ],
+        ),
       ),
     );
   }

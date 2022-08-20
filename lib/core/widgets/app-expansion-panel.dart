@@ -303,9 +303,9 @@ class BookingsExpansionPanel extends StatelessWidget {
 
                                         Get.back();
                                         onDeletePressed();
-                                        BookingsCalenderWidgetLogic
+                                        BookingsCalenderWidgetLogicNew
                                             bookingCalenderLogic =
-                                            BookingsCalenderWidgetLogic();
+                                            BookingsCalenderWidgetLogicNew();
                                         bookingCalenderLogic.onDateSelected(
                                             bookingCalenderLogic
                                                 .controller.lastDateIndex);
@@ -809,7 +809,11 @@ class BookingsExpansionPanel extends StatelessWidget {
             Text(
               "Payment ${payment.amount.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
               style: TextStyle(
-                  fontSize: 10, fontWeight: FontWeight.w600, wordSpacing: 2),
+                fontSize: 10,
+                fontWeight: FontWeight.w600,
+                wordSpacing: 2,
+                overflow: TextOverflow.ellipsis,
+              ),
             ),
             SizedBox(height: 2),
             if (payment.time != null &&
