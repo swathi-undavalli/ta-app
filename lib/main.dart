@@ -75,13 +75,13 @@ void main() async {
   });
 
   await GetStorage.init();
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    systemNavigationBarColor: Colors.black,
-    statusBarColor: Colors.white,
-    statusBarBrightness: Brightness.light,
-    statusBarIconBrightness: Brightness.dark,
-    systemNavigationBarIconBrightness: Brightness.dark,
-  ));
+  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  //   systemNavigationBarColor: Colors.black,
+  //   statusBarColor: Colors.white,
+  //   statusBarBrightness: Brightness.light,
+  //   statusBarIconBrightness: Brightness.dark,
+  //   systemNavigationBarIconBrightness: Brightness.dark,
+  // ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   FirebaseMessagingLogic();
   runApp(MyApp());

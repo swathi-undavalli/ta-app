@@ -242,7 +242,7 @@ class EditBookingNewScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        BookingsCalenderWidget(
+                        BookingsCalenderWidgetOld(
                           autoScrollController: autoScrollControllerTheory,
                           highlightInvalidTime: true,
                           startDate: DateTime.now(),
@@ -328,7 +328,7 @@ class EditBookingNewScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        BookingsCalenderWidget(
+                        BookingsCalenderWidgetOld(
                           autoScrollController: scrollController,
                           highlightInvalidTime: true,
                           startDate: DateTime.now(),
@@ -414,7 +414,7 @@ class EditBookingNewScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        BookingsCalenderWidget(
+                        BookingsCalenderWidgetOld(
                           highlightInvalidTime: true,
                           autoScrollController: scrollController,
                           startDate: DateTime.now(),
@@ -504,7 +504,7 @@ class EditBookingNewScreen extends StatelessWidget {
                             ),
                           ),
                         ),
-                        BookingsCalenderWidget(
+                        BookingsCalenderWidgetOld(
                           autoScrollController: scrollController,
                           highlightInvalidTime: true,
                           startDate: DateTime.now(),

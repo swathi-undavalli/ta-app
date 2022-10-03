@@ -18,7 +18,7 @@ class BookingsCalenderWidgetLogicNew {
       Get.put(BookingsCalenderWidgetControllerNew());
 
   Future<void> getBookings(DateTime date) async {
-    //log("getBookings");
+    log("BookingsCalenderWidgetLogicNew : getBookings ${DateFormat("dd-MM-yyyy").format(date)}");
     //log("Started");
     controller.bookingTimings = [];
     controller.bookings = [];
@@ -26,9 +26,10 @@ class BookingsCalenderWidgetLogicNew {
     try {
       var data = await FirebaseFirestore.instance
           .collection("bookings")
-          .where("bookingDate",
-              arrayContains:
-                  "${date.day < 10 ? "0${date.day}" : date.day}-${date.month < 10 ? "0${date.month}" : date.month}-${date.year}")
+          .where(
+            "bookingDate", arrayContains: DateFormat("dd-MM-yyyy").format(date),
+            // ["04-10-2022"],
+          )
           .get();
 
       data.docs.forEach((element) {

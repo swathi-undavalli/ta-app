@@ -140,7 +140,9 @@ class BookDateTime extends StatelessWidget {
               ),
               AppButton.miniFlat(
                 text: "ADD",
-                onTap: logic.addPoolSessionDateTime,
+                onTap: () {
+                  logic.addPoolSessionDateTime();
+                },
                 bgColor: AppColors.background.black,
                 textColor: AppColors.text.white,
               )
@@ -172,7 +174,9 @@ class BookDateTime extends StatelessWidget {
               ),
               AppButton.miniFlat(
                 text: "ADD",
-                onTap: logic.addDiveSessionDateTime,
+                onTap: () {
+                  logic.addDiveSessionDateTime();
+                },
                 bgColor: AppColors.background.black,
                 textColor: AppColors.text.white,
               )
@@ -204,7 +208,9 @@ class BookDateTime extends StatelessWidget {
               ),
               AppButton.miniFlat(
                 text: "ADD",
-                onTap: logic.addTheorySessionDateTime,
+                onTap: () {
+                  logic.addTheorySessionDateTime();
+                },
                 bgColor: AppColors.background.black,
                 textColor: AppColors.text.white,
               )

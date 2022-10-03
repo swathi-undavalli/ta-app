@@ -253,7 +253,7 @@ class NewBookingLogic {
                 ),
               ),
             ),
-            BookingsCalenderWidget(
+            BookingsCalenderWidgetOld(
               autoScrollController: autoScrollControllerPool,
               highlightInvalidTime: true,
               calenderType: FilterType.Pool,
@@ -317,7 +317,7 @@ class NewBookingLogic {
                 ),
               ),
             ),
-            BookingsCalenderWidget(
+            BookingsCalenderWidgetOld(
               autoScrollController: autoScrollControllerDive,
               highlightInvalidTime: true,
               startDate: DateTime.now(),
@@ -382,12 +382,13 @@ class NewBookingLogic {
                 ),
               ),
             ),
-            BookingsCalenderWidget(
+            BookingsCalenderWidgetOld(
               autoScrollController: autoScrollControllerTheory,
               highlightInvalidTime: true,
               calenderType: FilterType.Theory,
               startDate: DateTime.now(),
               onDateTimeSelected: (date) {
+                log(date.toString());
                 selectedTheoryDate = date;
               },
               isDiveSession: false,

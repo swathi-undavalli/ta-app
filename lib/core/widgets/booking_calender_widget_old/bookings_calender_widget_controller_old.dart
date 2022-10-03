@@ -15,7 +15,7 @@ import 'package:intl/intl.dart';
 
 class BookingsCalenderWidgetLogic {
   BookingsCalenderWidgetController controller =
-  Get.put(BookingsCalenderWidgetController());
+      Get.put(BookingsCalenderWidgetController());
 
   getBookings(DateTime date) async {
     //log("getBookings");
@@ -27,12 +27,12 @@ class BookingsCalenderWidgetLogic {
       var data = await FirebaseFirestore.instance
           .collection("bookings")
           .where("bookingDate",
-          arrayContains:
-          "${date.day < 10 ? "0${date.day}" : date.day}-${date.month < 10 ? "0${date.month}" : date.month}-${date.year}")
+              arrayContains:
+                  "${date.day < 10 ? "0${date.day}" : date.day}-${date.month < 10 ? "0${date.month}" : date.month}-${date.year}")
           .get();
 
       data.docs.forEach((element) {
-        log("===========s${element.data().toString()}");
+        // log("===========s${element.data().toString()}");
 
         try {
           BookingModel booking = BookingModel.fromMap(element.data());
@@ -130,27 +130,34 @@ class BookingsCalenderWidgetLogic {
   }
 
   filterBookingsList() {
-    //print('==============================');
-    //print("seleted Time : ${controller.selectedDate}");
+    print('==============================');
+    print("Selected Time : ${controller.selectedDate}");
 
     controller.bookings.forEach((element) {
-      //print(".........");
-      //print(element.activity[0].name);
-      //print(element.theoryDate);
-      //print(element.poolDate);
-      //print(element.diveDate);
-      //print(".........");
+      print(".........");
+      print(element.activity[0].name);
+      print(element.theoryDate);
+      print(element.poolDate);
+      print(element.diveDate);
+      print(".........");
     });
 
-    //print("filtering started........\n\n");
+    print("filtering started........\n\n");
     List<ItemModel> newItemsList = [];
     controller.poolCount = 0;
     controller.theoryCount = 0;
     controller.diveCount = 0;
+
+    log("1");
+
     controller.bookings.forEach((booking) {
-      var im = ItemModel.fromBookings(booking);
+      ItemModel im = ItemModel.fromBookings(booking);
+      log("1.1");
 
       if (booking.theoryDate != null && booking.theoryDate.isNotEmpty) {
+
+        log("1.2");
+
         booking.theoryDate.forEach((date) {
           //print("+++++++++++");
           //print(date);

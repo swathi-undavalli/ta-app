@@ -14,7 +14,7 @@ import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
-class BookingsCalenderWidget extends StatelessWidget {
+class BookingsCalenderWidgetOld extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
   final bool isDiveSession;
   final bool showDetails;
@@ -23,7 +23,7 @@ class BookingsCalenderWidget extends StatelessWidget {
   final bool highlightInvalidTime;
   final FilterType calenderType;
   final AutoScrollController autoScrollController;
-  BookingsCalenderWidget({
+  BookingsCalenderWidgetOld({
     @required this.onDateTimeSelected,
     this.onSearchTap,
     this.isDiveSession = false,
@@ -79,13 +79,13 @@ class BookingsCalenderWidget extends StatelessWidget {
       access: AccessRights.viewBookings,
       showMessage: true,
       child:
-      GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
+          GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
         return Column(
           children: [
-            buildDaySelector(),
+            _buildDaySelector(),
             if (showDetails) SizedBox(height: 20),
-            buildTimeTable(),
-            buildBookingDetails(),
+            _buildTimeTable(),
+            // _buildBookingDetails(),
             SizedBox(height: 20),
           ],
         );
@@ -95,59 +95,59 @@ class BookingsCalenderWidget extends StatelessWidget {
 
   ///==================UI===================///
 
-  Widget buildBookingDetails() {
-    return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
-      if (showDetails)
-        return Column(
-          children: [
-            SizedBox(height: 20),
-            Row(
-              children: [
-                buildTabButton(
-                  "Theory",
-                      () {
-                    controller.selectedType = FilterType.Theory;
-                  },
-                  count: controller.theoryCountN,
-                  enable: controller.selectedType == FilterType.Theory,
-                  color: Colors.orangeAccent,
-                ),
-                buildTabButton(
-                  "Pool",
-                      () {
-                    controller.selectedType = FilterType.Pool;
-                  },
-                  count: controller.poolCountN,
-                  enable: controller.selectedType == FilterType.Pool,
-                  color: Colors.green,
-                ),
-                buildTabButton(
-                  "Dive",
-                      () {
-                    controller.selectedType = FilterType.Dive;
-                  },
-                  count: controller.diveCountN,
-                  enable: controller.selectedType == FilterType.Dive,
-                  color: Colors.lightBlueAccent,
-                ),
-              ],
-            ),
-            SizedBox(height: 20),
-            buildBookingsList(),
-          ],
-        );
-      else
-        return SizedBox();
-    });
-  }
+  // Widget _buildBookingDetails() {
+  //   return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
+  //     if (showDetails)
+  //       return Column(
+  //         children: [
+  //           SizedBox(height: 20),
+  //           Row(
+  //             children: [
+  //               _buildTabButton(
+  //                 "Theory",
+  //                 () {
+  //                   controller.selectedType = FilterType.Theory;
+  //                 },
+  //                 count: controller.theoryCountN,
+  //                 enable: controller.selectedType == FilterType.Theory,
+  //                 color: Colors.orangeAccent,
+  //               ),
+  //               _buildTabButton(
+  //                 "Pool",
+  //                 () {
+  //                   controller.selectedType = FilterType.Pool;
+  //                 },
+  //                 count: controller.poolCountN,
+  //                 enable: controller.selectedType == FilterType.Pool,
+  //                 color: Colors.green,
+  //               ),
+  //               _buildTabButton(
+  //                 "Dive",
+  //                 () {
+  //                   controller.selectedType = FilterType.Dive;
+  //                 },
+  //                 count: controller.diveCountN,
+  //                 enable: controller.selectedType == FilterType.Dive,
+  //                 color: Colors.lightBlueAccent,
+  //               ),
+  //             ],
+  //           ),
+  //           SizedBox(height: 20),
+  //           _buildBookingsList(),
+  //         ],
+  //       );
+  //     else
+  //       return SizedBox();
+  //   });
+  // }
 
-  Widget buildTabButton(
-      String title,
-      Function onTap, {
-        bool enable = false,
-        Color color,
-        int count,
-      }) {
+  Widget _buildTabButton(
+    String title,
+    Function onTap, {
+    bool enable = false,
+    Color color,
+    int count,
+  }) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap,
@@ -200,7 +200,7 @@ class BookingsCalenderWidget extends StatelessWidget {
     );
   }
 
-  Widget buildTimeTable() {
+  Widget _buildTimeTable() {
     logic.getTime();
     return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
       return Container(
@@ -219,17 +219,17 @@ class BookingsCalenderWidget extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      buildTitle("Bookings"),
+                      _buildTitle("Bookings"),
                       SizedBox(width: 3),
                       controller.showLoading
                           ? SizedBox(
-                        width: 10,
-                        height: 10,
-                        child: CircularProgressIndicator(
-                          color: AppColors.background.black,
-                          strokeWidth: 1,
-                        ),
-                      )
+                              width: 10,
+                              height: 10,
+                              child: CircularProgressIndicator(
+                                color: AppColors.background.black,
+                                strokeWidth: 1,
+                              ),
+                            )
                           : SizedBox(),
                     ],
                   ),
@@ -243,7 +243,7 @@ class BookingsCalenderWidget extends StatelessWidget {
                   spacing: 0,
                   runSpacing: 5,
                   children: controller.timeTable
-                      .map((date) => buildTimings(date))
+                      .map((date) => _buildTimings(date))
                       .toList()),
             ),
             if (!controller.showLoading)
@@ -252,13 +252,13 @@ class BookingsCalenderWidget extends StatelessWidget {
                   Center(
                     child: Container(
                       child: (controller.poolCount == 0 &&
-                          controller.theoryCount == 0 &&
-                          controller.diveCount == 0 &&
-                          showDetails)
+                              controller.theoryCount == 0 &&
+                              controller.diveCount == 0 &&
+                              showDetails)
                           ? Text(
-                        "No Bookings Found",
-                        style: TextStyle(fontSize: 15),
-                      )
+                              "No Bookings Found",
+                              style: TextStyle(fontSize: 15),
+                            )
                           : SizedBox(),
                     ),
                   ),
@@ -271,35 +271,35 @@ class BookingsCalenderWidget extends StatelessWidget {
     });
   }
 
-  Widget buildSessionCount({String session, int count, Color color}) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 5.0, right: 5),
-      child: Row(
-        children: [
-          Text(
-            "$session: ",
-            style: TextStyle(
-                color: AppColors.text.black,
-                fontSize: 12,
-                fontWeight: FontWeight.normal),
-          ),
-          Container(
-            width: 20,
-            height: 20,
-            child: FittedBox(
-              child: Text(
-                "$count",
-                style: TextStyle(
-                    color: color, fontSize: 12, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
+  // Widget _buildSessionCount({String session, int count, Color color}) {
+  //   return Padding(
+  //     padding: const EdgeInsets.only(left: 5.0, right: 5),
+  //     child: Row(
+  //       children: [
+  //         Text(
+  //           "$session: ",
+  //           style: TextStyle(
+  //               color: AppColors.text.black,
+  //               fontSize: 12,
+  //               fontWeight: FontWeight.normal),
+  //         ),
+  //         Container(
+  //           width: 20,
+  //           height: 20,
+  //           child: FittedBox(
+  //             child: Text(
+  //               "$count",
+  //               style: TextStyle(
+  //                   color: color, fontSize: 12, fontWeight: FontWeight.bold),
+  //             ),
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
+  // }
 
-  Widget buildBookingsList() {
+  Widget _buildBookingsList() {
     return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
       //print(controller.bookings);
       List<ItemModel> expansionList = [];
@@ -349,20 +349,20 @@ class BookingsCalenderWidget extends StatelessWidget {
     });
   }
 
-  Widget buildDetails(String text) {
-    return Container(
-      height: 15,
-      child: Text(
-        text,
-        style: TextStyle(
-            color: AppColors.text.darkgrey,
-            fontSize: 10,
-            fontWeight: FontWeight.normal),
-      ),
-    );
-  }
+  // Widget _buildDetails(String text) {
+  //   return Container(
+  //     height: 15,
+  //     child: Text(
+  //       text,
+  //       style: TextStyle(
+  //           color: AppColors.text.darkgrey,
+  //           fontSize: 10,
+  //           fontWeight: FontWeight.normal),
+  //     ),
+  //   );
+  // }
 
-  Widget buildTitle(String text) {
+  Widget _buildTitle(String text) {
     return Container(
       // padding: const EdgeInsets.only(left: 20, right: 10),
       alignment: Alignment.centerLeft,
@@ -377,7 +377,7 @@ class BookingsCalenderWidget extends StatelessWidget {
     );
   }
 
-  Widget buildTimings(DateTime date) {
+  Widget _buildTimings(DateTime date) {
     return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
       getCircleColor(BookingsCalenderWidgetController controller) {
         if (controller.selectedDate == date)
@@ -387,17 +387,20 @@ class BookingsCalenderWidget extends StatelessWidget {
           return AppColors.background.grey;
       }
 
-      Widget num = getEventsCount(controller, date);
+      Widget num = _getEventsCount(controller, date);
       if (num == null && showDetails) return SizedBox();
       return GestureDetector(
         onTap: () {
+          log("1");
           if (highlightInvalidTime &&
               DateTime.now().difference(date).inSeconds > 0) {
             showToast("Invalid Date");
           } else {
+            log("2");
             controller.selectedDate = date;
-            //print("Selected Date : ${controller.selectedDate}");
-            logic.filterBookingsList();
+            log("3");
+            // logic.filterBookingsList();
+            log("4");
             onDateTimeSelected(controller.selectedDate);
           }
         },
@@ -448,35 +451,39 @@ class BookingsCalenderWidget extends StatelessWidget {
     });
   }
 
-  bool isSameDates(DateTime a, DateTime b) {
+  bool _isSameDates(DateTime a, DateTime b) {
     return (a.day == b.day && a.month == b.month && a.year == b.year);
   }
 
-  Widget buildDaySelector() {
+  Widget _buildDaySelector() {
     getDotColor(int index, BookingsCalenderWidgetController controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
+      if (_isSameDates(
+          controller.selectedDate, controller.calenderDates[index]))
         return Colors.green;
-      return isSameDates(controller.calenderDates[index], DateTime.now())
+      return _isSameDates(controller.calenderDates[index], DateTime.now())
           ? AppColors.background.skyBlue
           : AppColors.background.grey;
     }
 
     getDateColor(int index, BookingsCalenderWidgetController controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
+      if (_isSameDates(
+          controller.selectedDate, controller.calenderDates[index]))
         return Colors.white;
       return AppColors.background.black;
     }
 
     getDayColor(int index, BookingsCalenderWidgetController controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
+      if (_isSameDates(
+          controller.selectedDate, controller.calenderDates[index]))
         return Colors.white;
       return AppColors.background.black;
     }
 
     getBoxColor(int index, BookingsCalenderWidgetController controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
+      if (_isSameDates(
+          controller.selectedDate, controller.calenderDates[index]))
         return Colors.black;
-      return isSameDates(controller.calenderDates[index], DateTime.now())
+      return _isSameDates(controller.calenderDates[index], DateTime.now())
           ? AppColors.background.datesBlue
           : AppColors.background.white;
     }
@@ -550,7 +557,7 @@ class BookingsCalenderWidget extends StatelessWidget {
     });
   }
 
-  Widget getEventsCount(
+  Widget _getEventsCount(
       BookingsCalenderWidgetController controller, DateTime date) {
     var show = false;
     int totalBookings = 0;
@@ -605,65 +612,65 @@ class BookingsCalenderWidget extends StatelessWidget {
       return null;
   }
 
-  Widget getPAXCount(
-      BookingsCalenderWidgetController controller, DateTime date) {
-    var show = false;
-    int totalBookings = 0;
-    int totalPax = 0;
-
-    for (BookingModel booking in controller.bookings) {
-      //print("=====================hell");
-      var list = [];
-      if (booking.diveDate != null) {
-        list.addAll(booking.diveDate);
-      }
-      if (booking.poolDate != null) {
-        list.addAll(booking.poolDate);
-      }
-      if (booking.theoryDate != null) {
-        list.addAll(booking.theoryDate);
-      }
-
-      for (DateTime date in list) {
-        if (isSameHour(date, controller.selectedDate)) {
-          //print(booking.toMap());
-        }
-      }
-    }
-
-    for (DateTime bookingTime in logic.controller.bookingTimings) {
-      //print("=====================hell");
-      if (controller.isDiveSession) {
-        if (bookingTime.hour == date.hour &&
-            bookingTime.day == date.day &&
-            bookingTime.minute == date.minute) {
-          totalBookings++;
-          show = true;
-        }
-      } else {
-        if (bookingTime.hour == date.hour && bookingTime.day == date.day) {
-          totalBookings++;
-          show = true;
-        }
-      }
-    }
-    if (show)
-      return Container(
-        height: 12,
-        width: 12,
-        decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.background.skyBlue)),
-        child: Center(
-          child: Text(
-            totalBookings.toString(),
-            style: TextStyle(fontSize: 8),
-          ),
-        ),
-      );
-    else
-      return null;
-  }
+  // Widget _getPAXCount(
+  //     BookingsCalenderWidgetController controller, DateTime date) {
+  //   var show = false;
+  //   int totalBookings = 0;
+  //   int totalPax = 0;
+  //
+  //   for (BookingModel booking in controller.bookings) {
+  //     //print("=====================hell");
+  //     var list = [];
+  //     if (booking.diveDate != null) {
+  //       list.addAll(booking.diveDate);
+  //     }
+  //     if (booking.poolDate != null) {
+  //       list.addAll(booking.poolDate);
+  //     }
+  //     if (booking.theoryDate != null) {
+  //       list.addAll(booking.theoryDate);
+  //     }
+  //
+  //     for (DateTime date in list) {
+  //       if (isSameHour(date, controller.selectedDate)) {
+  //         //print(booking.toMap());
+  //       }
+  //     }
+  //   }
+  //
+  //   for (DateTime bookingTime in logic.controller.bookingTimings) {
+  //     //print("=====================hell");
+  //     if (controller.isDiveSession) {
+  //       if (bookingTime.hour == date.hour &&
+  //           bookingTime.day == date.day &&
+  //           bookingTime.minute == date.minute) {
+  //         totalBookings++;
+  //         show = true;
+  //       }
+  //     } else {
+  //       if (bookingTime.hour == date.hour && bookingTime.day == date.day) {
+  //         totalBookings++;
+  //         show = true;
+  //       }
+  //     }
+  //   }
+  //   if (show)
+  //     return Container(
+  //       height: 12,
+  //       width: 12,
+  //       decoration: BoxDecoration(
+  //           borderRadius: BorderRadius.circular(10),
+  //           border: Border.all(color: AppColors.background.skyBlue)),
+  //       child: Center(
+  //         child: Text(
+  //           totalBookings.toString(),
+  //           style: TextStyle(fontSize: 8),
+  //         ),
+  //       ),
+  //     );
+  //   else
+  //     return null;
+  // }
 
   void clearSearch() {}
 }
