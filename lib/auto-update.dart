@@ -113,6 +113,10 @@ class AutoUpdateLogic {
   }
 
   checkForUpdate() async {
+    if (GetPlatform.isIOS) {
+      return;
+    }
+
     ///completely terminated
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null && message.notification != null) {

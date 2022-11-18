@@ -43,9 +43,7 @@ class LoginScreenLogic {
                     keyboardType: TextInputType.number,
                     controller: controller.textEditingControllersOTP[i],
                     focusNode: controller.focusNodesOTP[i],
-                    inputFormatters: [
-                      FilteringTextInputFormatter.digitsOnly
-                    ],
+                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                     decoration: InputDecoration(
                       border: InputBorder.none,
                       focusedBorder: InputBorder.none,
@@ -158,13 +156,13 @@ class LoginScreenLogic {
   }
 
   verifyEmployeeID() async {
-    //print("verifyEmployeeID");
+    log("verifyEmployeeID");
     try {
       currentEmployee = await EmployeeRepo.getEmployee(getEmployeeId());
       controller.phoneNumberTED.text = currentEmployee.authPhone;
       getPhoneNumber();
       EmployeeRepo.employeeID = getEmployeeId();
-      //print("Done");
+      print("Done");
       return true;
     } catch (e) {
       return false;
@@ -177,38 +175,42 @@ class LoginScreenLogic {
       controller.showLoading = true;
       controller.showPhoneNumber = false;
       if (await verifyEmployeeID()) {
-        await FirebaseAuth.instance.verifyPhoneNumber(
-          timeout: Duration(seconds: 60),
-          phoneNumber: getPhoneNumber(),
-          verificationCompleted: (PhoneAuthCredential credential) async {
-            await FirebaseAuth.instance.signInWithCredential(credential);
-
-            if (FirebaseAuth.instance.currentUser != null) {
-              EmployeeRepo.initiateRepo(currentEmployee.id);
-              Get.offAndToNamed(WelcomeScreen.id);
-            } else {
-              //log('Failed');
-            }
-          },
-          verificationFailed: (FirebaseAuthException e) {
-            //log(e.toString());
-          },
-          codeSent: (String verificationId, int resendToken) async {
-            controller.otpStatus = "OTP has been sent to ${getPhoneNumber()}";
-            startTimer();
-            String smsCode = await getFilledOTP();
-            PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                verificationId: verificationId, smsCode: smsCode);
-            await FirebaseAuth.instance.signInWithCredential(credential);
-            if (FirebaseAuth.instance.currentUser != null) {
-              EmployeeRepo.initiateRepo(currentEmployee.id);
-              Get.offAndToNamed(WelcomeScreen.id);
-            } else {
-              //log('Failed');
-            }
-          },
-          codeAutoRetrievalTimeout: (String verificationId) {},
-        );
+        if (GetPlatform.isIOS) {
+          EmployeeRepo.initiateRepo(currentEmployee.id);
+          Get.offAndToNamed(WelcomeScreen.id);
+        } else {
+          await FirebaseAuth.instance.verifyPhoneNumber(
+            timeout: Duration(seconds: 60),
+            phoneNumber: getPhoneNumber(),
+            verificationCompleted: (PhoneAuthCredential credential) async {
+              await FirebaseAuth.instance.signInWithCredential(credential);
+              if (FirebaseAuth.instance.currentUser != null) {
+                EmployeeRepo.initiateRepo(currentEmployee.id);
+                Get.offAndToNamed(WelcomeScreen.id);
+              } else {
+                //log('Failed');
+              }
+            },
+            verificationFailed: (FirebaseAuthException e) {
+              //log(e.toString());
+            },
+            codeSent: (String verificationId, int resendToken) async {
+              controller.otpStatus = "OTP has been sent to ${getPhoneNumber()}";
+              startTimer();
+              String smsCode = await getFilledOTP();
+              PhoneAuthCredential credential = PhoneAuthProvider.credential(
+                  verificationId: verificationId, smsCode: smsCode);
+              await FirebaseAuth.instance.signInWithCredential(credential);
+              if (FirebaseAuth.instance.currentUser != null) {
+                EmployeeRepo.initiateRepo(currentEmployee.id);
+                Get.offAndToNamed(WelcomeScreen.id);
+              } else {
+                //log('Failed');
+              }
+            },
+            codeAutoRetrievalTimeout: (String verificationId) {},
+          );
+        }
       } else {
         Get.defaultDialog(
           contentPadding:

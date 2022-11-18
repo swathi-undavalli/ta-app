@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>671883511961-sbcsa8hpvkefo05icba4qiv8ulev4m18.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.671883511961-sbcsa8hpvkefo05icba4qiv8ulev4m18</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>671883511961-6mubiv3tso091s20cv7juanirpg30hf0.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAJFHDoc1lfQtTRtEpRmCJue2kwfB5jUh8</string>
+	<key>GCM_SENDER_ID</key>
+	<string>671883511961</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.example.templeAdventures</string>
+	<key>PROJECT_ID</key>
+	<string>seismic-glow-283418</string>
+	<key>STORAGE_BUCKET</key>
+	<string>seismic-glow-283418.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:671883511961:ios:25e276f31add4689b05008</string>
+</dict>
+</plist>
