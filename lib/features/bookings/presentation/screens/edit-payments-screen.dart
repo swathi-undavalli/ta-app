@@ -77,18 +77,22 @@ class EditPaymentsScreen extends StatelessWidget {
               width: 8,
               decoration: BoxDecoration(
                   color: Colors.green, borderRadius: BorderRadius.circular(10)),
-            ).paddingOnly(top: 2),
+            ).paddingOnly(top: 2, left: 5),
             SizedBox(width: 10),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Payment ${payment.amount.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
-                  style: TextStyle(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w600,
-                      wordSpacing: 2),
+                Container(
+                  width: Get.width - 100,
+                  child: Text(
+                    "Payment ${payment.amount.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w600,
+                        wordSpacing: 2),
+                  ),
                 ),
                 SizedBox(height: 2),
                 if (payment.time != null &&
@@ -240,7 +244,7 @@ class EditPaymentsScreen extends StatelessWidget {
                   child: Icon(Icons.edit, size: 12),
                 ),
               ),
-              SizedBox(width: 20),
+              SizedBox(width: 13),
               GestureDetector(
                 onTap: () async {
                   log(logic.controller.bookingModel.toMap().toString());

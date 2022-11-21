@@ -30,10 +30,8 @@ class LoginScreenLogic {
                 RawKeyboardListener(
                   onKey: (value) {
                     if (value.logicalKey == LogicalKeyboardKey.backspace) {
-                      if (controller.textEditingControllersOTP[i].text.length ==
-                          0) {
-                        if (i != 0)
-                          controller.focusNodesOTP[i - 1].requestFocus();
+                      if (controller.textEditingControllersOTP[i].text.length == 0) {
+                        if (i != 0) controller.focusNodesOTP[i - 1].requestFocus();
                       }
                     }
                   },
@@ -51,18 +49,14 @@ class LoginScreenLogic {
                       errorBorder: InputBorder.none,
                       disabledBorder: InputBorder.none,
                     ),
-                    style: TextStyle(
-                        fontFamily: AppFonts.nunito,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                    style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 20, fontWeight: FontWeight.bold),
                     onChanged: (_) {
                       getOTP();
                       bool isNum = false;
                       controller.update();
 
                       try {
-                        int a = int.parse(
-                            controller.textEditingControllersOTP[i].text);
+                        int a = int.parse(controller.textEditingControllersOTP[i].text);
                         //print(a);
                         isNum = true;
                       } catch (e) {
@@ -70,24 +64,17 @@ class LoginScreenLogic {
                       }
 
                       if (isNum) {
-                        if (controller.textEditingControllersOTP[5].text !=
-                                '' &&
-                            controller
-                                    .textEditingControllersOTP[5].text.length >=
-                                1) {
+                        if (controller.textEditingControllersOTP[5].text != '' &&
+                            controller.textEditingControllersOTP[5].text.length >= 1) {
                           controller.textEditingControllersOTP[5].text =
                               controller.textEditingControllersOTP[5].text[0];
                           disposeKeyboard();
                           return;
                         }
-                        if (controller
-                                .textEditingControllersOTP[i].text.length ==
-                            1) {
+                        if (controller.textEditingControllersOTP[i].text.length == 1) {
                           controller.focusNodesOTP[i + 1].requestFocus();
                         }
-                        if (controller
-                                .textEditingControllersOTP[i].text.length >
-                            1) {
+                        if (controller.textEditingControllersOTP[i].text.length > 1) {
                           controller.textEditingControllersOTP[i + 1].text =
                               controller.textEditingControllersOTP[i].text[1];
                           controller.textEditingControllersOTP[i].text =
@@ -105,10 +92,7 @@ class LoginScreenLogic {
                   height: 4,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(3),
-                    color:
-                        controller.textEditingControllersOTP[i].text.length == 1
-                            ? Colors.black
-                            : Colors.grey,
+                    color: controller.textEditingControllersOTP[i].text.length == 1 ? Colors.black : Colors.grey,
                   ),
                 ),
               ],
@@ -175,59 +159,53 @@ class LoginScreenLogic {
       controller.showLoading = true;
       controller.showPhoneNumber = false;
       if (await verifyEmployeeID()) {
-        if (GetPlatform.isIOS) {
-          EmployeeRepo.initiateRepo(currentEmployee.id);
-          Get.offAndToNamed(WelcomeScreen.id);
-        } else {
-          await FirebaseAuth.instance.verifyPhoneNumber(
-            timeout: Duration(seconds: 60),
-            phoneNumber: getPhoneNumber(),
-            verificationCompleted: (PhoneAuthCredential credential) async {
-              await FirebaseAuth.instance.signInWithCredential(credential);
-              if (FirebaseAuth.instance.currentUser != null) {
-                EmployeeRepo.initiateRepo(currentEmployee.id);
-                Get.offAndToNamed(WelcomeScreen.id);
-              } else {
-                //log('Failed');
-              }
-            },
-            verificationFailed: (FirebaseAuthException e) {
-              //log(e.toString());
-            },
-            codeSent: (String verificationId, int resendToken) async {
-              controller.otpStatus = "OTP has been sent to ${getPhoneNumber()}";
-              startTimer();
-              String smsCode = await getFilledOTP();
-              PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                  verificationId: verificationId, smsCode: smsCode);
-              await FirebaseAuth.instance.signInWithCredential(credential);
-              if (FirebaseAuth.instance.currentUser != null) {
-                EmployeeRepo.initiateRepo(currentEmployee.id);
-                Get.offAndToNamed(WelcomeScreen.id);
-              } else {
-                //log('Failed');
-              }
-            },
-            codeAutoRetrievalTimeout: (String verificationId) {},
-          );
-        }
+        // if (GetPlatform.isIOS) {
+        //   EmployeeRepo.initiateRepo(currentEmployee.id);
+        //   Get.offAndToNamed(WelcomeScreen.id);
+        // }
+        // else {
+        await FirebaseAuth.instance.verifyPhoneNumber(
+          timeout: Duration(seconds: 60),
+          phoneNumber: getPhoneNumber(),
+          verificationCompleted: (PhoneAuthCredential credential) async {
+            await FirebaseAuth.instance.signInWithCredential(credential);
+            if (FirebaseAuth.instance.currentUser != null) {
+              EmployeeRepo.initiateRepo(currentEmployee.id);
+              Get.offAndToNamed(WelcomeScreen.id);
+            } else {
+              //log('Failed');
+            }
+          },
+          verificationFailed: (FirebaseAuthException e) {
+            //log(e.toString());
+          },
+          codeSent: (String verificationId, int resendToken) async {
+            controller.otpStatus = "OTP has been sent to ${getPhoneNumber()}";
+            startTimer();
+            String smsCode = await getFilledOTP();
+            PhoneAuthCredential credential =
+                PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+            await FirebaseAuth.instance.signInWithCredential(credential);
+            if (FirebaseAuth.instance.currentUser != null) {
+              EmployeeRepo.initiateRepo(currentEmployee.id);
+              Get.offAndToNamed(WelcomeScreen.id);
+            } else {
+              //log('Failed');
+            }
+          },
+          codeAutoRetrievalTimeout: (String verificationId) {},
+        );
+        // }
       } else {
         Get.defaultDialog(
-          contentPadding:
-              EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 40),
+          contentPadding: EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 40),
           title: "\n Oops!",
           middleText: "you are not Authorized to use this app.",
           backgroundColor: Colors.white,
           titleStyle: TextStyle(
-              color: AppColors.text.black,
-              fontFamily: AppFonts.nunito,
-              fontSize: 16,
-              fontWeight: FontWeight.bold),
+              color: AppColors.text.black, fontFamily: AppFonts.nunito, fontSize: 16, fontWeight: FontWeight.bold),
           middleTextStyle: TextStyle(
-              color: AppColors.text.black,
-              fontFamily: AppFonts.nunito,
-              fontSize: 16,
-              fontWeight: FontWeight.bold),
+              color: AppColors.text.black, fontFamily: AppFonts.nunito, fontSize: 16, fontWeight: FontWeight.bold),
           cancel: AppButton.miniFlat(
             text: 'OK',
             onTap: () {
@@ -265,8 +243,7 @@ class LoginScreenLogic {
       codeSent: (String verificationId, int resendToken) async {
         controller.otpStatus = "OTP has been Resent";
         String smsCode = await getFilledOTP();
-        PhoneAuthCredential credential = PhoneAuthProvider.credential(
-            verificationId: verificationId, smsCode: smsCode);
+        PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
         await FirebaseAuth.instance.signInWithCredential(credential);
         if (FirebaseAuth.instance.currentUser != null) {
           Get.offAndToNamed(WelcomeScreen.id);

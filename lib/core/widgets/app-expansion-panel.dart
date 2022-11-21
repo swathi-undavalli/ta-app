@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
@@ -7,33 +8,26 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:qr/qr.dart';
 import 'package:share/share.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
-import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/access_levels.dart';
+import 'package:temple_adventures/core/widgets/qr-image.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/select-seats-widget.dart';
 import 'package:temple_adventures/features/bookings/controller/edit-payments-controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:temple_adventures/features/bookings/presentation/screens/add-guest-details-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-payments-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/edit-payments-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/share_%20booking_widget.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/share_bookingDetails_widget.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
-import 'bookings_calender_widget/bookings_calender_widget.dart';
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart';
 
 class BookingsExpansionPanel extends StatelessWidget {
   final ExpansionPanelLogic logic = ExpansionPanelLogic();
@@ -497,17 +491,170 @@ class BookingsExpansionPanel extends StatelessWidget {
                                       //   },
                                       // ),
                                       // SizedBox(width: 5),
-                                      AppButton.miniFlat(
-                                        text: "Get Link",
-                                        onTap: () async {
-                                          String link =
-                                              "https://seismic-glow-283418.web.app/?booking=${itemModel.bookingModel.id}";
-                                          await Clipboard.setData(
-                                              ClipboardData(text: link));
-                                          Fluttertoast.showToast(
-                                              msg: "Link copied to Clipboard");
-                                        },
-                                      ).paddingOnly(right: 15),
+                                      if (itemModel.colorCode == "Blue")
+                                        AppButton.miniFlat(
+                                          text: "Get Link",
+                                          onTap: () async {
+                                            String bookingId =
+                                                itemModel.bookingModel.id;
+                                            String bs64 = base64
+                                                .encode(bookingId.codeUnits);
+                                            print(bs64);
+                                            String link =
+                                                "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=";
+
+                                            showModalBottomSheet(
+                                                backgroundColor:
+                                                    Colors.transparent,
+                                                isScrollControlled: true,
+                                                context: context,
+                                                useRootNavigator: true,
+                                                builder: (context) {
+                                                  return Container(
+                                                    padding: EdgeInsets.only(
+                                                        bottom: MediaQuery.of(
+                                                                context)
+                                                            .viewInsets
+                                                            .bottom,
+                                                        top: 30,
+                                                        left: 30,
+                                                        right: 30),
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                              topLeft: Radius
+                                                                  .circular(15),
+                                                              topRight: Radius
+                                                                  .circular(
+                                                                      15)),
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisSize:
+                                                          MainAxisSize.min,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            Container(
+                                                              width: 150,
+                                                              child: Text(
+                                                                "${itemModel.name.capitalizeFirst + "x" + itemModel.pax.toString()}",
+                                                                style: TextStyle(
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontSize:
+                                                                        FontSize
+                                                                            .textSize),
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ),
+                                                            const Spacer(),
+                                                            Material(
+                                                              color: Colors
+                                                                  .transparent,
+                                                              child: InkWell(
+                                                                  highlightColor: Colors
+                                                                      .blue
+                                                                      .withOpacity(
+                                                                          0.2),
+                                                                  splashColor: Colors
+                                                                      .grey
+                                                                      .withOpacity(
+                                                                          0.3),
+                                                                  borderRadius:
+                                                                      BorderRadius
+                                                                          .circular(
+                                                                              20),
+                                                                  radius: 100,
+                                                                  onTap: () {
+                                                                    Navigator.pop(
+                                                                        context);
+                                                                    // provider.onCancelPressed();
+                                                                  },
+                                                                  child: Icon(Icons
+                                                                      .close)),
+                                                            )
+                                                          ],
+                                                        ),
+                                                        SizedBox(height: 50),
+                                                        Container(
+                                                          height: 50,
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20),
+                                                            color: AppColors
+                                                                .text
+                                                                .lightSkyBlue
+                                                                .withOpacity(
+                                                                    0.1),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .start,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              SizedBox(
+                                                                  width: 15),
+                                                              Container(
+                                                                width: 200,
+                                                                child: Text(
+                                                                  "temple_paperwork/?bookingId..",
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                ),
+                                                              ),
+                                                              Spacer(),
+                                                              IconButton(
+                                                                  onPressed:
+                                                                      () async {
+                                                                    await Clipboard.setData(
+                                                                        ClipboardData(
+                                                                            text:
+                                                                                link));
+                                                                    Fluttertoast
+                                                                        .showToast(
+                                                                            msg:
+                                                                                "Link copied to Clipboard");
+                                                                  },
+                                                                  icon: Icon(
+                                                                      Icons
+                                                                          .copy_outlined,
+                                                                      size:
+                                                                          20)),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                        SizedBox(height: 50),
+                                                        Container(
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: QRImage(
+                                                              height: 150,
+                                                              width: 150,
+                                                              data:
+                                                                  "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ="),
+                                                        ),
+                                                        SizedBox(height: 50),
+                                                      ],
+                                                    ),
+                                                  );
+                                                });
+                                          },
+                                        ).paddingOnly(right: 15),
 
                                       // AppButton.miniFlat(
                                       //   text: "Add Info",
@@ -633,7 +780,6 @@ class BookingsExpansionPanel extends StatelessWidget {
   Widget buildPaymentStatus(
       {@required double totalAmount,
       @required List<PaymentModel> payments,
-      // @required int i,
       @required ItemModel itemModel}) {
     double deposits = 0.0;
 
@@ -806,13 +952,17 @@ class BookingsExpansionPanel extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "Payment ${payment.amount.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
-              style: TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.w600,
-                wordSpacing: 2,
+            Container(
+              width: Get.width - 50 - 25,
+              child: Text(
+                "Payment ${payment.amount.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
                 overflow: TextOverflow.ellipsis,
+                style: TextStyle(
+                  fontSize: 10,
+                  fontWeight: FontWeight.w600,
+                  wordSpacing: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
               ),
             ),
             SizedBox(height: 2),
