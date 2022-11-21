@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>671883511961-sbcsa8hpvkefo05icba4qiv8ulev4m18.apps.googleusercontent.com</string>
+	<string>671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.671883511961-sbcsa8hpvkefo05icba4qiv8ulev4m18</string>
+	<string>com.googleusercontent.apps.671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg</string>
 	<key>ANDROID_CLIENT_ID</key>
 	<string>671883511961-6mubiv3tso091s20cv7juanirpg30hf0.apps.googleusercontent.com</string>
 	<key>API_KEY</key>
@@ -15,7 +15,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.example.templeAdventures</string>
+	<string>com.templeadventures.scubadiving</string>
 	<key>PROJECT_ID</key>
 	<string>seismic-glow-283418</string>
 	<key>STORAGE_BUCKET</key>
@@ -31,6 +31,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:671883511961:ios:25e276f31add4689b05008</string>
+	<string>1:671883511961:ios:99961ae0cf633ff7b05008</string>
 </dict>
 </plist>
