@@ -59,18 +59,18 @@ Future<void> backgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LocalNotificationService.initialize();
-
-  if (Platform.isIOS) {
-    await Firebase.initializeApp(
-        options: const FirebaseOptions(
-            apiKey: "AIzaSyAJFHDoc1lfQtTRtEpRmCJue2kwfB5jUh8",
-            appId: "1:671883511961:ios:99961ae0cf633ff7b05008",
-            messagingSenderId: "671883511961",
-            iosClientId: "671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com",
-            projectId: "seismic-glow-283418"));
-  } else {
-    await Firebase.initializeApp();
-  }
+  await Firebase.initializeApp();
+  // if (Platform.isIOS) {
+  //   await Firebase.initializeApp(
+  //       options: const FirebaseOptions(
+  //           apiKey: "AIzaSyAJFHDoc1lfQtTRtEpRmCJue2kwfB5jUh8",
+  //           appId: "1:671883511961:ios:99961ae0cf633ff7b05008",
+  //           messagingSenderId: "671883511961",
+  //           iosClientId: "671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com",
+  //           projectId: "seismic-glow-283418"));
+  // } else {
+  //   await Firebase.initializeApp();
+  // }
 
   FirebaseMessaging.onBackgroundMessage(backgroundHandler);
 
