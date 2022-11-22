@@ -11,16 +11,14 @@ String logModelToMap(LogModel data) => json.encode(data.toMap());
 class LogModel {
   LogModel({
     @required this.type,
-     this.createdBy,
-     this.timeStamp,
-     this.bookingId,
-     this.activityName,
-     this.employeeName,
-  }){
-    if(timeStamp == null)
-     timeStamp = Timestamp.fromDate(DateTime.now());
-    if(createdBy == null)
-   createdBy = currentEmployee.name;
+    this.createdBy,
+    this.timeStamp,
+    this.bookingId,
+    this.activityName,
+    this.employeeName,
+  }) {
+    if (timeStamp == null) timeStamp = Timestamp.fromDate(DateTime.now());
+    if (createdBy == null) createdBy = currentEmployee.name;
   }
 
   LogType type;
@@ -71,6 +69,8 @@ convertToEnum(String e) {
       return LogType.editEmployee;
     case "deleteEmployee":
       return LogType.deleteEmployee;
+    case "bookingPaxDeleted":
+      return LogType.bookingPaxDeleted;
   }
 }
 
@@ -96,5 +96,7 @@ convertToString(LogType e) {
       return "editEmployee";
     case LogType.deleteEmployee:
       return "deleteEmployee";
+    case LogType.bookingPaxDeleted:
+      return "bookingPaxDeleted";
   }
 }
