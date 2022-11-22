@@ -2,14 +2,31 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class  LocalNotificationService {
-  static final FlutterLocalNotificationsPlugin _notificationsPlugin =
+  static FlutterLocalNotificationsPlugin _notificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  static void initialize() {
-    final InitializationSettings initializationSettings =
-        InitializationSettings(
-            android: AndroidInitializationSettings("@mipmap/ic_launcher"));
-    _notificationsPlugin.initialize(initializationSettings);
+  static void initialize() async{
+    // final InitializationSettings initializationSettings =
+    //     InitializationSettings(
+    //         android: AndroidInitializationSettings("@mipmap/ic_launcher"));
+    var androidInitilize = const AndroidInitializationSettings('@mipmap/ic_launcher');
+ //New Added
+    const IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(
+      requestSoundPermission: true,
+      requestBadgePermission: true,
+      requestAlertPermission: true,
+    );
+   // _notificationsPlugin.initialize(initializationSettings);
+    var initilizationsSettings = InitializationSettings(android: androidInitilize, iOS: initializationSettingsIOS);
+    _notificationsPlugin = FlutterLocalNotificationsPlugin();
+    await _notificationsPlugin.initialize(
+      initilizationsSettings,
+      onSelectNotification: (payload) async {
+        //onTap(payload);
+      },
+    );
+
+
   }
 
   static void display(RemoteMessage message) async {
