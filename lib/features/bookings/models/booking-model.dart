@@ -196,6 +196,14 @@ class BookingModel {
   bool get hasPoolSession => poolDate != null;
   bool get hasDiveSession => diveDate != null;
 
+  bool get hasMedicalIssues {
+    pax.forEach((e) {
+      if (e['needDoctor'] == true) {
+        return true;
+      }
+    });
+    return false;
+  }
 }
 
 class PaymentModel {
@@ -247,5 +255,4 @@ class PaymentModel {
         "remarks": remarks,
         "paymentMode": paymentMode,
       };
-
 }

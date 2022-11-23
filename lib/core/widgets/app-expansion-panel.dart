@@ -165,7 +165,7 @@ class BookingsExpansionPanel extends StatelessWidget {
           alignment: Alignment.topCenter,
           // height: controller.isExpanded[i] ? 400 : 50,
           constraints: BoxConstraints(
-            minHeight: controller.isExpanded[i] ? 400 : 50,
+            minHeight: controller.isExpanded[i] ? 500 : 50,
           ),
           // height: controller.isExpanded[i] ? 470 : 50,
           width: 350,
@@ -234,6 +234,30 @@ class BookingsExpansionPanel extends StatelessWidget {
                             ],
                           ),
                         ),
+                        SizedBox(width: 5),
+                        if (itemModel.colorCode == "Blue" &&
+                            itemModel.bookingModel.pax.length - 1 ==
+                                itemModel.bookingModel.noOfPersons)
+                          Icon(
+                            Icons.verified,
+                            color: AppColors.text.skyBlue,
+                            size: 12,
+                          ).paddingOnly(right: 5),
+                        // ...itemModel.bookingModel.pax.map((e) {
+                        //   if (e['needDoctor'] == true)
+                        //     return Icon(
+                        //       Icons.medication,
+                        //       color: Colors.red.shade500,
+                        //       size: 13,
+                        //     );
+                        //   return SizedBox();
+                        // }),
+                        if (itemModel.bookingModel.hasMedicalIssues)
+                          Icon(
+                            Icons.medication,
+                            color: Colors.red.shade500,
+                            size: 13,
+                          ),
                         IconButton(
                           splashRadius: 20,
                           icon: Icon(Icons.call_rounded,
@@ -349,7 +373,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                           initialData: SizedBox(),
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
-                                ConnectionState.done)
+                                ConnectionState.done) {
                               return Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -406,7 +430,6 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   ),
                                   SizedBox(height: 30),
                                   buildPaymentStatus(
-                                    // i: i,
                                     itemModel: itemModel,
                                     totalAmount:
                                         itemModel.bookingModel.totalCost,
@@ -427,6 +450,63 @@ class BookingsExpansionPanel extends StatelessWidget {
                                     ],
                                   ),
                                   SizedBox(height: 10),
+                                  if (itemModel.colorCode == "Blue")
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          children: [
+                                            Text(
+                                              "Doctor Required",
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  fontWeight: FontWeight.w600),
+                                            ),
+                                            SizedBox(width: 15),
+                                            Icon(Icons.medication, size: 20),
+                                          ],
+                                        ),
+                                        SizedBox(height: 10),
+                                        ...itemModel.bookingModel.pax.map((e) {
+                                          if (e['needDoctor'] == true)
+                                            return Row(
+                                              children: [
+                                                Container(
+                                                  height: 8,
+                                                  width: 8,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.red,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10)),
+                                                ).paddingOnly(top: 2),
+                                                SizedBox(width: 10),
+                                                Text(
+                                                  e['first-name'] +
+                                                      e['last-name'],
+                                                  style: TextStyle(
+                                                      fontSize: FontSize.small),
+                                                ),
+                                                Spacer(),
+                                                IconButton(
+                                                  splashRadius: 15,
+                                                  icon: Icon(Icons.call_rounded,
+                                                      color: AppColors
+                                                          .background.black),
+                                                  iconSize: 15,
+                                                  onPressed: () {
+                                                    makingPhoneCall(
+                                                        e['phoneNumber']);
+                                                  },
+                                                ),
+                                              ],
+                                            ).paddingOnly(right: 20);
+                                          return SizedBox();
+                                        }),
+                                      ],
+                                    ),
+                                  SizedBox(height: 20),
                                   Row(
                                     children: [
                                       if (bookingCalenderLogic
@@ -851,6 +931,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                   SizedBox(height: 20),
                                 ],
                               );
+                            }
                             return SizedBox();
                           })
                       : SizedBox(),
