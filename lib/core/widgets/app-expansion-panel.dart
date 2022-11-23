@@ -839,7 +839,6 @@ class BookingsExpansionPanel extends StatelessWidget {
                                           //     .replaceAll("+", "");
                                           // log(phone);
                                           String phone = "916303359863";
-                                          String link = "https://thebig.co/whatsapp-automatic-text-formatter";
                                           String message = """
                                           *Temple Adventures - Scuba Diving Pondicherry*
  
