@@ -29,12 +29,8 @@ class LogScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('logs')
-                  .orderBy('timeStamp', descending: true)
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
+              stream: FirebaseFirestore.instance.collection('logs').orderBy('timeStamp', descending: true).snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
                     child: CircularProgressIndicator(color: Colors.black),
@@ -42,8 +38,7 @@ class LogScreen extends StatelessWidget {
                 }
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
-                    LogModel logModel =
-                        LogModel.fromMap(snapshot.data.docs[index].data());
+                    LogModel logModel = LogModel.fromMap(snapshot.data.docs[index].data());
                     //print("Started");
                     return buildLog(
                       log: logModel,
@@ -127,6 +122,12 @@ class LogScreen extends StatelessWidget {
             color: AppColors.text.white,
             size: 23,
           );
+        case LogType.bookingPaxDeleted:
+          return Icon(
+            Icons.person_remove_rounded,
+            color: AppColors.text.white,
+            size: 23,
+          );
       }
     }
 
@@ -171,6 +172,14 @@ class LogScreen extends StatelessWidget {
           // return AppColors.text.black;
           // return Color(0xff707070);
           return AppColors.text.skyBlue;
+
+        case LogType.bookingPaxDeleted:
+          // return AppColors.text.black;
+          // return Color(0xff707070);
+          return AppColors.text.orange;
+
+        default:
+          return AppColors.text.skyBlue;
         // return Color(0xff454444);
       }
     }
@@ -197,22 +206,20 @@ class LogScreen extends StatelessWidget {
           return "Edited ${log.employeeName}";
         case LogType.deleteEmployee:
           return "Deleted ${log.employeeName}";
+        case LogType.bookingPaxDeleted:
+          return "PAX Deleted";
       }
     }
 
     return GestureDetector(
       onTap: () async {
         if (getTitle() == "Booking Created") {
-          var data = await FirebaseFirestore.instance
-              .collection("bookings")
-              .doc(log.bookingId.trim())
-              .get();
+          var data = await FirebaseFirestore.instance.collection("bookings").doc(log.bookingId.trim()).get();
           if (data.data() != null) {
             print(log.bookingId);
             Get.toNamed(DetailsScreen.id, arguments: data.data());
           } else {
-            Fluttertoast.showToast(
-                msg: "${log.bookingId} Booking Doesn't Exit");
+            Fluttertoast.showToast(msg: "${log.bookingId} Booking Doesn't Exit");
           }
         } else {
           return;
@@ -225,8 +232,7 @@ class LogScreen extends StatelessWidget {
               Container(
                 height: 40,
                 width: 40,
-                decoration:
-                    BoxDecoration(shape: BoxShape.circle, color: getColor()),
+                decoration: BoxDecoration(shape: BoxShape.circle, color: getColor()),
                 child: Center(
                   child: getIcon(),
                 ),
@@ -292,8 +298,7 @@ class LogScreen extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(
-                left: 1.0, right: 1.0, top: 17, bottom: 17),
+            padding: const EdgeInsets.only(left: 1.0, right: 1.0, top: 17, bottom: 17),
             child: Container(
               height: 1,
               width: Get.width,
@@ -324,6 +329,7 @@ enum LogType {
   signedOut,
   bookingCreated,
   bookingDeleted,
+  bookingPaxDeleted,
   bookingEdited,
   addActivity,
   editActivity,
