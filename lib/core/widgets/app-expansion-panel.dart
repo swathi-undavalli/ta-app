@@ -662,6 +662,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                         onPressed: () async {
                                           // String phone = itemModel.phone.replaceAll("+", "");
                                           String phone = "916303359863";
+                                          String link = "https://thebig.co/whatsapp-automatic-text-formatter";
                                           String message = """
                                           *Temple Adventures - Scuba Diving Pondicherry*
  
@@ -683,7 +684,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
 
 *We need to submit all diver details to the *Marine Police / Coast Guard* and *PADI.* To process the same and take you diving, we need *all the divers to complete* the *paperwork process*. You may share this link with them. 
 
-*Please complete the paperwork process* by clicking this link: https://thebig.co/whatsapp-automatic-text-formatter. This includes _Discover Scuba Diving Form, Medical Form, Liability Releases, Agency NDA and our policies_
+*Please complete the paperwork process* by clicking this link: $link. This includes _Discover Scuba Diving Form, Medical Form, Liability Releases, Agency NDA and our policies_
 
 *Please arrive 15 minutes before your scheduled pool session and your ocean dive. If you are late on the day of your ocean dive you will miss your spot on the boat.*
  
