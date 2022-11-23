@@ -29,6 +29,7 @@ import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
+import 'package:http/http.dart' as http;
 
 class BookingsExpansionPanel extends StatelessWidget {
   final ExpansionPanelLogic logic = ExpansionPanelLogic();
@@ -834,6 +835,19 @@ class BookingsExpansionPanel extends StatelessWidget {
                                           print(bs64);
                                           String link =
                                               "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=";
+                                          log(link);
+
+                                          final result = await http.post(
+                                              Uri.parse(
+                                                  'https://cleanuri.com/api/v1/shorten'),
+                                              body: {
+                                                'url': link,
+                                              });
+
+                                          final jsonResult =
+                                              jsonDecode(result.body);
+                                          final jsonLink =
+                                              jsonResult['result_url'];
 
                                           // String phone = itemModel.phone
                                           //     .replaceAll("+", "");
@@ -858,9 +872,9 @@ Total Cost : *${double.parse(itemModel.cost).roundToDouble()} /-* 
 Deposit : *${double.parse(itemModel.paid).roundToDouble()} /-* 
 Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-* 
 
-*We need to submit all diver details to the *Marine Police / Coast Guard* and *PADI.* To process the same and take you diving, we need *all the divers to complete* the *paperwork process*. You may share this link with them. 
+*We need to submit all diver details to the *Marine Police / Coast Guard** and *PADI.* To process the same and take you diving, we need *all the divers to complete* the *paperwork process*. You may share this link with them. 
 
-*Please complete the paperwork process* by clicking this link: $link. This includes _Discover Scuba Diving Form, Medical Form, Liability Releases, Agency NDA and our policies_
+*Please complete the paperwork process* by clicking this link: $jsonLink . This includes _Discover Scuba Diving Form, Medical Form, Liability Releases, Agency NDA and our policies_
 
 *Please arrive 15 minutes before your scheduled pool session and your ocean dive. If you are late on the day of your ocean dive you will miss your spot on the boat.*
  
