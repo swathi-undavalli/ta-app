@@ -43,14 +43,9 @@ class BookingsExpansionPanel extends StatelessWidget {
   TextEditingController depositTED = TextEditingController();
 
   TextEditingController searchTED = TextEditingController();
-  BookingsCalenderWidgetLogic bookingCalenderLogic =
-      BookingsCalenderWidgetLogic();
+  BookingsCalenderWidgetLogic bookingCalenderLogic = BookingsCalenderWidgetLogic();
 
-  BookingsExpansionPanel(
-      {this.items,
-      this.onDeletePressed,
-      this.onSearchTap,
-      @required this.searchBar});
+  BookingsExpansionPanel({this.items, this.onDeletePressed, this.onSearchTap, @required this.searchBar});
 
   generateList(List<ItemModel> itemsList) {
     if (itemsList.isEmpty) return [Text("No Results Found")];
@@ -72,9 +67,7 @@ class BookingsExpansionPanel extends StatelessWidget {
           if (controller.showSearchField)
             ...generateList(items.where((ItemModel item) {
               if (item.bookingID.contains(searchTED.text.trim())) return true;
-              if (item.name
-                  .toLowerCase()
-                  .contains(searchTED.text.trim().toLowerCase())) return true;
+              if (item.name.toLowerCase().contains(searchTED.text.trim().toLowerCase())) return true;
               return false;
             }).toList())
           else
@@ -100,8 +93,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.search,
-                        size: 20, color: AppColors.text.darkgrey),
+                    Icon(Icons.search, size: 20, color: AppColors.text.darkgrey),
                     SizedBox(width: 15),
                     Container(
                       width: controller.showSearchField ? 240 : 0,
@@ -110,12 +102,9 @@ class BookingsExpansionPanel extends StatelessWidget {
                           onSearchTap();
                         },
                         decoration: InputDecoration(
-                            enabledBorder:
-                                OutlineInputBorder(borderSide: BorderSide.none),
-                            focusedBorder:
-                                OutlineInputBorder(borderSide: BorderSide.none),
-                            disabledBorder:
-                                OutlineInputBorder(borderSide: BorderSide.none),
+                            enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                            focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                            disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
                             hintText: 'Search...',
                             hintStyle: TextStyle(fontSize: 14, height: 1)),
                         controller: searchTED,
@@ -130,8 +119,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                               searchTED.text = "";
                               searchController.update();
                             },
-                            child: Icon(Icons.close_outlined,
-                                size: 20, color: AppColors.text.darkgrey),
+                            child: Icon(Icons.close_outlined, size: 20, color: AppColors.text.darkgrey),
                           )
                         : SizedBox(),
                   ],
@@ -186,264 +174,192 @@ class BookingsExpansionPanel extends StatelessWidget {
               padding: const EdgeInsets.only(left: 15),
               child: Column(
                 children: [
-                  Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Container(
-                          height: 7,
-                          width: 7,
-                          decoration: BoxDecoration(
-                              color: getBalance(
-                                          itemModel.bookingModel.payments,
-                                          double.parse(itemModel.paid)
-                                              .roundToDouble(),
-                                          double.parse(itemModel.cost)
-                                              .roundToDouble()) ==
-                                      "0"
-                                  ? Colors.green
-                                  : Colors.red,
-                              borderRadius: BorderRadius.circular(5)),
-                        ),
-                        SizedBox(width: 5),
-                        Expanded(
-                          child: Row(
-                            children: [
-                              Flexible(
-                                child: Text(
-                                  itemModel.name
-                                      .trim()
-                                      .toLowerCase()
-                                      .capitalizeFirst,
-                                  overflow: TextOverflow.ellipsis,
-                                  style: TextStyle(
-                                      color: AppColors.text.black,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w600),
+                  Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                    Container(
+                      height: 7,
+                      width: 7,
+                      decoration: BoxDecoration(
+                          color: getBalance(
+                                      itemModel.bookingModel.payments,
+                                      double.parse(itemModel.paid).roundToDouble(),
+                                      double.parse(itemModel.cost).roundToDouble()) ==
+                                  "0"
+                              ? Colors.green
+                              : Colors.red,
+                          borderRadius: BorderRadius.circular(5)),
+                    ),
+                    SizedBox(width: 5),
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Flexible(
+                            child: Text(
+                              itemModel.name.trim().toLowerCase().capitalizeFirst,
+                              overflow: TextOverflow.ellipsis,
+                              style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
+                            ),
+                          ),
+                          Text(
+                            " x " + (itemModel.bookingModel.noOfPersons.toString()),
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
+                          ),
+                          if (itemModel.colorCode == "Blue" &&
+                              itemModel.bookingModel.pax.length - 1 == itemModel.bookingModel.noOfPersons)
+                            Icon(
+                              Icons.verified,
+                              color: AppColors.text.skyBlue,
+                              size: 12,
+                            ).paddingOnly(left: 5),
+                          if (itemModel.bookingModel.hasMedicalIssues) Text(" 👨‍⚕️"),
+                        ],
+                      ),
+                    ),
+                    SizedBox(width: 5),
+                    IconButton(
+                      splashRadius: 20,
+                      icon: Icon(Icons.call_rounded, color: AppColors.background.black),
+                      iconSize: 15,
+                      onPressed: () {
+                        log(double.parse(itemModel.balance).floorToDouble().toString());
+                        makingPhoneCall(itemModel.phone);
+                      },
+                    ),
+                    EmployeeAccess(
+                      access: AccessRights.editBookings,
+                      child: IconButton(
+                        splashRadius: 20,
+                        icon: Icon(Icons.delete, color: AppColors.background.black),
+                        iconSize: 15,
+                        onPressed: () {
+                          Get.defaultDialog(
+                            contentPadding: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 30),
+                            title: "\nAre You Sure ? ",
+                            middleText: "Booking will Be Deleted Permanently.",
+                            backgroundColor: Colors.white,
+                            titleStyle: TextStyle(
+                                color: AppColors.text.black,
+                                fontFamily: AppFonts.nunito,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold),
+                            middleTextStyle: TextStyle(
+                                color: AppColors.text.black,
+                                fontFamily: AppFonts.nunito,
+                                fontSize: 15,
+                                fontWeight: FontWeight.w500),
+                            confirm: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                AppButton.miniText(
+                                  text: 'Cancel',
+                                  onTap: () {
+                                    Get.back();
+                                  },
                                 ),
-                              ),
-                              Text(
-                                " x " +
-                                    (itemModel.bookingModel.noOfPersons
-                                        .toString()),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                    color: AppColors.text.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ],
-                          ),
-                        ),
-                        SizedBox(width: 5),
-                        if (itemModel.colorCode == "Blue" &&
-                            itemModel.bookingModel.pax.length - 1 ==
-                                itemModel.bookingModel.noOfPersons)
-                          Icon(
-                            Icons.verified,
-                            color: AppColors.text.skyBlue,
-                            size: 12,
-                          ).paddingOnly(right: 5),
-                        // ...itemModel.bookingModel.pax.map((e) {
-                        //   if (e['needDoctor'] == true)
-                        //     return Icon(
-                        //       Icons.medication,
-                        //       color: Colors.red.shade500,
-                        //       size: 13,
-                        //     );
-                        //   return SizedBox();
-                        // }),
-                        if (itemModel.bookingModel.hasMedicalIssues)
-                          Icon(
-                            Icons.medication,
-                            color: Colors.red.shade500,
-                            size: 13,
-                          ),
-                        IconButton(
-                          splashRadius: 20,
-                          icon: Icon(Icons.call_rounded,
-                              color: AppColors.background.black),
-                          iconSize: 15,
-                          onPressed: () {
-                            log(double.parse(itemModel.balance)
-                                .floorToDouble()
-                                .toString());
-                            makingPhoneCall(itemModel.phone);
-                          },
-                        ),
-                        EmployeeAccess(
-                          access: AccessRights.editBookings,
-                          child: IconButton(
-                            splashRadius: 20,
-                            icon: Icon(Icons.delete,
-                                color: AppColors.background.black),
-                            iconSize: 15,
-                            onPressed: () {
-                              Get.defaultDialog(
-                                contentPadding: EdgeInsets.only(
-                                    left: 30, right: 30, top: 20, bottom: 30),
-                                title: "\nAre You Sure ? ",
-                                middleText:
-                                    "Booking will Be Deleted Permanently.",
-                                backgroundColor: Colors.white,
-                                titleStyle: TextStyle(
-                                    color: AppColors.text.black,
-                                    fontFamily: AppFonts.nunito,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                                middleTextStyle: TextStyle(
-                                    color: AppColors.text.black,
-                                    fontFamily: AppFonts.nunito,
-                                    fontSize: 15,
-                                    fontWeight: FontWeight.w500),
-                                confirm: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    AppButton.miniText(
-                                      text: 'Cancel',
-                                      onTap: () {
-                                        Get.back();
-                                      },
-                                    ),
-                                    AppButton.miniFlat(
-                                      text: 'OK',
-                                      onTap: () {
-                                        FirebaseFirestore.instance
-                                            .collection("bookings")
-                                            .doc(itemModel.bookingModel.id)
-                                            .delete();
-                                        LogModel logModel = LogModel(
-                                            type: LogType.bookingDeleted,
-                                            bookingId:
-                                                itemModel.bookingModel.id);
-                                        FirebaseFirestore.instance
-                                            .collection("logs")
-                                            .doc()
-                                            .set(logModel.toMap());
+                                AppButton.miniFlat(
+                                  text: 'OK',
+                                  onTap: () {
+                                    FirebaseFirestore.instance
+                                        .collection("bookings")
+                                        .doc(itemModel.bookingModel.id)
+                                        .delete();
+                                    LogModel logModel =
+                                        LogModel(type: LogType.bookingDeleted, bookingId: itemModel.bookingModel.id);
+                                    FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
 
-                                        Get.back();
-                                        onDeletePressed();
-                                        BookingsCalenderWidgetLogicNew
-                                            bookingCalenderLogic =
-                                            BookingsCalenderWidgetLogicNew();
-                                        bookingCalenderLogic.onDateSelected(
-                                            bookingCalenderLogic
-                                                .controller.lastDateIndex);
-                                      },
-                                    ),
-                                  ],
+                                    Get.back();
+                                    onDeletePressed();
+                                    BookingsCalenderWidgetLogicNew bookingCalenderLogic =
+                                        BookingsCalenderWidgetLogicNew();
+                                    bookingCalenderLogic.onDateSelected(bookingCalenderLogic.controller.lastDateIndex);
+                                  },
                                 ),
-                                barrierDismissible: false,
-                                radius: 10,
-                              );
-                            },
-                          ),
-                        ),
-                        EmployeeAccess(
-                          access: AccessRights.editBookings,
-                          child: IconButton(
-                            splashRadius: 20,
-                            icon: Icon(Icons.edit,
-                                color: AppColors.background.black),
-                            iconSize: 15,
-                            onPressed: () {
-                              var model = itemModel.bookingModel;
-                              Get.toNamed(EditBookingNewScreen.id,
-                                  arguments: model);
-                            },
-                          ),
-                        ),
-                        IconButton(
-                          splashRadius: 20,
-                          icon: Icon(controller.isExpanded[i]
-                              ? Icons.keyboard_arrow_up_rounded
-                              : Icons.keyboard_arrow_down_rounded),
-                          onPressed: () {
-                            //log("tapped");
-                            controller.isExpanded[i] =
-                                !controller.isExpanded[i];
-                            //log(controller.isExpanded.toString());
-                            controller.update();
-                          },
-                        ),
-                      ]),
+                              ],
+                            ),
+                            barrierDismissible: false,
+                            radius: 10,
+                          );
+                        },
+                      ),
+                    ),
+                    EmployeeAccess(
+                      access: AccessRights.editBookings,
+                      child: IconButton(
+                        splashRadius: 20,
+                        icon: Icon(Icons.edit, color: AppColors.background.black),
+                        iconSize: 15,
+                        onPressed: () {
+                          var model = itemModel.bookingModel;
+                          Get.toNamed(EditBookingNewScreen.id, arguments: model);
+                        },
+                      ),
+                    ),
+                    IconButton(
+                      splashRadius: 20,
+                      icon: Icon(controller.isExpanded[i]
+                          ? Icons.keyboard_arrow_up_rounded
+                          : Icons.keyboard_arrow_down_rounded),
+                      onPressed: () {
+                        //log("tapped");
+                        controller.isExpanded[i] = !controller.isExpanded[i];
+                        //log(controller.isExpanded.toString());
+                        controller.update();
+                      },
+                    ),
+                  ]),
                   controller.isExpanded[i]
                       ? FutureBuilder(
                           future: Future.delayed(Duration(milliseconds: 200)),
                           initialData: SizedBox(),
                           builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
+                            if (snapshot.connectionState == ConnectionState.done) {
                               return Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
+                                  buildKeyValuePairs("Booking Id", itemModel.bookingID),
+                                  buildKeyValuePairs("Activity", itemModel.activity),
                                   buildKeyValuePairs(
-                                      "Booking Id", itemModel.bookingID),
+                                      "Total Cost", double.parse(itemModel.cost).roundToDouble().toString()),
                                   buildKeyValuePairs(
-                                      "Activity", itemModel.activity),
-                                  buildKeyValuePairs(
-                                      "Total Cost",
-                                      double.parse(itemModel.cost)
-                                          .roundToDouble()
-                                          .toString()),
-                                  buildKeyValuePairs(
-                                      "Deposit",
-                                      double.parse(itemModel.paid)
-                                          .roundToDouble()
-                                          .toString()),
+                                      "Deposit", double.parse(itemModel.paid).roundToDouble().toString()),
                                   buildKeyValuePairs(
                                     "Balance",
                                     getBalance(
                                         itemModel.bookingModel.payments,
-                                        double.parse(itemModel.paid)
-                                            .roundToDouble(),
-                                        double.parse(itemModel.cost)
-                                            .roundToDouble()),
+                                        double.parse(itemModel.paid).roundToDouble(),
+                                        double.parse(itemModel.cost).roundToDouble()),
                                   ),
-                                  buildKeyValuePairs(
-                                      "Pax",
-                                      itemModel.bookingModel.noOfPersons
-                                          .toString()),
-                                  ((itemModel != null) &&
-                                          (itemModel.receiptNo != null))
-                                      ? buildKeyValuePairs(
-                                          "Invoice no", itemModel.receiptNo)
+                                  buildKeyValuePairs("Pax", itemModel.bookingModel.noOfPersons.toString()),
+                                  ((itemModel != null) && (itemModel.receiptNo != null))
+                                      ? buildKeyValuePairs("Invoice no", itemModel.receiptNo)
                                       : buildKeyValuePairs("Invoice no", "-"),
                                   (itemModel.remarks == "")
                                       ? buildKeyValuePairs("Remarks", "-")
-                                      : buildKeyValuePairs("Remarks",
-                                          itemModel.remarks.toString()),
+                                      : buildKeyValuePairs("Remarks", itemModel.remarks.toString()),
                                   buildKeyValuePairs("Phone", itemModel.phone),
                                   buildKeyValuePairs("Email", itemModel.email),
                                   buildKeyValuePairs("Time", itemModel.time),
                                   buildKeyValuePairs("Date", itemModel.date),
-                                  buildKeyValuePairs(
-                                      "Session", itemModel.session),
+                                  buildKeyValuePairs("Session", itemModel.session),
                                   buildKeyValuePairs(
                                     "Registered",
                                     "${itemModel.bookingModel.pax.length - 1} / ${itemModel.bookingModel.noOfPersons}",
-                                    isDanger: ((itemModel
-                                                .bookingModel.pax.length -
-                                            1) !=
+                                    isDanger: ((itemModel.bookingModel.pax.length - 1) !=
                                         (itemModel.bookingModel.noOfPersons)),
                                   ),
                                   SizedBox(height: 30),
                                   buildPaymentStatus(
                                     itemModel: itemModel,
-                                    totalAmount:
-                                        itemModel.bookingModel.totalCost,
+                                    totalAmount: itemModel.bookingModel.totalCost,
                                     payments: [
                                       PaymentModel(
-                                        amount: double.parse(itemModel.paid)
-                                            .roundToDouble(),
+                                        amount: double.parse(itemModel.paid).roundToDouble(),
                                         collectedBy: itemModel.employeeName,
                                         reciptNo: itemModel.receiptNo,
-                                        referenceNo: itemModel
-                                            .bookingModel.paymentTransactionId,
+                                        referenceNo: itemModel.bookingModel.paymentTransactionId,
                                         remarks: "",
-                                        paymentMode:
-                                            itemModel.bookingModel.paymentMode,
+                                        paymentMode: itemModel.bookingModel.paymentMode,
                                         time: itemModel.bookingModel.createdAt,
                                       ),
                                       ...itemModel.bookingModel.payments
@@ -452,16 +368,13 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   SizedBox(height: 10),
                                   if (itemModel.colorCode == "Blue")
                                     Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Row(
                                           children: [
                                             Text(
                                               "Doctor Required",
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600),
+                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                                             ),
                                             SizedBox(width: 15),
                                             Icon(Icons.medication, size: 20),
@@ -470,38 +383,38 @@ class BookingsExpansionPanel extends StatelessWidget {
                                         SizedBox(height: 10),
                                         ...itemModel.bookingModel.pax.map((e) {
                                           if (e['needDoctor'] == true)
-                                            return Row(
-                                              children: [
-                                                Container(
-                                                  height: 8,
-                                                  width: 8,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.red,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10)),
-                                                ).paddingOnly(top: 2),
-                                                SizedBox(width: 10),
-                                                Text(
-                                                  e['first-name'] +
-                                                      e['last-name'],
-                                                  style: TextStyle(
-                                                      fontSize: FontSize.small),
-                                                ),
-                                                Spacer(),
-                                                IconButton(
-                                                  splashRadius: 15,
-                                                  icon: Icon(Icons.call_rounded,
-                                                      color: AppColors
-                                                          .background.black),
-                                                  iconSize: 15,
-                                                  onPressed: () {
-                                                    makingPhoneCall(
-                                                        e['phoneNumber']);
-                                                  },
-                                                ),
-                                              ],
-                                            ).paddingOnly(right: 20);
+                                            return Container(
+                                              height: 30,
+                                              child: Row(
+                                                children: [
+                                                  Container(
+                                                    height: 8,
+                                                    width: 8,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.red, borderRadius: BorderRadius.circular(10)),
+                                                  ).paddingOnly(top: 2),
+                                                  SizedBox(width: 10),
+                                                  Text(
+                                                    e['first-name'] + e['last-name'],
+                                                    style: TextStyle(fontSize: FontSize.small),
+                                                  ),
+                                                  Spacer(),
+                                                  IconButton(
+                                                    splashRadius: 15,
+                                                    padding: EdgeInsets.zero,
+                                                    icon: Icon(
+                                                      Icons.call_rounded,
+                                                      color: AppColors.background.black,
+                                                      size: 15,
+                                                    ),
+                                                    iconSize: 15,
+                                                    onPressed: () {
+                                                      makingPhoneCall(e['phoneNumber']);
+                                                    },
+                                                  ),
+                                                ],
+                                              ).paddingOnly(right: 20),
+                                            );
                                           return SizedBox();
                                         }),
                                       ],
@@ -509,46 +422,38 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   SizedBox(height: 20),
                                   Row(
                                     children: [
-                                      if (bookingCalenderLogic
-                                                  .controller.selectedType ==
-                                              FilterType.Dive &&
-                                          itemModel.bookingModel.pax.length -
-                                                  1 ==
-                                              itemModel
-                                                  .bookingModel.noOfPersons)
-                                        SelectSeatsWidget(
-                                            itemModel.bookingModel),
+                                      if (bookingCalenderLogic.controller.selectedType == FilterType.Dive &&
+                                          itemModel.bookingModel.pax.length - 1 == itemModel.bookingModel.noOfPersons)
+                                        SelectSeatsWidget(itemModel.bookingModel),
                                       Spacer(),
                                       if (itemModel.colorCode == "Blue")
                                         IconButton(
                                           icon: Icon(Icons.whatsapp_outlined),
                                           iconSize: 25,
                                           onPressed: () async {
-                                            String bookingId =
-                                                itemModel.bookingModel.id;
-                                            String bs64 = base64
-                                                .encode(bookingId.codeUnits);
+                                            String bookingId = itemModel.bookingModel.id;
+                                            String bs64 = base64.encode(bookingId.codeUnits);
                                             print(bs64);
                                             String link =
                                                 "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=";
                                             log(link);
 
+                                            var headers = {
+                                              "x-api-key": "uSirf5x9fM5iYjPuu8GXS4TVvLbt1tdg9DUe7f7N",
+                                              "Content-Type": "application/json"
+                                            };
                                             final result = await http.post(
-                                                Uri.parse(
-                                                    'https://cleanuri.com/api/v1/shorten'),
-                                                body: {
-                                                  'url': link,
-                                                });
+                                              Uri.parse('https://api.aws3.link/shorten'),
+                                              body: jsonEncode({
+                                                "longUrl": link,
+                                                "expireHours": 24,
+                                              }),
+                                              headers: headers,
+                                            );
 
-                                            final jsonResult =
-                                                jsonDecode(result.body);
-                                            final jsonLink =
-                                                jsonResult['result_url'];
+                                            final jsonLink = jsonDecode(result.body)["shortUrl"];
 
-                                            // String phone = itemModel.phone
-                                            //     .replaceAll("+", "");
-                                            // log(phone);
-                                            String phone = "916303359863";
+                                            String phone = itemModel.phone.replaceAll("+", "");
                                             String message = """
                                           *Temple Adventures - Scuba Diving Pondicherry*
  
@@ -576,15 +481,11 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
  
 🤿 🐟 Happy diving !!! 🐟 🤿
                                           """;
-                                            var uri =
-                                                "https://wa.me/$phone?text=$message";
+                                            var uri = "https://wa.me/$phone?text=$message";
                                             var encoded = Uri.encodeFull(uri);
-                                            if (!await launchUrl(
-                                                Uri.parse(encoded),
-                                                mode: LaunchMode
-                                                    .externalApplication)) {
-                                              showToast(
-                                                  "cannot launch whatsapp");
+                                            if (!await launchUrl(Uri.parse(encoded),
+                                                mode: LaunchMode.externalApplication)) {
+                                              showToast("cannot launch whatsapp");
                                             }
                                           },
                                         ).paddingOnly(right: 10),
@@ -592,47 +493,32 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                         AppButton.miniFlat(
                                           text: "Get Link",
                                           onTap: () async {
-                                            String bookingId =
-                                                itemModel.bookingModel.id;
-                                            String bs64 = base64
-                                                .encode(bookingId.codeUnits);
+                                            String bookingId = itemModel.bookingModel.id;
+                                            String bs64 = base64.encode(bookingId.codeUnits);
                                             print(bs64);
                                             String link =
                                                 "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=";
 
                                             showModalBottomSheet(
-                                                backgroundColor:
-                                                    Colors.transparent,
+                                                backgroundColor: Colors.transparent,
                                                 isScrollControlled: true,
                                                 context: context,
                                                 useRootNavigator: true,
                                                 builder: (context) {
                                                   return Container(
                                                     padding: EdgeInsets.only(
-                                                        bottom: MediaQuery.of(
-                                                                context)
-                                                            .viewInsets
-                                                            .bottom,
+                                                        bottom: MediaQuery.of(context).viewInsets.bottom,
                                                         top: 30,
                                                         left: 30,
                                                         right: 30),
-                                                    decoration:
-                                                        const BoxDecoration(
+                                                    decoration: const BoxDecoration(
                                                       color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topLeft: Radius
-                                                                  .circular(15),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      15)),
+                                                      borderRadius: BorderRadius.only(
+                                                          topLeft: Radius.circular(15), topRight: Radius.circular(15)),
                                                     ),
                                                     child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Row(
                                                           children: [
@@ -641,104 +527,60 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                                               child: Text(
                                                                 "${itemModel.name.capitalizeFirst + "x" + itemModel.pax.toString()}",
                                                                 style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        FontSize
-                                                                            .textSize),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
+                                                                    fontWeight: FontWeight.w600,
+                                                                    fontSize: FontSize.textSize),
+                                                                overflow: TextOverflow.ellipsis,
                                                               ),
                                                             ),
                                                             const Spacer(),
                                                             Material(
-                                                              color: Colors
-                                                                  .transparent,
+                                                              color: Colors.transparent,
                                                               child: InkWell(
-                                                                  highlightColor: Colors
-                                                                      .blue
-                                                                      .withOpacity(
-                                                                          0.2),
-                                                                  splashColor: Colors
-                                                                      .grey
-                                                                      .withOpacity(
-                                                                          0.3),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
+                                                                  highlightColor: Colors.blue.withOpacity(0.2),
+                                                                  splashColor: Colors.grey.withOpacity(0.3),
+                                                                  borderRadius: BorderRadius.circular(20),
                                                                   radius: 100,
                                                                   onTap: () {
-                                                                    Navigator.pop(
-                                                                        context);
+                                                                    Navigator.pop(context);
                                                                     // provider.onCancelPressed();
                                                                   },
-                                                                  child: Icon(Icons
-                                                                      .close)),
+                                                                  child: Icon(Icons.close)),
                                                             )
                                                           ],
                                                         ),
                                                         SizedBox(height: 50),
                                                         Container(
                                                           height: 50,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        20),
-                                                            color: AppColors
-                                                                .text
-                                                                .lightSkyBlue
-                                                                .withOpacity(
-                                                                    0.1),
+                                                          decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(20),
+                                                            color: AppColors.text.lightSkyBlue.withOpacity(0.1),
                                                           ),
                                                           child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
                                                             children: [
-                                                              SizedBox(
-                                                                  width: 15),
+                                                              SizedBox(width: 15),
                                                               Container(
                                                                 width: 200,
                                                                 child: Text(
                                                                   "temple_paperwork/?bookingId..",
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
+                                                                  overflow: TextOverflow.ellipsis,
                                                                 ),
                                                               ),
                                                               Spacer(),
                                                               IconButton(
-                                                                  onPressed:
-                                                                      () async {
-                                                                    await Clipboard.setData(
-                                                                        ClipboardData(
-                                                                            text:
-                                                                                link));
-                                                                    Fluttertoast
-                                                                        .showToast(
-                                                                            msg:
-                                                                                "Link copied to Clipboard");
+                                                                  onPressed: () async {
+                                                                    await Clipboard.setData(ClipboardData(text: link));
+                                                                    Fluttertoast.showToast(
+                                                                        msg: "Link copied to Clipboard");
                                                                   },
-                                                                  icon: Icon(
-                                                                      Icons
-                                                                          .copy_outlined,
-                                                                      size:
-                                                                          20)),
+                                                                  icon: Icon(Icons.copy_outlined, size: 20)),
                                                             ],
                                                           ),
                                                         ),
                                                         SizedBox(height: 50),
                                                         Container(
-                                                          alignment:
-                                                              Alignment.center,
+                                                          alignment: Alignment.center,
                                                           child: QRImage(
                                                               height: 150,
                                                               width: 150,
@@ -762,43 +604,28 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                         AppButton.miniFlat(
                                           text: "Manage PAX",
                                           onTap: () async {
-                                            BookingModel bookingModel =
-                                                itemModel.bookingModel;
+                                            BookingModel bookingModel = itemModel.bookingModel;
                                             showModalBottomSheet(
-                                                backgroundColor:
-                                                    Colors.transparent,
+                                                backgroundColor: Colors.transparent,
                                                 isScrollControlled: true,
                                                 context: context,
                                                 useRootNavigator: true,
                                                 builder: (context) {
                                                   return Container(
                                                     padding: EdgeInsets.only(
-                                                        bottom: MediaQuery.of(
-                                                                context)
-                                                            .viewInsets
-                                                            .bottom,
+                                                        bottom: MediaQuery.of(context).viewInsets.bottom,
                                                         top: 30,
                                                         left: 30,
                                                         right: 30),
-                                                    constraints: BoxConstraints(
-                                                        minHeight: 300),
-                                                    decoration:
-                                                        const BoxDecoration(
+                                                    constraints: BoxConstraints(minHeight: 300),
+                                                    decoration: const BoxDecoration(
                                                       color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topLeft: Radius
-                                                                  .circular(15),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      15)),
+                                                      borderRadius: BorderRadius.only(
+                                                          topLeft: Radius.circular(15), topRight: Radius.circular(15)),
                                                     ),
                                                     child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
                                                       children: [
                                                         Row(
                                                           children: [
@@ -807,66 +634,39 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                                               child: Text(
                                                                 "${itemModel.name.capitalizeFirst + " X " + itemModel.pax.toString()}",
                                                                 style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        FontSize
-                                                                            .textSize),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
+                                                                    fontWeight: FontWeight.w600,
+                                                                    fontSize: FontSize.textSize),
+                                                                overflow: TextOverflow.ellipsis,
                                                               ),
                                                             ),
                                                             const Spacer(),
                                                             Material(
-                                                              color: Colors
-                                                                  .transparent,
+                                                              color: Colors.transparent,
                                                               child: InkWell(
-                                                                  highlightColor: Colors
-                                                                      .blue
-                                                                      .withOpacity(
-                                                                          0.2),
-                                                                  splashColor: Colors
-                                                                      .grey
-                                                                      .withOpacity(
-                                                                          0.3),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
+                                                                  highlightColor: Colors.blue.withOpacity(0.2),
+                                                                  splashColor: Colors.grey.withOpacity(0.3),
+                                                                  borderRadius: BorderRadius.circular(20),
                                                                   radius: 100,
                                                                   onTap: () {
-                                                                    Navigator.pop(
-                                                                        context);
+                                                                    Navigator.pop(context);
                                                                     // provider.onCancelPressed();
                                                                   },
-                                                                  child: Icon(Icons
-                                                                      .close)),
+                                                                  child: Icon(Icons.close)),
                                                             )
                                                           ],
                                                         ),
                                                         SizedBox(height: 20),
-                                                        ...bookingModel.pax
-                                                            .asMap()
-                                                            .entries
-                                                            .map((e) {
+                                                        ...bookingModel.pax.asMap().entries.map((e) {
                                                           int index = e.key;
-                                                          String email =
-                                                              e.value["email"];
-                                                          if (index == 0)
-                                                            return SizedBox();
+                                                          String email = e.value["email"];
+                                                          if (index == 0) return SizedBox();
                                                           return Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                             children: [
                                                               Text(email),
                                                               IconButton(
                                                                 onPressed: () {
-                                                                  onDeletePaxPressed(
-                                                                      bookingModel,
-                                                                      index);
+                                                                  onDeletePaxPressed(bookingModel, index);
                                                                 },
                                                                 icon: Icon(
                                                                   Icons.delete,
@@ -894,19 +694,15 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                                   text: "Created By : ",
                                                   style: TextStyle(
                                                     fontFamily: AppFonts.nunito,
-                                                    color:
-                                                        AppColors.text.darkgrey,
+                                                    color: AppColors.text.darkgrey,
                                                     fontSize: 10,
                                                   ),
                                                   children: <TextSpan>[
                                                     TextSpan(
-                                                      text: itemModel
-                                                          .employeeName,
+                                                      text: itemModel.employeeName,
                                                       style: TextStyle(
-                                                        color:
-                                                            Color(0xff484646),
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                                        color: Color(0xff484646),
+                                                        fontWeight: FontWeight.bold,
                                                         fontSize: 10,
                                                       ),
                                                     ),
@@ -919,10 +715,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                       AppButton.miniFlat(
                                         text: "Share",
                                         onTap: () async {
-                                          File pdfFile =
-                                              await ShareBookingDetails
-                                                  .generatePdf(
-                                                      itemModel.bookingModel);
+                                          File pdfFile = await ShareBookingDetails.generatePdf(itemModel.bookingModel);
                                           Share.shareFiles([pdfFile.path]);
                                         },
                                       ).paddingOnly(right: 15),
@@ -960,11 +753,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
           child: Text(
             key,
             style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 13,
-                letterSpacing: 0.3,
-                fontWeight: FontWeight.w600,
-                height: 1.3),
+                color: Colors.grey[700], fontSize: 13, letterSpacing: 0.3, fontWeight: FontWeight.w600, height: 1.3),
           ),
         ),
         Container(
@@ -986,9 +775,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
   }
 
   Widget buildPaymentStatus(
-      {@required double totalAmount,
-      @required List<PaymentModel> payments,
-      @required ItemModel itemModel}) {
+      {@required double totalAmount, @required List<PaymentModel> payments, @required ItemModel itemModel}) {
     double deposits = 0.0;
 
     payments.forEach((payment) {
@@ -1006,9 +793,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                 Expanded(
                   child: Container(
                     height: 1,
-                    color: (totalAmount == deposits)
-                        ? Colors.green.shade400
-                        : Colors.black,
+                    color: (totalAmount == deposits) ? Colors.green.shade400 : Colors.black,
                   ),
                 ),
               ],
@@ -1046,9 +831,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                           child: Container(
                             width: 15,
                             height: 15,
-                            decoration: BoxDecoration(
-                                color: AppColors.text.skyBlue,
-                                shape: BoxShape.circle),
+                            decoration: BoxDecoration(color: AppColors.text.skyBlue, shape: BoxShape.circle),
                             child: Icon(
                               Icons.circle,
                               size: 10,
@@ -1083,8 +866,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             buildNumber(
-                                text:
-                                    (totalAmount - deposits).round().toString(),
+                                text: (totalAmount - deposits).round().toString(),
                                 // text: "16000",
                                 color: Colors.red.shade300,
                                 fontWeight: FontWeight.normal),
@@ -1096,9 +878,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         buildNumber(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                            text: totalAmount.round().toString()),
+                            fontWeight: FontWeight.bold, color: Colors.black, text: totalAmount.round().toString()),
                       ],
                     )),
               ],
@@ -1124,8 +904,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
               AppButton.miniFlat(
                 text: "Add Payment",
                 onTap: () {
-                  Get.toNamed(AddPaymentsScreen.id,
-                      arguments: itemModel.bookingModel);
+                  Get.toNamed(AddPaymentsScreen.id, arguments: itemModel.bookingModel);
                 },
               ).paddingOnly(right: 15)
             ],
@@ -1151,8 +930,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
         Container(
           height: 8,
           width: 8,
-          decoration: BoxDecoration(
-              color: Colors.green, borderRadius: BorderRadius.circular(10)),
+          decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(10)),
         ).paddingOnly(top: 2),
         SizedBox(width: 10),
         Column(
@@ -1251,8 +1029,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
     final BuildOwner buildOwner = BuildOwner(focusManager: FocusManager());
     pipelineOwner.rootNode = renderView;
     renderView.prepareInitialFrame();
-    final RenderObjectToWidgetElement<RenderBox> rootElement =
-        RenderObjectToWidgetAdapter<RenderBox>(
+    final RenderObjectToWidgetElement<RenderBox> rootElement = RenderObjectToWidgetAdapter<RenderBox>(
       container: repaintBoundary,
       child: Directionality(
         textDirection: TextDirection.ltr,
@@ -1269,11 +1046,9 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
     pipelineOwner.flushCompositingBits();
     pipelineOwner.flushPaint();
 
-    final ui.Image image =
-        await repaintBoundary.toImage(pixelRatio: pixelRatio);
+    final ui.Image image = await repaintBoundary.toImage(pixelRatio: pixelRatio);
     //final ui.Image image = await repaintBoundary.toImage(pixelRatio: 1);
-    final ByteData byteData =
-        await image.toByteData(format: ui.ImageByteFormat.png);
+    final ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
     return byteData.buffer.asUint8List();
   }
 
@@ -1281,19 +1056,12 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
     Get.defaultDialog(
       contentPadding: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 30),
       title: "\nAre You Sure ? ",
-      middleText:
-          "Booking PAX (${bookingModel.pax[index]["email"]}) will Be Deleted Permanently.",
+      middleText: "Booking PAX (${bookingModel.pax[index]["email"]}) will Be Deleted Permanently.",
       backgroundColor: Colors.white,
       titleStyle: TextStyle(
-          color: AppColors.text.black,
-          fontFamily: AppFonts.nunito,
-          fontSize: 16,
-          fontWeight: FontWeight.bold),
+          color: AppColors.text.black, fontFamily: AppFonts.nunito, fontSize: 16, fontWeight: FontWeight.bold),
       middleTextStyle: TextStyle(
-          color: AppColors.text.black,
-          fontFamily: AppFonts.nunito,
-          fontSize: 15,
-          fontWeight: FontWeight.w500),
+          color: AppColors.text.black, fontFamily: AppFonts.nunito, fontSize: 15, fontWeight: FontWeight.w500),
       confirm: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -1307,22 +1075,13 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
             text: 'OK',
             onTap: () async {
               bookingModel.pax.removeAt(index);
-              FirebaseFirestore.instance
-                  .collection("bookings")
-                  .doc(bookingModel.id)
-                  .set(bookingModel.toMap());
-              LogModel logModel = LogModel(
-                  type: LogType.bookingPaxDeleted, bookingId: bookingModel.id);
-              FirebaseFirestore.instance
-                  .collection("logs")
-                  .doc()
-                  .set(logModel.toMap());
+              FirebaseFirestore.instance.collection("bookings").doc(bookingModel.id).set(bookingModel.toMap());
+              LogModel logModel = LogModel(type: LogType.bookingPaxDeleted, bookingId: bookingModel.id);
+              FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
               Get.back();
               Get.back();
-              BookingsCalenderWidgetLogicNew bookingCalenderLogic =
-                  BookingsCalenderWidgetLogicNew();
-              bookingCalenderLogic.onDateSelected(
-                  bookingCalenderLogic.controller.lastDateIndex);
+              BookingsCalenderWidgetLogicNew bookingCalenderLogic = BookingsCalenderWidgetLogicNew();
+              bookingCalenderLogic.onDateSelected(bookingCalenderLogic.controller.lastDateIndex);
             },
           ),
         ],
@@ -1400,24 +1159,17 @@ class ItemModel {
     getTime() {
       var d = "";
       if (bookingModel.theoryDate != null && bookingModel.theoryDate.isNotEmpty)
-        d = d +
-            intl.DateFormat("hh:mm a").format(bookingModel.theoryDate[0]) +
-            ", ";
+        d = d + intl.DateFormat("hh:mm a").format(bookingModel.theoryDate[0]) + ", ";
       if (bookingModel.poolDate != null && bookingModel.poolDate.isNotEmpty)
-        d = d +
-            intl.DateFormat("hh:mm a").format(bookingModel.poolDate[0]) +
-            ", ";
+        d = d + intl.DateFormat("hh:mm a").format(bookingModel.poolDate[0]) + ", ";
       if (bookingModel.diveDate != null && bookingModel.diveDate.isNotEmpty)
-        d = d +
-            intl.DateFormat("hh:mm a").format(bookingModel.diveDate[0]) +
-            ", ";
+        d = d + intl.DateFormat("hh:mm a").format(bookingModel.diveDate[0]) + ", ";
       return d.substring(0, d.length - 2);
     }
 
     //log(bookingModel.balance.toString());
     return ItemModel(
-      phone: bookingModel.pax[0]["countryCode"] +
-          bookingModel.pax[0]["phoneNumber"],
+      phone: bookingModel.pax[0]["countryCode"] + bookingModel.pax[0]["phoneNumber"],
       bookingID: bookingModel.id,
       activity: bookingModel.activity[0].name.toString(),
       price: bookingModel.activity[0].price.toString(),
