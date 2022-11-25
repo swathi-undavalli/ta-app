@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:open_file/open_file.dart';
+// import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/boat/models/boat-model.dart';
@@ -263,7 +263,7 @@ class BoatLogic {
     final String fileName = '$path/Output.xlsx';
     final File file = File(fileName);
     await file.writeAsBytes(bytes, flush: true);
-    OpenFile.open(fileName);
+    // OpenFile.open(fileName);
   }
 
   getData() async {
