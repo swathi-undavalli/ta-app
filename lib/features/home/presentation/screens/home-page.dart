@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
+import '../../../../core/authentication/firebase-authentication.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
 import '../../../../core/widgets/attendance_report_widget/attendance_report_widget.dart';
 import '../../../../core/widgets/attendance_widget/attandence_widget_controller.dart';
 import '../../../../core/widgets/attendance_widget/attendence_widget.dart';
+import '../../../login/presentation/screens/login-page.dart';
 import '../../controller/home-page-controller.dart';
 
 class HomePage extends StatelessWidget {
@@ -20,8 +22,7 @@ class HomePage extends StatelessWidget {
         var futures = <Future>[];
 
         AttendanceWidgetLogic attendanceWidgetLogic = AttendanceWidgetLogic();
-        AttendanceReportWidgetLogic attendanceReportWidgetLogic =
-            AttendanceReportWidgetLogic();
+        AttendanceReportWidgetLogic attendanceReportWidgetLogic = AttendanceReportWidgetLogic();
 
         futures.add(attendanceWidgetLogic.reloadData());
         futures.add(attendanceReportWidgetLogic.reloadData());
@@ -39,7 +40,7 @@ class HomePage extends StatelessWidget {
                 children: [
                   Container(
                     margin: EdgeInsets.only(left: 0, top: 10),
-                    width: Get.width,
+                    width: MediaQuery.of(context).size.width,
                     alignment: Alignment.centerLeft,
                     child: IconButton(
                       onPressed: () {
@@ -48,7 +49,36 @@ class HomePage extends StatelessWidget {
                       icon: Icon(Icons.menu_rounded),
                     ),
                   ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Container(
+                  //      margin: EdgeInsets.only(left: 0, top: 10),
+                  //      width: 200,
+                  //       alignment: Alignment.centerLeft,
+                  //       child: IconButton(
+                  //         onPressed: () {
+                  //           dashboardDrawerKey.currentState.openDrawer();
+                  //         },
+                  //         icon: Icon(Icons.menu_rounded),
+                  //       ),
+                  //     ),
+                  //     Container(
+                  //      // margin: EdgeInsets.only(right: 10, top: 10),
+                  //      // width: 200,
+                  //       //alignment: Alignment.centerRight,
+                  //       child: IconButton(
+                  //         onPressed: () {
+                  //           FirebaseAuthentication.logout();
+                  //           Get.offAndToNamed(LoginScreen.id);
+                  //         },
+                  //         icon: Icon(Icons.logout),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: 10),
+
                   // ElevatedButton(
                   //   onPressed: () {},
                   //   child: Text("Do"),
@@ -241,4 +271,3 @@ getString(List<String> sublist) {
 // To parse this JSON data, do
 //
 //     final bookingModel = bookingModelFromMap(jsonString);
-

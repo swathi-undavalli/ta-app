@@ -11,7 +11,9 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/all-activities-screen.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
+import '../../../../core/authentication/firebase-authentication.dart';
 import '../../../admin-portal/presentation/admin-portal-screen.dart';
+import '../../../login/presentation/screens/login-page.dart';
 
 class NavDrawer extends StatelessWidget {
   static const String id = "sideMenuWidget";
@@ -19,85 +21,94 @@ class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: Column(
-        children: [
-          Spacer(),
-          SizedBox(height: 20),
-          buildUserProfile(),
-          SizedBox(height: 20),
-          buildName(),
-          SizedBox(height: 10),
-          buildLine(),
-          buildMenuItem(
-            icon: Icons.admin_panel_settings_rounded,
-            text: 'Admin Portal',
-            onTap: () {
-              Get.offAndToNamed(AdminPortalScreen.id);
-            },
-          ),
-          buildMenuItem(
-            icon: Icons.account_circle,
-            text: 'Profile',
-            onTap: () {
-              Get.offAndToNamed(EmployeeProfileScreen.id);
-            },
-          ),
-          EmployeeAccess(
-            access: AccessRights.personalAttendanceReport,
-            child: buildMenuItem(
-                icon: Icons.collections_bookmark_rounded,
-                text: 'Attendance',
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(height: 100),
+            buildUserProfile(),
+            SizedBox(height: 20),
+            buildName(),
+            SizedBox(height: 10),
+            buildLine(),
+            buildMenuItem(
+              icon: Icons.admin_panel_settings_rounded,
+              text: 'Admin Portal',
+              onTap: () {
+                Get.offAndToNamed(AdminPortalScreen.id);
+              },
+            ),
+            buildMenuItem(
+              icon: Icons.account_circle,
+              text: 'Profile',
+              onTap: () {
+                Get.offAndToNamed(EmployeeProfileScreen.id);
+              },
+            ),
+            EmployeeAccess(
+              access: AccessRights.personalAttendanceReport,
+              child: buildMenuItem(
+                  icon: Icons.collections_bookmark_rounded,
+                  text: 'Attendance',
+                  onTap: () {
+                    Get.offAndToNamed(AttendancePage.id);
+                  }),
+            ),
+            EmployeeAccess(
+              access: AccessRights.editActivityPrices,
+              child: buildMenuItem(
+                icon: Icons.edit,
+                text: 'Edit Prices',
                 onTap: () {
-                  Get.offAndToNamed(AttendancePage.id);
-                }),
-          ),
-          EmployeeAccess(
-            access: AccessRights.editActivityPrices,
-            child: buildMenuItem(
-              icon: Icons.edit,
-              text: 'Edit Prices',
-              onTap: () {
-                Get.offAndToNamed(AllActivitiesScreen.id);
-              },
+                  Get.offAndToNamed(AllActivitiesScreen.id);
+                },
+              ),
             ),
-          ),
 
-          EmployeeAccess(
-            access: AccessRights.viewBookings,
-            child: buildMenuItem(
-              icon: Icons.add_to_photos_sharp,
-              text: 'All Bookings',
+            EmployeeAccess(
+              access: AccessRights.viewBookings,
+              child: buildMenuItem(
+                icon: Icons.add_to_photos_sharp,
+                text: 'All Bookings',
+                onTap: () {
+                  Get.offAndToNamed(AllBookingsScreen.id);
+                },
+              ),
+            ),
+            buildMenuItem(
+              icon: Icons.book_rounded,
+              text: 'Logs',
               onTap: () {
-                Get.offAndToNamed(AllBookingsScreen.id);
+                Get.offAndToNamed(LogScreen.id);
               },
             ),
-          ),
-          buildMenuItem(
-            icon: Icons.book_rounded,
-            text: 'Logs',
-            onTap: () {
-              Get.offAndToNamed(LogScreen.id);
-            },
-          ),
-          buildMenuItem(
-            icon: Icons.directions_boat_sharp,
-            text: 'Add Boats',
-            onTap: () {
-              Get.toNamed(NewBoatPage.id);
-            },
-          ),
-          buildMenuItem(
-            icon: Icons.houseboat_rounded,
-            text: 'All Boats',
-            onTap: () {
-              Get.toNamed(AllBoatsPage.id);
-            },
-          ),
-          // Spacer(),
-          buildLine(),
-          buildMiniMenuItem(text: 'templeadventures.com'),
-          SizedBox(height: 20)
-        ],
+            buildMenuItem(
+              icon: Icons.directions_boat_sharp,
+              text: 'Add Boats',
+              onTap: () {
+                Get.toNamed(NewBoatPage.id);
+              },
+            ),
+            buildMenuItem(
+              icon: Icons.houseboat_rounded,
+              text: 'All Boats',
+              onTap: () {
+                Get.toNamed(AllBoatsPage.id);
+              },
+            ),
+            buildMenuItem(
+              icon: Icons.logout,
+              text: 'Log out',
+              onTap: () async {
+                await FirebaseAuthentication.logout();
+                Get.offAllNamed(LoginScreen.id);
+              },
+            ),
+            // Spacer(),
+            buildLine(),
+            buildMiniMenuItem(text: 'templeadventures.com'),
+            SizedBox(height: 20)
+          ],
+        ),
       ),
     );
   }
@@ -128,10 +139,7 @@ class NavDrawer extends StatelessWidget {
   }
 
   Widget buildMenuItem(
-      {@required IconData icon,
-      @required String text,
-      Color color = Colors.black87,
-      @required Function onTap}) {
+      {@required IconData icon, @required String text, Color color = Colors.black87, @required Function onTap}) {
     return Container(
       width: Get.width,
       alignment: Alignment.centerLeft,
@@ -139,10 +147,7 @@ class NavDrawer extends StatelessWidget {
         contentPadding: EdgeInsets.only(left: 30),
         title: Text(
           text,
-          style: TextStyle(
-              fontSize: 16,
-              color: Color(0xff605B5B),
-              fontWeight: FontWeight.w500),
+          style: TextStyle(fontSize: 16, color: Color(0xff605B5B), fontWeight: FontWeight.w500),
         ),
         leading: Icon(
           icon,
