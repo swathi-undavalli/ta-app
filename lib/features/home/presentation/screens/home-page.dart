@@ -22,8 +22,7 @@ class HomePage extends StatelessWidget {
         var futures = <Future>[];
 
         AttendanceWidgetLogic attendanceWidgetLogic = AttendanceWidgetLogic();
-        AttendanceReportWidgetLogic attendanceReportWidgetLogic =
-            AttendanceReportWidgetLogic();
+        AttendanceReportWidgetLogic attendanceReportWidgetLogic = AttendanceReportWidgetLogic();
 
         futures.add(attendanceWidgetLogic.reloadData());
         futures.add(attendanceReportWidgetLogic.reloadData());
@@ -39,34 +38,45 @@ class HomePage extends StatelessWidget {
               padding: const EdgeInsets.only(left: 20, right: 20),
               child: Column(
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                       // margin: EdgeInsets.only(left: 0, top: 10),
-                       // width: 200,
-                        //alignment: Alignment.centerLeft,
-                        child: IconButton(
-                          onPressed: () {
-                            dashboardDrawerKey.currentState.openDrawer();
-                          },
-                          icon: Icon(Icons.menu_rounded),
-                        ),
-                      ),
-                      Container(
-                       // margin: EdgeInsets.only(right: 10, top: 10),
-                       // width: 200,
-                        //alignment: Alignment.centerRight,
-                        child: IconButton(
-                          onPressed: () {
-                            FirebaseAuthentication.logout();
-                            Get.offAndToNamed(LoginScreen.id);
-                          },
-                          icon: Icon(Icons.logout),
-                        ),
-                      ),
-                    ],
+                  Container(
+                    margin: EdgeInsets.only(left: 0, top: 10),
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      onPressed: () {
+                        dashboardDrawerKey.currentState.openDrawer();
+                      },
+                      icon: Icon(Icons.menu_rounded),
+                    ),
                   ),
+                  // Row(
+                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //   children: [
+                  //     Container(
+                  //      margin: EdgeInsets.only(left: 0, top: 10),
+                  //      width: 200,
+                  //       alignment: Alignment.centerLeft,
+                  //       child: IconButton(
+                  //         onPressed: () {
+                  //           dashboardDrawerKey.currentState.openDrawer();
+                  //         },
+                  //         icon: Icon(Icons.menu_rounded),
+                  //       ),
+                  //     ),
+                  //     Container(
+                  //      // margin: EdgeInsets.only(right: 10, top: 10),
+                  //      // width: 200,
+                  //       //alignment: Alignment.centerRight,
+                  //       child: IconButton(
+                  //         onPressed: () {
+                  //           FirebaseAuthentication.logout();
+                  //           Get.offAndToNamed(LoginScreen.id);
+                  //         },
+                  //         icon: Icon(Icons.logout),
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   SizedBox(height: 10),
 
                   // ElevatedButton(
@@ -261,4 +271,3 @@ getString(List<String> sublist) {
 // To parse this JSON data, do
 //
 //     final bookingModel = bookingModelFromMap(jsonString);
-
