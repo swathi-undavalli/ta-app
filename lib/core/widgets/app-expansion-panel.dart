@@ -931,6 +931,48 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                             )
                                           : SizedBox(),
                                       Spacer(),
+                                      IconButton(
+                                        icon: Icon(Icons.whatsapp_outlined),
+                                        iconSize: 25,
+                                        onPressed: () async {
+                                          // String phone = itemModel.phone.replaceAll("+", "");
+                                          String phone = "916303359863";
+                                          String link = "https://thebig.co/whatsapp-automatic-text-formatter";
+                                          String message = """
+                                          *Temple Adventures - Scuba Diving Pondicherry*
+ 
+Hey ${itemModel.name.trim().toLowerCase().capitalizeFirst},
+
+Thanks for choosing us, we are excited to take you scuba diving with us 😍. 
+
+Here are your booking details 
+
+*Booking details:* 
+Booking ID : *${itemModel.bookingID}* 
+Pool Date: *20-11-2022* 
+Pool Time: *14:00 hrs* 
+Dive Date :*${itemModel.date}* 
+Dive Time :*${itemModel.time}* 
+Total Cost : *${double.parse(itemModel.cost).roundToDouble()}* 
+Deposit : *${double.parse(itemModel.paid).roundToDouble()}* 
+Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())}* 
+
+*We need to submit all diver details to the *Marine Police / Coast Guard* and *PADI.* To process the same and take you diving, we need *all the divers to complete* the *paperwork process*. You may share this link with them. 
+
+*Please complete the paperwork process* by clicking this link: $link. This includes _Discover Scuba Diving Form, Medical Form, Liability Releases, Agency NDA and our policies_
+
+*Please arrive 15 minutes before your scheduled pool session and your ocean dive. If you are late on the day of your ocean dive you will miss your spot on the boat.*
+ 
+🤿 🐟 Happy diving !!! 🐟 🤿
+                                          """;
+                                          var uri = "https://wa.me/$phone?text=$message";
+                                          var encoded = Uri.encodeFull(uri);
+                                          if (!await launchUrl(Uri.parse(encoded),
+                                              mode: LaunchMode.externalApplication)) {
+                                            showToast("cannot launch whatsapp");
+                                          }
+                                        },
+                                      ),
                                       AppButton.miniFlat(
                                         text: "Booking Info",
                                         bgColor: AppColors.text.orange
