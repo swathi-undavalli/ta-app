@@ -20,6 +20,33 @@ class NavDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (currentEmployee == null) {
+      return Drawer(
+        child: Column(
+          children: [
+            SizedBox(height: 100),
+            buildUserProfile(),
+            SizedBox(height: 20),
+            buildName(),
+            SizedBox(height: 10),
+            buildLine(),
+
+            buildMenuItem(
+              icon: Icons.logout,
+              text: 'Log out',
+              onTap: () async {
+                await FirebaseAuthentication.logout();
+                Get.offAllNamed(LoginScreen.id);
+              },
+            ),
+            // Spacer(),
+            buildLine(),
+            buildMiniMenuItem(text: 'templeadventures.com'),
+            SizedBox(height: 20)
+          ],
+        ),
+      );
+    }
     return Drawer(
       child: SingleChildScrollView(
         child: Column(
@@ -171,15 +198,16 @@ class NavDrawer extends StatelessWidget {
             letterSpacing: 1.2,
           ),
         ),
-        Text(
-          currentEmployee.firstName + " !",
-          style: TextStyle(
-            color: Colors.black54,
-            fontSize: 25,
-            fontWeight: FontWeight.w600,
-            letterSpacing: 0.2,
+        if (currentEmployee != null)
+          Text(
+            currentEmployee.firstName + " !",
+            style: TextStyle(
+              color: Colors.black54,
+              fontSize: 25,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.2,
+            ),
           ),
-        ),
       ],
     );
   }
