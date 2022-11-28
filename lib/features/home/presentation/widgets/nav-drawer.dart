@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
@@ -17,6 +18,7 @@ import '../../../login/presentation/screens/login-page.dart';
 
 class NavDrawer extends StatelessWidget {
   static const String id = "sideMenuWidget";
+  final AutoUpdateLogic logic = AutoUpdateLogic();
 
   @override
   Widget build(BuildContext context) {
@@ -132,6 +134,9 @@ class NavDrawer extends StatelessWidget {
             // ),
             // Spacer(),
             buildLine(),
+            buildMiniMenuItem(
+                text:
+                    "Version : ${logic.controller.version + "+" + logic.controller.buildNumber}"),
             buildMiniMenuItem(text: 'templeadventures.com'),
             SizedBox(height: 20)
           ],
@@ -166,7 +171,10 @@ class NavDrawer extends StatelessWidget {
   }
 
   Widget buildMenuItem(
-      {@required IconData icon, @required String text, Color color = Colors.black87, @required Function onTap}) {
+      {@required IconData icon,
+      @required String text,
+      Color color = Colors.black87,
+      @required Function onTap}) {
     return Container(
       width: Get.width,
       alignment: Alignment.centerLeft,
@@ -174,7 +182,10 @@ class NavDrawer extends StatelessWidget {
         contentPadding: EdgeInsets.only(left: 30),
         title: Text(
           text,
-          style: TextStyle(fontSize: 16, color: Color(0xff605B5B), fontWeight: FontWeight.w500),
+          style: TextStyle(
+              fontSize: 16,
+              color: Color(0xff605B5B),
+              fontWeight: FontWeight.w500),
         ),
         leading: Icon(
           icon,

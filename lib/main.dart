@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -44,6 +42,7 @@ import 'package:temple_adventures/features/logs/presentation/screens/details-scr
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:temple_adventures/features/messaging/firebase_messaging_controller.dart';
 import 'package:temple_adventures/features/messaging/notification_service.dart';
+import 'package:temple_adventures/features/splash/view/splash-screen.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
 import 'package:temple_adventures/notification-screen.dart';
 import 'features/Activities/presentation/screens/all-activities-screen.dart';
@@ -105,9 +104,11 @@ class MyApp extends StatelessWidget {
     Get.put(DashBoardScreenController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: FirebaseAuthentication.isUserLoggedIn()
-          ? DashBoardScreen.id
-          : LoginScreen.id,
+      initialRoute:
+          // FirebaseAuthentication.isUserLoggedIn()
+          //     ? DashBoardScreen.id
+          //     : LoginScreen.id,
+          SplashScreen.id,
       theme: ThemeData(
         textTheme: TextTheme(
           headline1: TextStyle(fontFamily: AppFonts.nunito),
@@ -165,6 +166,7 @@ class MyApp extends StatelessWidget {
         ImageViewPage.id: (context) => ImageViewPage(),
         NotificationsScreen.id: (context) => NotificationsScreen(),
         DetailsScreen.id: (context) => DetailsScreen(),
+        SplashScreen.id: (context) => SplashScreen(),
       },
     );
   }

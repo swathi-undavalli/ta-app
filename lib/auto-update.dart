@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -5,6 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:ota_update/ota_update.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
+import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'notification-screen.dart';
@@ -20,9 +24,24 @@ class AutoUpdateView extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
+            SizedBox(
+              height: 30,
+            ),
+            if (!logic.controller.criticalUpdate)
+              Container(
+                width: Get.width,
+                alignment: Alignment.topRight,
+                child: AppButton.miniFlat(
+                  text: "Skip",
+                  textColor: Colors.white,
+                  onTap: () async {
+                    Get.offAllNamed(DashBoardScreen.id);
+                  },
+                ),
+              ).paddingOnly(right: 20),
+            SizedBox(height: 50),
             SizedBox(
               height: 150,
               child: Image.asset(
@@ -130,6 +149,7 @@ class AutoUpdateLogic {
         .get();
     controller.latestVersionNumber = data.data()["number"];
     controller.downloadLink = data.data()["downloadLink"];
+    controller.criticalUpdate = data.data()["critical_update"];
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     controller.version = packageInfo.version;
@@ -137,7 +157,10 @@ class AutoUpdateLogic {
 
     if (controller.latestVersionNumber !=
         controller.version + "+" + controller.buildNumber) {
+      log("Auto update called");
       Get.offAllNamed(AutoUpdateView.id);
+    } else {
+      Get.offAllNamed(DashBoardScreen.id);
     }
   }
 
@@ -203,6 +226,8 @@ class AutoUpdateLogic {
 
 class AutoUpdateController extends GetxController {
   String latestVersionNumber, version, buildNumber, downloadLink;
+
+  bool criticalUpdate = false;
 
   OtaEvent _currentEvent;
 

@@ -30,8 +30,6 @@ class DashBoardScreen extends StatelessWidget {
 
   DashBoardScreen() {
     dashboardLogic = DashBoardScreenLogic();
-    AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
-    autoUpdateLogic.checkForUpdate();
 
     ///app is in Terminated
     FirebaseNotificationService.handleTerminatedNavigation();
