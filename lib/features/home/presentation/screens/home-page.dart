@@ -42,41 +42,25 @@ class HomePage extends StatelessWidget {
                     margin: EdgeInsets.only(left: 0, top: 10),
                     width: MediaQuery.of(context).size.width,
                     alignment: Alignment.centerLeft,
-                    child: IconButton(
-                      onPressed: () {
-                        dashboardDrawerKey.currentState.openDrawer();
-                      },
-                      icon: Icon(Icons.menu_rounded),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        IconButton(
+                          onPressed: () {
+                            dashboardDrawerKey.currentState.openDrawer();
+                          },
+                          icon: Icon(Icons.menu_rounded),
+                        ),
+                        IconButton(
+                          onPressed: () {
+                            FirebaseAuthentication.logout();
+                            Get.offAndToNamed(LoginScreen.id);
+                          },
+                          icon: Icon(Icons.logout),
+                        ),
+                      ],
                     ),
                   ),
-                  // Row(
-                  //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //   children: [
-                  //     Container(
-                  //      margin: EdgeInsets.only(left: 0, top: 10),
-                  //      width: 200,
-                  //       alignment: Alignment.centerLeft,
-                  //       child: IconButton(
-                  //         onPressed: () {
-                  //           dashboardDrawerKey.currentState.openDrawer();
-                  //         },
-                  //         icon: Icon(Icons.menu_rounded),
-                  //       ),
-                  //     ),
-                  //     Container(
-                  //      // margin: EdgeInsets.only(right: 10, top: 10),
-                  //      // width: 200,
-                  //       //alignment: Alignment.centerRight,
-                  //       child: IconButton(
-                  //         onPressed: () {
-                  //           FirebaseAuthentication.logout();
-                  //           Get.offAndToNamed(LoginScreen.id);
-                  //         },
-                  //         icon: Icon(Icons.logout),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                   SizedBox(height: 10),
 
                   // ElevatedButton(

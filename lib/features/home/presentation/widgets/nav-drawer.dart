@@ -122,14 +122,14 @@ class NavDrawer extends StatelessWidget {
                 Get.toNamed(AllBoatsPage.id);
               },
             ),
-            buildMenuItem(
-              icon: Icons.logout,
-              text: 'Log out',
-              onTap: () async {
-                await FirebaseAuthentication.logout();
-                Get.offAllNamed(LoginScreen.id);
-              },
-            ),
+            // buildMenuItem(
+            //   icon: Icons.logout,
+            //   text: 'Log out',
+            //   onTap: () async {
+            //     await FirebaseAuthentication.logout();
+            //     Get.offAllNamed(LoginScreen.id);
+            //   },
+            // ),
             // Spacer(),
             buildLine(),
             buildMiniMenuItem(text: 'templeadventures.com'),
