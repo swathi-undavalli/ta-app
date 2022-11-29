@@ -180,10 +180,6 @@ class BookingModel {
         total = total - discount;
       //print("total $total");
     }
-    //print(total);
-
-    //print(tax);
-    //print(total);
     return total;
   }
 
