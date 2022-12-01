@@ -44,8 +44,8 @@ class BookingsExpansionPanel extends StatelessWidget {
   TextEditingController depositTED = TextEditingController();
 
   TextEditingController searchTED = TextEditingController();
-  BookingsCalenderWidgetLogic bookingCalenderLogic =
-      BookingsCalenderWidgetLogic();
+  // BookingsCalenderWidgetLogic bookingCalenderLogic =
+  //     BookingsCalenderWidgetLogic();
 
   BookingsExpansionPanel(
       {this.items,
@@ -522,37 +522,30 @@ class BookingsExpansionPanel extends StatelessWidget {
                                         SizedBox(height: 20),
                                       ],
                                     ),
-                                  Row(
-                                    children: [
-                                      Spacer(),
-                                      if (itemModel.colorCode != "Blue")
+                                  if (itemModel.colorCode != "Blue")
+                                    Row(
+                                      children: [
                                         AppButton.miniFlat(
                                           text: "Process Cert",
                                           onTap: () async {
                                             String message = """
-                                          *Temple Adventures - Scuba Diving Pondicherry*
- 
-Hey *${itemModel.name.trim().toLowerCase().capitalizeFirst + itemModel.bookingModel.pax[0]["last-name"]}*,
 
-Thanks for choosing us, we are excited to take you scuba diving with us 😍. 
-
-Here are your certification details 
+*${itemModel.name.trim().toLowerCase().capitalizeFirst + itemModel.bookingModel.pax[0]["last-name"]} 's* ${itemModel.activity}
 
 *Certification details:* 
 
-Date of Birth :     *${"-"}* 
 Email : *${itemModel.email}* 
+Date of Birth : *${(itemModel.bookingModel.pax[0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel.pax[0]["dob"] as Timestamp).toDate()) : "-"}* 
 Certification : *${itemModel.activity}* 
 Course Completion Date : *${intl.DateFormat("dd-MM-yyy").format(DateTime.now())}* 
-Total Cost : *${double.parse(itemModel.cost).roundToDouble()} /-* 
-Deposit : *${double.parse(itemModel.paid).roundToDouble()} /-* 
 Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-* 
 Completed instructor : *${currentEmployee.name.trim()}* 
-Instructor No : *${"26hd8eh3d"}* 
+Instructor No : *${currentEmployee.agencyId ?? "-"}* 
 Invoice No : *${itemModel.bookingModel.receiptNo}* 
 Course / Equipment Upsell :     *${"-"}*
  
-🤿 🐟 Happy diving !!! 🐟 🤿
+Regards,
+*${currentEmployee.name.trim()}*
                                           """;
                                             await Clipboard.setData(
                                                 ClipboardData(text: message));
@@ -561,19 +554,43 @@ Course / Equipment Upsell :     *${"-"}*
                                                     "Message copied to Clipboard");
                                           },
                                         ).paddingOnly(right: 15),
-                                    ],
-                                  ),
+                                        Spacer(),
+                                        AppButton.miniFlat(
+                                          text: "E-Learning",
+                                          onTap: () async {
+                                            String message = """
+*E-Learning request details:* 
+
+First Name : *${itemModel.name.trim().toLowerCase().capitalizeFirst}* 
+Last Name : *${(itemModel.bookingModel.pax[0]["last-name"] != "") ? itemModel.bookingModel.pax[0]["last-name"] : "-"}* 
+Email : *${itemModel.email}* 
+Date of Birth : *${(itemModel.bookingModel.pax[0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel.pax[0]["dob"] as Timestamp).toDate()) : "-"}* 
+Course Name : *${itemModel.activity}* 
+Invoice No : *${itemModel.bookingModel.receiptNo}* 
+ 
+Regards,
+*${currentEmployee.name.trim()}*
+                                          """;
+                                            await Clipboard.setData(
+                                                ClipboardData(text: message));
+                                            Fluttertoast.showToast(
+                                                msg:
+                                                    "Message copied to Clipboard");
+                                          },
+                                        ).paddingOnly(right: 15),
+                                      ],
+                                    ),
                                   Row(
                                     children: [
-                                      if (bookingCalenderLogic
-                                                  .controller.selectedType ==
-                                              FilterType.Dive &&
-                                          itemModel.bookingModel.pax.length -
-                                                  1 ==
-                                              itemModel
-                                                  .bookingModel.noOfPersons)
-                                        SelectSeatsWidget(
-                                            itemModel.bookingModel),
+                                      // if (bookingCalenderLogic
+                                      //             .controller.selectedType ==
+                                      //         FilterType.Dive &&
+                                      //     itemModel.bookingModel.pax.length -
+                                      //             1 ==
+                                      //         itemModel
+                                      //             .bookingModel.noOfPersons)
+                                      //   SelectSeatsWidget(
+                                      //       itemModel.bookingModel),
                                       Spacer(),
                                       if (itemModel.colorCode == "Blue")
                                         IconButton(

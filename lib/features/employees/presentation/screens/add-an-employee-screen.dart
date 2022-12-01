@@ -1,11 +1,7 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
@@ -67,6 +63,7 @@ class AddAnUser extends StatelessWidget {
                             ),
                           ],
                         ),
+                        buildUniqueAgencyId(),
                         buildShiftTimePicker(context),
                         IntlPhoneField(
                           autoValidate: true,
@@ -350,6 +347,25 @@ class AddAnUser extends StatelessWidget {
     );
   }
 
+  Widget buildUniqueAgencyId() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10),
+      child: AppTextField(
+        width: Get.width,
+        hintText: 'Padi No',
+        controller: logic.controller.agencyIdTED,
+        focusNode: logic.controller.agencyIdNode,
+        required: false,
+        errorValidator: () {
+          return null;
+        },
+        validator: (firstName) {
+          return null;
+        },
+      ),
+    );
+  }
+
   Widget buildLastName() {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
@@ -358,7 +374,6 @@ class AddAnUser extends StatelessWidget {
         hintText: 'Last Name',
         controller: logic.controller.lastNameTED,
         focusNode: logic.controller.lastNameNode,
-        nextFocusNode: logic.controller.shiftTimeNode,
         required: false,
         errorValidator: () {
           return null;

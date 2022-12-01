@@ -1,8 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:intl/intl.dart';
 
 class EditBookingNewLogic {
   EditBookingNewLogic() {
@@ -26,6 +29,42 @@ class EditBookingNewLogic {
     //print(controller.activities);
     //print("ended");
   }
+
+  dobDatePicker(context) {
+    DatePicker.showDatePicker(context,
+        showTitleActions: true,
+        minTime: DateTime.now().subtract(Duration(days: 36500)),
+        maxTime: DateTime.now().subtract(Duration(days: 2920)),
+        onChanged: (date) {
+      // //print('change $date');
+      controller.dob = date;
+      controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
+      controller.bookingModel.pax[0]["dob"] = date;
+    }, onConfirm: (date) {
+      // //print('confirm $date');
+      controller.dob = date;
+      controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
+
+      controller.update();
+    },
+        currentTime: controller.dob,
+        theme: DatePickerTheme(
+          cancelStyle: TextStyle(
+            fontFamily: AppFonts.nunito,
+            color: Colors.black87,
+          ),
+          doneStyle: TextStyle(
+            fontFamily: AppFonts.nunito,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+          ),
+          itemStyle: TextStyle(
+            fontFamily: AppFonts.nunito,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ));
+  }
 }
 
 class EditBookingNewController extends GetxController {
@@ -44,6 +83,7 @@ class EditBookingNewController extends GetxController {
   TextEditingController totalAmountTED = TextEditingController();
   TextEditingController firstNameTED = TextEditingController();
   TextEditingController lastNameTED = TextEditingController();
+  TextEditingController dobTED = TextEditingController();
 
   FocusNode activityNode = FocusNode();
   FocusNode invoiceNoNode = FocusNode();
@@ -59,8 +99,10 @@ class EditBookingNewController extends GetxController {
   FocusNode phoneNode = FocusNode();
   FocusNode emailNode = FocusNode();
   FocusNode timeNode = FocusNode();
+  FocusNode dobNode = FocusNode();
 
   DateTime startDate = DateTime.now();
+  DateTime _dob = DateTime.now();
 
   String _isoCode;
 
@@ -95,6 +137,13 @@ class EditBookingNewController extends GetxController {
   double get taxableAmount => _taxableAmount;
 
   double get discount => _discount;
+
+  DateTime get dob => _dob;
+
+  set dob(DateTime value) {
+    _dob = value;
+    update();
+  }
 
   set discount(double value) {
     _discount = value;
@@ -150,5 +199,6 @@ class EditBookingNewController extends GetxController {
     emailTED.text = "";
     _isoCode = null;
     phoneTED.text = "";
+    dobTED.text = "";
   }
 }

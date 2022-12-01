@@ -12,7 +12,6 @@ import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 class AddAnUserLogic {
-
   final DateFormat formatter = DateFormat('HH:mm');
 
   AddAnUserController controller = Get.put(AddAnUserController());
@@ -43,6 +42,7 @@ class AddAnUserLogic {
         gender: controller.genderTED.text,
         shiftTiming: controller.pickedTime,
         countryIsoCode: controller.countryISoCOde,
+        agencyId: controller.agencyIdTED.text,
         accessLevels: AccessLevels(
           viewBookings: controller.viewBookings,
           createBookings: controller.createBookings,
@@ -100,6 +100,7 @@ class AddAnUserLogic {
         gender: controller.genderTED.text,
         shiftTiming: controller.pickedTime,
         countryIsoCode: controller.countryISoCOde,
+        agencyId: controller.agencyIdTED.text,
         accessLevels: AccessLevels(
           viewBookings: controller.viewBookings,
           createBookings: controller.createBookings,
@@ -167,13 +168,13 @@ class AddAnUserLogic {
           ),
         ));
   }
-
 }
 
 class AddAnUserController extends GetxController {
   DateTime pickedTime = DateTime.now();
 
   TextEditingController firstNameTED = TextEditingController();
+  TextEditingController agencyIdTED = TextEditingController();
   TextEditingController lastNameTED = TextEditingController();
   TextEditingController employeeIdTED = TextEditingController();
   TextEditingController phoneNumberTED = TextEditingController();
@@ -185,6 +186,7 @@ class AddAnUserController extends GetxController {
 
   FocusNode firstNameNode = FocusNode();
   FocusNode lastNameNode = FocusNode();
+  FocusNode agencyIdNode = FocusNode();
   FocusNode employeeIdNode = FocusNode();
   FocusNode phoneNumberNode = FocusNode();
   FocusNode countryCodeNode = FocusNode();
@@ -264,6 +266,7 @@ class AddAnUserController extends GetxController {
     shiftTimeTED.text = "";
     genderTED.text = "";
     employeeIdTED.text = "";
+    agencyIdTED.text = "";
     viewBookings = false;
     createBookings = false;
     editBookings = false;

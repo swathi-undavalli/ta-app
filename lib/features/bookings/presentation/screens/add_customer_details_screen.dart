@@ -25,52 +25,55 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           return true;
         },
         child: SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 40),
-            child: GetBuilder<NewBookingController>(builder: (controller) {
-              return Column(
-                mainAxisAlignment: (controller.getDetailsPressed)
-                    ? MainAxisAlignment.center
-                    : MainAxisAlignment.start,
-                children: [
-                  if (!controller.getDetailsPressed) ...[
-                    buildEmailID(),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        AppButton.miniFlat(
-                          text: "Get Details",
-                          onTap: () {
-                            logic.getDetailsPressed();
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                  if (controller.getDetailsPressed) ...[
-                    buildNameFields(),
-                    buildEmailID(),
-                    buildNoOfPersons(),
-                    buildPhoneNumber(),
-                    SizedBox(height: 40),
-                  ],
-                  if (controller.showLoading)
-                    SizedBox(
-                      child: Center(
-                        child: SizedBox(
-                          child: CircularProgressIndicator(
-                            color: Colors.black,
-                            strokeWidth: 2,
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 40),
+              child: GetBuilder<NewBookingController>(builder: (controller) {
+                return Column(
+                  mainAxisAlignment: (controller.getDetailsPressed)
+                      ? MainAxisAlignment.center
+                      : MainAxisAlignment.start,
+                  children: [
+                    if (!controller.getDetailsPressed) ...[
+                      buildEmailID(),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          AppButton.miniFlat(
+                            text: "Get Details",
+                            onTap: () {
+                              logic.getDetailsPressed();
+                            },
                           ),
-                          height: 20,
-                          width: 20,
-                        ),
+                        ],
                       ),
-                      height: 200,
-                    ),
-                ],
-              );
-            }),
+                    ],
+                    if (controller.getDetailsPressed) ...[
+                      buildNameFields(),
+                      buildEmailID(),
+                      buildDOB(context),
+                      buildNoOfPersons(),
+                      buildPhoneNumber(),
+                      SizedBox(height: 40),
+                    ],
+                    if (controller.showLoading)
+                      SizedBox(
+                        child: Center(
+                          child: SizedBox(
+                            child: CircularProgressIndicator(
+                              color: Colors.black,
+                              strokeWidth: 2,
+                            ),
+                            height: 20,
+                            width: 20,
+                          ),
+                        ),
+                        height: 200,
+                      ),
+                  ],
+                );
+              }),
+            ),
           ),
         ),
       ),
@@ -86,7 +89,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
       focusNode: logic.controller.noOfPersonsNode,
       nextFocusNode: logic.controller.phoneNumberNode,
       keyboardType: TextInputType.number,
-      required: false,
+      required: true,
       onChangedCallBack: (_) {},
       isStrictNumber: true,
       errorValidator: () {
@@ -101,6 +104,36 @@ class AddCustomerDetailsScreen extends StatelessWidget {
     );
   }
 
+  Widget buildDOB(BuildContext context) {
+    return GetBuilder<NewBookingController>(builder: (controller) {
+      return GestureDetector(
+        onTap: () {
+          logic.dobDatePicker(context);
+        },
+        child: AbsorbPointer(
+          child: AppTextField(
+            hintText: "Date of Birth",
+            controller: logic.controller.dobTED,
+            focusNode: logic.controller.dobNode,
+            nextFocusNode: logic.controller.noOfPersonsNode,
+            keyboardType: TextInputType.number,
+            required: false,
+            onChangedCallBack: (_) {},
+            errorValidator: () {
+              return null;
+              // return Validator.validateEmail(
+              //     logic.controller.emailTED.text);
+            },
+            validator: (email) {
+              return null;
+              // return Validator.validateEmail(email);
+            },
+          ),
+        ),
+      );
+    });
+  }
+
   Widget buildNameFields() {
     return Row(
       children: [
@@ -110,7 +143,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           controller: logic.controller.fNameTED,
           focusNode: logic.controller.fNameNode,
           nextFocusNode: logic.controller.lNameNode,
-          required: false,
+          required: true,
           onChangedCallBack: (_) {},
           errorValidator: () {
             return null;
@@ -152,10 +185,11 @@ class AddCustomerDetailsScreen extends StatelessWidget {
       hintText: "Enter Customer Email ID",
       controller: logic.controller.emailTED,
       focusNode: logic.controller.emailNode,
-      nextFocusNode: logic.controller.noOfPersonsNode,
+      // nextFocusNode: logic.controller.noOfPersonsNode,
       keyboardType: TextInputType.emailAddress,
       onChangedCallBack: (_) {},
-      required: false,
+      required: true,
+
       errorValidator: () {
         return Validator.validateEmail(logic.controller.emailTED.text);
       },
@@ -208,7 +242,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
         initialValue: controller.phoneNumberTED.text,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
         decoration: InputDecoration(
-          labelText: "Phone Number",
+          labelText: "Phone Number  *",
           labelStyle: TextStyle(
             fontSize: FontSize.small,
             fontFamily: AppFonts.nunito,

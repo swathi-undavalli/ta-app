@@ -1,7 +1,3 @@
-import 'dart:developer';
-import 'dart:math' as math;
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -12,7 +8,6 @@ import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/access_levels.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
 class BookingsCalenderWidgetNew extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;

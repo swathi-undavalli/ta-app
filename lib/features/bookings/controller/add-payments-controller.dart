@@ -31,10 +31,10 @@ class AddPaymentsLogic {
             .set(controller.bookingModel.toMap());
         Get.back();
         controller.reset();
-        BookingsCalenderWidgetLogic bookingCalenderLogic =
-            BookingsCalenderWidgetLogic();
-        bookingCalenderLogic.onDateSelected(
-          bookingCalenderLogic.controller.lastDateIndex,
+        BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
+            BookingsCalenderWidgetLogicNew();
+        bookingCalenderLogicNew.onDateSelected(
+          bookingCalenderLogicNew.controller.lastDateIndex,
         );
       } else {
         Fluttertoast.showToast(msg: "Invalid Deposit");

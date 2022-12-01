@@ -1,15 +1,9 @@
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
-import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-
 import '../app-expansion-panel.dart';
 import 'package:intl/intl.dart';
 
@@ -27,8 +21,8 @@ class BookingsCalenderWidgetLogicNew {
       var data = await FirebaseFirestore.instance
           .collection("bookings")
           .where(
-            "bookingDate", arrayContains: DateFormat("dd-MM-yyyy").format(date),
-            // ["04-10-2022"],
+            "bookingDate",
+            arrayContains: DateFormat("dd-MM-yyyy").format(date),
           )
           .get();
 

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
@@ -149,6 +148,9 @@ class EmployeeDetailsScreen extends StatelessWidget {
                           subHeading: "Name", text: employeeArgument.name),
                       buildEmployeeInfo(
                           subHeading: "Employee ID", text: employeeArgument.id),
+                      buildEmployeeInfo(
+                          subHeading: "Padi No",
+                          text: employeeArgument.agencyId ?? "-"),
                       buildEmployeeInfo(
                           subHeading: "Phone Number",
                           text: employeeArgument.countryCode +
@@ -309,7 +311,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
       logic.controller.countryISoCOde = employee.countryIsoCode;
       logic.controller.genderTED.text = employee.gender;
       logic.controller.roleTED.text = employee.role;
-
+      logic.controller.agencyIdTED.text = employee.agencyId;
       logic.controller.viewBookings = employee.accessLevels.viewBookings;
       logic.controller.createBookings = employee.accessLevels.createBookings;
       logic.controller.editBookings = employee.accessLevels.editBookings;

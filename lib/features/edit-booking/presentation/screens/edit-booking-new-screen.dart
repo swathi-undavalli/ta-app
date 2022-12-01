@@ -10,8 +10,6 @@ import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/booking_calender_widget_old/booking_calender_old.dart';
-import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
-import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
@@ -52,6 +50,19 @@ class EditBookingNewScreen extends StatelessWidget {
     logic.controller.discountTED.text = bookingArg.discount.toString();
     logic.controller.taxable = bookingArg.tax != 0;
     logic.controller.discountSwitch = bookingArg.discountType == "%";
+
+    if (bookingArg.pax[0]["dob"] != null) {
+      try {
+        logic.controller.dob = (bookingArg.pax[0]["dob"] as Timestamp).toDate();
+      } catch (e) {
+        showToast(bookingArg.id);
+        logic.controller.dob = DateTime.now();
+      }
+      logic.controller.dobTED.text =
+          DateFormat("dd MMM, yyyy").format(logic.controller.dob);
+      log("Hey Dob");
+      log(logic.controller.dob.toString());
+    }
   }
 
   @override
@@ -89,6 +100,7 @@ class EditBookingNewScreen extends StatelessWidget {
                             buildActivityDropDown(),
                             buildPriceTF(controller),
                             buildNameFields(controller),
+                            buildDOB(context),
                             buildPAXTF(controller),
                             buildDiscount(),
                             buildTax(),
@@ -96,7 +108,6 @@ class EditBookingNewScreen extends StatelessWidget {
                             SizedBox(height: 25),
                             buildTotalAmount(),
                             SizedBox(height: 25),
-                            // buildBalanceAmount(),
                             buildReceiptNo(controller),
                             buildRemarksTF(controller),
                             buildEmailTF(controller),
@@ -132,6 +143,39 @@ class EditBookingNewScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  ///=====================UI==================///
+
+  Widget buildDOB(BuildContext context) {
+    return GetBuilder<EditBookingNewController>(builder: (controller) {
+      return GestureDetector(
+        onTap: () {
+          logic.dobDatePicker(context);
+        },
+        child: AbsorbPointer(
+          child: AppTextField(
+            hintText: "Date of Birth",
+            controller: logic.controller.dobTED,
+            focusNode: logic.controller.dobNode,
+            nextFocusNode: logic.controller.paxNode,
+            keyboardType: TextInputType.number,
+            required: false,
+            onChangedCallBack: (date) {
+              // controller.bookingModel.pax[0]["dob"] = date;
+              // log(controller.bookingModel.pax[0]["dob"].toString());
+              // controller.update();
+            },
+            errorValidator: () {
+              return null;
+            },
+            validator: (email) {
+              return null;
+            },
+          ),
+        ),
+      );
+    });
   }
 
   Widget buildButtons() {
@@ -195,9 +239,10 @@ class EditBookingNewScreen extends StatelessWidget {
                 Get.back();
                 controller.reset();
 
-                BookingsCalenderWidgetLogic bookingCalenderLogic = BookingsCalenderWidgetLogic();
-                bookingCalenderLogic.onDateSelected(
-                    bookingCalenderLogic.controller.lastDateIndex);
+                BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
+                    BookingsCalenderWidgetLogicNew();
+                bookingCalenderLogicNew.onDateSelected(
+                    bookingCalenderLogicNew.controller.lastDateIndex);
                 // bookingCalenderLogic.controller.selectedDate
                 //     .subtract(Duration(days: 10));
               }),
@@ -992,7 +1037,6 @@ class EditBookingNewScreen extends StatelessWidget {
         text: "Last Name",
         textEditingController: controller.lastNameTED,
         focus: controller.lastNameNode,
-        nextFocus: controller.paxNode,
         onChangedCallBack: (newName) {
           controller.bookingModel.pax[0]["last-name"] = newName;
         });

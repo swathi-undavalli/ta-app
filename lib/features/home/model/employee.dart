@@ -19,6 +19,7 @@ class Employee {
     this.firstName,
     this.lastName,
     this.countryIsoCode,
+    this.agencyId,
   }) {
     if (accessLevels == null)
       accessLevels = AccessLevels(
@@ -48,6 +49,7 @@ class Employee {
   String firstName;
   String lastName;
   String countryIsoCode;
+  String agencyId;
 
   factory Employee.fromMap(Map<String, dynamic> json) => Employee(
         id: json["id"],
@@ -67,6 +69,7 @@ class Employee {
         ),
         firstName: json["firstName"],
         lastName: json["lastName"],
+        agencyId: json["agencyId"],
       );
 
   String get name => firstName + " " + (lastName ?? "");
@@ -84,6 +87,7 @@ class Employee {
             "${shiftTiming.hour}:${shiftTiming.minute}:${shiftTiming.second}",
         "firstName": firstName,
         "lastName": lastName,
+        "agencyId": agencyId,
       };
 }
 

@@ -70,7 +70,7 @@ class PaymentDetailsScreen extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              logic.datePicker(context);
+              logic.paymentDatePicker(context);
             },
             child: Container(
               height: 30,
