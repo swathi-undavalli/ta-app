@@ -88,6 +88,10 @@ dependencies:
   flutter_app_installer: ^0.0.3
 #  in_app_update: ^3.0.0
   package_info_plus: ^1.4.0
+  pin_code_fields: ^7.1.0
+  otp_autofill: ^2.1.0
+
+
 
   #------------------------------------------
 

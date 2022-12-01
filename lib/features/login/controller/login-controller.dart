@@ -18,91 +18,91 @@ class LoginScreenLogic {
   LoginScreenController controller = Get.put(LoginScreenController());
   String _otp = "";
 
-  List<Widget> getOtpFields() {
-    List<Widget> list = [];
-    for (int i = 0; i < 6; i++) {
-      list.add(
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 2.5),
-            child: Column(
-              children: [
-                RawKeyboardListener(
-                  onKey: (value) {
-                    if (value.logicalKey == LogicalKeyboardKey.backspace) {
-                      if (controller.textEditingControllersOTP[i].text.length == 0) {
-                        if (i != 0) controller.focusNodesOTP[i - 1].requestFocus();
-                      }
-                    }
-                  },
-                  focusNode: controller.keyboardFocusNodesOTP[i],
-                  child: TextField(
-                    textAlign: TextAlign.center,
-                    keyboardType: TextInputType.number,
-                    controller: controller.textEditingControllersOTP[i],
-                    focusNode: controller.focusNodesOTP[i],
-                    inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                    ),
-                    style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 20, fontWeight: FontWeight.bold),
-                    onChanged: (_) {
-                      getOTP();
-                      bool isNum = false;
-                      controller.update();
-
-                      try {
-                        int a = int.parse(controller.textEditingControllersOTP[i].text);
-                        //print(a);
-                        isNum = true;
-                      } catch (e) {
-                        isNum = false;
-                      }
-
-                      if (isNum) {
-                        if (controller.textEditingControllersOTP[5].text != '' &&
-                            controller.textEditingControllersOTP[5].text.length >= 1) {
-                          controller.textEditingControllersOTP[5].text =
-                              controller.textEditingControllersOTP[5].text[0];
-                          disposeKeyboard();
-                          return;
-                        }
-                        if (controller.textEditingControllersOTP[i].text.length == 1) {
-                          controller.focusNodesOTP[i + 1].requestFocus();
-                        }
-                        if (controller.textEditingControllersOTP[i].text.length > 1) {
-                          controller.textEditingControllersOTP[i + 1].text =
-                              controller.textEditingControllersOTP[i].text[1];
-                          controller.textEditingControllersOTP[i].text =
-                              controller.textEditingControllersOTP[i].text[0];
-                          controller.focusNodesOTP[i + 1].requestFocus();
-                        }
-                      } else {
-                        controller.textEditingControllersOTP[i].clear();
-                        controller.focusNodesOTP[i].requestFocus();
-                      }
-                    },
-                  ),
-                ),
-                Container(
-                  height: 4,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(3),
-                    color: controller.textEditingControllersOTP[i].text.length == 1 ? Colors.black : Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      );
-    }
-    return list;
-  }
+  // List<Widget> getOtpFields() {
+  //   List<Widget> list = [];
+  //   for (int i = 0; i < 6; i++) {
+  //     list.add(
+  //       Expanded(
+  //         child: Padding(
+  //           padding: const EdgeInsets.symmetric(horizontal: 2.5),
+  //           child: Column(
+  //             children: [
+  //               RawKeyboardListener(
+  //                 onKey: (value) {
+  //                   if (value.logicalKey == LogicalKeyboardKey.backspace) {
+  //                     if (controller.textEditingControllersOTP[i].text.length == 0) {
+  //                       if (i != 0) controller.focusNodesOTP[i - 1].requestFocus();
+  //                     }
+  //                   }
+  //                 },
+  //                 focusNode: controller.keyboardFocusNodesOTP[i],
+  //                 child: TextField(
+  //                   textAlign: TextAlign.center,
+  //                   keyboardType: TextInputType.number,
+  //                   controller: controller.textEditingControllersOTP[i],
+  //                   focusNode: controller.focusNodesOTP[i],
+  //                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+  //                   decoration: InputDecoration(
+  //                     border: InputBorder.none,
+  //                     focusedBorder: InputBorder.none,
+  //                     enabledBorder: InputBorder.none,
+  //                     errorBorder: InputBorder.none,
+  //                     disabledBorder: InputBorder.none,
+  //                   ),
+  //                   style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 20, fontWeight: FontWeight.bold),
+  //                   onChanged: (_) {
+  //                     getOTP();
+  //                     bool isNum = false;
+  //                     controller.update();
+  //
+  //                     try {
+  //                       int a = int.parse(controller.textEditingControllersOTP[i].text);
+  //                       //print(a);
+  //                       isNum = true;
+  //                     } catch (e) {
+  //                       isNum = false;
+  //                     }
+  //
+  //                     if (isNum) {
+  //                       if (controller.textEditingControllersOTP[5].text != '' &&
+  //                           controller.textEditingControllersOTP[5].text.length >= 1) {
+  //                         controller.textEditingControllersOTP[5].text =
+  //                             controller.textEditingControllersOTP[5].text[0];
+  //                         disposeKeyboard();
+  //                         return;
+  //                       }
+  //                       if (controller.textEditingControllersOTP[i].text.length == 1) {
+  //                         controller.focusNodesOTP[i + 1].requestFocus();
+  //                       }
+  //                       if (controller.textEditingControllersOTP[i].text.length > 1) {
+  //                         controller.textEditingControllersOTP[i + 1].text =
+  //                             controller.textEditingControllersOTP[i].text[1];
+  //                         controller.textEditingControllersOTP[i].text =
+  //                             controller.textEditingControllersOTP[i].text[0];
+  //                         controller.focusNodesOTP[i + 1].requestFocus();
+  //                       }
+  //                     } else {
+  //                       controller.textEditingControllersOTP[i].clear();
+  //                       controller.focusNodesOTP[i].requestFocus();
+  //                     }
+  //                   },
+  //                 ),
+  //               ),
+  //               Container(
+  //                 height: 4,
+  //                 decoration: BoxDecoration(
+  //                   borderRadius: BorderRadius.circular(3),
+  //                   color: controller.textEditingControllersOTP[i].text.length == 1 ? Colors.black : Colors.grey,
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     );
+  //   }
+  //   return list;
+  // }
 
   getPhoneNumber() {
     String phoneNumber = controller.phoneNumberTED.text;
@@ -120,16 +120,12 @@ class LoginScreenLogic {
   }
 
   getOTP() {
-    _otp = '';
-    for (int i = 0; i < 6; i++) {
-      _otp = _otp + controller.textEditingControllersOTP[i].text;
-    }
-    if (_otp.length == 6) {
+    if (controller.otp.length == 6) {
       controller.showFab = true;
     } else {
       controller.showFab = false;
     }
-    return _otp;
+    return controller.otp;
   }
 
   getFilledOTP() async {
@@ -317,6 +313,8 @@ class LoginScreenController extends GetxController {
   bool _showResend = false;
 
   bool _otpSent = false;
+
+  String otp = "";
 
   bool get showResend => _showResend;
 

@@ -6,10 +6,38 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
 import 'package:temple_adventures/features/login/controller/login-controller.dart';
+import 'package:otp_autofill/otp_autofill.dart';
+// import 'package:otp_autofill/otp_autofill.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
   static const String id = "LoginScreen";
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final LoginScreenLogic logic = LoginScreenLogic();
+  OTPTextEditController _otpController;
+
+  String _otpError, _completedOtp;
+
+  @override
+  void initState() {
+    _otpController = OTPTextEditController(
+        codeLength: 6,
+        onCodeReceive: (code) {
+          logic.controller.otp = code;
+        })
+      ..startListenUserConsent(
+        (code) {
+          final exp = RegExp(r'(\d{6})');
+          return exp.stringMatch(code ?? '') ?? '';
+        },
+      );
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,25 +91,18 @@ class LoginScreen extends StatelessWidget {
             textAlign: TextAlign.center,
             cursorColor: Colors.black,
             keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter. digitsOnly
-            ],
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
               labelText: "Employee ID",
               labelStyle: TextStyle(
                 fontSize: 20,
                 color: Colors.black,
               ),
-              border: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black, width: 3)),
-              enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: Colors.black, width: 3, style: BorderStyle.solid)),
+              border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 3)),
+              enabledBorder:
+                  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 3, style: BorderStyle.solid)),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(
-                      color: AppColors.background.skyBlue,
-                      width: 3,
-                      style: BorderStyle.solid)),
+                  borderSide: BorderSide(color: AppColors.background.skyBlue, width: 3, style: BorderStyle.solid)),
             ),
           ),
         );
@@ -100,10 +121,7 @@ class LoginScreen extends StatelessWidget {
           fontFamily: AppFonts.nunito,
         ),
       ),
-      style: TextStyle(
-          fontFamily: AppFonts.nunito,
-          fontWeight: FontWeight.bold,
-          fontSize: 14),
+      style: TextStyle(fontFamily: AppFonts.nunito, fontWeight: FontWeight.bold, fontSize: 14),
       searchText: "Search",
       onSubmitted: (_) {
         logic.signInWithPhoneNumber();
@@ -139,8 +157,45 @@ class LoginScreen extends StatelessWidget {
         if (!controller.showPhoneNumber)
           // return buildPhoneNumberTextField();
           // else
-          return Row(
-            children: logic.getOtpFields(),
+          return PinCodeTextField(
+            length: 6,
+            animationType: AnimationType.fade,
+            pinTheme: PinTheme(
+              shape: PinCodeFieldShape.box,
+              borderRadius: BorderRadius.circular(5),
+              borderWidth: 1,
+              fieldHeight: 48,
+              fieldWidth: 43.33,
+              activeFillColor: Colors.white,
+              activeColor: AppColors.background.lightBlue,
+              inactiveColor: Color(0x33000000),
+              inactiveFillColor: Theme.of(context).cardColor,
+              selectedFillColor: AppColors.background.lightBlue.withOpacity(0.3),
+            ),
+            animationDuration: Duration(milliseconds: 300),
+            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+            enableActiveFill: true,
+            controller: _otpController,
+            autoFocus: true,
+            //textInputType: TextInputType.number,
+            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+            keyboardType: TextInputType.number,
+            onCompleted: (v) {
+              _completedOtp = v;
+            },
+            onChanged: (value) {
+              _otpError = null;
+
+              // setState(() {
+              //   currentText = value;
+              // });
+            },
+            beforeTextPaste: (text) {
+              //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
+              //but you can show anything you want here, like your pop up saying wrong paste format or etc
+              return true;
+            },
+            appContext: context,
           );
         return SizedBox();
       }),
@@ -155,10 +210,7 @@ class LoginScreen extends StatelessWidget {
           child: Text(
             controller.otpStatus,
             textAlign: TextAlign.center,
-            style: TextStyle(
-                fontSize: FontSize.message,
-                fontFamily: AppFonts.nunito,
-                color: AppColors.text.skyBlue),
+            style: TextStyle(fontSize: FontSize.message, fontFamily: AppFonts.nunito, color: AppColors.text.skyBlue),
           ),
         );
       return SizedBox();
@@ -175,17 +227,13 @@ class LoginScreen extends StatelessWidget {
               children: [
                 TextSpan(
                   text: 'On behalf of the whole department welcome',
-                  style: TextStyle(
-                      fontSize: FontSize.message,
-                      fontFamily: AppFonts.nunito,
-                      color: AppColors.text.black),
+                  style:
+                      TextStyle(fontSize: FontSize.message, fontFamily: AppFonts.nunito, color: AppColors.text.black),
                 ),
                 TextSpan(
                   text: ' aboard.',
-                  style: TextStyle(
-                      fontSize: FontSize.message,
-                      fontFamily: AppFonts.nunito,
-                      color: AppColors.text.skyBlue),
+                  style:
+                      TextStyle(fontSize: FontSize.message, fontFamily: AppFonts.nunito, color: AppColors.text.skyBlue),
                 ),
               ],
             ),

@@ -659,7 +659,8 @@ class NewBookingController extends GetxController {
   List<ActivityModel> activities = [];
 
   reset() {
-    //print("reset data");
+    dobTED.text = "";
+    _dob = null;
     _bookingId = null;
     _diveLocation = "Pondicherry";
     _discountSwitch = true;
