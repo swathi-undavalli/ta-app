@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -6,8 +5,6 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
 import 'package:temple_adventures/features/login/controller/login-controller.dart';
-import 'package:otp_autofill/otp_autofill.dart';
-// import 'package:otp_autofill/otp_autofill.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -19,23 +16,9 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final LoginScreenLogic logic = LoginScreenLogic();
-  OTPTextEditController _otpController;
-
-  String _otpError, _completedOtp;
 
   @override
   void initState() {
-    _otpController = OTPTextEditController(
-        codeLength: 6,
-        onCodeReceive: (code) {
-          logic.controller.otp = code;
-        })
-      ..startListenUserConsent(
-        (code) {
-          final exp = RegExp(r'(\d{6})');
-          return exp.stringMatch(code ?? '') ?? '';
-        },
-      );
     super.initState();
   }
 
@@ -98,11 +81,16 @@ class _LoginScreenState extends State<LoginScreen> {
                 fontSize: 20,
                 color: Colors.black,
               ),
-              border: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 3)),
-              enabledBorder:
-                  UnderlineInputBorder(borderSide: BorderSide(color: Colors.black, width: 3, style: BorderStyle.solid)),
+              border: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 3)),
+              enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(
+                      color: Colors.black, width: 3, style: BorderStyle.solid)),
               focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: AppColors.background.skyBlue, width: 3, style: BorderStyle.solid)),
+                  borderSide: BorderSide(
+                      color: AppColors.background.skyBlue,
+                      width: 3,
+                      style: BorderStyle.solid)),
             ),
           ),
         );
@@ -121,7 +109,10 @@ class _LoginScreenState extends State<LoginScreen> {
           fontFamily: AppFonts.nunito,
         ),
       ),
-      style: TextStyle(fontFamily: AppFonts.nunito, fontWeight: FontWeight.bold, fontSize: 14),
+      style: TextStyle(
+          fontFamily: AppFonts.nunito,
+          fontWeight: FontWeight.bold,
+          fontSize: 14),
       searchText: "Search",
       onSubmitted: (_) {
         logic.signInWithPhoneNumber();
@@ -170,25 +161,21 @@ class _LoginScreenState extends State<LoginScreen> {
               activeColor: AppColors.background.lightBlue,
               inactiveColor: Color(0x33000000),
               inactiveFillColor: Theme.of(context).cardColor,
-              selectedFillColor: AppColors.background.lightBlue.withOpacity(0.3),
+              selectedFillColor:
+                  AppColors.background.lightBlue.withOpacity(0.3),
             ),
             animationDuration: Duration(milliseconds: 300),
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             enableActiveFill: true,
-            controller: _otpController,
             autoFocus: true,
             //textInputType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             keyboardType: TextInputType.number,
             onCompleted: (v) {
-              _completedOtp = v;
+              logic.controller.otp = v;
             },
             onChanged: (value) {
-              _otpError = null;
-
-              // setState(() {
-              //   currentText = value;
-              // });
+              logic.controller.otp = value;
             },
             beforeTextPaste: (text) {
               //if you return true then it will show the paste confirmation dialog. Otherwise if false, then nothing will happen.
@@ -210,7 +197,10 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Text(
             controller.otpStatus,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: FontSize.message, fontFamily: AppFonts.nunito, color: AppColors.text.skyBlue),
+            style: TextStyle(
+                fontSize: FontSize.message,
+                fontFamily: AppFonts.nunito,
+                color: AppColors.text.skyBlue),
           ),
         );
       return SizedBox();
@@ -227,13 +217,17 @@ class _LoginScreenState extends State<LoginScreen> {
               children: [
                 TextSpan(
                   text: 'On behalf of the whole department welcome',
-                  style:
-                      TextStyle(fontSize: FontSize.message, fontFamily: AppFonts.nunito, color: AppColors.text.black),
+                  style: TextStyle(
+                      fontSize: FontSize.message,
+                      fontFamily: AppFonts.nunito,
+                      color: AppColors.text.black),
                 ),
                 TextSpan(
                   text: ' aboard.',
-                  style:
-                      TextStyle(fontSize: FontSize.message, fontFamily: AppFonts.nunito, color: AppColors.text.skyBlue),
+                  style: TextStyle(
+                      fontSize: FontSize.message,
+                      fontFamily: AppFonts.nunito,
+                      color: AppColors.text.skyBlue),
                 ),
               ],
             ),

@@ -183,7 +183,8 @@ class FirebaseNotificationService {
   static handleTerminatedNavigation() async {
     RemoteMessage message =
         await FirebaseMessaging.instance.getInitialMessage();
-    if (message.data != null) {
+
+    if (message != null && message.data != null) {
       Get.toNamed(NotificationsScreen.id, arguments: message);
     }
     LocalNotificationService.display(message);

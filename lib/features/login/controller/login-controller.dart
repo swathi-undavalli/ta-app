@@ -16,7 +16,6 @@ LoginScreenLogic logic = LoginScreenLogic();
 
 class LoginScreenLogic {
   LoginScreenController controller = Get.put(LoginScreenController());
-  String _otp = "";
 
   // List<Widget> getOtpFields() {
   //   List<Widget> list = [];
