@@ -8,7 +8,7 @@ import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
-import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
+import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
@@ -24,8 +24,8 @@ class SelectSeatsWidget extends StatefulWidget {
 }
 
 class _SelectSeatsWidgetState extends State<SelectSeatsWidget> {
-  BookingsCalenderWidgetLogic bookingCalenderLogic =
-      BookingsCalenderWidgetLogic();
+  BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
+      BookingsCalenderWidgetLogicNew();
 
   @override
   void initState() {
@@ -37,7 +37,7 @@ class _SelectSeatsWidgetState extends State<SelectSeatsWidget> {
 
     for (int i = 0; i < widget.bookingModel.diveDate.length; i++) {
       if (isSame(widget.bookingModel.diveDate[i],
-          bookingCalenderLogic.controller.selectedDate)) {
+          bookingCalenderLogicNew.controller.selectedDate)) {
         print("Leaving");
       } else {
         widget.bookingModel.diveDate.removeAt(i);
@@ -78,6 +78,7 @@ class _SelectSeatsWidgetState extends State<SelectSeatsWidget> {
 
   bool showLoading = true;
   bool isFilled = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(

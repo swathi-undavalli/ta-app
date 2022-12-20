@@ -4,7 +4,7 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
-import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
+import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import 'package:temple_adventures/features/boat/models/boat-model.dart';
 import 'package:temple_adventures/features/boat/models/boat-passengers-model.dart';
 import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
@@ -297,10 +297,10 @@ class ChooseBoatLogic {
     }
     controller.showLoading = false;
     Get.back();
-    BookingsCalenderWidgetLogic bookingCalenderLogic =
-        BookingsCalenderWidgetLogic();
-    bookingCalenderLogic
-        .onDateSelected(bookingCalenderLogic.controller.lastDateIndex);
+    BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
+        BookingsCalenderWidgetLogicNew();
+    bookingCalenderLogicNew
+        .onDateSelected(bookingCalenderLogicNew.controller.lastDateIndex);
   }
 }
 

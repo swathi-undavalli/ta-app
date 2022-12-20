@@ -14,7 +14,7 @@ import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
-import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller.dart';
+import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/core/widgets/qr-image.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/select-seats-widget.dart';
@@ -44,8 +44,9 @@ class BookingsExpansionPanel extends StatelessWidget {
   TextEditingController depositTED = TextEditingController();
 
   TextEditingController searchTED = TextEditingController();
-  // BookingsCalenderWidgetLogic bookingCalenderLogic =
-  //     BookingsCalenderWidgetLogic();
+
+  BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
+      BookingsCalenderWidgetLogicNew();
 
   BookingsExpansionPanel(
       {this.items,
@@ -582,15 +583,15 @@ Regards,
                                     ),
                                   Row(
                                     children: [
-                                      // if (bookingCalenderLogic
-                                      //             .controller.selectedType ==
-                                      //         FilterType.Dive &&
-                                      //     itemModel.bookingModel.pax.length -
-                                      //             1 ==
-                                      //         itemModel
-                                      //             .bookingModel.noOfPersons)
-                                      //   SelectSeatsWidget(
-                                      //       itemModel.bookingModel),
+                                      if (bookingCalenderLogicNew
+                                                  .controller.selectedType ==
+                                              FilterType.Dive &&
+                                          itemModel.bookingModel.pax.length -
+                                                  1 ==
+                                              itemModel
+                                                  .bookingModel.noOfPersons)
+                                        SelectSeatsWidget(
+                                            itemModel.bookingModel),
                                       Spacer(),
                                       if (itemModel.colorCode == "Blue")
                                         IconButton(
