@@ -17,7 +17,7 @@ class AllBookingsLogic {
 }
 
 class AllBookingsController extends GetxController {
-  List<ItemModel> bookings;
+  List<ItemModel>? bookings;
 
   bool _showSuggestions = false;
 
@@ -33,7 +33,7 @@ class AllBookingsController extends GetxController {
 
   String _selectedPage = "1";
 
-  int _bookingCount;
+  int? _bookingCount;
 
   bool get onSelected => _onSelected;
 
@@ -41,7 +41,7 @@ class AllBookingsController extends GetxController {
 
   String get selectedPage => _selectedPage;
 
-  int get bookingCount => _bookingCount;
+  int? get bookingCount => _bookingCount;
 
   bool get showSuggestions => _showSuggestions;
 
@@ -50,7 +50,7 @@ class AllBookingsController extends GetxController {
     update();
   }
 
-  set bookingCount(int value) {
+  set bookingCount(int? value) {
     _bookingCount = value;
     update();
   }

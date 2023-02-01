@@ -76,11 +76,11 @@ class AllBookingsScreen extends StatelessWidget {
             }
             return ListView.builder(
               itemBuilder: (BuildContext context, int index) {
-                BookingModel booking = BookingModel.fromMap(snapshot.data.docs[index].data());
+                BookingModel booking = BookingModel.fromMap(snapshot.data!.docs[index].data() as Map<String, dynamic>);
                 // log(booking.id);
                 if (controller.searchTED.text.isNotEmpty) {
-                  if (booking.id.contains(controller.searchTED.text) ||
-                      (booking.pax[0]['first-name'] as String)
+                  if (booking.id!.contains(controller.searchTED.text) ||
+                      (booking.pax![0]['first-name'] as String)
                           .toLowerCase()
                           .contains(
                           controller.searchTED.text.toLowerCase().trim()))
@@ -149,7 +149,7 @@ class AllBookingsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildBookingExpansionPanel(BookingModel booking) => Text(booking.id);
+  Widget buildBookingExpansionPanel(BookingModel booking) => Text(booking.id!);
 
   Widget buildAllPages() {
     getCircleColor(int index, AllBookingsController controller) {

@@ -12,7 +12,7 @@ import 'package:url_launcher/url_launcher.dart';
 class AllBoatsExpansionPanelWidget extends StatefulWidget {
   int boatID;
 
-  AllBoatsExpansionPanelWidget({@required this.boatID});
+  AllBoatsExpansionPanelWidget({required this.boatID});
 
   @override
   State<AllBoatsExpansionPanelWidget> createState() =>
@@ -32,7 +32,7 @@ class _AllBoatsExpansionPanelWidgetState
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            BoatsModel boat = BoatsModel.fromMap(snapshot.data.data());
+            BoatsModel boat = BoatsModel.fromMap(snapshot.data!.data()!);
             return Padding(
               padding: const EdgeInsets.only(bottom: 15),
               child: AnimatedContainer(
@@ -68,14 +68,14 @@ class _AllBoatsExpansionPanelWidgetState
                                 child: Row(
                                   children: [
                                     Text(
-                                      boat.boatName,
+                                      boat.boatName!,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                           color: AppColors.text.black,
                                           fontSize: 16,
                                           fontWeight: FontWeight.w600),
                                     ),
-                                    if (!boat.ocean)
+                                    if (!boat.ocean!)
                                       Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Icon(
@@ -125,7 +125,7 @@ class _AllBoatsExpansionPanelWidgetState
                               SizedBox(height: 20),
                               Stack(
                                 children: [
-                                  (boat.ocean)
+                                  boat.ocean!
                                       ? TAImage(
                                           AppImages.icon.newBoat,
                                           height: 90,
@@ -140,8 +140,8 @@ class _AllBoatsExpansionPanelWidgetState
                                           ),
                                         ),
                                   Positioned(
-                                    left: (boat.ocean) ? 80 : 65,
-                                    top: (boat.ocean) ? 5 : 15,
+                                    left: boat.ocean! ? 80 : 65,
+                                    top: boat.ocean! ? 5 : 15,
                                     bottom: 5,
                                     child: Container(
                                       height: 400,
@@ -151,7 +151,7 @@ class _AllBoatsExpansionPanelWidgetState
                                           verticalDirection:
                                               VerticalDirection.down,
                                           children: [
-                                            ...List.generate(boat.capacity,
+                                            ...List.generate(boat.capacity!,
                                                 (index) {
                                               return buildSeat(
                                                   borderColor:
@@ -172,13 +172,13 @@ class _AllBoatsExpansionPanelWidgetState
                                     Expanded(
                                       child: buildCaptainName(
                                           icon: AppImages.icon.captain,
-                                          name: boat.captainName),
+                                          name: boat.captainName!),
                                     ),
                                     SizedBox(height: 20),
                                     Expanded(
                                       child: buildCaptainPhone(
                                           icon: Icons.phone,
-                                          phoneNumber: boat.phoneNumber),
+                                          phoneNumber: boat.phoneNumber!),
                                     ),
                                   ],
                                 ),
@@ -196,7 +196,7 @@ class _AllBoatsExpansionPanelWidgetState
         });
   }
 
-  Widget buildCaptainName({@required String icon, @required String name}) {
+  Widget buildCaptainName({required String icon, required String name}) {
     return Row(
       children: [
         TAImage(
@@ -219,7 +219,7 @@ class _AllBoatsExpansionPanelWidgetState
   }
 
   Widget buildCaptainPhone(
-      {@required IconData icon, @required String phoneNumber}) {
+      {required IconData icon, required String phoneNumber}) {
     return GestureDetector(
       onTap: () {
         makingPhoneCall(phoneNumber);
@@ -248,7 +248,7 @@ class _AllBoatsExpansionPanelWidgetState
     }
   }
 
-  Widget buildSeat({Color borderColor, Color color}) {
+  Widget buildSeat({required Color borderColor, Color? color}) {
     return Padding(
       padding: const EdgeInsets.only(left: 3.5, top: 6),
       child: Container(

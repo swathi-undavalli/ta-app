@@ -5,24 +5,24 @@ class DropdownWithSearch<T> extends StatelessWidget {
   final String placeHolder;
   final T selected;
   final List items;
-  final EdgeInsets selectedItemPadding;
-  final TextStyle selectedItemStyle;
-  final TextStyle dropdownHeadingStyle;
-  final TextStyle itemStyle;
-  final BoxDecoration decoration, disabledDecoration;
-  final double searchBarRadius;
-  final double dialogRadius;
+  final EdgeInsets? selectedItemPadding;
+  final TextStyle? selectedItemStyle;
+  final TextStyle? dropdownHeadingStyle;
+  final TextStyle? itemStyle;
+  final BoxDecoration? decoration, disabledDecoration;
+  final double? searchBarRadius;
+  final double? dialogRadius;
   final bool disabled;
 
   final Function onChanged;
 
   const DropdownWithSearch(
-      {Key key,
-        @required this.title,
-        @required this.placeHolder,
-        @required this.items,
-        @required this.selected,
-        @required this.onChanged,
+      {Key? key,
+        required this.title,
+        required this.placeHolder,
+        required this.items,
+        required this.selected,
+        required this.onChanged,
         this.selectedItemPadding,
         this.selectedItemStyle,
         this.dropdownHeadingStyle,
@@ -102,17 +102,17 @@ class SearchDialog extends StatefulWidget {
   final String title;
   final String placeHolder;
   final List items;
-  final TextStyle titleStyle;
-  final TextStyle itemStyle;
-  final double searchInputRadius;
+  final TextStyle? titleStyle;
+  final TextStyle? itemStyle;
+  final double? searchInputRadius;
 
-  final double dialogRadius;
+  final double? dialogRadius;
 
   const SearchDialog(
-      {Key key,
-        @required this.title,
-        @required this.placeHolder,
-        @required this.items,
+      {Key? key,
+        required this.title,
+        required this.placeHolder,
+        required this.items,
         this.titleStyle,
         this.searchInputRadius,
         this.dialogRadius,
@@ -125,7 +125,7 @@ class SearchDialog extends StatefulWidget {
 
 class _SearchDialogState<T> extends State<SearchDialog> {
   TextEditingController textController = TextEditingController();
-  List filteredList;
+  late List filteredList;
 
   @override
   void initState() {
@@ -158,7 +158,7 @@ class _SearchDialogState<T> extends State<SearchDialog> {
     return CustomDialog(
       shape: RoundedRectangleBorder(
           borderRadius: widget.dialogRadius != null
-              ? BorderRadius.circular(widget.dialogRadius)
+              ? BorderRadius.circular(widget.dialogRadius!)
               : BorderRadius.circular(14)),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12.0),
@@ -211,7 +211,7 @@ class _SearchDialogState<T> extends State<SearchDialog> {
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(
                         widget.searchInputRadius != null
-                            ? Radius.circular(widget.searchInputRadius)
+                            ? Radius.circular(widget.searchInputRadius!)
                             : Radius.circular(5)),
                     borderSide: const BorderSide(
                       color: Colors.black26,
@@ -220,7 +220,7 @@ class _SearchDialogState<T> extends State<SearchDialog> {
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(
                         widget.searchInputRadius != null
-                            ? Radius.circular(widget.searchInputRadius)
+                            ? Radius.circular(widget.searchInputRadius!)
                             : Radius.circular(5)),
                     borderSide: const BorderSide(color: Colors.black12),
                   ),
@@ -235,7 +235,7 @@ class _SearchDialogState<T> extends State<SearchDialog> {
             Expanded(
               child: ClipRRect(
                 borderRadius: BorderRadius.all(widget.dialogRadius != null
-                    ? Radius.circular(widget.dialogRadius)
+                    ? Radius.circular(widget.dialogRadius!)
                     : Radius.circular(5)),
                 //borderRadius: widget.dialogRadius!=null?BorderRadius.circular(widget.dropDownRadius!):BorderRadius.circular(14),
                 child: ListView.builder(
@@ -271,7 +271,7 @@ class CustomDialog extends StatelessWidget {
   ///
   /// Typically used in conjunction with [showDialog].
   const CustomDialog({
-    Key key,
+    Key? key,
     this.child,
     this.insetAnimationDuration = const Duration(milliseconds: 100),
     this.insetAnimationCurve = Curves.decelerate,
@@ -283,7 +283,7 @@ class CustomDialog extends StatelessWidget {
   /// The widget below this widget in the tree.
   ///
   /// {@macro flutter.widgets.child}
-  final Widget child;
+  final Widget? child;
 
   /// The duration of the animation to show when the system keyboard intrudes
   /// into the space that the dialog is placed in.
@@ -304,7 +304,7 @@ class CustomDialog extends StatelessWidget {
   ///
   /// The default shape is a [RoundedRectangleBorder] with a radius of 2.0.
   /// {@endtemplate}
-  final ShapeBorder shape;
+  final ShapeBorder? shape;
   final BoxConstraints constraints;
 
   Color _getColor(BuildContext context) {

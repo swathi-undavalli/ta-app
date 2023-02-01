@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
 class PhoneNumber {
-  String countryISOCode;
+  String? countryISOCode;
   String countryCode;
-  String number;
+  String? number;
 
   PhoneNumber({
-    @required this.countryISOCode,
-    @required this.countryCode,
-    @required this.number,
+    required this.countryISOCode,
+    required this.countryCode,
+    required this.number,
   });
 
   String get completeNumber {
-    return countryCode + number;
+    return countryCode + number!;
   }
 }

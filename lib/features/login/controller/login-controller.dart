@@ -7,7 +7,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/repository/employee_repo.dart';
-import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
@@ -138,7 +137,7 @@ class LoginScreenLogic {
     log("verifyEmployeeID");
     try {
       currentEmployee = await EmployeeRepo.getEmployee(getEmployeeId());
-      controller.phoneNumberTED.text = currentEmployee.authPhone;
+      controller.phoneNumberTED.text = currentEmployee!.authPhone;
       getPhoneNumber();
       EmployeeRepo.employeeID = getEmployeeId();
       print("Done");
@@ -165,7 +164,7 @@ class LoginScreenLogic {
           verificationCompleted: (PhoneAuthCredential credential) async {
             await FirebaseAuth.instance.signInWithCredential(credential);
             if (FirebaseAuth.instance.currentUser != null) {
-              EmployeeRepo.initiateRepo(currentEmployee.id);
+              EmployeeRepo.initiateRepo(currentEmployee!.id);
               Get.offAndToNamed(WelcomeScreen.id);
             } else {
               //log('Failed');
@@ -174,7 +173,7 @@ class LoginScreenLogic {
           verificationFailed: (FirebaseAuthException e) {
             //log(e.toString());
           },
-          codeSent: (String verificationId, int resendToken) async {
+          codeSent: (String verificationId, int? resendToken) async {
             controller.otpStatus = "OTP has been sent to ${getPhoneNumber()}";
             startTimer();
             String smsCode = await getFilledOTP();
@@ -182,7 +181,7 @@ class LoginScreenLogic {
                 PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
             await FirebaseAuth.instance.signInWithCredential(credential);
             if (FirebaseAuth.instance.currentUser != null) {
-              EmployeeRepo.initiateRepo(currentEmployee.id);
+              EmployeeRepo.initiateRepo(currentEmployee!.id);
               Get.offAndToNamed(WelcomeScreen.id);
             } else {
               //log('Failed');
@@ -235,7 +234,7 @@ class LoginScreenLogic {
       verificationFailed: (FirebaseAuthException e) {
         //log(e.toString());
       },
-      codeSent: (String verificationId, int resendToken) async {
+      codeSent: (String verificationId, int? resendToken) async {
         controller.otpStatus = "OTP has been Resent";
         String smsCode = await getFilledOTP();
         PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
@@ -302,8 +301,8 @@ class LoginScreenController extends GetxController {
   TextEditingController countryCodeTED = TextEditingController();
   TextEditingController employeeIdTED = TextEditingController();
 
-  FocusNode phoneNumberNode;
-  FocusNode countryCodeNode;
+  FocusNode? phoneNumberNode;
+  FocusNode? countryCodeNode;
 
   String _otpStatus = "";
   bool _showFab = true;

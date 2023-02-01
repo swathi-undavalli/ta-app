@@ -24,21 +24,21 @@ class CustomerModel {
     this.state,
   });
 
-  String addressLine1;
-  String addressLine2;
-  String city;
-  String firstName;
-  String lastName;
-  String country;
-  String countryCode;
-  String dob;
-  String email;
-  String gender;
-  String location;
-  String idProof;
-  String phoneNumber;
-  String pinCode;
-  String state;
+  String? addressLine1;
+  String? addressLine2;
+  String? city;
+  String? firstName;
+  String? lastName;
+  String? country;
+  String? countryCode;
+  String? dob;
+  String? email;
+  String? gender;
+  String? location;
+  String? idProof;
+  String? phoneNumber;
+  String? pinCode;
+  String? state;
 
   factory CustomerModel.fromMap(Map<String, dynamic> json) => CustomerModel(
         addressLine1: json["addressLine1"],

@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 
 class AppButton extends StatelessWidget {
-  final String text;
-  final Function onTap;
-  final Color bgColor;
-  final Color textColor;
+  final String? text;
+  final Function? onTap;
+  final Color? bgColor;
+  final Color? textColor;
   final Color splashColor;
   final double height;
   final double width;
@@ -14,11 +14,11 @@ class AppButton extends StatelessWidget {
   final bool enable;
 
   AppButton({
-    @required this.text,
-    @required this.onTap,
-    @required this.bgColor,
-    @required this.textColor,
-    @required this.splashColor,
+    required this.text,
+    required this.onTap,
+    required this.bgColor,
+    required this.textColor,
+    required this.splashColor,
     this.height = 31,
     this.width = 100,
     this.borderRadius = 20,
@@ -26,7 +26,7 @@ class AppButton extends StatelessWidget {
     this.enable = true,
   });
 
-  factory AppButton.miniText({String text, Function onTap}) {
+  factory AppButton.miniText({String? text, Function? onTap}) {
     return AppButton(
       text: text,
       onTap: onTap,
@@ -37,8 +37,8 @@ class AppButton extends StatelessWidget {
   }
 
   factory AppButton.miniFlat({
-    String text,
-    Function onTap,
+    String? text,
+    Function? onTap,
     bool enable = true,
     Color bgColor = Colors.black,
     Color textColor = Colors.white,
@@ -54,10 +54,10 @@ class AppButton extends StatelessWidget {
   }
 
   factory AppButton.flat({
-    String text,
-    Function onTap,
-    Color color,
-    Color textColor,
+    String? text,
+    Function? onTap,
+    Color? color,
+    Color? textColor,
     bool enable = true,
     double height= 50,
     double width=  155,
@@ -82,8 +82,8 @@ class AppButton extends StatelessWidget {
     return TextButton(
       style: ButtonStyle(
         overlayColor: MaterialStateProperty.all(splashColor),
-        backgroundColor: MaterialStateProperty.all<Color>(
-            enable ? bgColor : bgColor.withOpacity(0.5)),
+        backgroundColor: MaterialStateProperty.all<Color?>(
+            enable ? bgColor : bgColor!.withOpacity(0.5)),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
@@ -92,10 +92,10 @@ class AppButton extends StatelessWidget {
         minimumSize: MaterialStateProperty.all<Size>(Size(width, height)),
       ),
       onPressed: () {
-        if (enable) onTap();
+        if (enable) onTap!();
       },
       child: Text(
-        text,
+        text!,
         style: TextStyle(
           color: textColor,
           fontSize: fontSize,

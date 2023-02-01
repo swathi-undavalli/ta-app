@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Employee currentEmployee;
+Employee? currentEmployee;
 
 enum AttendanceType {
   CheckIn,
@@ -39,17 +39,17 @@ class Employee {
       );
   }
 
-  String id;
-  String gender;
-  String phoneNumber;
-  String countryCode;
-  String role;
-  AccessLevels accessLevels;
-  DateTime shiftTiming;
-  String firstName;
-  String lastName;
-  String countryIsoCode;
-  String agencyId;
+  String? id;
+  String? gender;
+  String? phoneNumber;
+  String? countryCode;
+  String? role;
+  AccessLevels? accessLevels;
+  DateTime? shiftTiming;
+  String? firstName;
+  String? lastName;
+  String? countryIsoCode;
+  String? agencyId;
 
   factory Employee.fromMap(Map<String, dynamic> json) => Employee(
         id: json["id"],
@@ -72,8 +72,8 @@ class Employee {
         agencyId: json["agencyId"],
       );
 
-  String get name => firstName + " " + (lastName ?? "");
-  get authPhone => countryCode + phoneNumber;
+  String get name => firstName! + " " + (lastName ?? "");
+  get authPhone => countryCode! + phoneNumber!;
 
   Map<String, dynamic> toMap() => {
         "id": id,
@@ -82,9 +82,9 @@ class Employee {
         "countryCode": countryCode,
         "countryIsoCode": countryIsoCode,
         "role": role,
-        "accessLevels": accessLevels.toMap(),
+        "accessLevels": accessLevels!.toMap(),
         "shiftTiming":
-            "${shiftTiming.hour}:${shiftTiming.minute}:${shiftTiming.second}",
+            "${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}",
         "firstName": firstName,
         "lastName": lastName,
         "agencyId": agencyId,
@@ -93,34 +93,34 @@ class Employee {
 
 class AccessLevels {
   AccessLevels({
-    @required this.viewBookings,
-    @required this.createBookings,
-    @required this.editBookings,
-    @required this.viewEmployees,
-    @required this.createEmployees,
-    @required this.editEmployees,
-    @required this.personalProfileEdit,
-    @required this.personalAttendanceReport,
-    @required this.attendanceReport,
-    @required this.weatherReport,
-    @required this.editActivityPrices,
-    @required this.addActivity,
-    @required this.notifications,
+    required this.viewBookings,
+    required this.createBookings,
+    required this.editBookings,
+    required this.viewEmployees,
+    required this.createEmployees,
+    required this.editEmployees,
+    required this.personalProfileEdit,
+    required this.personalAttendanceReport,
+    required this.attendanceReport,
+    required this.weatherReport,
+    required this.editActivityPrices,
+    required this.addActivity,
+    required this.notifications,
   });
 
-  bool viewBookings;
-  bool createBookings;
-  bool editBookings;
-  bool viewEmployees;
-  bool createEmployees;
-  bool editEmployees;
-  bool personalProfileEdit;
-  bool personalAttendanceReport;
-  bool attendanceReport;
-  bool weatherReport;
-  bool editActivityPrices;
-  bool addActivity;
-  bool notifications;
+  bool? viewBookings;
+  bool? createBookings;
+  bool? editBookings;
+  bool? viewEmployees;
+  bool? createEmployees;
+  bool? editEmployees;
+  bool? personalProfileEdit;
+  bool? personalAttendanceReport;
+  bool? attendanceReport;
+  bool? weatherReport;
+  bool? editActivityPrices;
+  bool? addActivity;
+  bool? notifications;
 
   factory AccessLevels.fromMap(Map<String, dynamic> json) => AccessLevels(
         viewBookings: json["viewBookings"],

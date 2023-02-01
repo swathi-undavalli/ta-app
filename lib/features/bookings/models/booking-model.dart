@@ -37,28 +37,28 @@ class BookingModel {
     this.createdAt,
   });
 
-  List<ActivityModel> activity;
-  List<Map<String, dynamic>> pax;
-  List<PaymentModel> payments;
-  List<String> idProofs;
-  int noOfPersons;
-  double discount;
-  double price;
-  double tax;
-  double paid;
-  String id;
-  String paymentMode;
-  String location;
-  String remarks;
-  String paymentTransactionId;
-  String receiptNo;
-  String employeeName;
-  List<DateTime> poolDate;
-  List<DateTime> diveDate;
-  List<DateTime> theoryDate;
-  List<String> bookingDate;
-  String discountType;
-  DateTime createdAt;
+  List<ActivityModel?>? activity;
+  List<Map<String, dynamic>>? pax;
+  List<PaymentModel>? payments;
+  List<String?>? idProofs;
+  int? noOfPersons;
+  double? discount;
+  double? price;
+  double? tax;
+  double? paid;
+  String? id;
+  String? paymentMode;
+  String? location;
+  String? remarks;
+  String? paymentTransactionId;
+  String? receiptNo;
+  String? employeeName;
+  List<DateTime?>? poolDate;
+  List<DateTime?>? diveDate;
+  List<DateTime?>? theoryDate;
+  List<String>? bookingDate;
+  String? discountType;
+  DateTime? createdAt;
 
   factory BookingModel.fromMap(Map<String, dynamic> json) {
     //log("fromMap");
@@ -67,7 +67,7 @@ class BookingModel {
       return DateTime.parse(date);
     }
 
-    double checkDouble(dynamic value) {
+    double? checkDouble(dynamic value) {
       if (value is String) {
         return double.parse(value);
       } else {
@@ -109,7 +109,7 @@ class BookingModel {
 
   Map<String, dynamic> toMap() {
     return {
-      "activity": List<dynamic>.from((activity ?? []).map((x) => x.toMap())),
+      "activity": List<dynamic>.from((activity ?? []).map((x) => x!.toMap())),
       "PAX": List<dynamic>.from((pax ?? []).map((x) => x)),
       "noOfPersons": noOfPersons,
       "createdAt": toDateOrNull(createdAt),
@@ -139,51 +139,51 @@ class BookingModel {
   }
 
   double get balance {
-    double balance = price;
+    double balance = price!;
 
     balance = balance * (noOfPersons ?? 1);
 
     /// Add Tax
     if (tax != null && tax != 0) {
-      balance += balance * (tax / 100);
+      balance += balance * (tax! / 100);
     }
 
     /// Deduct Discount
     if (discountType != null) {
       if (discountType == "%")
-        balance -= balance * (discount / 100);
+        balance -= balance * (discount! / 100);
       else
-        balance = balance - discount;
+        balance = balance - discount!;
     }
 
     /// Deduct paying now
     if (paid != null) {
-      balance -= paid;
+      balance -= paid!;
     }
     return balance.toPrecision(2);
   }
 
   double get totalCost {
-    double total = price;
+    double total = price!;
     total = total * (noOfPersons ?? 1);
 
     /// Add Tax
     if (tax != null && tax != 0) {
-      total += total * (tax / 100);
+      total += total * (tax! / 100);
     }
 
     /// Deduct Discount
     if (discountType != null) {
       if (discountType == "%")
-        total -= total * (discount / 100);
+        total -= total * (discount! / 100);
       else
-        total = total - discount;
+        total = total - discount!;
       //print("total $total");
     }
     return total;
   }
 
-  String toDateOrNull(DateTime date) {
+  String? toDateOrNull(DateTime? date) {
     if (date == null) return null;
     return date.toIso8601String();
   }
@@ -194,8 +194,8 @@ class BookingModel {
 
   bool get hasMedicalIssues {
     bool val = false;
-    if (pax.length > 1) {
-      pax.sublist(1).forEach((e) {
+    if (pax!.length > 1) {
+      pax!.sublist(1).forEach((e) {
         if (e['needDoctor'] != null && e['needDoctor'] == true) {
           print("${e['needDoctor']} kamba ${e['first-name']}");
           val = true;
@@ -218,14 +218,14 @@ class PaymentModel {
     this.time,
   });
 
-  double amount;
-  String collectedBy;
-  String reciptNo;
-  String referenceNo;
-  String paymentMode;
-  String remarks;
-  DateTime time;
-  String toDateOrNull(DateTime date) {
+  double? amount;
+  String? collectedBy;
+  String? reciptNo;
+  String? referenceNo;
+  String? paymentMode;
+  String? remarks;
+  DateTime? time;
+  String? toDateOrNull(DateTime? date) {
     if (date == null) return null;
     return date.toIso8601String();
   }

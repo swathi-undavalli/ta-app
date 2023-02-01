@@ -5,15 +5,15 @@ import 'package:octo_image/octo_image.dart';
 
 class TAImage extends StatelessWidget {
   final String image;
-  final double height;
-  final double width;
-  final String semanticsLabel;
-  final Color color;
+  final double? height;
+  final double? width;
+  final String? semanticsLabel;
+  final Color? color;
   final BoxFit fit;
-  final double borderRadius;
+  final double? borderRadius;
   const TAImage(
       this.image, {
-        Key key,
+        Key? key,
         this.height,
         this.width,
         this.borderRadius,

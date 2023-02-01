@@ -32,7 +32,7 @@ class AttendancePageLogic {
     //print("started=====================");
     QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore.instance
         .collection("employees")
-        .doc(controller.currentEmployee.id)
+        .doc(controller.currentEmployee!.id)
         .collection("attendance")
         .where("punctual", isEqualTo: "Absent")
         .get();
@@ -42,7 +42,7 @@ class AttendancePageLogic {
       var attandence = Attendance.fromMap(attendanceData);
       //print("============== ${data.docs[i].id}");
       if (attandence.LogTime != null)
-        controller.absentDates.add(attandence.LogTime.toDate());
+        controller.absentDates.add(attandence.LogTime!.toDate());
     }
     //print(controller.absentDates);
     controller.update();
@@ -112,13 +112,13 @@ class AttendancePageLogic {
     //print("getClockData");
     var data = await FirebaseFirestore.instance
         .collection("employees")
-        .doc(controller.currentEmployee.id)
+        .doc(controller.currentEmployee!.id)
         .collection("attendanceClock")
         .doc(DateFormat("MM-yyyy").format(DateTime.now()))
         .get();
 
     if (data.data() != null)
-      controller.clockData = data.data()["clockDuration"];
+      controller.clockData = data.data()!["clockDuration"];
     else
       controller.clockData = null;
 
@@ -141,15 +141,15 @@ class AttendancePageLogic {
 }
 
 class AttendancePageController extends GetxController {
-  Employee currentEmployee;
+  Employee? currentEmployee;
 
   List<DateTime> calenderDates = [];
   List<DateTime> absentDates = [];
 
   List<String> days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  String _date;
-  int _clockData = 0;
+  String? _date;
+  int? _clockData = 0;
 
   bool _showLoading = false;
 
@@ -164,12 +164,12 @@ class AttendancePageController extends GetxController {
 
   DateTime get selectedDate => _selectedDate;
 
-  String get date => _date;
+  String? get date => _date;
 
   bool get showLoading => _showLoading;
-  int get clockData => _clockData;
+  int? get clockData => _clockData;
 
-  set clockData(int value) {
+  set clockData(int? value) {
     _clockData = value;
     update();
   }
@@ -179,7 +179,7 @@ class AttendancePageController extends GetxController {
     update();
   }
 
-  set date(String value) {
+  set date(String? value) {
     _date = value;
     update();
   }

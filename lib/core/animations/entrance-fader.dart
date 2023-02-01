@@ -1,4 +1,3 @@
-//@dart=2.9
 import 'package:flutter/material.dart';
 
 /// Animates the child widget to visible after [ delay ] and the animation keeps for [ duration ].
@@ -10,7 +9,7 @@ class EntranceFader extends StatefulWidget {
   final Offset offset;
 
   const EntranceFader({
-    @required this.child,
+    required this.child,
     this.delay = const Duration(milliseconds: 0),
     this.duration = const Duration(milliseconds: 400),
     this.offset = const Offset(0.0, 32.0),
@@ -24,9 +23,9 @@ class EntranceFader extends StatefulWidget {
 
 class EntranceFaderState extends State<EntranceFader>
     with SingleTickerProviderStateMixin {
-    AnimationController _controller;
-    Animation _dxAnimation;
-    Animation _dyAnimation;
+    late AnimationController _controller;
+    late Animation _dxAnimation;
+    late Animation _dyAnimation;
 
   @override
   void initState() {

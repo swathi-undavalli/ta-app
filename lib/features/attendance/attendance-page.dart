@@ -19,7 +19,7 @@ class AttendancePage extends StatelessWidget {
         children: [
           buildShowLoading(),
           Scaffold(
-            appBar: buildAppBar(),
+            appBar: buildAppBar() as PreferredSizeWidget?,
             body: SafeArea(
               child: SingleChildScrollView(
                 child: Padding(
@@ -105,11 +105,11 @@ class AttendancePage extends StatelessWidget {
                       totalSteps: (5 * 60 * 60) ~/ 1000,
                       currentStep: (controller.clockData != null)
                           ? (logic
-                              .getPositiveNumber(controller.clockData ~/ 1000))
+                              .getPositiveNumber(controller.clockData! ~/ 1000))
                           : 0,
                       stepSize: 5,
                       selectedColor: (controller.clockData != null &&
-                              controller.clockData > 0)
+                              controller.clockData! > 0)
                           ? AppColors.background.skyBlue
                           : AppColors.background.red,
                       unselectedColor: Colors.grey[200],
@@ -119,7 +119,7 @@ class AttendancePage extends StatelessWidget {
                       selectedStepSize: 5,
                       roundedCap: (_, __) => true,
                       circularDirection: (controller.clockData != null &&
-                              controller.clockData > 0)
+                              controller.clockData! > 0)
                           ? CircularDirection.clockwise
                           : CircularDirection.counterclockwise,
                     ),
@@ -129,7 +129,7 @@ class AttendancePage extends StatelessWidget {
                       child: Center(
                         child: Text(
                           (controller.clockData != null)
-                              ? "${((controller.clockData < 0) ? "- " : "") + logic.getTimeFromSeconds(controller.clockData)}"
+                              ? "${((controller.clockData! < 0) ? "- " : "") + logic.getTimeFromSeconds(controller.clockData!)}"
                               : "--",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -164,7 +164,7 @@ class AttendancePage extends StatelessWidget {
           buildUserProfile(),
           SizedBox(height: 20),
           GetBuilder<AttendancePageController>(builder: (controller) {
-            return Text(controller.currentEmployee.name);
+            return Text(controller.currentEmployee!.name);
           }),
         ],
       ),

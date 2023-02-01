@@ -13,20 +13,20 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
   final bool isDiveSession;
   final bool showDetails;
-  final Function onSearchTap;
+  final Function? onSearchTap;
   DateTime startDate;
   final bool highlightInvalidTime;
-  final FilterType calenderType;
+  final FilterType? calenderType;
   final AutoScrollController autoScrollController;
   BookingsCalenderWidgetNew({
-    @required this.onDateTimeSelected,
+    required this.onDateTimeSelected,
     this.onSearchTap,
     this.isDiveSession = false,
     this.showDetails = false,
-    this.startDate,
+    required this.startDate,
     this.highlightInvalidTime = false,
     this.calenderType,
-    @required this.autoScrollController,
+    required this.autoScrollController,
   }) {
     //print("new instance");
     if (startDate == null) startDate = DateTime.now();
@@ -141,12 +141,12 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     String title,
     Function onTap, {
     bool enable = false,
-    Color color,
-    int count,
+    Color? color,
+    int? count,
   }) {
     return Expanded(
       child: GestureDetector(
-        onTap: onTap,
+        onTap: onTap as void Function()?,
         child: Container(
           height: 30,
           margin: EdgeInsets.all(5),
@@ -331,7 +331,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           if (element.session.contains("Theory")) expansionList.add(element);
           var count = 0;
           expansionList.forEach((element) {
-            count += element.pax;
+            count += element.pax!;
           });
           controller.theoryCountN = count;
           controller.theoryCount = expansionList.length;
@@ -342,7 +342,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           if (element.session.contains("Pool")) expansionList.add(element);
           var count = 0;
           expansionList.forEach((element) {
-            count += element.pax;
+            count += element.pax!;
           });
           controller.poolCountN = count;
           controller.poolCount = expansionList.length;
@@ -353,7 +353,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           if (element.session.contains("Dive")) expansionList.add(element);
           var count = 0;
           expansionList.forEach((element) {
-            count += element.pax;
+            count += element.pax!;
           });
           controller.diveCountN = count;
           controller.diveCount = expansionList.length;
@@ -365,7 +365,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           onDeletePressed: () {},
           searchBar: true,
           onSearchTap: () {
-            if (onSearchTap != null) onSearchTap();
+            if (onSearchTap != null) onSearchTap!();
           },
         );
       return SizedBox();
@@ -410,7 +410,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           return AppColors.background.grey;
       }
 
-      Widget num = _getEventsCount(controller, date);
+      Widget? num = _getEventsCount(controller, date);
 
       if (num == null && showDetails) return SizedBox();
       return GestureDetector(
@@ -574,7 +574,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     });
   }
 
-  Widget _getEventsCount(
+  Widget? _getEventsCount(
     BookingsCalenderWidgetControllerNew controller,
     DateTime date,
   ) {
@@ -585,36 +585,36 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
       var allBookingsList = [];
 
       if (controller.selectedType == null) {
-        allBookingsList.addAll(booking.diveDate);
-        allBookingsList.addAll(booking.poolDate);
-        allBookingsList.addAll(booking.theoryDate);
+        allBookingsList.addAll(booking.diveDate!);
+        allBookingsList.addAll(booking.poolDate!);
+        allBookingsList.addAll(booking.theoryDate!);
         allBookingsList.forEach((bookingDate) {
           if (isSameMinute(date, bookingDate)) {
-            totalBookings += booking.noOfPersons;
+            totalBookings += booking.noOfPersons!;
             show = true;
           }
         });
       } else if (controller.selectedType == FilterType.Theory) {
-        allBookingsList.addAll(booking.theoryDate);
+        allBookingsList.addAll(booking.theoryDate!);
         allBookingsList.forEach((bookingDate) {
           if (isSameMinute(date, bookingDate)) {
-            totalBookings += booking.noOfPersons;
+            totalBookings += booking.noOfPersons!;
             show = true;
           }
         });
       } else if (controller.selectedType == FilterType.Pool) {
-        allBookingsList.addAll(booking.poolDate);
+        allBookingsList.addAll(booking.poolDate!);
         allBookingsList.forEach((bookingDate) {
           if (isSameMinute(date, bookingDate)) {
-            totalBookings += booking.noOfPersons;
+            totalBookings += booking.noOfPersons!;
             show = true;
           }
         });
       } else if (controller.selectedType == FilterType.Dive) {
-        allBookingsList.addAll(booking.diveDate);
+        allBookingsList.addAll(booking.diveDate!);
         allBookingsList.forEach((bookingDate) {
           if (isSameMinute(date, bookingDate)) {
-            totalBookings += booking.noOfPersons;
+            totalBookings += booking.noOfPersons!;
             show = true;
           }
         });

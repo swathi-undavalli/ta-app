@@ -21,8 +21,8 @@ class NewBoatLogic {
   getCount() {
     controller.employeeCount = 0;
     controller.allEmployeesList = [];
-    if (counterModel != null && counterModel.employee != null) {
-      controller.employeeCount = counterModel.employee;
+    if (counterModel != null && counterModel!.employee != null) {
+      controller.employeeCount = counterModel!.employee;
     }
     // return getData(counterModel.employee);
     // return 54;
@@ -34,14 +34,14 @@ class NewBoatLogic {
 
   getData() async {
     controller.allEmployeesList = [];
-    for (int i = 1; i <= controller.employeeCount; i++) {
+    for (int i = 1; i <= controller.employeeCount!; i++) {
       var data = await FirebaseFirestore.instance
           .collection("employees")
           .doc(i.toString())
           .collection("employeeFullInformation")
           .doc("employeeData")
           .get();
-      Map<String, dynamic> employeeData = data.data();
+      Map<String, dynamic> employeeData = data.data()!;
       var e = Employee.fromMap(employeeData);
       controller.allEmployeesList.add(e);
     }
@@ -56,7 +56,7 @@ class NewBoatLogic {
         .collection("counter")
         .doc("count")
         .get();
-    CounterModel counterModel = CounterModel.fromMap(data.data());
+    CounterModel counterModel = CounterModel.fromMap(data.data()!);
     if (controller.boatNameTED.text != "" &&
         controller.boatCapacityTED.text != "" &&
         controller.captainNameTED.text != "" &&
@@ -66,14 +66,16 @@ class NewBoatLogic {
         capacity: int.parse(controller.boatCapacityTED.text),
         captainName: controller.captainNameTED.text,
         phoneNumber: controller.phoneTED.text,
-        id: (counterModel.boat + 1).toString(),
+        id: (counterModel.boat! + 1).toString(),
         ocean: (controller.diveType) ? true : false,
       );
       FirebaseFirestore.instance
           .collection('boats')
           .doc(boatsModel.id)
           .set(boatsModel.toMap());
-      counterModel.boat++;
+      if (counterModel.boat != null) {
+        counterModel.boat = counterModel.boat! + 1;
+      }
       FirebaseFirestore.instance
           .collection("counter")
           .doc("count")
@@ -120,7 +122,7 @@ class NewBoatController extends GetxController {
     diveType = true;
   }
 
-  int _employeeCount;
+  int? _employeeCount;
 
   bool _showLoading = true;
 
@@ -131,20 +133,20 @@ class NewBoatController extends GetxController {
     update();
   }
 
-  int get employeeCount => _employeeCount;
+  int? get employeeCount => _employeeCount;
 
-  set employeeCount(int value) {
+  set employeeCount(int? value) {
     _employeeCount = value;
     update();
   }
 
   List<Employee> allEmployeesList = [];
 
-  String _isoCode = "IN";
+  String? _isoCode = "IN";
 
-  String get isoCode => _isoCode;
+  String? get isoCode => _isoCode;
 
-  set isoCode(String value) {
+  set isoCode(String? value) {
     _isoCode = value;
     update();
   }

@@ -52,12 +52,12 @@ class WeatherRepository {
         .get();
     //print(data.data());
     //print(data.data().isEmpty);
-    if (data.data() != null && data.data().isNotEmpty) {
+    if (data.data() != null && data.data()!.isNotEmpty) {
       //if data exist.
       //print("admkasmdkmkds");
-      WeatherPageModel weatherPageModel = WeatherPageModel.fromMap(data.data());
+      WeatherPageModel weatherPageModel = WeatherPageModel.fromMap(data.data()!);
 
-      if (DateTime.now().difference(weatherPageModel.timeStamp).inHours >= 12) {
+      if (DateTime.now().difference(weatherPageModel.timeStamp!).inHours >= 12) {
         return await getLatestData(date);
       } else {
         return weatherPageModel;

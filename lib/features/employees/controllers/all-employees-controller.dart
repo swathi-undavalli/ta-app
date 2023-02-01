@@ -9,9 +9,9 @@ class AllEmployeesLogic {
     controller.suggestionsList = [];
     //print(controller.allEmployeesList[controller.allEmployeesList.length - 1].id);
     controller.allEmployeesList.forEach((employee) {
-      if (employee.firstName.toLowerCase().contains(text.toLowerCase()) ||
-          employee.lastName.toLowerCase().contains(text.toLowerCase()) ||
-          employee.id.contains(text)) {
+      if (employee.firstName!.toLowerCase().contains(text.toLowerCase()) ||
+          employee.lastName!.toLowerCase().contains(text.toLowerCase()) ||
+          employee.id!.contains(text)) {
         controller.suggestionsList.add(employee);
       }
     });

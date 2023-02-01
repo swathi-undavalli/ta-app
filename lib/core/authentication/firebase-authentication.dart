@@ -8,7 +8,7 @@ class FirebaseAuthentication {
   }
 
   static String userId() {
-    return auth.currentUser.uid;
+    return auth.currentUser!.uid;
   }
 
   static isUserLoggedIn() {

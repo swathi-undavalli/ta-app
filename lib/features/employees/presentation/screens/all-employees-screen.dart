@@ -160,8 +160,8 @@ class AllEmployeesScreen extends StatelessWidget {
   Widget buildAllEmployees() {
     logic.controller.allEmployeesList = [];
     getCount() {
-      if (counterModel != null && counterModel.employee != null)
-        return counterModel.employee;
+      if (counterModel != null && counterModel!.employee != null)
+        return counterModel!.employee;
       return 100;
     }
 
@@ -170,7 +170,7 @@ class AllEmployeesScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ...List.generate(
-          getCount(),
+          getCount()!,
           (index) => buildListTile(
             (index + 1).toString(),
           ),
@@ -204,13 +204,13 @@ class AllEmployeesScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(5),
                           color: Colors.grey),
                     ),
-                    baseColor: Colors.grey[300],
-                    highlightColor: Colors.grey[100],
+                    baseColor: Colors.grey[300]!,
+                    highlightColor: Colors.grey[100]!,
                   ),
                 ),
               );
             }
-            Map<String, dynamic> employeeData = snapshot.data.data();
+            Map<String, dynamic> employeeData = snapshot.data!.data()!;
             var e = Employee.fromMap(employeeData);
             logic.controller.allEmployeesList.add(e);
             //print(e.id);

@@ -50,7 +50,7 @@ class NewBookingLogic {
       ActivityModel activity = ActivityModel.fromMap(catalogue.docs[i].data());
       controller.activities.add(activity);
       controller.activities
-          .sort((a1, a2) => a2.priority.compareTo(a1.priority));
+          .sort((a1, a2) => a2.priority!.compareTo(a1.priority!));
       controller.showLoading = false;
     }
   }
@@ -58,7 +58,7 @@ class NewBookingLogic {
   onContinuePressedBookingForm() {
     controller.bookingModel.remarks = controller.remarksTED.text.toString();
     controller.bookingModel.employeeName =
-        currentEmployee.firstName + currentEmployee.lastName;
+        currentEmployee!.firstName! + currentEmployee!.lastName!;
     if (controller.payingNowTED.text == "" ||
         controller.payingNowTED.text == 0.toString()) {
       createCustomer();
@@ -80,7 +80,7 @@ class NewBookingLogic {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  controller.bookingId,
+                  controller.bookingId!,
                   style: TextStyle(fontSize: FontSize.title),
                 ),
                 Text("Booking Created Successfully"),
@@ -163,7 +163,7 @@ class NewBookingLogic {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  controller.bookingId,
+                  controller.bookingId!,
                   style: TextStyle(fontSize: FontSize.title),
                 ),
                 Text("Booking Created Successfully"),
@@ -267,7 +267,7 @@ class NewBookingLogic {
   }
 
   addPoolSessionDateTime() {
-    DateTime selectedPoolDate;
+    DateTime? selectedPoolDate;
     Get.defaultDialog(
       title: "",
       titlePadding: EdgeInsets.all(0),
@@ -313,9 +313,9 @@ class NewBookingLogic {
                   onTap: () {
                     if (controller.bookingModel.poolDate == null)
                       controller.bookingModel.poolDate = [];
-                    controller.bookingModel.poolDate.add(selectedPoolDate);
+                    controller.bookingModel.poolDate!.add(selectedPoolDate);
                     controller.bookingModel.poolDate =
-                        controller.bookingModel.poolDate.toSet().toList();
+                        controller.bookingModel.poolDate!.toSet().toList();
                     // //print(controller.bookingModel.poolDate);
                     controller.update();
                     Get.back();
@@ -331,7 +331,7 @@ class NewBookingLogic {
   }
 
   addDiveSessionDateTime() {
-    DateTime selectedDiveDate;
+    DateTime? selectedDiveDate;
     Get.defaultDialog(
       title: "",
       titlePadding: EdgeInsets.all(0),
@@ -377,9 +377,9 @@ class NewBookingLogic {
                   onTap: () {
                     if (controller.bookingModel.diveDate == null)
                       controller.bookingModel.diveDate = [];
-                    controller.bookingModel.diveDate.add(selectedDiveDate);
+                    controller.bookingModel.diveDate!.add(selectedDiveDate);
                     controller.bookingModel.diveDate =
-                        controller.bookingModel.diveDate.toSet().toList();
+                        controller.bookingModel.diveDate!.toSet().toList();
 
                     //print(controller.bookingModel.diveDate);
                     controller.update();
@@ -396,7 +396,7 @@ class NewBookingLogic {
   }
 
   addTheorySessionDateTime() {
-    DateTime selectedTheoryDate;
+    DateTime? selectedTheoryDate;
     Get.defaultDialog(
       title: "",
       titlePadding: EdgeInsets.all(0),
@@ -443,9 +443,9 @@ class NewBookingLogic {
                   onTap: () {
                     if (controller.bookingModel.theoryDate == null)
                       controller.bookingModel.theoryDate = [];
-                    controller.bookingModel.theoryDate.add(selectedTheoryDate);
+                    controller.bookingModel.theoryDate!.add(selectedTheoryDate);
                     controller.bookingModel.theoryDate =
-                        controller.bookingModel.theoryDate.toSet().toList();
+                        controller.bookingModel.theoryDate!.toSet().toList();
                     //log(controller.bookingModel.theoryDate.toString());
                     controller.update();
                     Get.back();
@@ -465,24 +465,24 @@ class NewBookingLogic {
     controller.bookingModel.bookingDate = [];
 
     if (controller.bookingModel.theoryDate != null &&
-        controller.bookingModel.theoryDate.isNotEmpty) {
-      controller.bookingModel.theoryDate.forEach((element) {
+        controller.bookingModel.theoryDate!.isNotEmpty) {
+      controller.bookingModel.theoryDate!.forEach((element) {
         //print(getStringDate(element));
-        controller.bookingModel.bookingDate.add(getStringDate(element));
+        controller.bookingModel.bookingDate!.add(getStringDate(element!));
       });
     }
     if (controller.bookingModel.poolDate != null &&
-        controller.bookingModel.poolDate.isNotEmpty) {
-      controller.bookingModel.poolDate.forEach((element) {
+        controller.bookingModel.poolDate!.isNotEmpty) {
+      controller.bookingModel.poolDate!.forEach((element) {
         //print(getStringDate(element));
-        controller.bookingModel.bookingDate.add(getStringDate(element));
+        controller.bookingModel.bookingDate!.add(getStringDate(element!));
       });
     }
     if (controller.bookingModel.diveDate != null &&
-        controller.bookingModel.diveDate.isNotEmpty) {
-      controller.bookingModel.diveDate.forEach((element) {
+        controller.bookingModel.diveDate!.isNotEmpty) {
+      controller.bookingModel.diveDate!.forEach((element) {
         //print(getStringDate(element));
-        controller.bookingModel.bookingDate.add(getStringDate(element));
+        controller.bookingModel.bookingDate!.add(getStringDate(element!));
       });
     }
     try {
@@ -514,7 +514,7 @@ class NewBookingLogic {
         controller.paxTED.text != "" &&
         controller.phoneNumberTED.text != "") {
       controller.bookingModel.pax = [];
-      controller.bookingModel.pax.add({
+      controller.bookingModel.pax!.add({
         "email": controller.emailTED.text,
         "first-name": controller.fNameTED.text,
         "last-name": controller.lNameTED.text,
@@ -527,8 +527,8 @@ class NewBookingLogic {
       controller.bookingModel.noOfPersons = getInt(controller.paxTED.text);
       disposeKeyboard();
       Get.toNamed(BookDateTime.id);
-      //log((controller.bookingModel.pax).toString());
     } else {
+      log("not allowed");
       showToast("Invalid Input");
     }
   }
@@ -538,20 +538,20 @@ class NewBookingLogic {
         .collection("customers")
         .doc(controller.emailTED.text)
         .get();
-    Map<String, dynamic> data = d.data();
+    Map<String, dynamic>? data = d.data();
     if (data == null) return false;
     controller.customerModel = CustomerModel.fromMap(data);
     log(controller.customerModel.toMap().toString());
-    controller.fNameTED.text = controller.customerModel.firstName;
-    controller.lNameTED.text = controller.customerModel.lastName;
-    controller.phoneNumberTED.text = controller.customerModel.phoneNumber;
-    controller.countryCodeTED.text = controller.customerModel.countryCode;
+    controller.fNameTED.text = controller.customerModel.firstName!;
+    controller.lNameTED.text = controller.customerModel.lastName!;
+    controller.phoneNumberTED.text = controller.customerModel.phoneNumber!;
+    controller.countryCodeTED.text = controller.customerModel.countryCode!;
     return true;
   }
 }
 
 class NewBookingController extends GetxController {
-  String _bookingId;
+  String? _bookingId;
 
   TextEditingController emailTED = TextEditingController();
   TextEditingController fNameTED = TextEditingController();
@@ -585,7 +585,7 @@ class NewBookingController extends GetxController {
 
   DateTime get paymentDate => _paymentDate;
 
-  String get bookingId => _bookingId;
+  String? get bookingId => _bookingId;
 
   bool get discountSwitch => _discountSwitch;
 
@@ -613,7 +613,7 @@ class NewBookingController extends GetxController {
     update();
   }
 
-  set bookingId(String value) {
+  set bookingId(String? value) {
     _bookingId = value;
     update();
   }
@@ -647,8 +647,8 @@ class NewBookingController extends GetxController {
   TextEditingController receiptNoTED = TextEditingController();
   TextEditingController dobTED = TextEditingController();
 
-  DateTime _dob = DateTime.now();
-  List<ActivityModel> selectedActivity = [];
+  DateTime? _dob = DateTime.now();
+  List<ActivityModel?> selectedActivity = [];
 
   double _cost = 0;
   double _balance = 0;
@@ -695,17 +695,17 @@ class NewBookingController extends GetxController {
 
   bool _showLoading = true;
 
-  String _isoCode = "IN";
+  String? _isoCode = "IN";
 
-  String get isoCode {
+  String? get isoCode {
     return _isoCode;
   }
 
   String get diveLocation => _diveLocation;
 
-  DateTime get dob => _dob;
+  DateTime? get dob => _dob;
 
-  set dob(DateTime value) {
+  set dob(DateTime? value) {
     _dob = value;
     update();
   }
@@ -729,7 +729,7 @@ class NewBookingController extends GetxController {
     update();
   }
 
-  set isoCode(String value) {
+  set isoCode(String? value) {
     _isoCode = value;
     update();
   }

@@ -33,7 +33,7 @@ class Dummy extends StatelessWidget {
     );
   }
 
-  Widget buildPaymentStatus({String totalAmount, List<double> payments}) {
+  Widget buildPaymentStatus({required String totalAmount, required List<double> payments}) {
     var list = payments;
     var total = totalAmount;
     double deposits = 0.0;
@@ -213,7 +213,7 @@ class Dummy extends StatelessWidget {
     );
   }
 
-  Widget buildCircle({Color color}) {
+  Widget buildCircle({Color? color}) {
     return SizedBox(
       width: 120,
       child: Icon(
@@ -224,7 +224,7 @@ class Dummy extends StatelessWidget {
     );
   }
 
-  Widget buildNumber({FontWeight fontWeight, Color color, String text}) {
+  Widget buildNumber({FontWeight? fontWeight, Color? color, required String text}) {
     return SizedBox(
       width: 120,
       child: Center(

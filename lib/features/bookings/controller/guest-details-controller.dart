@@ -16,7 +16,7 @@ class GuestDetailsLogic {
   GuestDetailsController controller = Get.put(GuestDetailsController());
 
   ImagePicker imagePicker = ImagePicker();
-  Function onImagePicked;
+  Function? onImagePicked;
 
   init() {
     controller.bookingModel = Get.arguments;
@@ -24,7 +24,7 @@ class GuestDetailsLogic {
 
   browseImage(bool isFront, ImageSource source) async {
     print("==========started");
-    XFile pickedFile =
+    XFile? pickedFile =
         await imagePicker.pickImage(source: source, imageQuality: 50);
     print("==========ended");
 
@@ -78,7 +78,7 @@ class GuestDetailsLogic {
       if (!controller.customerExist) {
         if (controller.idProofFile == null &&
             (controller.uploadedImageUrl == null ||
-                controller.uploadedImageUrl.isEmpty)) {
+                controller.uploadedImageUrl!.isEmpty)) {
           Fluttertoast.showToast(msg: "Image not Picked");
           controller.pageLoading = false;
 
@@ -103,7 +103,7 @@ class GuestDetailsLogic {
 
   Future<void> createCustomer() async {
     controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
-        file: File(controller.idProofFile.path));
+        file: File(controller.idProofFile!.path));
     CustomerModel customer = CustomerModel(
       countryCode: controller.countryCodeTED.text,
       firstName: controller.firstNameTED.text,
@@ -120,7 +120,7 @@ class GuestDetailsLogic {
   }
 
   addGuest() async {
-    controller.bookingModel.pax.add({
+    controller.bookingModel!.pax!.add({
       "email": controller.emailTED.text,
       "first-name": controller.firstNameTED.text,
       "last-name": controller.lastNameTED.text,
@@ -130,12 +130,12 @@ class GuestDetailsLogic {
       "gender": controller.genderTED.text,
       "idProof": await getIDProofLink()
     });
-    log(controller.bookingModel.pax.toString());
+    log(controller.bookingModel!.pax.toString());
     await FirebaseFirestore.instance
         .collection("bookings")
-        .doc(controller.bookingModel.id)
+        .doc(controller.bookingModel!.id)
         .set(
-          controller.bookingModel.toMap(),
+          controller.bookingModel!.toMap(),
         );
   }
 
@@ -144,16 +144,16 @@ class GuestDetailsLogic {
         .collection("customers")
         .doc(controller.emailTED.text)
         .get();
-    Map<String, dynamic> data = d.data();
+    Map<String, dynamic>? data = d.data();
     if (data == null) return false;
     controller.customerModel = CustomerModel.fromMap(data);
-    log(controller.customerModel.toMap().toString());
-    controller.firstNameTED.text = controller.customerModel.firstName;
-    controller.lastNameTED.text = controller.customerModel.lastName;
-    controller.phoneNumberTED.text = controller.customerModel.phoneNumber;
-    controller.genderTED.text = controller.customerModel.gender;
-    controller.countryCodeTED.text = controller.customerModel.countryCode;
-    controller.idProofLink = controller.customerModel.idProof;
+    log(controller.customerModel!.toMap().toString());
+    controller.firstNameTED.text = controller.customerModel!.firstName!;
+    controller.lastNameTED.text = controller.customerModel!.lastName!;
+    controller.phoneNumberTED.text = controller.customerModel!.phoneNumber!;
+    controller.genderTED.text = controller.customerModel!.gender!;
+    controller.countryCodeTED.text = controller.customerModel!.countryCode!;
+    controller.idProofLink = controller.customerModel!.idProof;
     return true;
   }
 
@@ -168,25 +168,25 @@ class GuestDetailsLogic {
     if (controller.customerModel == null) {
       controller.customerModel = CustomerModel();
     }
-    controller.customerModel.firstName = controller.firstNameTED.text;
-    controller.customerModel.lastName = controller.lastNameTED.text;
-    controller.customerModel.countryCode = controller.countryCodeTED.text;
-    controller.customerModel.email = controller.emailTED.text;
-    controller.customerModel.phoneNumber = controller.phoneNumberTED.text;
-    controller.customerModel.gender = controller.genderTED.text;
-    controller.customerModel.idProof = await getIDProofLink();
+    controller.customerModel!.firstName = controller.firstNameTED.text;
+    controller.customerModel!.lastName = controller.lastNameTED.text;
+    controller.customerModel!.countryCode = controller.countryCodeTED.text;
+    controller.customerModel!.email = controller.emailTED.text;
+    controller.customerModel!.phoneNumber = controller.phoneNumberTED.text;
+    controller.customerModel!.gender = controller.genderTED.text;
+    controller.customerModel!.idProof = await getIDProofLink();
     await FirebaseFirestore.instance
         .collection("customers")
         .doc(controller.emailTED.text)
-        .set(controller.customerModel.toMap());
+        .set(controller.customerModel!.toMap());
   }
 
-  Future<String> getIDProofLink() async {
+  Future<String?> getIDProofLink() async {
     if (controller.customerExist) {
       if (controller.idProofFile != null) {
         if (controller.uploadedImageUrl == null)
           controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
-              file: File(controller.idProofFile.path));
+              file: File(controller.idProofFile!.path));
         return controller.uploadedImageUrl;
       } else {
         return controller.idProofLink;
@@ -194,7 +194,7 @@ class GuestDetailsLogic {
     } else {
       if (controller.uploadedImageUrl == null)
         controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
-            file: File(controller.idProofFile.path));
+            file: File(controller.idProofFile!.path));
       return controller.uploadedImageUrl;
     }
   }
@@ -213,12 +213,12 @@ class GuestDetailsController extends GetxController {
   FocusNode emailNode = FocusNode();
   FocusNode phoneNumberNode = FocusNode();
   FocusNode genderNode = FocusNode();
-  XFile _idProofFile;
+  XFile? _idProofFile;
 
-  CustomerModel customerModel = CustomerModel();
+  CustomerModel? customerModel = CustomerModel();
 
-  String _idProofLink;
-  BookingModel bookingModel;
+  String? _idProofLink;
+  BookingModel? bookingModel;
 
   bool _getDetailsPressed = false;
 
@@ -228,7 +228,7 @@ class GuestDetailsController extends GetxController {
 
   bool customerExist = false;
 
-  String uploadedImageUrl;
+  String? uploadedImageUrl;
 
   bool get showLoading => _showLoading;
 
@@ -251,16 +251,16 @@ class GuestDetailsController extends GetxController {
     update();
   }
 
-  String get idProofLink => _idProofLink;
+  String? get idProofLink => _idProofLink;
 
-  set idProofLink(String value) {
+  set idProofLink(String? value) {
     _idProofLink = value;
     update();
   }
 
-  XFile get idProofFile => _idProofFile;
+  XFile? get idProofFile => _idProofFile;
 
-  set idProofFile(XFile value) {
+  set idProofFile(XFile? value) {
     _idProofFile = value;
     update();
   }
@@ -280,13 +280,13 @@ class GuestDetailsController extends GetxController {
     customerModel = null;
   }
 
-  String _countryISoCOde = "IN";
+  String? _countryISoCOde = "IN";
 
   List<String> gender = ['Male', 'Female'];
 
-  String get countryISoCOde => _countryISoCOde;
+  String? get countryISoCOde => _countryISoCOde;
 
-  set countryISoCOde(String value) {
+  set countryISoCOde(String? value) {
     _countryISoCOde = value;
     update();
   }

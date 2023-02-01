@@ -10,11 +10,11 @@ import '../../../home/model/employee.dart';
 class FreelanceDiverBottomSheet extends StatefulWidget {
   final List<Freelancer> selectedFreelancers;
   final List<Freelancer> commonFreelancers;
-  final Function(Freelancer) onFreelanceTapped;
+  final Function(Freelancer)? onFreelanceTapped;
 
   FreelanceDiverBottomSheet(
-      {@required this.selectedFreelancers,
-      @required this.commonFreelancers,
+      {required this.selectedFreelancers,
+      required this.commonFreelancers,
       this.onFreelanceTapped});
 
   @override
@@ -102,12 +102,12 @@ class _FreelanceDiverBottomSheetState extends State<FreelanceDiverBottomSheet> {
             );
           }
           return Column(
-            children: snapshot.data.docs.map((document) {
-              Employee freelance = Employee.fromMap(document.data());
+            children: snapshot.data!.docs.map((document) {
+              Employee freelance = Employee.fromMap(document.data() as Map<String, dynamic>);
               log(freelance.toString());
               log(freelance.id.toString());
               if (searchTED.text.isNotEmpty) {
-                if (freelance.id.contains(searchTED.text) ||
+                if (freelance.id!.contains(searchTED.text) ||
                     freelance.name
                         .toLowerCase()
                         .contains(searchTED.text.toLowerCase().trim()))
@@ -122,13 +122,13 @@ class _FreelanceDiverBottomSheetState extends State<FreelanceDiverBottomSheet> {
         });
   }
 
-  Widget buildFreelance({Employee e}) {
+  Widget buildFreelance({required Employee e}) {
     return Container(
       child: Material(
         child: InkWell(
           onTap: () {
             setState(() {
-              widget.onFreelanceTapped(Freelancer(
+              widget.onFreelanceTapped!(Freelancer(
                 name: e.name,
                 phone: e.phoneNumber,
                 id: e.id,

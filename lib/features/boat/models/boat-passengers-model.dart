@@ -19,9 +19,9 @@ class BoatPassengersModel {
     this.freelancer,
   });
 
-  List<Passenger> passenger;
-  List<Employees> employees;
-  List<Freelancer> freelancer;
+  List<Passenger>? passenger;
+  List<Employees>? employees;
+  List<Freelancer>? freelancer;
 
   factory BoatPassengersModel.fromMap(Map<String, dynamic> json) =>
       BoatPassengersModel(
@@ -34,9 +34,9 @@ class BoatPassengersModel {
       );
 
   Map<String, dynamic> toMap() => {
-        "passenger": List<dynamic>.from(passenger.map((x) => x.toMap())),
-        "employees": List<dynamic>.from(employees.map((x) => x.toMap())),
-        "freelancer": List<dynamic>.from(freelancer.map((x) => x.toMap())),
+        "passenger": List<dynamic>.from(passenger!.map((x) => x.toMap())),
+        "employees": List<dynamic>.from(employees!.map((x) => x.toMap())),
+        "freelancer": List<dynamic>.from(freelancer!.map((x) => x.toMap())),
       };
 }
 
@@ -49,11 +49,11 @@ class Employees {
     this.boatID,
   });
 
-  String name;
-  String boatID;
-  String id;
-  String gender;
-  String phone;
+  String? name;
+  String? boatID;
+  String? id;
+  String? gender;
+  String? phone;
 
   factory Employees.fromMap(Map<String, dynamic> json) => Employees(
         name: json["name"],
@@ -93,11 +93,11 @@ class Freelancer {
     this.id,
   });
 
-  String name;
-  String boatID;
-  String gender;
-  String phone;
-  String id;
+  String? name;
+  String? boatID;
+  String? gender;
+  String? phone;
+  String? id;
 
   factory Freelancer.fromMap(Map<String, dynamic> json) => Freelancer(
         name: json["name"],
@@ -132,20 +132,20 @@ class Freelancer {
 
 class Passenger {
   Passenger({
-    @required this.name,
-    @required this.gender,
-    @required this.phone,
-    @required this.email,
-    @required this.boatID,
-    @required this.bookingID,
+    required this.name,
+    required this.gender,
+    required this.phone,
+    required this.email,
+    required this.boatID,
+    required this.bookingID,
   });
 
-  String name;
-  String gender;
-  String phone;
-  String email;
-  String boatID;
-  String bookingID;
+  String? name;
+  String? gender;
+  String? phone;
+  String? email;
+  String? boatID;
+  String? bookingID;
 
   factory Passenger.fromMap(Map<String, dynamic> json) => Passenger(
         name: json["name"],

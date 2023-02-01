@@ -11,7 +11,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'notification-screen.dart';
 
 class AutoUpdateView extends StatelessWidget {
-  AutoUpdateView({Key key}) : super(key: key);
+  AutoUpdateView({Key? key}) : super(key: key);
   static const String id = "AutoUpdateView";
 
   final AutoUpdateLogic logic = AutoUpdateLogic();
@@ -26,7 +26,7 @@ class AutoUpdateView extends StatelessWidget {
             SizedBox(
               height: 30,
             ),
-            if (!logic.controller.criticalUpdate)
+            if (!logic.controller.criticalUpdate!)
               Container(
                 width: Get.width,
                 alignment: Alignment.topRight,
@@ -110,7 +110,7 @@ class AutoUpdateLogic {
 
   openLink() async {
     try {
-      await launch(controller.downloadLink);
+      await launch(controller.downloadLink!);
     } catch (e) {
       Get.defaultDialog(
         title: "\nError Occured",
@@ -144,16 +144,16 @@ class AutoUpdateLogic {
         .collection("ota_update")
         .doc("version")
         .get();
-    controller.latestVersionNumber = data.data()["number"];
-    controller.downloadLink = data.data()["downloadLink"];
-    controller.criticalUpdate = data.data()["critical_update"];
+    controller.latestVersionNumber = data.data()!["number"];
+    controller.downloadLink = data.data()!["downloadLink"];
+    controller.criticalUpdate = data.data()!["critical_update"];
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     controller.version = packageInfo.version;
     controller.buildNumber = packageInfo.buildNumber;
 
     if (controller.latestVersionNumber !=
-        controller.version + "+" + controller.buildNumber) {
+        controller.version! + "+" + controller.buildNumber!) {
       log("Auto update called");
       Get.offAllNamed(AutoUpdateView.id);
     } else {
@@ -222,15 +222,15 @@ class AutoUpdateLogic {
 }
 
 class AutoUpdateController extends GetxController {
-  String latestVersionNumber, version, buildNumber, downloadLink;
+  String? latestVersionNumber, version, buildNumber, downloadLink;
 
-  bool criticalUpdate = false;
+  bool? criticalUpdate = false;
 
-  OtaEvent _currentEvent;
+  OtaEvent? _currentEvent;
 
-  OtaEvent get currentEvent => _currentEvent;
+  OtaEvent? get currentEvent => _currentEvent;
 
-  set currentEvent(OtaEvent value) {
+  set currentEvent(OtaEvent? value) {
     _currentEvent = value;
     update();
   }

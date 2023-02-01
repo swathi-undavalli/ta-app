@@ -1,5 +1,5 @@
 
-CounterModel counterModel;
+CounterModel? counterModel;
 
 class CounterModel {
   CounterModel({
@@ -11,12 +11,12 @@ class CounterModel {
     this.files,
   });
 
-  int activity;
-  int booking;
-  int employee;
-  int boat;
-  int freelance;
-  int files;
+  int? activity;
+  int? booking;
+  int? employee;
+  int? boat;
+  int? freelance;
+  int? files;
 
   factory CounterModel.fromMap(Map<String, dynamic> json) => CounterModel(
     activity: json["activity"],

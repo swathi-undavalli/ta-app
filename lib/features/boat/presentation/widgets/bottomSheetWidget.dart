@@ -13,10 +13,10 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
   final TextEditingController searchTED = TextEditingController();
 
   EmployeeSelectorBottomSheet({
-  @required this.onEmployeeTapped,
-  @required this.onEmployeeDeleted,
-    @required this.selectedEmployees,
-    @required this.commonEmployees,
+  required this.onEmployeeTapped,
+  required this.onEmployeeDeleted,
+    required this.selectedEmployees,
+    required this.commonEmployees,
   });
 
   final List<Employees> selectedEmployees;
@@ -66,7 +66,7 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
               child: SizedBox(
                 child: ListView(
                   children: [
-                    ...List.generate(counterModel.employee, (index) {
+                    ...List.generate(counterModel!.employee!, (index) {
                       return buildAllEmployees((index + 1).toString());
                     }),
                   ],
@@ -112,9 +112,9 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               emp.Employee employee =
-                  emp.Employee.fromMap(snapshot.data.data());
+                  emp.Employee.fromMap(snapshot.data!.data()!);
               if (searchTED.text.isNotEmpty) {
-                if (employee.id.contains(searchTED.text) ||
+                if (employee.id!.contains(searchTED.text) ||
                     employee.name
                         .toLowerCase()
                         .contains(searchTED.text.toLowerCase().trim()))
@@ -128,13 +128,13 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
     });
   }
 
-  Widget buildEmployeeNames({emp.Employee e}) {
+  Widget buildEmployeeNames({emp.Employee? e}) {
     return Container(
       child: Material(
         child: InkWell(
           onTap: () {
             onEmployeeTapped(Employees(
-              name: e.name,
+              name: e!.name,
               phone: e.phoneNumber,
               id: e.id,
               gender: e.gender,
@@ -149,7 +149,7 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
                 children: [
                   Icon(Icons.account_circle, color: Colors.black38, size: 25),
                   Text(
-                    "   ${e.name}",
+                    "   ${e!.name}",
                     style: TextStyle(color: AppColors.text.black, fontSize: 14),
                   ),
                   Expanded(

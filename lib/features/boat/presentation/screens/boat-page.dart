@@ -214,7 +214,7 @@ class BoatPage extends StatelessWidget {
   }
 
   selectDate(BuildContext context) async {
-    DateTime date = await showDatePicker(
+    DateTime? date = await showDatePicker(
       context: context,
       initialDate: logic.controller.selectedDate,
       firstDate: DateTime(2010),
@@ -235,7 +235,7 @@ class BoatPage extends StatelessWidget {
               ),
             ),
           ),
-          child: child,
+          child: child!,
         );
       },
     );

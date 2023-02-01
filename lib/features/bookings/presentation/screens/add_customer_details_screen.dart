@@ -15,7 +15,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar() as PreferredSizeWidget?,
       floatingActionButton: buildFloatingActionButton(),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor: AppColors.background.lightBlue,
@@ -194,7 +194,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
         return Validator.validateEmail(logic.controller.emailTED.text);
       },
       validator: (email) {
-        return Validator.validateEmail(email);
+        return Validator.validateEmail(email!);
       },
     );
   }
@@ -256,7 +256,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
         onSubmitted: (_) {},
         onChanged: (phone) {
           controller.countryCodeTED.text = phone.countryCode;
-          controller.phoneNumberTED.text = phone.number;
+          controller.phoneNumberTED.text = phone.number!;
           controller.isoCode = phone.countryISOCode;
           //print(phone.number);
           //print(phone.countryCode);

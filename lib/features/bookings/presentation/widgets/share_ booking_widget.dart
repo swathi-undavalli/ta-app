@@ -23,8 +23,8 @@ class ShareBookingWidget extends StatelessWidget {
           children: [
             SizedBox(height: 20),
             Text(
-              "${booking.pax[0]["first-name"] + " " + booking.pax[0]["last-name"]} 's"
-                  .capitalizeFirst,
+              "${booking.pax![0]["first-name"] + " " + booking.pax![0]["last-name"]} 's"
+                  .capitalizeFirst!,
               style: TextStyle(
                   fontSize: 16,
                   color: Colors.black,
@@ -35,7 +35,7 @@ class ShareBookingWidget extends StatelessWidget {
               width: Get.width,
               child: FittedBox(
                 child: Text(
-                  booking.activity[0].name,
+                  booking.activity![0]!.name!,
                   style: TextStyle(
                       fontSize: 14,
                       color: Color(0xff575757),
@@ -52,18 +52,18 @@ class ShareBookingWidget extends StatelessWidget {
                 buildBookingDetails(title: "Booking ID", text: booking.id),
                 buildBookingDetails(
                     title: "Name",
-                    text: booking.pax[0]["first-name"] +
+                    text: booking.pax![0]["first-name"] +
                         " " +
-                        booking.pax[0]["last-name"]),
+                        booking.pax![0]["last-name"]),
                 buildBookingDetails(
                     title: "Pax", text: booking.noOfPersons.toString()),
                 buildBookingDetails(
-                    title: "Email ID", text: booking.pax[0]["email"]),
+                    title: "Email ID", text: booking.pax![0]["email"]),
                 buildBookingDetails(
-                    title: "Activity", text: booking.activity[0].name),
-                buildDates(title: "Dive Dates", dates: booking.diveDate),
-                buildDates(title: "Theory Dates", dates: booking.theoryDate),
-                buildDates(title: "Pool Dates", dates: booking.poolDate),
+                    title: "Activity", text: booking.activity![0]!.name),
+                buildDates(title: "Dive Dates", dates: booking.diveDate!),
+                buildDates(title: "Theory Dates", dates: booking.theoryDate!),
+                buildDates(title: "Pool Dates", dates: booking.poolDate!),
               ],
             ),
             SizedBox(height: 20),
@@ -77,11 +77,11 @@ class ShareBookingWidget extends StatelessWidget {
                     text: (booking.totalCost.toStringAsFixed(0)) + " /-"),
                 buildBookingDetails(
                     title: "Deposit",
-                    text: booking.paid.toStringAsFixed(0) + " /-"),
+                    text: booking.paid!.toStringAsFixed(0) + " /-"),
                 buildBookingDetails(
                     title: "Balance",
                     text:
-                        (booking.totalCost - booking.paid).toStringAsFixed(0) +
+                        (booking.totalCost - booking.paid!).toStringAsFixed(0) +
                             " /-"),
                 buildBookingDetails(
                     title: "Receipt No", text: booking.receiptNo ?? "-"),
@@ -121,7 +121,7 @@ class ShareBookingWidget extends StatelessWidget {
 
   ///================UI==================///
 
-  Widget buildSectionTitle({String title}) {
+  Widget buildSectionTitle({required String title}) {
     return Text(
       title,
       style: TextStyle(
@@ -147,7 +147,7 @@ class ShareBookingWidget extends StatelessWidget {
         buildListOfPayments(
           payments: [
             PaymentModel(
-              amount: (booking.paid).roundToDouble(),
+              amount: booking.paid!.roundToDouble(),
               collectedBy: booking.employeeName,
               reciptNo: booking.receiptNo,
               referenceNo: booking.paymentTransactionId,
@@ -155,7 +155,7 @@ class ShareBookingWidget extends StatelessWidget {
               paymentMode: booking.paymentMode,
               time: booking.createdAt,
             ),
-            ...booking.payments,
+            ...booking.payments!,
           ],
         ),
         // ...List.generate(
@@ -171,7 +171,7 @@ class ShareBookingWidget extends StatelessWidget {
     );
   }
 
-  Widget buildListOfPayments({List<PaymentModel> payments}) {
+  Widget buildListOfPayments({required List<PaymentModel> payments}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -185,14 +185,14 @@ class ShareBookingWidget extends StatelessWidget {
     );
   }
 
-  Widget buildTransaction({PaymentModel payment}) {
+  Widget buildTransaction({required PaymentModel payment}) {
     DateTime now = DateTime.now();
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Payment ${payment.amount.round()} by ${payment.paymentMode ?? "-"} collected by ${payment.collectedBy}",
+          "Payment ${payment.amount!.round()} by ${payment.paymentMode ?? "-"} collected by ${payment.collectedBy}",
           style: TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
@@ -202,11 +202,11 @@ class ShareBookingWidget extends StatelessWidget {
         ),
         SizedBox(height: 2),
         if (payment.time != null &&
-            now.day == payment.time.day &&
-            now.month == payment.time.month &&
-            now.year == payment.time.year)
+            now.day == payment.time!.day &&
+            now.month == payment.time!.month &&
+            now.year == payment.time!.year)
           Text(
-            "Today - ${DateFormat("hh:mm a").format(payment.time)}",
+            "Today - ${DateFormat("hh:mm a").format(payment.time!)}",
             style: TextStyle(
               fontSize: 10,
               color: AppColors.text.darkgrey,
@@ -215,7 +215,7 @@ class ShareBookingWidget extends StatelessWidget {
           )
         else if (payment.time != null)
           Text(
-            DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time),
+            DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time!),
             style: TextStyle(
               fontSize: 10,
               color: AppColors.text.darkgrey,
@@ -235,7 +235,7 @@ class ShareBookingWidget extends StatelessWidget {
     ).paddingOnly(top: 10);
   }
 
-  Widget buildBookingDetails({String title, String text}) {
+  Widget buildBookingDetails({required String title, String? text}) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Row(
@@ -267,7 +267,7 @@ class ShareBookingWidget extends StatelessWidget {
     );
   }
 
-  Widget buildDates({String title, List<DateTime> dates}) {
+  Widget buildDates({required String title, required List<DateTime?> dates}) {
     return Padding(
       padding: const EdgeInsets.only(top: 5),
       child: Row(
@@ -286,7 +286,7 @@ class ShareBookingWidget extends StatelessWidget {
             children: [
               ...dates.map(
                 (e) {
-                  String date = DateFormat('dd-MM-yyyy @ hh:mm a').format(e);
+                  String date = DateFormat('dd-MM-yyyy @ hh:mm a').format(e!);
                   return Container(
                       width: 150,
                       child: Text(

@@ -33,7 +33,7 @@ class TideResponse {
   // String unit;
   // String timezone;
   // String datum;
-  List<Extreme> extremes;
+  List<Extreme>? extremes;
   // List<Extreme> heights;
 
   factory TideResponse.fromMap(Map<String, dynamic> json) {
@@ -69,7 +69,7 @@ class TideResponse {
         // "unit": unit,
         // "timezone": timezone,
         // "datum": datum,
-        "extremes": List<dynamic>.from(extremes.map((x) => x.toMap())),
+        "extremes": List<dynamic>.from(extremes!.map((x) => x.toMap())),
         // "heights": List<dynamic>.from(heights.map((x) => x.toMap())),
       };
 }
@@ -80,8 +80,8 @@ class Datums {
     this.hat,
   });
 
-  double lat;
-  double hat;
+  double? lat;
+  double? hat;
 
   factory Datums.fromMap(Map<String, dynamic> json) => Datums(
         lat: json["LAT"].toDouble(),
@@ -101,9 +101,9 @@ class Extreme {
     this.state,
   });
 
-  DateTime datetime;
-  double height;
-  State state;
+  DateTime? datetime;
+  double? height;
+  State? state;
 
   factory Extreme.fromMap(Map<String, dynamic> json) => Extreme(
         datetime: DateTime.parse(json["datetime"]),
@@ -112,9 +112,9 @@ class Extreme {
       );
 
   Map<String, dynamic> toMap() => {
-        "datetime": datetime.toIso8601String(),
+        "datetime": datetime!.toIso8601String(),
         "height": height,
-        "state": stateValues.reverse[state],
+        "state": stateValues.reverse![state],
       };
 }
 
@@ -135,10 +135,10 @@ class Origin {
     this.unit,
   });
 
-  double latitude;
-  double longitude;
-  double distance;
-  String unit;
+  double? latitude;
+  double? longitude;
+  double? distance;
+  String? unit;
 
   factory Origin.fromMap(Map<String, dynamic> json) => Origin(
         latitude: json["latitude"].toDouble(),
@@ -157,11 +157,11 @@ class Origin {
 
 class EnumValues<T> {
   Map<String, T> map;
-  Map<T, String> reverseMap;
+  Map<T, String>? reverseMap;
 
   EnumValues(this.map);
 
-  Map<T, String> get reverse {
+  Map<T, String>? get reverse {
     if (reverseMap == null) {
       reverseMap = map.map((k, v) => new MapEntry(v, k));
     }

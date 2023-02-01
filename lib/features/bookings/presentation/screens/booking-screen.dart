@@ -21,7 +21,7 @@ class BookingScreen extends StatelessWidget {
   var bookings = [DateTime.now()];
   BookingsCalenderWidgetLogicNew calenderLogic = BookingsCalenderWidgetLogicNew();
   ScrollController scrollController = ScrollController();
-  BookingsCalenderWidgetNew bookingsCalenderWidget;
+  late BookingsCalenderWidgetNew bookingsCalenderWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -52,9 +52,9 @@ class BookingScreen extends StatelessWidget {
             if (calenderLogic.controller.lastSelectedIndex == null)
               calenderLogic.controller.lastSelectedIndex = 50;
             bookingsCalenderWidget
-                .scrollToIndex(calenderLogic.controller.lastSelectedIndex);
+                .scrollToIndex(calenderLogic.controller.lastSelectedIndex!);
             await calenderLogic
-                .onDateSelected(calenderLogic.controller.lastSelectedIndex);
+                .onDateSelected(calenderLogic.controller.lastSelectedIndex!);
           },
           child: SafeArea(
             child: SingleChildScrollView(
@@ -139,7 +139,7 @@ class BookingScreen extends StatelessWidget {
 
   selectDate(
       BuildContext context, BookingsCalenderWidgetControllerNew controller) async {
-    final DateTime selected = await showDatePicker(
+    final DateTime? selected = await showDatePicker(
       context: context,
       initialDate: controller.selectedDate,
       firstDate: DateTime(2010),
@@ -160,12 +160,12 @@ class BookingScreen extends StatelessWidget {
               ),
             ),
           ),
-          child: child,
+          child: child!,
         );
       },
     );
     if (selected != null && selected != controller.selectedDate) {
-      var dif = controller.startDate.difference(selected).inDays;
+      var dif = controller.startDate!.difference(selected).inDays;
       if (dif < 0) {
         dif = dif * -1;
         bookingsCalenderWidget.scrollToIndex(dif);

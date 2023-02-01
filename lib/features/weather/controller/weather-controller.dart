@@ -42,7 +42,7 @@ class WeatherPageController extends GetxController {
   List<String> tideHeight = [];
   List<String> windDetails = ["Tide", "Time", "Height"];
 
-  WeatherPageModel weatherPageModel;
+  late WeatherPageModel weatherPageModel;
 
   bool _showLoading = false;
 

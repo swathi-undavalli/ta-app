@@ -21,7 +21,7 @@ class AddNewActivityLogic {
         .collection("counter")
         .doc("count")
         .get();
-    CounterModel counterModel = CounterModel.fromMap(data.data());
+    CounterModel counterModel = CounterModel.fromMap(data.data()!);
 
     if (controller.nameTED.text != "" &&
         controller.priceTED.text != "" &&
@@ -32,12 +32,15 @@ class AddNewActivityLogic {
           price: int.parse(controller.priceTED.text),
           priority: int.parse(controller.priorityTED.text),
           color: controller.colorTED.text,
-          id: (counterModel.activity + 1).toString());
+          id: (counterModel.activity! + 1).toString());
+
       FirebaseFirestore.instance
           .collection('catalogue')
           .doc(activityModel.id)
           .set(activityModel.toMap());
-      counterModel.activity++;
+      if (counterModel.activity != null) {
+        counterModel.activity = counterModel.activity! + 1;
+      }
       FirebaseFirestore.instance
           .collection("counter")
           .doc("count")

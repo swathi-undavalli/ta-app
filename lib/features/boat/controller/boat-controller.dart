@@ -22,10 +22,10 @@ class BoatLogic {
     controller.showLoading = false;
   }
 
-  getSlip({BoatPassengersModel boatPassengersModel, DateTime time}) {
+  getSlip({BoatPassengersModel? boatPassengersModel, DateTime? time}) {
     List boatData = [];
 
-    for (int i = 1; i <= counterModel.boat; i++) {
+    for (int i = 1; i <= counterModel!.boat!; i++) {
       log(i.toString());
       var boat = {
         "passengers": [],
@@ -33,22 +33,22 @@ class BoatLogic {
         "freelancers": [],
       };
 
-      boatPassengersModel.passenger.forEach((element) {
+      boatPassengersModel!.passenger!.forEach((element) {
         if (element.boatID == i.toString()) {
-          log(element.name);
-          boat["passengers"].add(element);
+          log(element.name!);
+          boat["passengers"]!.add(element);
         }
       });
-      boatPassengersModel.employees.forEach((element) {
+      boatPassengersModel.employees!.forEach((element) {
         if (element.boatID == i.toString()) {
-          log(element.name);
-          boat["employees"].add(element);
+          log(element.name!);
+          boat["employees"]!.add(element);
         }
       });
-      boatPassengersModel.freelancer.forEach((element) {
+      boatPassengersModel.freelancer!.forEach((element) {
         if (element.boatID == i.toString()) {
-          log(element.name);
-          boat["freelancers"].add(element);
+          log(element.name!);
+          boat["freelancers"]!.add(element);
         }
       });
       boatData.add(boat);
@@ -61,7 +61,7 @@ class BoatLogic {
   }
 
   void generateCSV(
-      {BoatPassengersModel boatPassengersModel, DateTime time}) async {
+      {BoatPassengersModel? boatPassengersModel, DateTime? time}) async {
     final sync.Workbook workbook = sync.Workbook();
     final sync.Worksheet sheet = workbook.worksheets[0];
 
@@ -101,7 +101,7 @@ class BoatLogic {
     int sno = 1;
     var totals = [0, 0, 0, 0, 0, 0];
 
-    for (int i = 1; i <= counterModel.boat; i++) {
+    for (int i = 1; i <= counterModel!.boat!; i++) {
       log(i.toString());
       var boat = {
         "passengers": [],
@@ -109,10 +109,10 @@ class BoatLogic {
         "freelancers": [],
       };
 
-      boatPassengersModel.passenger.forEach((element) {
+      boatPassengersModel!.passenger!.forEach((element) {
         if (element.boatID == i.toString()) {
-          log(element.name);
-          log(element.gender);
+          log(element.name!);
+          log(element.gender!);
           totals[i - 1]++;
 
           sheet.getRangeByName('A$currentLine').text = sno.toString();
@@ -123,7 +123,7 @@ class BoatLogic {
           // sheet.getRangeByName('F$currentLine').text =
           //     boatName[int.parse(element.boatID) - 1];
           sheet.getRangeByName('F$currentLine').text =
-              controller.boatsList[int.parse(element.boatID) - 1].boatName;
+              controller.boatsList[int.parse(element.boatID!) - 1].boatName;
 
           sheet
               .getRangeByName('A$currentLine:K$currentLine')
@@ -139,12 +139,12 @@ class BoatLogic {
               sync.HAlignType.center;
           currentLine++;
           sno++;
-          boat["passengers"].add(element);
+          boat["passengers"]!.add(element);
         }
       });
-      boatPassengersModel.employees.forEach((element) {
+      boatPassengersModel.employees!.forEach((element) {
         if (element.boatID == i.toString()) {
-          log(element.name);
+          log(element.name!);
           totals[i - 1]++;
 
           sheet.getRangeByName('A$currentLine').text = sno.toString();
@@ -153,7 +153,7 @@ class BoatLogic {
           sheet.getRangeByName('D$currentLine').text = "Staff";
           sheet.getRangeByName('E$currentLine').text = "India";
           sheet.getRangeByName('F$currentLine').text =
-              controller.boatsList[int.parse(element.boatID) - 1].boatName;
+              controller.boatsList[int.parse(element.boatID!) - 1].boatName;
 
           sheet
               .getRangeByName('A$currentLine:K$currentLine')
@@ -169,12 +169,12 @@ class BoatLogic {
               sync.HAlignType.center;
           currentLine++;
           sno++;
-          boat["employees"].add(element);
+          boat["employees"]!.add(element);
         }
       });
-      boatPassengersModel.freelancer.forEach((element) {
+      boatPassengersModel.freelancer!.forEach((element) {
         if (element.boatID == i.toString()) {
-          log(element.name);
+          log(element.name!);
           totals[i - 1]++;
           sheet.getRangeByName('A$currentLine').text = sno.toString();
           sheet.getRangeByName('B$currentLine').text = element.name;
@@ -182,7 +182,7 @@ class BoatLogic {
           sheet.getRangeByName('D$currentLine').text = "Freelance";
           sheet.getRangeByName('E$currentLine').text = "India";
           sheet.getRangeByName('F$currentLine').text =
-              controller.boatsList[int.parse(element.boatID) - 1].boatName;
+              controller.boatsList[int.parse(element.boatID!) - 1].boatName;
 
           sheet
               .getRangeByName('A$currentLine:K$currentLine')
@@ -198,7 +198,7 @@ class BoatLogic {
               sync.HAlignType.center;
           currentLine++;
           sno++;
-          boat["freelancers"].add(element);
+          boat["freelancers"]!.add(element);
         }
       });
 
@@ -226,7 +226,7 @@ class BoatLogic {
 
     int boatNo = 0;
 
-    for (int i = 0; i < counterModel.boat; i++) {
+    for (int i = 0; i < counterModel!.boat!; i++) {
       if (totals[i] != 0) {
         boatNo++;
         sheet.getRangeByName('A$currentLine').text = boatNo.toString();
@@ -239,7 +239,7 @@ class BoatLogic {
         sheet.getRangeByName('D$currentLine').text =
             controller.boatsList[i].phoneNumber;
         sheet.getRangeByName('E$currentLine').text =
-            DateFormat('hh : mm').format(time);
+            DateFormat('hh : mm').format(time!);
         sheet.getRangeByName('F$currentLine').text =
             DateFormat('hh : mm').format(time.add(Duration(hours: 4)));
         sheet.getRangeByName('A$currentLine:K$currentLine').cellStyle.fontSize =
@@ -283,7 +283,7 @@ class BoatLogic {
         .doc(DateFormat('dd-MM-yyyy').format(controller.selectedDate))
         .get();
 
-    Map<String, dynamic> passengerData = d.data();
+    Map<String, dynamic>? passengerData = d.data();
     if (passengerData == null) {
       log("no data found");
       controller.noDataFound = true;

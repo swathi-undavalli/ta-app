@@ -12,13 +12,13 @@ class AddPaymentsScreen extends StatelessWidget {
   static const String id = "AddPaymentsScreen";
   AddPaymentsLogic logic = AddPaymentsLogic();
 
-  BookingModel bookingArg = Get.arguments;
+  BookingModel? bookingArg = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
     logic.controller.bookingModel = bookingArg;
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar() as PreferredSizeWidget?,
       body: WillPopScope(
         onWillPop: () async {
           logic.controller.reset();
@@ -191,7 +191,7 @@ class AddPaymentsScreen extends StatelessWidget {
                 value: controller.paymentModeTED.text.isNotEmpty
                     ? controller.paymentModeTED.text
                     : null,
-                onChanged: (mode) {
+                onChanged: (dynamic mode) {
                   controller.paymentModeTED.text = mode;
                   controller.update();
                 },
@@ -225,7 +225,7 @@ class AddPaymentsScreen extends StatelessWidget {
             height: 30,
             width: 120,
             child: Text(
-                " ${getBalance(bookingArg.payments, double.parse(bookingArg.paid.toString()).roundToDouble(), double.parse(bookingArg.totalCost.toString()).roundToDouble())} /-"),
+                " ${getBalance(bookingArg!.payments!, double.parse(bookingArg!.paid.toString()).roundToDouble(), double.parse(bookingArg!.totalCost.toString()).roundToDouble())} /-"),
           )
         ],
       );
@@ -236,7 +236,7 @@ class AddPaymentsScreen extends StatelessWidget {
     double t = deposit;
     payments.forEach((payment) {
       print(payment);
-      t += payment.amount;
+      t += payment.amount!;
     });
     return (total - t).toInt().toString();
   }

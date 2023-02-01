@@ -1,11 +1,11 @@
 class ActivityModel {
   ActivityModel({this.name, this.price, this.id, this.priority , this.color});
 
-  String name;
-  int price;
-  String id;
-  int priority;
-  String color;
+  String? name;
+  int? price;
+  String? id;
+  int? priority;
+  String? color;
 
   factory ActivityModel.fromMap(Map<String, dynamic> json) => ActivityModel(
         name: json["name"],

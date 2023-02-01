@@ -8,13 +8,13 @@ import 'package:temple_adventures/features/admin-portal/models/adminPortal-model
 import '../../../core/constants/constants.dart';
 
 class PDFViewerPage extends StatelessWidget {
-  final AdminPortalModel adminPortalModel;
-  final File file;
+  final AdminPortalModel? adminPortalModel;
+  final File? file;
   PDFViewerPage({this.adminPortalModel, this.file});
 
   @override
   Widget build(BuildContext context) {
-    final name = basename(adminPortalModel.filename);
+    final name = basename(adminPortalModel!.filename!);
     return Scaffold(
       appBar: AppBar(
         toolbarHeight: 70,
@@ -29,7 +29,7 @@ class PDFViewerPage extends StatelessWidget {
       ),
       body: SafeArea(
           child: PDFView(
-        filePath: file.path,
+        filePath: file!.path,
         // swipeHorizontal: true,
 
       ),),

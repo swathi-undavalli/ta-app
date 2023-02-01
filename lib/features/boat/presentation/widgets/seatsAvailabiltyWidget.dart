@@ -16,7 +16,7 @@ class SeatsAvailabilityExpansionPanel extends StatefulWidget {
   final BoatsModel boat;
   final int fixedSeats;
   final int selectedSeats;
-  final int maxSeats;
+  final int? maxSeats;
   final bool enableSelection;
   final List<Employees> selectedEmployees;
   final List<Freelancer> selectedFreelancers;
@@ -29,20 +29,20 @@ class SeatsAvailabilityExpansionPanel extends StatefulWidget {
   final Function(Freelancer) onFreelanceAdded;
 
   SeatsAvailabilityExpansionPanel({
-    @required this.boat,
-    @required this.selectedSeats,
-    @required this.commonEmployees,
-    @required this.commonFreelancers,
-    @required this.fixedSeats,
-    @required this.maxSeats,
-    @required this.enableSelection,
-    @required this.selectedEmployees,
-    @required this.selectedFreelancers,
-    @required this.onFreelanceAdded,
-    @required this.onSeatSelected,
-    @required this.onEmployeeDeleted,
-    @required this.onEmployeesModified,
-    @required this.onFreelancerModified,
+    required this.boat,
+    required this.selectedSeats,
+    required this.commonEmployees,
+    required this.commonFreelancers,
+    required this.fixedSeats,
+    required this.maxSeats,
+    required this.enableSelection,
+    required this.selectedEmployees,
+    required this.selectedFreelancers,
+    required this.onFreelanceAdded,
+    required this.onSeatSelected,
+    required this.onEmployeeDeleted,
+    required this.onEmployeesModified,
+    required this.onFreelancerModified,
   });
 
   @override
@@ -94,14 +94,14 @@ class _SeatsAvailabilityExpansionPanelState
                         child: Row(
                           children: [
                             Text(
-                              widget.boat.boatName,
+                              widget.boat.boatName!,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   color: AppColors.text.black,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600),
                             ),
-                            if (!widget.boat.ocean)
+                            if (!widget.boat.ocean!)
                               Padding(
                                 padding: const EdgeInsets.all(8.0),
                                 child: Icon(
@@ -178,7 +178,7 @@ class _SeatsAvailabilityExpansionPanelState
                                     );
                                   }),
                                   ...List.generate(
-                                      (widget.boat.capacity -
+                                      (widget.boat.capacity! -
                                           widget.fixedSeats -
                                           widget.selectedSeats), (index) {
                                     return Seat(
@@ -355,7 +355,7 @@ class _SeatsAvailabilityExpansionPanelState
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
-                  e.name,
+                  e.name!,
                   style: TextStyle(fontSize: 10),
                 ),
               ),
@@ -401,7 +401,7 @@ class _SeatsAvailabilityExpansionPanelState
               child: Padding(
                 padding: const EdgeInsets.all(4.0),
                 child: Text(
-                  f.name,
+                  f.name!,
                   style: TextStyle(fontSize: 10),
                 ),
               ),
@@ -432,7 +432,7 @@ class _SeatsAvailabilityExpansionPanelState
     );
   }
 
-  Widget buildSideHeading({String text}) {
+  Widget buildSideHeading({required String text}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -458,7 +458,7 @@ class _SeatsAvailabilityExpansionPanelState
   }
 
   Widget buildSeatColorRepresentation(
-      {Color borderColor, Color color, String text}) {
+      {required Color borderColor, Color? color, required String text}) {
     return Row(
       children: [
         Container(

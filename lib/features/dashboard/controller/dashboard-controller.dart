@@ -21,8 +21,8 @@ class DashBoardScreenLogic {
         .collection("counter")
         .doc("count")
         .get();
-    counterModel = CounterModel.fromMap(data.data());
-    var count = counterModel.employee;
+    counterModel = CounterModel.fromMap(data.data()!);
+    var count = counterModel!.employee;
     //print(count);
   }
   reloadAfter1Sec() {

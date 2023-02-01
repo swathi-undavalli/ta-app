@@ -15,7 +15,7 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import '../../models/boat-passengers-model.dart';
 
 class SelectSeatsWidget extends StatefulWidget {
-  final BookingModel bookingModel;
+  final BookingModel? bookingModel;
 
   SelectSeatsWidget(this.bookingModel);
 
@@ -35,15 +35,15 @@ class _SelectSeatsWidgetState extends State<SelectSeatsWidget> {
           date1.year == date2.year);
     }
 
-    for (int i = 0; i < widget.bookingModel.diveDate.length; i++) {
-      if (isSame(widget.bookingModel.diveDate[i],
+    for (int i = 0; i < widget.bookingModel!.diveDate!.length; i++) {
+      if (isSame(widget.bookingModel!.diveDate![i]!,
           bookingCalenderLogicNew.controller.selectedDate)) {
         print("Leaving");
       } else {
-        widget.bookingModel.diveDate.removeAt(i);
+        widget.bookingModel!.diveDate!.removeAt(i);
       }
     }
-    getDataFromFirebase(widget.bookingModel.diveDate[0]);
+    getDataFromFirebase(widget.bookingModel!.diveDate![0]!);
 
     super.initState();
   }
@@ -53,7 +53,7 @@ class _SelectSeatsWidgetState extends State<SelectSeatsWidget> {
         .collection("coastGuardSlip")
         .doc(DateFormat("dd-MM-yyyy").format(date))
         .get();
-    Map<String, dynamic> data = d.data();
+    Map<String, dynamic>? data = d.data();
 
     print("hello");
 
@@ -62,12 +62,12 @@ class _SelectSeatsWidgetState extends State<SelectSeatsWidget> {
           BoatPassengersModel.fromMap(data[date.toIso8601String()]);
       log(boatModel.toMap().toString());
       int count = 0;
-      boatModel.passenger.forEach((p) {
-        if (p.bookingID == widget.bookingModel.id) {
+      boatModel.passenger!.forEach((p) {
+        if (p.bookingID == widget.bookingModel!.id) {
           count++;
         }
       });
-      if (widget.bookingModel.noOfPersons == count) {
+      if (widget.bookingModel!.noOfPersons == count) {
         isFilled = true;
       }
     }

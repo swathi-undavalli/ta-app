@@ -18,7 +18,7 @@ class GuestDetailsScreen extends StatelessWidget {
   static const String id = "GuestDetailsScreen";
   final GuestDetailsLogic logic = GuestDetailsLogic();
 
-  BookingModel bookingArg = Get.arguments;
+  BookingModel? bookingArg = Get.arguments;
 
   GuestDetailsScreen() {
     logic.init();
@@ -64,7 +64,7 @@ class GuestDetailsScreen extends StatelessWidget {
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            (bookingArg.pax.length - 1 != 0)
+                            (bookingArg!.pax!.length - 1 != 0)
                                 ? Padding(
                                     padding: const EdgeInsets.symmetric(
                                         horizontal: 5.0),
@@ -80,26 +80,26 @@ class GuestDetailsScreen extends StatelessWidget {
                                   )
                                 : SizedBox(),
                             SizedBox(height: 20),
-                            ...List.generate(bookingArg.pax.length - 1,
+                            ...List.generate(bookingArg!.pax!.length - 1,
                                 (index) {
                               return Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 7.0),
                                 child: GuestsExpansionPanel(
                                   customer: CustomerModel.fromMap(
-                                      bookingArg.pax[index + 1]),
+                                      bookingArg!.pax![index + 1]),
                                   booking: bookingArg,
                                 ),
                               );
                             }),
                             SizedBox(height: 20),
-                            (bookingArg.pax.length - 1 ==
-                                    bookingArg.noOfPersons)
+                            (bookingArg!.pax!.length - 1 ==
+                                    bookingArg!.noOfPersons)
                                 ? InkWell(
                                     onTap: () async {
                                       final pdfFile =
                                           await PdfAPi.generateImage(
-                                              bookingArg);
+                                              bookingArg!);
                                       PdfAPi.openFile(pdfFile);
                                     },
                                     splashColor: Colors.grey.withOpacity(0.3),
@@ -149,8 +149,8 @@ class GuestDetailsScreen extends StatelessWidget {
                                     // ),
                                   )
                                 : SizedBox(),
-                            if (bookingArg.pax.length - 1 !=
-                                bookingArg.noOfPersons) ...[
+                            if (bookingArg!.pax!.length - 1 !=
+                                bookingArg!.noOfPersons) ...[
                               if (!controller.getDetailsPressed) ...[
                                 Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -310,14 +310,14 @@ class GuestDetailsScreen extends StatelessWidget {
   }
 
   getImage(GuestDetailsController controller) {
-    if (controller.idProofLink != null && controller.idProofLink.isNotEmpty)
+    if (controller.idProofLink != null && controller.idProofLink!.isNotEmpty)
       return DecorationImage(
-        image: NetworkImage(controller.idProofLink),
+        image: NetworkImage(controller.idProofLink!),
         fit: BoxFit.cover,
       );
     if (controller.idProofFile != null)
       return DecorationImage(
-        image: FileImage(File(controller.idProofFile.path)),
+        image: FileImage(File(controller.idProofFile!.path)),
         fit: BoxFit.cover,
       );
   }
@@ -366,7 +366,7 @@ class GuestDetailsScreen extends StatelessWidget {
         return Validator.validateEmail(logic.controller.emailTED.text);
       },
       validator: (email) {
-        return Validator.validateEmail(email);
+        return Validator.validateEmail(email!);
       },
     );
   }
@@ -452,7 +452,7 @@ class GuestDetailsScreen extends StatelessWidget {
         value: controller.genderTED.text.isNotEmpty
             ? controller.genderTED.text
             : null,
-        onChanged: (newGender) {
+        onChanged: (dynamic newGender) {
           controller.genderTED.text = newGender;
           controller.update();
         },

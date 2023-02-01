@@ -8,28 +8,28 @@ import 'package:temple_adventures/core/services/file-uploader.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
 class IDProofLogic {
-  BookingModel bookingModel;
+  BookingModel? bookingModel;
 
   IDProofController controller = Get.put(IDProofController());
 
   ImagePicker imagePicker = ImagePicker();
-  Function onImagePicked;
+  Function? onImagePicked;
 
   browseImage(bool isFront, ImageSource source) async {
     //print("==========started");
-    XFile pickedFile =
+    XFile? pickedFile =
         await imagePicker.pickImage(source: source, imageQuality: 50);
     //print("==========ended");
     if (pickedFile != null) {
       if (isFront) {
         controller.showLoading = true;
         var link = await uploadImage(pickedFile);
-        controller.idProofs.add(link);
-        bookingModel.idProofs = controller.idProofs;
+        controller.idProofs!.add(link);
+        bookingModel!.idProofs = controller.idProofs;
         FirebaseFirestore.instance
             .collection("bookings")
-            .doc(bookingModel.id)
-            .set(bookingModel.toMap());
+            .doc(bookingModel!.id)
+            .set(bookingModel!.toMap());
         controller.update();
         controller.showLoading = false;
       }
@@ -71,7 +71,7 @@ class IDProofLogic {
 
   uploadImage(XFile file) async {
     var link = await FileUploader.uploadIDProof(
-        file: File(file.path), bookingID: bookingModel.id);
+        file: File(file.path), bookingID: bookingModel!.id);
 
     //print(bookingModel.id);
     // print(link);
@@ -80,7 +80,7 @@ class IDProofLogic {
 }
 
 class IDProofController extends GetxController {
-  List<String> idProofs = [];
+  List<String?>? idProofs = [];
   bool _showLoading = false;
   bool _shareLoading = false;
 

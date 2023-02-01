@@ -18,7 +18,7 @@ class AdminPortalLogic {
 
   browseImage(bool isFront, ImageSource source) async {
     print("==========started");
-    XFile pickedFile =
+    XFile? pickedFile =
         await imagePicker.pickImage(source: source, imageQuality: 50);
     print("==========ended");
 
@@ -63,24 +63,26 @@ class AdminPortalLogic {
   uploadImage(XFile file) async {
     var link = File(file.path);
     var imageLink = await FileUploader.uploadFile(file: link);
-    log(imageLink);
+    log(imageLink!);
 
     controller.adminPortalModel = AdminPortalModel(
         path: imageLink,
         filename: basename(file.path),
-        id: (counterModel.files + 1).toString());
+        id: (counterModel!.files! + 1).toString());
 
     FirebaseFirestore.instance
         .collection("adminPortal")
-        .doc((counterModel.files + 1).toString())
+        .doc((counterModel!.files! + 1).toString())
         .set(controller.adminPortalModel.toMap());
 
-    counterModel.files++;
+    if (counterModel!.files != null) {
+      counterModel!.files = counterModel!.files! + 1;
+    }
 
     FirebaseFirestore.instance
         .collection("counter")
         .doc("count")
-        .set(counterModel.toMap());
+        .set(counterModel!.toMap());
 
     controller.update();
     log("ended===========");
@@ -99,7 +101,7 @@ class AdminPortalLogic {
 class AdminPortalController extends GetxController {
   // XFile _idProofFile;
 
-  AdminPortalModel adminPortalModel;
+  late AdminPortalModel adminPortalModel;
 
   TextEditingController titleTED = TextEditingController();
 
@@ -111,10 +113,10 @@ class AdminPortalController extends GetxController {
 
   TextEditingController pdfName = TextEditingController();
 
-  // XFile get idProofFile => _idProofFile;
+// XFile get idProofFile => _idProofFile;
 
-  // set idProofFile(XFile value) {
-  //   _idProofFile = value;
-  //   update();
-  // }
+// set idProofFile(XFile value) {
+//   _idProofFile = value;
+//   update();
+// }
 }

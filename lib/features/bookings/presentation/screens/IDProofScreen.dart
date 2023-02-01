@@ -8,18 +8,18 @@ import 'package:temple_adventures/features/bookings/presentation/screens/all-idP
 
 class IDProofScreen extends StatelessWidget {
   static const String id = "IDProofScreen";
-  BookingModel bookingArg = Get.arguments;
+  BookingModel? bookingArg = Get.arguments;
   IDProofLogic logic = IDProofLogic();
 
   @override
   Widget build(BuildContext context) {
     logic.bookingModel = bookingArg;
-    logic.controller.idProofs = bookingArg.idProofs;
+    logic.controller.idProofs = bookingArg!.idProofs;
     return Stack(
       children: [
         Scaffold(
           backgroundColor: AppColors.background.lightBlue,
-          appBar: buildAppBar(),
+          appBar: buildAppBar() as PreferredSizeWidget?,
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: SafeArea(
@@ -40,7 +40,7 @@ class IDProofScreen extends StatelessWidget {
                               runSpacing: 20,
                               children: [
                                 buildAddID(),
-                                ...controller.idProofs.map((e) {
+                                ...controller.idProofs!.map((e) {
                                   // //log(controller.pickedIDProofs.toString());
                                   return buildIDProofs(image: e);
                                 })
@@ -90,12 +90,12 @@ class IDProofScreen extends StatelessWidget {
     );
   }
 
-  Widget buildIDProofs({String image}) {
+  Widget buildIDProofs({String? image}) {
     return GetBuilder<IDProofController>(builder: (controller) {
       return GestureDetector(
         onTap: () {
           Get.toNamed(AllIDProofsScreen.id,
-              arguments: controller.idProofs.indexOf(image));
+              arguments: controller.idProofs!.indexOf(image));
           //print(controller.idProofs.indexOf(image));
         },
         child: Container(

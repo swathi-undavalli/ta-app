@@ -38,7 +38,7 @@ class LogScreen extends StatelessWidget {
                 }
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
-                    LogModel logModel = LogModel.fromMap(snapshot.data.docs[index].data());
+                    LogModel logModel = LogModel.fromMap(snapshot.data!.docs[index].data() as Map<String, dynamic>);
                     //print("Started");
                     return buildLog(
                       log: logModel,
@@ -62,7 +62,7 @@ class LogScreen extends StatelessWidget {
   //   return;
   // }
 
-  Widget buildLog({LogModel log}) {
+  Widget buildLog({required LogModel log}) {
     dev.log("building .......");
     getIcon() {
       switch (log.type) {
@@ -70,7 +70,7 @@ class LogScreen extends StatelessWidget {
         case LogType.bookingDeleted:
         case LogType.bookingEdited:
           return Text(
-            log.bookingId,
+            log.bookingId!,
             style: TextStyle(
               color: AppColors.text.white,
               fontSize: 15,
@@ -214,7 +214,7 @@ class LogScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         if (getTitle() == "Booking Created") {
-          var data = await FirebaseFirestore.instance.collection("bookings").doc(log.bookingId.trim()).get();
+          var data = await FirebaseFirestore.instance.collection("bookings").doc(log.bookingId!.trim()).get();
           if (data.data() != null) {
             print(log.bookingId);
             Get.toNamed(DetailsScreen.id, arguments: data.data());
@@ -275,7 +275,7 @@ class LogScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    DateFormat("dd MMM, yyyy").format(log.timeStamp.toDate()),
+                    DateFormat("dd MMM, yyyy").format(log.timeStamp!.toDate()),
                     style: TextStyle(
                       color: AppColors.text.black,
                       fontSize: 12,
@@ -285,7 +285,7 @@ class LogScreen extends StatelessWidget {
                   ),
                   SizedBox(height: 5),
                   Text(
-                    DateFormat("hh:mm a").format(log.timeStamp.toDate()),
+                    DateFormat("hh:mm a").format(log.timeStamp!.toDate()),
                     style: TextStyle(
                       color: AppColors.text.skyBlue,
                       fontSize: 16,

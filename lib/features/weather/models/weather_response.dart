@@ -20,15 +20,15 @@ class WeatherResponse {
     this.charts,
   });
 
-  int timestamp;
-  int localTimestamp;
-  int issueTimestamp;
-  double fadedRating;
-  double solidRating;
-  Swell swell;
-  Wind wind;
-  Condition condition;
-  Charts charts;
+  int? timestamp;
+  int? localTimestamp;
+  int? issueTimestamp;
+  double? fadedRating;
+  double? solidRating;
+  Swell? swell;
+  Wind? wind;
+  Condition? condition;
+  Charts? charts;
 
   factory WeatherResponse.fromMap(Map<String, dynamic> json) {
     try {
@@ -60,7 +60,7 @@ class WeatherResponse {
     } catch (e) {
       //print(e);
       //print("debbindi mowa");
-      return null;
+      return WeatherResponse();
     }
   }
 
@@ -70,10 +70,10 @@ class WeatherResponse {
         "issueTimestamp": issueTimestamp,
         "fadedRating": fadedRating,
         "solidRating": solidRating,
-        "swell": swell.toMap(),
-        "wind": wind.toMap(),
-        "condition": condition.toMap(),
-        "charts": charts.toMap(),
+        "swell": swell!.toMap(),
+        "wind": wind!.toMap(),
+        "condition": condition!.toMap(),
+        "charts": charts!.toMap(),
       };
 }
 
@@ -86,11 +86,11 @@ class Charts {
     this.sst,
   });
 
-  String swell;
-  String period;
-  String wind;
-  String pressure;
-  String sst;
+  String? swell;
+  String? period;
+  String? wind;
+  String? pressure;
+  String? sst;
 
   factory Charts.fromMap(Map<String, dynamic> json) => Charts(
         swell: json["swell"],
@@ -117,10 +117,10 @@ class Condition {
     this.unit,
   });
 
-  double pressure;
-  double temperature;
-  String unitPressure;
-  String unit;
+  double? pressure;
+  double? temperature;
+  String? unitPressure;
+  String? unit;
 
   factory Condition.fromMap(Map<String, dynamic> json) => Condition(
         pressure: (json["pressure"] ?? 0) * 1.0,
@@ -147,12 +147,12 @@ class Swell {
     this.components,
   });
 
-  double minBreakingHeight;
-  double absMinBreakingHeight;
-  double maxBreakingHeight;
-  double absMaxBreakingHeight;
-  String unit;
-  Components components;
+  double? minBreakingHeight;
+  double? absMinBreakingHeight;
+  double? maxBreakingHeight;
+  double? absMaxBreakingHeight;
+  String? unit;
+  Components? components;
 
   factory Swell.fromMap(Map<String, dynamic> json) {
     try {
@@ -167,7 +167,7 @@ class Swell {
     } catch (e) {
       //print("black sheep");
       //print(e);
-      return null;
+      return Swell();
     }
   }
 
@@ -177,7 +177,7 @@ class Swell {
         "maxBreakingHeight": maxBreakingHeight,
         "absMaxBreakingHeight": absMaxBreakingHeight,
         "unit": unit,
-        "components": components.toMap(),
+        "components": components!.toMap(),
       };
 }
 
@@ -189,10 +189,10 @@ class Components {
     this.tertiary,
   });
 
-  Combined combined;
-  Combined primary;
-  Combined secondary;
-  Combined tertiary;
+  Combined? combined;
+  Combined? primary;
+  Combined? secondary;
+  Combined? tertiary;
 
   factory Components.fromMap(Map<String, dynamic> json) {
     try {
@@ -205,15 +205,15 @@ class Components {
     } catch (e) {
       //print(e);
       //print("Red sheep");
-      return null;
+      return Components();
     }
   }
 
   Map<String, dynamic> toMap() => {
-        "combined": combined.toMap(),
-        "primary": primary.toMap(),
-        "secondary": secondary.toMap(),
-        "tertiary": tertiary.toMap(),
+        "combined": combined!.toMap(),
+        "primary": primary!.toMap(),
+        "secondary": secondary!.toMap(),
+        "tertiary": tertiary!.toMap(),
       };
 }
 
@@ -225,13 +225,13 @@ class Combined {
     this.compassDirection,
   });
 
-  double height;
-  double period;
-  double direction;
-  String compassDirection;
+  double? height;
+  double? period;
+  double? direction;
+  String? compassDirection;
 
   factory Combined.fromMap(Map<String, dynamic> json) {
-    if (json == null) return null;
+    // if (json == null) return null;
     return Combined(
       height: (json["height"] ?? 0) * 1.0,
       period: (json["period"] ?? 0) * 1.0,
@@ -258,12 +258,12 @@ class Wind {
     this.unit,
   });
 
-  double speed;
-  double direction;
-  String compassDirection;
-  double chill;
-  double gusts;
-  String unit;
+  double? speed;
+  double? direction;
+  String? compassDirection;
+  double? chill;
+  double? gusts;
+  String? unit;
 
   factory Wind.fromMap(Map<String, dynamic> json) => Wind(
         speed: (json["speed"] ?? 0) * 1.0,

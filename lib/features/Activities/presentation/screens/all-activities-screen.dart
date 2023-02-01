@@ -18,7 +18,7 @@ class AllActivitiesScreen extends StatelessWidget {
       children: [
         Scaffold(
           floatingActionButton: buildFloatingActionButton(),
-          appBar: buildAppBar(),
+          appBar: buildAppBar() as PreferredSizeWidget?,
           body: SafeArea(
             child: SingleChildScrollView(
               physics: BouncingScrollPhysics(),
@@ -95,7 +95,7 @@ class AllActivitiesScreen extends StatelessWidget {
                 child: Container(
                   width: Get.width,
                   child: Text(
-                    activityModel.name,
+                    activityModel.name!,
                     style: TextStyle(
                         color: AppColors.text.black,
                         fontSize: FontSize.small,

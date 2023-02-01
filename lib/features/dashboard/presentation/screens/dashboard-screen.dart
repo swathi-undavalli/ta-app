@@ -16,7 +16,7 @@ import 'package:temple_adventures/main.dart';
 
 import '../../../../notification-screen.dart';
 
-DashBoardScreenLogic dashboardLogic;
+late DashBoardScreenLogic dashboardLogic;
 
 class DashBoardScreen extends StatelessWidget {
   static const String id = "DashBoardScreen";
@@ -26,7 +26,7 @@ class DashBoardScreen extends StatelessWidget {
     BookingScreen(),
     BoatPage(),
   ];
-  DateTime currentBackPressTime;
+  DateTime? currentBackPressTime;
 
   DashBoardScreen() {
     dashboardLogic = DashBoardScreenLogic();
@@ -46,7 +46,7 @@ class DashBoardScreen extends StatelessWidget {
           //log("back pressed");
           DateTime now = DateTime.now();
           if (currentBackPressTime == null ||
-              now.difference(currentBackPressTime) > Duration(seconds: 2)) {
+              now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
             currentBackPressTime = now;
             Fluttertoast.showToast(msg: "Press Double tap to exit");
             return Future.value(false);

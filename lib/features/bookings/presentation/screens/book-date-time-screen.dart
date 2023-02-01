@@ -86,7 +86,7 @@ class BookDateTime extends StatelessWidget {
                           controller.selectedActivity.length == 0)
                       ? null
                       : controller.selectedActivity[0],
-                  onChanged: (activity) {
+                  onChanged: (dynamic activity) {
                     if (controller.selectedActivity == null ||
                         controller.selectedActivity.length == 0) {
                       controller.selectedActivity = [];
@@ -104,7 +104,7 @@ class BookDateTime extends StatelessWidget {
                   items: controller.activities.toSet().toList().map((activity) {
                     return DropdownMenuItem(
                       child: new Text(
-                        activity.name,
+                        activity.name!,
                         style: TextStyle(fontWeight: FontWeight.normal),
                       ),
                       value: activity,
@@ -221,16 +221,16 @@ class BookDateTime extends StatelessWidget {
     });
   }
 
-  Widget buildTime(DateTime date, DateType type) {
+  Widget buildTime(DateTime? date, DateType type) {
     if (date != null)
       return GestureDetector(
         onTap: () {
           if (type == DateType.Theory)
-            logic.controller.bookingModel.theoryDate.remove(date);
+            logic.controller.bookingModel.theoryDate!.remove(date);
           if (type == DateType.Dive)
-            logic.controller.bookingModel.diveDate.remove(date);
+            logic.controller.bookingModel.diveDate!.remove(date);
           if (type == DateType.Pool)
-            logic.controller.bookingModel.poolDate.remove(date);
+            logic.controller.bookingModel.poolDate!.remove(date);
           logic.controller.update();
         },
         child: Container(

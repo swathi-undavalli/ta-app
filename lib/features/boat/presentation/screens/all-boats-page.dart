@@ -10,7 +10,7 @@ class AllBoatsPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar() as PreferredSizeWidget?,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
@@ -19,7 +19,7 @@ class AllBoatsPage extends StatelessWidget {
             child: Column(
               children: [
                 ...List.generate(
-                        counterModel.boat,
+                        counterModel!.boat!,
                         (index) =>
                             AllBoatsExpansionPanelWidget(boatID: index + 1))
                     .toList()

@@ -14,7 +14,7 @@ class NewBookingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar() as PreferredSizeWidget?,
       body: SafeArea(
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
@@ -57,7 +57,8 @@ class NewBookingScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSwitch({String text, Function onChanged, bool switchValue}) {
+  Widget buildSwitch(
+      {required String text, Function? onChanged, required bool switchValue}) {
     return Row(
       children: [
         Expanded(
@@ -69,7 +70,7 @@ class NewBookingScreen extends StatelessWidget {
         ),
         Switch(
           value: switchValue,
-          onChanged: onChanged,
+          onChanged: onChanged as void Function(bool)?,
           activeColor: AppColors.text.skyBlue,
           inactiveThumbColor: AppColors.text.grey,
         ),
@@ -136,7 +137,6 @@ class NewBookingScreen extends StatelessWidget {
     );
   }
 
-
   Widget buildPriceField() {
     return AppTextField(
       hintText: 'Price',
@@ -174,7 +174,7 @@ class NewBookingScreen extends StatelessWidget {
               buildAmountSummary(
                   text: "Price",
                   amount: getInt(controller.priceTED.text) *
-                      controller.bookingModel.noOfPersons *
+                      controller.bookingModel.noOfPersons! *
                       1.0),
               buildAmountSummary(
                 text: "Discount",
@@ -182,9 +182,10 @@ class NewBookingScreen extends StatelessWidget {
               ),
               buildAmountSummary(
                   text: "Total Amount",
-                  amount: controller.bookingModel.totalCost),
+                  amount: controller.bookingModel.totalCost.ceilToDouble()),
               buildAmountSummary(
-                  text: "Balance", amount: controller.bookingModel.balance),
+                  text: "Balance",
+                  amount: controller.bookingModel.balance.ceilToDouble()),
             ],
           );
         }),
@@ -194,14 +195,14 @@ class NewBookingScreen extends StatelessWidget {
 
   getDiscount(NewBookingController controller) {
     double price = getInt(controller.priceTED.text) *
-        controller.bookingModel.noOfPersons *
+        controller.bookingModel.noOfPersons! *
         1.0;
     if (controller.bookingModel.discountType == "%")
-      return price * (controller.bookingModel.discount / 100);
+      return price * (controller.bookingModel.discount! / 100);
     return (controller.bookingModel.discount) ?? 0.0;
   }
 
-  Widget buildAmountSummary({String text, double amount}) {
+  Widget buildAmountSummary({required String text, double? amount}) {
     return Container(
       width: 320,
       child: Row(
@@ -399,7 +400,7 @@ class NewBookingScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSubTitle({String text}) {
+  Widget buildSubTitle({required String text}) {
     return Text(
       text,
       style: TextStyle(

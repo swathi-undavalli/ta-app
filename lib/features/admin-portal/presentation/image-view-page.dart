@@ -7,13 +7,13 @@ import '../../../core/constants/constants.dart';
 import '../../../core/widgets/back-navigation-icon.dart';
 
 class ImageViewPage extends StatelessWidget {
-  final AdminPortalModel adminPortalModel = Get.arguments;
+  final AdminPortalModel? adminPortalModel = Get.arguments;
 
   static const String id = "ImageViewPage";
 
   @override
   Widget build(BuildContext context) {
-    final name = basename(adminPortalModel.filename);
+    final name = basename(adminPortalModel!.filename!);
 
     return Scaffold(
       appBar: AppBar(
@@ -35,9 +35,9 @@ class ImageViewPage extends StatelessWidget {
               height: Get.height,
               width: Get.width,
               decoration: BoxDecoration(
-                image: adminPortalModel.path != null
+                image: adminPortalModel!.path != null
                     ? DecorationImage(
-                        image: NetworkImage(adminPortalModel.path),
+                        image: NetworkImage(adminPortalModel!.path!),
                         // FileImage(File(image),
                         fit: BoxFit.contain,
                       )

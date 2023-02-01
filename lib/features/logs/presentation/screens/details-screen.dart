@@ -23,7 +23,7 @@ class DetailsScreen extends StatelessWidget {
   checkFireBase() async {
     logic.controller.bookingModel = BookingModel.fromMap(booking);
     logic.controller.update();
-    log(logic.controller.bookingModel.id);
+    log(logic.controller.bookingModel.id!);
   }
 
   @override
@@ -64,15 +64,15 @@ class DetailsScreen extends StatelessWidget {
                         title: "Booking ID", text: controller.bookingModel.id),
                     buildBookingDetails(
                         title: "Name",
-                        text: controller.bookingModel.pax[0]["first-name"] +
+                        text: controller.bookingModel.pax![0]["first-name"] +
                             " " +
-                            controller.bookingModel.pax[0]["last-name"]),
+                            controller.bookingModel.pax![0]["last-name"]),
                     buildBookingDetails(
                         title: "Pax",
                         text: controller.bookingModel.noOfPersons.toString()),
                     buildBookingDetails(
                         title: "Email ID",
-                        text: controller.bookingModel.pax[0]["email"]),
+                        text: controller.bookingModel.pax![0]["email"]),
                     buildBookingDetails(
                         title: "Total Amount",
                         text: (controller.bookingModel.totalCost
@@ -80,12 +80,12 @@ class DetailsScreen extends StatelessWidget {
                             " /-"),
                     buildBookingDetails(
                         title: "Deposit",
-                        text: controller.bookingModel.paid.toStringAsFixed(0) +
+                        text: controller.bookingModel.paid!.toStringAsFixed(0) +
                             " /-"),
                     buildBookingDetails(
                         title: "Balance",
                         text: (controller.bookingModel.totalCost -
-                                    controller.bookingModel.paid)
+                                    controller.bookingModel.paid!)
                                 .toStringAsFixed(0) +
                             " /-"),
                     buildBookingDetails(
@@ -100,16 +100,16 @@ class DetailsScreen extends StatelessWidget {
                             "-"),
                     buildBookingDetails(
                         title: "Activity",
-                        text: controller.bookingModel.activity[0].name),
+                        text: controller.bookingModel.activity![0]!.name),
                     buildDates(
                         title: "Dive Dates",
-                        dates: controller.bookingModel.diveDate),
+                        dates: controller.bookingModel.diveDate!),
                     buildDates(
                         title: "Theory Dates",
-                        dates: controller.bookingModel.theoryDate),
+                        dates: controller.bookingModel.theoryDate!),
                     buildDates(
                         title: "Pool Dates",
-                        dates: controller.bookingModel.poolDate),
+                        dates: controller.bookingModel.poolDate!),
                     buildBookingDetails(
                         title: "Remarks",
                         text: (controller.bookingModel.remarks != "")
@@ -125,7 +125,7 @@ class DetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildBookingDetails({String title, String text}) {
+  Widget buildBookingDetails({required String title, String? text}) {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
       child: Row(
@@ -157,7 +157,7 @@ class DetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildHeading({String title, String text}) {
+  Widget buildHeading({String? title, String? text}) {
     return Container(
       width: Get.width,
       child: FittedBox(
@@ -187,7 +187,7 @@ class DetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildDates({String title, List<DateTime> dates}) {
+  Widget buildDates({required String title, required List<DateTime?> dates}) {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
       child: Row(
@@ -206,7 +206,7 @@ class DetailsScreen extends StatelessWidget {
             children: [
               ...dates.map(
                 (e) {
-                  String date = DateFormat('dd-MM-yyyy @ hh-mm a').format(e);
+                  String date = DateFormat('dd-MM-yyyy @ hh-mm a').format(e!);
                   return Container(
                       width: 150,
                       child: Text(
@@ -233,5 +233,5 @@ class DetailsLogic {
 }
 
 class DetailsController extends GetxController {
-  BookingModel bookingModel;
+  late BookingModel bookingModel;
 }

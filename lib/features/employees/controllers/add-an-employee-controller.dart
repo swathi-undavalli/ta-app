@@ -15,7 +15,7 @@ class AddAnUserLogic {
   final DateFormat formatter = DateFormat('HH:mm');
 
   AddAnUserController controller = Get.put(AddAnUserController());
-  Employee employee;
+  Employee? employee;
 
   createEmployee() async {
     //TODO: Change.
@@ -23,7 +23,7 @@ class AddAnUserLogic {
         .collection("counter")
         .doc("count")
         .get();
-    CounterModel counterModel = CounterModel.fromMap(data.data());
+    CounterModel counterModel = CounterModel.fromMap(data.data()!);
 
     if (controller.firstNameTED.text != "" &&
         controller.employeeIdTED.text != "" &&
@@ -66,7 +66,11 @@ class AddAnUserLogic {
           // .collection('employeeFullInformation')
           // .doc('employeeData')
           .set(employee.toMap());
-      counterModel.employee++;
+
+      if (counterModel.employee != null) {
+        counterModel.employee = counterModel.employee! + 1;
+      }
+
       FirebaseFirestore.instance
           .collection("counter")
           .doc("count")
@@ -171,7 +175,7 @@ class AddAnUserLogic {
 }
 
 class AddAnUserController extends GetxController {
-  DateTime pickedTime = DateTime.now();
+  DateTime? pickedTime = DateTime.now();
 
   TextEditingController firstNameTED = TextEditingController();
   TextEditingController agencyIdTED = TextEditingController();
@@ -212,41 +216,41 @@ class AddAnUserController extends GetxController {
 
   ///Switches
 
-  bool _viewBookings = false;
-  bool _weatherReport = false;
-  bool _createBookings = false;
-  bool _editBookings = false;
-  bool _personalAttendanceReport = false;
-  bool _editActivityPrices = false;
-  bool _addActivity = false;
-  bool _editEmployees = false;
-  bool _personalProfileEdit = false;
-  bool _attendanceReport = false;
-  bool _createEmployees = false;
-  bool _viewEmployees = false;
-  bool _notifications = false;
+  bool? _viewBookings = false;
+  bool? _weatherReport = false;
+  bool? _createBookings = false;
+  bool? _editBookings = false;
+  bool? _personalAttendanceReport = false;
+  bool? _editActivityPrices = false;
+  bool? _addActivity = false;
+  bool? _editEmployees = false;
+  bool? _personalProfileEdit = false;
+  bool? _attendanceReport = false;
+  bool? _createEmployees = false;
+  bool? _viewEmployees = false;
+  bool? _notifications = false;
 
-  bool get notifications => _notifications;
+  bool? get notifications => _notifications;
 
-  set notifications(bool value) {
+  set notifications(bool? value) {
     _notifications = value;
     update();
   }
 
-  bool get viewBookings => _viewBookings;
+  bool? get viewBookings => _viewBookings;
 
-  set viewBookings(bool value) {
+  set viewBookings(bool? value) {
     _viewBookings = value;
     update();
   }
 
-  String _countryISoCOde = "IN";
+  String? _countryISoCOde = "IN";
 
   List<String> get roles => _roles;
 
-  String get countryISoCOde => _countryISoCOde;
+  String? get countryISoCOde => _countryISoCOde;
 
-  set countryISoCOde(String value) {
+  set countryISoCOde(String? value) {
     _countryISoCOde = value;
     update();
   }
@@ -282,79 +286,79 @@ class AddAnUserController extends GetxController {
     notifications = false;
   }
 
-  bool get createBookings => _createBookings;
+  bool? get createBookings => _createBookings;
 
-  set createBookings(bool value) {
+  set createBookings(bool? value) {
     _createBookings = value;
     update();
   }
 
-  bool get editBookings => _editBookings;
+  bool? get editBookings => _editBookings;
 
-  set editBookings(bool value) {
+  set editBookings(bool? value) {
     _editBookings = value;
     update();
   }
 
-  bool get viewEmployees => _viewEmployees;
+  bool? get viewEmployees => _viewEmployees;
 
-  set viewEmployees(bool value) {
+  set viewEmployees(bool? value) {
     _viewEmployees = value;
     update();
   }
 
-  bool get createEmployees => _createEmployees;
+  bool? get createEmployees => _createEmployees;
 
-  set createEmployees(bool value) {
+  set createEmployees(bool? value) {
     _createEmployees = value;
     update();
   }
 
-  bool get editEmployees => _editEmployees;
+  bool? get editEmployees => _editEmployees;
 
-  set editEmployees(bool value) {
+  set editEmployees(bool? value) {
     _editEmployees = value;
     update();
   }
 
-  bool get personalProfileEdit => _personalProfileEdit;
+  bool? get personalProfileEdit => _personalProfileEdit;
 
-  set personalProfileEdit(bool value) {
+  set personalProfileEdit(bool? value) {
     _personalProfileEdit = value;
     update();
   }
 
-  bool get personalAttendanceReport => _personalAttendanceReport;
+  bool? get personalAttendanceReport => _personalAttendanceReport;
 
-  set personalAttendanceReport(bool value) {
+  set personalAttendanceReport(bool? value) {
     _personalAttendanceReport = value;
     update();
   }
 
-  bool get attendanceReport => _attendanceReport;
+  bool? get attendanceReport => _attendanceReport;
 
-  set attendanceReport(bool value) {
+  set attendanceReport(bool? value) {
     _attendanceReport = value;
     update();
   }
 
-  bool get weatherReport => _weatherReport;
+  bool? get weatherReport => _weatherReport;
 
-  set weatherReport(bool value) {
+  set weatherReport(bool? value) {
     _weatherReport = value;
     update();
   }
 
-  bool get editActivityPrices => _editActivityPrices;
+  bool? get editActivityPrices => _editActivityPrices;
 
-  set editActivityPrices(bool value) {
+  set editActivityPrices(bool? value) {
     _editActivityPrices = value;
     update();
   }
 
-  bool get addActivity => _addActivity;
+  bool? get addActivity => _addActivity;
 
-  set addActivity(bool value) {
+  set addActivity(bool? value) {
     _addActivity = value;
     update();
   }

@@ -6,12 +6,12 @@ import 'package:http/http.dart' as http;
 enum RequestType { Get, Post }
 
 class API {
-  static http.Response response;
+  static late http.Response response;
 
   static Future apiHandler({
-    @required String url,
-    @required RequestType requestType,
-    Map<String, String> header,
+    required String url,
+    required RequestType requestType,
+    Map<String, String>? header,
     dynamic body,
   }) async {
     if (requestType == RequestType.Get) {

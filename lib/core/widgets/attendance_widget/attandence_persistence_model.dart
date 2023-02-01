@@ -7,9 +7,9 @@ class AttendancePersistenceModel {
     this.lastUpdated,
   });
 
-  bool showCheckIn;
-  bool showCheckOut;
-  DateTime lastUpdated;
+  bool? showCheckIn;
+  bool? showCheckOut;
+  DateTime? lastUpdated;
 
   factory AttendancePersistenceModel.fromJson(String str) =>
       AttendancePersistenceModel.fromMap(json.decode(str));
@@ -26,6 +26,6 @@ class AttendancePersistenceModel {
   Map<String, dynamic> toMap() => {
         "showCheckIn": showCheckIn,
         "showCheckOut": showCheckOut,
-        "lastUpdated": lastUpdated.toIso8601String(),
+        "lastUpdated": lastUpdated!.toIso8601String(),
       };
 }

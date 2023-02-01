@@ -12,20 +12,20 @@ import 'package:temple_adventures/features/bookings/presentation/widgets/app-tex
 
 class GuestsEditScreen extends StatelessWidget {
   static const String id = "GuestsEditScreen";
-  CustomerModel customerArg = Get.arguments[0] as CustomerModel;
-  BookingModel bookingArg = Get.arguments[1] as BookingModel;
+  CustomerModel? customerArg = Get.arguments[0] as CustomerModel?;
+  BookingModel? bookingArg = Get.arguments[1] as BookingModel?;
   GuestsEditLogic logic = GuestsEditLogic();
 
   GuestsEditScreen() {
     logic.controller.customerModel = customerArg;
     logic.controller.bookingModel = bookingArg;
-    logic.controller.firstNameTED.text = customerArg.firstName;
-    logic.controller.lastNameTED.text = customerArg.lastName;
-    logic.controller.emailTED.text = customerArg.email;
-    logic.controller.phoneTED.text = customerArg.phoneNumber;
-    logic.controller.countryCodeTED.text = customerArg.countryCode ?? "+91";
-    logic.controller.genderTED.text = customerArg.gender;
-    logic.controller.idProofLink = customerArg.idProof;
+    logic.controller.firstNameTED.text = customerArg!.firstName!;
+    logic.controller.lastNameTED.text = customerArg!.lastName!;
+    logic.controller.emailTED.text = customerArg!.email!;
+    logic.controller.phoneTED.text = customerArg!.phoneNumber!;
+    logic.controller.countryCodeTED.text = customerArg!.countryCode ?? "+91";
+    logic.controller.genderTED.text = customerArg!.gender!;
+    logic.controller.idProofLink = customerArg!.idProof;
     // logic.controller.isoCode = "+91";
   }
 
@@ -193,15 +193,15 @@ class GuestsEditScreen extends StatelessWidget {
   }
 
   getImage(GuestsEditController controller) {
-    if (controller.idProofLink != null && controller.idProofLink.isNotEmpty) {
+    if (controller.idProofLink != null && controller.idProofLink!.isNotEmpty) {
       return DecorationImage(
-        image: NetworkImage(controller.idProofLink),
+        image: NetworkImage(controller.idProofLink!),
         fit: BoxFit.cover,
       );
     }
     if (controller.idProofFile != null)
       return DecorationImage(
-        image: FileImage(File(controller.idProofFile.path)),
+        image: FileImage(File(controller.idProofFile!.path)),
         fit: BoxFit.cover,
       );
   }
@@ -230,7 +230,7 @@ class GuestsEditScreen extends StatelessWidget {
         value: controller.genderTED.text.isNotEmpty
             ? controller.genderTED.text
             : null,
-        onChanged: (newGender) {
+        onChanged: (dynamic newGender) {
           controller.genderTED.text = newGender;
           controller.update();
         },
@@ -267,8 +267,8 @@ class GuestsEditScreen extends StatelessWidget {
         onSubmitted: (_) {},
         onChanged: (phone) {
           // controller.customerModel. = phone.countryISOCode;
-          controller.customerModel.phoneNumber = phone.number;
-          controller.customerModel.countryCode = phone.countryCode;
+          controller.customerModel!.phoneNumber = phone.number;
+          controller.customerModel!.countryCode = phone.countryCode;
         },
       );
     });
@@ -282,7 +282,7 @@ class GuestsEditScreen extends StatelessWidget {
       focus: logic.controller.emailNode,
       nextFocus: logic.controller.phoneNode,
       onChangedCallBack: (email) {
-        logic.controller.customerModel.email = email;
+        logic.controller.customerModel!.email = email;
       },
     );
   }
@@ -307,7 +307,7 @@ class GuestsEditScreen extends StatelessWidget {
         focus: logic.controller.firstNameNode,
         nextFocus: logic.controller.lastNameNode,
         onChangedCallBack: (newName) {
-          logic.controller.customerModel.firstName = newName;
+          logic.controller.customerModel!.firstName = newName;
         });
   }
 
@@ -318,17 +318,17 @@ class GuestsEditScreen extends StatelessWidget {
         focus: logic.controller.lastNameNode,
         nextFocus: logic.controller.phoneNode,
         onChangedCallBack: (newName) {
-          logic.controller.customerModel.lastName = newName;
+          logic.controller.customerModel!.lastName = newName;
         });
   }
 
   Widget buildTextFields({
-    String text,
-    TextEditingController textEditingController,
-    TextInputType keyBoardType,
-    FocusNode focus,
-    FocusNode nextFocus,
-    Function(String) onChangedCallBack,
+    String? text,
+    TextEditingController? textEditingController,
+    TextInputType? keyBoardType,
+    FocusNode? focus,
+    FocusNode? nextFocus,
+    Function(String)? onChangedCallBack,
   }) {
     return Container(
       child: AppTextField(
@@ -339,7 +339,7 @@ class GuestsEditScreen extends StatelessWidget {
         focusNode: focus,
         nextFocusNode: nextFocus,
         onChangedCallBack: (_) {
-          onChangedCallBack(_);
+          onChangedCallBack!(_);
         },
         errorValidator: () {
           return null;

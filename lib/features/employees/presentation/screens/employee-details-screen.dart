@@ -16,12 +16,12 @@ import 'package:intl/intl.dart';
 
 class EmployeeDetailsScreen extends StatelessWidget {
   static const String id = "EmployeeDetailsScreen";
-  final Employee employeeArgument = Get.arguments as Employee;
+  final Employee? employeeArgument = Get.arguments as Employee?;
   AddAnUserLogic logic = AddAnUserLogic();
 
   @override
   Widget build(BuildContext context) {
-    final DateTime date = employeeArgument.shiftTiming;
+    final DateTime date = employeeArgument!.shiftTiming!;
     final DateFormat formatter = DateFormat('HH:mm');
     final String shiftTiming = formatter.format(date);
     return Scaffold(
@@ -43,7 +43,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 20),
                 Text(
-                  employeeArgument.name,
+                  employeeArgument!.name,
                   style: TextStyle(
                       color: AppColors.text.black,
                       fontWeight: FontWeight.w700,
@@ -56,8 +56,8 @@ class EmployeeDetailsScreen extends StatelessWidget {
                     buildIcons(
                       Icons.call_rounded,
                       () {
-                        makingPhoneCall(employeeArgument.phoneNumber,
-                            employeeArgument.countryCode);
+                        makingPhoneCall(employeeArgument!.phoneNumber!,
+                            employeeArgument!.countryCode!);
                       },
                     ),
                     EmployeeAccess(
@@ -104,7 +104,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                                   onTap: () {
                                     FirebaseFirestore.instance
                                         .collection("employees")
-                                        .doc(employeeArgument.id)
+                                        .doc(employeeArgument!.id)
                                         // .collection("employeeFullInformation")
                                         // .doc("employeeData")
                                         .delete();
@@ -115,7 +115,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                                     //     .set(counterModel.toMap());
                                     LogModel logModel = LogModel(
                                       type: LogType.deleteEmployee,
-                                      employeeName: employeeArgument.name,
+                                      employeeName: employeeArgument!.name,
                                     );
                                     FirebaseFirestore.instance
                                         .collection("logs")
@@ -145,20 +145,20 @@ class EmployeeDetailsScreen extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       buildEmployeeInfo(
-                          subHeading: "Name", text: employeeArgument.name),
+                          subHeading: "Name", text: employeeArgument!.name),
                       buildEmployeeInfo(
-                          subHeading: "Employee ID", text: employeeArgument.id),
+                          subHeading: "Employee ID", text: employeeArgument!.id!),
                       buildEmployeeInfo(
                           subHeading: "Padi No",
-                          text: employeeArgument.agencyId ?? "-"),
+                          text: employeeArgument!.agencyId ?? "-"),
                       buildEmployeeInfo(
                           subHeading: "Phone Number",
-                          text: employeeArgument.countryCode +
-                              employeeArgument.phoneNumber),
+                          text: employeeArgument!.countryCode! +
+                              employeeArgument!.phoneNumber!),
                       buildEmployeeInfo(
                           subHeading: "ShiftTiming", text: shiftTiming),
                       buildEmployeeInfo(
-                          subHeading: "Role", text: employeeArgument.role),
+                          subHeading: "Role", text: employeeArgument!.role!),
                     ],
                   ),
                 ),
@@ -213,7 +213,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildEmployeeInfo({String subHeading, String text}) {
+  Widget buildEmployeeInfo({required String subHeading, required String text}) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
@@ -260,7 +260,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
 
   Widget buildIcons(IconData icon, Function onTap) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Container(
         height: 35,
         width: 35,
@@ -291,44 +291,44 @@ class EmployeeDetailsScreen extends StatelessWidget {
   checkFirebase() async {
     var info = await FirebaseFirestore.instance
         .collection("employees")
-        .doc(employeeArgument.id)
+        .doc(employeeArgument!.id)
         // .collection("employeeFullInformation")
         // .doc("employeeData")
         .get();
     if (info.data() != null) {
-      Employee employee = Employee.fromMap(info.data());
+      Employee employee = Employee.fromMap(info.data()!);
       //print(info.data());
-      final DateTime date = employee.shiftTiming;
+      final DateTime date = employee.shiftTiming!;
       final DateFormat formatter = DateFormat('HH:mm');
       final String shiftTiming = formatter.format(date);
       logic.controller.pickedTime = employee.shiftTiming;
-      logic.controller.employeeIdTED.text = employee.id;
-      logic.controller.firstNameTED.text = employee.firstName;
-      logic.controller.lastNameTED.text = employee.lastName;
+      logic.controller.employeeIdTED.text = employee.id!;
+      logic.controller.firstNameTED.text = employee.firstName!;
+      logic.controller.lastNameTED.text = employee.lastName!;
       logic.controller.shiftTimeTED.text = shiftTiming;
-      logic.controller.phoneNumberTED.text = employee.phoneNumber;
-      logic.controller.countryCodeTED.text = employee.countryCode;
+      logic.controller.phoneNumberTED.text = employee.phoneNumber!;
+      logic.controller.countryCodeTED.text = employee.countryCode!;
       logic.controller.countryISoCOde = employee.countryIsoCode;
-      logic.controller.genderTED.text = employee.gender;
-      logic.controller.roleTED.text = employee.role;
-      logic.controller.agencyIdTED.text = employee.agencyId;
-      logic.controller.viewBookings = employee.accessLevels.viewBookings;
-      logic.controller.createBookings = employee.accessLevels.createBookings;
-      logic.controller.editBookings = employee.accessLevels.editBookings;
-      logic.controller.viewEmployees = employee.accessLevels.viewEmployees;
-      logic.controller.createEmployees = employee.accessLevels.createEmployees;
-      logic.controller.editEmployees = employee.accessLevels.editEmployees;
-      logic.controller.notifications = employee.accessLevels.notifications;
+      logic.controller.genderTED.text = employee.gender!;
+      logic.controller.roleTED.text = employee.role!;
+      logic.controller.agencyIdTED.text = employee.agencyId!;
+      logic.controller.viewBookings = employee.accessLevels!.viewBookings;
+      logic.controller.createBookings = employee.accessLevels!.createBookings;
+      logic.controller.editBookings = employee.accessLevels!.editBookings;
+      logic.controller.viewEmployees = employee.accessLevels!.viewEmployees;
+      logic.controller.createEmployees = employee.accessLevels!.createEmployees;
+      logic.controller.editEmployees = employee.accessLevels!.editEmployees;
+      logic.controller.notifications = employee.accessLevels!.notifications;
       logic.controller.personalProfileEdit =
-          employee.accessLevels.personalProfileEdit;
+          employee.accessLevels!.personalProfileEdit;
       logic.controller.personalAttendanceReport =
-          employee.accessLevels.personalAttendanceReport;
+          employee.accessLevels!.personalAttendanceReport;
       logic.controller.attendanceReport =
-          employee.accessLevels.attendanceReport;
-      logic.controller.weatherReport = employee.accessLevels.weatherReport;
+          employee.accessLevels!.attendanceReport;
+      logic.controller.weatherReport = employee.accessLevels!.weatherReport;
       logic.controller.editActivityPrices =
-          employee.accessLevels.editActivityPrices;
-      logic.controller.addActivity = employee.accessLevels.addActivity;
+          employee.accessLevels!.editActivityPrices;
+      logic.controller.addActivity = employee.accessLevels!.addActivity;
 
       return true;
     }

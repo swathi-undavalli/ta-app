@@ -23,7 +23,7 @@ class _ChooseBoatPageState extends State<ChooseBoatPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar() as PreferredSizeWidget?,
       floatingActionButton: FloatingActionButton(
         elevation: 0,
         onPressed: () async {
@@ -68,7 +68,7 @@ class _ChooseBoatPageState extends State<ChooseBoatPage> {
           ),
           Text(
             DateFormat('dd-MM-yyyy')
-                .format(controller.diveDates[controller.currentDiveDateIndex]),
+                .format(controller.diveDates![controller.currentDiveDateIndex]!),
             style: TextStyle(
                 fontSize: 16,
                 fontFamily: AppFonts.nunito,

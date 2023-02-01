@@ -11,21 +11,21 @@ String adminPortalModelToMap(AdminPortalModel data) =>
 
 class AdminPortalModel {
   AdminPortalModel({
-    @required this.path,
+    required this.path,
     this.createdBy,
-    @required this.filename,
+    required this.filename,
     this.timeStamp,
     this.id
   }) {
     if (timeStamp == null) timeStamp = Timestamp.fromDate(DateTime.now());
-    if (createdBy == null) createdBy = currentEmployee.name;
+    if (createdBy == null) createdBy = currentEmployee!.name;
   }
 
-  String path;
-  String createdBy;
-  String filename;
-  Timestamp timeStamp;
-  String id;
+  String? path;
+  String? createdBy;
+  String? filename;
+  Timestamp? timeStamp;
+  String? id;
 
   factory AdminPortalModel.fromMap(Map<String, dynamic> json) =>
       AdminPortalModel(

@@ -45,13 +45,13 @@ class AttendanceWidgetLogic {
       count++;
       controller.date = DateTime.now();
     }
-    if (Get.isDialogOpen) Get.back();
+    if (Get.isDialogOpen!) Get.back();
   }
 
   onCheckInPressed() async {
     onCheckInConfirmPressed() {
-      var shift = DateTime(0, 0, 0, currentEmployee.shiftTiming.hour,
-          currentEmployee.shiftTiming.minute);
+      var shift = DateTime(0, 0, 0, currentEmployee!.shiftTiming!.hour,
+          currentEmployee!.shiftTiming!.minute);
       var now = DateTime.now();
       var present = DateTime(
         0,

@@ -87,7 +87,7 @@ ThemeData lightTheme = ThemeData(
   ),
 );
 
-TextStyle heading = Get.textTheme.headline1;
-TextStyle subHeading = Get.textTheme.headline2;
-TextStyle title = Get.textTheme.headline3;
-TextStyle subtitle = Get.textTheme.headline4;
+TextStyle? heading = Get.textTheme.headline1;
+TextStyle? subHeading = Get.textTheme.headline2;
+TextStyle? title = Get.textTheme.headline3;
+TextStyle? subtitle = Get.textTheme.headline4;

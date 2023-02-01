@@ -12,7 +12,7 @@ class AddEmployeeWidget extends StatelessWidget {
 Function   onTap;
 
 
-  AddEmployeeWidget({@required this.text, @required this.subText,@required this.onTap});
+  AddEmployeeWidget({required this.text, required this.subText,required this.onTap});
 
   @override
   Widget build(BuildContext context) {

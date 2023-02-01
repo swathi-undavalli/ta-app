@@ -136,7 +136,7 @@ class NavDrawer extends StatelessWidget {
             buildLine(),
             buildMiniMenuItem(
                 text:
-                    "Version : ${logic.controller.version + "+" + logic.controller.buildNumber}"),
+                    "Version : ${logic.controller.version! + "+" + logic.controller.buildNumber!}"),
             buildMiniMenuItem(text: 'templeadventures.com'),
             SizedBox(height: 20)
           ],
@@ -157,7 +157,7 @@ class NavDrawer extends StatelessWidget {
     );
   }
 
-  Widget buildMiniMenuItem({@required text}) {
+  Widget buildMiniMenuItem({required text}) {
     return Padding(
       padding: const EdgeInsets.only(left: 30, top: 15),
       child: Container(
@@ -171,10 +171,10 @@ class NavDrawer extends StatelessWidget {
   }
 
   Widget buildMenuItem(
-      {@required IconData icon,
-      @required String text,
+      {required IconData icon,
+      required String text,
       Color color = Colors.black87,
-      @required Function onTap}) {
+      required Function onTap}) {
     return Container(
       width: Get.width,
       alignment: Alignment.centerLeft,
@@ -191,7 +191,7 @@ class NavDrawer extends StatelessWidget {
           icon,
           color: color,
         ),
-        onTap: onTap,
+        onTap: onTap as void Function()?,
       ),
     );
   }
@@ -211,7 +211,7 @@ class NavDrawer extends StatelessWidget {
         ),
         if (currentEmployee != null)
           Text(
-            currentEmployee.firstName + " !",
+            currentEmployee!.firstName! + " !",
             style: TextStyle(
               color: Colors.black54,
               fontSize: 25,

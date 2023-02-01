@@ -11,13 +11,13 @@ class EmployeeMiniModel {
     this.punctual,
   });
 
-  String shiftTime;
-  int difference;
-  String phone;
-  String name;
-  Timestamp logTime;
-  String id;
-  String punctual;
+  String? shiftTime;
+  int? difference;
+  String? phone;
+  String? name;
+  Timestamp? logTime;
+  String? id;
+  String? punctual;
 
   factory EmployeeMiniModel.fromMap(Map<String, dynamic> json) =>
       EmployeeMiniModel(

@@ -15,12 +15,12 @@ class BoatsModel {
     this.ocean,
   });
 
-  String id;
-  String boatName;
-  String captainName;
-  String phoneNumber;
-  int capacity;
-  bool ocean;
+  String? id;
+  String? boatName;
+  String? captainName;
+  String? phoneNumber;
+  int? capacity;
+  bool? ocean;
 
   factory BoatsModel.fromMap(Map<String, dynamic> json) => BoatsModel(
         id: json["id"],

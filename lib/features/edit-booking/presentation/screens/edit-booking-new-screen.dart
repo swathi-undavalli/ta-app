@@ -22,7 +22,7 @@ import 'package:temple_adventures/features/logs/presentation/screens/log-screen.
 class EditBookingNewScreen extends StatelessWidget {
   static const String id = "EditBookingNewScreen";
   EditBookingNewLogic logic = EditBookingNewLogic();
-  final BookingModel bookingArg = Get.arguments;
+  final BookingModel? bookingArg = Get.arguments;
   final AutoScrollController autoScrollControllerTheory =
       AutoScrollController();
   final AutoScrollController autoScrollControllerPool = AutoScrollController();
@@ -31,31 +31,32 @@ class EditBookingNewScreen extends StatelessWidget {
   EditBookingNewScreen() {
     logic.controller.bookingModel = bookingArg;
     logic.controller.activityNAmeTED.text =
-        bookingArg.activity[0].name.toString();
-    logic.controller.discountTED.text = (bookingArg.discount).toString();
+        bookingArg!.activity![0]!.name.toString();
     logic.controller.totalAmountTED.text =
-        ((bookingArg.totalCost).round()).toString();
-    logic.controller.priceTED.text = bookingArg.price.toString();
-    logic.controller.depositTED.text = bookingArg.paid.toString();
-    logic.controller.balanceTED.text = bookingArg.balance.toString();
-    logic.controller.paxTED.text = bookingArg.noOfPersons.toString();
-    logic.controller.remarksTED.text = bookingArg.remarks;
-    logic.controller.invoiceTED.text = bookingArg.receiptNo;
-    logic.controller.countryCodeTED.text = bookingArg.pax[0]["countryCode"];
-    logic.controller.phoneTED.text = bookingArg.pax[0]["phoneNumber"];
-    logic.controller.emailTED.text = bookingArg.pax[0]["email"];
-    logic.controller.firstNameTED.text = bookingArg.pax[0]["first-name"];
-    logic.controller.lastNameTED.text = bookingArg.pax[0]["last-name"];
-    logic.controller.isoCode = bookingArg.pax[0]["isoCode"];
-    logic.controller.discountTED.text = bookingArg.discount.toString();
-    logic.controller.taxable = bookingArg.tax != 0;
-    logic.controller.discountSwitch = bookingArg.discountType == "%";
+        ((bookingArg!.totalCost).round()).toString();
+    logic.controller.priceTED.text = bookingArg!.price.toString();
+    logic.controller.depositTED.text = bookingArg!.paid.toString();
+    logic.controller.balanceTED.text = bookingArg!.balance.toString();
+    logic.controller.paxTED.text = bookingArg!.noOfPersons.toString();
+    logic.controller.remarksTED.text = bookingArg!.remarks ?? "-";
+    logic.controller.invoiceTED.text = bookingArg!.receiptNo ?? "-";
+    logic.controller.countryCodeTED.text =
+        bookingArg!.pax![0]["countryCode"] ?? "-";
+    logic.controller.phoneTED.text = bookingArg!.pax![0]["phoneNumber"] ?? "-";
+    logic.controller.emailTED.text = bookingArg!.pax![0]["email"] ?? "-";
+    logic.controller.firstNameTED.text = bookingArg!.pax![0]["first-name"];
+    logic.controller.lastNameTED.text = bookingArg!.pax![0]["last-name"] ?? "-";
+    logic.controller.isoCode = bookingArg!.pax![0]["isoCode"] ?? "-";
+    logic.controller.discountTED.text = bookingArg!.discount?.toString() ?? "0";
+    logic.controller.taxable = bookingArg!.tax != 0;
+    logic.controller.discountSwitch = bookingArg!.discountType == "%";
 
-    if (bookingArg.pax[0]["dob"] != null) {
+    if (bookingArg!.pax![0]["dob"] != null) {
       try {
-        logic.controller.dob = (bookingArg.pax[0]["dob"] as Timestamp).toDate();
+        logic.controller.dob =
+            (bookingArg!.pax![0]["dob"] as Timestamp).toDate();
       } catch (e) {
-        showToast(bookingArg.id);
+        showToast(bookingArg!.id!);
         logic.controller.dob = DateTime.now();
       }
       logic.controller.dobTED.text =
@@ -202,36 +203,36 @@ class EditBookingNewScreen extends StatelessWidget {
               text: "Update",
               textColor: AppColors.text.white,
               onTap: () async {
-                controller.bookingModel.bookingDate = [];
+                controller.bookingModel!.bookingDate = [];
 
-                if (controller.bookingModel.poolDate != null &&
-                    controller.bookingModel.poolDate.isNotEmpty) {
-                  controller.bookingModel.poolDate.forEach((date) {
-                    controller.bookingModel.bookingDate
-                        .add(getStringDate(date));
+                if (controller.bookingModel!.poolDate != null &&
+                    controller.bookingModel!.poolDate!.isNotEmpty) {
+                  controller.bookingModel!.poolDate!.forEach((date) {
+                    controller.bookingModel!.bookingDate!
+                        .add(getStringDate(date!));
                   });
                 }
-                if (controller.bookingModel.theoryDate != null &&
-                    controller.bookingModel.theoryDate.isNotEmpty) {
-                  controller.bookingModel.theoryDate.forEach((date) {
-                    controller.bookingModel.bookingDate
-                        .add(getStringDate(date));
+                if (controller.bookingModel!.theoryDate != null &&
+                    controller.bookingModel!.theoryDate!.isNotEmpty) {
+                  controller.bookingModel!.theoryDate!.forEach((date) {
+                    controller.bookingModel!.bookingDate!
+                        .add(getStringDate(date!));
                   });
                 }
-                if (controller.bookingModel.diveDate != null &&
-                    controller.bookingModel.diveDate.isNotEmpty) {
-                  controller.bookingModel.diveDate.forEach((date) {
-                    controller.bookingModel.bookingDate
-                        .add(getStringDate(date));
+                if (controller.bookingModel!.diveDate != null &&
+                    controller.bookingModel!.diveDate!.isNotEmpty) {
+                  controller.bookingModel!.diveDate!.forEach((date) {
+                    controller.bookingModel!.bookingDate!
+                        .add(getStringDate(date!));
                   });
                 }
                 await FirebaseFirestore.instance
                     .collection("bookings")
-                    .doc(controller.bookingModel.id)
-                    .set(controller.bookingModel.toMap());
+                    .doc(controller.bookingModel!.id)
+                    .set(controller.bookingModel!.toMap());
                 LogModel logModel = LogModel(
                     type: LogType.bookingEdited,
-                    bookingId: controller.bookingModel.id);
+                    bookingId: controller.bookingModel!.id);
                 FirebaseFirestore.instance
                     .collection("logs")
                     .doc()
@@ -252,21 +253,21 @@ class EditBookingNewScreen extends StatelessWidget {
   }
 
   Widget buildEditSessions(EditBookingNewController controller,
-      {@required DateType type}) {
+      {required DateType type}) {
     String title = "";
     List<Widget> dates = [];
-    FilterType filterType;
-    AutoScrollController scrollController;
+    FilterType? filterType;
+    AutoScrollController? scrollController;
     if (type == DateType.Theory) {
       title = "Theory";
       filterType = FilterType.Theory;
       scrollController = autoScrollControllerTheory;
-      dates = controller.bookingModel.theoryDate
+      dates = controller.bookingModel!.theoryDate!
           .map(
             (e) => buildDateButton(
               date: e,
               onEdit: () {
-                DateTime selectedTheoryDate = e;
+                DateTime? selectedTheoryDate = e;
                 Get.defaultDialog(
                   title: "",
                   titlePadding: EdgeInsets.all(0),
@@ -312,12 +313,13 @@ class EditBookingNewScreen extends StatelessWidget {
                               textColor: AppColors.text.white,
                               onTap: () {
                                 if (selectedTheoryDate != null &&
-                                    selectedTheoryDate.hour != null &&
-                                    selectedTheoryDate.minute != null &&
-                                    selectedTheoryDate.day != null) {
-                                  int index = controller.bookingModel.theoryDate
+                                    selectedTheoryDate!.hour != null &&
+                                    selectedTheoryDate!.minute != null &&
+                                    selectedTheoryDate!.day != null) {
+                                  int index = controller
+                                      .bookingModel!.theoryDate!
                                       .indexOf(e);
-                                  controller.bookingModel.theoryDate[index] =
+                                  controller.bookingModel!.theoryDate![index] =
                                       selectedTheoryDate;
                                   //print(controller.bookingModel.theoryDate);
                                   controller.update();
@@ -336,7 +338,7 @@ class EditBookingNewScreen extends StatelessWidget {
                 );
               },
               onDelete: () {
-                controller.bookingModel.theoryDate.remove(e);
+                controller.bookingModel!.theoryDate!.remove(e);
                 controller.update();
               },
             ),
@@ -347,12 +349,12 @@ class EditBookingNewScreen extends StatelessWidget {
       title = "Pool";
       filterType = FilterType.Pool;
       scrollController = autoScrollControllerPool;
-      dates = controller.bookingModel.poolDate
+      dates = controller.bookingModel!.poolDate!
           .map(
             (e) => buildDateButton(
               date: e,
               onEdit: () {
-                DateTime selectedPoolDate = e;
+                DateTime? selectedPoolDate = e;
                 Get.defaultDialog(
                   title: "",
                   titlePadding: EdgeInsets.all(0),
@@ -398,12 +400,12 @@ class EditBookingNewScreen extends StatelessWidget {
                               textColor: AppColors.text.white,
                               onTap: () {
                                 if (selectedPoolDate != null &&
-                                    selectedPoolDate.hour != null &&
-                                    selectedPoolDate.minute != null &&
-                                    selectedPoolDate.day != null) {
-                                  int index = controller.bookingModel.poolDate
+                                    selectedPoolDate!.hour != null &&
+                                    selectedPoolDate!.minute != null &&
+                                    selectedPoolDate!.day != null) {
+                                  int index = controller.bookingModel!.poolDate!
                                       .indexOf(e);
-                                  controller.bookingModel.poolDate[index] =
+                                  controller.bookingModel!.poolDate![index] =
                                       selectedPoolDate;
                                   //print(controller.bookingModel.poolDate);
                                   controller.update();
@@ -422,7 +424,7 @@ class EditBookingNewScreen extends StatelessWidget {
                 );
               },
               onDelete: () {
-                controller.bookingModel.poolDate.remove(e);
+                controller.bookingModel!.poolDate!.remove(e);
                 controller.update();
               },
             ),
@@ -433,12 +435,12 @@ class EditBookingNewScreen extends StatelessWidget {
       title = "Dive";
       filterType = FilterType.Dive;
       scrollController = autoScrollControllerDive;
-      dates = controller.bookingModel.diveDate
+      dates = controller.bookingModel!.diveDate!
           .map(
             (e) => buildDateButton(
               date: e,
               onEdit: () {
-                DateTime selectedDiveDate = e;
+                DateTime? selectedDiveDate = e;
                 Get.defaultDialog(
                   title: "",
                   titlePadding: EdgeInsets.all(0),
@@ -484,12 +486,12 @@ class EditBookingNewScreen extends StatelessWidget {
                               textColor: AppColors.text.white,
                               onTap: () {
                                 if (selectedDiveDate != null &&
-                                    selectedDiveDate.hour != null &&
-                                    selectedDiveDate.minute != null &&
-                                    selectedDiveDate.day != null) {
-                                  int index = controller.bookingModel.diveDate
+                                    selectedDiveDate!.hour != null &&
+                                    selectedDiveDate!.minute != null &&
+                                    selectedDiveDate!.day != null) {
+                                  int index = controller.bookingModel!.diveDate!
                                       .indexOf(e);
-                                  controller.bookingModel.diveDate[index] =
+                                  controller.bookingModel!.diveDate![index] =
                                       selectedDiveDate;
                                   //print(controller.bookingModel.diveDate);
                                   controller.update();
@@ -508,7 +510,7 @@ class EditBookingNewScreen extends StatelessWidget {
                 );
               },
               onDelete: () {
-                controller.bookingModel.diveDate.remove(e);
+                controller.bookingModel!.diveDate!.remove(e);
                 controller.update();
               },
             ),
@@ -528,7 +530,7 @@ class EditBookingNewScreen extends StatelessWidget {
             AppButton.miniFlat(
               text: "ADD",
               onTap: () {
-                DateTime selectedDate;
+                DateTime? selectedDate;
                 Get.defaultDialog(
                   title: "",
                   titlePadding: EdgeInsets.all(0),
@@ -574,21 +576,21 @@ class EditBookingNewScreen extends StatelessWidget {
                               textColor: AppColors.text.white,
                               onTap: () {
                                 if (selectedDate != null &&
-                                    selectedDate.hour != null &&
-                                    selectedDate.minute != null &&
-                                    selectedDate.day != null) {
+                                    selectedDate!.hour != null &&
+                                    selectedDate!.minute != null &&
+                                    selectedDate!.day != null) {
                                   if (type == DateType.Theory)
-                                    controller.bookingModel.theoryDate
+                                    controller.bookingModel!.theoryDate!
                                         .add(selectedDate);
                                   else if (type == DateType.Pool)
-                                    controller.bookingModel.poolDate
+                                    controller.bookingModel!.poolDate!
                                         .add(selectedDate);
                                   else if (type == DateType.Dive)
-                                    controller.bookingModel.diveDate
+                                    controller.bookingModel!.diveDate!
                                         .add(selectedDate);
 
-                                  controller.bookingModel.bookingDate
-                                      .add(getStringDate(selectedDate));
+                                  controller.bookingModel!.bookingDate!
+                                      .add(getStringDate(selectedDate!));
 
                                   controller.update();
                                   Get.back();
@@ -614,9 +616,9 @@ class EditBookingNewScreen extends StatelessWidget {
   }
 
   Widget buildDateButton({
-    DateTime date,
-    Function onEdit,
-    Function onDelete,
+    DateTime? date,
+    Function? onEdit,
+    Function? onDelete,
     String text = "Change",
   }) {
     return GetBuilder<EditBookingNewController>(builder: (controller) {
@@ -627,7 +629,7 @@ class EditBookingNewScreen extends StatelessWidget {
           IconButton(
               splashRadius: 20,
               onPressed: () {
-                onEdit();
+                onEdit!();
               },
               icon: Icon(
                 Icons.edit,
@@ -636,7 +638,7 @@ class EditBookingNewScreen extends StatelessWidget {
           IconButton(
               splashRadius: 20,
               onPressed: () {
-                onDelete();
+                onDelete!();
               },
               icon: Icon(
                 Icons.delete,
@@ -651,7 +653,7 @@ class EditBookingNewScreen extends StatelessWidget {
     });
   }
 
-  getStringFromDate(DateTime dateT) {
+  getStringFromDate(DateTime? dateT) {
     if (dateT != null) {
       final DateFormat formatter = DateFormat('hh:mm a');
       String time;
@@ -689,19 +691,19 @@ class EditBookingNewScreen extends StatelessWidget {
                     // focusNode: controller.locationNode,
                     underline: Container(height: 1, color: Colors.black45),
                     isExpanded: true,
-                    value: controller.bookingModel.activity[0],
-                    onChanged: (activity) {
+                    value: controller.bookingModel!.activity![0],
+                    onChanged: (dynamic activity) {
                       //print(activity.name);
-                      controller.bookingModel.activity[0] = activity;
+                      controller.bookingModel!.activity![0] = activity;
                       controller.priceTED.text = activity.price.toString();
-                      controller.bookingModel.price = activity.price * 1.0;
+                      controller.bookingModel!.price = activity.price * 1.0;
                       controller.update();
                     },
                     items:
                         controller.activities.toSet().toList().map((activity) {
                       return DropdownMenuItem(
                         child: new Text(
-                          activity.name,
+                          activity.name!,
                           style: TextStyle(
                             fontWeight: FontWeight.normal,
                           ),
@@ -742,9 +744,9 @@ class EditBookingNewScreen extends StatelessWidget {
         searchText: "Search",
         onSubmitted: (_) {},
         onChanged: (phone) {
-          controller.bookingModel.pax[0]["isoCode"] = phone.countryISOCode;
-          controller.bookingModel.pax[0]["phoneNumber"] = phone.number;
-          controller.bookingModel.pax[0]["countryCode"] = phone.countryCode;
+          controller.bookingModel!.pax![0]["isoCode"] = phone.countryISOCode;
+          controller.bookingModel!.pax![0]["phoneNumber"] = phone.number;
+          controller.bookingModel!.pax![0]["countryCode"] = phone.countryCode;
         },
       );
     });
@@ -758,7 +760,7 @@ class EditBookingNewScreen extends StatelessWidget {
       focus: controller.emailNode,
       nextFocus: controller.phoneNode,
       onChangedCallBack: (email) {
-        controller.bookingModel.pax[0]["email"] = email;
+        controller.bookingModel!.pax![0]["email"] = email;
       },
     );
   }
@@ -770,7 +772,7 @@ class EditBookingNewScreen extends StatelessWidget {
       focus: controller.remarksNode,
       nextFocus: controller.emailNode,
       onChangedCallBack: (email) {
-        controller.bookingModel.remarks = email;
+        controller.bookingModel!.remarks = email;
       },
     );
   }
@@ -782,7 +784,7 @@ class EditBookingNewScreen extends StatelessWidget {
         focus: controller.invoiceNoNode,
         nextFocus: controller.remarksNode,
         onChangedCallBack: (invoice) {
-          controller.bookingModel.receiptNo = invoice;
+          controller.bookingModel!.receiptNo = invoice;
         });
   }
 
@@ -792,7 +794,7 @@ class EditBookingNewScreen extends StatelessWidget {
       textEditingController: controller.depositTED,
       keyBoardType: TextInputType.number,
       onChangedCallBack: (payingNow) {
-        controller.bookingModel.paid = getInt(payingNow) * 1.0;
+        controller.bookingModel!.paid = getInt(payingNow) * 1.0;
         controller.update();
       },
       focus: controller.depositNode,
@@ -818,7 +820,7 @@ class EditBookingNewScreen extends StatelessWidget {
             ),
             Container(
               child: Text(
-                controller.bookingModel.balance.roundToDouble().toString() +
+                controller.bookingModel!.balance.roundToDouble().toString() +
                     "/-",
                 style: TextStyle(
                     fontSize: FontSize.textSize, fontWeight: FontWeight.w600),
@@ -848,7 +850,7 @@ class EditBookingNewScreen extends StatelessWidget {
             ),
             Container(
               child: Text(
-                controller.bookingModel.totalCost.roundToDouble().toString() +
+                controller.bookingModel!.totalCost.roundToDouble().toString() +
                     "/-",
                 style: TextStyle(
                     fontSize: FontSize.textSize, fontWeight: FontWeight.w600),
@@ -880,9 +882,10 @@ class EditBookingNewScreen extends StatelessWidget {
                   },
                   onChangedCallBack: (discount) {
                     try {
-                      controller.bookingModel.discount = double.parse(discount);
+                      controller.bookingModel!.discount =
+                          double.parse(discount);
                     } catch (e) {
-                      controller.bookingModel.discount = 0;
+                      controller.bookingModel!.discount = 0;
                     }
                     controller.update();
                   },
@@ -911,9 +914,9 @@ class EditBookingNewScreen extends StatelessWidget {
                       switchValue: controller.discountSwitch,
                       onChanged: (value) {
                         if (value)
-                          controller.bookingModel.discountType = "%";
+                          controller.bookingModel!.discountType = "%";
                         else
-                          controller.bookingModel.discountType = "₹";
+                          controller.bookingModel!.discountType = "₹";
                         controller.discountSwitch = value;
                       }),
                 ),
@@ -936,7 +939,7 @@ class EditBookingNewScreen extends StatelessWidget {
   Widget buildBookingID() {
     return GetBuilder<EditBookingNewController>(builder: (controller) {
       return Text(
-        "Booking ID : ${controller.bookingModel.id}",
+        "Booking ID : ${controller.bookingModel!.id}",
         style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       );
     });
@@ -960,7 +963,7 @@ class EditBookingNewScreen extends StatelessWidget {
                   text: "",
                   switchValue: controller.taxable,
                   onChanged: (value) {
-                    controller.bookingModel.tax = value ? 18 : 0;
+                    controller.bookingModel!.tax = value ? 18 : 0;
                     controller.taxable = value;
                   }),
             ),
@@ -970,7 +973,8 @@ class EditBookingNewScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSwitch({String text, Function onChanged, bool switchValue}) {
+  Widget buildSwitch(
+      {required String text, Function? onChanged, required bool switchValue}) {
     return Row(
       children: [
         Expanded(
@@ -982,7 +986,7 @@ class EditBookingNewScreen extends StatelessWidget {
         ),
         Switch(
           value: switchValue,
-          onChanged: onChanged,
+          onChanged: onChanged as void Function(bool)?,
           activeColor: AppColors.text.skyBlue,
           inactiveThumbColor: AppColors.text.grey,
         ),
@@ -998,7 +1002,7 @@ class EditBookingNewScreen extends StatelessWidget {
         focus: controller.paxNode,
         nextFocus: controller.discountNode,
         onChangedCallBack: (newNumber) {
-          controller.bookingModel.noOfPersons = getInt(newNumber);
+          controller.bookingModel!.noOfPersons = getInt(newNumber);
           controller.update();
         });
   }
@@ -1028,7 +1032,7 @@ class EditBookingNewScreen extends StatelessWidget {
         focus: controller.firstNameNode,
         nextFocus: controller.lastNameNode,
         onChangedCallBack: (newName) {
-          controller.bookingModel.pax[0]["first-name"] = newName;
+          controller.bookingModel!.pax![0]["first-name"] = newName;
         });
   }
 
@@ -1038,7 +1042,7 @@ class EditBookingNewScreen extends StatelessWidget {
         textEditingController: controller.lastNameTED,
         focus: controller.lastNameNode,
         onChangedCallBack: (newName) {
-          controller.bookingModel.pax[0]["last-name"] = newName;
+          controller.bookingModel!.pax![0]["last-name"] = newName;
         });
   }
 
@@ -1055,7 +1059,7 @@ class EditBookingNewScreen extends StatelessWidget {
     );
   }
 
-  Widget buildSubTitle({String text}) {
+  Widget buildSubTitle({required String text}) {
     return Text(
       text,
       style: TextStyle(
@@ -1076,19 +1080,19 @@ class EditBookingNewScreen extends StatelessWidget {
       focus: controller.priceNode,
       nextFocus: controller.firstNameNode,
       onChangedCallBack: (newPrice) {
-        controller.bookingModel.price = getInt(newPrice) * 1.0;
+        controller.bookingModel!.price = getInt(newPrice) * 1.0;
         controller.update();
       },
     );
   }
 
   Widget buildTextFields({
-    String text,
-    TextEditingController textEditingController,
-    TextInputType keyBoardType,
-    FocusNode focus,
-    FocusNode nextFocus,
-    Function(String) onChangedCallBack,
+    String? text,
+    TextEditingController? textEditingController,
+    TextInputType? keyBoardType,
+    FocusNode? focus,
+    FocusNode? nextFocus,
+    Function(String)? onChangedCallBack,
   }) {
     return Container(
       child: AppTextField(
@@ -1099,7 +1103,7 @@ class EditBookingNewScreen extends StatelessWidget {
         focusNode: focus,
         nextFocusNode: nextFocus,
         onChangedCallBack: (_) {
-          onChangedCallBack(_);
+          onChangedCallBack!(_);
         },
         errorValidator: () {
           return null;

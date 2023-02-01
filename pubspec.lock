@@ -374,14 +374,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
-  flutter_keyboard_visibility:
-    dependency: transitive
-    description:
-      name: flutter_keyboard_visibility
-      sha256: b912b7be11ca1b77533056f14fc9f5d8348d2c74b53001f24b8ae5771ca344be
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.7.0"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -952,14 +944,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.1"
-  search_widget:
-    dependency: "direct main"
-    description:
-      name: search_widget
-      sha256: "1bffa2d312a3b6a9819276af6d4715b642d0364774de858496e83e9004406a51"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.2"
   share:
     dependency: "direct main"
     description:
@@ -1262,5 +1246,5 @@ packages:
     source: hosted
     version: "6.2.2"
 sdks:
-  dart: ">=2.18.0 <3.0.0"
+  dart: ">=2.18.0 <4.0.0"
   flutter: ">=3.3.0"

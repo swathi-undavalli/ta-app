@@ -20,7 +20,7 @@ import '../screens/add-payments-screen.dart';
 class AllBookingsExpansionPanel extends StatefulWidget {
   BookingModel booking;
 
-  AllBookingsExpansionPanel({@required this.booking});
+  AllBookingsExpansionPanel({required this.booking});
 
   @override
   State<AllBookingsExpansionPanel> createState() =>
@@ -31,7 +31,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
   bool isExpanded = false;
   DateTime date = DateTime.now();
 
-  ItemModel items;
+  ItemModel? items;
 
   @override
   void initState() {
@@ -43,11 +43,11 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 2.0, horizontal: 20),
-      child: buildExpansion(itemModel: items),
+      child: buildExpansion(itemModel: items!),
     );
   }
 
-  Widget buildExpansion({ItemModel itemModel, int i}) {
+  Widget buildExpansion({required ItemModel itemModel, int? i}) {
     getColor() {
       if (itemModel.colorCode == "Blue")
         return Color(0xffA9EBF8).withOpacity(0.3);
@@ -98,10 +98,10 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                         width: 7,
                         decoration: BoxDecoration(
                             color: getBalance(
-                                        items.bookingModel.payments,
-                                        double.parse(items.paid)
+                                        items!.bookingModel!.payments!,
+                                        double.parse(items!.paid)
                                             .roundToDouble(),
-                                        double.parse(items.cost)
+                                        double.parse(items!.cost)
                                             .roundToDouble()) ==
                                     "0"
                                 ? Colors.green
@@ -114,10 +114,10 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                           children: [
                             Flexible(
                               child: Text(
-                                itemModel.name
+                                itemModel.name!
                                     .trim()
                                     .toLowerCase()
-                                    .capitalizeFirst,
+                                    .capitalizeFirst!,
                                 overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                     color: AppColors.text.black,
@@ -127,7 +127,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                             ),
                             Text(
                               " x " +
-                                  (itemModel.bookingModel.noOfPersons
+                                  (itemModel.bookingModel!.noOfPersons
                                       .toString()),
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
@@ -188,11 +188,11 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                     onTap: () {
                                       FirebaseFirestore.instance
                                           .collection("bookings")
-                                          .doc(itemModel.bookingModel.id)
+                                          .doc(itemModel.bookingModel!.id)
                                           .delete();
                                       LogModel logModel = LogModel(
                                           type: LogType.bookingDeleted,
-                                          bookingId: itemModel.bookingModel.id);
+                                          bookingId: itemModel.bookingModel!.id);
                                       FirebaseFirestore.instance
                                           .collection("logs")
                                           .doc()
@@ -255,64 +255,64 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 buildKeyValuePairs(
-                                    "Booking Id", items.bookingID),
-                                buildKeyValuePairs("Activity", items.activity),
+                                    "Booking Id", items!.bookingID!),
+                                buildKeyValuePairs("Activity", items!.activity),
                                 buildKeyValuePairs(
                                     "Total Cost",
-                                    double.parse(items.cost)
+                                    double.parse(items!.cost)
                                         .roundToDouble()
                                         .toString()),
                                 buildKeyValuePairs(
                                     "Deposit",
-                                    double.parse(items.paid)
+                                    double.parse(items!.paid)
                                         .roundToDouble()
                                         .toString()),
                                 buildKeyValuePairs(
                                   "Balance",
                                   getBalance(
-                                      items.bookingModel.payments,
-                                      double.parse(items.paid).roundToDouble(),
-                                      double.parse(items.cost).roundToDouble()),
+                                      items!.bookingModel!.payments!,
+                                      double.parse(items!.paid).roundToDouble(),
+                                      double.parse(items!.cost).roundToDouble()),
                                 ),
                                 buildKeyValuePairs("Pax",
-                                    items.bookingModel.noOfPersons.toString()),
-                                ((items != null) && (items.receiptNo != null))
+                                    items!.bookingModel!.noOfPersons.toString()),
+                                ((items != null) && (items!.receiptNo != null))
                                     ? buildKeyValuePairs(
-                                        "Invoice no", items.receiptNo)
+                                        "Invoice no", items!.receiptNo!)
                                     : buildKeyValuePairs("Invoice no", "-"),
-                                (items.remarks == "")
+                                (items!.remarks == "")
                                     ? buildKeyValuePairs("Remarks", "-")
                                     : buildKeyValuePairs(
-                                        "Remarks", items.remarks.toString()),
-                                buildKeyValuePairs("Phone", items.phone),
-                                buildKeyValuePairs("Email", items.email),
-                                buildKeyValuePairs("Time", items.time),
-                                buildKeyValuePairs("Date", items.date),
-                                buildKeyValuePairs("Session", items.session),
+                                        "Remarks", items!.remarks.toString()),
+                                buildKeyValuePairs("Phone", items!.phone!),
+                                buildKeyValuePairs("Email", items!.email!),
+                                buildKeyValuePairs("Time", items!.time),
+                                buildKeyValuePairs("Date", items!.date),
+                                buildKeyValuePairs("Session", items!.session),
                                 buildKeyValuePairs(
                                   "Registered",
-                                  "${items.bookingModel.pax.length - 1} / ${items.bookingModel.noOfPersons}",
+                                  "${items!.bookingModel!.pax!.length - 1} / ${items!.bookingModel!.noOfPersons}",
                                   isDanger:
-                                      ((items.bookingModel.pax.length - 1) !=
-                                          (items.bookingModel.noOfPersons)),
+                                      ((items!.bookingModel!.pax!.length - 1) !=
+                                          (items!.bookingModel!.noOfPersons)),
                                 ),
                                 SizedBox(height: 30),
                                 buildPaymentStatus(
-                                  totalAmount: items.bookingModel.totalCost,
+                                  totalAmount: items!.bookingModel!.totalCost,
                                   payments: [
                                     PaymentModel(
-                                      amount: double.parse(items.paid)
+                                      amount: double.parse(items!.paid)
                                           .roundToDouble(),
-                                      collectedBy: items.employeeName,
-                                      reciptNo: items.receiptNo,
-                                      referenceNo: items
-                                          .bookingModel.paymentTransactionId,
+                                      collectedBy: items!.employeeName,
+                                      reciptNo: items!.receiptNo,
+                                      referenceNo: items!
+                                          .bookingModel!.paymentTransactionId,
                                       remarks: "",
                                       paymentMode:
-                                          items.bookingModel.paymentMode,
-                                      time: items.bookingModel.createdAt,
+                                          items!.bookingModel!.paymentMode,
+                                      time: items!.bookingModel!.createdAt,
                                     ),
-                                    ...items.bookingModel.payments
+                                    ...items!.bookingModel!.payments!
                                   ],
                                 ),
                                 SizedBox(height: 10),
@@ -324,7 +324,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                         text: "Add Payment",
                                         onTap: () {
                                           Get.toNamed(AddPaymentsScreen.id,
-                                              arguments: items.bookingModel);
+                                              arguments: items!.bookingModel);
 
                                           // Get.defaultDialog(
                                           //   contentPadding: EdgeInsets.only(
@@ -443,7 +443,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    (items.employeeName != null)
+                                    (items!.employeeName != null)
                                         ? Container(
                                             alignment: Alignment.centerRight,
                                             child: RichText(
@@ -457,7 +457,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                                 ),
                                                 children: <TextSpan>[
                                                   TextSpan(
-                                                    text: items.employeeName,
+                                                    text: items!.employeeName,
                                                     style: TextStyle(
                                                       color: Color(0xff484646),
                                                       fontWeight:
@@ -481,14 +481,14 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                     //         msg: "Link copied to Clipboard");
                                     //   },
                                     // ).paddingOnly(right: 15),
-                                    (items.bookingModel.pax.length - 1) !=
-                                            (items.bookingModel.noOfPersons)
+                                    (items!.bookingModel!.pax!.length - 1) !=
+                                            (items!.bookingModel!.noOfPersons)
                                         ? AppButton.miniFlat(
                                             text: "Add Info",
                                             onTap: () {
                                               Get.toNamed(GuestDetailsScreen.id,
                                                   arguments:
-                                                      items.bookingModel);
+                                                      items!.bookingModel);
                                             },
                                           ).paddingOnly(right: 15)
                                         : SizedBox(),
@@ -509,13 +509,13 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
   }
 
   Widget buildPaymentStatus({
-    @required double totalAmount,
-    @required List<PaymentModel> payments,
+    required double totalAmount,
+    required List<PaymentModel> payments,
   }) {
     double deposits = 0.0;
 
     payments.forEach((payment) {
-      deposits += payment.amount;
+      deposits += payment.amount!;
     });
 
     int n = payments.length;
@@ -593,7 +593,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: List<Widget>.generate(n, (i) {
                       return buildNumber(
-                          text: payments[i].amount.round().toString(),
+                          text: payments[i].amount!.round().toString(),
                           fontWeight: FontWeight.normal,
                           color: Colors.black);
                     }),
@@ -643,12 +643,12 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
   String getBalance(List<PaymentModel> payments, double deposit, double total) {
     double t = deposit;
     payments.forEach((payment) {
-      t += payment.amount;
+      t += payment.amount!;
     });
     return (total - t).toInt().toString();
   }
 
-  Widget buildTransactions({PaymentModel payment}) {
+  Widget buildTransactions({required PaymentModel payment}) {
     DateTime now = DateTime.now();
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -666,22 +666,22 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Paid ${payment.amount.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
+              "Paid ${payment.amount!.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
               style: TextStyle(
                   fontSize: 10, fontWeight: FontWeight.w600, wordSpacing: 2),
             ),
             SizedBox(height: 2),
             if (payment.time != null &&
-                now.day == payment.time.day &&
-                now.month == payment.time.month &&
-                now.year == payment.time.year)
+                now.day == payment.time!.day &&
+                now.month == payment.time!.month &&
+                now.year == payment.time!.year)
               Text(
-                "Today - ${DateFormat("hh:mm a").format(payment.time)}",
+                "Today - ${DateFormat("hh:mm a").format(payment.time!)}",
                 style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
               )
             else if (payment.time != null)
               Text(
-                DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time),
+                DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time!),
                 style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
               )
             else
@@ -695,7 +695,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
     ).paddingOnly(bottom: 10);
   }
 
-  makingPhoneCall(String phoneNumber) async {
+  makingPhoneCall(String? phoneNumber) async {
     String url = 'tel:$phoneNumber';
     if (await canLaunch(url)) {
       await launch(url);
@@ -738,7 +738,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
     );
   }
 
-  Widget buildCircle({Color color}) {
+  Widget buildCircle({Color? color}) {
     return SizedBox(
       width: 39,
       child: Icon(
@@ -749,7 +749,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
     );
   }
 
-  Widget buildNumber({FontWeight fontWeight, Color color, String text}) {
+  Widget buildNumber({FontWeight? fontWeight, Color? color, required String text}) {
     return SizedBox(
       width: 39,
       child: Center(
@@ -764,12 +764,12 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
 
 class ItemModel {
   bool expanded;
-  final String name;
+  final String? name;
   String time;
   String session;
-  final String email;
-  final String bookingID;
-  final String phone;
+  final String? email;
+  final String? bookingID;
+  final String? phone;
   final String activity;
   final String colorCode;
   final String price;
@@ -777,33 +777,33 @@ class ItemModel {
   final String cost;
   final String paid;
   final String balance;
-  final String remarks;
-  final int pax;
+  final String? remarks;
+  final int? pax;
   final bool registration;
-  final String receiptNo;
-  final String employeeName;
-  BookingModel bookingModel;
+  final String? receiptNo;
+  final String? employeeName;
+  BookingModel? bookingModel;
 
   ItemModel({
-    @required this.phone,
-    @required this.activity,
-    @required this.bookingID,
-    @required this.colorCode,
-    @required this.price,
-    @required this.time,
-    @required this.session,
-    @required this.date,
-    @required this.cost,
-    @required this.paid,
-    @required this.receiptNo,
-    @required this.balance,
-    @required this.remarks,
-    @required this.registration,
+    required this.phone,
+    required this.activity,
+    required this.bookingID,
+    required this.colorCode,
+    required this.price,
+    required this.time,
+    required this.session,
+    required this.date,
+    required this.cost,
+    required this.paid,
+    required this.receiptNo,
+    required this.balance,
+    required this.remarks,
+    required this.registration,
     this.expanded = false,
-    @required this.name,
-    @required this.employeeName,
-    @required this.pax,
-    @required this.email,
+    required this.name,
+    required this.employeeName,
+    required this.pax,
+    required this.email,
     this.bookingModel,
   });
 
@@ -818,32 +818,32 @@ class ItemModel {
 
     getTime() {
       var d = "";
-      if (bookingModel.theoryDate != null && bookingModel.theoryDate.isNotEmpty)
-        d = d + DateFormat("hh:mm").format(bookingModel.theoryDate[0]) + ", ";
-      if (bookingModel.poolDate != null && bookingModel.poolDate.isNotEmpty)
-        d = d + DateFormat("hh:mm").format(bookingModel.poolDate[0]) + ", ";
-      if (bookingModel.diveDate != null && bookingModel.diveDate.isNotEmpty)
-        d = d + DateFormat("hh:mm").format(bookingModel.diveDate[0]) + ", ";
+      if (bookingModel.theoryDate != null && bookingModel.theoryDate!.isNotEmpty)
+        d = d + DateFormat("hh:mm").format(bookingModel.theoryDate![0]!) + ", ";
+      if (bookingModel.poolDate != null && bookingModel.poolDate!.isNotEmpty)
+        d = d + DateFormat("hh:mm").format(bookingModel.poolDate![0]!) + ", ";
+      if (bookingModel.diveDate != null && bookingModel.diveDate!.isNotEmpty)
+        d = d + DateFormat("hh:mm").format(bookingModel.diveDate![0]!) + ", ";
       return d.substring(0, d.length - 2);
     }
 
     //log(bookingModel.balance.toString());
     return ItemModel(
-      phone: bookingModel.pax[0]["countryCode"] +
-          bookingModel.pax[0]["phoneNumber"],
+      phone: bookingModel.pax![0]["countryCode"] +
+          bookingModel.pax![0]["phoneNumber"],
       bookingID: bookingModel.id,
-      activity: bookingModel.activity[0].name.toString(),
-      price: bookingModel.activity[0].price.toString(),
-      colorCode: bookingModel.activity[0].color.toString(),
-      date: bookingModel.bookingDate[0],
+      activity: bookingModel.activity![0]!.name.toString(),
+      price: bookingModel.activity![0]!.price.toString(),
+      colorCode: bookingModel.activity![0]!.color.toString(),
+      date: bookingModel.bookingDate![0],
       cost: bookingModel.totalCost.toString(),
       paid: bookingModel.paid.toString(),
       balance: bookingModel.balance.toString(),
       registration: true,
       receiptNo: bookingModel.receiptNo,
-      name: bookingModel.pax[0]["first-name"],
+      name: bookingModel.pax![0]["first-name"],
       pax: bookingModel.noOfPersons,
-      email: bookingModel.pax[0]["email"],
+      email: bookingModel.pax![0]["email"],
       remarks: bookingModel.remarks,
       time: getTime(),
       session: getSessions(),

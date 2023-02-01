@@ -15,10 +15,10 @@ class AddPaymentsLogic {
   onPaymentDetailsFilled() {
     if (controller.paymentModeTED.text != "") {
       if (controller.depositTED.text != "") {
-        controller.bookingModel.payments.add(
+        controller.bookingModel!.payments!.add(
           PaymentModel(
             amount: double.parse(controller.depositTED.text),
-            collectedBy: currentEmployee.name,
+            collectedBy: currentEmployee!.name,
             reciptNo: controller.receiptNoTED.text,
             referenceNo: controller.paymentReferenceTED.text,
             paymentMode: controller.paymentModeTED.text,
@@ -27,8 +27,8 @@ class AddPaymentsLogic {
         );
         FirebaseFirestore.instance
             .collection("bookings")
-            .doc(controller.bookingModel.id)
-            .set(controller.bookingModel.toMap());
+            .doc(controller.bookingModel!.id)
+            .set(controller.bookingModel!.toMap());
         Get.back();
         controller.reset();
         BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
@@ -87,7 +87,7 @@ class AddPaymentsController extends GetxController {
   FocusNode depositNode = FocusNode();
   FocusNode paymentReferenceNode = FocusNode();
   FocusNode receiptNoNode = FocusNode();
-  BookingModel bookingModel;
+  BookingModel? bookingModel;
 
   reset() {
     depositTED.text = "";

@@ -43,15 +43,15 @@ class BookingsCalenderWidgetLogicNew {
         //print("=============");
 
         if (booking.diveDate != null) {
-          controller.bookingTimings.addAll(booking.diveDate);
+          controller.bookingTimings.addAll(booking.diveDate!);
           //print(booking.diveDate);
         }
         if (booking.poolDate != null) {
-          controller.bookingTimings.addAll(booking.poolDate);
+          controller.bookingTimings.addAll(booking.poolDate!);
           //print(booking.poolDate);
         }
         if (booking.theoryDate != null) {
-          controller.bookingTimings.addAll(booking.theoryDate);
+          controller.bookingTimings.addAll(booking.theoryDate!);
           //print(booking.theoryDate);
         }
 
@@ -84,37 +84,37 @@ class BookingsCalenderWidgetLogicNew {
           //       ", ";
           // }
 
-          booking.theoryDate.forEach((date) {
+          booking.theoryDate!.forEach((date) {
             //log("theory loop");
             if (checkDate(date, controller.selectedDate)) {
-              controller.theoryCountN += booking.noOfPersons;
-              controller.theoryCountA += booking.noOfPersons;
+              controller.theoryCountN += booking.noOfPersons!;
+              controller.theoryCountA += booking.noOfPersons!;
               controller.theoryCount++;
               im.session = im.session + "Theory, ";
-              im.time = im.time + DateFormat("hh:mm ").format(date) + ", ";
+              im.time = im.time + DateFormat("hh:mm ").format(date!) + ", ";
             }
           });
 
-          booking.poolDate.forEach((date) {
+          booking.poolDate!.forEach((date) {
             //log("pool loop");
             //print("date $date");
             if (checkDate(date, controller.selectedDate)) {
-              controller.poolCountN += booking.noOfPersons;
-              controller.poolCountA += booking.noOfPersons;
+              controller.poolCountN += booking.noOfPersons!;
+              controller.poolCountA += booking.noOfPersons!;
               controller.poolCount++;
               im.session = im.session + "Pool, ";
-              im.time = im.time + DateFormat("hh:mm ").format(date) + ", ";
+              im.time = im.time + DateFormat("hh:mm ").format(date!) + ", ";
             }
           });
 
-          booking.diveDate.forEach((date) {
+          booking.diveDate!.forEach((date) {
             //log("dive loop");
             if (checkDate(date, controller.selectedDate)) {
               controller.diveCount++;
-              controller.diveCountN += booking.noOfPersons;
-              controller.diveCountA += booking.noOfPersons;
+              controller.diveCountN += booking.noOfPersons!;
+              controller.diveCountA += booking.noOfPersons!;
               im.session = im.session + "Dive, ";
-              im.time = im.time + DateFormat("hh:mm ").format(date) + ", ";
+              im.time = im.time + DateFormat("hh:mm ").format(date!) + ", ";
             }
           });
 
@@ -163,12 +163,12 @@ class BookingsCalenderWidgetLogicNew {
     controller.bookings.forEach((booking) {
       var im = ItemModel.fromBookings(booking);
 
-      if (booking.theoryDate != null && booking.theoryDate.isNotEmpty) {
-        booking.theoryDate.forEach((date) {
+      if (booking.theoryDate != null && booking.theoryDate!.isNotEmpty) {
+        booking.theoryDate!.forEach((date) {
           //print("+++++++++++");
           //print(date);
           //print(controller.selectedDate);
-          if (isSameMinute(date, controller.selectedDate)) {
+          if (isSameMinute(date!, controller.selectedDate)) {
             im.session = "Theory";
             im.time = DateFormat("hh:mm").format(date);
             //print("im.time ${im.time}");
@@ -178,12 +178,12 @@ class BookingsCalenderWidgetLogicNew {
           }
         });
       }
-      if (booking.poolDate != null && booking.poolDate.isNotEmpty) {
-        booking.poolDate.forEach((date) {
+      if (booking.poolDate != null && booking.poolDate!.isNotEmpty) {
+        booking.poolDate!.forEach((date) {
           //print("+++++++++++");
           //print(date);
           //print(controller.selectedDate);
-          if (isSameMinute(date, controller.selectedDate)) {
+          if (isSameMinute(date!, controller.selectedDate)) {
             im.session = "Pool";
             im.time = DateFormat("hh:mm").format(date);
             //print("im.time ${im.time}");
@@ -192,12 +192,12 @@ class BookingsCalenderWidgetLogicNew {
           }
         });
       }
-      if (booking.diveDate != null && booking.diveDate.isNotEmpty) {
-        booking.diveDate.forEach((date) {
+      if (booking.diveDate != null && booking.diveDate!.isNotEmpty) {
+        booking.diveDate!.forEach((date) {
           //print("+++++++++++");
           //print(date);
           //print(controller.selectedDate);
-          if (isSameMinute(date, controller.selectedDate)) {
+          if (isSameMinute(date!, controller.selectedDate)) {
             im.session = "Dive";
             im.time = DateFormat("hh:mm").format(date);
             //print("im.time ${im.time}");
@@ -237,14 +237,14 @@ class BookingsCalenderWidgetLogicNew {
     controller.calenderDates = [];
     var temp = controller.startDate;
     for (int i = 0; i < 400; i++) {
-      temp = temp.add(Duration(days: 1));
+      temp = temp!.add(Duration(days: 1));
       controller.calenderDates.add(temp);
     }
   }
 
   getTime() {
     getLimit() {
-      if (controller.isDiveSession && controller.showDetails)
+      if (controller.isDiveSession && controller.showDetails!)
         return 18 + 12;
       else if (controller.isDiveSession && controller.showDetails == false)
         return 18 + 2;
@@ -255,7 +255,7 @@ class BookingsCalenderWidgetLogicNew {
     controller.timeTable = [];
     var hour = 3;
     if (controller.calenderType == null)
-      hour = controller.showDetails ? 3 : 5;
+      hour = controller.showDetails! ? 3 : 5;
     else {
       if (controller.calenderType == FilterType.Theory)
         hour = 7;
@@ -311,47 +311,47 @@ class BookingsCalenderWidgetLogicNew {
     getTime();
   }
 
-  int getTotalSessions(FilterType type) {
-    controller.bookings.forEach((booking) {
-      int count = 0;
-      if (booking.theoryDate != null && booking.theoryDate.isNotEmpty) {
-        booking.theoryDate.forEach((date) {
-          if (isSameMinute(date, controller.selectedDate)) {
-            count++;
-          }
-        });
-        return count;
-      }
-
-      if (booking.poolDate != null && booking.poolDate.isNotEmpty) {
-        booking.poolDate.forEach((date) {
-          if (isSameMinute(date, controller.selectedDate)) {
-            count++;
-          }
-        });
-        return count;
-      }
-
-      if (booking.diveDate != null && booking.diveDate.isNotEmpty) {
-        booking.diveDate.forEach((date) {
-          if (isSameMinute(date, controller.selectedDate)) {
-            count++;
-          }
-        });
-        return count;
-      }
-    });
-
-    return 0;
-  }
+  // int getTotalSessions(FilterType type) {
+  //   controller.bookings.forEach((booking) {
+  //     int count = 0;
+  //     if (booking.theoryDate != null && booking.theoryDate!.isNotEmpty) {
+  //       booking.theoryDate!.forEach((date) {
+  //         if (isSameMinute(date!, controller.selectedDate)) {
+  //           count++;
+  //         }
+  //       });
+  //       return count;
+  //     }
+  //
+  //     if (booking.poolDate != null && booking.poolDate!.isNotEmpty) {
+  //       booking.poolDate!.forEach((date) {
+  //         if (isSameMinute(date!, controller.selectedDate)) {
+  //           count++;
+  //         }
+  //       });
+  //       return count;
+  //     }
+  //
+  //     if (booking.diveDate != null && booking.diveDate!.isNotEmpty) {
+  //       booking.diveDate!.forEach((date) {
+  //         if (isSameMinute(date!, controller.selectedDate)) {
+  //           count++;
+  //         }
+  //       });
+  //       return count;
+  //     }
+  //   });
+  //
+  //   return 0;
+  // }
 }
 
 class BookingsCalenderWidgetControllerNew extends GetxController {
-  List<DateTime> bookingTimings = [];
+  List<DateTime?> bookingTimings = [];
   List<BookingModel> bookings = [];
   List<ItemModel> _expansionBookings = [];
 
-  DateTime _startDate;
+  DateTime? _startDate;
   bool _showLoading = false;
 
   DateTime _selectedDate = DateTime(
@@ -362,27 +362,27 @@ class BookingsCalenderWidgetControllerNew extends GetxController {
     0,
     0,
   );
-  DateTime _selectedTime;
+  DateTime? _selectedTime;
 
   List<DateTime> calenderDates = [];
   List<DateTime> timeTable = [];
 
-  FilterType _selectedType;
+  FilterType? _selectedType;
 
   int theoryCount = 0, poolCount = 0, diveCount = 0;
   int theoryCountN = 0, poolCountN = 0, diveCountN = 0;
 
   int theoryCountA = 0, poolCountA = 0, diveCountA = 0;
 
-  bool showDetails;
+  bool? showDetails;
 
-  int lastDateIndex;
+  late int lastDateIndex;
 
-  int lastSelectedIndex;
+  int? lastSelectedIndex;
 
-  bool isDiveSession;
+  late bool isDiveSession;
 
-  FilterType calenderType;
+  FilterType? calenderType;
 
   // AutoScrollController autoScrollController = AutoScrollController();
   // AutoScrollController autoScrollController;
@@ -391,15 +391,15 @@ class BookingsCalenderWidgetControllerNew extends GetxController {
 
   bool get showLoading => _showLoading;
 
-  DateTime get startDate => _startDate;
+  DateTime? get startDate => _startDate;
 
-  DateTime get selectedTime => _selectedTime;
+  DateTime? get selectedTime => _selectedTime;
 
   List<ItemModel> get expansionItemModels => _expansionBookings;
 
-  FilterType get selectedType => _selectedType;
+  FilterType? get selectedType => _selectedType;
 
-  set selectedType(FilterType value) {
+  set selectedType(FilterType? value) {
     _selectedType = value;
     update();
   }
@@ -409,12 +409,12 @@ class BookingsCalenderWidgetControllerNew extends GetxController {
     update();
   }
 
-  set selectedTime(DateTime value) {
+  set selectedTime(DateTime? value) {
     _selectedTime = value;
     update();
   }
 
-  set startDate(DateTime value) {
+  set startDate(DateTime? value) {
     _startDate = value;
     update();
   }

@@ -12,14 +12,14 @@ class Attendance {
     this.punctual,
   });
 
-  Timestamp checkInTime;
-  String checkInLocation;
-  Timestamp checkOutTime;
-  String checkOutLocation;
-  Timestamp LogTime;
-  String checkOutInput;
-  String checkInInput;
-  String punctual;
+  Timestamp? checkInTime;
+  String? checkInLocation;
+  Timestamp? checkOutTime;
+  String? checkOutLocation;
+  Timestamp? LogTime;
+  String? checkOutInput;
+  String? checkInInput;
+  String? punctual;
 
   factory Attendance.fromMap(Map<String, dynamic> json) {
     //print(json);

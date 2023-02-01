@@ -18,20 +18,20 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
   final bool isDiveSession;
   final bool showDetails;
-  final Function onSearchTap;
+  final Function? onSearchTap;
   DateTime startDate;
   final bool highlightInvalidTime;
-  final FilterType calenderType;
-  final AutoScrollController autoScrollController;
+  final FilterType? calenderType;
+  final AutoScrollController? autoScrollController;
   BookingsCalenderWidgetOld({
-    @required this.onDateTimeSelected,
+    required this.onDateTimeSelected,
     this.onSearchTap,
     this.isDiveSession = false,
     this.showDetails = false,
-    this.startDate,
+    required this.startDate,
     this.highlightInvalidTime = false,
     this.calenderType,
-    @required this.autoScrollController,
+    required this.autoScrollController,
   }) {
     //print("new instance");
     if (startDate == null) startDate = DateTime.now();
@@ -53,7 +53,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   }
 
   scrollToIndex(int index) {
-    autoScrollController.scrollToIndex(index,
+    autoScrollController!.scrollToIndex(index,
         preferPosition: AutoScrollPosition.middle);
   }
 
@@ -145,12 +145,12 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
     String title,
     Function onTap, {
     bool enable = false,
-    Color color,
-    int count,
+    Color? color,
+    int? count,
   }) {
     return Expanded(
       child: GestureDetector(
-        onTap: onTap,
+        onTap: onTap as void Function()?,
         child: Container(
           height: 30,
           margin: EdgeInsets.all(5),
@@ -310,7 +310,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
           if (element.session.contains("Theory")) expansionList.add(element);
           var count = 0;
           expansionList.forEach((element) {
-            count += element.pax;
+            count += element.pax!;
           });
           controller.theoryCountN = count;
           controller.theoryCount = expansionList.length;
@@ -320,7 +320,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
           if (element.session.contains("Pool")) expansionList.add(element);
           var count = 0;
           expansionList.forEach((element) {
-            count += element.pax;
+            count += element.pax!;
           });
           controller.poolCountN = count;
           controller.poolCount = expansionList.length;
@@ -330,7 +330,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
           if (element.session.contains("Dive")) expansionList.add(element);
           var count = 0;
           expansionList.forEach((element) {
-            count += element.pax;
+            count += element.pax!;
           });
           controller.diveCountN = count;
           controller.diveCount = expansionList.length;
@@ -342,7 +342,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
           onDeletePressed: () {},
           searchBar: true,
           onSearchTap: () {
-            if (onSearchTap != null) onSearchTap();
+            if (onSearchTap != null) onSearchTap!();
           },
         );
       return SizedBox();
@@ -387,7 +387,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
           return AppColors.background.grey;
       }
 
-      Widget num = _getEventsCount(controller, date);
+      Widget? num = _getEventsCount(controller, date);
       if (num == null && showDetails) return SizedBox();
       return GestureDetector(
         onTap: () {
@@ -499,7 +499,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
             physics: BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               return AutoScrollTag(
-                controller: autoScrollController,
+                controller: autoScrollController!,
                 key: ValueKey(index),
                 index: index,
                 child: Padding(
@@ -557,22 +557,22 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
     });
   }
 
-  Widget _getEventsCount(
+  Widget? _getEventsCount(
       BookingsCalenderWidgetController controller, DateTime date) {
     var show = false;
     int totalBookings = 0;
 
     controller.bookings.forEach((booking) {
       var allBookingsList = [];
-      allBookingsList.addAll(booking.diveDate);
-      allBookingsList.addAll(booking.poolDate);
-      allBookingsList.addAll(booking.theoryDate);
+      allBookingsList.addAll(booking.diveDate!);
+      allBookingsList.addAll(booking.poolDate!);
+      allBookingsList.addAll(booking.theoryDate!);
       allBookingsList.forEach((bookingDate) {
         if (isSameMinute(date, bookingDate)) {
           //print("++++++++++++++++++++:)");
           //print(booking.id);
           //print(booking.noOfPersons);
-          totalBookings += booking.noOfPersons;
+          totalBookings += booking.noOfPersons!;
           show = true;
         }
       });

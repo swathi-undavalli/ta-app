@@ -8,10 +8,10 @@ import 'package:temple_adventures/features/bookings/models/customer-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/guests-edit-screen.dart';
 
 class GuestsExpansionPanel extends StatefulWidget {
-  GuestsExpansionPanel({@required this.customer,@required this.booking});
+  GuestsExpansionPanel({required this.customer,required this.booking});
 
   CustomerModel customer;
-  BookingModel booking;
+  BookingModel? booking;
 
   @override
   State<GuestsExpansionPanel> createState() => _GuestsExpansionPanelState();
@@ -56,11 +56,11 @@ class _GuestsExpansionPanelState extends State<GuestsExpansionPanel> {
                         children: [
                           Flexible(
                             child: Text(
-                              (widget.customer.firstName +
+                              (widget.customer.firstName! +
                                       " ${widget.customer.lastName}")
                                   .trim()
                                   .toLowerCase()
-                                  .capitalizeFirst,
+                                  .capitalizeFirst!,
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   color: AppColors.text.black,
@@ -109,15 +109,15 @@ class _GuestsExpansionPanelState extends State<GuestsExpansionPanel> {
                   children: <Widget>[
                     SizedBox(height: 20),
                     buildKeyValuePairs(
-                        "First Name   ", widget.customer.firstName),
+                        "First Name   ", widget.customer.firstName!),
                     buildKeyValuePairs(
-                        "Last Name   ", widget.customer.lastName),
-                    buildKeyValuePairs("Email  ", widget.customer.email),
+                        "Last Name   ", widget.customer.lastName!),
+                    buildKeyValuePairs("Email  ", widget.customer.email!),
                     buildKeyValuePairs(
                         "Phone  ",
-                        widget.customer.countryCode +
-                            widget.customer.phoneNumber),
-                    buildKeyValuePairs("Gender  ", widget.customer.gender),
+                        widget.customer.countryCode! +
+                            widget.customer.phoneNumber!),
+                    buildKeyValuePairs("Gender  ", widget.customer.gender!),
                   ],
                 ),
               )

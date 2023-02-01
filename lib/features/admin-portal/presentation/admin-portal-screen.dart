@@ -65,12 +65,13 @@ class AdminPortalScreen extends StatelessWidget {
                           }
                           return Column(
                             children: [
-                              ...snapshot.data.docs.map(
+                              ...snapshot.data!.docs.map(
                                 (document) {
                                   AdminPortalModel adminPortalModel =
-                                      AdminPortalModel.fromMap(document.data());
-                                  log(adminPortalModel.filename);
-                                  if (adminPortalModel.filename
+                                      AdminPortalModel.fromMap(document.data()
+                                          as Map<String, dynamic>);
+                                  log(adminPortalModel.filename!);
+                                  if (adminPortalModel.filename!
                                       .endsWith(".pdf")) {
                                     return buildPDF(
                                         context: context,
@@ -122,10 +123,10 @@ class AdminPortalScreen extends StatelessWidget {
             }
             return ListView.builder(
               itemBuilder: (BuildContext context, int index) {
-                AdminPortalModel adminPortalModel =
-                    AdminPortalModel.fromMap(snapshot.data.docs[index].data());
-                log(adminPortalModel.path);
-                if (adminPortalModel.path.endsWith(".pdf")) {
+                AdminPortalModel adminPortalModel = AdminPortalModel.fromMap(
+                    snapshot.data!.docs[index].data() as Map<String, dynamic>);
+                log(adminPortalModel.path!);
+                if (adminPortalModel.path!.endsWith(".pdf")) {
                   return buildPDF(
                       context: context, adminPortalModel: adminPortalModel);
                 }
@@ -151,11 +152,12 @@ class AdminPortalScreen extends StatelessWidget {
     );
   }
 
-  Widget buildPDF({BuildContext context, AdminPortalModel adminPortalModel}) {
+  Widget buildPDF(
+      {BuildContext? context, required AdminPortalModel adminPortalModel}) {
     return GestureDetector(
       onTap: () async {
-        final file = await PdfAPi.loadNetwork(adminPortalModel.path);
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        final file = await PdfAPi.loadNetwork(adminPortalModel.path!);
+        Navigator.of(context!).push(MaterialPageRoute(builder: (context) {
           return PDFViewerPage(
             adminPortalModel: adminPortalModel,
             file: file,
@@ -190,7 +192,7 @@ class AdminPortalScreen extends StatelessWidget {
                 Container(
                   width: Get.width * 0.61,
                   child: Text(
-                    adminPortalModel.filename,
+                    adminPortalModel.filename!,
                     style: TextStyle(
                         fontSize: 14,
                         fontWeight: FontWeight.w600,
@@ -200,7 +202,7 @@ class AdminPortalScreen extends StatelessWidget {
                 Text(
                   "Modified  " +
                       DateFormat.yMMMd()
-                          .format(adminPortalModel.timeStamp.toDate()),
+                          .format(adminPortalModel.timeStamp!.toDate()),
                   style: TextStyle(fontSize: 12),
                 ),
               ],
@@ -268,7 +270,7 @@ class AdminPortalScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        adminPortalModel.filename,
+                        adminPortalModel.filename!,
                         // "${basename(file.path)}",
                         style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -284,7 +286,7 @@ class AdminPortalScreen extends StatelessWidget {
                                 fontSize: 10, fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            adminPortalModel.createdBy,
+                            adminPortalModel.createdBy!,
                             style: TextStyle(
                               fontSize: 10,
                             ),
@@ -305,7 +307,7 @@ class AdminPortalScreen extends StatelessWidget {
               onTap: () async {
                 print(adminPortalModel.path);
                 print("==============================");
-                final urlPath = adminPortalModel.path;
+                final urlPath = adminPortalModel.path!;
                 final url = Uri.parse(urlPath);
                 print(url);
                 final response = await http.get(url);
@@ -323,12 +325,13 @@ class AdminPortalScreen extends StatelessWidget {
               onTap: () async {
                 var storage = await Permission.storage.status;
 
-                if(storage.isGranted){
+                if (storage.isGranted) {
                   await Permission.storage.request();
                 }
 
-                var appDocDir = await DownloadsPathProvider.downloadsDirectory;
-                String url = adminPortalModel.path;
+                var appDocDir =
+                    (await DownloadsPathProvider.downloadsDirectory)!;
+                String url = adminPortalModel.path!;
                 String savePath =
                     appDocDir.path + "/${adminPortalModel.filename}";
                 await Dio().download(url, savePath);
@@ -339,9 +342,9 @@ class AdminPortalScreen extends StatelessWidget {
     );
   }
 
-  Widget buildOptions({String name, IconData icon, Function onTap}) {
+  Widget buildOptions({required String name, IconData? icon, Function? onTap}) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Container(
         height: 60,
         width: Get.width,
@@ -362,7 +365,7 @@ class AdminPortalScreen extends StatelessWidget {
     );
   }
 
-  static Future<File> pickFile() async {
+  static Future<File?> pickFile() async {
     final result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
@@ -371,10 +374,10 @@ class AdminPortalScreen extends StatelessWidget {
     if (result == null) {
       return null;
     } else
-      return File(result.paths.first);
+      return File(result.paths.first!);
   }
 
-  Widget buildIcon({IconData icon, Function onTap, String text}) {
+  Widget buildIcon({IconData? icon, Function? onTap, required String text}) {
     return Column(
       children: [
         Container(
@@ -385,7 +388,7 @@ class AdminPortalScreen extends StatelessWidget {
               // color: AppColors.background.lightSkyBlue,
               border: Border.all(color: AppColors.background.lightSkyBlue)),
           child: IconButton(
-            onPressed: onTap,
+            onPressed: onTap as void Function()?,
             icon: Icon(icon, size: 20),
           ),
         ),
@@ -399,7 +402,7 @@ class AdminPortalScreen extends StatelessWidget {
   }
 
   Widget buildIDProof(
-      {BuildContext context, AdminPortalModel adminPortalModel}) {
+      {BuildContext? context, AdminPortalModel? adminPortalModel}) {
     return GetBuilder<AdminPortalController>(builder: (controller) {
       return GestureDetector(
         onTap: () {
@@ -416,9 +419,9 @@ class AdminPortalScreen extends StatelessWidget {
                 width: 30,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
-                  image: adminPortalModel.path != null
+                  image: adminPortalModel!.path != null
                       ? DecorationImage(
-                          image: NetworkImage(adminPortalModel.path),
+                          image: NetworkImage(adminPortalModel.path!),
                           // FileImage(
                           //   File(adminPortalModel.path),
                           // ),
@@ -504,7 +507,7 @@ class AdminPortalScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4),
                         image: adminPortalModel.path != null
                             ? DecorationImage(
-                                image: NetworkImage(adminPortalModel.path),
+                                image: NetworkImage(adminPortalModel.path!),
 
                                 // FileImage(File(adminPortalModel.path)),
                                 fit: BoxFit.cover,
@@ -535,7 +538,7 @@ class AdminPortalScreen extends StatelessWidget {
                                 fontSize: 10, fontWeight: FontWeight.w600),
                           ),
                           Text(
-                            adminPortalModel.createdBy,
+                            adminPortalModel.createdBy!,
                             style: TextStyle(
                               fontSize: 10,
                             ),
@@ -557,7 +560,7 @@ class AdminPortalScreen extends StatelessWidget {
                 print(adminPortalModel.path);
                 print("==============================");
                 // idProofController.shareLoading = true;
-                final urlImage = adminPortalModel.path;
+                final urlImage = adminPortalModel.path!;
                 final url = Uri.parse(urlImage);
                 print(url);
                 final response = await http.get(url);
@@ -575,7 +578,7 @@ class AdminPortalScreen extends StatelessWidget {
               name: "Download",
               icon: Icons.file_download,
               onTap: () async {
-                String url = adminPortalModel.path;
+                String url = adminPortalModel.path!;
                 GallerySaver.saveImage(url).then((value) {
                   showToast("Downloaded successfully");
                 });
@@ -630,19 +633,21 @@ class AdminPortalScreen extends StatelessWidget {
                           controller.adminPortalModel = AdminPortalModel(
                               path: filePath,
                               filename: basename(file.path),
-                              id: (counterModel.files + 1).toString());
+                              id: (counterModel!.files! + 1).toString());
                           log("aklsnasd");
                           FirebaseFirestore.instance
                               .collection("adminPortal")
-                              .doc((counterModel.files + 1).toString())
+                              .doc((counterModel!.files! + 1).toString())
                               .set(controller.adminPortalModel.toMap());
 
-                          counterModel.files++;
+                          if (counterModel!.files != null) {
+                            counterModel!.files = counterModel!.files! + 1;
+                          }
 
                           FirebaseFirestore.instance
                               .collection("counter")
                               .doc("count")
-                              .set(counterModel.toMap());
+                              .set(counterModel!.toMap());
 
                           controller.update();
                           controller.pickedFile.add(pdfFile.path);

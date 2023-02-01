@@ -9,11 +9,11 @@ import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 
 class EmployeeRepo {
-  static String employeeID;
+  static String? employeeID;
   static GetStorage _getStorage = GetStorage();
   static String _employeeKey = "employeeID";
 
-  static initiateRepo(String employeeId) {
+  static initiateRepo(String? employeeId) {
     employeeID = employeeId;
     _getStorage.write(_employeeKey, employeeID);
   }
@@ -23,7 +23,7 @@ class EmployeeRepo {
     //print(employeeID);
     var data = await FirebaseApi.getEmployeeFullInformation(employeeID);
     //print(data.data());
-    return Employee.fromMap(data.data());
+    return Employee.fromMap(data.data()!);
   }
 
   static updateEmployee(Employee employee) async {
@@ -64,7 +64,7 @@ class EmployeeRepo {
       } else {
         //print('User declined or has not accepted permission');
       }
-      if (currentEmployee.accessLevels.notifications == true) {
+      if (currentEmployee!.accessLevels!.notifications == true) {
         FirebaseMessaging.instance
             .subscribeToTopic("newBooking")
             .whenComplete(() => showToast("Subscribed"));

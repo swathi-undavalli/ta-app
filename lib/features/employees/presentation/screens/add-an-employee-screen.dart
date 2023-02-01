@@ -46,7 +46,7 @@ class AddAnUser extends StatelessWidget {
                       children: [
                         SizedBox(height: 10),
                         Text(
-                          "Last Employee ID : ${counterModel.employee.toString()}",
+                          "Last Employee ID : ${counterModel!.employee.toString()}",
                           style: TextStyle(
                               fontSize: 16, fontWeight: FontWeight.w600),
                         ),
@@ -151,90 +151,90 @@ class AddAnUser extends StatelessWidget {
         children: [
           buildSwitch(
               text: "View Bookings",
-              switchValue: controller.viewBookings,
+              switchValue: controller.viewBookings!,
               onChanged: (value) {
                 controller.viewBookings = value;
               }),
           buildSwitch(
             text: "Create Bookings",
-            switchValue: controller.createBookings,
+            switchValue: controller.createBookings!,
             onChanged: (value) {
               controller.createBookings = value;
             },
           ),
           buildSwitch(
             text: "Edit Bookings",
-            switchValue: controller.editBookings,
+            switchValue: controller.editBookings!,
             onChanged: (value) {
               controller.editBookings = value;
             },
           ),
           buildSwitch(
             text: "View Employees",
-            switchValue: controller.viewEmployees,
+            switchValue: controller.viewEmployees!,
             onChanged: (value) {
               controller.viewEmployees = value;
             },
           ),
           buildSwitch(
             text: "Create Employees",
-            switchValue: controller.createEmployees,
+            switchValue: controller.createEmployees!,
             onChanged: (value) {
               controller.createEmployees = value;
             },
           ),
           buildSwitch(
             text: "Edit Employees",
-            switchValue: controller.editEmployees,
+            switchValue: controller.editEmployees!,
             onChanged: (value) {
               controller.editEmployees = value;
             },
           ),
           buildSwitch(
             text: "Personal Profile Edit",
-            switchValue: controller.personalProfileEdit,
+            switchValue: controller.personalProfileEdit!,
             onChanged: (value) {
               controller.personalProfileEdit = value;
             },
           ),
           buildSwitch(
             text: "Personal Attendance Report",
-            switchValue: controller.personalAttendanceReport,
+            switchValue: controller.personalAttendanceReport!,
             onChanged: (value) {
               controller.personalAttendanceReport = value;
             },
           ),
           buildSwitch(
             text: "Attendance Report",
-            switchValue: controller.attendanceReport,
+            switchValue: controller.attendanceReport!,
             onChanged: (value) {
               controller.attendanceReport = value;
             },
           ),
           buildSwitch(
             text: "Weather Report",
-            switchValue: controller.weatherReport,
+            switchValue: controller.weatherReport!,
             onChanged: (value) {
               controller.weatherReport = value;
             },
           ),
           buildSwitch(
             text: "Edit Activity Prices",
-            switchValue: controller.editActivityPrices,
+            switchValue: controller.editActivityPrices!,
             onChanged: (value) {
               controller.editActivityPrices = value;
             },
           ),
           buildSwitch(
             text: "Add Activity",
-            switchValue: controller.addActivity,
+            switchValue: controller.addActivity!,
             onChanged: (value) {
               controller.addActivity = value;
             },
           ),
           buildSwitch(
             text: "Subscribe Notifications",
-            switchValue: controller.notifications,
+            switchValue: controller.notifications!,
             onChanged: (value) {
               controller.notifications = value;
             },
@@ -244,7 +244,7 @@ class AddAnUser extends StatelessWidget {
     });
   }
 
-  Widget buildSwitch({String text, Function onChanged, bool switchValue}) {
+  Widget buildSwitch({required String text, Function? onChanged, required bool switchValue}) {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: Row(
@@ -258,7 +258,7 @@ class AddAnUser extends StatelessWidget {
           ),
           Switch(
             value: switchValue,
-            onChanged: onChanged,
+            onChanged: onChanged as void Function(bool)?,
             activeColor: AppColors.text.black,
             inactiveThumbColor: AppColors.text.grey,
           ),
@@ -290,7 +290,7 @@ class AddAnUser extends StatelessWidget {
         logic.controller.roleNode.requestFocus();
       },
       onChanged: (phone) {
-        logic.controller.phoneNumberTED.text = phone.number;
+        logic.controller.phoneNumberTED.text = phone.number!;
         logic.controller.countryCodeTED.text = phone.countryCode;
         logic.controller.countryISoCOde = phone.countryISOCode;
         //print(phone.number);
@@ -448,7 +448,7 @@ class AddAnUser extends StatelessWidget {
           value: controller.roleTED.text.isNotEmpty
               ? controller.roleTED.text
               : null,
-          onChanged: (newRole) {
+          onChanged: (dynamic newRole) {
             controller.roleTED.text = newRole;
             controller.update();
           },
@@ -474,7 +474,7 @@ class AddAnUser extends StatelessWidget {
           value: controller.genderTED.text.isNotEmpty
               ? controller.genderTED.text
               : null,
-          onChanged: (newGender) {
+          onChanged: (dynamic newGender) {
             controller.genderTED.text = newGender;
             controller.update();
           },

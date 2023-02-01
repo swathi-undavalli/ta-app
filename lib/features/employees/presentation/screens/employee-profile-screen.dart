@@ -18,7 +18,7 @@ class EmployeeProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final DateTime date = currentEmployee.shiftTiming;
+    final DateTime date = currentEmployee!.shiftTiming!;
     final DateFormat formatter = DateFormat('HH-mm-ss');
     final String shiftTiming = formatter.format(date);
     return WillPopScope(
@@ -75,16 +75,16 @@ class EmployeeProfileScreen extends StatelessWidget {
                             children: [
                               buildEmployeeInfo(
                                   subHeading: "Name",
-                                  text: currentEmployee.name),
+                                  text: currentEmployee!.name),
                               buildEmployeeInfo(
                                   subHeading: "Phone Number",
-                                  text: currentEmployee.countryCode +
-                                      currentEmployee.phoneNumber),
+                                  text: currentEmployee!.countryCode! +
+                                      currentEmployee!.phoneNumber!),
                               buildEmployeeInfo(
                                   subHeading: "ShiftTiming", text: shiftTiming),
                               buildEmployeeInfo(
                                   subHeading: "Role",
-                                  text: currentEmployee.role),
+                                  text: currentEmployee!.role),
                             ],
                           ),
                         ),
@@ -142,7 +142,7 @@ class EmployeeProfileScreen extends StatelessWidget {
           searchText: "Search",
           onSubmitted: (_) {},
           onChanged: (phone) {
-            controller.phoneNumberTED.text = phone.number;
+            controller.phoneNumberTED.text = phone.number!;
             controller.countryCodeTED.text = phone.countryCode;
             //print(phone.number);
             //print(phone.countryCode);
@@ -178,18 +178,18 @@ class EmployeeProfileScreen extends StatelessWidget {
               textColor: AppColors.text.white,
               onTap: () async {
                 if (controller.nameTED.text != "")
-                  currentEmployee.firstName = controller.nameTED.text;
+                  currentEmployee!.firstName = controller.nameTED.text;
                 if (controller.phoneNumberTED.text != "") {
-                  currentEmployee.countryIsoCode = controller.isoCode;
-                  currentEmployee.countryCode = controller.countryCodeTED.text;
-                  currentEmployee.phoneNumber = controller.phoneNumberTED.text;
+                  currentEmployee!.countryIsoCode = controller.isoCode;
+                  currentEmployee!.countryCode = controller.countryCodeTED.text;
+                  currentEmployee!.phoneNumber = controller.phoneNumberTED.text;
                 }
                 FirebaseFirestore.instance
                     .collection("employees")
-                    .doc(currentEmployee.id)
+                    .doc(currentEmployee!.id)
                     .collection("employeeFullInformation")
                     .doc("employeeData")
-                    .set(currentEmployee.toMap());
+                    .set(currentEmployee!.toMap());
                 controller.isEditMode = !controller.isEditMode;
                 controller.reset();
               },
@@ -202,11 +202,11 @@ class EmployeeProfileScreen extends StatelessWidget {
   }
 
   Widget buildTextFields(
-      {String hintText,
-      TextEditingController textEditingController,
-      FocusNode focus,
-      FocusNode nextFocus,
-      TextInputType keyBoardType}) {
+      {String? hintText,
+      TextEditingController? textEditingController,
+      FocusNode? focus,
+      FocusNode? nextFocus,
+      TextInputType? keyBoardType}) {
     return GetBuilder<EmployeeProfileController>(builder: (controller) {
       if (controller.isEditMode)
         return Container(
@@ -272,7 +272,7 @@ class EmployeeProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget buildEmployeeInfo({String subHeading, String text}) {
+  Widget buildEmployeeInfo({String? subHeading, String? text}) {
     return GetBuilder<EmployeeProfileController>(builder: (controller) {
       if (!controller.isEditMode)
         return Padding(
@@ -286,7 +286,7 @@ class EmployeeProfileScreen extends StatelessWidget {
                   child: Container(
                     width: Get.width,
                     child: Text(
-                      subHeading,
+                      subHeading!,
                       style: TextStyle(
                           color: AppColors.text.black,
                           fontSize: 14,
@@ -297,7 +297,7 @@ class EmployeeProfileScreen extends StatelessWidget {
                 Container(
                   width: 150,
                   child: Text(
-                    ":      " + text,
+                    ":      " + text!,
                     style: TextStyle(
                         color: AppColors.text.black,
                         fontSize: 12,

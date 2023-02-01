@@ -47,7 +47,7 @@ class HomePage extends StatelessWidget {
                       children: [
                         IconButton(
                           onPressed: () {
-                            dashboardDrawerKey.currentState.openDrawer();
+                            dashboardDrawerKey.currentState!.openDrawer();
                           },
                           icon: Icon(Icons.menu_rounded),
                         ),

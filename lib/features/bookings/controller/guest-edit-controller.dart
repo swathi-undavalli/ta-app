@@ -16,11 +16,11 @@ class GuestsEditLogic {
   GuestsEditController controller = Get.put(GuestsEditController());
 
   ImagePicker imagePicker = ImagePicker();
-  Function onImagePicked;
+  Function? onImagePicked;
 
   browseImage(bool isFront, ImageSource source) async {
     print("==========started");
-    XFile pickedFile =
+    XFile? pickedFile =
         await imagePicker.pickImage(source: source, imageQuality: 50);
     print("==========ended");
 
@@ -69,7 +69,7 @@ class GuestsEditLogic {
         controller.emailTED.text.isNotEmpty &&
         controller.phoneTED.text.isNotEmpty &&
         controller.genderTED.text.isNotEmpty &&
-        (controller.idProofFile != null || controller.idProofLink.isNotEmpty)) {
+        (controller.idProofFile != null || controller.idProofLink!.isNotEmpty)) {
       controller.pageLoading = true;
       // await addGuest();
       await updatePassenger();
@@ -88,23 +88,23 @@ class GuestsEditLogic {
         .collection("customers")
         .doc(controller.emailTED.text)
         .get();
-    Map<String, dynamic> data = d.data();
+    Map<String, dynamic>? data = d.data();
     if (data == null) return false;
     controller.customerModel = CustomerModel.fromMap(data);
-    log(controller.customerModel.toMap().toString());
-    controller.firstNameTED.text = controller.customerModel.firstName;
-    controller.lastNameTED.text = controller.customerModel.lastName;
-    controller.phoneTED.text = controller.customerModel.phoneNumber;
-    controller.genderTED.text = controller.customerModel.gender;
-    controller.countryCodeTED.text = controller.customerModel.countryCode;
-    controller.idProofLink = controller.customerModel.idProof;
+    log(controller.customerModel!.toMap().toString());
+    controller.firstNameTED.text = controller.customerModel!.firstName!;
+    controller.lastNameTED.text = controller.customerModel!.lastName!;
+    controller.phoneTED.text = controller.customerModel!.phoneNumber!;
+    controller.genderTED.text = controller.customerModel!.gender!;
+    controller.countryCodeTED.text = controller.customerModel!.countryCode!;
+    controller.idProofLink = controller.customerModel!.idProof;
     return true;
   }
 
-  Future<String> getIDProofLink() async {
+  Future<String?> getIDProofLink() async {
     if (controller.idProofFile != null) {
       controller.uploadedImageUrl = await FileUploader.uploadCustomerID(
-          file: File(controller.idProofFile.path));
+          file: File(controller.idProofFile!.path));
       return controller.uploadedImageUrl;
     } else {
       return controller.idProofLink;
@@ -115,46 +115,46 @@ class GuestsEditLogic {
     if (controller.customerModel == null) {
       controller.customerModel = CustomerModel();
     }
-    controller.customerModel.firstName = controller.firstNameTED.text;
-    controller.customerModel.lastName = controller.lastNameTED.text;
-    controller.customerModel.countryCode = controller.countryCodeTED.text;
-    controller.customerModel.email = controller.emailTED.text;
-    controller.customerModel.phoneNumber = controller.phoneTED.text;
-    controller.customerModel.gender = controller.genderTED.text;
-    controller.customerModel.idProof = await getIDProofLink();
+    controller.customerModel!.firstName = controller.firstNameTED.text;
+    controller.customerModel!.lastName = controller.lastNameTED.text;
+    controller.customerModel!.countryCode = controller.countryCodeTED.text;
+    controller.customerModel!.email = controller.emailTED.text;
+    controller.customerModel!.phoneNumber = controller.phoneTED.text;
+    controller.customerModel!.gender = controller.genderTED.text;
+    controller.customerModel!.idProof = await getIDProofLink();
     await FirebaseFirestore.instance
         .collection("customers")
         .doc(controller.emailTED.text)
-        .set(controller.customerModel.toMap());
+        .set(controller.customerModel!.toMap());
   }
 
   updatePassenger() async {
     int i = 1;
 
-    for (i = 1; i < controller.bookingModel.pax.length; i++) {
-      if (controller.bookingModel.pax[i]["email"] ==
-          controller.customerModel.email) {
+    for (i = 1; i < controller.bookingModel!.pax!.length; i++) {
+      if (controller.bookingModel!.pax![i]["email"] ==
+          controller.customerModel!.email) {
         break;
       }
     }
-    controller.bookingModel.pax[i]["email"] = controller.emailTED.text;
-    controller.bookingModel.pax[i]["first-name"] = controller.firstNameTED.text;
-    controller.bookingModel.pax[i]["last-name"] = controller.lastNameTED.text;
-    controller.bookingModel.pax[i]["phoneNumber"] = controller.phoneTED.text;
-    controller.bookingModel.pax[i]["countryCode"] =
+    controller.bookingModel!.pax![i]["email"] = controller.emailTED.text;
+    controller.bookingModel!.pax![i]["first-name"] = controller.firstNameTED.text;
+    controller.bookingModel!.pax![i]["last-name"] = controller.lastNameTED.text;
+    controller.bookingModel!.pax![i]["phoneNumber"] = controller.phoneTED.text;
+    controller.bookingModel!.pax![i]["countryCode"] =
         controller.countryCodeTED.text;
-    controller.bookingModel.pax[i]["gender"] = controller.genderTED.text;
-    controller.bookingModel.pax[i]["idProof"] = await getIDProofLink();
+    controller.bookingModel!.pax![i]["gender"] = controller.genderTED.text;
+    controller.bookingModel!.pax![i]["idProof"] = await getIDProofLink();
 
     await FirebaseFirestore.instance
         .collection("bookings")
-        .doc(controller.bookingModel.id)
-        .set(controller.bookingModel.toMap());
+        .doc(controller.bookingModel!.id)
+        .set(controller.bookingModel!.toMap());
   }
 
   updateCoastGuardSlip() async {
-    for (int i = 0; i < controller.bookingModel.diveDate.length; i++) {
-      var diveDate = controller.bookingModel.diveDate[i];
+    for (int i = 0; i < controller.bookingModel!.diveDate!.length; i++) {
+      var diveDate = controller.bookingModel!.diveDate![i]!;
       print(DateFormat("dd-MM-yyyy").format(diveDate));
       var data = await FirebaseFirestore.instance
           .collection("coastGuardSlip")
@@ -162,22 +162,22 @@ class GuestsEditLogic {
           .get();
       log("===============================");
       log(data.data().toString());
-      Map<String, dynamic> d = data.data();
+      Map<String, dynamic>? d = data.data();
 
       if (d != null) {
         BoatPassengersModel boatPassengersModel =
             BoatPassengersModel.fromMap(d[diveDate.toIso8601String()]);
-        for (i = 0; i < boatPassengersModel.passenger.length; i++) {
-          if (boatPassengersModel.passenger[i].email == controller.customerModel.email) {
+        for (i = 0; i < boatPassengersModel.passenger!.length; i++) {
+          if (boatPassengersModel.passenger![i].email == controller.customerModel!.email) {
             break;
           }
         }
         log(i.toString());
         log("========================================");
-        boatPassengersModel.passenger[i].email = controller.emailTED.text;
-        boatPassengersModel.passenger[i].name = controller.firstNameTED.text;
-        boatPassengersModel.passenger[i].phone = controller.phoneTED.text;
-        boatPassengersModel.passenger[i].gender = controller.genderTED.text;
+        boatPassengersModel.passenger![i].email = controller.emailTED.text;
+        boatPassengersModel.passenger![i].name = controller.firstNameTED.text;
+        boatPassengersModel.passenger![i].phone = controller.phoneTED.text;
+        boatPassengersModel.passenger![i].gender = controller.genderTED.text;
 
         d[diveDate.toIso8601String()] = boatPassengersModel.toMap();
         await FirebaseFirestore.instance
@@ -189,13 +189,13 @@ class GuestsEditLogic {
       }
     }
 
-    print(controller.bookingModel.diveDate);
+    print(controller.bookingModel!.diveDate);
   }
 }
 
 class GuestsEditController extends GetxController {
-  CustomerModel customerModel;
-  BookingModel bookingModel;
+  CustomerModel? customerModel;
+  BookingModel? bookingModel;
 
   TextEditingController firstNameTED = TextEditingController();
   TextEditingController lastNameTED = TextEditingController();
@@ -225,20 +225,20 @@ class GuestsEditController extends GetxController {
     customerModel = null;
   }
 
-  XFile _idProofFile;
+  XFile? _idProofFile;
   bool customerExist = false;
   String _isoCode = "IN";
-  String _idProofLink;
-  String uploadedImageUrl;
+  String? _idProofLink;
+  String? uploadedImageUrl;
   bool _pageLoading = false;
 
   List<String> gender = ['Male', 'Female'];
 
   String get isoCode => _isoCode;
 
-  XFile get idProofFile => _idProofFile;
+  XFile? get idProofFile => _idProofFile;
 
-  String get idProofLink => _idProofLink;
+  String? get idProofLink => _idProofLink;
 
   bool get pageLoading => _pageLoading;
 
@@ -247,12 +247,12 @@ class GuestsEditController extends GetxController {
     update();
   }
 
-  set idProofLink(String value) {
+  set idProofLink(String? value) {
     _idProofLink = value;
     update();
   }
 
-  set idProofFile(XFile value) {
+  set idProofFile(XFile? value) {
     _idProofFile = value;
     update();
   }

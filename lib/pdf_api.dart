@@ -12,10 +12,10 @@ import 'package:path/path.dart';
 class PdfAPi {
   static Future<File> generateImage(BookingModel booking) async {
     final pdf = pw.Document();
-    List<String> netImage = [];
-    for (int i = 1; i < booking.pax.length; i++) {
-      print(booking.pax[i]["idProof"]);
-      netImage.add(booking.pax[i]["idProof"]);
+    List<String?> netImage = [];
+    for (int i = 1; i < booking.pax!.length; i++) {
+      print(booking.pax![i]["idProof"]);
+      netImage.add(booking.pax![i]["idProof"]);
     }
 
     final pageTheme = pw.PageTheme(
@@ -24,7 +24,7 @@ class PdfAPi {
 
     List<pw.Widget> list = [];
     for (int i = 0; i < netImage.length; i++) {
-      var im = await networkImage(netImage[i]);
+      var im = await networkImage(netImage[i]!);
       var img = pw.Padding(
         padding: const pw.EdgeInsets.only(left: 20, right: 20, top: 10),
         child: pw.Container(
@@ -56,7 +56,7 @@ class PdfAPi {
     return saveDocument(name: 'ID:${booking.id} IdProofs.pdf', pdf: pdf);
   }
 
-  static Future<File> saveDocument({String name, pw.Document pdf}) async {
+  static Future<File> saveDocument({String? name, required pw.Document pdf}) async {
     final bytes = await pdf.save();
 
     final dir = await getApplicationDocumentsDirectory();

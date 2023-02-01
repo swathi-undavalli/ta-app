@@ -8,7 +8,7 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/messaging/firebase_messaging_controller.dart';
 
 class FirebaseMessagingDemo extends StatelessWidget {
-  FirebaseMessagingDemo({Key key}) : super(key: key);
+  FirebaseMessagingDemo({Key? key}) : super(key: key);
 
   static const String id = "/FirebaseMessagingDemo";
 

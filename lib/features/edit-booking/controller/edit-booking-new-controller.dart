@@ -23,7 +23,7 @@ class EditBookingNewLogic {
       ActivityModel activity = ActivityModel.fromMap(catalogue.docs[i].data());
       controller.activities.add(activity);
       controller.activities
-          .sort((a1, a2) => a2.priority.compareTo(a1.priority));
+          .sort((a1, a2) => a2.priority!.compareTo(a1.priority!));
       controller.showLoading = false;
     }
     //print(controller.activities);
@@ -39,7 +39,7 @@ class EditBookingNewLogic {
       // //print('change $date');
       controller.dob = date;
       controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
-      controller.bookingModel.pax[0]["dob"] = date;
+      controller.bookingModel!.pax![0]["dob"] = date;
     }, onConfirm: (date) {
       // //print('confirm $date');
       controller.dob = date;
@@ -68,7 +68,7 @@ class EditBookingNewLogic {
 }
 
 class EditBookingNewController extends GetxController {
-  BookingModel bookingModel;
+  BookingModel? bookingModel;
   TextEditingController activityNAmeTED = TextEditingController();
   TextEditingController depositTED = TextEditingController();
   TextEditingController balanceTED = TextEditingController();
@@ -104,7 +104,7 @@ class EditBookingNewController extends GetxController {
   DateTime startDate = DateTime.now();
   DateTime _dob = DateTime.now();
 
-  String _isoCode;
+  String? _isoCode;
 
   bool _discountSwitch = true;
 
@@ -114,15 +114,15 @@ class EditBookingNewController extends GetxController {
 
   bool _taxable = false;
 
-  double _cost;
+  double? _cost;
 
-  double _totalCost;
+  double? _totalCost;
 
-  double _taxableAmount;
+  double? _taxableAmount;
 
-  double _discount;
+  double? _discount;
 
-  String get isoCode => _isoCode;
+  String? get isoCode => _isoCode;
 
   bool get discountSwitch => _discountSwitch;
 
@@ -130,13 +130,13 @@ class EditBookingNewController extends GetxController {
 
   bool get taxable => _taxable;
 
-  double get cost => _cost;
+  double? get cost => _cost;
 
-  double get totalCost => _totalCost;
+  double? get totalCost => _totalCost;
 
-  double get taxableAmount => _taxableAmount;
+  double? get taxableAmount => _taxableAmount;
 
-  double get discount => _discount;
+  double? get discount => _discount;
 
   DateTime get dob => _dob;
 
@@ -145,22 +145,22 @@ class EditBookingNewController extends GetxController {
     update();
   }
 
-  set discount(double value) {
+  set discount(double? value) {
     _discount = value;
     update();
   }
 
-  set taxableAmount(double value) {
+  set taxableAmount(double? value) {
     _taxableAmount = value;
     update();
   }
 
-  set totalCost(double value) {
+  set totalCost(double? value) {
     _totalCost = value;
     update();
   }
 
-  set cost(double value) {
+  set cost(double? value) {
     _cost = value;
     update();
   }
@@ -180,7 +180,7 @@ class EditBookingNewController extends GetxController {
     update();
   }
 
-  set isoCode(String value) {
+  set isoCode(String? value) {
     _isoCode = value;
     update();
   }

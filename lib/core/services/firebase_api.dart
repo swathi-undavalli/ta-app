@@ -14,7 +14,7 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 
 class FirebaseApi {
   static Future<DocumentSnapshot<Map<String, dynamic>>>
-      getEmployeeFullInformation(String employeeID) async {
+      getEmployeeFullInformation(String? employeeID) async {
     return await FirebaseFirestore.instance
         .collection('employees')
         .doc(employeeID)
@@ -37,7 +37,7 @@ class FirebaseApi {
     var date = DateFormat("dd-M-yyyy").format(dateTime);
     return await FirebaseFirestore.instance
         .collection('employees')
-        .doc(currentEmployee.id)
+        .doc(currentEmployee!.id)
         .collection('attendance')
         .doc(date)
         .get();
@@ -54,9 +54,9 @@ class FirebaseApi {
     await FirebaseFirestore.instance.runTransaction((transaction) async {
       log("addNewBooking2");
       DocumentSnapshot counterSnapshot = await transaction.get(counterRef);
-      Map<String, dynamic> data = counterSnapshot.data();
+      Map<String, dynamic> data = counterSnapshot.data() as Map<String, dynamic>;
       log("addNewBooking3");
-      int newBookingID = data["booking"] + 1;
+      int? newBookingID = data["booking"] + 1;
       DocumentReference bookingRef = FirebaseFirestore.instance
           .collection('bookings')
           .doc(newBookingID.toString());
@@ -112,8 +112,8 @@ class FirebaseApi {
 
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         var now = DateTime.now();
-        var shift = DateTime(0, 0, 0, currentEmployee.shiftTiming.hour,
-            currentEmployee.shiftTiming.minute);
+        var shift = DateTime(0, 0, 0, currentEmployee!.shiftTiming!.hour,
+            currentEmployee!.shiftTiming!.minute);
         var present = DateTime(0, 0, 0, now.hour, now.minute);
         var status = "On-Time";
         if (present.difference(shift).inMinutes > 10) status = "Late";
@@ -122,48 +122,48 @@ class FirebaseApi {
 
         var cData = await FirebaseFirestore.instance
             .collection('employees')
-            .doc(currentEmployee.id)
+            .doc(currentEmployee!.id)
             .collection('attendanceClock')
             .doc(DateFormat("MM-yyyy").format(DateTime.now()))
             .get();
-        Map<String, dynamic> clockData = cData.data();
+        Map<String, dynamic>? clockData = cData.data();
 
         if (clockData == null || clockData["clockDuration"] == null) {
           clockData = {};
           clockData["clockDuration"] =
-              getDifferenceInSeconds(currentEmployee.shiftTiming);
+              getDifferenceInSeconds(currentEmployee!.shiftTiming!);
         } else {
           var clock = clockData["clockDuration"];
-          clock = clock + getDifferenceInSeconds(currentEmployee.shiftTiming);
+          clock = clock + getDifferenceInSeconds(currentEmployee!.shiftTiming!);
           clockData["clockDuration"] = clock;
         }
 
         FirebaseFirestore.instance
             .collection('employees')
-            .doc(currentEmployee.id)
+            .doc(currentEmployee!.id)
             .collection('attendanceClock')
             .doc(DateFormat("MM-yyyy").format(DateTime.now()))
             .set(clockData);
 
         DocumentSnapshot counterSnapshot =
             await transaction.get(dailyAttendanceLog);
-        Map<String, dynamic> data = counterSnapshot.data();
+        Map<String, dynamic> data = counterSnapshot.data() as Map<String, dynamic>;
         EmployeeMiniModel newData = EmployeeMiniModel(
-          shiftTime: DateFormat("hh:mm:ss").format(currentEmployee.shiftTiming),
-          phone: currentEmployee.phoneNumber,
-          name: currentEmployee.firstName + " " + currentEmployee.lastName,
+          shiftTime: DateFormat("hh:mm:ss").format(currentEmployee!.shiftTiming!),
+          phone: currentEmployee!.phoneNumber,
+          name: currentEmployee!.firstName! + " " + currentEmployee!.lastName!,
           logTime: Timestamp.now(),
-          id: currentEmployee.id,
+          id: currentEmployee!.id,
           punctual: status,
         );
-        data[currentEmployee.id] = newData.toMap();
+        data[currentEmployee!.id!] = newData.toMap();
         transaction.update(dailyAttendanceLog, data);
       });
     }
 
     await FirebaseFirestore.instance
         .collection('employees')
-        .doc(currentEmployee.id)
+        .doc(currentEmployee!.id)
         .collection('attendance')
         .doc(date)
         .set(attendance.toMap());
@@ -189,7 +189,7 @@ class FirebaseApi {
           onSuccess(await v.ref.getDownloadURL());
         })
         .whenComplete(() => showToast("Pdf Upload Success"))
-        .onError((error, stackTrace) async {
+        .onError((dynamic error, stackTrace) async {
           showToast(error.toString());
         })
         .catchError((error) => showToast(error.toString()));
@@ -214,7 +214,7 @@ class FirebaseApi {
           onSuccess(await v.ref.getDownloadURL());
         })
         .whenComplete(() => showToast("Id proof upload Success"))
-        .onError((error, stackTrace) async {
+        .onError((dynamic error, stackTrace) async {
           showToast(error.toString());
         })
         .catchError((error) => showToast(error.toString()));

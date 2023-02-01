@@ -101,12 +101,12 @@ class _AttendanceReportWidgetState extends State<AttendanceReportWidget> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(e.name),
+                            Text(e.name!),
                             if (e.punctual == "Late")
                               Text(
                                 e.logTime != null
                                     ? DateFormat("hh : mm")
-                                        .format(e.logTime.toDate())
+                                        .format(e.logTime!.toDate())
                                     : "",
                                 style: TextStyle(
                                     color: Colors.red,
@@ -116,7 +116,7 @@ class _AttendanceReportWidgetState extends State<AttendanceReportWidget> {
                               Text(
                                 e.logTime != null
                                     ? DateFormat("hh : mm")
-                                        .format(e.logTime.toDate())
+                                        .format(e.logTime!.toDate())
                                     : "",
                                 style: TextStyle(
                                     color: Colors.green,
@@ -127,7 +127,7 @@ class _AttendanceReportWidgetState extends State<AttendanceReportWidget> {
                                 children: [
                                   if (e.punctual != "Absent")
                                     Text(
-                                      "${e.shiftTime.split(":")[0]} : ${e.shiftTime.split(":")[1]}",
+                                      "${e.shiftTime!.split(":")[0]} : ${e.shiftTime!.split(":")[1]}",
                                       style: TextStyle(
                                           color: Colors.red,
                                           fontSize: FontSize.small),
@@ -188,12 +188,12 @@ class _AttendanceReportWidgetState extends State<AttendanceReportWidget> {
     String title,
     Function onTap, {
     bool enable = false,
-    Color color,
-    int count,
+    Color? color,
+    int? count,
   }) {
     return Expanded(
       child: GestureDetector(
-        onTap: onTap,
+        onTap: onTap as void Function()?,
         child: Container(
           height: 30,
           margin: EdgeInsets.all(5),
@@ -343,7 +343,7 @@ class AttendanceReportWidgetLogic {
 
     //print(data);
 
-    Map<String, dynamic> fData = data.data();
+    Map<String, dynamic> fData = data.data()!;
     // log(fData.toString());
     // fData.forEach((key, value) {
     //   log(value.toString());
@@ -367,14 +367,14 @@ class AttendanceReportWidgetLogic {
           now.year,
           now.month,
           now.day,
-          int.parse(employee.shiftTime.split(":")[0]),
-          int.parse(employee.shiftTime.split(":")[1]),
-          int.parse(employee.shiftTime.split(":")[2]),
+          int.parse(employee.shiftTime!.split(":")[0]),
+          int.parse(employee.shiftTime!.split(":")[1]),
+          int.parse(employee.shiftTime!.split(":")[2]),
         );
 
         // log(employee.punctual);
         if (employee.logTime == null) {
-          log(employee.name + "   " + employee.id);
+          log(employee.name! + "   " + employee.id!);
           //log(DateTime.now().difference(empShiftTime).inHours.toString());
           if (DateTime.now().difference(empShiftTime).inHours >= 6) {
             employee.punctual = "Absent";
@@ -388,7 +388,7 @@ class AttendanceReportWidgetLogic {
     //print(controller.employeesList);
 
     controller.employeesList
-        .sort((a, b) => int.parse(a.id).compareTo(int.parse(b.id)));
+        .sort((a, b) => int.parse(a.id!).compareTo(int.parse(b.id!)));
 
     controller.employeesList.forEach((element) {
       // //print(element.punctual);
@@ -403,9 +403,9 @@ class AttendanceReportWidgetLogic {
             now.year,
             now.month,
             now.day,
-            int.parse(element.shiftTime.split(":")[0]),
-            int.parse(element.shiftTime.split(":")[1]),
-            int.parse(element.shiftTime.split(":")[2]),
+            int.parse(element.shiftTime!.split(":")[0]),
+            int.parse(element.shiftTime!.split(":")[1]),
+            int.parse(element.shiftTime!.split(":")[2]),
           ).difference(DateTime.now()).inMinutes <
           0) {
         // //log(DateTime(

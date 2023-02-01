@@ -3,25 +3,25 @@ import 'package:flutter/services.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 
 class AppTextField extends StatefulWidget {
-  int maxLimit;
-  int minLines;
-  int maxLines;
-  Widget icon;
+  int? maxLimit;
+  int? minLines;
+  int? maxLines;
+  Widget? icon;
   double width;
-  String hintText;
+  String? hintText;
   bool required;
-  Function(String) validator;
-  Function(String) onChangedCallBack;
-  TextEditingController controller;
-  Function errorValidator;
-  FocusNode focusNode;
-  FocusNode nextFocusNode;
-  TextInputType keyboardType;
+  Function(String?)? validator;
+  Function(String)? onChangedCallBack;
+  TextEditingController? controller;
+  Function? errorValidator;
+  FocusNode? focusNode;
+  FocusNode? nextFocusNode;
+  TextInputType? keyboardType;
   TextInputAction textInputAction;
   bool enableSuggestions;
-  Function finalSubmit;
+  Function? finalSubmit;
   // Function onChanged;
-  String labelText;
+  String? labelText;
   bool isStrictNumber;
 
   AppTextField({
@@ -84,7 +84,7 @@ class _AppTextFieldsState extends State<AppTextField> {
               fontWeight: FontWeight.bold,
             ),
             icon: widget.icon,
-            errorText: widget.errorValidator(),
+            errorText: widget.errorValidator!(),
             labelStyle: TextStyle(
               fontSize: FontSize.small,
               fontFamily: AppFonts.nunito,
@@ -92,20 +92,20 @@ class _AppTextFieldsState extends State<AppTextField> {
           ),
           onTap: () {},
           validator: (value) {
-            return widget.validator(value);
+            return widget.validator!(value);
           },
           onChanged: (value) {
             if (widget.onChangedCallBack != null)
-              widget.onChangedCallBack(value);
+              widget.onChangedCallBack!(value);
             if (widget.maxLimit != null && value.length == widget.maxLimit)
-              widget.nextFocusNode.requestFocus();
+              widget.nextFocusNode!.requestFocus();
             setState(() {});
           },
           onFieldSubmitted: (value) {
             if (widget.finalSubmit == null)
-              widget.nextFocusNode.requestFocus();
+              widget.nextFocusNode!.requestFocus();
             else
-              widget.finalSubmit();
+              widget.finalSubmit!();
           },
         ),
       ),

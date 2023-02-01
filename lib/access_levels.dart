@@ -81,36 +81,36 @@ var employees = [
 
 class EmployeeAccess extends StatelessWidget {
   final Widget child;
-  final bool access;
-  final bool showMessage;
+  final bool? access;
+  final bool? showMessage;
 
   EmployeeAccess(
-      {@required this.child, @required this.access, this.showMessage});
+      {required this.child, required this.access, this.showMessage});
 
   @override
   Widget build(BuildContext context) {
-    if ((access == null || !access) && showMessage != null && showMessage)
+    if ((access == null || !access!) && showMessage != null && showMessage!)
       return SizedBox(
         height: 300,
         child: Center(
           child: Text("You Don't have Access to this page"),
         ),
       );
-    if (access != null && access) return child;
+    if (access != null && access!) return child;
     return SizedBox();
   }
 
   static run({
-    @required Function function,
-    @required bool access,
+    required Function function,
+    required bool? access,
   }) {
     if (access != null && access) function();
   }
 }
 
 class AccessRights {
-  static AccessLevels get accessLevel {
-    return currentEmployee.accessLevels;
+  static AccessLevels? get accessLevel {
+    return currentEmployee!.accessLevels;
     // return AccessLevels(
     //   viewBookings: true,
     //   createBookings: true,
@@ -127,17 +127,17 @@ class AccessRights {
     // );
   }
 
-  static bool get viewBookings => accessLevel.viewBookings;
-  static bool get createBookings => accessLevel.createBookings;
-  static bool get editBookings => accessLevel.editBookings;
-  static bool get viewEmployees => accessLevel.viewEmployees;
-  static bool get createEmployees => accessLevel.createEmployees;
-  static bool get editEmployees => accessLevel.editEmployees;
-  static bool get personalProfileEdit => accessLevel.personalProfileEdit;
-  static bool get personalAttendanceReport =>
-      accessLevel.personalAttendanceReport;
-  static bool get attendanceReport => accessLevel.attendanceReport;
-  static bool get weatherReport => accessLevel.weatherReport;
-  static bool get editActivityPrices => accessLevel.editActivityPrices;
-  static bool get addActivity => accessLevel.addActivity;
+  static bool? get viewBookings => accessLevel!.viewBookings;
+  static bool? get createBookings => accessLevel!.createBookings;
+  static bool? get editBookings => accessLevel!.editBookings;
+  static bool? get viewEmployees => accessLevel!.viewEmployees;
+  static bool? get createEmployees => accessLevel!.createEmployees;
+  static bool? get editEmployees => accessLevel!.editEmployees;
+  static bool? get personalProfileEdit => accessLevel!.personalProfileEdit;
+  static bool? get personalAttendanceReport =>
+      accessLevel!.personalAttendanceReport;
+  static bool? get attendanceReport => accessLevel!.attendanceReport;
+  static bool? get weatherReport => accessLevel!.weatherReport;
+  static bool? get editActivityPrices => accessLevel!.editActivityPrices;
+  static bool? get addActivity => accessLevel!.addActivity;
 }

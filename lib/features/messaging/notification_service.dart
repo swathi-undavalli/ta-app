@@ -45,8 +45,8 @@ class  LocalNotificationService {
 
       await _notificationsPlugin.show(
         id,
-        message.notification.title,
-        message.notification.body,
+        message.notification!.title,
+        message.notification!.body,
         notificationDetails,
       );
     } catch (e) {

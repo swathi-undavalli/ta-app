@@ -15,7 +15,7 @@ class PaymentDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar() as PreferredSizeWidget?,
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
@@ -155,7 +155,7 @@ class PaymentDetailsScreen extends StatelessWidget {
                 value: controller.paymentModeTED.text.isNotEmpty
                     ? controller.paymentModeTED.text
                     : null,
-                onChanged: (mode) {
+                onChanged: (dynamic mode) {
                   controller.paymentModeTED.text = mode;
                   controller.update();
                 },

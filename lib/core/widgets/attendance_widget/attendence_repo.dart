@@ -9,7 +9,7 @@ import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 class AttendanceRepo {
-  static Attendance attendance;
+  static late Attendance attendance;
 
   /// syncs firebase data with local data.
   static synchronize() async {
@@ -62,7 +62,7 @@ class AttendanceRepo {
     var data = await FirebaseApi.getAttendance(date);
     //print(data.data());
     //print("=======================");
-    return Attendance.fromMap(data.data());
+    return Attendance.fromMap(data.data()!);
   }
 
   static updateAttendance(Attendance attendance) async {
@@ -70,35 +70,87 @@ class AttendanceRepo {
   }
 
   static Future<String> getUserPosition() async {
-    Position position = await GeolocatorPlatform.instance
-        .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
+    Position position = await GeolocatorPlatform.instance.getCurrentPosition(
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
     //print("+++++++++++++++++++++++");
     //print(position.latitude);
     //print(position.longitude);
-    position = await GeolocatorPlatform.instance
-        .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
-    position = await GeolocatorPlatform.instance
-        .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
-    position = await GeolocatorPlatform.instance
-        .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
-    position = await GeolocatorPlatform.instance
-        .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
-    position = await GeolocatorPlatform.instance
-        .getCurrentPosition(locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
+    position = await GeolocatorPlatform.instance.getCurrentPosition(
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
+    position = await GeolocatorPlatform.instance.getCurrentPosition(
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
+    position = await GeolocatorPlatform.instance.getCurrentPosition(
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
+    position = await GeolocatorPlatform.instance.getCurrentPosition(
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
+    position = await GeolocatorPlatform.instance.getCurrentPosition(
+        locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
     Position currentPosition = position;
 
-    Position templeAdventuresPondicherry =
-        Position(latitude: 11.9224978, longitude: 79.8280985);
-    Position templeAdventuresPondicherryClassRoom =
-        Position(latitude: 11.9235666, longitude: 79.827048);
-    Position templeAdventuresChennai =
-        Position(latitude: 12.940611194153405, longitude: 80.25962182954129);
-    Position devHome = Position(latitude: 11.9814072, longitude: 79.8449049);
-    Position dashAndSims =
-        Position(latitude: 11.9874156, longitude: 79.8371414);
-    Position swathiHome = Position(latitude: 16.9529061, longitude: 81.7113184);
+    Position templeAdventuresPondicherry = Position(
+        latitude: 11.9224978,
+        longitude: 79.8280985,
+        timestamp: DateTime.now(),
+        accuracy: 0.0,
+        altitude: 0.0,
+        heading: 0.0,
+        speed: 0.0,
+        speedAccuracy: 0.0);
+    Position templeAdventuresPondicherryClassRoom = Position(
+        latitude: 11.9235666,
+        longitude: 79.827048,
+        timestamp: DateTime.now(),
+        accuracy: 0.0,
+        altitude: 0.0,
+        heading: 0.0,
+        speed: 0.0,
+        speedAccuracy: 0.0);
+    Position templeAdventuresChennai = Position(
+        latitude: 12.940611194153405,
+        longitude: 80.25962182954129,
+        timestamp: DateTime.now(),
+        accuracy: 0.0,
+        altitude: 0.0,
+        heading: 0.0,
+        speed: 0.0,
+        speedAccuracy: 0.0);
+    Position devHome = Position(
+        latitude: 11.9814072,
+        longitude: 79.8449049,
+        timestamp: DateTime.now(),
+        accuracy: 0.0,
+        altitude: 0.0,
+        heading: 0.0,
+        speed: 0.0,
+        speedAccuracy: 0.0);
+    Position dashAndSims = Position(
+        latitude: 11.9874156,
+        longitude: 79.8371414,
+        timestamp: DateTime.now(),
+        accuracy: 0.0,
+        altitude: 0.0,
+        heading: 0.0,
+        speed: 0.0,
+        speedAccuracy: 0.0);
+    Position swathiHome = Position(
+        latitude: 16.9529061,
+        longitude: 81.7113184,
+        timestamp: DateTime.now(),
+        accuracy: 0.0,
+        altitude: 0.0,
+        heading: 0.0,
+        speed: 0.0,
+        speedAccuracy: 0.0);
 
-    Position kameshHome = Position(latitude: 16.9041354, longitude: 81.6711417);
+    Position kameshHome = Position(
+        latitude: 16.9041354,
+        longitude: 81.6711417,
+        timestamp: DateTime.now(),
+        accuracy: 0.0,
+        altitude: 0.0,
+        heading: 0.0,
+        speed: 0.0,
+        speedAccuracy: 0.0);
 
     //print(Geo.getDistance(currentPosition, templeAdventuresPondicherryClassRoom));
 

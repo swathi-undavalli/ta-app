@@ -5,11 +5,11 @@ import 'package:temple_adventures/core/constants/constants.dart';
 
 class Seat extends StatefulWidget {
   Seat(
-      {Key key,
-      @required this.selected,
-      @required this.enabled,
+      {Key? key,
+      required this.selected,
+      required this.enabled,
       this.isFixed = false,
-      @required this.onSelected})
+      required this.onSelected})
       : super(key: key);
 
   bool selected;
@@ -22,8 +22,8 @@ class Seat extends StatefulWidget {
 }
 
 class _SeatState extends State<Seat> {
-  Color borderColor, color, seatNoColor;
-  int seatNo;
+  Color? borderColor, color, seatNoColor;
+  int? seatNo;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +60,7 @@ class _SeatState extends State<Seat> {
           decoration: BoxDecoration(
             borderRadius: BorderRadiusDirectional.circular(4),
             border: Border.all(
-                color: widget.isFixed ? Colors.grey : borderColor, width: 1),
+                color: widget.isFixed ? Colors.grey : borderColor!, width: 1),
             color: widget.isFixed ? Colors.grey.withOpacity(0.7) : color,
           ),
           child: Center(

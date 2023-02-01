@@ -29,7 +29,7 @@ class AllIDProofsScreen extends StatelessWidget {
     return Stack(
       children: [
         Scaffold(
-          appBar: buildAppBar(),
+          appBar: buildAppBar() as PreferredSizeWidget?,
           body: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
             child: SafeArea(
@@ -43,7 +43,7 @@ class AllIDProofsScreen extends StatelessWidget {
                       child: PageView(
                         controller: controller,
                         children: <Widget>[
-                          ...idProofController.idProofs.map(
+                          ...idProofController.idProofs!.map(
                             (e) {
                               return buildIDProof(image: e);
                             },
@@ -65,7 +65,7 @@ class AllIDProofsScreen extends StatelessWidget {
                             onTap: () async {
                               idProofController.shareLoading = true;
                               final urlImage = idProofController
-                                  .idProofs[controller.page.toInt()];
+                                  .idProofs![controller.page!.toInt()]!;
                               final url = Uri.parse(urlImage);
                               final response = await http.get(url);
                               final bytes = response.bodyBytes;
@@ -96,7 +96,7 @@ class AllIDProofsScreen extends StatelessWidget {
                               //   await Permission.storage.request();
                               // }
                               String url = idProofController
-                                  .idProofs[controller.page.toInt()];
+                                  .idProofs![controller.page!.toInt()]!;
                               // String url =
                               //     "https://media.wired.com/photos/5fb70f2ce7b75db783b7012c/master/pass/Gear-Photos-597589287.jpg";
                               GallerySaver.saveImage(url).then((value) {
@@ -118,14 +118,14 @@ class AllIDProofsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildIcons({IconData icon, Function onTap, String iconName}) {
+  Widget buildIcons({IconData? icon, Function? onTap, required String iconName}) {
     return Column(
       children: [
         IconButton(
           iconSize: 20,
           icon: Icon(icon),
           color: AppColors.text.black,
-          onPressed: onTap,
+          onPressed: onTap as void Function()?,
         ),
         Text(
           iconName,
@@ -145,7 +145,7 @@ class AllIDProofsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildIDProof({String image}) {
+  Widget buildIDProof({String? image}) {
     return GestureDetector(
       onTap: () {
         // Get.bottomSheet(

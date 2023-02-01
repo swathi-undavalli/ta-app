@@ -18,8 +18,8 @@ class BoatWidget extends StatefulWidget {
   final BoatPassengersModel boatPassengersModel;
 
   BoatWidget({
-    @required this.boat,
-    @required this.boatPassengersModel,
+    required this.boat,
+    required this.boatPassengersModel,
   });
 
   @override
@@ -36,22 +36,22 @@ class _BoatWidgetState extends State<BoatWidget> {
     List<Passenger> passengers = [];
     List<Freelancer> freelancers = [];
 
-    widget.boatPassengersModel.passenger.forEach((passenger) {
+    widget.boatPassengersModel.passenger!.forEach((passenger) {
       if (passenger.boatID == widget.boat.id) {
         bookedSeats++;
       }
     });
-    widget.boatPassengersModel.employees.forEach((employee) {
+    widget.boatPassengersModel.employees!.forEach((employee) {
       if (employee.boatID == widget.boat.id) {
         employees.add(employee);
       }
     });
-    widget.boatPassengersModel.passenger.forEach((passenger) {
+    widget.boatPassengersModel.passenger!.forEach((passenger) {
       if (passenger.boatID == widget.boat.id) {
         passengers.add(passenger);
       }
     });
-    widget.boatPassengersModel.freelancer.forEach((freelancer) {
+    widget.boatPassengersModel.freelancer!.forEach((freelancer) {
       if (freelancer.boatID == widget.boat.id) {
         freelancers.add(freelancer);
       }
@@ -90,7 +90,7 @@ class _BoatWidgetState extends State<BoatWidget> {
                       Container(
                         width: 100,
                         child: Text(
-                          widget.boat.boatName,
+                          widget.boat.boatName!,
                           overflow: TextOverflow.ellipsis,
                           style: TextStyle(
                               color: AppColors.text.black,
@@ -133,7 +133,7 @@ class _BoatWidgetState extends State<BoatWidget> {
                         builder: (context, snapshot) {
                           log(bookedSeats.toString());
                           log(widget.boat.capacity.toString());
-                          log(widget.boatPassengersModel.passenger.length
+                          log(widget.boatPassengersModel.passenger!.length
                               .toString());
                           if (snapshot.connectionState == ConnectionState.done)
                             return Column(
@@ -145,7 +145,7 @@ class _BoatWidgetState extends State<BoatWidget> {
                                   alignment: Alignment.center,
                                   child: Stack(
                                     children: [
-                                      (widget.boat.ocean)
+                                      widget.boat.ocean!
                                           ? Padding(
                                               padding: const EdgeInsets.only(
                                                   right: 20.0),
@@ -164,8 +164,8 @@ class _BoatWidgetState extends State<BoatWidget> {
                                               ),
                                             ),
                                       Positioned(
-                                        left: (widget.boat.ocean) ? 80 : 65,
-                                        top: (widget.boat.ocean) ? 5 : 15,
+                                        left: widget.boat.ocean! ? 80 : 65,
+                                        top: widget.boat.ocean! ? 5 : 15,
                                         bottom: 5,
                                         child: Container(
                                           height: 400,
@@ -184,7 +184,7 @@ class _BoatWidgetState extends State<BoatWidget> {
                                                           .text.lightSkyBlue);
                                                 }),
                                                 ...List.generate(
-                                                    (widget.boat.capacity -
+                                                    (widget.boat.capacity! -
                                                         bookedSeats), (index) {
                                                   return buildSeat(
                                                       borderColor:
@@ -217,12 +217,12 @@ class _BoatWidgetState extends State<BoatWidget> {
                                     Expanded(
                                       child: buildCaptainName(
                                           icon: AppImages.icon.captain,
-                                          name: widget.boat.captainName),
+                                          name: widget.boat.captainName!),
                                     ),
                                     Expanded(
                                       child: buildCaptainPhone(
                                           icon: Icons.phone,
-                                          phoneNumber: widget.boat.phoneNumber),
+                                          phoneNumber: widget.boat.phoneNumber!),
                                     ),
                                   ],
                                 ),
@@ -244,7 +244,7 @@ class _BoatWidgetState extends State<BoatWidget> {
                                                 padding:
                                                     const EdgeInsets.all(5.0),
                                                 child: Text(
-                                                  e.name,
+                                                  e.name!,
                                                   style:
                                                       TextStyle(fontSize: 12),
                                                 ),
@@ -276,7 +276,7 @@ class _BoatWidgetState extends State<BoatWidget> {
                                                 padding:
                                                     const EdgeInsets.all(5.0),
                                                 child: Text(
-                                                  e.name,
+                                                  e.name!,
                                                   style:
                                                       TextStyle(fontSize: 12),
                                                 ),
@@ -330,7 +330,7 @@ class _BoatWidgetState extends State<BoatWidget> {
     );
   }
 
-  Widget buildStatusName({@required String title}) {
+  Widget buildStatusName({required String title}) {
     return Text(
       title,
       style: TextStyle(
@@ -340,7 +340,7 @@ class _BoatWidgetState extends State<BoatWidget> {
     );
   }
 
-  Widget buildSeat({Color borderColor, Color color}) {
+  Widget buildSeat({required Color borderColor, Color? color}) {
     return Padding(
       padding: const EdgeInsets.only(left: 3.5, top: 6),
       child: Container(
@@ -354,7 +354,7 @@ class _BoatWidgetState extends State<BoatWidget> {
     );
   }
 
-  Widget buildCaptainName({@required String icon, @required String name}) {
+  Widget buildCaptainName({required String icon, required String name}) {
     return Row(
       children: [
         TAImage(
@@ -377,7 +377,7 @@ class _BoatWidgetState extends State<BoatWidget> {
   }
 
   Widget buildCaptainPhone(
-      {@required IconData icon, @required String phoneNumber}) {
+      {required IconData icon, required String phoneNumber}) {
     return GestureDetector(
       onTap: () {
         makingPhoneCall(phoneNumber);
@@ -406,7 +406,7 @@ class _BoatWidgetState extends State<BoatWidget> {
     }
   }
 
-  Widget buildBoatStatus({String totalAmount, List<double> payments}) {
+  Widget buildBoatStatus({String? totalAmount, List<double>? payments}) {
     return Row(
       children: [
         buildCircle(),
@@ -418,7 +418,7 @@ class _BoatWidgetState extends State<BoatWidget> {
     );
   }
 
-  Widget buildCircle({Color color}) {
+  Widget buildCircle({Color? color}) {
     return Icon(
       Icons.circle,
       size: 10,
@@ -442,7 +442,7 @@ class _BoatWidgetState extends State<BoatWidget> {
     );
   }
 
-  Widget buildSideHeading({String text}) {
+  Widget buildSideHeading({required String text}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -471,7 +471,7 @@ class _BoatWidgetState extends State<BoatWidget> {
   }
 
   Widget buildSeatColorRepresentation(
-      {Color borderColor, Color color, String text}) {
+      {required Color borderColor, Color? color, required String text}) {
     return Row(
       children: [
         Container(
@@ -493,10 +493,10 @@ class _BoatWidgetState extends State<BoatWidget> {
   }
 
   Widget seatsAvailability(
-      {@required String name,
-      @required String value,
-      @required double fontSize,
-      @required Color valueColour}) {
+      {required String name,
+      required String value,
+      required double fontSize,
+      required Color valueColour}) {
     return Text.rich(
       TextSpan(
         children: [
@@ -520,7 +520,7 @@ class _BoatWidgetState extends State<BoatWidget> {
     );
   }
 
-  Widget buildText({@required String text, @required String value}) {
+  Widget buildText({required String text, required String value}) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -539,12 +539,12 @@ class _BoatWidgetState extends State<BoatWidget> {
     );
   }
 
-  Widget buildPassengers(String boatId) {
-    Map<String, List<Passenger>> passengersBasedOnBookingId = {};
+  Widget buildPassengers(String? boatId) {
+    Map<String?, List<Passenger>> passengersBasedOnBookingId = {};
 
-    widget.boatPassengersModel.passenger.forEach((passenger) {
+    widget.boatPassengersModel.passenger!.forEach((passenger) {
       if (passengersBasedOnBookingId.containsKey(passenger.bookingID)) {
-        passengersBasedOnBookingId[passenger.bookingID].add(passenger);
+        passengersBasedOnBookingId[passenger.bookingID]!.add(passenger);
       } else {
         passengersBasedOnBookingId[passenger.bookingID] = [passenger];
       }
@@ -567,8 +567,8 @@ class _BoatWidgetState extends State<BoatWidget> {
 }
 
 class PassengersList extends StatelessWidget {
-  final String bookingId;
-  final String boatId;
+  final String? bookingId;
+  final String? boatId;
   final List<Passenger> passengers;
   PassengersList(this.bookingId, this.boatId, this.passengers);
 
@@ -587,7 +587,7 @@ class PassengersList extends StatelessWidget {
         child: Wrap(
           children: [
             Text(
-              bookingId,
+              bookingId!,
               style: TextStyle(
                   fontSize: 7,
                   color: AppColors.background.skyBlue,
@@ -596,7 +596,7 @@ class PassengersList extends StatelessWidget {
             ...passengers
                 .map(
                   (e) => Text(
-                    e.name.capitalizeFirst,
+                    e.name!.capitalizeFirst!,
                     style: TextStyle(fontSize: 12),
                   ).paddingOnly(right: 5),
                 )

@@ -49,8 +49,8 @@ class ShareBookingDetails {
           pw.SizedBox(height: 33),
           pw.Center(
             child: pw.Text(
-              "${booking.pax[0]["first-name"] + " " + booking.pax[0]["last-name"]}'s"
-                  .capitalizeFirst,
+              "${booking.pax![0]["first-name"] + " " + booking.pax![0]["last-name"]}'s"
+                  .capitalizeFirst!,
               style: pw.TextStyle(
                 fontSize: 25,
                 color: PdfColors.black,
@@ -60,7 +60,7 @@ class ShareBookingDetails {
           pw.SizedBox(height: 10),
           pw.Center(
             child: pw.Text(
-              booking.activity[0].name,
+              booking.activity![0]!.name!,
               style: pw.TextStyle(
                 fontSize: 20,
                 color: PdfColor.fromInt(0xff737373),
@@ -76,18 +76,18 @@ class ShareBookingDetails {
               buildBookingDetails(title: "Booking ID", text: booking.id),
               buildBookingDetails(
                   title: "Name",
-                  text: booking.pax[0]["first-name"] +
+                  text: booking.pax![0]["first-name"] +
                       " " +
-                      booking.pax[0]["last-name"]),
+                      booking.pax![0]["last-name"]),
               buildBookingDetails(
                   title: "Pax", text: booking.noOfPersons.toString()),
               buildBookingDetails(
-                  title: "Email ID", text: booking.pax[0]["email"]),
+                  title: "Email ID", text: booking.pax![0]["email"]),
               buildBookingDetails(
-                  title: "Activity", text: booking.activity[0].name),
-              buildDates(title: "Dive Dates", dates: booking.diveDate),
-              buildDates(title: "Theory Dates", dates: booking.theoryDate),
-              buildDates(title: "Pool Dates", dates: booking.poolDate),
+                  title: "Activity", text: booking.activity![0]!.name),
+              buildDates(title: "Dive Dates", dates: booking.diveDate!),
+              buildDates(title: "Theory Dates", dates: booking.theoryDate!),
+              buildDates(title: "Pool Dates", dates: booking.poolDate!),
             ],
           ),
           pw.SizedBox(height: 20),
@@ -101,10 +101,10 @@ class ShareBookingDetails {
                   text: (booking.totalCost.toStringAsFixed(0)) + " /-"),
               buildBookingDetails(
                   title: "Deposit",
-                  text: booking.paid.toStringAsFixed(0) + " /-"),
+                  text: booking.paid!.toStringAsFixed(0) + " /-"),
               buildBookingDetails(
                   title: "Balance",
-                  text: (booking.totalCost - booking.paid).toStringAsFixed(0) +
+                  text: (booking.totalCost - booking.paid!).toStringAsFixed(0) +
                       " /-"),
               buildBookingDetails(
                   title: "Receipt No", text: booking.receiptNo ?? "-"),
@@ -141,7 +141,7 @@ class ShareBookingDetails {
     return saveDocument(name: 'ID: ${booking.id} BookingDetails.pdf', pdf: pdf);
   }
 
-  static Future<File> saveDocument({String name, pw.Document pdf}) async {
+  static Future<File> saveDocument({String? name, required pw.Document pdf}) async {
     final bytes = await pdf.save();
 
     final dir = await getApplicationDocumentsDirectory();
@@ -175,7 +175,7 @@ class ShareBookingDetails {
     return file;
   }
 
-  static pw.Widget buildSectionTitle({String title}) {
+  static pw.Widget buildSectionTitle({required String title}) {
     return pw.Text(
       title,
       style: pw.TextStyle(
@@ -203,7 +203,7 @@ class ShareBookingDetails {
           buildListOfPayments(
             payments: [
               PaymentModel(
-                amount: (booking.paid).roundToDouble(),
+                amount: booking.paid!.roundToDouble(),
                 collectedBy: booking.employeeName,
                 reciptNo: booking.receiptNo,
                 referenceNo: booking.paymentTransactionId,
@@ -211,7 +211,7 @@ class ShareBookingDetails {
                 paymentMode: booking.paymentMode,
                 time: booking.createdAt,
               ),
-              ...booking.payments,
+              ...booking.payments!,
             ],
           ),
           // ...List.generate(
@@ -228,7 +228,7 @@ class ShareBookingDetails {
     );
   }
 
-  static pw.Widget buildListOfPayments({List<PaymentModel> payments}) {
+  static pw.Widget buildListOfPayments({required List<PaymentModel> payments}) {
     return pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -242,7 +242,7 @@ class ShareBookingDetails {
     );
   }
 
-  static pw.Widget buildTransaction({PaymentModel payment}) {
+  static pw.Widget buildTransaction({required PaymentModel payment}) {
     DateTime now = DateTime.now();
     return pw.Padding(
       padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
@@ -251,7 +251,7 @@ class ShareBookingDetails {
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Text(
-            "Payment ${payment.amount.round()} by ${payment.paymentMode ?? "-"} collected by ${payment.collectedBy}",
+            "Payment ${payment.amount!.round()} by ${payment.paymentMode ?? "-"} collected by ${payment.collectedBy}",
             style: pw.TextStyle(
                 fontSize: 14,
                 // fontWeight: pw.FontWeight.w600,
@@ -260,16 +260,16 @@ class ShareBookingDetails {
           ),
           pw.SizedBox(height: 2),
           if (payment.time != null &&
-              now.day == payment.time.day &&
-              now.month == payment.time.month &&
-              now.year == payment.time.year)
+              now.day == payment.time!.day &&
+              now.month == payment.time!.month &&
+              now.year == payment.time!.year)
             pw.Text(
-              "Today - ${DateFormat("hh:mm a").format(payment.time)}",
+              "Today - ${DateFormat("hh:mm a").format(payment.time!)}",
               style: pw.TextStyle(fontSize: 12, color: PdfColors.grey),
             )
           else if (payment.time != null)
             pw.Text(
-              DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time),
+              DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time!),
               style: pw.TextStyle(
                 fontSize: 12,
                 color: PdfColors.grey,
@@ -288,7 +288,7 @@ class ShareBookingDetails {
     );
   }
 
-  static pw.Widget buildBookingDetails({String title, String text}) {
+  static pw.Widget buildBookingDetails({required String title, String? text}) {
     return pw.Padding(
       padding: pw.EdgeInsets.only(top: 5, bottom: 5),
       child: pw.Row(
@@ -319,7 +319,7 @@ class ShareBookingDetails {
     );
   }
 
-  static pw.Widget buildDates({String title, List<DateTime> dates}) {
+  static pw.Widget buildDates({required String title, required List<DateTime?> dates}) {
     return pw.Padding(
       padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
       child: pw.Row(
@@ -338,7 +338,7 @@ class ShareBookingDetails {
             children: [
               ...dates.map(
                 (e) {
-                  String date = DateFormat('dd-MM-yyyy @ hh:mm a').format(e);
+                  String date = DateFormat('dd-MM-yyyy @ hh:mm a').format(e!);
                   return pw.Container(
                     width: 200,
                     child: pw.Text(

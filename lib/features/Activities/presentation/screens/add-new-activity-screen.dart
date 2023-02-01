@@ -12,7 +12,7 @@ class AddNewActivityScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar() as PreferredSizeWidget?,
       body: WillPopScope(
         onWillPop: () async {
           logic.controller.reset();
@@ -100,7 +100,7 @@ class AddNewActivityScreen extends StatelessWidget {
           value: controller.priorityTED.text.isNotEmpty
               ? controller.priorityTED.text
               : null,
-          onChanged: (priority) {
+          onChanged: (dynamic priority) {
             controller.priorityTED.text = priority;
             controller.update();
           },
@@ -126,7 +126,7 @@ class AddNewActivityScreen extends StatelessWidget {
           value: controller.colorTED.text.isNotEmpty
               ? controller.colorTED.text
               : null,
-          onChanged: (newColor) {
+          onChanged: (dynamic newColor) {
             controller.colorTED.text = newColor;
             controller.update();
           },
@@ -192,11 +192,11 @@ class AddNewActivityScreen extends StatelessWidget {
   }
 
   Widget buildTextFields(
-      {String name,
-      TextEditingController textEditingController,
-      FocusNode focusNode,
-      FocusNode nextFocusNode,
-      TextInputType keyBoardType}) {
+      {String? name,
+      TextEditingController? textEditingController,
+      FocusNode? focusNode,
+      FocusNode? nextFocusNode,
+      TextInputType? keyBoardType}) {
     return GetBuilder<AddNewActivityController>(builder: (controller) {
       return AppTextField(
         hintText: name,

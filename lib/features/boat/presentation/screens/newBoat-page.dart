@@ -19,7 +19,7 @@ class NewBoatPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar() as PreferredSizeWidget?,
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: WillPopScope(
@@ -119,7 +119,7 @@ class NewBoatPage extends StatelessWidget {
           value: controller.captainNameTED.text.isNotEmpty
               ? controller.captainNameTED.text
               : null,
-          onChanged: (employee) {
+          onChanged: (dynamic employee) {
             controller.captainNameTED.text = employee;
             controller.update();
           },
@@ -161,7 +161,7 @@ class NewBoatPage extends StatelessWidget {
           onSubmitted: (_) {},
           onChanged: (phone) {
             controller.countryCodeTED.text = phone.countryCode;
-            controller.phoneTED.text = phone.number;
+            controller.phoneTED.text = phone.number!;
             controller.isoCode = phone.countryISOCode;
             //print(phone.number);
             //print(phone.countryCode);
@@ -199,7 +199,7 @@ class NewBoatPage extends StatelessWidget {
     );
   }
 
-  Widget buildSwitch({String text, Function onChanged, bool switchValue}) {
+  Widget buildSwitch({required String text, Function? onChanged, required bool switchValue}) {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20),
       child: Row(
@@ -214,7 +214,7 @@ class NewBoatPage extends StatelessWidget {
           ),
           Switch(
             value: switchValue,
-            onChanged: onChanged,
+            onChanged: onChanged as void Function(bool)?,
             activeColor: AppColors.text.skyBlue,
             inactiveThumbColor: AppColors.text.grey,
           ),
@@ -242,11 +242,11 @@ class NewBoatPage extends StatelessWidget {
   }
 
   Widget buildTextFields(
-      {String name,
-      TextEditingController textEditingController,
-      FocusNode focusNode,
-      FocusNode nextFocusNode,
-      TextInputType keyBoardType}) {
+      {String? name,
+      TextEditingController? textEditingController,
+      FocusNode? focusNode,
+      FocusNode? nextFocusNode,
+      TextInputType? keyBoardType}) {
     return AppTextField(
       hintText: name,
       controller: textEditingController,

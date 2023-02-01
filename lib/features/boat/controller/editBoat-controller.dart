@@ -10,7 +10,7 @@ class EditBoatLogic {
 }
 
 class EditBoatController extends GetxController {
-  BoatsModel boatsModel;
+  BoatsModel? boatsModel;
   TextEditingController boatCapacityTED = TextEditingController();
   TextEditingController captainNameTED = TextEditingController();
   TextEditingController phoneTED = TextEditingController();
@@ -20,7 +20,7 @@ class EditBoatController extends GetxController {
   FocusNode captainNameNode = FocusNode();
   FocusNode phoneNode = FocusNode();
 
-  String _boatName;
+  String? _boatName;
 
   reset() {
     boatCapacityTED.text = "";
@@ -28,13 +28,13 @@ class EditBoatController extends GetxController {
     phoneTED.text = "";
   }
 
-  int _employeeCount;
+  int? _employeeCount;
 
   bool _showLoading = true;
 
-  String get boatName => _boatName;
+  String? get boatName => _boatName;
 
-  int get employeeCount => _employeeCount;
+  int? get employeeCount => _employeeCount;
 
   bool get showLoading => _showLoading;
 
@@ -43,23 +43,23 @@ class EditBoatController extends GetxController {
     update();
   }
 
-  set boatName(String value) {
+  set boatName(String? value) {
     _boatName = value;
     update();
   }
 
-  set employeeCount(int value) {
+  set employeeCount(int? value) {
     _employeeCount = value;
     update();
   }
 
   List<Employee> allEmployeesList = [];
 
-  String _isoCode = "IN";
+  String? _isoCode = "IN";
 
-  String get isoCode => _isoCode;
+  String? get isoCode => _isoCode;
 
-  set isoCode(String value) {
+  set isoCode(String? value) {
     _isoCode = value;
     update();
   }

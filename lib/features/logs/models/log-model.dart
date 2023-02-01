@@ -10,7 +10,7 @@ String logModelToMap(LogModel data) => json.encode(data.toMap());
 
 class LogModel {
   LogModel({
-    @required this.type,
+    required this.type,
     this.createdBy,
     this.timeStamp,
     this.bookingId,
@@ -18,15 +18,15 @@ class LogModel {
     this.employeeName,
   }) {
     if (timeStamp == null) timeStamp = Timestamp.fromDate(DateTime.now());
-    if (createdBy == null) createdBy = currentEmployee.name;
+    if (createdBy == null) createdBy = currentEmployee!.name;
   }
 
   LogType type;
-  String createdBy;
-  Timestamp timeStamp;
-  String bookingId;
-  String activityName;
-  String employeeName;
+  String? createdBy;
+  Timestamp? timeStamp;
+  String? bookingId;
+  String? activityName;
+  String? employeeName;
 
   factory LogModel.fromMap(Map<String, dynamic> json) => LogModel(
         type: convertToEnum(json["type"]),
@@ -47,7 +47,7 @@ class LogModel {
       };
 }
 
-convertToEnum(String e) {
+convertToEnum(String? e) {
   switch (e) {
     case "bookingCreated":
       return LogType.bookingCreated;

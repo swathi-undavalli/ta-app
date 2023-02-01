@@ -213,7 +213,7 @@ class FreelanceDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildEmployeeInfo({String subHeading, String text}) {
+  Widget buildEmployeeInfo({required String subHeading, required String text}) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
@@ -260,7 +260,7 @@ class FreelanceDetailsScreen extends StatelessWidget {
 
   Widget buildIcons(IconData icon, Function onTap) {
     return GestureDetector(
-      onTap: onTap,
+      onTap: onTap as void Function()?,
       child: Container(
         height: 35,
         width: 35,
@@ -296,38 +296,38 @@ class FreelanceDetailsScreen extends StatelessWidget {
     // .doc("employeeData")
         .get();
     if (info.data() != null) {
-      Employee employee = Employee.fromMap(info.data());
+      Employee employee = Employee.fromMap(info.data()!);
       //print(info.data());
-      final DateTime date = employee.shiftTiming;
+      final DateTime date = employee.shiftTiming!;
       final DateFormat formatter = DateFormat('HH-mm-ss a');
       final String shiftTiming = formatter.format(date);
-      logic.controller.freelanceIdTED.text = employee.id;
-      logic.controller.firstNameTED.text = employee.firstName;
-      logic.controller.lastNameTED.text = employee.lastName;
+      logic.controller.freelanceIdTED.text = employee.id!;
+      logic.controller.firstNameTED.text = employee.firstName!;
+      logic.controller.lastNameTED.text = employee.lastName!;
       logic.controller.shiftTimeTED.text = shiftTiming;
-      logic.controller.phoneNumberTED.text = employee.phoneNumber;
-      logic.controller.countryCodeTED.text = employee.countryCode;
+      logic.controller.phoneNumberTED.text = employee.phoneNumber!;
+      logic.controller.countryCodeTED.text = employee.countryCode!;
       logic.controller.countryISoCOde = employee.countryIsoCode;
-      logic.controller.genderTED.text = employee.gender;
-      logic.controller.roleTED.text = employee.role;
+      logic.controller.genderTED.text = employee.gender!;
+      logic.controller.roleTED.text = employee.role!;
 
-      logic.controller.viewBookings = employee.accessLevels.viewBookings;
-      logic.controller.createBookings = employee.accessLevels.createBookings;
-      logic.controller.editBookings = employee.accessLevels.editBookings;
-      logic.controller.viewEmployees = employee.accessLevels.viewEmployees;
-      logic.controller.createEmployees = employee.accessLevels.createEmployees;
-      logic.controller.editEmployees = employee.accessLevels.editEmployees;
-      logic.controller.notifications = employee.accessLevels.notifications;
+      logic.controller.viewBookings = employee.accessLevels!.viewBookings;
+      logic.controller.createBookings = employee.accessLevels!.createBookings;
+      logic.controller.editBookings = employee.accessLevels!.editBookings;
+      logic.controller.viewEmployees = employee.accessLevels!.viewEmployees;
+      logic.controller.createEmployees = employee.accessLevels!.createEmployees;
+      logic.controller.editEmployees = employee.accessLevels!.editEmployees;
+      logic.controller.notifications = employee.accessLevels!.notifications;
       logic.controller.personalProfileEdit =
-          employee.accessLevels.personalProfileEdit;
+          employee.accessLevels!.personalProfileEdit;
       logic.controller.personalAttendanceReport =
-          employee.accessLevels.personalAttendanceReport;
+          employee.accessLevels!.personalAttendanceReport;
       logic.controller.attendanceReport =
-          employee.accessLevels.attendanceReport;
-      logic.controller.weatherReport = employee.accessLevels.weatherReport;
+          employee.accessLevels!.attendanceReport;
+      logic.controller.weatherReport = employee.accessLevels!.weatherReport;
       logic.controller.editActivityPrices =
-          employee.accessLevels.editActivityPrices;
-      logic.controller.addActivity = employee.accessLevels.addActivity;
+          employee.accessLevels!.editActivityPrices;
+      logic.controller.addActivity = employee.accessLevels!.addActivity;
 
       return true;
     }

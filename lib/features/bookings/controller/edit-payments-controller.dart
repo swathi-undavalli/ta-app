@@ -10,7 +10,7 @@ class EditPaymentsLogic {
 
 class EditPaymentsController extends GetxController {
 
-  BookingModel bookingModel;
+  BookingModel? bookingModel;
 
   TextEditingController paymentTED = TextEditingController();
   TextEditingController paymentModeTED = TextEditingController();

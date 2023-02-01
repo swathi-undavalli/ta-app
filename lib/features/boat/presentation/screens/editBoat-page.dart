@@ -14,19 +14,19 @@ import 'package:temple_adventures/features/bookings/presentation/widgets/app-tex
 class EditBoatPage extends StatelessWidget {
   static const String id = "EditBoatPage";
   EditBoatLogic logic = EditBoatLogic();
-  final BoatsModel boatsArg = Get.arguments;
+  final BoatsModel? boatsArg = Get.arguments;
 
   EditBoatPage() {
-    logic.controller.boatCapacityTED.text = boatsArg.capacity.toString();
-    logic.controller.captainNameTED.text = boatsArg.captainName;
-    logic.controller.phoneTED.text = boatsArg.phoneNumber;
-    logic.controller.boatName = boatsArg.boatName;
+    logic.controller.boatCapacityTED.text = boatsArg!.capacity.toString();
+    logic.controller.captainNameTED.text = boatsArg!.captainName!;
+    logic.controller.phoneTED.text = boatsArg!.phoneNumber!;
+    logic.controller.boatName = boatsArg!.boatName;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(boatName: logic.controller.boatName),
+      appBar: buildAppBar(boatName: logic.controller.boatName!) as PreferredSizeWidget?,
       body: SingleChildScrollView(
         physics: BouncingScrollPhysics(),
         child: WillPopScope(
@@ -110,7 +110,7 @@ class EditBoatPage extends StatelessWidget {
           value: controller.captainNameTED.text.isNotEmpty
               ? controller.captainNameTED.text
               : null,
-          onChanged: (employee) {
+          onChanged: (dynamic employee) {
             controller.captainNameTED.text = employee;
             controller.update();
           },
@@ -151,7 +151,7 @@ class EditBoatPage extends StatelessWidget {
           onSubmitted: (_) {},
           onChanged: (phone) {
             controller.countryCodeTED.text = phone.countryCode;
-            controller.phoneTED.text = phone.number;
+            controller.phoneTED.text = phone.number!;
             controller.isoCode = phone.countryISOCode;
 
             // controller.boatsModel.phoneNumber = phone.number;
@@ -187,13 +187,13 @@ class EditBoatPage extends StatelessWidget {
               capacity: int.parse(controller.boatCapacityTED.text),
               captainName: controller.captainNameTED.text,
               phoneNumber: controller.phoneTED.text,
-              boatName: boatsArg.boatName,
-              ocean: boatsArg.ocean,
-              id: boatsArg.id,
+              boatName: boatsArg!.boatName,
+              ocean: boatsArg!.ocean,
+              id: boatsArg!.id,
             );
             var boat = FirebaseFirestore.instance
                 .collection("boats")
-                .doc(boatsArg.id)
+                .doc(boatsArg!.id)
                 .set(boatsModel.toMap());
             //print(boat);
             controller.reset();
@@ -206,7 +206,7 @@ class EditBoatPage extends StatelessWidget {
     });
   }
 
-  Widget buildAppBar({String boatName}) {
+  Widget buildAppBar({required String boatName}) {
     return AppBar(
       toolbarHeight: 70,
       centerTitle: true,
@@ -225,12 +225,12 @@ class EditBoatPage extends StatelessWidget {
   }
 
   Widget buildTextFields(
-      {String name,
-      TextEditingController textEditingController,
-      FocusNode focusNode,
-      FocusNode nextFocusNode,
-      TextInputType keyBoardType,
-      Function onChanged}) {
+      {String? name,
+      TextEditingController? textEditingController,
+      FocusNode? focusNode,
+      FocusNode? nextFocusNode,
+      TextInputType? keyBoardType,
+      Function? onChanged}) {
     return AppTextField(
       hintText: name,
       controller: textEditingController,
@@ -238,7 +238,7 @@ class EditBoatPage extends StatelessWidget {
       nextFocusNode: nextFocusNode,
       required: false,
       keyboardType: keyBoardType,
-      onChangedCallBack: onChanged,
+      onChangedCallBack: onChanged as dynamic Function(String)?,
       errorValidator: () {
         return null;
       },

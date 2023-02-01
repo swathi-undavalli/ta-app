@@ -41,7 +41,7 @@ class WelcomeScreen extends StatelessWidget {
 
   Widget buildPersonRole() {
     return Text(
-      currentEmployee.role,
+      currentEmployee!.role!,
       style: TextStyle(
         fontSize: FontSize.message,
         color: AppColors.text.black,
@@ -53,7 +53,7 @@ class WelcomeScreen extends StatelessWidget {
 
   Widget buildPersonName() {
     return Text(
-      currentEmployee.firstName,
+      currentEmployee!.firstName!,
       style: TextStyle(
         fontSize: FontSize.title,
         color: AppColors.text.skyBlue,

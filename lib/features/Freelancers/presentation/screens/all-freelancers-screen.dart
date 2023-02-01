@@ -96,11 +96,11 @@ class AllFreelancersScreen extends StatelessWidget {
               );
             }
             return Column(
-              children: snapshot.data.docs.map((document) {
-                Employee employee = Employee.fromMap(document.data());
+              children: snapshot.data!.docs.map((document) {
+                Employee employee = Employee.fromMap(document.data() as Map<String, dynamic>);
 
                 if (controller.searchTED.text.isNotEmpty) {
-                  if (employee.id.contains(controller.searchTED.text) ||
+                  if (employee.id!.contains(controller.searchTED.text) ||
                       employee.name.toLowerCase().contains(
                           controller.searchTED.text.toLowerCase().trim()))
                     return buildFreelance(f: employee);
@@ -115,7 +115,7 @@ class AllFreelancersScreen extends StatelessWidget {
     });
   }
 
-  Widget buildFreelance({Employee f}) {
+  Widget buildFreelance({required Employee f}) {
     return GestureDetector(
       onTap: () {
         Get.toNamed(FreelanceDetailsScreen.id, arguments: f);

@@ -35,11 +35,11 @@ import 'package:http/http.dart' as http;
 class BookingsExpansionPanel extends StatelessWidget {
   final ExpansionPanelLogic logic = ExpansionPanelLogic();
   final SearchController searchController = Get.put(SearchController());
-  final List<ItemModel> items;
+  final List<ItemModel>? items;
   bool searchBar = true;
   DateTime date = DateTime.now();
-  Function onDeletePressed;
-  Function onSearchTap;
+  Function? onDeletePressed;
+  Function? onSearchTap;
   List<Widget> expansions = [];
   TextEditingController depositTED = TextEditingController();
 
@@ -52,7 +52,7 @@ class BookingsExpansionPanel extends StatelessWidget {
       {this.items,
       this.onDeletePressed,
       this.onSearchTap,
-      @required this.searchBar});
+      required this.searchBar});
 
   generateList(List<ItemModel> itemsList) {
     if (itemsList.isEmpty) return [Text("No Results Found")];
@@ -72,15 +72,15 @@ class BookingsExpansionPanel extends StatelessWidget {
         children: [
           if (searchBar == true) buildSearchBar(),
           if (controller.showSearchField)
-            ...generateList(items.where((ItemModel item) {
-              if (item.bookingID.contains(searchTED.text.trim())) return true;
-              if (item.name
+            ...generateList(items!.where((ItemModel item) {
+              if (item.bookingID!.contains(searchTED.text.trim())) return true;
+              if (item.name!
                   .toLowerCase()
                   .contains(searchTED.text.trim().toLowerCase())) return true;
               return false;
             }).toList())
           else
-            ...generateList(items)
+            ...generateList(items!)
         ],
       );
     });
@@ -88,7 +88,7 @@ class BookingsExpansionPanel extends StatelessWidget {
 
   Widget buildSearchBar() {
     return GetBuilder<SearchController>(builder: (controller) {
-      return (controller.showSearchField && items.length > 5)
+      return (controller.showSearchField && items!.length > 5)
           ? Padding(
               padding: const EdgeInsets.only(bottom: 20.0),
               child: AnimatedContainer(
@@ -109,7 +109,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                       width: controller.showSearchField ? 240 : 0,
                       child: TextField(
                         onTap: () {
-                          onSearchTap();
+                          onSearchTap!();
                         },
                         decoration: InputDecoration(
                             enabledBorder:
@@ -144,9 +144,9 @@ class BookingsExpansionPanel extends StatelessWidget {
     });
   }
 
-  Widget buildExpansion({ItemModel itemModel, int i}) {
+  Widget buildExpansion({ItemModel? itemModel, int? i}) {
     getColor() {
-      if (itemModel.colorCode == "Blue")
+      if (itemModel!.colorCode == "Blue")
         return Color(0xffA9EBF8).withOpacity(0.3);
       else if (itemModel.colorCode == "Purple")
         return Color(0xffBCB8F5);
@@ -166,7 +166,7 @@ class BookingsExpansionPanel extends StatelessWidget {
           curve: Curves.easeInCubic,
           alignment: Alignment.topCenter,
           constraints: BoxConstraints(
-            minHeight: controller.isExpanded[i] ? 500 : 50,
+            minHeight: controller.isExpanded[i!] ? 500 : 50,
           ),
           width: 350,
           decoration: BoxDecoration(
@@ -196,9 +196,9 @@ class BookingsExpansionPanel extends StatelessWidget {
                                 children: [
                                   Flexible(
                                     child: Text(
-                                      (itemModel.name
+                                      itemModel!.name!
                                           .toLowerCase()
-                                          .capitalizeFirst),
+                                          .capitalizeFirst!,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
                                           color: AppColors.text.black,
@@ -208,7 +208,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   ),
                                   Text(
                                     " x " +
-                                        (itemModel.bookingModel.noOfPersons
+                                        (itemModel.bookingModel!.noOfPersons
                                             .toString()),
                                     overflow: TextOverflow.ellipsis,
                                     style: TextStyle(
@@ -217,7 +217,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                         fontWeight: FontWeight.w600),
                                   ),
                                   if (getBalance(
-                                          itemModel.bookingModel.payments,
+                                          itemModel.bookingModel!.payments!,
                                           double.parse(itemModel.paid)
                                               .roundToDouble(),
                                           double.parse(itemModel.cost)
@@ -230,14 +230,14 @@ class BookingsExpansionPanel extends StatelessWidget {
                                           color: Colors.grey),
                                     ),
                                   if (itemModel.colorCode == "Blue" &&
-                                      itemModel.bookingModel.pax.length - 1 ==
-                                          itemModel.bookingModel.noOfPersons)
+                                      itemModel.bookingModel!.pax!.length - 1 ==
+                                          itemModel.bookingModel!.noOfPersons)
                                     Icon(
                                       Icons.verified,
                                       color: AppColors.text.skyBlue,
                                       size: 12,
                                     ).paddingOnly(left: 10),
-                                  if (itemModel.bookingModel.hasMedicalIssues)
+                                  if (itemModel.bookingModel!.hasMedicalIssues)
                                     Text(
                                       "  🏥️",
                                       style:
@@ -336,13 +336,13 @@ class BookingsExpansionPanel extends StatelessWidget {
                                                           .collection(
                                                               "bookings")
                                                           .doc(itemModel
-                                                              .bookingModel.id)
+                                                              .bookingModel!.id)
                                                           .delete();
                                                       LogModel logModel = LogModel(
                                                           type: LogType
                                                               .bookingDeleted,
                                                           bookingId: itemModel
-                                                              .bookingModel.id);
+                                                              .bookingModel!.id);
                                                       FirebaseFirestore.instance
                                                           .collection("logs")
                                                           .doc()
@@ -350,7 +350,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                                               logModel.toMap());
 
                                                       Get.back();
-                                                      onDeletePressed();
+                                                      onDeletePressed!();
                                                       BookingsCalenderWidgetLogicNew
                                                           bookingCalenderLogic =
                                                           BookingsCalenderWidgetLogicNew();
@@ -387,7 +387,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                     ],
                                   ).paddingOnly(bottom: 15),
                                   buildKeyValuePairs(
-                                      "Booking Id", itemModel.bookingID),
+                                      "Booking Id", itemModel.bookingID!),
                                   buildKeyValuePairs(
                                       "Activity", itemModel.activity),
                                   buildKeyValuePairs(
@@ -403,7 +403,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   buildKeyValuePairs(
                                     "Balance",
                                     getBalance(
-                                        itemModel.bookingModel.payments,
+                                        itemModel.bookingModel!.payments!,
                                         double.parse(itemModel.paid)
                                             .roundToDouble(),
                                         double.parse(itemModel.cost)
@@ -411,36 +411,36 @@ class BookingsExpansionPanel extends StatelessWidget {
                                   ),
                                   buildKeyValuePairs(
                                       "Pax",
-                                      itemModel.bookingModel.noOfPersons
+                                      itemModel.bookingModel!.noOfPersons
                                           .toString()),
                                   ((itemModel != null) &&
                                           (itemModel.receiptNo != null))
                                       ? buildKeyValuePairs(
-                                          "Invoice no", itemModel.receiptNo)
+                                          "Invoice no", itemModel.receiptNo!)
                                       : buildKeyValuePairs("Invoice no", "-"),
                                   (itemModel.remarks == "")
                                       ? buildKeyValuePairs("Remarks", "-")
                                       : buildKeyValuePairs("Remarks",
                                           itemModel.remarks.toString()),
-                                  buildKeyValuePairs("Phone", itemModel.phone),
-                                  buildKeyValuePairs("Email", itemModel.email),
+                                  buildKeyValuePairs("Phone", itemModel.phone!),
+                                  buildKeyValuePairs("Email", itemModel.email!),
                                   buildKeyValuePairs("Time", itemModel.time),
                                   buildKeyValuePairs("Date", itemModel.date),
                                   buildKeyValuePairs(
                                       "Session", itemModel.session),
                                   buildKeyValuePairs(
                                     "Registered",
-                                    "${itemModel.bookingModel.pax.length - 1} / ${itemModel.bookingModel.noOfPersons}",
+                                    "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
                                     isDanger: ((itemModel
-                                                .bookingModel.pax.length -
+                                                .bookingModel!.pax!.length -
                                             1) !=
-                                        (itemModel.bookingModel.noOfPersons)),
+                                        (itemModel.bookingModel!.noOfPersons)),
                                   ),
                                   SizedBox(height: 30),
                                   buildPaymentStatus(
                                     itemModel: itemModel,
                                     totalAmount:
-                                        itemModel.bookingModel.totalCost,
+                                        itemModel.bookingModel!.totalCost,
                                     payments: [
                                       PaymentModel(
                                         amount: double.parse(itemModel.paid)
@@ -448,13 +448,13 @@ class BookingsExpansionPanel extends StatelessWidget {
                                         collectedBy: itemModel.employeeName,
                                         reciptNo: itemModel.receiptNo,
                                         referenceNo: itemModel
-                                            .bookingModel.paymentTransactionId,
+                                            .bookingModel!.paymentTransactionId,
                                         remarks: "",
                                         paymentMode:
-                                            itemModel.bookingModel.paymentMode,
-                                        time: itemModel.bookingModel.createdAt,
+                                            itemModel.bookingModel!.paymentMode,
+                                        time: itemModel.bookingModel!.createdAt,
                                       ),
-                                      ...itemModel.bookingModel.payments
+                                      ...itemModel.bookingModel!.payments!
                                     ],
                                   ),
                                   SizedBox(height: 10),
@@ -476,7 +476,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                                           ],
                                         ),
                                         SizedBox(height: 10),
-                                        ...itemModel.bookingModel.pax.map((e) {
+                                        ...itemModel.bookingModel!.pax!.map((e) {
                                           if (e['needDoctor'] == true)
                                             return Container(
                                               height: 30,
@@ -531,22 +531,22 @@ class BookingsExpansionPanel extends StatelessWidget {
                                           onTap: () async {
                                             String message = """
 
-*${itemModel.name.trim().toLowerCase().capitalizeFirst + itemModel.bookingModel.pax[0]["last-name"]} 's* ${itemModel.activity}
+*${itemModel.name!.trim().toLowerCase().capitalizeFirst! + itemModel.bookingModel!.pax![0]["last-name"]} 's* ${itemModel.activity}
 
 *Certification details:* 
 
 Email : *${itemModel.email}* 
-Date of Birth : *${(itemModel.bookingModel.pax[0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel.pax[0]["dob"] as Timestamp).toDate()) : "-"}* 
+Date of Birth : *${(itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.pax![0]["dob"] as Timestamp).toDate()) : "-"}* 
 Certification : *${itemModel.activity}* 
 Course Completion Date : *${intl.DateFormat("dd-MM-yyy").format(DateTime.now())}* 
-Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-* 
-Completed instructor : *${currentEmployee.name.trim()}* 
-Instructor No : *${currentEmployee.agencyId ?? "-"}* 
-Invoice No : *${itemModel.bookingModel.receiptNo}* 
+Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-* 
+Completed instructor : *${currentEmployee!.name.trim()}* 
+Instructor No : *${currentEmployee!.agencyId ?? "-"}* 
+Invoice No : *${itemModel.bookingModel!.receiptNo}* 
 Course / Equipment Upsell :     *${"-"}*
  
 Regards,
-*${currentEmployee.name.trim()}*
+*${currentEmployee!.name.trim()}*
                                           """;
                                             await Clipboard.setData(
                                                 ClipboardData(text: message));
@@ -562,15 +562,15 @@ Regards,
                                             String message = """
 *E-Learning request details:* 
 
-First Name : *${itemModel.name.trim().toLowerCase().capitalizeFirst}* 
-Last Name : *${(itemModel.bookingModel.pax[0]["last-name"] != "") ? itemModel.bookingModel.pax[0]["last-name"] : "-"}* 
+First Name : *${itemModel.name!.trim().toLowerCase().capitalizeFirst}* 
+Last Name : *${(itemModel.bookingModel!.pax![0]["last-name"] != "") ? itemModel.bookingModel!.pax![0]["last-name"] : "-"}* 
 Email : *${itemModel.email}* 
-Date of Birth : *${(itemModel.bookingModel.pax[0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel.pax[0]["dob"] as Timestamp).toDate()) : "-"}* 
+Date of Birth : *${(itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.pax![0]["dob"] as Timestamp).toDate()) : "-"}* 
 Course Name : *${itemModel.activity}* 
-Invoice No : *${itemModel.bookingModel.receiptNo}* 
+Invoice No : *${itemModel.bookingModel!.receiptNo}* 
  
 Regards,
-*${currentEmployee.name.trim()}*
+*${currentEmployee!.name.trim()}*
                                           """;
                                             await Clipboard.setData(
                                                 ClipboardData(text: message));
@@ -586,10 +586,10 @@ Regards,
                                       if (bookingCalenderLogicNew
                                                   .controller.selectedType ==
                                               FilterType.Dive &&
-                                          itemModel.bookingModel.pax.length -
+                                          itemModel.bookingModel!.pax!.length -
                                                   1 ==
                                               itemModel
-                                                  .bookingModel.noOfPersons)
+                                                  .bookingModel!.noOfPersons)
                                         SelectSeatsWidget(
                                             itemModel.bookingModel),
                                       Spacer(),
@@ -601,7 +601,7 @@ Regards,
                                           iconSize: 25,
                                           onPressed: () async {
                                             String bookingId =
-                                                itemModel.bookingModel.id;
+                                                itemModel.bookingModel!.id!;
                                             String bs64 = base64
                                                 .encode(bookingId.codeUnits);
                                             print(bs64);
@@ -627,12 +627,12 @@ Regards,
                                             final jsonLink = jsonDecode(
                                                 result.body)["shortUrl"];
 
-                                            String phone = itemModel.phone
+                                            String phone = itemModel.phone!
                                                 .replaceAll("+", "");
                                             String message = """
                                           *Temple Adventures - Scuba Diving Pondicherry*
  
-Hey *${itemModel.name.trim().toLowerCase().capitalizeFirst}*,
+Hey *${itemModel.name!.trim().toLowerCase().capitalizeFirst}*,
 
 Thanks for choosing us, we are excited to take you scuba diving with us 😍. 
 
@@ -641,13 +641,13 @@ Here are your booking details 
 *Booking details:* 
 Booking ID : *${itemModel.bookingID}* 
 Course Name : *${itemModel.activity}* 
-Pool Date : *${intl.DateFormat("dd-MM-yyy").format(itemModel.bookingModel.poolDate[0])}* 
-Pool Time : *${intl.DateFormat("hh:mm a").format(itemModel.bookingModel.poolDate[0])}* 
-Dive Date : *${intl.DateFormat("dd-MM-yyy").format(itemModel.bookingModel.diveDate[0])}* 
-Dive Time : *${intl.DateFormat("hh:mm a").format(itemModel.bookingModel.diveDate[0])}* 
+Pool Date : *${intl.DateFormat("dd-MM-yyy").format(itemModel.bookingModel!.poolDate![0]!)}* 
+Pool Time : *${intl.DateFormat("hh:mm a").format(itemModel.bookingModel!.poolDate![0]!)}* 
+Dive Date : *${intl.DateFormat("dd-MM-yyy").format(itemModel.bookingModel!.diveDate![0]!)}* 
+Dive Time : *${intl.DateFormat("hh:mm a").format(itemModel.bookingModel!.diveDate![0]!)}* 
 Total Cost : *${double.parse(itemModel.cost).roundToDouble()} /-* 
 Deposit : *${double.parse(itemModel.paid).roundToDouble()} /-* 
-Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-* 
+Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-* 
 
 *We need to submit all diver details to the *Marine Police / Coast Guard** and *PADI.* To process the same and take you diving, we need *all the divers to complete* the *paperwork process*. You may share this link with them. 
 
@@ -676,7 +676,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                               .withOpacity(0.8),
                                           onTap: () async {
                                             String bookingId =
-                                                itemModel.bookingModel.id;
+                                                itemModel.bookingModel!.id!;
                                             String bs64 = base64
                                                 .encode(bookingId.codeUnits);
                                             print(bs64);
@@ -722,7 +722,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                                             Container(
                                                               width: 150,
                                                               child: Text(
-                                                                "${itemModel.name.capitalizeFirst + "x" + itemModel.pax.toString()}",
+                                                                "${itemModel.name!.capitalizeFirst! + "x" + itemModel.pax.toString()}",
                                                                 style: TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
@@ -845,7 +845,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                         AppButton.miniFlat(
                                           text: "Manage PAX",
                                           onTap: () async {
-                                            BookingModel bookingModel =
+                                            BookingModel? bookingModel =
                                                 itemModel.bookingModel;
                                             showModalBottomSheet(
                                                 backgroundColor:
@@ -888,7 +888,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                                             Container(
                                                               width: 150,
                                                               child: Text(
-                                                                "${itemModel.name.capitalizeFirst + " X " + itemModel.pax.toString()}",
+                                                                "${itemModel.name!.capitalizeFirst! + " X " + itemModel.pax.toString()}",
                                                                 style: TextStyle(
                                                                     fontWeight:
                                                                         FontWeight
@@ -930,12 +930,12 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                                           ],
                                                         ),
                                                         SizedBox(height: 20),
-                                                        ...bookingModel.pax
+                                                        ...bookingModel!.pax!
                                                             .asMap()
                                                             .entries
                                                             .map((e) {
                                                           int index = e.key;
-                                                          String email =
+                                                          String? email =
                                                               e.value["email"];
                                                           if (index == 0)
                                                             return SizedBox();
@@ -944,7 +944,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                                                 MainAxisAlignment
                                                                     .spaceBetween,
                                                             children: [
-                                                              Text(email),
+                                                              Text(email!),
                                                               IconButton(
                                                                 onPressed: () {
                                                                   onDeletePaxPressed(
@@ -1008,7 +1008,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                                           File pdfFile =
                                               await ShareBookingDetails
                                                   .generatePdf(
-                                                      itemModel.bookingModel);
+                                                      itemModel.bookingModel!);
                                           Share.shareFiles([pdfFile.path]);
                                         },
                                       ).paddingOnly(right: 15),
@@ -1030,7 +1030,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
     });
   }
 
-  makingPhoneCall(String phoneNumber) async {
+  makingPhoneCall(String? phoneNumber) async {
     String url = 'tel:$phoneNumber';
     if (await canLaunch(url)) {
       await launch(url);
@@ -1072,13 +1072,13 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
   }
 
   Widget buildPaymentStatus(
-      {@required double totalAmount,
-      @required List<PaymentModel> payments,
-      @required ItemModel itemModel}) {
+      {required double totalAmount,
+      required List<PaymentModel> payments,
+      required ItemModel? itemModel}) {
     double deposits = 0.0;
 
     payments.forEach((payment) {
-      deposits += payment.amount;
+      deposits += payment.amount!;
     });
 
     int n = payments.length;
@@ -1155,7 +1155,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: List<Widget>.generate(n, (i) {
                       return buildNumber(
-                          text: payments[i].amount.round().toString(),
+                          text: payments[i].amount!.round().toString(),
                           fontWeight: FontWeight.normal,
                           color: Colors.black);
                     }),
@@ -1195,7 +1195,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
         GestureDetector(
           onTap: () {
             EditPaymentsLogic editPaymentsLogic = EditPaymentsLogic();
-            editPaymentsLogic.controller.bookingModel = itemModel.bookingModel;
+            editPaymentsLogic.controller.bookingModel = itemModel!.bookingModel;
             Get.toNamed(EditPaymentsScreen.id);
           },
           child: Row(
@@ -1211,7 +1211,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
                 text: "Add Payment",
                 onTap: () {
                   Get.toNamed(AddPaymentsScreen.id,
-                      arguments: itemModel.bookingModel);
+                      arguments: itemModel!.bookingModel);
                 },
               ).paddingOnly(right: 15)
             ],
@@ -1228,7 +1228,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
     );
   }
 
-  Widget buildTransactions({PaymentModel payment}) {
+  Widget buildTransactions({required PaymentModel payment}) {
     DateTime now = DateTime.now();
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
@@ -1248,7 +1248,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
             Container(
               // width: Get.width - 50 - 25,
               child: Text(
-                "Payment ${payment.amount.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
+                "Payment ${payment.amount!.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 10,
@@ -1260,16 +1260,16 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
             ),
             SizedBox(height: 2),
             if (payment.time != null &&
-                now.day == payment.time.day &&
-                now.month == payment.time.month &&
-                now.year == payment.time.year)
+                now.day == payment.time!.day &&
+                now.month == payment.time!.month &&
+                now.year == payment.time!.year)
               Text(
-                "Today - ${intl.DateFormat("hh:mm a").format(payment.time)}",
+                "Today - ${intl.DateFormat("hh:mm a").format(payment.time!)}",
                 style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
               )
             else if (payment.time != null)
               Text(
-                intl.DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time),
+                intl.DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time!),
                 style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
               )
             else
@@ -1283,7 +1283,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
     ).paddingOnly(bottom: 10);
   }
 
-  Widget buildCircle({Color color}) {
+  Widget buildCircle({Color? color}) {
     return SizedBox(
       width: 39,
       child: Icon(
@@ -1294,7 +1294,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
     );
   }
 
-  Widget buildNumber({FontWeight fontWeight, Color color, String text}) {
+  Widget buildNumber({FontWeight? fontWeight, Color? color, required String text}) {
     return SizedBox(
       width: 39,
       child: Center(
@@ -1309,7 +1309,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
   String getBalance(List<PaymentModel> payments, double deposit, double total) {
     double t = deposit;
     payments.forEach((payment) {
-      t += payment.amount;
+      t += payment.amount!;
     });
     return (total - t).toInt().toString();
   }
@@ -1359,7 +1359,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
         await repaintBoundary.toImage(pixelRatio: pixelRatio);
     //final ui.Image image = await repaintBoundary.toImage(pixelRatio: 1);
     final ByteData byteData =
-        await image.toByteData(format: ui.ImageByteFormat.png);
+        (await image.toByteData(format: ui.ImageByteFormat.png))!;
     return byteData.buffer.asUint8List();
   }
 
@@ -1368,7 +1368,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
       contentPadding: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 30),
       title: "\nAre You Sure ? ",
       middleText:
-          "Booking PAX (${bookingModel.pax[index]["email"]}) will Be Deleted Permanently.",
+          "Booking PAX (${bookingModel.pax![index]["email"]}) will Be Deleted Permanently.",
       backgroundColor: Colors.white,
       titleStyle: TextStyle(
           color: AppColors.text.black,
@@ -1392,7 +1392,7 @@ Balance : *${getBalance(itemModel.bookingModel.payments, double.parse(itemModel.
           AppButton.miniFlat(
             text: 'OK',
             onTap: () async {
-              bookingModel.pax.removeAt(index);
+              bookingModel.pax!.removeAt(index);
               FirebaseFirestore.instance
                   .collection("bookings")
                   .doc(bookingModel.id)
@@ -1426,17 +1426,17 @@ class ExpansionPanelLogic {
 class ExpansionPanelController extends GetxController {
   List<bool> isExpanded = [];
 
-  BookingModel bookingModel;
+  BookingModel? bookingModel;
 }
 
 class ItemModel {
   bool expanded;
-  final String name;
+  final String? name;
   String time;
   String session;
-  final String email;
-  final String bookingID;
-  final String phone;
+  final String? email;
+  final String? bookingID;
+  final String? phone;
   final String activity;
   final String colorCode;
   final String price;
@@ -1444,33 +1444,33 @@ class ItemModel {
   final String cost;
   final String paid;
   final String balance;
-  final String remarks;
-  final int pax;
+  final String? remarks;
+  final int? pax;
   final bool registration;
-  final String receiptNo;
-  final String employeeName;
-  BookingModel bookingModel;
+  final String? receiptNo;
+  final String? employeeName;
+  BookingModel? bookingModel;
 
   ItemModel({
-    @required this.phone,
-    @required this.activity,
-    @required this.bookingID,
-    @required this.colorCode,
-    @required this.price,
-    @required this.time,
-    @required this.session,
-    @required this.date,
-    @required this.cost,
-    @required this.paid,
-    @required this.receiptNo,
-    @required this.balance,
-    @required this.remarks,
-    @required this.registration,
+    required this.phone,
+    required this.activity,
+    required this.bookingID,
+    required this.colorCode,
+    required this.price,
+    required this.time,
+    required this.session,
+    required this.date,
+    required this.cost,
+    required this.paid,
+    required this.receiptNo,
+    required this.balance,
+    required this.remarks,
+    required this.registration,
     this.expanded = false,
-    @required this.name,
-    @required this.employeeName,
-    @required this.pax,
-    @required this.email,
+    required this.name,
+    required this.employeeName,
+    required this.pax,
+    required this.email,
     this.bookingModel,
   });
 
@@ -1485,38 +1485,38 @@ class ItemModel {
 
     getTime() {
       var d = "";
-      if (bookingModel.theoryDate != null && bookingModel.theoryDate.isNotEmpty)
+      if (bookingModel.theoryDate != null && bookingModel.theoryDate!.isNotEmpty)
         d = d +
-            intl.DateFormat("hh:mm a").format(bookingModel.theoryDate[0]) +
+            intl.DateFormat("hh:mm a").format(bookingModel.theoryDate![0]!) +
             ", ";
-      if (bookingModel.poolDate != null && bookingModel.poolDate.isNotEmpty)
+      if (bookingModel.poolDate != null && bookingModel.poolDate!.isNotEmpty)
         d = d +
-            intl.DateFormat("hh:mm a").format(bookingModel.poolDate[0]) +
+            intl.DateFormat("hh:mm a").format(bookingModel.poolDate![0]!) +
             ", ";
-      if (bookingModel.diveDate != null && bookingModel.diveDate.isNotEmpty)
+      if (bookingModel.diveDate != null && bookingModel.diveDate!.isNotEmpty)
         d = d +
-            intl.DateFormat("hh:mm a").format(bookingModel.diveDate[0]) +
+            intl.DateFormat("hh:mm a").format(bookingModel.diveDate![0]!) +
             ", ";
       return d.substring(0, d.length - 2);
     }
 
     //log(bookingModel.balance.toString());
     return ItemModel(
-      phone: bookingModel.pax[0]["countryCode"] +
-          bookingModel.pax[0]["phoneNumber"],
+      phone: bookingModel.pax![0]["countryCode"] +
+          bookingModel.pax![0]["phoneNumber"],
       bookingID: bookingModel.id,
-      activity: bookingModel.activity[0].name.toString(),
-      price: bookingModel.activity[0].price.toString(),
-      colorCode: bookingModel.activity[0].color.toString(),
-      date: bookingModel.bookingDate[0],
+      activity: bookingModel.activity![0]!.name.toString(),
+      price: bookingModel.activity![0]!.price.toString(),
+      colorCode: bookingModel.activity![0]!.color.toString(),
+      date: bookingModel.bookingDate![0],
       cost: bookingModel.totalCost.toString(),
       paid: bookingModel.paid.toString(),
       balance: bookingModel.balance.toString(),
       registration: true,
       receiptNo: bookingModel.receiptNo,
-      name: bookingModel.pax[0]["first-name"],
+      name: bookingModel.pax![0]["first-name"],
       pax: bookingModel.noOfPersons,
-      email: bookingModel.pax[0]["email"],
+      email: bookingModel.pax![0]["email"],
       remarks: bookingModel.remarks,
       time: getTime(),
       session: getSessions(),

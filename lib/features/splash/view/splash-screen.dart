@@ -5,7 +5,7 @@ import 'package:temple_adventures/core/authentication/firebase-authentication.da
 import 'package:temple_adventures/features/login/presentation/screens/login-page.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({Key key}) : super(key: key);
+  SplashScreen({Key? key}) : super(key: key);
   static const String id = "SplashScreen";
 
   @override

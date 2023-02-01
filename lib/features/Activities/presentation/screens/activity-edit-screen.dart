@@ -14,19 +14,19 @@ import 'package:temple_adventures/features/logs/presentation/screens/log-screen.
 
 class ActivityEditScreen extends StatelessWidget {
   static const String id = "PriceEditScreen";
-  final ActivityModel activityArg = Get.arguments;
+  final ActivityModel? activityArg = Get.arguments;
   ActivityEditLogic logic = ActivityEditLogic();
   AllActivitiesLogic allActivitiesLogic = AllActivitiesLogic();
   ActivityEditScreen() {
-    logic.controller.priceTED.text = activityArg.price.toString();
-    logic.controller.nameTED.text = activityArg.name;
-    logic.controller.colorTED.text = activityArg.color;
+    logic.controller.priceTED.text = activityArg!.price.toString();
+    logic.controller.nameTED.text = activityArg!.name!;
+    logic.controller.colorTED.text = activityArg!.color!;
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar() as PreferredSizeWidget?,
       body: SafeArea(
         child: GetBuilder<ActivityEditController>(builder: (controller) {
           return SingleChildScrollView(
@@ -86,7 +86,7 @@ class ActivityEditScreen extends StatelessWidget {
         value: controller.colorTED.text.isNotEmpty
             ? controller.colorTED.text
             : null,
-        onChanged: (newColor) {
+        onChanged: (dynamic newColor) {
           controller.colorTED.text = newColor;
           controller.update();
         },
@@ -123,15 +123,15 @@ class ActivityEditScreen extends StatelessWidget {
               text: "Update",
               textColor: AppColors.text.white,
               onTap: () async {
-                activityArg.name = controller.nameTED.text;
-                activityArg.price = int.parse(controller.priceTED.text);
-                activityArg.color = controller.colorTED.text;
+                activityArg!.name = controller.nameTED.text;
+                activityArg!.price = int.parse(controller.priceTED.text);
+                activityArg!.color = controller.colorTED.text;
                 await FirebaseFirestore.instance
                     .collection("catalogue")
-                    .doc(activityArg.id)
-                    .set(activityArg.toMap());
+                    .doc(activityArg!.id)
+                    .set(activityArg!.toMap());
                 LogModel logModel = LogModel(
-                    type: LogType.editActivity, activityName: activityArg.name);
+                    type: LogType.editActivity, activityName: activityArg!.name);
                 FirebaseFirestore.instance
                     .collection("logs")
                     .doc()
@@ -207,7 +207,7 @@ class ActivityEditScreen extends StatelessWidget {
                     onTap: () {
                       FirebaseFirestore.instance
                           .collection("catalogue")
-                          .doc(activityArg.id)
+                          .doc(activityArg!.id)
                           .delete();
                       Get.back();
                       Get.back();
@@ -233,9 +233,9 @@ class ActivityEditScreen extends StatelessWidget {
   }
 
   Widget buildTextFields(
-      {String name,
-      TextEditingController textEditingController,
-      TextInputType keyBoardType}) {
+      {String? name,
+      TextEditingController? textEditingController,
+      TextInputType? keyBoardType}) {
     return Container(
       width: 320,
       child: AppTextField(
