@@ -11,7 +11,7 @@ class  LocalNotificationService {
     //         android: AndroidInitializationSettings("@mipmap/ic_launcher"));
     var androidInitilize = const AndroidInitializationSettings('@mipmap/ic_launcher');
  //New Added
-    const IOSInitializationSettings initializationSettingsIOS = IOSInitializationSettings(
+    DarwinInitializationSettings initializationSettingsIOS = DarwinInitializationSettings(
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
@@ -21,9 +21,9 @@ class  LocalNotificationService {
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
     await _notificationsPlugin.initialize(
       initilizationsSettings,
-      onSelectNotification: (payload) async {
-        //onTap(payload);
-      },
+      // onSelectNotification: (payload) async {
+      //   onTap(payload);
+      // },
     );
 
 

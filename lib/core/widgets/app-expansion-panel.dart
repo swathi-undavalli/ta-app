@@ -595,7 +595,7 @@ Regards,
                                       Spacer(),
                                       if (itemModel.colorCode == "Blue")
                                         IconButton(
-                                          icon: Icon(Icons.whatsapp_outlined),
+                                          icon: Icon(Icons.whatshot_outlined),
                                           color: AppColors.text.green
                                               .withOpacity(0.8),
                                           iconSize: 25,
@@ -619,7 +619,7 @@ Regards,
                                                   'https://api.aws3.link/shorten'),
                                               body: jsonEncode({
                                                 "longUrl": link,
-                                                "expireHours": 24,
+                                                "expireHours": 48,
                                               }),
                                               headers: headers,
                                             );

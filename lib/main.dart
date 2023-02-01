@@ -12,7 +12,6 @@ import 'package:temple_adventures/features/admin-portal/presentation/image-view-
 import 'package:temple_adventures/features/boat/presentation/screens/all-boats-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
 import 'package:temple_adventures/auto-update.dart';
-import 'package:temple_adventures/core/authentication/firebase-authentication.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/d1.dart';
 import 'package:temple_adventures/d2.dart';
@@ -32,7 +31,6 @@ import 'package:temple_adventures/features/bookings/presentation/screens/guests-
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/share_%20booking_widget.dart';
 import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
