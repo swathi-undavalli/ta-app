@@ -12,9 +12,11 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 class AddPaymentsLogic {
   AddPaymentsController controller = Get.put(AddPaymentsController());
 
-  onPaymentDetailsFilled() {
+  onPaymentDetailsFilled(String balance) {
     if (controller.paymentModeTED.text != "") {
-      if (controller.depositTED.text != "") {
+      if (controller.depositTED.text != "" &&
+          double.parse(controller.depositTED.text) > 0 &&
+          double.parse(controller.depositTED.text) < double.parse(balance)) {
         controller.bookingModel!.payments!.add(
           PaymentModel(
             amount: double.parse(controller.depositTED.text),

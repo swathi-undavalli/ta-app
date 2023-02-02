@@ -261,7 +261,10 @@ class AddPaymentsScreen extends StatelessWidget {
         textColor: AppColors.text.white,
         color: AppColors.background.black,
         onTap: () {
-          logic.onPaymentDetailsFilled();
+          logic.onPaymentDetailsFilled(getBalance(
+              bookingArg!.payments!,
+              double.parse(bookingArg!.paid.toString()).roundToDouble(),
+              double.parse(bookingArg!.totalCost.toString()).roundToDouble()));
         },
       ),
     );

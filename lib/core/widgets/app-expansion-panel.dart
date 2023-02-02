@@ -9,9 +9,11 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:share/share.dart';
+import 'package:temple_adventures/core/constants/assets.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
+import 'package:temple_adventures/core/util/ta-image.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
@@ -64,6 +66,8 @@ class BookingsExpansionPanel extends StatelessWidget {
     }
     return expansions;
   }
+
+  // final GlobalKey _menuKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -157,6 +161,48 @@ class BookingsExpansionPanel extends StatelessWidget {
       else
         return Colors.white;
     }
+
+    // final button = PopupMenuButton(
+    //     icon: TAImage(
+    //       AppImages.icon.whatsapp,
+    //       color: Colors.green,
+    //       height: 40,
+    //       width: 40,
+    //     ),
+    //     key: _menuKey,
+    //     itemBuilder: (_) => const <PopupMenuItem<String>>[
+    //           PopupMenuItem<String>(
+    //               child: Text(
+    //                 'Booking info',
+    //                 style: TextStyle(fontSize: 12),
+    //               ),
+    //               value: 'Doge'),
+    //           PopupMenuItem<String>(
+    //               child: Text(
+    //                 'Cancellation Warning',
+    //                 style: TextStyle(fontSize: 12),
+    //               ),
+    //               value: 'Lion'),
+    //           PopupMenuItem<String>(
+    //               child: Text(
+    //                 'Confirmation of timing',
+    //                 style: TextStyle(fontSize: 12),
+    //               ),
+    //               value: 'Lion'),
+    //           PopupMenuItem<String>(
+    //               child: Text(
+    //                 'Feedback',
+    //                 style: TextStyle(fontSize: 12),
+    //               ),
+    //               value: 'Lion'),
+    //           PopupMenuItem<String>(
+    //               child: Text(
+    //                 'Photos link',
+    //                 style: TextStyle(fontSize: 12),
+    //               ),
+    //               value: 'Lion'),
+    //         ],
+    //     onSelected: (_) {});
 
     return GetBuilder<ExpansionPanelController>(builder: (controller) {
       return Padding(
@@ -342,7 +388,8 @@ class BookingsExpansionPanel extends StatelessWidget {
                                                           type: LogType
                                                               .bookingDeleted,
                                                           bookingId: itemModel
-                                                              .bookingModel!.id);
+                                                              .bookingModel!
+                                                              .id);
                                                       FirebaseFirestore.instance
                                                           .collection("logs")
                                                           .doc()
@@ -476,7 +523,8 @@ class BookingsExpansionPanel extends StatelessWidget {
                                           ],
                                         ),
                                         SizedBox(height: 10),
-                                        ...itemModel.bookingModel!.pax!.map((e) {
+                                        ...itemModel.bookingModel!.pax!
+                                            .map((e) {
                                           if (e['needDoctor'] == true)
                                             return Container(
                                               height: 30,
@@ -594,42 +642,39 @@ Regards,
                                             itemModel.bookingModel),
                                       Spacer(),
                                       if (itemModel.colorCode == "Blue")
-                                        IconButton(
-                                          icon: Icon(Icons.whatshot_outlined),
-                                          color: AppColors.text.green
-                                              .withOpacity(0.8),
-                                          iconSize: 25,
-                                          onPressed: () async {
-                                            String bookingId =
-                                                itemModel.bookingModel!.id!;
-                                            String bs64 = base64
-                                                .encode(bookingId.codeUnits);
-                                            print(bs64);
-                                            String link =
-                                                "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=";
-                                            log(link);
+                                        GestureDetector(
+                                            onTap: () async {
+                                              String bookingId =
+                                                  itemModel.bookingModel!.id!;
+                                              String bs64 = base64
+                                                  .encode(bookingId.codeUnits);
+                                              print(bs64);
+                                              String link =
+                                                  "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=";
+                                              log(link);
 
-                                            var headers = {
-                                              "x-api-key":
-                                                  "uSirf5x9fM5iYjPuu8GXS4TVvLbt1tdg9DUe7f7N",
-                                              "Content-Type": "application/json"
-                                            };
-                                            final result = await http.post(
-                                              Uri.parse(
-                                                  'https://api.aws3.link/shorten'),
-                                              body: jsonEncode({
-                                                "longUrl": link,
-                                                "expireHours": 48,
-                                              }),
-                                              headers: headers,
-                                            );
+                                              var headers = {
+                                                "x-api-key":
+                                                    "uSirf5x9fM5iYjPuu8GXS4TVvLbt1tdg9DUe7f7N",
+                                                "Content-Type":
+                                                    "application/json"
+                                              };
+                                              final result = await http.post(
+                                                Uri.parse(
+                                                    'https://api.aws3.link/shorten'),
+                                                body: jsonEncode({
+                                                  "longUrl": link,
+                                                  "expireHours": 48,
+                                                }),
+                                                headers: headers,
+                                              );
 
-                                            final jsonLink = jsonDecode(
-                                                result.body)["shortUrl"];
+                                              final jsonLink = jsonDecode(
+                                                  result.body)["shortUrl"];
 
-                                            String phone = itemModel.phone!
-                                                .replaceAll("+", "");
-                                            String message = """
+                                              String phone = itemModel.phone!
+                                                  .replaceAll("+", "");
+                                              String message = """
                                           *Temple Adventures - Scuba Diving Pondicherry*
  
 Hey *${itemModel.name!.trim().toLowerCase().capitalizeFirst}*,
@@ -657,18 +702,23 @@ Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemMode
  
 🤿 🐟 Happy diving !!! 🐟 🤿
                                           """;
-                                            var uri =
-                                                "https://wa.me/$phone?text=$message";
-                                            var encoded = Uri.encodeFull(uri);
-                                            if (!await launchUrl(
-                                                Uri.parse(encoded),
-                                                mode: LaunchMode
-                                                    .externalApplication)) {
-                                              showToast(
-                                                  "cannot launch whatsapp");
-                                            }
-                                          },
-                                        ).paddingOnly(right: 10),
+                                              var uri =
+                                                  "https://wa.me/$phone?text=$message";
+                                              var encoded = Uri.encodeFull(uri);
+                                              if (!await launchUrl(
+                                                  Uri.parse(encoded),
+                                                  mode: LaunchMode
+                                                      .externalApplication)) {
+                                                showToast(
+                                                    "cannot launch whatsapp");
+                                              }
+                                            },
+                                            child: TAImage(
+                                              AppImages.icon.whatsapp,
+                                              color: Colors.green,
+                                              height: 40,
+                                              width: 40,
+                                            )).paddingOnly(right: 10),
                                       if (itemModel.colorCode == "Blue")
                                         AppButton.miniFlat(
                                           text: "PaperWork",
@@ -1269,7 +1319,8 @@ Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemMode
               )
             else if (payment.time != null)
               Text(
-                intl.DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time!),
+                intl.DateFormat("EEE dd MMM yy - hh:mm a")
+                    .format(payment.time!),
                 style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
               )
             else
@@ -1294,7 +1345,8 @@ Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemMode
     );
   }
 
-  Widget buildNumber({FontWeight? fontWeight, Color? color, required String text}) {
+  Widget buildNumber(
+      {FontWeight? fontWeight, Color? color, required String text}) {
     return SizedBox(
       width: 39,
       child: Center(
@@ -1485,7 +1537,8 @@ class ItemModel {
 
     getTime() {
       var d = "";
-      if (bookingModel.theoryDate != null && bookingModel.theoryDate!.isNotEmpty)
+      if (bookingModel.theoryDate != null &&
+          bookingModel.theoryDate!.isNotEmpty)
         d = d +
             intl.DateFormat("hh:mm a").format(bookingModel.theoryDate![0]!) +
             ", ";

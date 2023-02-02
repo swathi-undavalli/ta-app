@@ -8,21 +8,35 @@ class AppImages {
 
 class _IconImages {
   const _IconImages();
+
   String get phone => "images/phone.svg";
+
   String get captain => "images/captain.svg";
+
   String get boat => "images/boat.svg";
+
   String get appLogo => "images/AppLogoPondy.png";
+
   String get vehicle => "images/vehicle.svg";
+
   String get newBoat => "images/newBoat.svg";
+
   String get messageBox => "images/messageBox.svg";
+
   String get folder => "images/folder.svg";
+
   String get pdfLogo => "images/pdfLogo.svg";
+
   String get pdfLogo1 => "images/PDFLogo.png";
+
   String get AppLogo => "images/AppLogoPondy.png";
+
+  String get whatsapp => "images/whatsapp.svg";
 }
 
 class _LottieImages {
   const _LottieImages();
+
   String get fireFlame => "assets/lotties/93361-fireflame.json";
 }
 

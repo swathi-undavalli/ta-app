@@ -16,92 +16,6 @@ LoginScreenLogic logic = LoginScreenLogic();
 class LoginScreenLogic {
   LoginScreenController controller = Get.put(LoginScreenController());
 
-  // List<Widget> getOtpFields() {
-  //   List<Widget> list = [];
-  //   for (int i = 0; i < 6; i++) {
-  //     list.add(
-  //       Expanded(
-  //         child: Padding(
-  //           padding: const EdgeInsets.symmetric(horizontal: 2.5),
-  //           child: Column(
-  //             children: [
-  //               RawKeyboardListener(
-  //                 onKey: (value) {
-  //                   if (value.logicalKey == LogicalKeyboardKey.backspace) {
-  //                     if (controller.textEditingControllersOTP[i].text.length == 0) {
-  //                       if (i != 0) controller.focusNodesOTP[i - 1].requestFocus();
-  //                     }
-  //                   }
-  //                 },
-  //                 focusNode: controller.keyboardFocusNodesOTP[i],
-  //                 child: TextField(
-  //                   textAlign: TextAlign.center,
-  //                   keyboardType: TextInputType.number,
-  //                   controller: controller.textEditingControllersOTP[i],
-  //                   focusNode: controller.focusNodesOTP[i],
-  //                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-  //                   decoration: InputDecoration(
-  //                     border: InputBorder.none,
-  //                     focusedBorder: InputBorder.none,
-  //                     enabledBorder: InputBorder.none,
-  //                     errorBorder: InputBorder.none,
-  //                     disabledBorder: InputBorder.none,
-  //                   ),
-  //                   style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 20, fontWeight: FontWeight.bold),
-  //                   onChanged: (_) {
-  //                     getOTP();
-  //                     bool isNum = false;
-  //                     controller.update();
-  //
-  //                     try {
-  //                       int a = int.parse(controller.textEditingControllersOTP[i].text);
-  //                       //print(a);
-  //                       isNum = true;
-  //                     } catch (e) {
-  //                       isNum = false;
-  //                     }
-  //
-  //                     if (isNum) {
-  //                       if (controller.textEditingControllersOTP[5].text != '' &&
-  //                           controller.textEditingControllersOTP[5].text.length >= 1) {
-  //                         controller.textEditingControllersOTP[5].text =
-  //                             controller.textEditingControllersOTP[5].text[0];
-  //                         disposeKeyboard();
-  //                         return;
-  //                       }
-  //                       if (controller.textEditingControllersOTP[i].text.length == 1) {
-  //                         controller.focusNodesOTP[i + 1].requestFocus();
-  //                       }
-  //                       if (controller.textEditingControllersOTP[i].text.length > 1) {
-  //                         controller.textEditingControllersOTP[i + 1].text =
-  //                             controller.textEditingControllersOTP[i].text[1];
-  //                         controller.textEditingControllersOTP[i].text =
-  //                             controller.textEditingControllersOTP[i].text[0];
-  //                         controller.focusNodesOTP[i + 1].requestFocus();
-  //                       }
-  //                     } else {
-  //                       controller.textEditingControllersOTP[i].clear();
-  //                       controller.focusNodesOTP[i].requestFocus();
-  //                     }
-  //                   },
-  //                 ),
-  //               ),
-  //               Container(
-  //                 height: 4,
-  //                 decoration: BoxDecoration(
-  //                   borderRadius: BorderRadius.circular(3),
-  //                   color: controller.textEditingControllersOTP[i].text.length == 1 ? Colors.black : Colors.grey,
-  //                 ),
-  //               ),
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     );
-  //   }
-  //   return list;
-  // }
-
   getPhoneNumber() {
     String phoneNumber = controller.phoneNumberTED.text;
     if (phoneNumber.length > 5) {
@@ -153,11 +67,6 @@ class LoginScreenLogic {
       controller.showLoading = true;
       controller.showPhoneNumber = false;
       if (await verifyEmployeeID()) {
-        // if (GetPlatform.isIOS) {
-        //   EmployeeRepo.initiateRepo(currentEmployee.id);
-        //   Get.offAndToNamed(WelcomeScreen.id);
-        // }
-        // else {
         await FirebaseAuth.instance.verifyPhoneNumber(
           timeout: Duration(seconds: 60),
           phoneNumber: getPhoneNumber(),
@@ -177,8 +86,8 @@ class LoginScreenLogic {
             controller.otpStatus = "OTP has been sent to ${getPhoneNumber()}";
             startTimer();
             String smsCode = await getFilledOTP();
-            PhoneAuthCredential credential =
-                PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+            PhoneAuthCredential credential = PhoneAuthProvider.credential(
+                verificationId: verificationId, smsCode: smsCode);
             await FirebaseAuth.instance.signInWithCredential(credential);
             if (FirebaseAuth.instance.currentUser != null) {
               EmployeeRepo.initiateRepo(currentEmployee!.id);
@@ -192,14 +101,21 @@ class LoginScreenLogic {
         // }
       } else {
         Get.defaultDialog(
-          contentPadding: EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 40),
+          contentPadding:
+              EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 40),
           title: "\n Oops!",
           middleText: "you are not Authorized to use this app.",
           backgroundColor: Colors.white,
           titleStyle: TextStyle(
-              color: AppColors.text.black, fontFamily: AppFonts.nunito, fontSize: 16, fontWeight: FontWeight.bold),
+              color: AppColors.text.black,
+              fontFamily: AppFonts.nunito,
+              fontSize: 16,
+              fontWeight: FontWeight.bold),
           middleTextStyle: TextStyle(
-              color: AppColors.text.black, fontFamily: AppFonts.nunito, fontSize: 16, fontWeight: FontWeight.bold),
+              color: AppColors.text.black,
+              fontFamily: AppFonts.nunito,
+              fontSize: 16,
+              fontWeight: FontWeight.bold),
           cancel: AppButton.miniFlat(
             text: 'OK',
             onTap: () {
@@ -237,7 +153,8 @@ class LoginScreenLogic {
       codeSent: (String verificationId, int? resendToken) async {
         controller.otpStatus = "OTP has been Resent";
         String smsCode = await getFilledOTP();
-        PhoneAuthCredential credential = PhoneAuthProvider.credential(verificationId: verificationId, smsCode: smsCode);
+        PhoneAuthCredential credential = PhoneAuthProvider.credential(
+            verificationId: verificationId, smsCode: smsCode);
         await FirebaseAuth.instance.signInWithCredential(credential);
         if (FirebaseAuth.instance.currentUser != null) {
           Get.offAndToNamed(WelcomeScreen.id);
