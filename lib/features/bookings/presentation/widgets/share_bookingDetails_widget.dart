@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+
 // import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
@@ -32,47 +33,48 @@ class ShareBookingDetails {
         build: (context) => <pw.Widget>[
           pw.Row(
             children: [
-              pw.Image(image, height: 90, width: 90),
+              pw.Image(image, height: 60, width: 60),
               pw.Spacer(),
               pw.FittedBox(
                 child: pw.Text(
                     "EAST COAST WATERSPORTS PVT LTD,\n#9A, Gandhi st., Colas Nagar,\nOpposite Indira Gandhi Stadium \nPondicerry, India \nContact : +91 9940219449",
-                    style: pw.TextStyle(color: PdfColor.fromInt(0xff263238))),
+                    style: pw.TextStyle(
+                        color: PdfColor.fromInt(0xff263238), fontSize: 14)),
               ),
             ],
           ),
-          pw.SizedBox(height: 33),
+          pw.SizedBox(height: 25),
           pw.Container(
               height: 1,
               width: Get.width * 2,
               color: PdfColor.fromInt(0xffD9D9D9)),
-          pw.SizedBox(height: 33),
+          pw.SizedBox(height: 25),
           pw.Center(
             child: pw.Text(
               "${booking.pax![0]["first-name"] + " " + booking.pax![0]["last-name"]}'s"
                   .capitalizeFirst!,
               style: pw.TextStyle(
-                fontSize: 25,
+                fontSize: 20,
                 color: PdfColors.black,
               ),
             ),
           ),
-          pw.SizedBox(height: 10),
+          pw.SizedBox(height: 6),
           pw.Center(
             child: pw.Text(
               booking.activity![0]!.name!,
               style: pw.TextStyle(
-                fontSize: 20,
+                fontSize: 16,
                 color: PdfColor.fromInt(0xff737373),
               ),
             ),
           ),
-          pw.SizedBox(height: 30),
+          pw.SizedBox(height: 25),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               buildSectionTitle(title: "Booking Details"),
-              pw.SizedBox(height: 10),
+              pw.SizedBox(height: 6),
               buildBookingDetails(title: "Booking ID", text: booking.id),
               buildBookingDetails(
                   title: "Name",
@@ -90,12 +92,12 @@ class ShareBookingDetails {
               buildDates(title: "Pool Dates", dates: booking.poolDate!),
             ],
           ),
-          pw.SizedBox(height: 20),
+          pw.SizedBox(height: 10),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               buildSectionTitle(title: "Payment Details"),
-              pw.SizedBox(height: 10),
+              pw.SizedBox(height: 6),
               buildBookingDetails(
                   title: "Total Amount",
                   text: (booking.totalCost.toStringAsFixed(0)) + " /-"),
@@ -115,22 +117,33 @@ class ShareBookingDetails {
                   text: (booking.paymentTransactionId != "")
                       ? booking.paymentTransactionId
                       : "-"),
+              pw.SizedBox(height: 10),
               buildAllTransactions(booking),
             ],
           ),
-          pw.SizedBox(height: 70),
+          pw.SizedBox(
+            child: pw.Text(
+              "Note : Thank you for considering Temple Adventures for your scuba diving experience. We are pleased to offer a variety of dive plans to accommodate your needs and preferences. Our team is dedicated to providing a safe and enjoyable diving experience, and sometimes we have to negotiate the time of your dive based on the availability of our boats.We understand that flexibility is important, and we strive to accommodate your schedule to the best of our ability. Please let us know if you have any specific requests, and we will do our best to accommodate them.",
+              style: pw.TextStyle(
+                fontSize: 10,
+                color: PdfColor.fromInt(0xff575757),
+                // fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 30),
           pw.Text(
             "For any queries,",
             style: pw.TextStyle(
-              fontSize: 12,
+              fontSize: 10,
               color: PdfColor.fromInt(0xff979797),
             ),
           ),
-          pw.SizedBox(height: 5),
+          pw.SizedBox(height: 3),
           pw.Text(
             "Contact : ${booking.employeeName}",
             style: pw.TextStyle(
-              fontSize: 12,
+              fontSize: 10,
               // fontWeight: pw.FontWeight.w600,
               color: PdfColor.fromInt(0xff505050),
             ),
@@ -141,7 +154,8 @@ class ShareBookingDetails {
     return saveDocument(name: 'ID: ${booking.id} BookingDetails.pdf', pdf: pdf);
   }
 
-  static Future<File> saveDocument({String? name, required pw.Document pdf}) async {
+  static Future<File> saveDocument(
+      {String? name, required pw.Document pdf}) async {
     final bytes = await pdf.save();
 
     final dir = await getApplicationDocumentsDirectory();
@@ -192,14 +206,8 @@ class ShareBookingDetails {
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
-          pw.Text(
-            "All Transactions",
-            style: pw.TextStyle(
-              fontSize: 14,
-              color: PdfColors.black,
-            ),
-          ),
-          pw.SizedBox(height: 10),
+          buildSectionTitle(title: "All Transactions"),
+          pw.SizedBox(height: 6),
           buildListOfPayments(
             payments: [
               PaymentModel(
@@ -253,7 +261,7 @@ class ShareBookingDetails {
           pw.Text(
             "Payment ${payment.amount!.round()} by ${payment.paymentMode ?? "-"} collected by ${payment.collectedBy}",
             style: pw.TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 // fontWeight: pw.FontWeight.w600,
                 wordSpacing: 2,
                 color: PdfColors.black),
@@ -297,7 +305,7 @@ class ShareBookingDetails {
             child: pw.Text(
               title,
               style: pw.TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 color: PdfColors.black,
                 // fontWeight: FontWeight.w500,
               ),
@@ -308,7 +316,7 @@ class ShareBookingDetails {
             child: pw.Text(
               "$text",
               style: pw.TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 color: PdfColor.fromInt(0xff575757),
                 // fontWeight: FontWeight.w500,
               ),
@@ -319,7 +327,8 @@ class ShareBookingDetails {
     );
   }
 
-  static pw.Widget buildDates({required String title, required List<DateTime?> dates}) {
+  static pw.Widget buildDates(
+      {required String title, required List<DateTime?> dates}) {
     return pw.Padding(
       padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
       child: pw.Row(
@@ -328,7 +337,7 @@ class ShareBookingDetails {
             child: pw.Text(
               title,
               style: pw.TextStyle(
-                fontSize: 14,
+                fontSize: 12,
                 color: PdfColors.black,
                 // fontWeight: FontWeight.w500,
               ),
@@ -344,7 +353,7 @@ class ShareBookingDetails {
                     child: pw.Text(
                       "$date",
                       style: pw.TextStyle(
-                        fontSize: 14,
+                        fontSize: 12,
                         color: PdfColor.fromInt(0xff575757),
                         // overflow: TextOverflow.ellipsis,
                       ),

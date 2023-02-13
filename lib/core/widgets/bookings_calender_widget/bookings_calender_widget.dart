@@ -18,6 +18,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   final bool highlightInvalidTime;
   final FilterType? calenderType;
   final AutoScrollController autoScrollController;
+
   BookingsCalenderWidgetNew({
     required this.onDateTimeSelected,
     this.onSearchTap,
@@ -73,8 +74,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     return EmployeeAccess(
       access: AccessRights.viewBookings,
       showMessage: true,
-      child:
-          GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
+      child: GetBuilder<BookingsCalenderWidgetControllerNew>(
+          builder: (controller) {
         return Column(
           children: [
             _buildDaySelector(),
@@ -93,7 +94,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   ///==================UI===================///
 
   Widget _buildBookingTypeSelector() {
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(
+        builder: (controller) {
       if (showDetails)
         return Column(
           children: [
@@ -181,7 +183,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                         "$count",
                         style: TextStyle(
                           color: color,
-                          fontSize: FontSize.small - 2,
+                          fontSize: 12,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -198,7 +200,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
 
   Widget _buildTimeTable() {
     logic.getTime();
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(
+        builder: (controller) {
       return Container(
         width: Get.width,
         decoration: BoxDecoration(
@@ -319,7 +322,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   // }
 
   Widget _buildBookingsList() {
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(
+        builder: (controller) {
       if (!showDetails) return SizedBox();
 
       //print(controller.bookings);
@@ -336,8 +340,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           controller.theoryCountN = count;
           controller.theoryCount = expansionList.length;
         });
-      }
-      else if (controller.selectedType == FilterType.Pool) {
+      } else if (controller.selectedType == FilterType.Pool) {
         controller.expansionItemModels.forEach((element) {
           if (element.session.contains("Pool")) expansionList.add(element);
           var count = 0;
@@ -347,8 +350,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           controller.poolCountN = count;
           controller.poolCount = expansionList.length;
         });
-      }
-      else if (controller.selectedType == FilterType.Dive) {
+      } else if (controller.selectedType == FilterType.Dive) {
         controller.expansionItemModels.forEach((element) {
           if (element.session.contains("Dive")) expansionList.add(element);
           var count = 0;
@@ -401,7 +403,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   }
 
   Widget _buildTimings(DateTime date) {
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(
+        builder: (controller) {
       getCircleColor(BookingsCalenderWidgetControllerNew controller) {
         if (controller.selectedDate == date)
           return AppColors.background.skyBlue;
@@ -505,7 +508,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           : AppColors.background.white;
     }
 
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(
+        builder: (controller) {
       return Container(
         height: 100,
         width: Get.width,
@@ -717,4 +721,3 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
 
   void clearSearch() {}
 }
-

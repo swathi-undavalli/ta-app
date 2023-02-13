@@ -6,13 +6,9 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import 'package:temple_adventures/access_levels.dart';
-import 'package:temple_adventures/d1.dart';
-import 'package:temple_adventures/d2.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
 import 'package:temple_adventures/features/bookings/controller/booking-controller.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:intl/intl.dart';
-import 'dart:developer';
 
 class BookingScreen extends StatelessWidget {
   static const String id = "BookingPage";

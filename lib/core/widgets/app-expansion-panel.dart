@@ -262,6 +262,16 @@ class BookingsExpansionPanel extends StatelessWidget {
                                         fontSize: 14,
                                         fontWeight: FontWeight.w600),
                                   ),
+                                  if (bookingCalenderLogicNew
+                                          .controller.selectedType ==
+                                      FilterType.Pool)
+                                    Text(
+                                      "(${intl.DateFormat("hh:mm a").format(itemModel.bookingModel!.poolDate![0]!)})",
+                                      style: TextStyle(
+                                          color: AppColors.text.black,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.w500),
+                                    ).paddingOnly(left: 5),
                                   if (getBalance(
                                           itemModel.bookingModel!.payments!,
                                           double.parse(itemModel.paid)
