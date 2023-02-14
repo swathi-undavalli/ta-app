@@ -67,7 +67,7 @@ class BookingsExpansionPanel extends StatelessWidget {
     return expansions;
   }
 
-  // final GlobalKey _menuKey = GlobalKey();
+  final GlobalKey _menuKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -162,47 +162,47 @@ class BookingsExpansionPanel extends StatelessWidget {
         return Colors.white;
     }
 
-    // final button = PopupMenuButton(
-    //     icon: TAImage(
-    //       AppImages.icon.whatsapp,
-    //       color: Colors.green,
-    //       height: 40,
-    //       width: 40,
-    //     ),
-    //     key: _menuKey,
-    //     itemBuilder: (_) => const <PopupMenuItem<String>>[
-    //           PopupMenuItem<String>(
-    //               child: Text(
-    //                 'Booking info',
-    //                 style: TextStyle(fontSize: 12),
-    //               ),
-    //               value: 'Doge'),
-    //           PopupMenuItem<String>(
-    //               child: Text(
-    //                 'Cancellation Warning',
-    //                 style: TextStyle(fontSize: 12),
-    //               ),
-    //               value: 'Lion'),
-    //           PopupMenuItem<String>(
-    //               child: Text(
-    //                 'Confirmation of timing',
-    //                 style: TextStyle(fontSize: 12),
-    //               ),
-    //               value: 'Lion'),
-    //           PopupMenuItem<String>(
-    //               child: Text(
-    //                 'Feedback',
-    //                 style: TextStyle(fontSize: 12),
-    //               ),
-    //               value: 'Lion'),
-    //           PopupMenuItem<String>(
-    //               child: Text(
-    //                 'Photos link',
-    //                 style: TextStyle(fontSize: 12),
-    //               ),
-    //               value: 'Lion'),
-    //         ],
-    //     onSelected: (_) {});
+    final button = PopupMenuButton(
+        icon: TAImage(
+          AppImages.icon.whatsapp,
+          color: Colors.green,
+          height: 40,
+          width: 40,
+        ),
+        key: _menuKey,
+        itemBuilder: (_) => const <PopupMenuItem<String>>[
+              PopupMenuItem<String>(
+                  child: Text(
+                    'Booking info',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  value: 'Doge'),
+              PopupMenuItem<String>(
+                  child: Text(
+                    'Cancellation Warning',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  value: 'Lion'),
+              PopupMenuItem<String>(
+                  child: Text(
+                    'Confirmation of timing',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  value: 'Lion'),
+              PopupMenuItem<String>(
+                  child: Text(
+                    'Feedback',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  value: 'Lion'),
+              PopupMenuItem<String>(
+                  child: Text(
+                    'Photos link',
+                    style: TextStyle(fontSize: 12),
+                  ),
+                  value: 'Lion'),
+            ],
+        onSelected: (_) {});
 
     return GetBuilder<ExpansionPanelController>(builder: (controller) {
       return Padding(
@@ -651,84 +651,84 @@ Regards,
                                         SelectSeatsWidget(
                                             itemModel.bookingModel),
                                       Spacer(),
-                                      if (itemModel.colorCode == "Blue")
-                                        GestureDetector(
-                                            onTap: () async {
-                                              String bookingId =
-                                                  itemModel.bookingModel!.id!;
-                                              String bs64 = base64
-                                                  .encode(bookingId.codeUnits);
-                                              print(bs64);
-                                              String link =
-                                                  "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=";
-                                              log(link);
-
-                                              var headers = {
-                                                "x-api-key":
-                                                    "uSirf5x9fM5iYjPuu8GXS4TVvLbt1tdg9DUe7f7N",
-                                                "Content-Type":
-                                                    "application/json"
-                                              };
-                                              final result = await http.post(
-                                                Uri.parse(
-                                                    'https://api.aws3.link/shorten'),
-                                                body: jsonEncode({
-                                                  "longUrl": link,
-                                                  "expireHours": 48,
-                                                }),
-                                                headers: headers,
-                                              );
-
-                                              final jsonLink = jsonDecode(
-                                                  result.body)["shortUrl"];
-
-                                              String phone = itemModel.phone!
-                                                  .replaceAll("+", "");
-                                              String message = """
-                                          *Temple Adventures - Scuba Diving Pondicherry*
- 
-Hey *${itemModel.name!.trim().toLowerCase().capitalizeFirst}*,
-
-Thanks for choosing us, we are excited to take you scuba diving with us 😍. 
-
-Here are your booking details 
-
-*Booking details:* 
-Booking ID : *${itemModel.bookingID}* 
-Course Name : *${itemModel.activity}* 
-Pool Date : *${intl.DateFormat("dd-MM-yyy").format(itemModel.bookingModel!.poolDate![0]!)}* 
-Pool Time : *${intl.DateFormat("hh:mm a").format(itemModel.bookingModel!.poolDate![0]!)}* 
-Dive Date : *${intl.DateFormat("dd-MM-yyy").format(itemModel.bookingModel!.diveDate![0]!)}* 
-Dive Time : *${intl.DateFormat("hh:mm a").format(itemModel.bookingModel!.diveDate![0]!)}* 
-Total Cost : *${double.parse(itemModel.cost).roundToDouble()} /-* 
-Deposit : *${double.parse(itemModel.paid).roundToDouble()} /-* 
-Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-* 
-
-*We need to submit all diver details to the *Marine Police / Coast Guard** and *PADI.* To process the same and take you diving, we need *all the divers to complete* the *paperwork process*. You may share this link with them. 
-
-*Please complete the paperwork process* by clicking this link: $jsonLink . This includes _Discover Scuba Diving Form, Medical Form, Liability Releases, Agency NDA and our policies_
-
-*Please arrive 15 minutes before your scheduled pool session and your ocean dive. If you are late on the day of your ocean dive you will miss your spot on the boat.*
- 
-🤿 🐟 Happy diving !!! 🐟 🤿
-                                          """;
-                                              var uri =
-                                                  "https://wa.me/$phone?text=$message";
-                                              var encoded = Uri.encodeFull(uri);
-                                              if (!await launchUrl(
-                                                  Uri.parse(encoded),
-                                                  mode: LaunchMode
-                                                      .externalApplication)) {
-                                                showToast(
-                                                    "cannot launch whatsapp");
-                                              }
-                                            },
-                                            child: TAImage(
-                                              AppImages.icon.whatsapp,
-                                              color: Colors.green,
-                                              height: 40,
-                                              width: 40,
-                                            )).paddingOnly(right: 10),
+                                      if (itemModel.colorCode == "Blue") button,
+//                                         GestureDetector(
+//                                             onTap: () async {
+//                                               String bookingId =
+//                                                   itemModel.bookingModel!.id!;
+//                                               String bs64 = base64
+//                                                   .encode(bookingId.codeUnits);
+//                                               print(bs64);
+//                                               String link =
+//                                                   "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=";
+//                                               log(link);
+//
+//                                               var headers = {
+//                                                 "x-api-key":
+//                                                     "uSirf5x9fM5iYjPuu8GXS4TVvLbt1tdg9DUe7f7N",
+//                                                 "Content-Type":
+//                                                     "application/json"
+//                                               };
+//                                               final result = await http.post(
+//                                                 Uri.parse(
+//                                                     'https://api.aws3.link/shorten'),
+//                                                 body: jsonEncode({
+//                                                   "longUrl": link,
+//                                                   "expireHours": 48,
+//                                                 }),
+//                                                 headers: headers,
+//                                               );
+//
+//                                               final jsonLink = jsonDecode(
+//                                                   result.body)["shortUrl"];
+//
+//                                               String phone = itemModel.phone!
+//                                                   .replaceAll("+", "");
+//                                               String message = """
+//                                           *Temple Adventures - Scuba Diving Pondicherry*
+//
+// Hey *${itemModel.name!.trim().toLowerCase().capitalizeFirst}*,
+//
+// Thanks for choosing us, we are excited to take you scuba diving with us 😍.
+//
+// Here are your booking details
+//
+// *Booking details:*
+// Booking ID : *${itemModel.bookingID}*
+// Course Name : *${itemModel.activity}*
+// Pool Date : *${intl.DateFormat("dd-MM-yyy").format(itemModel.bookingModel!.poolDate![0]!)}*
+// Pool Time : *${intl.DateFormat("hh:mm a").format(itemModel.bookingModel!.poolDate![0]!)}*
+// Dive Date : *${intl.DateFormat("dd-MM-yyy").format(itemModel.bookingModel!.diveDate![0]!)}*
+// Dive Time : *${intl.DateFormat("hh:mm a").format(itemModel.bookingModel!.diveDate![0]!)}*
+// Total Cost : *${double.parse(itemModel.cost).roundToDouble()} /-*
+// Deposit : *${double.parse(itemModel.paid).roundToDouble()} /-*
+// Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-*
+//
+// *We need to submit all diver details to the *Marine Police / Coast Guard** and *PADI.* To process the same and take you diving, we need *all the divers to complete* the *paperwork process*. You may share this link with them.
+//
+// *Please complete the paperwork process* by clicking this link: $jsonLink . This includes _Discover Scuba Diving Form, Medical Form, Liability Releases, Agency NDA and our policies_
+//
+// *Please arrive 15 minutes before your scheduled pool session and your ocean dive. If you are late on the day of your ocean dive you will miss your spot on the boat.*
+//
+// 🤿 🐟 Happy diving !!! 🐟 🤿
+//                                           """;
+//                                               var uri =
+//                                                   "https://wa.me/$phone?text=$message";
+//                                               var encoded = Uri.encodeFull(uri);
+//                                               if (!await launchUrl(
+//                                                   Uri.parse(encoded),
+//                                                   mode: LaunchMode
+//                                                       .externalApplication)) {
+//                                                 showToast(
+//                                                     "cannot launch whatsapp");
+//                                               }
+//                                             },
+//                                             child: TAImage(
+//                                               AppImages.icon.whatsapp,
+//                                               color: Colors.green,
+//                                               height: 40,
+//                                               width: 40,
+//                                             )).paddingOnly(right: 10),
                                       if (itemModel.colorCode == "Blue")
                                         AppButton.miniFlat(
                                           text: "PaperWork",
