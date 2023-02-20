@@ -92,7 +92,18 @@ class ShareBookingDetails {
               buildDates(title: "Pool Dates", dates: booking.poolDate!),
             ],
           ),
-          pw.SizedBox(height: 10),
+          pw.SizedBox(height: 20),
+          pw.SizedBox(
+            child: pw.Text(
+              "Note : Thank you for considering Temple Adventures for your scuba diving experience. We are pleased to offer a variety of dive plans to accommodate your needs and preferences. Our team is dedicated to providing a safe and enjoyable diving experience, and sometimes we have to negotiate the time of your dive based on the availability of our boats.We understand that flexibility is important, and we strive to accommodate your schedule to the best of our ability. Please let us know if you have any specific requests, and we will do our best to accommodate them.",
+              style: pw.TextStyle(
+                fontSize: 10,
+                color: PdfColor.fromInt(0xff575757),
+                // fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          pw.SizedBox(height: 20),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -114,22 +125,13 @@ class ShareBookingDetails {
                   title: "Payment Mode", text: booking.paymentMode ?? "-"),
               buildBookingDetails(
                   title: "Transaction ID",
-                  text: (booking.paymentTransactionId != "")
+                  text: (booking.paymentTransactionId != "" ||
+                          booking.paymentTransactionId != null)
                       ? booking.paymentTransactionId
                       : "-"),
               pw.SizedBox(height: 10),
               buildAllTransactions(booking),
             ],
-          ),
-          pw.SizedBox(
-            child: pw.Text(
-              "Note : Thank you for considering Temple Adventures for your scuba diving experience. We are pleased to offer a variety of dive plans to accommodate your needs and preferences. Our team is dedicated to providing a safe and enjoyable diving experience, and sometimes we have to negotiate the time of your dive based on the availability of our boats.We understand that flexibility is important, and we strive to accommodate your schedule to the best of our ability. Please let us know if you have any specific requests, and we will do our best to accommodate them.",
-              style: pw.TextStyle(
-                fontSize: 10,
-                color: PdfColor.fromInt(0xff575757),
-                // fontWeight: FontWeight.w500,
-              ),
-            ),
           ),
           pw.SizedBox(height: 30),
           pw.Text(
@@ -345,22 +347,36 @@ class ShareBookingDetails {
           ),
           pw.Column(
             children: [
-              ...dates.map(
-                (e) {
-                  String date = DateFormat('dd-MM-yyyy @ hh:mm a').format(e!);
-                  return pw.Container(
-                    width: 200,
-                    child: pw.Text(
-                      "$date",
-                      style: pw.TextStyle(
-                        fontSize: 12,
-                        color: PdfColor.fromInt(0xff575757),
-                        // overflow: TextOverflow.ellipsis,
+              if (dates.isNotEmpty)
+                ...dates.map(
+                  (e) {
+                    String date = DateFormat('dd-MM-yyyy').format(e!);
+                    log(date.toString());
+                    return pw.Container(
+                      width: 200,
+                      child: pw.Text(
+                        "$date",
+                        style: pw.TextStyle(
+                          fontSize: 12,
+                          color: PdfColor.fromInt(0xff575757),
+                          // overflow: TextOverflow.ellipsis,
+                        ),
                       ),
+                    );
+                  },
+                )
+              else
+                pw.Container(
+                  width: 200,
+                  child: pw.Text(
+                    "-",
+                    style: pw.TextStyle(
+                      fontSize: 12,
+                      color: PdfColor.fromInt(0xff575757),
+                      // overflow: TextOverflow.ellipsis,
                     ),
-                  );
-                },
-              )
+                  ),
+                )
             ],
           ),
         ],

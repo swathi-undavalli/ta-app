@@ -35,6 +35,8 @@ class BookingModel {
     this.idProofs,
     this.payments,
     this.createdAt,
+    this.cancelBooking,
+    this.cancellationReason,
   });
 
   List<ActivityModel?>? activity;
@@ -59,6 +61,9 @@ class BookingModel {
   List<String>? bookingDate;
   String? discountType;
   DateTime? createdAt;
+  bool? cancelBooking;
+  String? cancellationReason;
+
 
   factory BookingModel.fromMap(Map<String, dynamic> json) {
     //log("fromMap");
@@ -101,9 +106,11 @@ class BookingModel {
       theoryDate: List<DateTime>.from(
           json["theoryDate"].map((x) => parseDateOrNull(x))),
       poolDate:
-      List<DateTime>.from(json["poolDate"].map((x) => parseDateOrNull(x))),
+          List<DateTime>.from(json["poolDate"].map((x) => parseDateOrNull(x))),
       diveDate:
-      List<DateTime>.from(json["diveDate"].map((x) => parseDateOrNull(x))),
+          List<DateTime>.from(json["diveDate"].map((x) => parseDateOrNull(x))),
+      cancelBooking: json["cancelBooking"],
+      cancellationReason: json["cancellationReason"],
     );
   }
 
@@ -130,11 +137,13 @@ class BookingModel {
       "location": location,
       "paymentTransactionId": paymentTransactionId,
       "theoryDate":
-      List<String>.from((theoryDate ?? []).map((x) => toDateOrNull(x))),
+          List<String>.from((theoryDate ?? []).map((x) => toDateOrNull(x))),
       "poolDate":
-      List<String>.from((poolDate ?? []).map((x) => toDateOrNull(x))),
+          List<String>.from((poolDate ?? []).map((x) => toDateOrNull(x))),
       "diveDate":
-      List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
+          List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
+      "cancelBooking": cancelBooking,
+      "cancellationReason": cancellationReason,
     };
   }
 
@@ -248,12 +257,12 @@ class PaymentModel {
   }
 
   Map<String, dynamic> toMap() => {
-    "amount": amount,
-    "collectedBy": collectedBy,
-    "time": toDateOrNull(time),
-    "reciptNo": reciptNo,
-    "referenceNo": referenceNo,
-    "remarks": remarks,
-    "paymentMode": paymentMode,
-  };
+        "amount": amount,
+        "collectedBy": collectedBy,
+        "time": toDateOrNull(time),
+        "reciptNo": reciptNo,
+        "referenceNo": referenceNo,
+        "remarks": remarks,
+        "paymentMode": paymentMode,
+      };
 }
