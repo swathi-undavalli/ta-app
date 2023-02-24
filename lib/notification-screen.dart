@@ -28,7 +28,6 @@ class NotificationsScreen extends StatelessWidget {
         .get();
     logic.controller.bookingModel = BookingModel.fromMap(data.data()!);
     logic.controller.update();
-    log(logic.controller.bookingModel.id!);
     logic.controller.loading = false;
   }
 
@@ -50,82 +49,83 @@ class NotificationsScreen extends StatelessWidget {
             body: SafeArea(
               child: GetBuilder<NotificationController>(builder: (controller) {
                 return SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.only(
-                        top: 0, left: 30, right: 30, bottom: 30),
-                    child: Container(
-                      width: Get.width,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "Hurrah !!",
-                            style: TextStyle(
-                                fontSize: 30,
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.text.skyBlue),
-                          ),
-                          SizedBox(height: 30),
-                          buildHeading(
-                              title: "New Booking Created by",
-                              text: controller.bookingModel.employeeName),
-                          SizedBox(height: 50),
-                          buildBookingDetails(
-                              title: "Booking ID",
-                              text: controller.bookingModel.id),
-                          buildBookingDetails(
-                              title: "Name",
-                              text: controller.bookingModel.pax![0]["first-name"] +
-                                  " " +
-                                  controller.bookingModel.pax![0]["last-name"]),
-                          buildBookingDetails(
-                              title: "Pax",
-                              text: controller.bookingModel.noOfPersons.toString()),
-                          buildBookingDetails(
-                              title: "Email ID",
-                              text: controller.bookingModel.pax![0]["email"]),
-                          buildBookingDetails(
-                              title: "Total Amount",
-                              text: (controller.bookingModel.totalCost
-                                  .toStringAsFixed(0)) + "/-"),
-                          buildBookingDetails(
-                              title: "Deposit",
-                              text: controller.bookingModel.paid!.toStringAsFixed(0) + "/-"),
-                          buildBookingDetails(
-                              title: "Balance",
-                              text: (controller.bookingModel.totalCost -
-                                  controller.bookingModel.paid!)
-                                  .toStringAsFixed(0) + "/-"),
-                          buildBookingDetails(
-                              title: "Receipt No",
-                              text: controller.bookingModel.receiptNo ?? "-"),
-                          buildBookingDetails(
-                              title: "Payment Mode",
-                              text: controller.bookingModel.paymentMode ?? "-"),
-                          buildBookingDetails(
-                              title: "Transaction ID",
-                              text: controller.bookingModel.paymentTransactionId ??
-                                  "-"),
-                          buildBookingDetails(
-                              title: "Activity",
-                              text: controller.bookingModel.activity![0]!.name),
-                          buildDates(
-                              title: "Dive Dates",
-                              dates: controller.bookingModel.diveDate!),
-                          buildDates(
-                              title: "Theory Dates",
-                              dates: controller.bookingModel.theoryDate!),
-                          buildDates(
-                              title: "Pool Dates",
-                              dates: controller.bookingModel.poolDate!),
-                          buildBookingDetails(
-                              title: "Remarks",
-                              text: (controller.bookingModel.remarks != "")
-                                  ? controller.bookingModel.remarks
-                                  : "-"),
-                        ],
-                      ),
-                    ),
+                  child: Container(
+                    width: Get.width,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          "Hurrah !!",
+                          style: TextStyle(
+                              fontSize: 30,
+                              fontWeight: FontWeight.w600,
+                              color: AppColors.text.skyBlue),
+                        ),
+                        SizedBox(height: 30),
+                        buildHeading(
+                            title: "New Booking Created by",
+                            text: controller.bookingModel?.employeeName ?? ""),
+                        SizedBox(height: 50),
+                        buildBookingDetails(
+                            title: "Booking ID",
+                            text: controller.bookingModel?.id ?? ""),
+                        buildBookingDetails(
+                            title: "Name",
+                            text:
+                                "${controller.bookingModel?.pax?[0]["first-name"] ?? ""} "
+                                "${controller.bookingModel?.pax?[0]["last-name"] ?? ""}"),
+                        buildBookingDetails(
+                            title: "Pax",
+                            text: controller.bookingModel?.noOfPersons
+                                .toString()),
+                        buildBookingDetails(
+                            title: "Email ID",
+                            text: controller.bookingModel?.pax![0]["email"]),
+                        buildBookingDetails(
+                            title: "Total Amount",
+                            text: (controller.bookingModel?.totalCost
+                                        .toStringAsFixed(0) ??
+                                    "-") +
+                                "/-"),
+                        buildBookingDetails(
+                            title: "Deposit",
+                            text: (controller.bookingModel?.paid
+                                        ?.toStringAsFixed(0) ??
+                                    "-") +
+                                "/-"),
+                        buildBookingDetails(
+                            title: "Balance",
+                            text: ((controller.bookingModel?.totalCost ?? 0) -
+                                        (controller.bookingModel?.paid ?? 0))
+                                    .toStringAsFixed(0) +
+                                "/-"),
+                        buildBookingDetails(
+                            title: "Receipt No",
+                            text: controller.bookingModel?.receiptNo),
+                        buildBookingDetails(
+                            title: "Payment Mode",
+                            text: controller.bookingModel?.paymentMode),
+                        buildBookingDetails(
+                            title: "Transaction ID",
+                            text:
+                                controller.bookingModel?.paymentTransactionId),
+                        buildBookingDetails(
+                            title: "Activity",
+                            text: controller.bookingModel?.activity?[0]?.name),
+                        buildDates(
+                            title: "Dive Dates",
+                            dates: controller.bookingModel?.diveDate),
+                        buildDates(
+                            title: "Theory Dates",
+                            dates: controller.bookingModel?.theoryDate),
+                        buildDates(
+                            title: "Pool Dates",
+                            dates: controller.bookingModel?.poolDate),
+                        buildBookingDetails(
+                            title: "Remarks",
+                            text: controller.bookingModel?.remarks),
+                      ],
+                    ).paddingOnly(top: 0, left: 30, right: 30, bottom: 30),
                   ),
                 );
               }),
@@ -145,14 +145,13 @@ class NotificationsScreen extends StatelessWidget {
           width: Get.width,
           child: Center(
               child: CircularProgressIndicator(
-                color: Colors.white,
-              )),
+            color: Colors.white,
+          )),
         );
       else
         return Container();
     });
   }
-
 
   Widget buildBookingDetails({required String title, String? text}) {
     return Padding(
@@ -172,7 +171,7 @@ class NotificationsScreen extends StatelessWidget {
           Container(
             width: 150,
             child: Text(
-              "$text",
+              (text != null && text.isNotEmpty) ? "$text" : "-",
               style: TextStyle(
                   fontSize: 12,
                   fontFamily: AppFonts.nunito,
@@ -216,7 +215,7 @@ class NotificationsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildDates({required String title, required List<DateTime?> dates}) {
+  Widget buildDates({required String title, required List<DateTime?>? dates}) {
     return Padding(
       padding: const EdgeInsets.only(left: 20.0, right: 20, top: 10),
       child: Row(
@@ -231,26 +230,29 @@ class NotificationsScreen extends StatelessWidget {
                   fontWeight: FontWeight.w500),
             ),
           ),
-          Column(
-            children: [
-              ...dates.map(
-                    (e) {
-                  String date = DateFormat('dd-MM-yyyy @ hh:mm a').format(e!);
-                  return Container(
-                      width: 150,
-                      child: Text(
-                        "$date",
-                        style: TextStyle(
-                            fontSize: 12,
-                            fontFamily: AppFonts.nunito,
-                            color: AppColors.text.black,
-                            fontWeight: FontWeight.w500,
-                            overflow: TextOverflow.ellipsis),
-                      ));
-                },
-              )
-            ],
-          ),
+          (dates != null && dates.isNotEmpty)
+              ? Column(
+                  children: [
+                    ...dates.map(
+                      (e) {
+                        String date =
+                            DateFormat('dd-MM-yyyy @ hh:mm a').format(e!);
+                        return Container(
+                            width: 150,
+                            child: Text(
+                              "$date",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  fontFamily: AppFonts.nunito,
+                                  color: AppColors.text.black,
+                                  fontWeight: FontWeight.w500,
+                                  overflow: TextOverflow.ellipsis),
+                            ));
+                      },
+                    )
+                  ],
+                )
+              : Container(width: 150, child: Text("-")),
         ],
       ),
     );
@@ -262,7 +264,7 @@ class NotificationLogic {
 }
 
 class NotificationController extends GetxController {
-  late BookingModel bookingModel;
+  BookingModel? bookingModel;
   bool _loading = false;
 
   bool get loading => _loading;

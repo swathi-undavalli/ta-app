@@ -17,7 +17,7 @@ class EditBookingNewLogic {
   getDataFromFireBase() async {
     //print("Strated");
     QuerySnapshot<Map<String, dynamic>> catalogue =
-        await FirebaseFirestore.instance.collection('catalogue').get();
+        await FirebaseFirestore.instance.collection("catalogue").get();
     controller.activities = [];
     for (int i = 0; i < catalogue.docs.length; i++) {
       if (catalogue.docs[i].id == 'colors') continue;

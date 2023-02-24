@@ -61,7 +61,7 @@ class NewBookingLogic {
     controller.bookingModel.employeeName =
         currentEmployee!.firstName! + currentEmployee!.lastName!;
     if (controller.payingNowTED.text == "" ||
-        controller.payingNowTED.text == 0.toString()) {
+        int.parse(controller.payingNowTED.text) == 0) {
       createCustomer();
       createBooking();
       Get.defaultDialog(
@@ -140,11 +140,7 @@ class NewBookingLogic {
       controller.bookingModel.paymentMode = controller.paymentModeTED.text;
       controller.bookingModel.paymentTransactionId =
           controller.paymentReferenceTED.text;
-      if (controller.receiptNoTED.text == "") {
-        controller.bookingModel.receiptNo = "";
-      } else
-        controller.bookingModel.receiptNo = controller.receiptNoTED.text;
-      // Get.toNamed(AddCustomerDetailsScreen.id);
+      controller.bookingModel.receiptNo = controller.receiptNoTED.text;
       createCustomer();
       createBooking();
       Get.defaultDialog(
@@ -206,10 +202,8 @@ class NewBookingLogic {
         showTitleActions: true,
         minTime: DateTime.now().subtract(Duration(days: 36500)),
         maxTime: DateTime.now(), onChanged: (date) {
-      // //print('change $date');
       controller.paymentDate = date;
     }, onConfirm: (date) {
-      // //print('confirm $date');
       controller.paymentDate = date;
       controller.update();
     },
@@ -238,14 +232,11 @@ class NewBookingLogic {
         minTime: DateTime.now().subtract(Duration(days: 36500)),
         maxTime: DateTime.now().subtract(Duration(days: 2920)),
         onChanged: (date) {
-      // //print('change $date');
       controller.dob = date;
       controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
     }, onConfirm: (date) {
-      // //print('confirm $date');
       controller.dob = date;
       controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
-
       controller.update();
     },
         currentTime: controller.dob,
@@ -462,36 +453,25 @@ class NewBookingLogic {
   }
 
   createBooking() async {
-    //print("createBooking");
     controller.bookingModel.bookingDate = [];
-
     if (controller.bookingModel.theoryDate != null &&
         controller.bookingModel.theoryDate!.isNotEmpty) {
       controller.bookingModel.theoryDate!.forEach((element) {
-        //print(getStringDate(element));
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       });
     }
     if (controller.bookingModel.poolDate != null &&
         controller.bookingModel.poolDate!.isNotEmpty) {
       controller.bookingModel.poolDate!.forEach((element) {
-        //print(getStringDate(element));
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       });
     }
     if (controller.bookingModel.diveDate != null &&
         controller.bookingModel.diveDate!.isNotEmpty) {
       controller.bookingModel.diveDate!.forEach((element) {
-        //print(getStringDate(element));
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       });
     }
-    try {
-      log(controller.bookingModel.toMap().toString());
-    } catch (e) {
-      print(e);
-    }
-    log(controller.bookingModel.noOfPersons.toString());
     controller.bookingId =
         await FirebaseApi.addNewBooking(controller.bookingModel);
     LogModel logModel =
@@ -501,12 +481,19 @@ class NewBookingLogic {
   }
 
   onContinueChooseDatesPressed() {
-    if (controller.bookingModel.theoryDate != null ||
-        controller.bookingModel.poolDate != null ||
-        controller.bookingModel.diveDate != null) {
-      Get.toNamed(NewBookingScreen.id);
-    } else
-      showToast("Please select at-least one session");
+    if (controller.bookingModel.activity != null) {
+      if ((controller.bookingModel.theoryDate != null &&
+              controller.bookingModel.theoryDate!.isNotEmpty) ||
+          (controller.bookingModel.poolDate != null &&
+              controller.bookingModel.poolDate!.isNotEmpty) ||
+          (controller.bookingModel.diveDate != null &&
+              controller.bookingModel.diveDate!.isNotEmpty)) {
+        Get.toNamed(NewBookingScreen.id);
+      } else
+        showToast("Please select at-least one session");
+    } else {
+      showToast("Please select Activity");
+    }
   }
 
   void onCheckPressed() {
@@ -525,6 +512,7 @@ class NewBookingLogic {
         "dob": controller.dob,
       });
       log(controller.dob.toString());
+      log("country code${controller.countryCodeTED.text}");
       controller.bookingModel.noOfPersons = getInt(controller.paxTED.text);
       disposeKeyboard();
       Get.toNamed(BookDateTime.id);
@@ -543,10 +531,14 @@ class NewBookingLogic {
     if (data == null) return false;
     controller.customerModel = CustomerModel.fromMap(data);
     log(controller.customerModel.toMap().toString());
-    controller.fNameTED.text = controller.customerModel.firstName!;
-    controller.lNameTED.text = controller.customerModel.lastName!;
-    controller.phoneNumberTED.text = controller.customerModel.phoneNumber!;
-    controller.countryCodeTED.text = controller.customerModel.countryCode!;
+    controller.fNameTED.text = controller.customerModel.firstName ?? "";
+    controller.lNameTED.text = controller.customerModel.lastName ?? "";
+    controller.phoneNumberTED.text = controller.customerModel.phoneNumber ?? "";
+    controller.countryCodeTED.text =
+        ((controller.customerModel.countryCode != null &&
+                controller.customerModel.countryCode!.isNotEmpty)
+            ? controller.customerModel.countryCode
+            : "+91")!;
     return true;
   }
 }
@@ -649,7 +641,7 @@ class NewBookingController extends GetxController {
   TextEditingController dobTED = TextEditingController();
 
   DateTime? _dob = DateTime.now();
-  List<ActivityModel?> selectedActivity = [];
+  ActivityModel? selectedActivity;
 
   double _cost = 0;
   double _balance = 0;
@@ -681,7 +673,7 @@ class NewBookingController extends GetxController {
     countryCodeTED.text = "";
     remarksTED.text = "";
     receiptNoTED.text = "";
-    selectedActivity = [];
+    selectedActivity = null;
     _isoCode = "IN";
     _cost = 0;
     _taxableAmount = 0;

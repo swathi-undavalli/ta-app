@@ -147,10 +147,11 @@ class EmployeeDetailsScreen extends StatelessWidget {
                       buildEmployeeInfo(
                           subHeading: "Name", text: employeeArgument!.name),
                       buildEmployeeInfo(
-                          subHeading: "Employee ID", text: employeeArgument!.id!),
+                          subHeading: "Employee ID",
+                          text: employeeArgument!.id!),
                       buildEmployeeInfo(
                           subHeading: "Padi No",
-                          text: employeeArgument!.agencyId ?? "-"),
+                          text: employeeArgument!.agencyId),
                       buildEmployeeInfo(
                           subHeading: "Phone Number",
                           text: employeeArgument!.countryCode! +
@@ -169,7 +170,9 @@ class EmployeeDetailsScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       buildEmployeeInfo(
-                          subHeading: "Login Time", text: "06:00:00"),
+                          subHeading: "Login Time",
+                          text: DateFormat("hh:mm a")
+                              .format(employeeArgument!.shiftTiming!)),
                       buildEmployeeInfo(
                           subHeading: "Login Location", text: "Pondicherry"),
                       SizedBox(height: 10),
@@ -213,7 +216,8 @@ class EmployeeDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget buildEmployeeInfo({required String subHeading, required String text}) {
+  Widget buildEmployeeInfo(
+      {required String subHeading, required String? text}) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
@@ -236,7 +240,9 @@ class EmployeeDetailsScreen extends StatelessWidget {
             Container(
               width: 150,
               child: Text(
-                ":      " + text,
+                (text != null && text.isNotEmpty)
+                    ? ":      " + text
+                    : ":      " + "-",
                 style: TextStyle(
                     color: AppColors.text.black,
                     fontSize: 12,
@@ -302,16 +308,16 @@ class EmployeeDetailsScreen extends StatelessWidget {
       final DateFormat formatter = DateFormat('HH:mm');
       final String shiftTiming = formatter.format(date);
       logic.controller.pickedTime = employee.shiftTiming;
-      logic.controller.employeeIdTED.text = employee.id!;
-      logic.controller.firstNameTED.text = employee.firstName!;
-      logic.controller.lastNameTED.text = employee.lastName!;
+      logic.controller.employeeIdTED.text = employee.id ?? "";
+      logic.controller.firstNameTED.text = employee.firstName ?? "";
+      logic.controller.lastNameTED.text = employee.lastName ?? "";
       logic.controller.shiftTimeTED.text = shiftTiming;
-      logic.controller.phoneNumberTED.text = employee.phoneNumber!;
-      logic.controller.countryCodeTED.text = employee.countryCode!;
+      logic.controller.phoneNumberTED.text = employee.phoneNumber ?? "";
+      logic.controller.countryCodeTED.text = employee.countryCode ?? "";
       logic.controller.countryISoCOde = employee.countryIsoCode;
-      logic.controller.genderTED.text = employee.gender!;
-      logic.controller.roleTED.text = employee.role!;
-      logic.controller.agencyIdTED.text = employee.agencyId!;
+      logic.controller.genderTED.text = employee.gender ?? "";
+      logic.controller.roleTED.text = employee.role ?? "";
+      logic.controller.agencyIdTED.text = employee.agencyId ?? "";
       logic.controller.viewBookings = employee.accessLevels!.viewBookings;
       logic.controller.createBookings = employee.accessLevels!.createBookings;
       logic.controller.editBookings = employee.accessLevels!.editBookings;

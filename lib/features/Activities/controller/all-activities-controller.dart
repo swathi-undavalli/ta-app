@@ -15,7 +15,6 @@ class AllActivitiesLogic {
   getAllActivities() async {
     var data = await FirebaseFirestore.instance.collection("catalogue").get();
     controller.allActivitiesList = [];
-
     for (var element in data.docs) {
       if (element.id == 'colors') {
         continue;

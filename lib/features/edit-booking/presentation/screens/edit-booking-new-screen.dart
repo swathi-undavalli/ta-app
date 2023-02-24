@@ -38,15 +38,15 @@ class EditBookingNewScreen extends StatelessWidget {
     logic.controller.depositTED.text = bookingArg!.paid.toString();
     logic.controller.balanceTED.text = bookingArg!.balance.toString();
     logic.controller.paxTED.text = bookingArg!.noOfPersons.toString();
-    logic.controller.remarksTED.text = bookingArg!.remarks ?? "-";
-    logic.controller.invoiceTED.text = bookingArg!.receiptNo ?? "-";
+    logic.controller.remarksTED.text = bookingArg!.remarks ?? "";
+    logic.controller.invoiceTED.text = bookingArg!.receiptNo ?? "";
     logic.controller.countryCodeTED.text =
-        bookingArg!.pax![0]["countryCode"] ?? "-";
-    logic.controller.phoneTED.text = bookingArg!.pax![0]["phoneNumber"] ?? "-";
-    logic.controller.emailTED.text = bookingArg!.pax![0]["email"] ?? "-";
+        bookingArg!.pax![0]["countryCode"] ?? "";
+    logic.controller.phoneTED.text = bookingArg!.pax![0]["phoneNumber"] ?? "";
+    logic.controller.emailTED.text = bookingArg!.pax![0]["email"] ?? "";
     logic.controller.firstNameTED.text = bookingArg!.pax![0]["first-name"];
-    logic.controller.lastNameTED.text = bookingArg!.pax![0]["last-name"] ?? "-";
-    logic.controller.isoCode = bookingArg!.pax![0]["isoCode"] ?? "-";
+    logic.controller.lastNameTED.text = bookingArg!.pax![0]["last-name"] ?? "";
+    logic.controller.isoCode = bookingArg!.pax![0]["isoCode"] ?? "";
     logic.controller.discountTED.text = bookingArg!.discount?.toString() ?? "0";
     logic.controller.taxable = bookingArg!.tax != 0;
     logic.controller.discountSwitch = bookingArg!.discountType == "%";

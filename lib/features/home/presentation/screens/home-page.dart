@@ -103,14 +103,14 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                   SizedBox(height: 20),
-                  AddEmployeeWidget(
-                    text: "Add Freelancers",
-                    subText: "Only admins can modify",
-                    onTap: () {
-                      Get.toNamed(AllFreelancersScreen.id);
-                    },
-                  ),
-                  SizedBox(height: 20),
+                  // AddEmployeeWidget(
+                  //   text: "Add Freelancers",
+                  //   subText: "Only admins can modify",
+                  //   onTap: () {
+                  //     Get.toNamed(AllFreelancersScreen.id);
+                  //   },
+                  // ),
+                  // SizedBox(height: 20),
                   AttendanceReportWidget(),
                   SizedBox(height: 100),
                   SizedBox(
