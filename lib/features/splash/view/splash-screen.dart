@@ -24,7 +24,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (FirebaseAuthentication.isUserLoggedIn()) {
       AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
-      autoUpdateLogic.checkForUpdate();
+      await autoUpdateLogic.checkForUpdate();
     } else {
       Get.toNamed(LoginScreen.id);
     }

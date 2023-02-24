@@ -12,6 +12,8 @@ import 'package:temple_adventures/features/bookings/presentation/widgets/app-tex
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
+import '../../../home/model/colors_data.dart';
+
 class ActivityEditScreen extends StatelessWidget {
   static const String id = "PriceEditScreen";
   final ActivityModel? activityArg = Get.arguments;
@@ -130,8 +132,12 @@ class ActivityEditScreen extends StatelessWidget {
                     .collection("catalogue")
                     .doc(activityArg!.id)
                     .set(activityArg!.toMap());
+
+                await updateColorsDocument();
+
                 LogModel logModel = LogModel(
-                    type: LogType.editActivity, activityName: activityArg!.name);
+                    type: LogType.editActivity,
+                    activityName: activityArg!.name);
                 FirebaseFirestore.instance
                     .collection("logs")
                     .doc()
@@ -250,5 +256,30 @@ class ActivityEditScreen extends StatelessWidget {
         },
       ),
     );
+  }
+
+  Future<void> updateColorsDocument() async {
+    var data = await FirebaseFirestore.instance.collection("catalogue").get();
+    var map = {
+      "Blue": [],
+      "Purple": [],
+      "White": [],
+      "Red": [],
+      "Green": [],
+    };
+
+    for (var d in data.docs) {
+      if (d.id == "colors") continue;
+      var color = d.data()["color"];
+      var name = d.data()["name"];
+      map[color]!.add(name);
+    }
+
+    await FirebaseFirestore.instance
+        .collection("catalogue")
+        .doc("colors")
+        .set(map);
+
+    colorsData = ColorsDataModel.fromMap(map);
   }
 }

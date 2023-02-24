@@ -8,10 +8,14 @@ import 'package:temple_adventures/core/services/data_persistance.dart';
 import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 
+import '../../Activities/controller/all-activities-controller.dart';
+import '../../home/model/colors_data.dart';
+
 class DashBoardScreenLogic {
   DashBoardScreenController controller = Get.find();
 
   DashBoardScreenLogic() {
+    getColorsData();
     getCurrentEmployee();
     getCounterData();
     reloadAfter1Sec();
@@ -25,6 +29,15 @@ class DashBoardScreenLogic {
     var count = counterModel!.employee;
     //print(count);
   }
+
+  getColorsData() async {
+    var data = await FirebaseFirestore.instance
+        .collection("catalogue")
+        .doc("colors")
+        .get();
+    colorsData = ColorsDataModel.fromMap(data.data()!);
+  }
+
   reloadAfter1Sec() {
     //log("reloadAfter1Sec");
     Future.delayed(Duration(seconds: 1))

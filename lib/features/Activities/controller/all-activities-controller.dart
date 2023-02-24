@@ -15,17 +15,28 @@ class AllActivitiesLogic {
   getAllActivities() async {
     var data = await FirebaseFirestore.instance.collection("catalogue").get();
     controller.allActivitiesList = [];
-    data.docs.forEach((element) {
+
+    for (var element in data.docs) {
+      if (element.id == 'colors') {
+        continue;
+      }
       ActivityModel activity = ActivityModel.fromMap(element.data());
       controller.allActivitiesList.add(activity);
-    });
+    }
+
     controller.showLoading = false;
+  }
+
+  Future<List> get activities async {
+    if (controller.allActivitiesList.isNotEmpty)
+      return controller.allActivitiesList;
+    else
+      await getAllActivities();
+    return controller.allActivitiesList;
   }
 }
 
 class AllActivitiesController extends GetxController {
-
-
   List<ActivityModel> allActivitiesList = [];
 
   bool _showLoading = true;

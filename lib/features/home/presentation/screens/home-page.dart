@@ -1,3 +1,6 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
@@ -22,7 +25,8 @@ class HomePage extends StatelessWidget {
         var futures = <Future>[];
 
         AttendanceWidgetLogic attendanceWidgetLogic = AttendanceWidgetLogic();
-        AttendanceReportWidgetLogic attendanceReportWidgetLogic = AttendanceReportWidgetLogic();
+        AttendanceReportWidgetLogic attendanceReportWidgetLogic =
+            AttendanceReportWidgetLogic();
 
         futures.add(attendanceWidgetLogic.reloadData());
         futures.add(attendanceReportWidgetLogic.reloadData());
@@ -62,9 +66,31 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10),
-
                   // ElevatedButton(
-                  //   onPressed: () {},
+                  //   onPressed: () async {
+                  //     var data = await FirebaseFirestore.instance
+                  //         .collection("catalogue")
+                  //         .get();
+                  //     var map = {
+                  //       "Blue": [],
+                  //       "Purple": [],
+                  //       "White": [],
+                  //       "Red": [],
+                  //       "Green": [],
+                  //     };
+                  //
+                  //     for (var d in data.docs) {
+                  //       var color = d.data()["color"];
+                  //       var name = d.data()["name"];
+                  //       map[color]!.add(name);
+                  //     }
+                  //
+                  //     await FirebaseFirestore.instance
+                  //         .collection("catalogue")
+                  //         .doc("colors")
+                  //         .set(map);
+                  //     log(data.toString());
+                  //   },
                   //   child: Text("Do"),
                   // ),
                   AttendanceWidget(),
@@ -159,7 +185,6 @@ class HomePage extends StatelessWidget {
   //   final data = await rootBundle.load('images/AppLogoPondy.png');
   //   return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
   // }
-
 }
 
 getString(List<String> sublist) {

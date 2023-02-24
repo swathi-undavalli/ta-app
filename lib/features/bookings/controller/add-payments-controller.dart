@@ -16,7 +16,7 @@ class AddPaymentsLogic {
     if (controller.paymentModeTED.text != "") {
       if (controller.depositTED.text != "" &&
           double.parse(controller.depositTED.text) > 0 &&
-          double.parse(controller.depositTED.text) < double.parse(balance)) {
+          double.parse(controller.depositTED.text) <= double.parse(balance)) {
         controller.bookingModel!.payments!.add(
           PaymentModel(
             amount: double.parse(controller.depositTED.text),

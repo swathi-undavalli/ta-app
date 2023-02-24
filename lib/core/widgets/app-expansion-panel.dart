@@ -35,6 +35,9 @@ import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
 import 'package:http/http.dart' as http;
 
+import '../../features/Activities/controller/all-activities-controller.dart';
+import '../../features/home/model/colors_data.dart';
+
 class BookingsExpansionPanel extends StatelessWidget {
   final ExpansionPanelLogic logic = ExpansionPanelLogic();
   final SearchController searchController = Get.put(SearchController());
@@ -153,15 +156,29 @@ class BookingsExpansionPanel extends StatelessWidget {
     getColor() {
       if (itemModel!.bookingModel?.cancelBooking == true) {
         return Color(0xffEE9A9D);
-      } else if (itemModel.colorCode == "Blue")
-        return Color(0xffA9EBF8).withOpacity(0.3);
-      else if (itemModel.colorCode == "Purple")
-        return Color(0xffDDB3FF);
-      else if (itemModel.colorCode == "Red")
-        return Color(0xffF8FF96);
-      else if (itemModel.colorCode == "Green")
-        return Color(0xff96F1BD);
-      else if (itemModel.colorCode == "White") return Color(0xffE0E0E0);
+      } else {
+        String cc = '';
+
+        if (colorsData!.blue.contains(itemModel.activity))
+          cc = "Blue";
+        else if (colorsData!.purple.contains(itemModel.activity))
+          cc = "Purple";
+        else if (colorsData!.red.contains(itemModel.activity))
+          cc = "Red";
+        else if (colorsData!.green.contains(itemModel.activity))
+          cc = "Green";
+        else if (colorsData!.white.contains(itemModel.activity)) cc = "White";
+
+        if (cc == "Blue")
+          return Color(0xffA9EBF8).withOpacity(0.3);
+        else if (cc == "Purple")
+          return Color(0xffDDB3FF);
+        else if (cc == "Red")
+          return Color(0xffF8FF96);
+        else if (cc == "Green")
+          return Color(0xff96F1BD);
+        else if (cc == "White") return Color(0xffE0E0E0);
+      }
     }
 
     final button = PopupMenuButton(
@@ -197,8 +214,8 @@ class BookingsExpansionPanel extends StatelessWidget {
               String phone = itemModel.phone!.replaceAll("+", "");
               String message = """
                Hello "${itemModel.name}"
-Hope you are excited to have your scuba diving session session. Please note that the time for your boat is <Ocean Dive Time>. Please report to the dive center by <Ocean Dive Time - 15 minutes>. 
-Please note that if you are not here by the scheduled time, the boat will leave without you, and there will be no scheduling change or refunds applicable as per our policies.
+Hope you are excited to have your scuba diving session. Please note that the time for your boat is ${intl.DateFormat("dd-MM-yyy @ hh:mm a").format(itemModel.bookingModel!.diveDate![0]!)}. Please report to the dive center before 15 minutes. 
+Please note that if you are not present at the center by the scheduled time, the boat will leave without you, and there will be no scheduling change or refunds applicable as per our policies.
                          """;
 
               var uri = "https://wa.me/$phone?text=$message";
@@ -300,24 +317,9 @@ Hey *${itemModel.name!.trim().toLowerCase().capitalizeFirst}*,
 
 Thanks for choosing us, we are excited to take you scuba diving with us 😍.
 
-Here are your booking details
-
-*Booking details:*
-Booking ID : *${itemModel.bookingID}*
-Course Name : *${itemModel.activity}*
-Pool Date : *${intl.DateFormat("dd-MM-yyy").format(itemModel.bookingModel!.poolDate![0]!)}*
-Pool Time : *${intl.DateFormat("hh:mm a").format(itemModel.bookingModel!.poolDate![0]!)}*
-Dive Date : *${intl.DateFormat("dd-MM-yyy").format(itemModel.bookingModel!.diveDate![0]!)}*
-Dive Time : *${intl.DateFormat("hh:mm a").format(itemModel.bookingModel!.diveDate![0]!)}*
-Total Cost : *${double.parse(itemModel.cost).roundToDouble()} /-*
-Deposit : *${double.parse(itemModel.paid).roundToDouble()} /-*
-Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-*
+*Please complete the paperwork process* by clicking the below link: $jsonLink . This includes _Discover Scuba Diving Form, Medical Form, Liability Releases, Agency NDA and our policies_
 
 *We need to submit all diver details to the *Marine Police / Coast Guard** and *PADI.* To process the same and take you diving, we need *all the divers to complete* the *paperwork process*. You may share this link with them.
-
-*Please complete the paperwork process* by clicking this link: $jsonLink . This includes _Discover Scuba Diving Form, Medical Form, Liability Releases, Agency NDA and our policies_
-
-*Please arrive 15 minutes before your scheduled pool session and your ocean dive. If you are late on the day of your ocean dive you will miss your spot on the boat.*
 
 🤿 🐟 Happy diving !!! 🐟 🤿
                                           """;
@@ -1381,7 +1383,7 @@ Regards,
             Container(
               // width: Get.width - 50 - 25,
               child: Text(
-                "Payment ${payment.amount!.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
+                "Payment ${payment.amount!.round()} by ${payment.paymentMode ?? "-"} collected by ${payment.collectedBy}",
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 10,

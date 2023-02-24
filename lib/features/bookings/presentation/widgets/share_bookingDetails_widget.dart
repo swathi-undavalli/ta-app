@@ -316,7 +316,7 @@ class ShareBookingDetails {
           pw.Container(
             width: 200,
             child: pw.Text(
-              "$text",
+              (text != null && text.isNotEmpty) ? "$text" : "-",
               style: pw.TextStyle(
                 fontSize: 12,
                 color: PdfColor.fromInt(0xff575757),

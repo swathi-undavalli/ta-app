@@ -20,6 +20,7 @@ class EditBookingNewLogic {
         await FirebaseFirestore.instance.collection('catalogue').get();
     controller.activities = [];
     for (int i = 0; i < catalogue.docs.length; i++) {
+      if (catalogue.docs[i].id == 'colors') continue;
       ActivityModel activity = ActivityModel.fromMap(catalogue.docs[i].data());
       controller.activities.add(activity);
       controller.activities
