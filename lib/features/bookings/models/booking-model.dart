@@ -15,7 +15,7 @@ class BookingModel {
   BookingModel({
     this.activity,
     this.pax,
-    this.noOfPersons,
+    this.noOfPersons = 1,
     this.location = "Pondicherry",
     this.discount = 0,
     this.price = 0,
@@ -63,7 +63,6 @@ class BookingModel {
   DateTime? createdAt;
   bool? cancelBooking;
   String? cancellationReason;
-
 
   factory BookingModel.fromMap(Map<String, dynamic> json) {
     //log("fromMap");
@@ -167,9 +166,9 @@ class BookingModel {
 
     /// Deduct paying now
     if (paid != null) {
-      balance -= paid!;
+      balance = balance.floorToDouble() - paid!;
     }
-    return balance.toPrecision(2);
+    return balance;
   }
 
   double get totalCost {
@@ -189,7 +188,7 @@ class BookingModel {
         total = total - discount!;
       //print("total $total");
     }
-    return total;
+    return total.floorToDouble();
   }
 
   String? toDateOrNull(DateTime? date) {
@@ -198,7 +197,9 @@ class BookingModel {
   }
 
   bool get hasTheorySession => theoryDate != null;
+
   bool get hasPoolSession => poolDate != null;
+
   bool get hasDiveSession => diveDate != null;
 
   bool get hasMedicalIssues {
@@ -234,6 +235,7 @@ class PaymentModel {
   String? paymentMode;
   String? remarks;
   DateTime? time;
+
   String? toDateOrNull(DateTime? date) {
     if (date == null) return null;
     return date.toIso8601String();
