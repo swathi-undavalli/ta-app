@@ -172,20 +172,18 @@ class MyApp extends StatelessWidget {
 
 class FirebaseNotificationService {
   static handleNavigation(RemoteMessage message) {
-    if (message.data != null) {
-      Get.toNamed(NotificationsScreen.id, arguments: message);
-    }
+    Get.toNamed(NotificationsScreen.id, arguments: message);
     LocalNotificationService.display(message);
   }
 
   static handleTerminatedNavigation() async {
-    RemoteMessage message =
-        (await FirebaseMessaging.instance.getInitialMessage())!;
+    RemoteMessage? message =
+        await FirebaseMessaging.instance.getInitialMessage();
 
-    if (message != null && message.data != null) {
+    if (message != null) {
       Get.toNamed(NotificationsScreen.id, arguments: message);
+      LocalNotificationService.display(message);
     }
-    LocalNotificationService.display(message);
   }
 
   static backgroundHandler(RemoteMessage message) {}

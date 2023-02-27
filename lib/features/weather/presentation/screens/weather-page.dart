@@ -17,40 +17,46 @@ class WeatherPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Scaffold(
-          body: SafeArea(
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: EmployeeAccess(
-                access: AccessRights.weatherReport,
-                showMessage: true,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          SizedBox(height: 40),
-                          buildTideTimings(),
-                          SizedBox(height: 20),
-                          buildTideConditions(context),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-        ),
-        buildShowLoading(),
-      ],
+    return Scaffold(
+      body: SafeArea(
+        child: Center(child: Text("Coming Soon")),
+      ),
     );
+    //   Stack(
+    //   children: [
+    //     Scaffold(
+    //       body: SafeArea(
+    //         child: SingleChildScrollView(
+    //           physics: BouncingScrollPhysics(),
+    //           child:
+    //           EmployeeAccess(
+    //             access: AccessRights.weatherReport,
+    //             showMessage: true,
+    //             child: Column(
+    //               mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //               crossAxisAlignment: CrossAxisAlignment.start,
+    //               children: [
+    //                 Center(
+    //                   child: Column(
+    //                     mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //                     crossAxisAlignment: CrossAxisAlignment.center,
+    //                     children: [
+    //                       SizedBox(height: 40),
+    //                       buildTideTimings(),
+    //                       SizedBox(height: 20),
+    //                       buildTideConditions(context),
+    //                     ],
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //         ),
+    //       ),
+    //     ),
+    //     buildShowLoading(),
+    //   ],
+    // );
   }
 
   ///================UI==============///
@@ -106,15 +112,18 @@ class WeatherPage extends StatelessWidget {
                         style: DefaultTextStyle.of(context).style,
                         children: <TextSpan>[
                           TextSpan(
-                              text: controller.weatherPageModel.temperature!
-                                  .toStringAsFixed(1),
+                              text: (controller.weatherPageModel != null)
+                                  ? controller.weatherPageModel?.temperature!
+                                      .toStringAsFixed(1)
+                                  : "-",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xff02D2F9),
                                   fontSize: 30)),
                           TextSpan(
-                              text:
-                                  " °${controller.weatherPageModel.temperatureUnits}",
+                              text: (controller.weatherPageModel != null)
+                                  ? " °${controller.weatherPageModel?.temperatureUnits}"
+                                  : "-",
                               style: TextStyle(
                                   fontWeight: FontWeight.bold,
                                   color: Color(0xff02D2F9),
@@ -150,9 +159,11 @@ class WeatherPage extends StatelessWidget {
                         style: DefaultTextStyle.of(context).style,
                         children: <TextSpan>[
                           TextSpan(
-                            text:
-                                (controller.weatherPageModel.waveHeight! / 3.28)
-                                    .toStringAsFixed(1),
+                            text: (controller.weatherPageModel != null)
+                                ? ((controller.weatherPageModel?.waveHeight)! /
+                                        3.28)
+                                    .toStringAsFixed(1)
+                                : "-",
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Color(0xff02D2F9),
@@ -198,14 +209,18 @@ class WeatherPage extends StatelessWidget {
                     style: DefaultTextStyle.of(context).style,
                     children: <TextSpan>[
                       TextSpan(
-                          text: controller.weatherPageModel.windSpeed!
-                              .toStringAsFixed(1),
+                          text: (controller.weatherPageModel != null)
+                              ? controller.weatherPageModel?.windSpeed
+                                  ?.toStringAsFixed(1)
+                              : "-",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Color(0xff02D2F9),
                               fontSize: 32)),
                       TextSpan(
-                          text: " ${controller.weatherPageModel.speedUnits}",
+                          text: (controller.weatherPageModel != null)
+                              ? " ${controller.weatherPageModel?.speedUnits}"
+                              : "-",
                           style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Color(0xff02D2F9),
@@ -221,7 +236,9 @@ class WeatherPage extends StatelessWidget {
                       fontWeight: FontWeight.w700),
                 ),
                 Text(
-                  controller.weatherPageModel.gusts!.toStringAsFixed(1),
+                  (controller.weatherPageModel != null)
+                      ? (controller.weatherPageModel?.gusts)!.toStringAsFixed(1)
+                      : "",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       color: Color(0xff02D2F9),
@@ -299,14 +316,16 @@ class WeatherPage extends StatelessWidget {
               ),
             ),
             SizedBox(height: 10),
-            Container(
-              height: 170,
-              child: Column(
-                children: controller.weatherPageModel.tides!
-                    .map((tide) => buildTideDetails(tide))
-                    .toList(),
+            if (controller.weatherPageModel?.tides != null &&
+                controller.weatherPageModel!.tides!.isNotEmpty)
+              Container(
+                height: 170,
+                child: Column(
+                  children: controller.weatherPageModel!.tides!
+                      .map((tide) => buildTideDetails(tide))
+                      .toList(),
+                ),
               ),
-            ),
           ],
         ),
       );
@@ -358,7 +377,7 @@ class WeatherPage extends StatelessWidget {
           SizedBox(
             width: 30,
             child: Text(
-              getTideType(tide.state),
+              (tide.state != null) ? (tide.state)! : "-",
               style: TextStyle(
                   color: AppColors.text.skyBlue,
                   fontSize: 11,
@@ -406,16 +425,6 @@ class WeatherPage extends StatelessWidget {
       return "Tomorrow";
     } else {
       return "Yesterday";
-    }
-  }
-
-  getTideType(tide.State? state) {
-    if (state == tide.State.HIGH_TIDE) {
-      return "High";
-    } else if (state == tide.State.LOW_TIDE) {
-      return "Low";
-    } else {
-      return "-";
     }
   }
 }

@@ -29,8 +29,12 @@ class LogScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: StreamBuilder(
-              stream: FirebaseFirestore.instance.collection('logs').orderBy('timeStamp', descending: true).snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              stream: FirebaseFirestore.instance
+                  .collection('logs')
+                  .orderBy('timeStamp', descending: true)
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
                 if (!snapshot.hasData) {
                   return Center(
                     child: CircularProgressIndicator(color: Colors.black),
@@ -38,19 +42,17 @@ class LogScreen extends StatelessWidget {
                 }
                 return ListView.builder(
                   itemBuilder: (BuildContext context, int index) {
-                    LogModel logModel = LogModel.fromMap(snapshot.data!.docs[index].data() as Map<String, dynamic>);
-                    //print("Started");
-                    return buildLog(
-                      log: logModel,
-                    );
+                    if (snapshot.data != null) {
+                      Map<String, dynamic>? map = snapshot.data?.docs[index]
+                          .data() as Map<String, dynamic>?;
+                      if (map != null) {
+                        LogModel logModel = LogModel.fromMap(map);
+                        return buildLog(
+                          log: logModel,
+                        );
+                      }
+                    }
                   },
-                  // children: snapshot.data.docs.map((document) {
-                  //   LogModel logModel = LogModel.fromMap(document.data());
-                  //   //print("Started");
-                  //   return buildLog(
-                  //     log: logModel,
-                  //   );
-                  // }).toList(),
                 );
               }),
         ),
@@ -214,12 +216,16 @@ class LogScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         if (getTitle() == "Booking Created") {
-          var data = await FirebaseFirestore.instance.collection("bookings").doc(log.bookingId!.trim()).get();
+          var data = await FirebaseFirestore.instance
+              .collection("bookings")
+              .doc(log.bookingId!.trim())
+              .get();
           if (data.data() != null) {
             print(log.bookingId);
             Get.toNamed(DetailsScreen.id, arguments: data.data());
           } else {
-            Fluttertoast.showToast(msg: "${log.bookingId} Booking Doesn't Exit");
+            Fluttertoast.showToast(
+                msg: "${log.bookingId} Booking Doesn't Exit");
           }
         } else {
           return;
@@ -232,7 +238,8 @@ class LogScreen extends StatelessWidget {
               Container(
                 height: 40,
                 width: 40,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: getColor()),
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: getColor()),
                 child: Center(
                   child: getIcon(),
                 ),
@@ -298,7 +305,8 @@ class LogScreen extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.only(left: 1.0, right: 1.0, top: 17, bottom: 17),
+            padding: const EdgeInsets.only(
+                left: 1.0, right: 1.0, top: 17, bottom: 17),
             child: Container(
               height: 1,
               width: Get.width,

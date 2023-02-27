@@ -27,37 +27,61 @@ class WeatherRepository {
     return li;
   }
 
-  Future<TideResponse> getTideResponse() async {
+  Future<TideResponse?> getTideResponse() async {
+    // var response = await API.apiHandler(
+    //   url:
+    //       'https://tides.p.rapidapi.com/tides?longitude=79.768021&latitude= 11.744699&interval=60&duration=1440',
+    //   requestType: RequestType.Get,
+    //   header: {
+    //     'x-rapidapi-host': 'tides.p.rapidapi.com',
+    //     'x-rapidapi-key': 'ba02214b4emshd031700e9d5d770p18df96jsn30e1ef5a3287'
+    //   },
+    // );
+    var now = DateTime.now();
+    int startDate =
+        DateTime(now.year, now.month, now.day, 4).millisecondsSinceEpoch;
+    int endDate = DateTime(now.year, now.month, now.day, 20)
+        .add(Duration(days: 1))
+        .millisecondsSinceEpoch;
+
     var response = await API.apiHandler(
       url:
-          'https://tides.p.rapidapi.com/tides?longitude=79.768021&latitude= 11.744699&interval=60&duration=1440',
+          'https://api.stormglass.io/v2/tide/extremes/point?lat=11.744699&lng=79.768021&start=$startDate&end=$endDate',
       requestType: RequestType.Get,
       header: {
-        'x-rapidapi-host': 'tides.p.rapidapi.com',
-        'x-rapidapi-key': 'ba02214b4emshd031700e9d5d770p18df96jsn30e1ef5a3287'
+        'Authorization':
+            "4c364c42-e88b-11ec-8956-0242ac130002-4c364cce-e88b-11ec-8956-0242ac130002"
       },
     );
-    final Map<String, dynamic> json = jsonDecode(response);
-    //print(json);
-    TideResponse tideResponse = TideResponse.fromMap(json);
-    //print(tideResponse);
-    return tideResponse;
+    if (response != null) {
+      final Map<String, dynamic>? json = jsonDecode(response);
+      log("etetetet");
+
+      log(json.toString());
+
+      if (json != null) {
+        TideResponse tideResponse = TideResponse.fromMap(json);
+        return tideResponse;
+      } else {
+        return null;
+      }
+    } else {
+      return null;
+    }
   }
 
-  Future<WeatherPageModel> getWeatherData(DateTime date) async {
+  Future<WeatherPageModel?> getWeatherData(DateTime date) async {
     DocumentSnapshot<Map<String, dynamic>> data = await FirebaseFirestore
         .instance
         .collection("weather")
         .doc("weather")
         .get();
-    //print(data.data());
-    //print(data.data().isEmpty);
     if (data.data() != null && data.data()!.isNotEmpty) {
-      //if data exist.
-      //print("admkasmdkmkds");
-      WeatherPageModel weatherPageModel = WeatherPageModel.fromMap(data.data()!);
+      WeatherPageModel weatherPageModel =
+          WeatherPageModel.fromMap(data.data()!);
 
-      if (DateTime.now().difference(weatherPageModel.timeStamp!).inHours >= 12) {
+      if (DateTime.now().difference(weatherPageModel.timeStamp!).inHours >=
+          12) {
         return await getLatestData(date);
       } else {
         return weatherPageModel;
@@ -67,19 +91,22 @@ class WeatherRepository {
     }
   }
 
-  Future<WeatherPageModel> getLatestData(DateTime date) async {
+  Future<WeatherPageModel?> getLatestData(DateTime date) async {
     List<WeatherResponse> weather = await getWeatherResponse();
-    TideResponse tide = await getTideResponse();
+    TideResponse? tide = await getTideResponse();
 
-    WeatherPageModel weatherPageModel =
-        WeatherPageModel.fromResponse(weather, tide, date);
-    weatherPageModel.timeStamp = DateTime.now();
+    if (tide != null) {
+      WeatherPageModel weatherPageModel =
+          WeatherPageModel.fromResponse(weather, tide, date);
+      weatherPageModel.timeStamp = DateTime.now();
 
-    FirebaseFirestore.instance
-        .collection("weather")
-        .doc("weather")
-        .set(weatherPageModel.toMap());
-
-    return weatherPageModel;
+      FirebaseFirestore.instance
+          .collection("weather")
+          .doc("weather")
+          .set(weatherPageModel.toMap());
+      return weatherPageModel;
+    } else {
+      return null;
+    }
   }
 }

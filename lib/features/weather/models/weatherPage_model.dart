@@ -16,7 +16,7 @@ class WeatherPageModel {
     required this.windSpeed,
     required this.speedUnits,
     required this.gusts,
-    required this.temperature ,
+    required this.temperature,
     required this.tides,
     required this.temperatureUnits,
     required this.pressure,

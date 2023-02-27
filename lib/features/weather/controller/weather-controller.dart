@@ -9,7 +9,7 @@ class WeatherPageLogic {
   WeatherRepository weatherRepository = WeatherRepository();
 
   WeatherPageLogic() {
-    onTodayPressed();
+    // onTodayPressed();
   }
 
   getWeatherData(DateTime date) async {
@@ -42,7 +42,7 @@ class WeatherPageController extends GetxController {
   List<String> tideHeight = [];
   List<String> windDetails = ["Tide", "Time", "Height"];
 
-  late WeatherPageModel weatherPageModel;
+  WeatherPageModel? weatherPageModel;
 
   bool _showLoading = false;
 

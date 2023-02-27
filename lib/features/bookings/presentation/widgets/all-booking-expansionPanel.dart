@@ -4,13 +4,12 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
-import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-guest-details-screen.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/home/model/colors_data.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -49,16 +48,31 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
 
   Widget buildExpansion({required ItemModel itemModel, int? i}) {
     getColor() {
-      if (itemModel.colorCode == "Blue")
-        return Color(0xffA9EBF8).withOpacity(0.3);
-      else if (itemModel.colorCode == "Purple")
-        return Color(0xffBCB8F5);
-      else if (itemModel.colorCode == "Red")
-        return Color(0xffF6B2B2);
-      else if (itemModel.colorCode == "Green")
-        return Color(0xff96F1BD);
-      else
-        return Colors.white;
+      if (itemModel.bookingModel?.cancelBooking == true) {
+        return Color(0xffEE9A9D);
+      } else {
+        String cc = '';
+
+        if (colorsData!.blue.contains(itemModel.activity))
+          cc = "Blue";
+        else if (colorsData!.purple.contains(itemModel.activity))
+          cc = "Purple";
+        else if (colorsData!.red.contains(itemModel.activity))
+          cc = "Red";
+        else if (colorsData!.green.contains(itemModel.activity))
+          cc = "Green";
+        else if (colorsData!.white.contains(itemModel.activity)) cc = "White";
+
+        if (cc == "Blue")
+          return Color(0xffA9EBF8).withOpacity(0.3);
+        else if (cc == "Purple")
+          return Color(0xffDDB3FF);
+        else if (cc == "Red")
+          return Color(0xffF8FF96);
+        else if (cc == "Green")
+          return Color(0xff96F1BD);
+        else if (cc == "White") return Color(0xffE0E0E0);
+      }
     }
 
     return Padding(
@@ -192,7 +206,8 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                           .delete();
                                       LogModel logModel = LogModel(
                                           type: LogType.bookingDeleted,
-                                          bookingId: itemModel.bookingModel!.id);
+                                          bookingId:
+                                              itemModel.bookingModel!.id);
                                       FirebaseFirestore.instance
                                           .collection("logs")
                                           .doc()
@@ -272,10 +287,13 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                   getBalance(
                                       items!.bookingModel!.payments!,
                                       double.parse(items!.paid).roundToDouble(),
-                                      double.parse(items!.cost).roundToDouble()),
+                                      double.parse(items!.cost)
+                                          .roundToDouble()),
                                 ),
-                                buildKeyValuePairs("Pax",
-                                    items!.bookingModel!.noOfPersons.toString()),
+                                buildKeyValuePairs(
+                                    "Pax",
+                                    items!.bookingModel!.noOfPersons
+                                        .toString()),
                                 ((items != null) && (items!.receiptNo != null))
                                     ? buildKeyValuePairs(
                                         "Invoice no", items!.receiptNo!)
@@ -749,7 +767,8 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
     );
   }
 
-  Widget buildNumber({FontWeight? fontWeight, Color? color, required String text}) {
+  Widget buildNumber(
+      {FontWeight? fontWeight, Color? color, required String text}) {
     return SizedBox(
       width: 39,
       child: Center(
@@ -818,7 +837,8 @@ class ItemModel {
 
     getTime() {
       var d = "";
-      if (bookingModel.theoryDate != null && bookingModel.theoryDate!.isNotEmpty)
+      if (bookingModel.theoryDate != null &&
+          bookingModel.theoryDate!.isNotEmpty)
         d = d + DateFormat("hh:mm").format(bookingModel.theoryDate![0]!) + ", ";
       if (bookingModel.poolDate != null && bookingModel.poolDate!.isNotEmpty)
         d = d + DateFormat("hh:mm").format(bookingModel.poolDate![0]!) + ", ";
