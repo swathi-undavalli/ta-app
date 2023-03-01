@@ -52,6 +52,7 @@ class LogScreen extends StatelessWidget {
                         );
                       }
                     }
+                    return SizedBox();
                   },
                 );
               }),
