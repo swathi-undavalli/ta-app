@@ -117,8 +117,7 @@ class AutoUpdateLogic {
         titleStyle: TextStyle(
           fontWeight: FontWeight.bold,
         ),
-        middleText:
-            "\n\nError occurred while auto-update. Please contact developer.\n\n",
+        middleText: "\n\nError occurred while auto-update. Please contact developer.\n\n",
         middleTextStyle: TextStyle(
           color: Colors.black54,
           fontSize: 14,
@@ -130,6 +129,7 @@ class AutoUpdateLogic {
 
   checkForUpdate() async {
     if (GetPlatform.isIOS) {
+      Get.offAllNamed(DashBoardScreen.id);
       return;
     }
 
@@ -140,10 +140,7 @@ class AutoUpdateLogic {
       }
     });
 
-    var data = await FirebaseFirestore.instance
-        .collection("ota_update")
-        .doc("version")
-        .get();
+    var data = await FirebaseFirestore.instance.collection("ota_update").doc("version").get();
     controller.latestVersionNumber = data.data()!["number"];
     controller.downloadLink = data.data()!["downloadLink"];
     controller.criticalUpdate = data.data()!["critical_update"];
@@ -152,8 +149,7 @@ class AutoUpdateLogic {
     controller.version = packageInfo.version;
     controller.buildNumber = packageInfo.buildNumber;
 
-    if (controller.latestVersionNumber !=
-        controller.version! + "+" + controller.buildNumber!) {
+    if (controller.latestVersionNumber != controller.version! + "+" + controller.buildNumber!) {
       log("Auto update called");
       Get.offAllNamed(AutoUpdateView.id);
     } else {

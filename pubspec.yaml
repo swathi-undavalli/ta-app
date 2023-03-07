@@ -64,11 +64,11 @@ dependencies:
   #------------------------------------------
   #             Auth and Firebase
 
-  firebase_auth: ^4.2.5
-  firebase_core: ^2.4.1
-  cloud_firestore: ^4.3.1
-  firebase_storage: ^11.0.10
-  firebase_messaging: ^14.2.1
+  firebase_auth: ^4.2.2
+  firebase_core: ^2.7.0
+  cloud_firestore: ^4.4.3
+  firebase_storage: ^11.0.14
+  firebase_messaging: ^14.2.5
   flutter_local_notifications: ^13.0.0
   ota_update: ^4.0.2
   flutter_app_installer: ^0.0.3

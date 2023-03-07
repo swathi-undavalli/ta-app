@@ -51,6 +51,9 @@ import 'features/employees/presentation/screens/employee-details-screen.dart';
 import 'features/employees/presentation/screens/employee-profile-screen.dart';
 import 'features/login/presentation/screens/login-page.dart';
 
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
 Future<void> backgroundHandler(RemoteMessage message) async {
   print("called onBackgroundMessage");
 }
@@ -58,7 +61,6 @@ Future<void> backgroundHandler(RemoteMessage message) async {
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   LocalNotificationService.initialize();
-  //await Firebase.initializeApp();
   if (Platform.isIOS) {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
@@ -101,14 +103,11 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    print("building MyApp");
     Get.put(DashBoardScreenController());
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute:
-          // FirebaseAuthentication.isUserLoggedIn()
-          //     ? DashBoardScreen.id
-          //     : LoginScreen.id,
-          SplashScreen.id,
+      initialRoute: SplashScreen.id,
       theme: ThemeData(
         textTheme: TextTheme(
           headline1: TextStyle(fontFamily: AppFonts.nunito),
@@ -179,8 +178,7 @@ class FirebaseNotificationService {
   }
 
   static handleTerminatedNavigation() async {
-    RemoteMessage? message =
-        await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
 
     if (message != null) {
       Get.toNamed(NotificationsScreen.id, arguments: message);
