@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "671883511961-3l1tjcf2mprfktn8s0as4eb284p54du2.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.temple_adventures.scubadiving",
+            "certificate_hash": "050e68e65ebc7881fc5d84cde64e9ba8299e1acc"
+          }
+        },
+        {
           "client_id": "671883511961-6mubiv3tso091s20cv7juanirpg30hf0.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {

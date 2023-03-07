@@ -63,7 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '671883511961',
     projectId: 'seismic-glow-283418',
     storageBucket: 'seismic-glow-283418.appspot.com',
-    androidClientId: '671883511961-6mubiv3tso091s20cv7juanirpg30hf0.apps.googleusercontent.com',
+    androidClientId: '671883511961-3l1tjcf2mprfktn8s0as4eb284p54du2.apps.googleusercontent.com',
     iosClientId: '671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com',
     iosBundleId: 'com.templeadventures.scubadiving',
   );

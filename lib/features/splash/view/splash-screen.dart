@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/auto-update.dart';
@@ -22,11 +23,16 @@ class _SplashScreenState extends State<SplashScreen> {
   init() async {
     await Future.delayed(Duration(microseconds: 500));
 
-    if (FirebaseAuthentication.isUserLoggedIn()) {
-      AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
-      await autoUpdateLogic.checkForUpdate();
-    } else {
-      Get.toNamed(LoginScreen.id);
+    try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        Get.toNamed(LoginScreen.id);
+      } else {
+        AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
+        await autoUpdateLogic.checkForUpdate();
+      }
+    } catch (e, s) {
+      print(e);
     }
   }
 
