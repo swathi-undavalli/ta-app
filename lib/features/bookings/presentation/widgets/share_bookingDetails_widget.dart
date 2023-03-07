@@ -350,7 +350,9 @@ class ShareBookingDetails {
               if (dates.isNotEmpty)
                 ...dates.map(
                   (e) {
-                    String date = DateFormat('dd-MM-yyyy').format(e!);
+                    String date = (title != "Pool Dates")
+                        ? DateFormat('dd-MM-yyyy').format(e!)
+                        : DateFormat('dd-MM-yyyy @ hh:mm a').format(e!);
                     log(date.toString());
                     return pw.Container(
                       width: 200,
