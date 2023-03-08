@@ -1,17 +1,25 @@
+// To parse this JSON data, do
+//
+//     final conditions = conditionsFromMap(jsonString);
 
+import 'package:meta/meta.dart';
 import 'dart:convert';
 
 class Conditions {
   Conditions({
+    required this.id,
     required this.levels,
   });
 
+  final String id;
   final List<Level> levels;
 
   Conditions copyWith({
+    String? id,
     List<Level>? levels,
   }) =>
       Conditions(
+        id: id ?? this.id,
         levels: levels ?? this.levels,
       );
 
@@ -20,12 +28,14 @@ class Conditions {
   String toJson() => json.encode(toMap());
 
   factory Conditions.fromMap(Map<String, dynamic> json) => Conditions(
-        levels: List<Level>.from(json["levels"].map((x) => Level.fromMap(x))),
-      );
+    id: json["id"],
+    levels: List<Level>.from(json["levels"].map((x) => Level.fromMap(x))),
+  );
 
   Map<String, dynamic> toMap() => {
-        "levels": List<dynamic>.from(levels.map((x) => x.toMap())),
-      };
+    "id": id,
+    "levels": List<dynamic>.from(levels.map((x) => x.toMap())),
+  };
 }
 
 class Level {
@@ -63,18 +73,18 @@ class Level {
   String toJson() => json.encode(toMap());
 
   factory Level.fromMap(Map<String, dynamic> json) => Level(
-        depth: json["depth"],
-        fish: json["fish"],
-        visibility: json["visibility"],
-        currents: json["currents"],
-        updatedAt: DateTime.parse(json["updatedAt"]),
-      );
+    depth: json["depth"],
+    fish: json["fish"],
+    visibility: json["visibility"],
+    currents: json["currents"],
+    updatedAt: DateTime.parse(json["updatedAt"]),
+  );
 
   Map<String, dynamic> toMap() => {
-        "depth": depth,
-        "fish": fish,
-        "visibility": visibility,
-        "currents": currents,
-        "updatedAt": updatedAt.toIso8601String(),
-      };
+    "depth": depth,
+    "fish": fish,
+    "visibility": visibility,
+    "currents": currents,
+    "updatedAt": updatedAt.toIso8601String(),
+  };
 }
