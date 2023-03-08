@@ -44,6 +44,7 @@ import 'package:temple_adventures/features/splash/view/splash-screen.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
 import 'package:temple_adventures/notification-screen.dart';
 import 'features/Activities/presentation/screens/all-activities-screen.dart';
+import 'features/conditions/screens/add-conditions-screen.dart';
 import 'features/dashboard/controller/dashboard-controller.dart';
 import 'features/employees/presentation/screens/employee-details-screen.dart';
 import 'features/employees/presentation/screens/employee-profile-screen.dart';
@@ -165,6 +166,7 @@ class MyApp extends StatelessWidget {
         NotificationsScreen.id: (context) => NotificationsScreen(),
         DetailsScreen.id: (context) => DetailsScreen(),
         SplashScreen.id: (context) => SplashScreen(),
+        AddConditionsPage.id: (context) => AddConditionsPage(),
       },
     );
   }
