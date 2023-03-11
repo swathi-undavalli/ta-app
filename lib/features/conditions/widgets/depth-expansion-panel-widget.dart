@@ -1,0 +1,253 @@
+import 'package:intl/intl.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get_utils/src/extensions/widget_extensions.dart';
+import 'package:temple_adventures/core/constants/constants.dart';
+
+import '../models/conditions-model.dart';
+
+class DepthExpansionPanelWidget extends StatefulWidget {
+  DepthExpansionPanelWidget({
+    required this.level,
+    required this.onDeletePressed,
+    required this.onChanged,
+  });
+
+  Level level;
+  Function onDeletePressed;
+  Function(double fish, double visibility, double currents) onChanged;
+
+  @override
+  State<DepthExpansionPanelWidget> createState() =>
+      _DepthExpansionPanelWidgetState();
+}
+
+class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
+  bool isExpanded = false;
+
+  late double fishLife = (widget.level.fish) * 1.0;
+  late double visibility = (widget.level.visibility) * 1.0;
+  late double currents = (widget.level.currents) * 1.0;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(
+                "${widget.level.depth} meters",
+                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+              ),
+              Spacer(),
+              IconButton(
+                padding: EdgeInsets.all(0),
+                visualDensity: VisualDensity(horizontal: 0, vertical: 0),
+                splashRadius: 20,
+                iconSize: 13,
+                icon: Icon(Icons.delete),
+                onPressed: () {
+                  widget.onDeletePressed();
+                },
+              ),
+              IconButton(
+                visualDensity: VisualDensity(horizontal: 0, vertical: 0),
+                padding: EdgeInsets.all(0),
+                splashRadius: 20,
+                iconSize: 20,
+                icon: Icon(isExpanded
+                    ? Icons.keyboard_arrow_up_rounded
+                    : Icons.keyboard_arrow_down_rounded),
+                onPressed: () {
+                  setState(() {
+                    isExpanded = !isExpanded;
+                  });
+                },
+              ),
+            ],
+          ).paddingOnly(left: 25),
+          if (isExpanded)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SizedBox(height: 15),
+                buildConditionSlider(
+                  SliderType.fishLife,
+                ),
+                buildConditionSlider(
+                  SliderType.visibility,
+                ),
+                buildConditionSlider(
+                  SliderType.currents,
+                ),
+                SizedBox(height: 15),
+                buildWaterConditions(
+                        title: "Updated By", text: widget.level.updatedBy)
+                    .paddingSymmetric(horizontal: 27),
+                SizedBox(height: 10),
+                buildWaterConditions(
+                        title: "Updated Time",
+                        text: DateFormat("dd MMM yyyy @ hh:mm a")
+                            .format(widget.level.updatedAt))
+                    .paddingSymmetric(horizontal: 27),
+                SizedBox(height: 25),
+              ],
+            )
+        ],
+      ),
+    );
+  }
+
+  ///==================UI==================///
+
+  Widget buildWaterConditions({required String title, required String text}) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 85,
+          child: Text(
+            "${title}",
+            style: TextStyle(
+                fontSize: FontSize.small, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Text(
+          " :   ${text}",
+          style: TextStyle(fontSize: FontSize.small),
+        ),
+      ],
+    );
+  }
+
+  Widget buildConditionSlider(SliderType type) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          getSliderTitle(type),
+          style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
+        ).paddingOnly(left: 32),
+        // SizedBox(height: 12),
+        Row(
+          children: [
+            Container(
+              width: 175,
+              child: SliderTheme(
+                data: SliderThemeData(
+                  trackHeight: 3,
+                  thumbShape: RoundSliderThumbShape(
+                    enabledThumbRadius: 5,
+                    pressedElevation: 1,
+                  ),
+                  overlayShape: RoundSliderOverlayShape(overlayRadius: 20.0),
+                ),
+                child: Slider(
+                  value: getValue(type),
+                  onChanged: (double value) {
+                    switch (type) {
+                      case SliderType.fishLife:
+                        fishLife = value;
+                        break;
+                      case SliderType.visibility:
+                        visibility = value;
+                        break;
+                      case SliderType.currents:
+                        currents = value;
+                        break;
+                    }
+                    setState(() {});
+                    widget.onChanged(fishLife, visibility, currents);
+                  },
+                  activeColor: AppColors.text.grey.withOpacity(0.5),
+                  inactiveColor: AppColors.text.grey.withOpacity(0.5),
+                  thumbColor: AppColors.text.black,
+                  divisions: 5,
+                  min: 0,
+                  max: 5,
+                ),
+              ),
+            ),
+            SizedBox(width: 10),
+            Container(
+              width: 67,
+              child: Text(
+                getConditions(type),
+                style: TextStyle(
+                    fontSize: 10,
+                    color: getColor(getValue(type)),
+                    fontWeight: FontWeight.w600),
+              ),
+            )
+          ],
+        ).paddingOnly(left: 20, right: 20),
+      ],
+    ).paddingOnly(bottom: 12);
+  }
+
+  double getValue(SliderType type) {
+    switch (type) {
+      case SliderType.fishLife:
+        return fishLife;
+      case SliderType.visibility:
+        return visibility;
+      case SliderType.currents:
+        return currents;
+    }
+  }
+
+  String getConditions(SliderType type) {
+    switch (type) {
+      case SliderType.fishLife:
+        if (fishLife == 0) return 'No Fish';
+        if (fishLife == 1) return 'Mild Fish';
+        if (fishLife == 2) return 'More Fish';
+        if (fishLife == 3) return 'Very More Fish';
+        return 'Schools of fishes';
+      case SliderType.visibility:
+        if (visibility == 0) return "Can't see computer";
+        if (visibility == 1) return "Can't see dive buddy";
+        if (visibility == 2) return 'Can see reef';
+        if (visibility == 3) return 'Can see Boat';
+        return 'Can see everything';
+      case SliderType.currents:
+        if (currents == 0) return "No Current";
+        if (currents == 1) return 'Mild Current';
+        if (currents == 2) return 'Moderate Current';
+        if (currents == 3) return 'Strong Current';
+        return 'Where is my passport ?';
+    }
+  }
+}
+
+enum SliderType {
+  fishLife,
+  visibility,
+  currents,
+}
+
+Color getColor(double value) {
+  if (value == 0) return Color(0xffBE0000);
+  if (value == 1) return Color(0xffBE0000);
+  if (value == 2) return Color(0xffFF7A00);
+  if (value == 3) return Color(0xffFF7A00);
+  if (value == 4) return Color(0xff009429);
+  return Color(0xff009429);
+}
+
+String getSliderTitle(SliderType type) {
+  switch (type) {
+    case SliderType.fishLife:
+      return 'Fish Life';
+    case SliderType.visibility:
+      return 'Visibility';
+    case SliderType.currents:
+      return 'Currents';
+  }
+}

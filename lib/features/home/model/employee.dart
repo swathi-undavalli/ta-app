@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 Employee? currentEmployee;
 
 enum AttendanceType {

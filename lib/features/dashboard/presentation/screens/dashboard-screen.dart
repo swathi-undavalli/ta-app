@@ -15,6 +15,7 @@ import 'package:temple_adventures/features/weather/presentation/screens/weather-
 import 'package:temple_adventures/main.dart';
 
 import '../../../../notification-screen.dart';
+import '../../../conditions/screens/conditions-screen.dart';
 
 late DashBoardScreenLogic dashboardLogic;
 
@@ -24,7 +25,7 @@ class DashBoardScreen extends StatelessWidget {
     HomePage(),
     WeatherPage(),
     BookingScreen(),
-    BoatPage(),
+    ConditionsScreen(),
   ];
   DateTime? currentBackPressTime;
 
@@ -72,7 +73,6 @@ class DashBoardScreen extends StatelessWidget {
       ),
     );
   }
-
 
   ///===============UI=================///
 
