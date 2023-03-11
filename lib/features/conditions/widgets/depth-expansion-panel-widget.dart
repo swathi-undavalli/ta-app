@@ -1,19 +1,20 @@
-import 'dart:developer';
-
+import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 
+import '../models/conditions-model.dart';
+
 class DepthExpansionPanelWidget extends StatefulWidget {
   DepthExpansionPanelWidget({
-    required this.depth,
+    required this.level,
     required this.onDeletePressed,
     required this.onChanged,
   });
 
-  String depth;
+  Level level;
   Function onDeletePressed;
-  Function(int fish, int visibility, int currents) onChanged;
+  Function(double fish, double visibility, double currents) onChanged;
 
   @override
   State<DepthExpansionPanelWidget> createState() =>
@@ -23,9 +24,9 @@ class DepthExpansionPanelWidget extends StatefulWidget {
 class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
   bool isExpanded = false;
 
-  int fishLife = 0;
-  int visibilityRange = 0;
-  int currents = 0;
+  late double fishLife = (widget.level.fish) * 1.0;
+  late double visibility = (widget.level.visibility) * 1.0;
+  late double currents = (widget.level.currents) * 1.0;
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +43,7 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
           Row(
             children: [
               Text(
-                "${widget.depth} meters",
+                "${widget.level.depth} meters",
                 style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
               ),
               Spacer(),
@@ -76,37 +77,29 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SizedBox(height: 25),
+                SizedBox(height: 15),
                 buildConditionSlider(
-                    category: 'Fish Life',
-                    visibility: fishLife,
-                    condition: 'No fish',
-                    onChanged: (value) {
-                      setState(() {
-                        fishLife = value.toInt();
-                      });
-                    }),
+                  SliderType.fishLife,
+                ),
                 buildConditionSlider(
-                    category: 'Visibility',
-                    visibility: visibilityRange,
-                    condition: 'Hardly visible',
-                    onChanged: (value) {
-                      setState(() {
-                        visibilityRange = value.toInt();
-                      });
-                    }),
+                  SliderType.visibility,
+                ),
                 buildConditionSlider(
-                    category: 'Currents',
-                    visibility: currents,
-                    condition: 'Low Currents',
-                    onChanged: (value) {
-                      setState(() {
-                        currents = value.toInt();
-                      });
-                    }),
+                  SliderType.currents,
+                ),
+                SizedBox(height: 15),
+                buildWaterConditions(
+                        title: "Updated By", text: widget.level.updatedBy)
+                    .paddingSymmetric(horizontal: 27),
+                SizedBox(height: 10),
+                buildWaterConditions(
+                        title: "Updated Time",
+                        text: DateFormat("dd MMM yyyy @ hh:mm a")
+                            .format(widget.level.updatedAt))
+                    .paddingSymmetric(horizontal: 27),
                 SizedBox(height: 25),
               ],
-            ).paddingSymmetric(horizontal: 27)
+            )
         ],
       ),
     );
@@ -114,19 +107,34 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
 
   ///==================UI==================///
 
-  Widget buildConditionSlider(
-      {required String category,
-      required String condition,
-      required Function onChanged,
-      required int visibility}) {
+  Widget buildWaterConditions({required String title, required String text}) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 85,
+          child: Text(
+            "${title}",
+            style: TextStyle(
+                fontSize: FontSize.small, fontWeight: FontWeight.bold),
+          ),
+        ),
+        Text(
+          " :   ${text}",
+          style: TextStyle(fontSize: FontSize.small),
+        ),
+      ],
+    );
+  }
+
+  Widget buildConditionSlider(SliderType type) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          category,
+          getSliderTitle(type),
           style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
-        ).paddingOnly(left: 5),
-        SizedBox(height: 12),
+        ).paddingOnly(left: 32),
+        // SizedBox(height: 12),
         Row(
           children: [
             Container(
@@ -134,15 +142,28 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
               child: SliderTheme(
                 data: SliderThemeData(
                   trackHeight: 3,
-                  thumbShape: RoundSliderThumbShape(enabledThumbRadius: 5),
-                  overlayShape: RoundSliderOverlayShape(overlayRadius: 0.0),
+                  thumbShape: RoundSliderThumbShape(
+                    enabledThumbRadius: 5,
+                    pressedElevation: 1,
+                  ),
+                  overlayShape: RoundSliderOverlayShape(overlayRadius: 20.0),
                 ),
                 child: Slider(
-                  label: visibility.toString(),
-                  value: visibility.toDouble(),
-                  onChanged: (value) {
-                    onChanged(value);
-                    widget.onChanged(fishLife, visibilityRange, currents);
+                  value: getValue(type),
+                  onChanged: (double value) {
+                    switch (type) {
+                      case SliderType.fishLife:
+                        fishLife = value;
+                        break;
+                      case SliderType.visibility:
+                        visibility = value;
+                        break;
+                      case SliderType.currents:
+                        currents = value;
+                        break;
+                    }
+                    setState(() {});
+                    widget.onChanged(fishLife, visibility, currents);
                   },
                   activeColor: AppColors.text.grey.withOpacity(0.5),
                   inactiveColor: AppColors.text.grey.withOpacity(0.5),
@@ -157,16 +178,76 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
             Container(
               width: 67,
               child: Text(
-                condition,
+                getConditions(type),
                 style: TextStyle(
                     fontSize: 10,
-                    color: Color(0xffBE0000),
+                    color: getColor(getValue(type)),
                     fontWeight: FontWeight.w600),
               ),
             )
           ],
-        ),
+        ).paddingOnly(left: 20, right: 20),
       ],
-    ).paddingOnly(bottom: 22);
+    ).paddingOnly(bottom: 12);
+  }
+
+  double getValue(SliderType type) {
+    switch (type) {
+      case SliderType.fishLife:
+        return fishLife;
+      case SliderType.visibility:
+        return visibility;
+      case SliderType.currents:
+        return currents;
+    }
+  }
+
+  String getConditions(SliderType type) {
+    switch (type) {
+      case SliderType.fishLife:
+        if (fishLife == 0) return 'No Fish';
+        if (fishLife == 1) return 'Mild Fish';
+        if (fishLife == 2) return 'More Fish';
+        if (fishLife == 3) return 'Very More Fish';
+        return 'Schools of fishes';
+      case SliderType.visibility:
+        if (visibility == 0) return "Can't see computer";
+        if (visibility == 1) return "Can't see dive buddy";
+        if (visibility == 2) return 'Can see reef';
+        if (visibility == 3) return 'Can see Boat';
+        return 'Can see everything';
+      case SliderType.currents:
+        if (currents == 0) return "No Current";
+        if (currents == 1) return 'Mild Current';
+        if (currents == 2) return 'Moderate Current';
+        if (currents == 3) return 'Strong Current';
+        return 'Where is my passport ?';
+    }
+  }
+}
+
+enum SliderType {
+  fishLife,
+  visibility,
+  currents,
+}
+
+Color getColor(double value) {
+  if (value == 0) return Color(0xffBE0000);
+  if (value == 1) return Color(0xffBE0000);
+  if (value == 2) return Color(0xffFF7A00);
+  if (value == 3) return Color(0xffFF7A00);
+  if (value == 4) return Color(0xff009429);
+  return Color(0xff009429);
+}
+
+String getSliderTitle(SliderType type) {
+  switch (type) {
+    case SliderType.fishLife:
+      return 'Fish Life';
+    case SliderType.visibility:
+      return 'Visibility';
+    case SliderType.currents:
+      return 'Currents';
   }
 }

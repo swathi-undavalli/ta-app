@@ -166,7 +166,7 @@ class MyApp extends StatelessWidget {
         NotificationsScreen.id: (context) => NotificationsScreen(),
         DetailsScreen.id: (context) => DetailsScreen(),
         SplashScreen.id: (context) => SplashScreen(),
-        AddConditionsPage.id: (context) => AddConditionsPage(),
+        AddConditionsScreen.id: (context) => AddConditionsScreen(),
       },
     );
   }
