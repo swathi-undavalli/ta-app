@@ -19,12 +19,10 @@ class SurfaceConditionsExpansionWidget extends StatefulWidget {
   Function(List<SurfaceCondition> surfaceConditions) onChanged;
   bool disableTouches;
   @override
-  State<SurfaceConditionsExpansionWidget> createState() =>
-      _SurfaceConditionsExpansionWidgetState();
+  State<SurfaceConditionsExpansionWidget> createState() => _SurfaceConditionsExpansionWidgetState();
 }
 
-class _SurfaceConditionsExpansionWidgetState
-    extends State<SurfaceConditionsExpansionWidget> {
+class _SurfaceConditionsExpansionWidgetState extends State<SurfaceConditionsExpansionWidget> {
   bool isExpanded = false;
 
   late double surfaceTemp = (currentConditions.temp) * 1.0;
@@ -56,9 +54,7 @@ class _SurfaceConditionsExpansionWidgetState
                 padding: EdgeInsets.all(0),
                 splashRadius: 20,
                 iconSize: 20,
-                icon: Icon(isExpanded
-                    ? Icons.keyboard_arrow_up_rounded
-                    : Icons.keyboard_arrow_down_rounded),
+                icon: Icon(isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded),
                 onPressed: () {
                   setState(() {
                     isExpanded = !isExpanded;
@@ -66,7 +62,7 @@ class _SurfaceConditionsExpansionWidgetState
                 },
               ),
             ],
-          ).paddingOnly(left: 25),
+          ).paddingOnly(left: 20),
           if (isExpanded)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -84,8 +80,7 @@ class _SurfaceConditionsExpansionWidgetState
                 SizedBox(height: 10),
                 buildWaterConditions(
                   title: "Updated Time",
-                  text: DateFormat("dd MMM yyyy @ hh:mm a")
-                      .format(currentConditions.updatedAt),
+                  text: DateFormat("dd MMM yyyy @ hh:mm a").format(currentConditions.updatedAt),
                 ).paddingSymmetric(horizontal: 27),
                 SizedBox(height: 25),
               ],
@@ -104,8 +99,7 @@ class _SurfaceConditionsExpansionWidgetState
           width: 85,
           child: Text(
             "$title",
-            style: TextStyle(
-                fontSize: FontSize.small, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.bold),
           ),
         ),
         Text(
@@ -122,12 +116,13 @@ class _SurfaceConditionsExpansionWidgetState
       children: [
         Text(
           getSliderTitle(type),
-          style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
-        ).paddingOnly(left: 32),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+        ).paddingOnly(left: 20),
         Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              width: 175,
+            Expanded(
               child: SliderTheme(
                 data: SliderThemeData(
                   trackHeight: 3,
@@ -170,31 +165,37 @@ class _SurfaceConditionsExpansionWidgetState
                 ),
               ),
             ),
-            SizedBox(width: 10),
             Container(
               width: 67,
               child: Text(
                 getConditions(type),
                 style: TextStyle(
-                    fontSize: 10,
-                    color: getColor(getValue(type)),
-                    fontWeight: FontWeight.w600),
+                  fontSize: 13,
+                  color: getColor(getValue(type), type == SurfaceSlider.surfaceTemp),
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            )
+            ).paddingOnly(top: 10),
           ],
-        ).paddingOnly(bottom: 5, left: 20, right: 20),
+        ),
       ],
-    );
+    ).paddingOnly(bottom: 5);
   }
 
-  Color getColor(double value) {
+  Color getColor(double value, bool isTemp) {
+    if (isTemp) {
+      // RED
+      if ([20, 21, 22, 35, 34, 33].contains(value)) return Color(0xffBE0000);
+      // ORANGE
+      if ([23, 24, 25, 32, 31, 30].contains(value)) return Color(0xffFF7A00);
+      // GREEN
+      if ([26, 27, 28, 29].contains(value)) return Color(0xff009429);
+    }
     if (value == 0) return Color(0xff009429);
     if (value == 1) return Color(0xff009429);
     if (value == 2) return Color(0xffFF7A00);
     if (value == 3) return Color(0xffFF7A00);
-    if (value == 4 ||
-        (value >= 20 && value <= 25) ||
-        (value >= 30 && value <= 35)) return Color(0xffBE0000);
+    if (value == 4) return Color(0xffBE0000);
     return Color(0xffBE0000);
   }
 

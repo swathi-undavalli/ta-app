@@ -17,8 +17,7 @@ class DepthExpansionPanelWidget extends StatefulWidget {
   Function(double fish, double visibility, double currents) onChanged;
 
   @override
-  State<DepthExpansionPanelWidget> createState() =>
-      _DepthExpansionPanelWidgetState();
+  State<DepthExpansionPanelWidget> createState() => _DepthExpansionPanelWidgetState();
 }
 
 class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
@@ -62,9 +61,7 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
                 padding: EdgeInsets.all(0),
                 splashRadius: 20,
                 iconSize: 20,
-                icon: Icon(isExpanded
-                    ? Icons.keyboard_arrow_up_rounded
-                    : Icons.keyboard_arrow_down_rounded),
+                icon: Icon(isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded),
                 onPressed: () {
                   setState(() {
                     isExpanded = !isExpanded;
@@ -72,7 +69,7 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
                 },
               ),
             ],
-          ).paddingOnly(left: 25),
+          ).paddingOnly(left: 20),
           if (isExpanded)
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,14 +85,11 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
                   SliderType.currents,
                 ),
                 SizedBox(height: 15),
-                buildWaterConditions(
-                        title: "Updated By", text: widget.level.updatedBy)
+                buildWaterConditions(title: "Updated By", text: widget.level.updatedBy)
                     .paddingSymmetric(horizontal: 27),
                 SizedBox(height: 10),
                 buildWaterConditions(
-                        title: "Updated Time",
-                        text: DateFormat("dd MMM yyyy @ hh:mm a")
-                            .format(widget.level.updatedAt))
+                        title: "Updated Time", text: DateFormat("dd MMM yyyy @ hh:mm a").format(widget.level.updatedAt))
                     .paddingSymmetric(horizontal: 27),
                 SizedBox(height: 25),
               ],
@@ -114,8 +108,7 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
           width: 85,
           child: Text(
             "${title}",
-            style: TextStyle(
-                fontSize: FontSize.small, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.bold),
           ),
         ),
         Text(
@@ -132,13 +125,12 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
       children: [
         Text(
           getSliderTitle(type),
-          style: TextStyle(fontSize: 10, fontWeight: FontWeight.w600),
-        ).paddingOnly(left: 32),
+          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+        ).paddingOnly(left: 20),
         // SizedBox(height: 12),
         Row(
           children: [
-            Container(
-              width: 175,
+            Expanded(
               child: SliderTheme(
                 data: SliderThemeData(
                   trackHeight: 3,
@@ -174,21 +166,20 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
                 ),
               ),
             ),
-            SizedBox(width: 10),
             Container(
               width: 67,
               child: Text(
                 getConditions(type),
                 style: TextStyle(
-                    fontSize: 10,
-                    color: getColor(getValue(type)),
+                    fontSize: 13,
+                    color: getColor(getValue(type), type == SliderType.currents),
                     fontWeight: FontWeight.w600),
               ),
             )
           ],
-        ).paddingOnly(left: 20, right: 20),
+        ),
       ],
-    ).paddingOnly(bottom: 12);
+    ).paddingOnly(bottom: 0);
   }
 
   double getValue(SliderType type) {
@@ -206,10 +197,10 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
     switch (type) {
       case SliderType.fishLife:
         if (fishLife == 0) return 'No Fish';
-        if (fishLife == 1) return 'Mild Fish';
-        if (fishLife == 2) return 'More Fish';
-        if (fishLife == 3) return 'Very More Fish';
-        return 'Schools of fishes';
+        if (fishLife == 1) return 'Scattered Fish';
+        if (fishLife == 2) return 'Lots of Fish';
+        if (fishLife == 3) return 'Rare fish seen';
+        return 'Whale shark';
       case SliderType.visibility:
         if (visibility == 0) return "Can't see computer";
         if (visibility == 1) return "Can't see dive buddy";
@@ -232,7 +223,15 @@ enum SliderType {
   currents,
 }
 
-Color getColor(double value) {
+Color getColor(double value, bool isCurrents) {
+  if (isCurrents) {
+    if (value == 4) return Color(0xffBE0000);
+    if (value == 3) return Color(0xffBE0000);
+    if (value == 2) return Color(0xffFF7A00);
+    if (value == 1) return Color(0xffFF7A00);
+    if (value == 0) return Color(0xff009429);
+    return Color(0xffBE0000);
+  }
   if (value == 0) return Color(0xffBE0000);
   if (value == 1) return Color(0xffBE0000);
   if (value == 2) return Color(0xffFF7A00);

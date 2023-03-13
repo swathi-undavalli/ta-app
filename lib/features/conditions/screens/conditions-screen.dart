@@ -42,10 +42,8 @@ class ConditionsScreen extends StatelessWidget {
                         Container(
                           width: 103,
                           child: Text(
-                            DateFormat('dd-MMM-yyyy')
-                                .format(controller.selectedDate),
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
+                            DateFormat('dd-MMM-yyyy').format(controller.selectedDate),
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                         ),
                         Spacer(),
@@ -80,11 +78,9 @@ class ConditionsScreen extends StatelessWidget {
                       SurfaceConditionsExpansionWidget(
                         key: UniqueKey(),
                         disableTouches: true,
-                        surfaceConditions:
-                            controller.conditions!.surfaceConditions,
+                        surfaceConditions: controller.conditions!.surfaceConditions,
                         selectedReef: controller.selectedReef,
-                        onChanged:
-                            (List<SurfaceCondition> surfaceConditions) {},
+                        onChanged: (List<SurfaceCondition> surfaceConditions) {},
                       ).paddingSymmetric(horizontal: 27),
                     SizedBox(height: 25),
                     Container(
@@ -94,8 +90,8 @@ class ConditionsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         color: Colors.white,
                       ),
-                      child: buildGraph().paddingSymmetric(vertical: 29),
-                    ).paddingSymmetric(horizontal: 27),
+                      child: buildGraph().paddingSymmetric(vertical: 10),
+                    ).paddingSymmetric(horizontal: 20),
                     SizedBox(height: 22),
                     // buildSurfaceConditions(
                     //     title: "Surface Temperature",
@@ -143,8 +139,7 @@ class ConditionsScreen extends StatelessWidget {
           width: 120,
           child: Text(
             "${title}",
-            style: TextStyle(
-                fontSize: FontSize.small, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.bold),
           ),
         ),
         Text(
@@ -176,8 +171,7 @@ class ConditionsScreen extends StatelessWidget {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 primary: AppColors.text.black,
-                textStyle:
-                    TextStyle(fontWeight: FontWeight.w500), // button text color
+                textStyle: TextStyle(fontWeight: FontWeight.w500), // button text color
               ),
             ),
           ),
@@ -216,10 +210,12 @@ class ConditionsScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
-          width: 53,
-          child: Text(
-            "${level.depth} m",
-          ).paddingOnly(right: 10, left: 10),
+          width: 40,
+          child: Center(
+            child: Text(
+              "${level.depth} m",
+            ).paddingOnly(right: 5),
+          ),
         ),
         Container(
           color: Colors.black.withOpacity(0.3),
@@ -258,28 +254,21 @@ class ConditionsScreen extends StatelessWidget {
               width: 230,
               height: 1,
             ).paddingOnly(top: 10),
-            Container(
-              width: 230,
-              alignment: Alignment.centerRight,
-              child: RichText(
-                text: TextSpan(
-                  text: level.updatedBy,
-                  style: TextStyle(
-                    fontSize: 8,
-                    color: AppColors.text.darkgrey,
-                    fontFamily: AppFonts.nunito,
-                  ),
-                  children: <TextSpan>[
-                    TextSpan(
-                        style: TextStyle(
-                            color: AppColors.text.darkgrey,
-                            fontWeight: FontWeight.w600),
-                        text:
-                            " (${DateFormat("hh : mm a").format(level.updatedAt)})"),
-                  ],
+            RichText(
+              text: TextSpan(
+                text: level.updatedBy,
+                style: TextStyle(
+                  fontSize: 8,
+                  color: AppColors.text.darkgrey,
+                  fontFamily: AppFonts.nunito,
                 ),
+                children: <TextSpan>[
+                  TextSpan(
+                      style: TextStyle(color: AppColors.text.darkgrey, fontWeight: FontWeight.w600),
+                      text: " (${DateFormat("hh : mm a").format(level.updatedAt)})"),
+                ],
               ),
-            )
+            ).paddingOnly(left: 5, top: 5),
           ],
         ),
       ],
@@ -311,12 +300,12 @@ class ConditionsScreen extends StatelessWidget {
         ),
         Text(getEmoji(type)).paddingOnly(right: 5),
         SizedBox(
-          width: 62,
+          width: 85,
           child: Text(
             getStatus(pos, type),
             style: TextStyle(
-              fontSize: 7,
-              color: getColor(pos * 1.0),
+              fontSize: 10,
+              color: getColor(pos * 1.0, type == SliderType.currents),
             ),
           ),
         ),
@@ -367,16 +356,12 @@ class ConditionsScreen extends StatelessWidget {
         height: 27,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          color: logic.controller.selectedReef == reefName
-              ? AppColors.text.skyBlue
-              : AppColors.text.white,
+          color: logic.controller.selectedReef == reefName ? AppColors.text.skyBlue : AppColors.text.white,
         ),
         child: Text(
           reefName,
           style: TextStyle(
-              color: logic.controller.selectedReef == reefName
-                  ? AppColors.text.white
-                  : AppColors.text.black,
+              color: logic.controller.selectedReef == reefName ? AppColors.text.white : AppColors.text.black,
               fontSize: FontSize.small),
         ).paddingSymmetric(horizontal: 9, vertical: 5),
       ).paddingOnly(right: 13),
