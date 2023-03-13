@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/features/conditions/models/conditions-model.dart';
 import 'package:flutter/material.dart';
@@ -49,102 +51,113 @@ class AddConditionsScreen extends StatelessWidget {
               floatingActionButton: buildFloatingActionButton(),
               body: SafeArea(
                 child: SingleChildScrollView(
-                  physics: BouncingScrollPhysics(),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SizedBox(height: 30),
-                      Container(
-                        width: 103,
-                        child: Text(
-                          DateFormat('dd-MMM-yyyy').format(DateTime.now()),
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
-                        ),
-                      ).paddingSymmetric(horizontal: 30),
-                      SizedBox(height: 30),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(children: [
-                          ...controller.reefs.map(
-                            (e) => buildChip(
-                              onTap: () {
-                                logic.onChipChanged(e);
-                              },
-                              reefName: e,
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          SizedBox(height: 30),
+                          Container(
+                            width: 103,
+                            child: Text(
+                              DateFormat('dd-MMM-yyyy').format(DateTime.now()),
+                              style: TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.w600),
                             ),
-                          )
-                        ]).paddingSymmetric(horizontal: 27),
+                          ).paddingSymmetric(horizontal: 30),
+                          SizedBox(height: 30),
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Row(children: [
+                              ...controller.reefs.map(
+                                (e) => buildChip(
+                                  onTap: () {
+                                    logic.onChipChanged(e);
+                                  },
+                                  reefName: e,
+                                ),
+                              )
+                            ]).paddingSymmetric(horizontal: 27),
+                          ),
+                          SizedBox(height: 30),
+                          if (controller.conditions != null)
+                            buildSurfaceConditionsExpansionWidget(controller)
+                                .paddingSymmetric(horizontal: 27),
+                          SizedBox(height: 30),
+                          if (controller.conditions != null &&
+                              controller.conditions!.levels.isNotEmpty)
+                            Text(
+                              "Water Conditions : ",
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w600),
+                            ).paddingSymmetric(horizontal: 27),
+                          SizedBox(height: 30),
+                        ],
                       ),
-                      SizedBox(height: 30),
-                      if (controller.conditions != null)
-                        SurfaceConditionsExpansionWidget(
-                          key: UniqueKey(),
-                          surfaceConditions:
-                              controller.conditions!.surfaceConditions,
-                          onChanged:
-                              (List<SurfaceCondition> surfaceConditions) {
-                            controller.conditions = controller.conditions!
-                                .copyWith(surfaceConditions: surfaceConditions);
-                          },
-                          selectedReef: controller.selectedReef,
-                          disableTouches: false,
-                        ).paddingSymmetric(horizontal: 27),
-                      SizedBox(height: 30),
-                      if (controller.conditions != null &&
-                          controller.conditions!.levels.isNotEmpty)
-                        Text(
-                          "Water Conditions : ",
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w600),
-                        ).paddingSymmetric(horizontal: 27),
-                      if (logic.getLevels.isEmpty)
-                        Container(
-                            height: Get.height / 3,
-                            width: Get.width,
-                            child: Center(
-                                child: Text(
-                                    "Please add water conditions by clicking below"))),
-                      SizedBox(height: 30),
-                      if (controller.conditions != null &&
-                          controller.conditions!.levels.isNotEmpty)
-                        ...controller.conditions!.levels.asMap().entries.map(
-                          (l) {
-                            if (l.value.reef == controller.selectedReef)
-                              return DepthExpansionPanelWidget(
-                                level: l.value,
-                                onDeletePressed: () {
-                                  _showAlert(
-                                      context: context,
-                                      title: "Are you you want to delete ?",
-                                      content:
-                                          "Added information will be completely removed.",
-                                      onOkayPressed: () {
-                                        controller.conditions!.levels
-                                            .removeAt(l.key);
-                                        Get.back();
-                                        // log(controller.conditions.toString());
-                                        controller.update();
-                                      });
-                                },
-                                onChanged: (double fish, double visibility,
-                                    double currents) {
-                                  controller.conditions!.levels[l.key] =
-                                      controller.conditions!.levels[l.key]
-                                          .copyWith(
-                                    fish: fish.toInt(),
-                                    visibility: visibility.toInt(),
-                                    currents: currents.toInt(),
-                                  );
+                      Container(
+                        height: Get.height - 373,
+                        child: SingleChildScrollView(
+                          physics: BouncingScrollPhysics(),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (logic.getLevels.isEmpty)
+                                Container(
+                                    height: Get.height / 3,
+                                    width: Get.width,
+                                    child: Center(
+                                        child: Text(
+                                            "Please add water conditions by clicking below"))),
+                              if (controller.conditions != null &&
+                                  controller.conditions!.levels.isNotEmpty)
+                                ...controller.conditions!.levels
+                                    .asMap()
+                                    .entries
+                                    .map(
+                                  (l) {
+                                    if (l.value.reef == controller.selectedReef)
+                                      return buildDepthExpansionPanel(
+                                        level: l.value,
+                                        onDeletePressed: () {
+                                          _showAlert(
+                                              context: context,
+                                              title:
+                                                  "Are you you want to delete ?",
+                                              content:
+                                                  "Added information will be completely removed.",
+                                              onOkayPressed: () {
+                                                controller.conditions!.levels
+                                                    .removeAt(l.key);
+                                                Get.back();
+                                                controller.update();
+                                              });
+                                        },
+                                        onChanged: (double fish,
+                                            double visibility,
+                                            double currents) {
+                                          controller.conditions!.levels[l.key] =
+                                              controller
+                                                  .conditions!.levels[l.key]
+                                                  .copyWith(
+                                            fish: fish.toInt(),
+                                            visibility: visibility.toInt(),
+                                            currents: currents.toInt(),
+                                          );
 
-                                  // log("$fish");
-                                  // log("$visibility");
-                                  // log("$currents");
-                                },
-                              ).paddingOnly(bottom: 12, left: 27, right: 27);
-                            return SizedBox();
-                          },
+                                          // log("$fish");
+                                          // log("$visibility");
+                                          // log("$currents");
+                                        },
+                                      ).paddingOnly(
+                                          bottom: 12, left: 27, right: 27);
+                                    return SizedBox();
+                                  },
+                                ),
+                              SizedBox(height: 50)
+                            ],
+                          ),
                         ),
+                      ),
                     ],
                   ),
                 ),
@@ -168,6 +181,29 @@ class AddConditionsScreen extends StatelessWidget {
   }
 
   ///=====================UI==================///
+
+  Widget buildSurfaceConditionsExpansionWidget(
+      AddConditionsController controller) {
+    return SurfaceConditionsExpansionWidget(
+      key: UniqueKey(),
+      surfaceConditions: controller.conditions!.surfaceConditions,
+      onChanged: (List<SurfaceCondition> surfaceConditions) {
+        controller.conditions = controller.conditions!
+            .copyWith(surfaceConditions: surfaceConditions);
+      },
+      selectedReef: controller.selectedReef,
+      disableTouches: false,
+    );
+  }
+
+  Widget buildDepthExpansionPanel(
+      {required Level level,
+      required Function onDeletePressed,
+      required Function(double fish, double visibility, double currents)
+          onChanged}) {
+    return DepthExpansionPanelWidget(
+        level: level, onDeletePressed: onDeletePressed, onChanged: onChanged);
+  }
 
   Widget buildChip({required Function onTap, required String reefName}) {
     return GestureDetector(

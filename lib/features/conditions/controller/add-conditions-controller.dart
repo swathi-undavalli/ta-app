@@ -73,8 +73,8 @@ class AddConditionsLogic {
     controller.conditions!.levels.add(
       Level(
           depth: int.parse(depth),
-          fish: 0,
-          visibility: 0,
+          fish: 5,
+          visibility: 5,
           currents: 0,
           updatedAt: DateTime.now(),
           reef: reefName,

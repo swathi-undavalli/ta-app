@@ -42,8 +42,10 @@ class ConditionsScreen extends StatelessWidget {
                         Container(
                           width: 103,
                           child: Text(
-                            DateFormat('dd-MMM-yyyy').format(controller.selectedDate),
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            DateFormat('dd-MMM-yyyy')
+                                .format(controller.selectedDate),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.w600),
                           ),
                         ),
                         Spacer(),
@@ -78,9 +80,11 @@ class ConditionsScreen extends StatelessWidget {
                       SurfaceConditionsExpansionWidget(
                         key: UniqueKey(),
                         disableTouches: true,
-                        surfaceConditions: controller.conditions!.surfaceConditions,
+                        surfaceConditions:
+                            controller.conditions!.surfaceConditions,
                         selectedReef: controller.selectedReef,
-                        onChanged: (List<SurfaceCondition> surfaceConditions) {},
+                        onChanged:
+                            (List<SurfaceCondition> surfaceConditions) {},
                       ).paddingSymmetric(horizontal: 27),
                     SizedBox(height: 25),
                     Container(
@@ -90,7 +94,7 @@ class ConditionsScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                         color: Colors.white,
                       ),
-                      child: buildGraph().paddingSymmetric(vertical: 10),
+                      child: buildGraph().paddingSymmetric(vertical: 20),
                     ).paddingSymmetric(horizontal: 20),
                     SizedBox(height: 22),
                     // buildSurfaceConditions(
@@ -139,7 +143,8 @@ class ConditionsScreen extends StatelessWidget {
           width: 120,
           child: Text(
             "${title}",
-            style: TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: FontSize.small, fontWeight: FontWeight.bold),
           ),
         ),
         Text(
@@ -171,7 +176,8 @@ class ConditionsScreen extends StatelessWidget {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 primary: AppColors.text.black,
-                textStyle: TextStyle(fontWeight: FontWeight.w500), // button text color
+                textStyle:
+                    TextStyle(fontWeight: FontWeight.w500), // button text color
               ),
             ),
           ),
@@ -200,14 +206,14 @@ class ConditionsScreen extends StatelessWidget {
     }
 
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: logic.getLevels.map((e) => buildLevel(e)).toList(),
     );
   }
 
   Widget buildLevel(Level level) {
     return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         SizedBox(
           width: 40,
@@ -220,7 +226,7 @@ class ConditionsScreen extends StatelessWidget {
         Container(
           color: Colors.black.withOpacity(0.3),
           width: 1,
-          height: 82,
+          height: 120,
         ),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -235,7 +241,7 @@ class ConditionsScreen extends StatelessWidget {
                       color: Colors.black.withOpacity(0.05),
                       width: 3,
                       height: 1,
-                    ).paddingOnly(top: 10),
+                    ).paddingOnly(top: 6, bottom: 6),
                   ),
                 ),
                 Column(
@@ -251,60 +257,69 @@ class ConditionsScreen extends StatelessWidget {
             ),
             Container(
               color: Colors.black.withOpacity(0.05),
-              width: 230,
+              width: 250,
               height: 1,
             ).paddingOnly(top: 10),
             RichText(
               text: TextSpan(
                 text: level.updatedBy,
                 style: TextStyle(
-                  fontSize: 8,
+                  fontSize: 9,
                   color: AppColors.text.darkgrey,
                   fontFamily: AppFonts.nunito,
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                      style: TextStyle(color: AppColors.text.darkgrey, fontWeight: FontWeight.w600),
-                      text: " (${DateFormat("hh : mm a").format(level.updatedAt)})"),
+                      style: TextStyle(
+                          color: AppColors.text.darkgrey,
+                          fontWeight: FontWeight.w600),
+                      text:
+                          " (${DateFormat("hh : mm a").format(level.updatedAt)})"),
                 ],
               ),
             ).paddingOnly(left: 5, top: 5),
           ],
         ),
       ],
-    );
+    ).paddingSymmetric(horizontal: 5);
   }
 
   Widget buildSlider(int pos, SliderType type) {
     return Row(
       children: [
-        SliderTheme(
-          data: SliderThemeData(
-            trackHeight: 3,
-            thumbShape: RoundSliderThumbShape(
-              enabledThumbRadius: 5,
-              pressedElevation: 1,
+        Container(
+          width: Get.width - 117 - 70,
+          child: Expanded(
+            flex: 2,
+            child: SliderTheme(
+              data: SliderThemeData(
+                trackHeight: 3,
+                thumbShape: RoundSliderThumbShape(
+                  enabledThumbRadius: 5,
+                  pressedElevation: 1,
+                ),
+                overlayShape: RoundSliderOverlayShape(overlayRadius: 10.0),
+              ),
+              child: Slider(
+                value: pos * 1.0,
+                onChanged: (double value) {},
+                activeColor: AppColors.text.grey.withOpacity(0.5),
+                inactiveColor: AppColors.text.grey.withOpacity(0.5),
+                thumbColor: AppColors.text.black,
+                divisions: 5,
+                min: 0,
+                max: 5,
+              ),
             ),
-            overlayShape: RoundSliderOverlayShape(overlayRadius: 10.0),
-          ),
-          child: Slider(
-            value: pos * 1.0,
-            onChanged: (double value) {},
-            activeColor: AppColors.text.grey.withOpacity(0.5),
-            inactiveColor: AppColors.text.grey.withOpacity(0.5),
-            thumbColor: AppColors.text.black,
-            divisions: 5,
-            min: 0,
-            max: 5,
           ),
         ),
         Text(getEmoji(type)).paddingOnly(right: 5),
         SizedBox(
-          width: 85,
+          width: 70,
           child: Text(
             getStatus(pos, type),
             style: TextStyle(
-              fontSize: 10,
+              fontSize: 12,
               color: getColor(pos * 1.0, type == SliderType.currents),
             ),
           ),
@@ -317,16 +332,16 @@ class ConditionsScreen extends StatelessWidget {
     switch (type) {
       case SliderType.fishLife:
         if (pos == 0) return 'No Fish';
-        if (pos == 1) return 'Mild Fish';
-        if (pos == 2) return 'More Fish';
-        if (pos == 3) return 'Very More Fish';
-        return 'Schools of fishes';
+        if (pos == 1) return 'Scattered Fish';
+        if (pos == 2) return 'Lots of Fish';
+        if (pos == 3) return 'Rare fish seen';
+        return 'Whale shark';
       case SliderType.visibility:
-        if (pos == 0) return "Can't see anything";
-        if (pos == 1) return 'Very Green';
-        if (pos == 2) return 'Medium Visibility';
-        if (pos == 3) return 'Clear';
-        return 'Crystal Clear';
+        if (pos == 0) return "Can't see computer";
+        if (pos == 1) return "Can't see dive buddy";
+        if (pos == 2) return 'Can see reef';
+        if (pos == 3) return 'Can see Boat';
+        return 'Can see everything';
       case SliderType.currents:
         if (pos == 0) return "No Current";
         if (pos == 1) return 'Mild Current';
@@ -356,12 +371,16 @@ class ConditionsScreen extends StatelessWidget {
         height: 27,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          color: logic.controller.selectedReef == reefName ? AppColors.text.skyBlue : AppColors.text.white,
+          color: logic.controller.selectedReef == reefName
+              ? AppColors.text.skyBlue
+              : AppColors.text.white,
         ),
         child: Text(
           reefName,
           style: TextStyle(
-              color: logic.controller.selectedReef == reefName ? AppColors.text.white : AppColors.text.black,
+              color: logic.controller.selectedReef == reefName
+                  ? AppColors.text.white
+                  : AppColors.text.black,
               fontSize: FontSize.small),
         ).paddingSymmetric(horizontal: 9, vertical: 5),
       ).paddingOnly(right: 13),

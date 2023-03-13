@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
@@ -18,8 +20,18 @@ class SurfaceConditionsExpansionWidget extends StatefulWidget {
   String selectedReef;
   Function(List<SurfaceCondition> surfaceConditions) onChanged;
   bool disableTouches;
+
+  late _SurfaceConditionsExpansionWidgetState depthExpansionPanelWidgetState;
+
   @override
-  State<SurfaceConditionsExpansionWidget> createState() => _SurfaceConditionsExpansionWidgetState();
+  State<SurfaceConditionsExpansionWidget> createState() {
+    depthExpansionPanelWidgetState = _SurfaceConditionsExpansionWidgetState();
+    return depthExpansionPanelWidgetState;
+  }
+
+  void closeExpansion() {
+    depthExpansionPanelWidgetState.closeExpansion();
+  }
 }
 
 class _SurfaceConditionsExpansionWidgetState extends State<SurfaceConditionsExpansionWidget> {
@@ -32,60 +44,70 @@ class _SurfaceConditionsExpansionWidgetState extends State<SurfaceConditionsExpa
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                "Surface Conditions",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-              ),
-              Spacer(),
-              IconButton(
-                visualDensity: VisualDensity(horizontal: 0, vertical: 0),
-                padding: EdgeInsets.all(0),
-                splashRadius: 20,
-                iconSize: 20,
-                icon: Icon(isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded),
-                onPressed: () {
-                  setState(() {
-                    isExpanded = !isExpanded;
-                  });
-                },
-              ),
-            ],
-          ).paddingOnly(left: 20),
-          if (isExpanded)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          isExpanded = !isExpanded;
+        });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                SizedBox(height: 15),
-                buildConditionSlider(SurfaceSlider.surfaceTemp),
-                buildConditionSlider(SurfaceSlider.surfaceCurrent),
-                buildConditionSlider(SurfaceSlider.windSpeed),
-                buildConditionSlider(SurfaceSlider.swell),
-                SizedBox(height: 15),
-                buildWaterConditions(
-                  title: "Updated By",
-                  text: currentConditions.updatedBy,
-                ).paddingSymmetric(horizontal: 27),
-                SizedBox(height: 10),
-                buildWaterConditions(
-                  title: "Updated Time",
-                  text: DateFormat("dd MMM yyyy @ hh:mm a").format(currentConditions.updatedAt),
-                ).paddingSymmetric(horizontal: 27),
-                SizedBox(height: 25),
+                Text(
+                  "Surface Conditions",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                ),
+                Spacer(),
+                IconButton(
+                  visualDensity: VisualDensity(horizontal: 0, vertical: 0),
+                  padding: EdgeInsets.all(0),
+                  splashRadius: 20,
+                  iconSize: 20,
+                  icon: Icon(isExpanded
+                      ? Icons.keyboard_arrow_up_rounded
+                      : Icons.keyboard_arrow_down_rounded),
+                  onPressed: () {
+                    setState(() {
+                      isExpanded = !isExpanded;
+                    });
+                  },
+                ),
               ],
-            )
-        ],
+            ).paddingOnly(left: 20),
+            if (isExpanded)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 15),
+                  buildConditionSlider(SurfaceSlider.surfaceTemp),
+                  buildConditionSlider(SurfaceSlider.surfaceCurrent),
+                  buildConditionSlider(SurfaceSlider.windSpeed),
+                  buildConditionSlider(SurfaceSlider.swell),
+                  SizedBox(height: 15),
+                  buildWaterConditions(
+                    title: "Updated By",
+                    text: currentConditions.updatedBy,
+                  ),
+                  SizedBox(height: 10),
+                  buildWaterConditions(
+                    title: "Updated Time",
+                    text: DateFormat("dd MMM yyyy @ hh:mm a")
+                        .format(currentConditions.updatedAt),
+                  ),
+                  SizedBox(height: 25),
+                ],
+              )
+          ],
+        ),
       ),
     );
   }
@@ -99,7 +121,8 @@ class _SurfaceConditionsExpansionWidgetState extends State<SurfaceConditionsExpa
           width: 85,
           child: Text(
             "$title",
-            style: TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: FontSize.small, fontWeight: FontWeight.bold),
           ),
         ),
         Text(
@@ -107,7 +130,7 @@ class _SurfaceConditionsExpansionWidgetState extends State<SurfaceConditionsExpa
           style: TextStyle(fontSize: FontSize.small),
         ),
       ],
-    );
+    ).paddingSymmetric(horizontal: 20);
   }
 
   Widget buildConditionSlider(SurfaceSlider type) {
@@ -171,13 +194,14 @@ class _SurfaceConditionsExpansionWidgetState extends State<SurfaceConditionsExpa
                 getConditions(type),
                 style: TextStyle(
                   fontSize: 13,
-                  color: getColor(getValue(type), type == SurfaceSlider.surfaceTemp),
+                  color: getColor(
+                      getValue(type), type == SurfaceSlider.surfaceTemp),
                   fontWeight: FontWeight.w600,
                 ),
               ),
             ).paddingOnly(top: 10),
           ],
-        ),
+        ).paddingOnly(right: 10, left: 5),
       ],
     ).paddingOnly(bottom: 5);
   }
@@ -223,17 +247,17 @@ class _SurfaceConditionsExpansionWidgetState extends State<SurfaceConditionsExpa
         if (surfaceCurrents == 3) return 'Strong Current';
         return 'Where is my passport ?';
       case SurfaceSlider.windSpeed:
-        if (windSpeed == 0) return "Pool like";
-        if (windSpeed == 1) return 'Mild';
-        if (windSpeed == 2) return 'Big';
-        if (windSpeed == 3) return 'Very big';
-        return 'Stay at home';
-      case SurfaceSlider.swell:
-        if (swell == 0) return "Gentle breeze";
-        if (swell == 1) return 'Light winds';
-        if (swell == 2) return 'Strong winds ';
-        if (swell == 3) return 'Storm';
+        if (windSpeed == 0) return "Gentle breeze";
+        if (windSpeed == 1) return 'Light winds';
+        if (windSpeed == 2) return 'Strong winds ';
+        if (windSpeed == 3) return 'Storm';
         return 'Boat is flying';
+      case SurfaceSlider.swell:
+        if (swell == 0) return "Pool like";
+        if (swell == 1) return 'Mild';
+        if (swell == 2) return 'Big';
+        if (swell == 3) return 'Very big';
+        return 'Stay at home';
     }
   }
 
@@ -270,6 +294,14 @@ class _SurfaceConditionsExpansionWidgetState extends State<SurfaceConditionsExpa
         );
       }
     }
+  }
+
+  void closeExpansion() {
+    setState(() {
+      isExpanded = false;
+      log("==========depth expansion closed");
+      log(isExpanded.toString());
+    });
   }
 }
 

@@ -17,7 +17,8 @@ class DepthExpansionPanelWidget extends StatefulWidget {
   Function(double fish, double visibility, double currents) onChanged;
 
   @override
-  State<DepthExpansionPanelWidget> createState() => _DepthExpansionPanelWidgetState();
+  State<DepthExpansionPanelWidget> createState() =>
+      _DepthExpansionPanelWidgetState();
 }
 
 class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
@@ -29,72 +30,82 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              Text(
-                "${widget.level.depth} meters",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
-              ),
-              Spacer(),
-              IconButton(
-                padding: EdgeInsets.all(0),
-                visualDensity: VisualDensity(horizontal: 0, vertical: 0),
-                splashRadius: 20,
-                iconSize: 13,
-                icon: Icon(Icons.delete),
-                onPressed: () {
-                  widget.onDeletePressed();
-                },
-              ),
-              IconButton(
-                visualDensity: VisualDensity(horizontal: 0, vertical: 0),
-                padding: EdgeInsets.all(0),
-                splashRadius: 20,
-                iconSize: 20,
-                icon: Icon(isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded),
-                onPressed: () {
-                  setState(() {
-                    isExpanded = !isExpanded;
-                  });
-                },
-              ),
-            ],
-          ).paddingOnly(left: 20),
-          if (isExpanded)
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          isExpanded = !isExpanded;
+        });
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                SizedBox(height: 15),
-                buildConditionSlider(
-                  SliderType.fishLife,
+                Text(
+                  "${widget.level.depth} meters",
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
-                buildConditionSlider(
-                  SliderType.visibility,
+                Spacer(),
+                IconButton(
+                  padding: EdgeInsets.all(0),
+                  visualDensity: VisualDensity(horizontal: 0, vertical: 0),
+                  splashRadius: 20,
+                  iconSize: 13,
+                  icon: Icon(Icons.delete),
+                  onPressed: () {
+                    widget.onDeletePressed();
+                  },
                 ),
-                buildConditionSlider(
-                  SliderType.currents,
+                IconButton(
+                  visualDensity: VisualDensity(horizontal: 0, vertical: 0),
+                  padding: EdgeInsets.all(0),
+                  splashRadius: 20,
+                  iconSize: 20,
+                  icon: Icon(isExpanded
+                      ? Icons.keyboard_arrow_up_rounded
+                      : Icons.keyboard_arrow_down_rounded),
+                  onPressed: () {
+                    setState(() {
+                      isExpanded = !isExpanded;
+                    });
+                  },
                 ),
-                SizedBox(height: 15),
-                buildWaterConditions(title: "Updated By", text: widget.level.updatedBy)
-                    .paddingSymmetric(horizontal: 27),
-                SizedBox(height: 10),
-                buildWaterConditions(
-                        title: "Updated Time", text: DateFormat("dd MMM yyyy @ hh:mm a").format(widget.level.updatedAt))
-                    .paddingSymmetric(horizontal: 27),
-                SizedBox(height: 25),
               ],
-            )
-        ],
+            ).paddingOnly(left: 20),
+            if (isExpanded)
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 15),
+                  buildConditionSlider(
+                    SliderType.fishLife,
+                  ),
+                  buildConditionSlider(
+                    SliderType.visibility,
+                  ),
+                  buildConditionSlider(
+                    SliderType.currents,
+                  ),
+                  SizedBox(height: 15),
+                  buildWaterConditions(
+                      title: "Updated By", text: widget.level.updatedBy),
+                  SizedBox(height: 10),
+                  buildWaterConditions(
+                      title: "Updated Time",
+                      text: DateFormat("dd MMM yyyy @ hh:mm a")
+                          .format(widget.level.updatedAt)),
+                  SizedBox(height: 25),
+                ],
+              )
+          ],
+        ),
       ),
     );
   }
@@ -108,7 +119,8 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
           width: 85,
           child: Text(
             "${title}",
-            style: TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: FontSize.small, fontWeight: FontWeight.bold),
           ),
         ),
         Text(
@@ -116,7 +128,7 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
           style: TextStyle(fontSize: FontSize.small),
         ),
       ],
-    );
+    ).paddingSymmetric(horizontal: 20);
   }
 
   Widget buildConditionSlider(SliderType type) {
@@ -127,7 +139,6 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
           getSliderTitle(type),
           style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         ).paddingOnly(left: 20),
-        // SizedBox(height: 12),
         Row(
           children: [
             Expanded(
@@ -172,14 +183,15 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
                 getConditions(type),
                 style: TextStyle(
                     fontSize: 13,
-                    color: getColor(getValue(type), type == SliderType.currents),
+                    color:
+                        getColor(getValue(type), type == SliderType.currents),
                     fontWeight: FontWeight.w600),
               ),
             )
           ],
-        ),
+        ).paddingOnly(right: 10, left: 5),
       ],
-    ).paddingOnly(bottom: 0);
+    ).paddingOnly(bottom: 5);
   }
 
   double getValue(SliderType type) {
