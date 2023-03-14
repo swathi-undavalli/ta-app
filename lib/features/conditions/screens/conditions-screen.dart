@@ -29,91 +29,85 @@ class ConditionsScreen extends StatelessWidget {
             child: Icon(Icons.add),
           ),
           body: SafeArea(
-            child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
-              child: GetBuilder<ConditionsController>(builder: (controller) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 20),
-                    Row(
-                      children: [
-                        Container(
-                          width: 103,
-                          child: Text(
-                            DateFormat('dd-MMM-yyyy')
-                                .format(controller.selectedDate),
-                            style: TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.w600),
+            child: GetBuilder<ConditionsController>(builder: (controller) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(height: 20),
+                      Row(
+                        children: [
+                          Container(
+                            width: 103,
+                            child: Text(
+                              DateFormat('dd-MMM-yyyy').format(controller.selectedDate),
+                              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                            ),
                           ),
-                        ),
-                        Spacer(),
-                        IconButton(
-                          splashRadius: 20,
-                          onPressed: () {
-                            selectDate(context);
-                          },
-                          icon: Icon(
-                            Icons.calendar_today_outlined,
-                            size: 17,
-                          ),
-                        ),
-                      ],
-                    ).paddingSymmetric(horizontal: 32),
-                    SizedBox(height: 20),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(children: [
-                        ...controller.reefs.map(
-                          (e) => buildChip(
-                            onTap: () {
-                              logic.onChipChanged(e);
+                          Spacer(),
+                          IconButton(
+                            splashRadius: 20,
+                            onPressed: () {
+                              selectDate(context);
                             },
-                            reefName: e,
+                            icon: Icon(
+                              Icons.calendar_today_outlined,
+                              size: 17,
+                            ),
                           ),
-                        )
-                      ]).paddingSymmetric(horizontal: 27),
-                    ),
-                    SizedBox(height: 25),
-                    if (controller.conditions != null)
-                      SurfaceConditionsExpansionWidget(
-                        key: UniqueKey(),
-                        disableTouches: true,
-                        surfaceConditions:
-                            controller.conditions!.surfaceConditions,
-                        selectedReef: controller.selectedReef,
-                        onChanged:
-                            (List<SurfaceCondition> surfaceConditions) {},
-                      ).paddingSymmetric(horizontal: 27),
-                    SizedBox(height: 25),
-                    Container(
-                      width: Get.width,
-                      height: Get.height,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12),
-                        color: Colors.white,
+                        ],
+                      ).paddingSymmetric(horizontal: 32),
+                      SizedBox(height: 20),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(children: [
+                          ...controller.reefs.map(
+                            (e) => buildChip(
+                              onTap: () {
+                                logic.onChipChanged(e);
+                              },
+                              reefName: e,
+                            ),
+                          )
+                        ]).paddingSymmetric(horizontal: 27),
                       ),
-                      child: buildGraph().paddingSymmetric(vertical: 20),
-                    ).paddingSymmetric(horizontal: 20),
-                    SizedBox(height: 22),
-                    // buildSurfaceConditions(
-                    //     title: "Surface Temperature",
-                    //     text:
-                    //         "${(logic.controller.conditions != null) ? "${controller.conditions!.surfaceTemperature.toString()} °C" : "-"}"),
-                    // buildSurfaceConditions(
-                    //     title: "Surface Currents",
-                    //     text:
-                    //         "${(logic.controller.conditions != null) ? controller.conditions!.surfaceCurrents.toString() : "-"}"),
-                    // buildSurfaceConditions(
-                    //     title: "Wind Speed",
-                    //     text:
-                    //         "${(logic.controller.conditions != null) ? controller.conditions!.windSpeed.toString() : "-"}"),
-                    // SizedBox(height: 30),
-                  ],
-                );
-              }),
-            ),
+                      SizedBox(height: 25),
+                    ],
+                  ),
+                  SizedBox(
+                    height: Get.height - 232,
+                    child: SingleChildScrollView(
+                      physics: BouncingScrollPhysics(),
+                      child: Column(
+                        children: [
+                          if (controller.conditions != null)
+                            SurfaceConditionsExpansionWidget(
+                              key: UniqueKey(),
+                              disableTouches: true,
+                              surfaceConditions: controller.conditions!.surfaceConditions,
+                              selectedReef: controller.selectedReef,
+                              onChanged: (List<SurfaceCondition> surfaceConditions) {},
+                            ).paddingSymmetric(horizontal: 27),
+                          SizedBox(height: 25),
+                          Container(
+                            width: Get.width,
+                            // height: Get.height,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(12),
+                              color: Colors.white,
+                            ),
+                            child: buildGraph().paddingSymmetric(vertical: 20),
+                          ).paddingSymmetric(horizontal: 20),
+                          SizedBox(height: 22),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            }),
           ),
         ),
         GetBuilder<ConditionsController>(builder: (controller) {
@@ -143,8 +137,7 @@ class ConditionsScreen extends StatelessWidget {
           width: 120,
           child: Text(
             "${title}",
-            style: TextStyle(
-                fontSize: FontSize.small, fontWeight: FontWeight.bold),
+            style: TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.bold),
           ),
         ),
         Text(
@@ -176,8 +169,7 @@ class ConditionsScreen extends StatelessWidget {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 primary: AppColors.text.black,
-                textStyle:
-                    TextStyle(fontWeight: FontWeight.w500), // button text color
+                textStyle: TextStyle(fontWeight: FontWeight.w500), // button text color
               ),
             ),
           ),
@@ -197,16 +189,18 @@ class ConditionsScreen extends StatelessWidget {
   Widget buildGraph() {
     if (logic.getLevels.isEmpty) {
       return Column(
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          SizedBox(width: Get.width, child: Text("No entries found in selected reef")),
           SizedBox(height: 50),
-          Text("No entries found in selected reef"),
         ],
       );
     }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: logic.getLevels.map((e) => buildLevel(e)).toList(),
     );
   }
@@ -270,11 +264,8 @@ class ConditionsScreen extends StatelessWidget {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                      style: TextStyle(
-                          color: AppColors.text.darkgrey,
-                          fontWeight: FontWeight.w600),
-                      text:
-                          " (${DateFormat("hh : mm a").format(level.updatedAt)})"),
+                      style: TextStyle(color: AppColors.text.darkgrey, fontWeight: FontWeight.w600),
+                      text: " (${DateFormat("hh : mm a").format(level.updatedAt)})"),
                 ],
               ),
             ).paddingOnly(left: 5, top: 5),
@@ -371,16 +362,12 @@ class ConditionsScreen extends StatelessWidget {
         height: 27,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          color: logic.controller.selectedReef == reefName
-              ? AppColors.text.skyBlue
-              : AppColors.text.white,
+          color: logic.controller.selectedReef == reefName ? AppColors.text.skyBlue : AppColors.text.white,
         ),
         child: Text(
           reefName,
           style: TextStyle(
-              color: logic.controller.selectedReef == reefName
-                  ? AppColors.text.white
-                  : AppColors.text.black,
+              color: logic.controller.selectedReef == reefName ? AppColors.text.white : AppColors.text.black,
               fontSize: FontSize.small),
         ).paddingSymmetric(horizontal: 9, vertical: 5),
       ).paddingOnly(right: 13),
