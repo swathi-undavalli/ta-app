@@ -20,9 +20,10 @@ class ConditionsLogic {
   getLatestConditions() async {
     controller.conditions =
         await conditionsRepo.getConditions(controller.selectedDate);
-    if (controller.conditions != null) {
-      log(controller.conditions!.toMap().toString());
-    }
+    // if (controller.conditions != null) {
+    //   log(controller.conditions!.toMap().toString());
+    // }
+    // }
   }
 
   void onFloatingActionButtonPressed() {
@@ -67,6 +68,7 @@ class ConditionsController extends GetxController {
   ];
 
   bool get showLoading => _showLoading;
+
   set showLoading(bool value) {
     _showLoading = value;
     update();

@@ -208,22 +208,22 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
   String getConditions(SliderType type) {
     switch (type) {
       case SliderType.fishLife:
-        if (fishLife == 0) return 'No Fish';
-        if (fishLife == 1) return 'Scattered Fish';
-        if (fishLife == 2) return 'Lots of Fish';
+        if (fishLife == 0) return 'No fish';
+        if (fishLife == 1) return 'Scattered fish';
+        if (fishLife == 2) return 'Lots of fish';
         if (fishLife == 3) return 'Rare fish seen';
         return 'Whale shark';
       case SliderType.visibility:
         if (visibility == 0) return "Can't see computer";
         if (visibility == 1) return "Can't see dive buddy";
         if (visibility == 2) return 'Can see reef';
-        if (visibility == 3) return 'Can see Boat';
+        if (visibility == 3) return 'Can see boat';
         return 'Can see everything';
       case SliderType.currents:
-        if (currents == 0) return "No Current";
-        if (currents == 1) return 'Mild Current';
-        if (currents == 2) return 'Moderate Current';
-        if (currents == 3) return 'Strong Current';
+        if (currents == 0) return "No current";
+        if (currents == 1) return 'Mild current';
+        if (currents == 2) return 'Moderate current';
+        if (currents == 3) return 'Strong current';
         return 'Where is my passport ?';
     }
   }

@@ -34,7 +34,8 @@ class SurfaceConditionsExpansionWidget extends StatefulWidget {
   }
 }
 
-class _SurfaceConditionsExpansionWidgetState extends State<SurfaceConditionsExpansionWidget> {
+class _SurfaceConditionsExpansionWidgetState
+    extends State<SurfaceConditionsExpansionWidget> {
   bool isExpanded = false;
 
   late double surfaceTemp = (currentConditions.temp) * 1.0;
@@ -241,10 +242,10 @@ class _SurfaceConditionsExpansionWidgetState extends State<SurfaceConditionsExpa
       case SurfaceSlider.surfaceTemp:
         return surfaceTemp.toString();
       case SurfaceSlider.surfaceCurrent:
-        if (surfaceCurrents == 0) return "No Current";
-        if (surfaceCurrents == 1) return 'Mild Current';
-        if (surfaceCurrents == 2) return 'Moderate Current';
-        if (surfaceCurrents == 3) return 'Strong Current';
+        if (surfaceCurrents == 0) return "No current";
+        if (surfaceCurrents == 1) return 'Mild current';
+        if (surfaceCurrents == 2) return 'Moderate current';
+        if (surfaceCurrents == 3) return 'Strong current';
         return 'Where is my passport ?';
       case SurfaceSlider.windSpeed:
         if (windSpeed == 0) return "Gentle breeze";

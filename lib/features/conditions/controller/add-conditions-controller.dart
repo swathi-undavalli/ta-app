@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:intl/intl.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/features/conditions/controller/conditions-controller.dart';
@@ -10,12 +12,16 @@ class AddConditionsLogic {
   ConditionsRepository conditionsRepo = ConditionsRepository();
 
   Future<void> init() async {
+    log("calling init");
+    log("==============================");
     controller.showLoading = true;
     await getExistingData();
     controller.showLoading = false;
   }
 
   getExistingData() async {
+    log("calling existing data");
+
     controller.conditions = await conditionsRepo.getConditions(DateTime.now());
 
     if (controller.conditions == null) {
@@ -38,6 +44,8 @@ class AddConditionsLogic {
   }
 
   List<Level> get getLevels {
+    log("calling get levels");
+
     if (controller.conditions == null ||
         controller.conditions!.levels.isEmpty) {
       return [];
@@ -58,6 +66,8 @@ class AddConditionsLogic {
     required String depth,
     required String reefName,
   }) {
+    log("calling add level");
+
     if (controller.conditions != null &&
         controller.conditions!.levels.isNotEmpty) {
       bool isAlreadyExist = false;
@@ -80,11 +90,15 @@ class AddConditionsLogic {
           reef: reefName,
           updatedBy: (currentEmployee != null) ? currentEmployee!.name : "-"),
     );
+    log("=======================================");
+    log(controller.conditions!.levels.toString());
     controller.update();
     return true;
   }
 
   Future<void> onSavePressed() async {
+    log("on save pressed");
+
     controller.showLoading = true;
 
     await conditionsRepo.updateConditions(controller.conditions!);
@@ -98,6 +112,8 @@ class AddConditionsLogic {
   String getID(DateTime date) => DateFormat("dd-M-yyyy").format(date);
 
   void onChipChanged(String e) {
+    log("on chip changed");
+
     controller.selectedReef = e;
     controller.update();
   }
