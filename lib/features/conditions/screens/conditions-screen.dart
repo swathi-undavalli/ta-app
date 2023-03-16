@@ -332,7 +332,7 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
         if (pos == 0) return 'No fish';
         if (pos == 1) return 'Scattered fish';
         if (pos == 2) return 'Lots of fish';
-        if (pos == 3) return 'Rare fish seen';
+        if (pos == 3) return 'Rare fish life';
         return 'Whale shark';
       case SliderType.visibility:
         if (pos == 0) return "Can't see computer";

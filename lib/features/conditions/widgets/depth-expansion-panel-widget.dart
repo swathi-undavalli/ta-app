@@ -211,7 +211,7 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
         if (fishLife == 0) return 'No fish';
         if (fishLife == 1) return 'Scattered fish';
         if (fishLife == 2) return 'Lots of fish';
-        if (fishLife == 3) return 'Rare fish seen';
+        if (fishLife == 3) return 'Rare fish life';
         return 'Whale shark';
       case SliderType.visibility:
         if (visibility == 0) return "Can't see computer";
