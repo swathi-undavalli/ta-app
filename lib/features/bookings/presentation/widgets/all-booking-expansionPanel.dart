@@ -852,7 +852,7 @@ class ItemModel {
       activity: bookingModel.activity![0]!.name.toString(),
       price: bookingModel.activity![0]!.price.toString(),
       colorCode: bookingModel.activity![0]!.color.toString(),
-      date: bookingModel.bookingDate![0] ?? "",
+      date: bookingModel.bookingDate![0],
       cost: bookingModel.totalCost.toString(),
       paid: bookingModel.paid.toString(),
       balance: bookingModel.balance.toString(),
