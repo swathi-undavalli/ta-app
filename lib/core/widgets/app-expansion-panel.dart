@@ -294,20 +294,20 @@ Please click the below link : $link
                   "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=";
               log(link);
 
-              // var headers = {
-              //   "x-api-key": "uSirf5x9fM5iYjPuu8GXS4TVvLbt1tdg9DUe7f7N",
-              //   "Content-Type": "application/json"
-              // };
-              // final result = await http.post(
-              //   Uri.parse('https://api.aws3.link/shorten'),
-              //   body: jsonEncode({
-              //     "longUrl": link,
-              //     "expireHours": 48,
-              //   }),
-              //   headers: headers,
-              // );
+              var headers = {
+                "x-api-key": "uSirf5x9fM5iYjPuu8GXS4TVvLbt1tdg9DUe7f7N",
+                "Content-Type": "application/json"
+              };
+              final result = await http.post(
+                Uri.parse('https://api.aws3.link/shorten'),
+                body: jsonEncode({
+                  "longUrl": link,
+                  "expireHours": 48,
+                }),
+                headers: headers,
+              );
 
-              // final jsonLink = jsonDecode(result.body)["shortUrl"];
+              final jsonLink = jsonDecode(result.body)["shortUrl"];
 
               String phone = itemModel.phone!.replaceAll("+", "");
               String message = """
@@ -319,7 +319,7 @@ Thanks for choosing us, we are excited to take you scuba diving with us 😍.
 
 we need *all the divers to complete* the *paperwork process*. Please share this link with them.
 
-*Please complete the paperwork process* by clicking the below link: $link . This includes _Discover Scuba Diving Form, Medical Form, Liability Releases, Agency NDA and our policies_
+*Please complete the paperwork process* by clicking the below link: $jsonLink. This includes _Discover Scuba Diving Form, Medical Form, Liability Releases, Agency NDA and our policies_
 
                                           """;
               var uri = "https://wa.me/$phone?text=$message";

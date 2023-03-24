@@ -4,8 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
-import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/all-bookings/controller/all-bookings-controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/all-booking-expansionPanel.dart';
@@ -76,33 +74,25 @@ class AllBookingsScreen extends StatelessWidget {
             }
             return ListView.builder(
               itemBuilder: (BuildContext context, int index) {
-                BookingModel booking = BookingModel.fromMap(snapshot.data!.docs[index].data() as Map<String, dynamic>);
-                // log(booking.id);
-                if (controller.searchTED.text.isNotEmpty) {
-                  if (booking.id!.contains(controller.searchTED.text) ||
-                      (booking.pax![0]['first-name'] as String)
-                          .toLowerCase()
-                          .contains(
-                          controller.searchTED.text.toLowerCase().trim()))
-                    return AllBookingsExpansionPanel(booking: booking);
-                  return SizedBox();
+                try {
+                  BookingModel booking = BookingModel.fromMap(
+                      snapshot.data!.docs[index].data()
+                          as Map<String, dynamic>);
+                  log(booking.id.toString());
+                  if (controller.searchTED.text.isNotEmpty) {
+                    if (booking.id!.contains(controller.searchTED.text) ||
+                        (booking.pax![0]['first-name'] as String)
+                            .toLowerCase()
+                            .contains(
+                                controller.searchTED.text.toLowerCase().trim()))
+                      return AllBookingsExpansionPanel(booking: booking);
+                    return SizedBox();
+                  }
+                  return AllBookingsExpansionPanel(booking: booking);
+                } catch (e) {
+                  log(e.toString());
                 }
-                return AllBookingsExpansionPanel(booking: booking);
               },
-              // children: snapshot.data.docs.map((document) {
-              //   BookingModel booking = BookingModel.fromMap(document.data());
-              //   // log(booking.id);
-              //   if (controller.searchTED.text.isNotEmpty) {
-              //     if (booking.id.contains(controller.searchTED.text) ||
-              //         (booking.pax[0]['first-name'] as String)
-              //             .toLowerCase()
-              //             .contains(
-              //                 controller.searchTED.text.toLowerCase().trim()))
-              //       return AllBookingsExpansionPanel(booking: booking);
-              //     return SizedBox();
-              //   }
-              //   return AllBookingsExpansionPanel(booking: booking);
-              // }).toList(),
             );
           },
         );
@@ -147,58 +137,6 @@ class AllBookingsScreen extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  Widget buildBookingExpansionPanel(BookingModel booking) => Text(booking.id!);
-
-  Widget buildAllPages() {
-    getCircleColor(int index, AllBookingsController controller) {
-      if (controller.selectedPage == controller.pages[index])
-        return AppColors.background.lightSkyBlue;
-      return AppColors.background.white;
-    }
-
-    return GetBuilder<AllBookingsController>(builder: (controller) {
-      return Center(
-        child: Container(
-          alignment: Alignment.center,
-          height: 50,
-          width: Get.width / 2,
-          child: ListView.builder(
-            itemCount: controller.pages.length,
-            controller: scrollController,
-            scrollDirection: Axis.horizontal,
-            physics: BouncingScrollPhysics(),
-            itemBuilder: (BuildContext context, int index) {
-              return Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: GestureDetector(
-                  onTap: () {
-                    controller.selectedPage = controller.pages[index];
-                    //log(controller.selectedPage);
-                  },
-                  child: Container(
-                    height: 25,
-                    width: 25,
-                    child: Center(
-                        child: Text(
-                      controller.pages[index],
-                      style: TextStyle(
-                          color: AppColors.background.black,
-                          fontSize: FontSize.small,
-                          fontWeight: FontWeight.w600),
-                    )),
-                    decoration: BoxDecoration(
-                        color: getCircleColor(index, controller),
-                        shape: BoxShape.circle),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
-      );
-    });
   }
 
   Widget buildShowLoading() {
