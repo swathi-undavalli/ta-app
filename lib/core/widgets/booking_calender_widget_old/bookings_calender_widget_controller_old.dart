@@ -10,7 +10,7 @@ import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
-import '../app-expansion-panel.dart';
+import '../booking-expansion-panel.dart';
 import 'package:intl/intl.dart';
 
 class BookingsCalenderWidgetLogic {

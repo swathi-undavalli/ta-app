@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/boat-page.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/dashboard/controller/dashboard-controller.dart';
 import 'package:temple_adventures/features/home/presentation/screens/home-page.dart';
@@ -23,7 +24,7 @@ class DashBoardScreen extends StatelessWidget {
   static const String id = "DashBoardScreen";
   final screens = [
     HomePage(),
-    WeatherPage(),
+    ManageBoatsPage(),
     BookingScreen(),
     ConditionsScreen(),
   ];
@@ -124,9 +125,9 @@ class DashBoardScreen extends StatelessWidget {
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('images/taCloudWhite.png')),
-            activeIcon: buildActiveIcon('images/taCloudBlack.png'),
-            label: 'weather',
+            icon: ImageIcon(AssetImage('images/boatWhite.png')),
+            activeIcon: buildActiveIcon('images/boat_black.png'),
+            label: 'boat',
           ),
           BottomNavigationBarItem(
             icon: ImageIcon(AssetImage('images/taCalWhite.png')),
@@ -134,9 +135,9 @@ class DashBoardScreen extends StatelessWidget {
             label: 'bookings',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('images/boatWhite.png')),
-            activeIcon: buildActiveIcon('images/boat_black.png'),
-            label: 'boat',
+            icon: ImageIcon(AssetImage('images/taCloudWhite.png')),
+            activeIcon: buildActiveIcon('images/taCloudBlack.png'),
+            label: 'weather',
           ),
         ],
       );

@@ -4,7 +4,7 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import '../app-expansion-panel.dart';
+import '../booking-expansion-panel.dart';
 import 'package:intl/intl.dart';
 
 class BookingsCalenderWidgetLogicNew {

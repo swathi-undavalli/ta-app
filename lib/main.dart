@@ -21,6 +21,7 @@ import 'package:temple_adventures/features/Activities/presentation/screens/activ
 import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/editBoat-page.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/newBoat-page.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-guest-details-screen.dart';
@@ -68,7 +69,8 @@ void main() async {
             apiKey: "AIzaSyAJFHDoc1lfQtTRtEpRmCJue2kwfB5jUh8",
             appId: "1:671883511961:ios:99961ae0cf633ff7b05008",
             messagingSenderId: "671883511961",
-            iosClientId: "671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com",
+            iosClientId:
+                "671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com",
             projectId: "seismic-glow-283418"));
   } else {
     await Firebase.initializeApp();
@@ -168,6 +170,7 @@ class MyApp extends StatelessWidget {
         DetailsScreen.id: (context) => DetailsScreen(),
         SplashScreen.id: (context) => SplashScreen(),
         AddConditionsScreen.id: (context) => AddConditionsScreen(),
+        ManageBoatsPage.id: (context) => ManageBoatsPage(),
       },
     );
   }
@@ -180,7 +183,8 @@ class FirebaseNotificationService {
   }
 
   static handleTerminatedNavigation() async {
-    RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? message =
+        await FirebaseMessaging.instance.getInitialMessage();
 
     if (message != null) {
       Get.toNamed(NotificationsScreen.id, arguments: message);

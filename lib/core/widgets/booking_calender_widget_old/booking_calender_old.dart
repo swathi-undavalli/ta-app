@@ -9,7 +9,7 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
-import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
+import 'package:temple_adventures/core/widgets/booking-expansion-panel.dart';
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';

@@ -15,7 +15,6 @@ import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/util/ta-image.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
-import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/core/widgets/qr-image.dart';
@@ -34,8 +33,6 @@ import 'package:temple_adventures/features/logs/presentation/screens/log-screen.
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:ui' as ui;
 import 'package:http/http.dart' as http;
-
-import '../../features/Activities/controller/all-activities-controller.dart';
 import '../../features/home/model/colors_data.dart';
 
 class BookingsExpansionPanel extends StatelessWidget {
@@ -48,7 +45,6 @@ class BookingsExpansionPanel extends StatelessWidget {
   Function? onSearchTap;
   List<Widget> expansions = [];
   TextEditingController depositTED = TextEditingController();
-
   TextEditingController searchTED = TextEditingController();
 
   BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
@@ -422,7 +418,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                       Icons.verified,
                                       color: AppColors.text.skyBlue,
                                       size: 12,
-                                    ).paddingOnly(left: 10),
+                                    ).paddingOnly(left: 3),
                                   if (itemModel.bookingModel!.hasMedicalIssues)
                                     Text(
                                       "  🏥️",
@@ -721,6 +717,7 @@ Email : *${itemModel.email}* 
 Date of Birth : *${(itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.pax![0]["dob"] as Timestamp).toDate()) : "-"}* 
 Course Name : *${itemModel.activity}* 
 Invoice No : *${itemModel.bookingModel!.receiptNo}* 
+Phone Number : *${itemModel.bookingModel!.pax![0]["phoneNumber"]}* 
  
 Regards,
 *${currentEmployee!.name.trim()}*
@@ -736,15 +733,15 @@ Regards,
                                     ),
                                   Row(
                                     children: [
-                                      if (bookingCalenderLogicNew
-                                                  .controller.selectedType ==
-                                              FilterType.Dive &&
-                                          itemModel.bookingModel!.pax!.length -
-                                                  1 ==
-                                              itemModel
-                                                  .bookingModel!.noOfPersons)
-                                        SelectSeatsWidget(
-                                            itemModel.bookingModel),
+                                      // if (bookingCalenderLogicNew
+                                      //             .controller.selectedType ==
+                                      //         FilterType.Dive &&
+                                      //     itemModel.bookingModel!.pax!.length -
+                                      //             1 ==
+                                      //         itemModel
+                                      //             .bookingModel!.noOfPersons)
+                                      //   SelectSeatsWidget(
+                                      //       itemModel.bookingModel),
                                       Spacer(),
                                       if (itemModel.colorCode == "Blue") button,
                                       if (itemModel.colorCode == "Blue")
@@ -1563,8 +1560,6 @@ class ExpansionPanelController extends GetxController {
   List<bool> isExpanded = [];
 
   TextEditingController cancelMessage = TextEditingController();
-
-  BookingModel? bookingModel;
 }
 
 class ItemModel {

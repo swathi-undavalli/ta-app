@@ -10,6 +10,7 @@ class _IconImages {
   const _IconImages();
 
   String get phone => "images/phone.svg";
+  String get add => "images/addIcon.svg";
 
   String get captain => "images/captain.svg";
 

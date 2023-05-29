@@ -5,9 +5,11 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
-import 'package:temple_adventures/core/widgets/app-expansion-panel.dart';
+import 'package:temple_adventures/core/widgets/booking-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import 'package:temple_adventures/access_levels.dart';
+
+import '../../../features/boat/presentation/widgets/customer-list-widget.dart';
 
 class BookingsCalenderWidgetNew extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
@@ -16,6 +18,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   final Function? onSearchTap;
   DateTime startDate;
   final bool highlightInvalidTime;
+  final bool isBookingScreen;
   final FilterType? calenderType;
   final AutoScrollController autoScrollController;
 
@@ -28,6 +31,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     this.highlightInvalidTime = false,
     this.calenderType,
     required this.autoScrollController,
+    required this.isBookingScreen,
   }) {
     //print("new instance");
     if (startDate == null) startDate = DateTime.now();
@@ -293,34 +297,6 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     return [];
   }
 
-  // Widget _buildSessionCount({String session, int count, Color color}) {
-  //   return Padding(
-  //     padding: const EdgeInsets.only(left: 5.0, right: 5),
-  //     child: Row(
-  //       children: [
-  //         Text(
-  //           "$session: ",
-  //           style: TextStyle(
-  //               color: AppColors.text.black,
-  //               fontSize: 12,
-  //               fontWeight: FontWeight.normal),
-  //         ),
-  //         Container(
-  //           width: 20,
-  //           height: 20,
-  //           child: FittedBox(
-  //             child: Text(
-  //               "$count",
-  //               style: TextStyle(
-  //                   color: color, fontSize: 12, fontWeight: FontWeight.bold),
-  //             ),
-  //           ),
-  //         ),
-  //       ],
-  //     ),
-  //   );
-  // }
-
   Widget _buildBookingsList() {
     return GetBuilder<BookingsCalenderWidgetControllerNew>(
         builder: (controller) {
@@ -361,7 +337,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           controller.diveCount = expansionList.length;
         });
       }
-      if (showDetails)
+      if (showDetails && isBookingScreen)
         return BookingsExpansionPanel(
           items: expansionList,
           onDeletePressed: () {},
@@ -370,22 +346,18 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
             if (onSearchTap != null) onSearchTap!();
           },
         );
+      else if (showDetails && !isBookingScreen) {
+        return CustomerListWidget(
+          searchBar: true,
+          items: expansionList,
+          onSearchTap: () {
+            if (onSearchTap != null) onSearchTap!();
+          },
+        );
+      }
       return SizedBox();
     });
   }
-
-  // Widget _buildDetails(String text) {
-  //   return Container(
-  //     height: 15,
-  //     child: Text(
-  //       text,
-  //       style: TextStyle(
-  //           color: AppColors.text.darkgrey,
-  //           fontSize: 10,
-  //           fontWeight: FontWeight.normal),
-  //     ),
-  //   );
-  // }
 
   Widget _buildTitle(String text) {
     return Container(

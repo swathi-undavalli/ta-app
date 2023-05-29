@@ -8,7 +8,7 @@ import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/boat/models/boat-model.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/bottomSheetWidget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/seat.dart';
-import '../../../../core/widgets/app-expansion-panel.dart';
+import '../../../../core/widgets/booking-expansion-panel.dart';
 import '../../models/boat-passengers-model.dart';
 import 'freelanceDiverBottomSheetWidget.dart';
 

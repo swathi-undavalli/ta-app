@@ -1,18 +1,15 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
-import 'package:temple_adventures/access_levels.dart';
-import 'package:temple_adventures/features/bookings/controller/booking-controller.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
+import 'package:temple_adventures/features/boat/controller/manage-boats-controller.dart';
 import 'package:intl/intl.dart';
 
-class BookingScreen extends StatelessWidget {
-  static const String id = "BookingPage";
-  final BookingScreenLogic logic = BookingScreenLogic();
+class ManageBoatsPage extends StatelessWidget {
+  static const String id = "ManageBoatsPage";
+  final ManageBoatsLogic logic = ManageBoatsLogic();
   final AutoScrollController autoScrollController = AutoScrollController();
   var bookings = [DateTime.now()];
   BookingsCalenderWidgetLogicNew calenderLogic =
@@ -22,7 +19,7 @@ class BookingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<BookingScreenController>(builder: (controller) {
+    return GetBuilder<ManageBoatsController>(builder: (controller) {
       bookingsCalenderWidget = BookingsCalenderWidgetNew(
         onDateTimeSelected: (DateTime selectedDate) {},
         onSearchTap: () {
@@ -32,16 +29,13 @@ class BookingScreen extends StatelessWidget {
         showDetails: true,
         startDate: DateTime.now().subtract(Duration(days: 50)),
         isDiveSession: true,
-        isBookingScreen: true,
+        isBookingScreen: false,
       );
       return Scaffold(
+        floatingActionButton: buildFloatingActionButton(),
         backgroundColor: AppColors.background.lightBlue,
-        floatingActionButton: EmployeeAccess(
-          access: AccessRights.createBookings,
-          child: buildFloatingActionButton(),
-        ),
         body: RefreshIndicator(
-          color: AppColors.IconColor.black,
+          color: Colors.black,
           onRefresh: () async {
             if (calenderLogic.controller.lastSelectedIndex == null)
               calenderLogic.controller.lastSelectedIndex = 50;
@@ -87,16 +81,12 @@ class BookingScreen extends StatelessWidget {
     });
   }
 
-  ///===============UI==============///
+  ///=========================UI========================///
 
   Widget buildFloatingActionButton() {
     return FloatingActionButton(
       elevation: 0,
-      onPressed: () {
-        // Get.toNamed(ChooseBoatPage.id);
-        Get.toNamed(AddCustomerDetailsScreen.id);
-        // Get.toNamed(Dummy.id);
-      },
+      onPressed: () {},
       backgroundColor: AppColors.background.black,
       child: Icon(Icons.add),
     );
