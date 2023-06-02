@@ -90,6 +90,8 @@ class BookingsExpansionPanel extends StatelessWidget {
     });
   }
 
+  ///====================UI==================///
+
   Widget buildSearchBar() {
     return GetBuilder<SearchController>(builder: (controller) {
       return (controller.showSearchField && items!.length > 5)
@@ -340,16 +342,15 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
           constraints: BoxConstraints(
             minHeight: controller.isExpanded[i!] ? 500 : 50,
           ),
-          width: 350,
+          width: Get.width,
           decoration: BoxDecoration(
             color: getColor(),
             borderRadius: BorderRadius.circular(10),
-            // border: Border.all(color: AppColors.text.grey),
           ),
           child: Container(
-            constraints: BoxConstraints(
-              minHeight: controller.isExpanded[i] ? 500 : 50,
-            ),
+            // constraints: BoxConstraints(
+            //   minHeight: controller.isExpanded[i] ? 500 : 50,
+            // ),
             decoration: BoxDecoration(
               color: getColor(),
               borderRadius: BorderRadius.circular(10),
@@ -358,92 +359,87 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
               padding: const EdgeInsets.only(left: 15),
               child: Column(
                 children: [
-                  Column(
-                    children: [
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: Row(
-                                children: [
-                                  Flexible(
-                                    child: Text(
-                                      itemModel!.name!
-                                          .toLowerCase()
-                                          .capitalizeFirst!,
-                                      overflow: TextOverflow.ellipsis,
-                                      style: TextStyle(
-                                          color: AppColors.text.black,
-                                          fontSize: 14,
-                                          fontWeight: FontWeight.w600),
-                                    ),
-                                  ),
-                                  Text(
-                                    " x " +
-                                        (itemModel.bookingModel!.noOfPersons
-                                            .toString()),
-                                    overflow: TextOverflow.ellipsis,
-                                    style: TextStyle(
-                                        color: AppColors.text.black,
-                                        fontSize: 14,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  if (bookingCalenderLogicNew
-                                          .controller.selectedType ==
-                                      FilterType.Pool)
-                                    Text(
-                                      "(${intl.DateFormat("hh:mm a").format(itemModel.bookingModel!.poolDate![0]!)})",
-                                      style: TextStyle(
-                                          color: AppColors.text.black,
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w500),
-                                    ).paddingOnly(left: 5),
-                                  if (getBalance(
-                                          itemModel.bookingModel!.payments!,
-                                          double.parse(itemModel.paid)
-                                              .roundToDouble(),
-                                          double.parse(itemModel.cost)
-                                              .roundToDouble()) !=
-                                      "0")
-                                    Text(
-                                      "  💵  ",
-                                      style: TextStyle(
-                                          fontSize: FontSize.small,
-                                          color: Colors.grey),
-                                    ),
-                                  if (itemModel.colorCode == "Blue" &&
-                                      itemModel.bookingModel!.pax!.length - 1 ==
-                                          itemModel.bookingModel!.noOfPersons)
-                                    Icon(
-                                      Icons.verified,
-                                      color: AppColors.text.skyBlue,
-                                      size: 12,
-                                    ).paddingOnly(left: 3),
-                                  if (itemModel.bookingModel!.hasMedicalIssues)
-                                    Text(
-                                      "  🏥️",
-                                      style:
-                                          TextStyle(fontSize: FontSize.small),
-                                    ),
-                                ],
+                  Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Expanded(
+                          child: Row(
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  itemModel!.name!
+                                      .toLowerCase()
+                                      .capitalizeFirst!,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: TextStyle(
+                                      color: AppColors.text.black,
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.w600),
+                                ),
                               ),
-                            ),
-                            IconButton(
-                              splashRadius: 20,
-                              icon: Icon(controller.isExpanded[i]
-                                  ? Icons.keyboard_arrow_up_rounded
-                                  : Icons.keyboard_arrow_down_rounded),
-                              onPressed: () {
-                                //log("tapped");
-                                controller.isExpanded[i] =
-                                    !controller.isExpanded[i];
-                                //log(controller.isExpanded.toString());
-                                controller.update();
-                              },
-                            ),
-                          ]),
-                    ],
-                  ),
+                              Text(
+                                " x " +
+                                    (itemModel.bookingModel!.noOfPersons
+                                        .toString()),
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                    color: AppColors.text.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              if (bookingCalenderLogicNew
+                                      .controller.selectedType ==
+                                  FilterType.Pool)
+                                Text(
+                                  "(${intl.DateFormat("hh:mm a").format(itemModel.bookingModel!.poolDate![0]!)})",
+                                  style: TextStyle(
+                                      color: AppColors.text.black,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500),
+                                ).paddingOnly(left: 5),
+                              if (getBalance(
+                                      itemModel.bookingModel!.payments!,
+                                      double.parse(itemModel.paid)
+                                          .roundToDouble(),
+                                      double.parse(itemModel.cost)
+                                          .roundToDouble()) !=
+                                  "0")
+                                Text(
+                                  "  💵  ",
+                                  style: TextStyle(
+                                      fontSize: FontSize.small,
+                                      color: Colors.grey),
+                                ),
+                              if (itemModel.colorCode == "Blue" &&
+                                  itemModel.bookingModel!.pax!.length - 1 ==
+                                      itemModel.bookingModel!.noOfPersons)
+                                Icon(
+                                  Icons.verified,
+                                  color: AppColors.text.skyBlue,
+                                  size: 12,
+                                ).paddingOnly(left: 3),
+                              if (itemModel.bookingModel!.hasMedicalIssues)
+                                Text(
+                                  "  🏥️",
+                                  style: TextStyle(fontSize: FontSize.small),
+                                ),
+                            ],
+                          ),
+                        ),
+                        IconButton(
+                          splashRadius: 20,
+                          icon: Icon(controller.isExpanded[i]
+                              ? Icons.keyboard_arrow_up_rounded
+                              : Icons.keyboard_arrow_down_rounded),
+                          onPressed: () {
+                            //log("tapped");
+                            controller.isExpanded[i] =
+                                !controller.isExpanded[i];
+                            //log(controller.isExpanded.toString());
+                            controller.update();
+                          },
+                        ),
+                      ]),
                   controller.isExpanded[i]
                       ? FutureBuilder(
                           future: Future.delayed(Duration(milliseconds: 200)),
