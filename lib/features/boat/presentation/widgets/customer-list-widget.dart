@@ -135,7 +135,7 @@ class _CustomerListWidgetState extends State<CustomerListWidget> {
                     child: Row(
                       children: [
                         SizedBox(
-                          width: Get.width - 173,
+                          width: Get.width - 200,
                           child: Text(
                             "${itemModel!.name!.toLowerCase().capitalizeFirst!}  x  ${(itemModel.bookingModel!.noOfPersons.toString())}",
                             style: TextStyle(
@@ -147,19 +147,18 @@ class _CustomerListWidgetState extends State<CustomerListWidget> {
                         Spacer(),
                         Container(
                           height: 18,
-                          width: 70,
                           decoration: BoxDecoration(
-                              color: Colors.white60,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              buildCustomerStatus(AppColors.text.green),
-                              buildCustomerStatus(AppColors.text.grey),
-                              buildCustomerStatus(AppColors.text.skyBlue),
-                              buildCustomerStatus(Colors.yellow),
-                            ],
-                          ),
+                              color: Colors.white70,
+                              borderRadius: BorderRadius.circular(3)),
+                          child: Center(
+                            child: Text(
+                              controller
+                                  .bookingStatus[controller.customerStatus],
+                              style: TextStyle(
+                                  fontSize: FontSize.small,
+                                  fontWeight: FontWeight.w600),
+                            ),
+                          ).paddingSymmetric(horizontal: 3),
                         ),
                       ],
                     ),
@@ -213,179 +212,44 @@ class _CustomerListWidgetState extends State<CustomerListWidget> {
                               SizedBox(height: 10),
                               SizedBox(height: 10),
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Column(
-                                    children: [
-                                      ...List.generate(
-                                        controller.customerStatus.length,
-                                        (index) => Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Column(
-                                              children: [
-                                                buildCircle(
-                                                    color: statusColor(),
-                                                    onTap: () {
-                                                      setState(() {
-                                                        controller
-                                                                .customerStatus[
-                                                            index] = !controller
-                                                                .customerStatus[
-                                                            index];
-                                                        log(controller
-                                                            .customerStatus
-                                                            .toString());
-                                                      });
-                                                    }),
-                                                if (index != 3)
-                                                  SizedBox(
-                                                    width: 13,
-                                                    child: Center(
-                                                      child: Container(
-                                                          height: 40,
-                                                          width: 1,
-                                                          color: statusColor()),
-                                                    ),
-                                                  ),
-                                              ],
-                                            ),
-                                            SizedBox(width: 20),
-                                            Container(
-                                              height: 15,
-                                              child: Center(
-                                                child: Text(
-                                                  progress(),
-                                                  style: TextStyle(
-                                                    color: Colors.grey[600],
-                                                    fontSize: 13,
-                                                    fontWeight: FontWeight.w500,
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        ),
+                                  Container(
+                                    height: 33,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white70,
+                                      borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(4),
+                                          bottomLeft: Radius.circular(4)),
+                                    ),
+                                    child: Text(
+                                      controller.bookingStatus[
+                                          controller.customerStatus],
+                                      style: TextStyle(
+                                          fontSize: FontSize.small,
+                                          fontWeight: FontWeight.w600),
+                                    ).paddingOnly(left: 15, right: 15, top: 8),
+                                  ),
+                                  SizedBox(width: 2),
+                                  GestureDetector(
+                                    onTap: () {
+                                      logic.onBookingStatusPressed();
+                                      controller.update();
+                                    },
+                                    child: Container(
+                                      height: 33,
+                                      width: 27,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white70,
+                                        borderRadius: BorderRadius.only(
+                                            topRight: Radius.circular(4),
+                                            bottomRight: Radius.circular(4)),
                                       ),
-                                    ],
-                                  ),
-                                  Spacer(),
-                                  PopupMenuButton<String>(
-                                    child: (logic.controller.boatTED.text == "")
-                                        ? Column(
-                                            children: [
-                                              SizedBox(
-                                                width: 100,
-                                                child: Text(
-                                                  "No boat selected",
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                              SizedBox(height: 10),
-                                              Container(
-                                                height: 31,
-                                                width: 100,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.black,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20)),
-                                                child: Center(
-                                                  child: Text("Select Boat",
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.white)),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Column(
-                                            children: [
-                                              Text(
-                                                "Selected Boat :",
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  // decoration: TextDecoration.underline
-                                                ),
-                                              ).paddingAll(5),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    logic.controller.boatTED
-                                                        .text,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.black,
-                                                      // fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ).paddingAll(5),
-                                                  Text(
-                                                    "Change",
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.blue,
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline),
-                                                  ).paddingOnly(
-                                                      left: 10, right: 7),
-                                                  Icon(
-                                                    Icons.edit,
-                                                    size: 12,
-                                                    color: Colors.blue,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                    itemBuilder: (BuildContext context) {
-                                      return [
-                                        ...logic.controller.allBoats.map(
-                                          (e) => PopupMenuItem<String>(
-                                            value: e,
-                                            onTap: () {
-                                              setState(() {
-                                                logic.controller.boatTED.text =
-                                                    e;
-                                              });
-                                            },
-                                            child: Text(
-                                              e,
-                                              style: TextStyle(fontSize: 12),
-                                            ),
-                                          ),
-                                        ),
-                                        PopupMenuItem<String>(
-                                          value: "Add custom",
-                                          onTap: () {},
-                                          child: Column(
-                                            children: [
-                                              Divider(
-                                                color: Colors.black26,
-                                              ),
-                                              SizedBox(height: 5),
-                                              Text(
-                                                "Add custom",
-                                                style: TextStyle(fontSize: 12),
-                                              ).paddingOnly(bottom: 2),
-                                            ],
-                                          ),
-                                        ),
-                                      ];
-                                    },
-                                    onSelected: (String value) {
-                                      if (value == 'Add custom') {
-                                        showTextFieldDialog(context);
-                                      }
-                                    },
-                                  ),
-                                  SizedBox(width: 30),
+                                      child: Icon(
+                                        Icons.arrow_right,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  )
                                 ],
                               ),
                               SizedBox(height: 20),
@@ -402,53 +266,31 @@ class _CustomerListWidgetState extends State<CustomerListWidget> {
     }).paddingSymmetric(vertical: 10);
   }
 
-  String progress() {
-    if (logic.controller.customerStatus[0]) {
+  String progress(int index) {
+    if (index == 0) {
       return "Paper work";
-    } else if (logic.controller.customerStatus[1]) {
+    } else if (index == 1) {
       return "Pool Session";
-    } else if (logic.controller.customerStatus[2]) {
+    } else if (index == 2) {
       return "Dive Session";
-    } else if (logic.controller.customerStatus[3]) {
-      return "Left dive enter";
+    } else if (index == 3) {
+      return "Left dive center";
     } else {
       return "";
     }
   }
 
-  Color statusColor() {
-    if (logic.controller.customerStatus[0]) {
-      return AppColors.text.black;
-    } else if (logic.controller.customerStatus[1]) {
-      return AppColors.text.skyBlue;
-    } else if (logic.controller.customerStatus[2]) {
-      return AppColors.text.red;
-    } else if (logic.controller.customerStatus[3]) {
-      return Colors.yellow;
-    } else {
-      return Colors.grey.shade500;
-    }
-  }
-
-  Widget buildCircle({required Color color, required Function onTap}) {
-    return InkWell(
-      onTap: () {
-        onTap();
-      },
-      splashColor: Colors.grey,
-      radius: 40,
-      borderRadius: BorderRadius.circular(30),
-      child: Container(
-        width: 13,
-        height: 13,
-        decoration: BoxDecoration(
-            border: Border.all(color: color), shape: BoxShape.circle),
-        child: Center(
-          child: Icon(
-            Icons.circle,
-            size: 10,
-            color: color,
-          ),
+  Widget buildCircle({required Color color}) {
+    return Container(
+      width: 13,
+      height: 13,
+      decoration: BoxDecoration(
+          border: Border.all(color: color), shape: BoxShape.circle),
+      child: Center(
+        child: Icon(
+          Icons.circle,
+          size: 10,
+          color: color,
         ),
       ),
     );
@@ -532,14 +374,6 @@ class _CustomerListWidgetState extends State<CustomerListWidget> {
     );
   }
 
-  Widget buildCustomerStatus(Color color) {
-    return Container(
-      height: 8,
-      width: 8,
-      decoration: BoxDecoration(color: color, shape: BoxShape.circle),
-    ).paddingSymmetric(horizontal: 3);
-  }
-
   Widget buildSearchBar() {
     return GetBuilder<CustomerSearchController>(builder: (controller) {
       return (controller.showSearchField && widget.items!.length > 5)
@@ -602,13 +436,22 @@ class _CustomerListWidgetState extends State<CustomerListWidget> {
 class CustomerListWidgetLogic {
   CustomerListWidgetController controller =
       Get.put(CustomerListWidgetController());
+
+  void onBookingStatusPressed() {
+    if (controller.customerStatus < 4) {
+      controller.customerStatus += 1;
+      print(controller.customerStatus);
+    } else {
+      controller.customerStatus = 0;
+    }
+  }
 }
 
 class CustomerListWidgetController extends GetxController {
   TextEditingController customTED = TextEditingController();
   List<bool> isExpanded = [];
+  int customerStatus = 0;
   TextEditingController boatTED = TextEditingController();
-  List<bool> customerStatus = [false, false, false, false];
   List<String> allBoats = [
     "Tucy",
     "007",
@@ -616,6 +459,13 @@ class CustomerListWidgetController extends GetxController {
     "Ranga",
     "Traveller",
     "Class Room",
+  ];
+  List<String> bookingStatus = [
+    "Booking Done",
+    "Paper work",
+    "Pool Session",
+    "Dive Session",
+    "Left Dive Center"
   ];
 }
 
@@ -629,3 +479,181 @@ class CustomerSearchController extends GetxController {
     update();
   }
 }
+
+// Row(
+//   mainAxisAlignment: MainAxisAlignment.start,
+//   children: [
+//     Column(
+//       crossAxisAlignment:
+//           CrossAxisAlignment.start,
+//       children: [
+//         ...List.generate(
+//           controller.customerStatus.length,
+//           (index) => InkWell(
+//             onTap: () {
+//               setState(() {
+//                 controller.customerStatus[index] =
+//                     !controller
+//                         .customerStatus[index];
+//                 log(controller.customerStatus
+//                     .toString());
+//               });
+//             },
+//             splashColor: Colors.grey,
+//             borderRadius:
+//                 BorderRadius.circular(20),
+//             child: Row(
+//               crossAxisAlignment:
+//                   CrossAxisAlignment.start,
+//               children: [
+//                 Column(
+//                   children: [
+//                     buildCircle(
+//                       color: statusColor(index),
+//                     ),
+//                     if (index != 3)
+//                       SizedBox(
+//                         width: 13,
+//                         child: Center(
+//                           child: Container(
+//                               height: 40,
+//                               width: 1,
+//                               color: statusColor(
+//                                   index)),
+//                         ),
+//                       ),
+//                   ],
+//                 ),
+//                 SizedBox(width: 15),
+//                 Container(
+//                   height: 15,
+//                   child: Text(
+//                     progress(index),
+//                     style: TextStyle(
+//                       color: statusColor(index),
+//                       fontSize: 13,
+//                       fontWeight: FontWeight.w500,
+//                     ),
+//                   ),
+//                 )
+//               ],
+//             ),
+//           ),
+//         ),
+//       ],
+//     ),
+//     Spacer(),
+//     PopupMenuButton<String>(
+//       child: (logic.controller.boatTED.text == "")
+//           ? Column(
+//               children: [
+//                 SizedBox(
+//                   width: 100,
+//                   child: Text(
+//                     "No boat selected",
+//                     textAlign: TextAlign.center,
+//                   ),
+//                 ),
+//                 SizedBox(height: 10),
+//                 Container(
+//                   height: 31,
+//                   width: 100,
+//                   decoration: BoxDecoration(
+//                       color: Colors.black,
+//                       borderRadius:
+//                           BorderRadius.circular(
+//                               20)),
+//                   child: Center(
+//                     child: Text("Select Boat",
+//                         style: TextStyle(
+//                             fontSize: 12,
+//                             color: Colors.white)),
+//                   ),
+//                 ),
+//               ],
+//             )
+//           : Column(
+//               children: [
+//                 Text(
+//                   "Selected Boat :",
+//                   style: TextStyle(
+//                     fontSize: 14,
+//                     color: Colors.black,
+//                     fontWeight: FontWeight.bold,
+//                     // decoration: TextDecoration.underline
+//                   ),
+//                 ).paddingAll(5),
+//                 Row(
+//                   children: [
+//                     Text(
+//                       logic.controller.boatTED
+//                           .text,
+//                       style: TextStyle(
+//                         fontSize: 12,
+//                         color: Colors.black,
+//                         // fontWeight: FontWeight.bold,
+//                       ),
+//                     ).paddingAll(5),
+//                     Text(
+//                       "Change",
+//                       style: TextStyle(
+//                           fontSize: 12,
+//                           color: Colors.blue,
+//                           decoration:
+//                               TextDecoration
+//                                   .underline),
+//                     ).paddingOnly(
+//                         left: 10, right: 7),
+//                     Icon(
+//                       Icons.edit,
+//                       size: 12,
+//                       color: Colors.blue,
+//                     ),
+//                   ],
+//                 ),
+//               ],
+//             ),
+//       itemBuilder: (BuildContext context) {
+//         return [
+//           ...logic.controller.allBoats.map(
+//             (e) => PopupMenuItem<String>(
+//               value: e,
+//               onTap: () {
+//                 setState(() {
+//                   logic.controller.boatTED.text =
+//                       e;
+//                 });
+//               },
+//               child: Text(
+//                 e,
+//                 style: TextStyle(fontSize: 12),
+//               ),
+//             ),
+//           ),
+//           PopupMenuItem<String>(
+//             value: "Add custom",
+//             onTap: () {},
+//             child: Column(
+//               children: [
+//                 Divider(
+//                   color: Colors.black26,
+//                 ),
+//                 SizedBox(height: 5),
+//                 Text(
+//                   "Add custom",
+//                   style: TextStyle(fontSize: 12),
+//                 ).paddingOnly(bottom: 2),
+//               ],
+//             ),
+//           ),
+//         ];
+//       },
+//       onSelected: (String value) {
+//         if (value == 'Add custom') {
+//           showTextFieldDialog(context);
+//         }
+//       },
+//     ),
+//     SizedBox(width: 30),
+//   ],
+// ),

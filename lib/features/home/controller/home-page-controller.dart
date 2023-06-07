@@ -10,6 +10,9 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 
 class HomePageLogic {
   HomePageController controller = Get.put(HomePageController());
+
+
+
 }
 
 class HomePageController extends GetxController {

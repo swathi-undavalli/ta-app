@@ -49,14 +49,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
-  bidi:
-    dependency: transitive
-    description:
-      name: bidi
-      sha256: dc00274c7edabae2ab30c676e736ea1eb0b1b7a1b436cb5fe372e431ccb39ab0
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.6"
   boolean_selector:
     dependency: transitive
     description:
@@ -382,6 +374,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.0"
+  flutter_drawing_board:
+    dependency: "direct main"
+    description:
+      name: flutter_drawing_board
+      sha256: "12469d7ce627df68b995ee0ea8c345e93f4cfc9a57ff34bd6f6d89bdab5fd7bf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.4+2"
+  flutter_hsvcolor_picker:
+    dependency: transitive
+    description:
+      name: flutter_hsvcolor_picker
+      sha256: "5612d51d3f826f7c7f5cb8c2462a9d13f2b71884f4765aaf69f04e3ee06a18bf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.3"
   flutter_local_notifications:
     dependency: "direct main"
     description:
@@ -422,6 +430,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.9"
+  flutter_state_notifier:
+    dependency: transitive
+    description:
+      name: flutter_state_notifier
+      sha256: "4a1d282df8ab549d0c6aed0a2cdb486111c830778028f14048980c886bbb74fa"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.3"
   flutter_svg:
     dependency: "direct main"
     description:
@@ -456,6 +472,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "10.4.0"
+  freezed_annotation:
+    dependency: transitive
+    description:
+      name: freezed_annotation
+      sha256: aeac15850ef1b38ee368d4c53ba9a847e900bb2c53a4db3f6881cbb3cb684338
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
   gallery_saver:
     dependency: "direct main"
     description:
@@ -528,6 +552,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+  history_state_notifier:
+    dependency: transitive
+    description:
+      name: history_state_notifier
+      sha256: "5f5cc4d0f689c229c8202a74b937f61a051f09da354892f0d734422b5254d45f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.5"
   html:
     dependency: transitive
     description:
@@ -556,10 +588,10 @@ packages:
     dependency: transitive
     description:
       name: image
-      sha256: "483a389d6ccb292b570c31b3a193779b1b0178e7eb571986d9a49904b6861227"
+      sha256: "8e9d133755c3e84c73288363e6343157c383a0c6c56fc51afcc5d4d7180306d6"
       url: "https://pub.dev"
     source: hosted
-    version: "4.0.15"
+    version: "3.3.0"
   image_cropper:
     dependency: "direct main"
     description:
@@ -648,6 +680,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.6.5"
+  json_annotation:
+    dependency: transitive
+    description:
+      name: json_annotation
+      sha256: b10a7b2ff83d83c777edba3c6a0f97045ddadd56c944e1a23a3fdf43a1bf4467
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.8.1"
   location:
     dependency: "direct main"
     description:
@@ -704,6 +744,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  nested:
+    dependency: transitive
+    description:
+      name: nested
+      sha256: "03bac4c528c64c95c722ec99280375a6f2fc708eec17c7b3f07253b626cd2a20"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   octo_image:
     dependency: "direct main"
     description:
@@ -820,10 +868,10 @@ packages:
     dependency: "direct main"
     description:
       name: pdf
-      sha256: "6cd57e8e6d052bd1078f18e0dc7cd6701fad6288231c1ce99d66ef5034d14e61"
+      sha256: "10659b915e65832b106f6d1d213e09b789cc1f24bf282ee911e49db35b96be4d"
       url: "https://pub.dev"
     source: hosted
-    version: "3.9.0"
+    version: "3.8.4"
   pedantic:
     dependency: transitive
     description:
@@ -832,6 +880,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.1"
+  perfect_freehand:
+    dependency: transitive
+    description:
+      name: perfect_freehand
+      sha256: "77bfdd5efb223d120de5cc18c5d6e0b36a835e920521cfe67e281960bad44c9b"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   permission_handler:
     dependency: "direct main"
     description:
@@ -916,10 +972,10 @@ packages:
     dependency: "direct main"
     description:
       name: printing
-      sha256: fe654363cd0114b50a0815b24e96957c7e9a60eb4e3b7ccfe71cf3f2b7114cb2
+      sha256: "4df9e22bd4cb2ecea67183e5b328711b10276127b8878d9d5cb60ccd4c24a77c"
       url: "https://pub.dev"
     source: hosted
-    version: "5.10.1"
+    version: "5.9.3"
   process:
     dependency: transitive
     description:
@@ -928,6 +984,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.2.4"
+  provider:
+    dependency: transitive
+    description:
+      name: provider
+      sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.0.5"
   qr:
     dependency: transitive
     description:
@@ -944,6 +1008,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.27.7"
+  scribble:
+    dependency: "direct main"
+    description:
+      name: scribble
+      sha256: e24d00ae57b0b643bebb265a125dadb2b871dc87ec49724a11d50c4d89ca12d4
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.9.1"
   scroll_to_index:
     dependency: "direct main"
     description:
@@ -968,6 +1040,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
+  signature:
+    dependency: "direct main"
+    description:
+      name: signature
+      sha256: ad23383717dfa926204695ef6928ff513a77387be1b4a8c685099ce3ec35e5f8
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.3.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -1005,6 +1085,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
+  state_notifier:
+    dependency: transitive
+    description:
+      name: state_notifier
+      sha256: "8fe42610f179b843b12371e40db58c9444f8757f8b69d181c97e50787caed289"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.2+1"
   step_progress_indicator:
     dependency: "direct main"
     description:
@@ -1254,5 +1342,5 @@ packages:
     source: hosted
     version: "6.2.2"
 sdks:
-  dart: ">=2.18.0 <3.0.0"
-  flutter: ">=3.7.0"
+  dart: ">=2.19.0 <3.0.0"
+  flutter: ">=3.3.0"

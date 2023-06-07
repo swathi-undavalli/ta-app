@@ -1,9 +1,5 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import '../../../../core/authentication/firebase-authentication.dart';
 import '../../../../core/constants/constants.dart';
@@ -66,33 +62,6 @@ class HomePage extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 10),
-                  // ElevatedButton(
-                  //   onPressed: () async {
-                  //     var data = await FirebaseFirestore.instance
-                  //         .collection("catalogue")
-                  //         .get();
-                  //     var map = {
-                  //       "Blue": [],
-                  //       "Purple": [],
-                  //       "White": [],
-                  //       "Red": [],
-                  //       "Green": [],
-                  //     };
-                  //
-                  //     for (var d in data.docs) {
-                  //       var color = d.data()["color"];
-                  //       var name = d.data()["name"];
-                  //       map[color]!.add(name);
-                  //     }
-                  //
-                  //     await FirebaseFirestore.instance
-                  //         .collection("catalogue")
-                  //         .doc("colors")
-                  //         .set(map);
-                  //     log(data.toString());
-                  //   },
-                  //   child: Text("Do"),
-                  // ),
                   AttendanceWidget(),
                   SizedBox(height: 20),
                   AddEmployeeWidget(
@@ -103,14 +72,6 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                   SizedBox(height: 20),
-                  // AddEmployeeWidget(
-                  //   text: "Add Freelancers",
-                  //   subText: "Only admins can modify",
-                  //   onTap: () {
-                  //     Get.toNamed(AllFreelancersScreen.id);
-                  //   },
-                  // ),
-                  // SizedBox(height: 20),
                   AttendanceReportWidget(),
                   SizedBox(height: 100),
                   SizedBox(
@@ -125,26 +86,6 @@ class HomePage extends StatelessWidget {
     );
   }
 
-  // Future sendEmail() async{
-  //   final email = 'sahithaundavalli2000@gmail.com';
-  //
-  //   final smtpServer = gmailSaslXoauth2(email,token);
-  //
-  //   final message = Message()
-  //   ..from = Address(email,'Sahitha')
-  //   ..recipients = ['swathi.undavalli2003@gmail.com']
-  //   ..subject = 'Hello Sahitha'
-  //   ..text = 'This is a test email!';
-  //   try{
-  //     await send(message, smtpServer);
-  //     showToast("Email Sent Successfully");
-  //   }catch(e){
-  //
-  //     print(e);
-  //
-  //   }
-  // }
-
   getFirstName(String d) {
     d = d.trim();
     return d.split(" ").first.trim();
@@ -155,36 +96,6 @@ class HomePage extends StatelessWidget {
 
     return d.replaceAll(getFirstName(d), "").trim();
   }
-
-  // Future<void> createPDF() async {
-  //   PdfDocument document = PdfDocument();
-  //   final page = document.pages.add();
-  //
-  //   for (int i = 0; i < 2; i++) {
-  //     final image = document.pages[i];
-  //     print(i);
-  //     image.graphics.drawImage(
-  //         PdfBitmap(await readImages('images/AppLogoPondy.png')),
-  //         Rect.fromLTWH(0, 0, Get.width, Get.height));
-  //   }
-  //
-  //   List<int> bytes = document.save();
-  //   document.dispose();
-  //
-  //   saveLaunchFile(bytes, 'Output.pdf');
-  // }
-  //
-  // Future<void> saveLaunchFile(List<int> bytes, String fileName) async {
-  //   final path = (await getExternalStorageDirectory()).path;
-  //   final file = File('$path/$fileName');
-  //   await file.writeAsBytes(bytes, flush: true);
-  //   OpenFile.open('$path/$fileName');
-  // }
-  //
-  // Future<Uint8List> readImages(String image) async {
-  //   final data = await rootBundle.load('images/AppLogoPondy.png');
-  //   return data.buffer.asUint8List(data.offsetInBytes, data.lengthInBytes);
-  // }
 }
 
 getString(List<String> sublist) {
@@ -193,90 +104,3 @@ getString(List<String> sublist) {
   }
   return "";
 }
-
-// Future<String> getPDFlink({
-//   @required String email,
-//   @required List<String> activity,
-//   @required String location,
-//   @required String fName,
-//   @required String lName,
-//   @required String bday,
-//   @required String ad1,
-//   @required String ad2,
-//   @required String con,
-//   @required String state,
-//   @required String city,
-//   @required String pin,
-//   @required String phone,
-//   @required String gen,
-// }) async {
-//   String api = "https://templeadventures.com/api/v1/generatePdf/";
-//   var body = {
-//     "email": email,
-//     "Activity": activity,
-//     "Location": location,
-//     "first-name": fName,
-//     "last-name": lName,
-//     "Birthday": bday,
-//     "Address-1": ad1,
-//     "Address-2": ad2,
-//     "Country": con,
-//     "State": state,
-//     "City": city,
-//     "Pin-Code": pin,
-//     "Phone": phone,
-//     "Gender": gen,
-//   };
-//
-//   var dio = Dio();
-//   try {
-//     //print("started");
-//     FormData formData = new FormData.fromMap(body);
-//     var response = await dio.post(api, data: formData);
-//     var data = jsonDecode(response.data);
-//     //print(response.data);
-//     //print(data[0]);
-//     return data[0];
-//     //print("ended");
-//   } catch (e) {
-//     //print(e);
-//   }
-//   return "no data found";
-// }
-//
-// Future<File> showPDFh() async {
-//   //print("getting url");
-//   String link = await getPDFlink(
-//     email: "kamesh.wb@gmail.com",
-//     activity: ["Open Water"],
-//     location: "Puducherry",
-//     fName: "Siddharth",
-//     lName: "Jha",
-//     bday: "1993-07-26",
-//     ad1: "TEST",
-//     ad2: "TEST",
-//     con: "India",
-//     state: "Maharashtra",
-//     city: "Mumbai",
-//     pin: "411015",
-//     phone: "8329889224",
-//     gen: "Male",
-//   );
-//   var response = await http.get(Uri.parse(link));
-//
-//   var documentDirectory = await getTemporaryDirectory();
-//
-//   var file = File(join(
-//       documentDirectory.path, '${DateTime.now().micr
-//   osecondsSinceEpoch}.pdf'));
-//
-//   //print(1);
-//   file.writeAsBytesSync(response.bodyBytes);
-//   //print(2);
-//   await Pspdfkit.present(file.path);
-//   return file;
-// }
-
-// To parse this JSON data, do
-//
-//     final bookingModel = bookingModelFromMap(jsonString);
