@@ -33,7 +33,6 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     required this.autoScrollController,
     required this.isBookingScreen,
   }) {
-    //print("new instance");
     if (startDate == null) startDate = DateTime.now();
     startDate = startDate.subtract(Duration(days: 1));
     logic.controller.startDate = startDate;
@@ -85,6 +84,65 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
             _buildDaySelector(),
             if (showDetails) SizedBox(height: 20),
             _buildBookingTypeSelector(),
+            SizedBox(height: 15),
+            if (showDetails && !isBookingScreen)
+              Container(
+                width: Get.width,
+                decoration: BoxDecoration(
+                  color: Colors.transparent,
+                  borderRadius: BorderRadiusDirectional.circular(10),
+                ),
+                child: Wrap(
+                    children: controller.boats
+                        .map(
+                          (boat) => FittedBox(
+                            child: Container(
+                              height: 30,
+                              margin: EdgeInsets.all(5),
+                              padding: EdgeInsets.only(left: 13, right: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: Colors.white,
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    boat,
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 12,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(width: 5),
+                                  Container(
+                                    height: 15,
+                                    width: 15,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: Center(
+                                      child: Text(
+                                        "3",
+                                        style: TextStyle(
+                                          color: AppColors.text.skyBlue,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                        .toList()),
+              ),
+            SizedBox(height: 20),
             _buildTimeTable(),
             SizedBox(height: 20),
             _buildBookingsList(),
@@ -103,7 +161,6 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
       if (showDetails)
         return Column(
           children: [
-            SizedBox(height: 20),
             Row(
               children: [
                 _buildTabButton(
@@ -135,7 +192,6 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(height: 20),
           ],
         );
       else

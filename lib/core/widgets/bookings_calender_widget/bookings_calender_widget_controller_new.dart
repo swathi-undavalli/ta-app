@@ -306,45 +306,9 @@ class BookingsCalenderWidgetLogicNew {
     controller.diveCountA = 0;
     controller.selectedDate = controller.calenderDates[index];
     controller.selectedType = null;
-    //print("===========started${controller.calenderDates[index]}");
     getBookings(controller.calenderDates[index]);
-    //print("===========ended${controller.calenderDates[index]}");
     getTime();
   }
-
-// int getTotalSessions(FilterType type) {
-//   controller.bookings.forEach((booking) {
-//     int count = 0;
-//     if (booking.theoryDate != null && booking.theoryDate!.isNotEmpty) {
-//       booking.theoryDate!.forEach((date) {
-//         if (isSameMinute(date!, controller.selectedDate)) {
-//           count++;
-//         }
-//       });
-//       return count;
-//     }
-//
-//     if (booking.poolDate != null && booking.poolDate!.isNotEmpty) {
-//       booking.poolDate!.forEach((date) {
-//         if (isSameMinute(date!, controller.selectedDate)) {
-//           count++;
-//         }
-//       });
-//       return count;
-//     }
-//
-//     if (booking.diveDate != null && booking.diveDate!.isNotEmpty) {
-//       booking.diveDate!.forEach((date) {
-//         if (isSameMinute(date!, controller.selectedDate)) {
-//           count++;
-//         }
-//       });
-//       return count;
-//     }
-//   });
-//
-//   return 0;
-// }
 }
 
 class BookingsCalenderWidgetControllerNew extends GetxController {
@@ -369,6 +333,14 @@ class BookingsCalenderWidgetControllerNew extends GetxController {
   List<DateTime> timeTable = [];
 
   FilterType? _selectedType;
+  List<String> boats = [
+    "Tucy",
+    "007",
+    "Batman",
+    "Ranga",
+    "Traveller",
+    "Class Room",
+  ];
 
   int theoryCount = 0, poolCount = 0, diveCount = 0;
   int theoryCountN = 0, poolCountN = 0, diveCountN = 0;

@@ -148,7 +148,7 @@ class _CustomerListWidgetState extends State<CustomerListWidget> {
                         Container(
                           height: 18,
                           decoration: BoxDecoration(
-                              color: Colors.white70,
+                              color: progressColor(controller.customerStatus),
                               borderRadius: BorderRadius.circular(3)),
                           child: Center(
                             child: Text(
@@ -213,10 +213,33 @@ class _CustomerListWidgetState extends State<CustomerListWidget> {
                               SizedBox(height: 10),
                               Row(
                                 children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      logic.onBookingStatusLeftArrowPressed();
+                                      controller.update();
+                                    },
+                                    child: Container(
+                                      height: 33,
+                                      width: 27,
+                                      decoration: BoxDecoration(
+                                        color: progressColor(
+                                            controller.customerStatus),
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(4),
+                                            bottomLeft: Radius.circular(4)),
+                                      ),
+                                      child: Icon(
+                                        Icons.arrow_left,
+                                        size: 16,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(width: 2),
                                   Container(
                                     height: 33,
                                     decoration: BoxDecoration(
-                                      color: Colors.white70,
+                                      color: progressColor(
+                                          controller.customerStatus),
                                       borderRadius: BorderRadius.only(
                                           topLeft: Radius.circular(4),
                                           bottomLeft: Radius.circular(4)),
@@ -232,14 +255,15 @@ class _CustomerListWidgetState extends State<CustomerListWidget> {
                                   SizedBox(width: 2),
                                   GestureDetector(
                                     onTap: () {
-                                      logic.onBookingStatusPressed();
+                                      logic.onBookingStatusRightArrowPressed();
                                       controller.update();
                                     },
                                     child: Container(
                                       height: 33,
                                       width: 27,
                                       decoration: BoxDecoration(
-                                        color: Colors.white70,
+                                        color: progressColor(
+                                            controller.customerStatus),
                                         borderRadius: BorderRadius.only(
                                             topRight: Radius.circular(4),
                                             bottomRight: Radius.circular(4)),
@@ -252,7 +276,15 @@ class _CustomerListWidgetState extends State<CustomerListWidget> {
                                   )
                                 ],
                               ),
-                              SizedBox(height: 20),
+                              AppTextField(
+                                hintText: "Equipment Notes",
+                                errorValidator: () {
+                                  return null;
+                                },
+                                validator: (_) {
+                                  return null;
+                                },
+                              )
                             ],
                           ).paddingSymmetric(horizontal: 15);
                         }
@@ -266,17 +298,19 @@ class _CustomerListWidgetState extends State<CustomerListWidget> {
     }).paddingSymmetric(vertical: 10);
   }
 
-  String progress(int index) {
+  Color progressColor(int index) {
     if (index == 0) {
-      return "Paper work";
+      return Colors.white70;
     } else if (index == 1) {
-      return "Pool Session";
+      return Colors.black26;
     } else if (index == 2) {
-      return "Dive Session";
+      return AppColors.text.skyBlue.withOpacity(0.5);
     } else if (index == 3) {
-      return "Left dive center";
+      return Colors.red.withOpacity(0.7);
+    } else if (index == 4) {
+      return Colors.yellow.withOpacity(0.7);
     } else {
-      return "";
+      return Colors.white70;
     }
   }
 
@@ -437,12 +471,17 @@ class CustomerListWidgetLogic {
   CustomerListWidgetController controller =
       Get.put(CustomerListWidgetController());
 
-  void onBookingStatusPressed() {
+  void onBookingStatusRightArrowPressed() {
     if (controller.customerStatus < 4) {
       controller.customerStatus += 1;
       print(controller.customerStatus);
-    } else {
-      controller.customerStatus = 0;
+    }
+  }
+
+  void onBookingStatusLeftArrowPressed() {
+    if (controller.customerStatus > 0 && controller.customerStatus <= 4) {
+      controller.customerStatus -= 1;
+      print(controller.customerStatus);
     }
   }
 }
