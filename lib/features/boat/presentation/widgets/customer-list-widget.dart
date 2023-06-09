@@ -12,18 +12,18 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/home/model/colors_data.dart';
 
-class CustomerListWidget extends StatefulWidget {
+class CustomersExpansionPanel extends StatefulWidget {
   final List<ItemModel>? items;
   bool searchBar = true;
   Function? onSearchTap;
 
-  CustomerListWidget({this.items, this.onSearchTap, required this.searchBar});
+  CustomersExpansionPanel({this.items, this.onSearchTap, required this.searchBar});
 
   @override
-  State<CustomerListWidget> createState() => _CustomerListWidgetState();
+  State<CustomersExpansionPanel> createState() => _CustomersExpansionPanelState();
 }
 
-class _CustomerListWidgetState extends State<CustomerListWidget> {
+class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
   final CustomerListWidgetLogic logic = CustomerListWidgetLogic();
 
   final CustomerSearchController searchController =

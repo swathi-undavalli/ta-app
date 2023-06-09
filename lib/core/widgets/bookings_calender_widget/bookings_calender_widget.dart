@@ -403,7 +403,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           },
         );
       else if (showDetails && !isBookingScreen) {
-        return CustomerListWidget(
+        return CustomersExpansionPanel(
           searchBar: true,
           items: expansionList,
           onSearchTap: () {
