@@ -1,16 +1,14 @@
-import 'dart:developer';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/assets.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/ta-image.dart';
-import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/booking-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
+import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/home/model/colors_data.dart';
+import 'package:temple_adventures/features/home/model/employee.dart';
 
 class CustomersExpansionPanel extends StatefulWidget {
   final List<ItemModel>? items;
@@ -189,9 +187,162 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                                 isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
                                     (itemModel.bookingModel!.noOfPersons)),
                               ),
+                              SizedBox(height: 20),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "Instructors / Dive-Buddies :",
+                                    style: TextStyle(
+                                      fontSize: FontSize.textSize,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  InkWell(
+                                    onTap: () {
+                                      showModalBottomSheet(
+                                        context: context,
+                                        isScrollControlled: true,
+                                        builder: (BuildContext context) {
+                                          return EmpSelectorBottomSheet();
+                                        },
+                                      );
+                                    },
+                                    child: Container(
+                                      height: 31,
+                                      width: 100,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black,
+                                        borderRadius: BorderRadius.circular(
+                                          30,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          "Manage",
+                                          style: TextStyle(
+                                            fontSize: 12,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
                               SizedBox(height: 10),
-                              SizedBox(height: 10),
-                              buildBookingStatus(controller),
+                              buildDiverName().paddingOnly(bottom: 6),
+                              buildDiverName().paddingOnly(bottom: 6),
+                              buildDiverName().paddingOnly(bottom: 6),
+                              buildDiverName().paddingOnly(bottom: 6),
+                              SizedBox(height: 20),
+                              Row(
+                                children: [
+                                  buildBookingStatus(controller),
+                                  Spacer(),
+                                  PopupMenuButton<String>(
+                                    child: (logic.controller.boatTED.text == "")
+                                        ? Column(
+                                      children: [
+                                        // SizedBox(
+                                        //   child: Text(
+                                        //     "No boat selected",
+                                        //     textAlign: TextAlign.center,
+                                        //   ),
+                                        // ),
+                                        // SizedBox(height: 10),
+                                        Container(
+                                          height: 31,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                              color: Colors.black, borderRadius: BorderRadius.circular(20)),
+                                          child: Center(
+                                            child: Text("Select Boat",
+                                                style: TextStyle(fontSize: 12, color: Colors.white)),
+                                          ),
+                                        ),
+                                      ],
+                                    )
+                                        : Column(
+                                      children: [
+                                        Text(
+                                          "Selected Boat :",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.bold,
+                                            // decoration: TextDecoration.underline
+                                          ),
+                                        ).paddingAll(5),
+                                        Row(
+                                          children: [
+                                            Text(
+                                              logic.controller.boatTED.text,
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.black,
+                                                // fontWeight: FontWeight.bold,
+                                              ),
+                                            ).paddingAll(5),
+                                            Text(
+                                              "Change",
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  color: Colors.blue,
+                                                  decoration: TextDecoration.underline),
+                                            ).paddingOnly(left: 10, right: 7),
+                                            Icon(
+                                              Icons.edit,
+                                              size: 12,
+                                              color: Colors.blue,
+                                            ),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                    itemBuilder: (BuildContext context) {
+                                      return [
+                                        ...logic.controller.allBoats.map(
+                                              (e) => PopupMenuItem<String>(
+                                            value: e,
+                                            onTap: () {
+                                              setState(() {
+                                                logic.controller.boatTED.text = e;
+                                              });
+                                            },
+                                            child: Text(
+                                              e,
+                                              style: TextStyle(fontSize: 12),
+                                            ),
+                                          ),
+                                        ),
+                                        PopupMenuItem<String>(
+                                          value: "Add custom",
+                                          onTap: () {},
+                                          child: Column(
+                                            children: [
+                                              Divider(
+                                                color: Colors.black26,
+                                              ),
+                                              SizedBox(height: 5),
+                                              Text(
+                                                "Add custom",
+                                                style: TextStyle(fontSize: 12),
+                                              ).paddingOnly(bottom: 2),
+                                            ],
+                                          ),
+                                        ),
+                                      ];
+                                    },
+                                    onSelected: (String value) {
+                                      if (value == 'Add custom') {
+                                        showTextFieldDialog(context);
+                                      }
+                                    },
+                                  ),
+                                ],
+                              ),
+                              SizedBox(height: 20),
                               AppTextField(
                                 hintText: "Equipment Notes",
                                 errorValidator: () {
@@ -207,6 +358,8 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                         return SizedBox();
                       })
                   : SizedBox(),
+
+
             ],
           ),
         ),
@@ -270,6 +423,31 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     );
   }
 
+  Widget buildDiverName() {
+    return RichText(
+      text: TextSpan(
+        text: '1   ',
+        style: TextStyle(
+          color: Colors.grey[700],
+          fontFamily: "Nunito",
+          fontSize: 13,
+          letterSpacing: 0.3,
+          fontWeight: FontWeight.w600,
+          height: 1.3,
+        ),
+        children: const <TextSpan>[
+          TextSpan(
+            text: 'Mohana',
+            style: TextStyle(
+              color: Colors.black,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+
   Color getProgressColor(int index) {
     if (index == 0) {
       return Colors.white70;
@@ -309,16 +487,28 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     return (total - t).toInt().toString();
   }
 
-  Widget buildKeyValuePairs(String key, String value, {bool isDanger = false}) {
+  Widget buildKeyValuePairs(
+    String key,
+    String value, {
+    bool isDanger = false,
+    bool shrinkKey = false,
+  }) {
     return Row(
       children: [
-        Expanded(
-          child: Text(
+        if (shrinkKey)
+          Text(
             key,
             style: TextStyle(
                 color: Colors.grey[700], fontSize: 13, letterSpacing: 0.3, fontWeight: FontWeight.w600, height: 1.3),
+          ).paddingOnly(right: 10)
+        else
+          Expanded(
+            child: Text(
+              key,
+              style: TextStyle(
+                  color: Colors.grey[700], fontSize: 13, letterSpacing: 0.3, fontWeight: FontWeight.w600, height: 1.3),
+            ),
           ),
-        ),
         Container(
           height: 16,
           width: 170,
@@ -427,6 +617,185 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
           : SizedBox();
     });
   }
+}
+
+class EmpSelectorBottomSheet extends StatefulWidget {
+  const EmpSelectorBottomSheet({
+    Key? key,
+  }) : super(key: key);
+
+  static show(BuildContext context) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return EmpSelectorBottomSheet();
+      },
+    );
+  }
+
+  @override
+  State<EmpSelectorBottomSheet> createState() => _EmpSelectorBottomSheetState();
+}
+
+class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
+  final CollectionReference employeesCollection = FirebaseFirestore.instance.collection('employees');
+  List<Employee> selectedEmployees = [];
+
+  @override
+  Widget build(BuildContext context) {
+    print(selectedEmployees);
+    return Container(
+      height: 700,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(
+          30,
+        ),
+      ),
+      child: Column(
+        children: [
+          SizedBox(
+            height: 10,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                width: 30,
+              ),
+              Text(
+                "Manage Divers",
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
+              ).paddingOnly(top: 8),
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () {
+                  Navigator.pop(context);
+                },
+              ),
+              SizedBox(
+                width: 30,
+              ),
+            ],
+          ),
+          if (selectedEmployees.isNotEmpty)
+            Wrap(
+              alignment: WrapAlignment.start,
+              runAlignment: WrapAlignment.start,
+              children: selectedEmployees
+                  .map((e) => InkWell(
+                        onTap: () {
+                          selectedEmployees.remove(e);
+                          setState(() {});
+                        },
+                        child: Container(
+                          height: 30,
+                          padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 2.0,
+                            ),
+                          ),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(e.name),
+                              SizedBox(
+                                width: 5,
+                              ),
+                              Icon(
+                                Icons.close,
+                                size: 16,
+                                color: Colors.grey,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ))
+                  .toList(),
+              spacing: 10,
+              runSpacing: 10,
+            ).paddingOnly(left: 15, top: 20),
+          Expanded(
+            child: StreamBuilder<QuerySnapshot>(
+              stream: employeesCollection.snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}');
+                }
+
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                }
+
+                if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
+                  return Text('No employees found.');
+                }
+
+                return ListView(
+                  children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                    try {
+                      Employee employee = Employee.fromMap(document.data() as Map<String, dynamic>);
+
+                      return InkWell(
+                        onTap: () {
+                          if (selectedEmployees.contains(employee)) {
+                            selectedEmployees.remove(employee);
+                          } else {
+                            selectedEmployees.add(employee);
+                          }
+                          setState(() {});
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              child: Text(
+                                employee.name,
+                                style: TextStyle(
+                                  fontSize: 16,
+                                ),
+                              ).paddingOnly(
+                                left: 30,
+                                top: 10,
+                                bottom: 10,
+                              ),
+                            ),
+                            Spacer(),
+                            if (selectedEmployees.contains(employee))
+                              Icon(
+                                Icons.check_circle,
+                                color: Colors.green,
+                              ),
+                            SizedBox(
+                              width: 30,
+                            ),
+                          ],
+                        ),
+                      );
+                    } catch (e) {
+                      return SizedBox();
+                    }
+                  }).toList(),
+                ).paddingOnly(top: 20);
+              },
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+int getCount() {
+  if (counterModel != null && counterModel!.employee != null) return counterModel?.employee ?? 100;
+  return 100;
 }
 
 class CustomerListWidgetLogic {
