@@ -26,8 +26,7 @@ class CustomersExpansionPanel extends StatefulWidget {
 class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
   final CustomerListWidgetLogic logic = CustomerListWidgetLogic();
 
-  final CustomerSearchController searchController =
-      Get.put(CustomerSearchController());
+  final CustomerSearchController searchController = Get.put(CustomerSearchController());
 
   DateTime date = DateTime.now();
 
@@ -35,8 +34,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
 
   TextEditingController searchTED = TextEditingController();
 
-  BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
-      BookingsCalenderWidgetLogicNew();
+  BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
 
   generateList(List<ItemModel> itemsList, BuildContext context) {
     if (itemsList.isEmpty) return [Text("No Results Found")];
@@ -44,8 +42,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     expansions = [];
     for (int i = 0; i < itemsList.length; i++) {
       logic.controller.isExpanded.add(false);
-      expansions
-          .add(buildCustomer(itemModel: itemsList[i], i: i, context: context));
+      expansions.add(buildCustomerDetails(itemModel: itemsList[i], i: i, context: context));
     }
     return expansions;
   }
@@ -59,12 +56,8 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
           if (controller.showSearchField)
             ...generateList(
                 widget.items!.where((ItemModel item) {
-                  if (item.bookingID!.contains(searchTED.text.trim()))
-                    return true;
-                  if (item.name!
-                      .toLowerCase()
-                      .contains(searchTED.text.trim().toLowerCase()))
-                    return true;
+                  if (item.bookingID!.contains(searchTED.text.trim())) return true;
+                  if (item.name!.toLowerCase().contains(searchTED.text.trim().toLowerCase())) return true;
                   return false;
                 }).toList(),
                 context)
@@ -76,8 +69,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
   }
 
   ///====================UI==================///
-  Widget buildCustomer(
-      {ItemModel? itemModel, int? i, required BuildContext context}) {
+  Widget buildCustomerDetails({ItemModel? itemModel, int? i, required BuildContext context}) {
     getColor() {
       if (itemModel!.bookingModel?.cancelBooking == true) {
         return Color(0xffEE9A9D);
@@ -138,25 +130,19 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                           width: Get.width - 200,
                           child: Text(
                             "${itemModel!.name!.toLowerCase().capitalizeFirst!}  x  ${(itemModel.bookingModel!.noOfPersons.toString())}",
-                            style: TextStyle(
-                                color: AppColors.text.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600),
+                            style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
                           ),
                         ),
                         Spacer(),
                         Container(
                           height: 18,
                           decoration: BoxDecoration(
-                              color: progressColor(controller.customerStatus),
+                              color: getProgressColor(controller.customerStatus),
                               borderRadius: BorderRadius.circular(3)),
                           child: Center(
                             child: Text(
-                              controller
-                                  .bookingStatus[controller.customerStatus],
-                              style: TextStyle(
-                                  fontSize: FontSize.small,
-                                  fontWeight: FontWeight.w600),
+                              controller.bookingStatus[controller.customerStatus],
+                              style: TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.w600),
                             ),
                           ).paddingSymmetric(horizontal: 3),
                         ),
@@ -166,9 +152,8 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                   Spacer(),
                   IconButton(
                     splashRadius: 20,
-                    icon: Icon(controller.isExpanded[i]
-                        ? Icons.keyboard_arrow_up_rounded
-                        : Icons.keyboard_arrow_down_rounded),
+                    icon: Icon(
+                        controller.isExpanded[i] ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded),
                     onPressed: () {
                       controller.isExpanded[i] = !controller.isExpanded[i];
                       controller.update();
@@ -189,13 +174,10 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                               SizedBox(height: 10),
                               Text(
                                 "Booking Details : ",
-                                style: TextStyle(
-                                    fontSize: FontSize.textSize,
-                                    fontWeight: FontWeight.w600),
+                                style: TextStyle(fontSize: FontSize.textSize, fontWeight: FontWeight.w600),
                               ),
                               SizedBox(height: 10),
-                              buildKeyValuePairs(
-                                  "Course Name", itemModel.activity),
+                              buildKeyValuePairs("Course Name", itemModel.activity),
                               buildKeyValuePairs(
                                 "Balance",
                                 "${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} / -",
@@ -204,78 +186,12 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                               buildKeyValuePairs(
                                 "Registered",
                                 "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
-                                isDanger:
-                                    ((itemModel.bookingModel!.pax!.length -
-                                            1) !=
-                                        (itemModel.bookingModel!.noOfPersons)),
+                                isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
+                                    (itemModel.bookingModel!.noOfPersons)),
                               ),
                               SizedBox(height: 10),
                               SizedBox(height: 10),
-                              Row(
-                                children: [
-                                  GestureDetector(
-                                    onTap: () {
-                                      logic.onBookingStatusLeftArrowPressed();
-                                      controller.update();
-                                    },
-                                    child: Container(
-                                      height: 33,
-                                      width: 27,
-                                      decoration: BoxDecoration(
-                                        color: progressColor(
-                                            controller.customerStatus),
-                                        borderRadius: BorderRadius.only(
-                                            topLeft: Radius.circular(4),
-                                            bottomLeft: Radius.circular(4)),
-                                      ),
-                                      child: Icon(
-                                        Icons.arrow_left,
-                                        size: 16,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(width: 2),
-                                  Container(
-                                    height: 33,
-                                    decoration: BoxDecoration(
-                                      color: progressColor(
-                                          controller.customerStatus),
-                                      borderRadius: BorderRadius.only(
-                                          topLeft: Radius.circular(4),
-                                          bottomLeft: Radius.circular(4)),
-                                    ),
-                                    child: Text(
-                                      controller.bookingStatus[
-                                          controller.customerStatus],
-                                      style: TextStyle(
-                                          fontSize: FontSize.small,
-                                          fontWeight: FontWeight.w600),
-                                    ).paddingOnly(left: 15, right: 15, top: 8),
-                                  ),
-                                  SizedBox(width: 2),
-                                  GestureDetector(
-                                    onTap: () {
-                                      logic.onBookingStatusRightArrowPressed();
-                                      controller.update();
-                                    },
-                                    child: Container(
-                                      height: 33,
-                                      width: 27,
-                                      decoration: BoxDecoration(
-                                        color: progressColor(
-                                            controller.customerStatus),
-                                        borderRadius: BorderRadius.only(
-                                            topRight: Radius.circular(4),
-                                            bottomRight: Radius.circular(4)),
-                                      ),
-                                      child: Icon(
-                                        Icons.arrow_right,
-                                        size: 16,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
+                              buildBookingStatus(controller),
                               AppTextField(
                                 hintText: "Equipment Notes",
                                 errorValidator: () {
@@ -298,7 +214,63 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     }).paddingSymmetric(vertical: 10);
   }
 
-  Color progressColor(int index) {
+  Row buildBookingStatus(CustomerListWidgetController controller) {
+    return Row(
+      children: [
+        GestureDetector(
+          onTap: () {
+            logic.onBookingStatusLeftArrowPressed();
+            controller.update();
+          },
+          child: Container(
+            height: 33,
+            width: 27,
+            decoration: BoxDecoration(
+              color: getProgressColor(controller.customerStatus),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
+            ),
+            child: Icon(
+              Icons.arrow_left,
+              size: 16,
+            ),
+          ),
+        ),
+        SizedBox(width: 2),
+        Container(
+          height: 33,
+          decoration: BoxDecoration(
+            color: getProgressColor(controller.customerStatus),
+            borderRadius: BorderRadius.only(topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
+          ),
+          child: Text(
+            controller.bookingStatus[controller.customerStatus],
+            style: TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.w600),
+          ).paddingOnly(left: 15, right: 15, top: 8),
+        ),
+        SizedBox(width: 2),
+        GestureDetector(
+          onTap: () {
+            logic.onBookingStatusRightArrowPressed();
+            controller.update();
+          },
+          child: Container(
+            height: 33,
+            width: 27,
+            decoration: BoxDecoration(
+              color: getProgressColor(controller.customerStatus),
+              borderRadius: BorderRadius.only(topRight: Radius.circular(4), bottomRight: Radius.circular(4)),
+            ),
+            child: Icon(
+              Icons.arrow_right,
+              size: 16,
+            ),
+          ),
+        )
+      ],
+    );
+  }
+
+  Color getProgressColor(int index) {
     if (index == 0) {
       return Colors.white70;
     } else if (index == 1) {
@@ -318,8 +290,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     return Container(
       width: 13,
       height: 13,
-      decoration: BoxDecoration(
-          border: Border.all(color: color), shape: BoxShape.circle),
+      decoration: BoxDecoration(border: Border.all(color: color), shape: BoxShape.circle),
       child: Center(
         child: Icon(
           Icons.circle,
@@ -345,11 +316,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
           child: Text(
             key,
             style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 13,
-                letterSpacing: 0.3,
-                fontWeight: FontWeight.w600,
-                height: 1.3),
+                color: Colors.grey[700], fontSize: 13, letterSpacing: 0.3, fontWeight: FontWeight.w600, height: 1.3),
           ),
         ),
         Container(
@@ -424,8 +391,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.search,
-                        size: 20, color: AppColors.text.darkgrey),
+                    Icon(Icons.search, size: 20, color: AppColors.text.darkgrey),
                     SizedBox(width: 15),
                     Container(
                       width: controller.showSearchField ? 240 : 0,
@@ -434,12 +400,9 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                           widget.onSearchTap!();
                         },
                         decoration: InputDecoration(
-                            enabledBorder:
-                                OutlineInputBorder(borderSide: BorderSide.none),
-                            focusedBorder:
-                                OutlineInputBorder(borderSide: BorderSide.none),
-                            disabledBorder:
-                                OutlineInputBorder(borderSide: BorderSide.none),
+                            enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                            focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                            disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
                             hintText: 'Search...',
                             hintStyle: TextStyle(fontSize: 14, height: 1)),
                         controller: searchTED,
@@ -454,8 +417,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                               searchTED.text = "";
                               searchController.update();
                             },
-                            child: Icon(Icons.close_outlined,
-                                size: 20, color: AppColors.text.darkgrey),
+                            child: Icon(Icons.close_outlined, size: 20, color: AppColors.text.darkgrey),
                           )
                         : SizedBox(),
                   ],
@@ -468,8 +430,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
 }
 
 class CustomerListWidgetLogic {
-  CustomerListWidgetController controller =
-      Get.put(CustomerListWidgetController());
+  CustomerListWidgetController controller = Get.put(CustomerListWidgetController());
 
   void onBookingStatusRightArrowPressed() {
     if (controller.customerStatus < 4) {
@@ -499,13 +460,7 @@ class CustomerListWidgetController extends GetxController {
     "Traveller",
     "Class Room",
   ];
-  List<String> bookingStatus = [
-    "Booking Done",
-    "Paper work",
-    "Pool Session",
-    "Dive Session",
-    "Left Dive Center"
-  ];
+  List<String> bookingStatus = ["Booking Done", "Paper work", "Pool Session", "Dive Session", "Left Dive Center"];
 }
 
 class CustomerSearchController extends GetxController {
