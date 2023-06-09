@@ -17,8 +17,6 @@ class AllEmployeesLogic {
     });
     controller.update();
   }
-
-
 }
 
 class AllEmployeesController extends GetxController {

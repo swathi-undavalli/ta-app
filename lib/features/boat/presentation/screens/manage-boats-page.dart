@@ -12,8 +12,7 @@ class ManageBoatsPage extends StatelessWidget {
   final ManageBoatsLogic logic = ManageBoatsLogic();
   final AutoScrollController autoScrollController = AutoScrollController();
   var bookings = [DateTime.now()];
-  BookingsCalenderWidgetLogicNew calenderLogic =
-      BookingsCalenderWidgetLogicNew();
+  BookingsCalenderWidgetLogicNew calenderLogic = BookingsCalenderWidgetLogicNew();
   ScrollController scrollController = ScrollController();
   late BookingsCalenderWidgetNew bookingsCalenderWidget;
 
@@ -32,32 +31,26 @@ class ManageBoatsPage extends StatelessWidget {
         isBookingScreen: false,
       );
       return Scaffold(
-        floatingActionButton: buildFloatingActionButton(),
+        // floatingActionButton: buildFloatingActionButton(),
         backgroundColor: AppColors.background.lightBlue,
         body: RefreshIndicator(
           color: Colors.black,
           onRefresh: () async {
-            if (calenderLogic.controller.lastSelectedIndex == null)
-              calenderLogic.controller.lastSelectedIndex = 50;
-            bookingsCalenderWidget
-                .scrollToIndex(calenderLogic.controller.lastSelectedIndex!);
-            await calenderLogic
-                .onDateSelected(calenderLogic.controller.lastSelectedIndex!);
+            if (calenderLogic.controller.lastSelectedIndex == null) calenderLogic.controller.lastSelectedIndex = 50;
+            bookingsCalenderWidget.scrollToIndex(calenderLogic.controller.lastSelectedIndex!);
+            await calenderLogic.onDateSelected(calenderLogic.controller.lastSelectedIndex!);
           },
           child: SafeArea(
             child: SingleChildScrollView(
               controller: scrollController,
               physics: BouncingScrollPhysics(),
               child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 40, bottom: 50),
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 40, bottom: 50),
                 child: Column(
                   children: [
-                    GetBuilder<BookingsCalenderWidgetControllerNew>(
-                        builder: (controller) {
+                    GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
                       DateTime date = controller.selectedDate;
-                      String formattedDate =
-                          DateFormat('dd-MMM-yyyy').format(date);
+                      String formattedDate = DateFormat('dd-MMM-yyyy').format(date);
                       return Row(
                         children: [
                           buildTitle("Calendar"),
@@ -92,12 +85,11 @@ class ManageBoatsPage extends StatelessWidget {
     );
   }
 
-  Widget buildCalendarIcon(
-      BuildContext context, BookingsCalenderWidgetControllerNew controller) {
+  Widget buildCalendarIcon(BuildContext context, BookingsCalenderWidgetControllerNew controller) {
     return IconButton(
       splashRadius: 20,
       onPressed: () {
-        selectDate(context, controller);
+        onSelectDataPressed(context, controller);
       },
       icon: Icon(
         Icons.calendar_today_outlined,
@@ -113,16 +105,12 @@ class ManageBoatsPage extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-            fontSize: 16,
-            color: AppColors.text.black,
-            fontWeight: FontWeight.bold,
-            fontFamily: AppFonts.nunito),
+            fontSize: 16, color: AppColors.text.black, fontWeight: FontWeight.bold, fontFamily: AppFonts.nunito),
       ),
     );
   }
 
-  selectDate(BuildContext context,
-      BookingsCalenderWidgetControllerNew controller) async {
+  void onSelectDataPressed(BuildContext context, BookingsCalenderWidgetControllerNew controller) async {
     final DateTime? selected = await showDatePicker(
       context: context,
       initialDate: controller.selectedDate,
@@ -139,8 +127,7 @@ class ManageBoatsPage extends StatelessWidget {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 primary: AppColors.text.black,
-                textStyle:
-                    TextStyle(fontWeight: FontWeight.w500), // button text color
+                textStyle: TextStyle(fontWeight: FontWeight.w500), // button text color
               ),
             ),
           ),

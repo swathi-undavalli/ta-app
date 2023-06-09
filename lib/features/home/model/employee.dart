@@ -49,6 +49,23 @@ class Employee {
   String? countryIsoCode;
   String? agencyId;
 
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      gender.hashCode ^
+      phoneNumber.hashCode ^
+      countryCode.hashCode ^
+      role.hashCode ^
+      accessLevels.hashCode ^
+      shiftTiming.hashCode ^
+      firstName.hashCode ^
+      lastName.hashCode ^
+      countryIsoCode.hashCode ^
+      agencyId.hashCode;
+
+  @override
+  bool operator ==(Object other) => other is Employee && id == other.id;
+
   factory Employee.fromMap(Map<String, dynamic> json) => Employee(
         id: json["id"],
         gender: json["gender"],
@@ -81,8 +98,7 @@ class Employee {
         "countryIsoCode": countryIsoCode,
         "role": role,
         "accessLevels": accessLevels!.toMap(),
-        "shiftTiming":
-            "${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}",
+        "shiftTiming": "${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}",
         "firstName": firstName,
         "lastName": lastName,
         "agencyId": agencyId,

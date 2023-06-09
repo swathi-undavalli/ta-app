@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/bottomSheetWidget.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/customer-list-widget.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import '../../../../core/authentication/firebase-authentication.dart';
 import '../../../../core/constants/constants.dart';
@@ -21,8 +23,7 @@ class HomePage extends StatelessWidget {
         var futures = <Future>[];
 
         AttendanceWidgetLogic attendanceWidgetLogic = AttendanceWidgetLogic();
-        AttendanceReportWidgetLogic attendanceReportWidgetLogic =
-            AttendanceReportWidgetLogic();
+        AttendanceReportWidgetLogic attendanceReportWidgetLogic = AttendanceReportWidgetLogic();
 
         futures.add(attendanceWidgetLogic.reloadData());
         futures.add(attendanceReportWidgetLogic.reloadData());
@@ -63,6 +64,11 @@ class HomePage extends StatelessWidget {
                   ),
                   SizedBox(height: 10),
                   AttendanceWidget(),
+                  ElevatedButton(
+                      onPressed: () {
+                        EmpSelectorBottomSheet.show(context);
+                      },
+                      child: Text("do")),
                   SizedBox(height: 20),
                   AddEmployeeWidget(
                     text: "Add Employees",

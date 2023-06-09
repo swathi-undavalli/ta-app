@@ -43,18 +43,15 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     logic.getDates();
     if (showDetails) {
       //print("1");
-      EmployeeAccess.run(
-          function: autoCenterDaySelector, access: AccessRights.viewBookings);
+      EmployeeAccess.run(function: autoCenterDaySelector, access: AccessRights.viewBookings);
     } else {
       //print("2");
-      EmployeeAccess.run(
-          function: scrollToSelectedDate, access: AccessRights.viewBookings);
+      EmployeeAccess.run(function: scrollToSelectedDate, access: AccessRights.viewBookings);
     }
   }
 
   scrollToIndex(int index) {
-    autoScrollController.scrollToIndex(index,
-        preferPosition: AutoScrollPosition.middle);
+    autoScrollController.scrollToIndex(index, preferPosition: AutoScrollPosition.middle);
   }
 
   final BookingsCalenderWidgetLogicNew logic = BookingsCalenderWidgetLogicNew();
@@ -78,8 +75,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     return EmployeeAccess(
       access: AccessRights.viewBookings,
       showMessage: true,
-      child: GetBuilder<BookingsCalenderWidgetControllerNew>(
-          builder: (controller) {
+      child: GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
         return Column(
           children: [
             _buildDaySelector(),
@@ -98,12 +94,10 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   ///==================UI===================///
 
   Widget _buildBookingTypeSelector() {
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(
-        builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
       if (showDetails)
         return Column(
           children: [
-            SizedBox(height: 20),
             Row(
               children: [
                 _buildTabButton(
@@ -204,8 +198,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
 
   Widget _buildTimeTable() {
     logic.getTime();
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(
-        builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
       return Container(
         width: Get.width,
         decoration: BoxDecoration(
@@ -240,14 +233,11 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
               child: Wrap(
                   spacing: 0,
                   runSpacing: 5,
-                  children: controller.timeTable
-                      .map((date) => _buildTimings(date))
-                      .toList()),
+                  children: controller.timeTable.map((date) => _buildTimings(date)).toList()),
             ),
             if (!controller.showLoading)
               Column(
@@ -265,27 +255,22 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   }
 
   Widget _buildErrorMessage(BookingsCalenderWidgetControllerNew controller) {
-    if (controller.selectedType == FilterType.Theory &&
-        controller.theoryCountA == 0)
+    if (controller.selectedType == FilterType.Theory && controller.theoryCountA == 0)
       return Text(
         "No theory sessions found",
         style: TextStyle(fontSize: 15),
       );
-    if (controller.selectedType == FilterType.Pool &&
-        controller.poolCountA == 0)
+    if (controller.selectedType == FilterType.Pool && controller.poolCountA == 0)
       return Text(
         "No pool sessions found",
         style: TextStyle(fontSize: 15),
       );
-    if (controller.selectedType == FilterType.Dive &&
-        controller.diveCountA == 0)
+    if (controller.selectedType == FilterType.Dive && controller.diveCountA == 0)
       return Text(
         "No dive sessions found",
         style: TextStyle(fontSize: 15),
       );
-    if (controller.theoryCountA == 0 &&
-        controller.poolCountA == 0 &&
-        controller.diveCountA == 0)
+    if (controller.theoryCountA == 0 && controller.poolCountA == 0 && controller.diveCountA == 0)
       return Text(
         "No bookings found",
         style: TextStyle(fontSize: 15),
@@ -298,8 +283,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   }
 
   Widget _buildBookingsList() {
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(
-        builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
       if (!showDetails) return SizedBox();
 
       //print(controller.bookings);
@@ -347,11 +331,13 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           },
         );
       else if (showDetails && !isBookingScreen) {
-        return CustomerListWidget(
+        return CustomersExpansionPanel(
           searchBar: true,
           items: expansionList,
           onSearchTap: () {
-            if (onSearchTap != null) onSearchTap!();
+            if (onSearchTap != null) {
+              onSearchTap!();
+            }
           },
         );
       }
@@ -366,23 +352,16 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-            fontSize: 16,
-            color: AppColors.text.black,
-            fontWeight: FontWeight.bold,
-            fontFamily: AppFonts.nunito),
+            fontSize: 16, color: AppColors.text.black, fontWeight: FontWeight.bold, fontFamily: AppFonts.nunito),
       ),
     );
   }
 
   Widget _buildTimings(DateTime date) {
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(
-        builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
       getCircleColor(BookingsCalenderWidgetControllerNew controller) {
-        if (controller.selectedDate == date)
-          return AppColors.background.skyBlue;
-        if (highlightInvalidTime &&
-            DateTime.now().difference(date).inSeconds > 0)
-          return AppColors.background.grey;
+        if (controller.selectedDate == date) return AppColors.background.skyBlue;
+        if (highlightInvalidTime && DateTime.now().difference(date).inSeconds > 0) return AppColors.background.grey;
       }
 
       Widget? num = _getEventsCount(controller, date);
@@ -390,8 +369,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
       if (num == null && showDetails) return SizedBox();
       return GestureDetector(
         onTap: () {
-          if (highlightInvalidTime &&
-              DateTime.now().difference(date).inSeconds > 0) {
+          if (highlightInvalidTime && DateTime.now().difference(date).inSeconds > 0) {
             showToast("Invalid Date");
           } else {
             controller.selectedDate = date;
@@ -410,25 +388,16 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                 child: Container(
                   width: 35,
                   height: 35,
-                  decoration: BoxDecoration(
-                      color: getCircleColor(controller),
-                      borderRadius: BorderRadius.circular(25)),
+                  decoration: BoxDecoration(color: getCircleColor(controller), borderRadius: BorderRadius.circular(25)),
                   child: Center(
                     child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
-                        text: (date.minute == 0)
-                            ? DateFormat("hh").format(date)
-                            : DateFormat("hh:mm").format(date),
-                        style: TextStyle(
-                            color: AppColors.text.black,
-                            fontFamily: AppFonts.nunito,
-                            fontSize: 10),
+                        text: (date.minute == 0) ? DateFormat("hh").format(date) : DateFormat("hh:mm").format(date),
+                        style: TextStyle(color: AppColors.text.black, fontFamily: AppFonts.nunito, fontSize: 10),
                         children: <TextSpan>[
                           TextSpan(
-                            text: (date.minute == 0)
-                                ? DateFormat(" a").format(date)
-                                : DateFormat("\na").format(date),
+                            text: (date.minute == 0) ? DateFormat(" a").format(date) : DateFormat("\na").format(date),
                             style: TextStyle(fontSize: 6),
                           ),
                         ],
@@ -453,35 +422,30 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
 
   Widget _buildDaySelector() {
     getDotColor(int index, BookingsCalenderWidgetControllerNew controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
-        return Colors.green;
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index])) return Colors.green;
       return isSameDates(controller.calenderDates[index], DateTime.now())
           ? AppColors.background.skyBlue
           : AppColors.background.grey;
     }
 
     getDateColor(int index, BookingsCalenderWidgetControllerNew controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
-        return Colors.white;
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index])) return Colors.white;
       return AppColors.background.black;
     }
 
     getDayColor(int index, BookingsCalenderWidgetControllerNew controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
-        return Colors.white;
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index])) return Colors.white;
       return AppColors.background.black;
     }
 
     getBoxColor(int index, BookingsCalenderWidgetControllerNew controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
-        return Colors.black;
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index])) return Colors.black;
       return isSameDates(controller.calenderDates[index], DateTime.now())
           ? AppColors.background.datesBlue
           : AppColors.background.white;
     }
 
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(
-        builder: (controller) {
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
       return Container(
         height: 100,
         width: Get.width,
@@ -516,8 +480,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(
-                              DateFormat('MMM')
-                                  .format(controller.calenderDates[index]),
+                              DateFormat('MMM').format(controller.calenderDates[index]),
                               style: TextStyle(
                                   color: getDotColor(index, controller),
                                   fontSize: FontSize.small,
@@ -531,8 +494,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                                   fontWeight: FontWeight.bold),
                             ),
                             Text(
-                              DateFormat('EE')
-                                  .format(controller.calenderDates[index]),
+                              DateFormat('EE').format(controller.calenderDates[index]),
                               style: TextStyle(
                                   color: getDayColor(index, controller),
                                   fontSize: FontSize.small,
@@ -618,8 +580,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
         height: 12,
         width: 12,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.background.skyBlue)),
+            borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.background.skyBlue)),
         child: Center(
           child: Text(
             totalBookings.toString(),
