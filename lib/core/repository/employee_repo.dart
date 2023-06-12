@@ -38,7 +38,7 @@ class EmployeeRepo {
     //log(notificationStatus.toString());
     //log("Notification check");
     //print("synchronise EmployeeRepo");
-    if(notificationStatus.isGranted){
+    if (notificationStatus.isGranted) {
       await Permission.notification.request();
     }
     var empID = _getStorage.read(_employeeKey);

@@ -114,7 +114,7 @@ class EmployeeSelectorBottomSheet extends StatelessWidget {
               emp.Employee employee =
                   emp.Employee.fromMap(snapshot.data!.data()!);
               if (searchTED.text.isNotEmpty) {
-                if (employee.id!.contains(searchTED.text) ||
+                if (employee.id.contains(searchTED.text) ||
                     employee.name
                         .toLowerCase()
                         .contains(searchTED.text.toLowerCase().trim()))

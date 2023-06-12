@@ -100,7 +100,7 @@ class AllFreelancersScreen extends StatelessWidget {
                 Employee employee = Employee.fromMap(document.data() as Map<String, dynamic>);
 
                 if (controller.searchTED.text.isNotEmpty) {
-                  if (employee.id!.contains(controller.searchTED.text) ||
+                  if (employee.id.contains(controller.searchTED.text) ||
                       employee.name.toLowerCase().contains(
                           controller.searchTED.text.toLowerCase().trim()))
                     return buildFreelance(f: employee);

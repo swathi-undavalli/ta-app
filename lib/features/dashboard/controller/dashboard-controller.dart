@@ -47,7 +47,6 @@ class DashBoardScreenLogic {
   getCurrentEmployee() async {
     controller.showLoading = true;
     if (currentEmployee == null) {
-      currentEmployee = Employee();
       await EmployeeRepo.synchronise();
       controller.update();
     }

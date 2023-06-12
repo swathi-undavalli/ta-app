@@ -148,7 +148,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                           subHeading: "Name", text: employeeArgument!.name),
                       buildEmployeeInfo(
                           subHeading: "Employee ID",
-                          text: employeeArgument!.id!),
+                          text: employeeArgument!.id),
                       buildEmployeeInfo(
                           subHeading: "Padi No",
                           text: employeeArgument!.agencyId),
@@ -308,7 +308,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
       final DateFormat formatter = DateFormat('HH:mm');
       final String shiftTiming = formatter.format(date);
       logic.controller.pickedTime = employee.shiftTiming;
-      logic.controller.employeeIdTED.text = employee.id ?? "";
+      logic.controller.employeeIdTED.text = employee.id;
       logic.controller.firstNameTED.text = employee.firstName ?? "";
       logic.controller.lastNameTED.text = employee.lastName ?? "";
       logic.controller.shiftTimeTED.text = shiftTiming;

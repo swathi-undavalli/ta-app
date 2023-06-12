@@ -1,3 +1,5 @@
+import 'package:temple_adventures/features/boat/models/boat-details.dart';
+
 Employee? currentEmployee;
 
 enum AttendanceType {
@@ -7,7 +9,7 @@ enum AttendanceType {
 
 class Employee {
   Employee({
-    this.id,
+    required this.id,
     this.gender,
     this.phoneNumber,
     this.countryCode,
@@ -37,7 +39,7 @@ class Employee {
       );
   }
 
-  String? id;
+  String id;
   String? gender;
   String? phoneNumber;
   String? countryCode;
@@ -64,7 +66,16 @@ class Employee {
       agencyId.hashCode;
 
   @override
-  bool operator ==(Object other) => other is Employee && id == other.id;
+  bool operator ==(Object other) {
+    if ((other is Employee || other is Instructor)) {
+      if (other is Instructor) {
+        return id == other.id;
+      }if (other is Employee) {
+        return id == other.id;
+      }
+    }
+    return false;
+  }
 
   factory Employee.fromMap(Map<String, dynamic> json) => Employee(
         id: json["id"],
@@ -88,6 +99,7 @@ class Employee {
       );
 
   String get name => firstName! + " " + (lastName ?? "");
+
   get authPhone => countryCode! + phoneNumber!;
 
   Map<String, dynamic> toMap() => {
@@ -98,7 +110,8 @@ class Employee {
         "countryIsoCode": countryIsoCode,
         "role": role,
         "accessLevels": accessLevels!.toMap(),
-        "shiftTiming": "${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}",
+        "shiftTiming":
+            "${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}",
         "firstName": firstName,
         "lastName": lastName,
         "agencyId": agencyId,

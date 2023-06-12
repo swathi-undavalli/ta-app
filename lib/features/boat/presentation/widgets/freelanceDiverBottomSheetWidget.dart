@@ -107,7 +107,7 @@ class _FreelanceDiverBottomSheetState extends State<FreelanceDiverBottomSheet> {
               log(freelance.toString());
               log(freelance.id.toString());
               if (searchTED.text.isNotEmpty) {
-                if (freelance.id!.contains(searchTED.text) ||
+                if (freelance.id.contains(searchTED.text) ||
                     freelance.name
                         .toLowerCase()
                         .contains(searchTED.text.toLowerCase().trim()))

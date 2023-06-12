@@ -301,7 +301,7 @@ class FreelanceDetailsScreen extends StatelessWidget {
       final DateTime date = employee.shiftTiming!;
       final DateFormat formatter = DateFormat('HH-mm-ss a');
       final String shiftTiming = formatter.format(date);
-      logic.controller.freelanceIdTED.text = employee.id!;
+      logic.controller.freelanceIdTED.text = employee.id;
       logic.controller.firstNameTED.text = employee.firstName!;
       logic.controller.lastNameTED.text = employee.lastName!;
       logic.controller.shiftTimeTED.text = shiftTiming;

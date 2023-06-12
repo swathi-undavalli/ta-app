@@ -156,7 +156,7 @@ class FirebaseApi {
           id: currentEmployee!.id,
           punctual: status,
         );
-        data[currentEmployee!.id!] = newData.toMap();
+        data[currentEmployee!.id] = newData.toMap();
         transaction.update(dailyAttendanceLog, data);
       });
     }

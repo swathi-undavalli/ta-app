@@ -100,7 +100,7 @@ class FreelanceLogic {
         log(controller.genderTED.text);
         log(controller.countryCodeTED.text);
         log(controller.countryISoCOde!);
-        log(freelance.id!);
+        log(freelance.id);
         FirebaseFirestore.instance
             .collection('freelance')
             .doc(freelance.id)

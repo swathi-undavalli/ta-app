@@ -404,7 +404,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
         );
       else if (showDetails && !isBookingScreen) {
         return CustomersExpansionPanel(
-          searchBar: true,
+          showSearchBar: true,
           items: expansionList,
           onSearchTap: () {
             if (onSearchTap != null) {

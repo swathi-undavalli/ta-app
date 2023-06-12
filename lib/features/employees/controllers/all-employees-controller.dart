@@ -11,7 +11,7 @@ class AllEmployeesLogic {
     controller.allEmployeesList.forEach((employee) {
       if (employee.firstName!.toLowerCase().contains(text.toLowerCase()) ||
           employee.lastName!.toLowerCase().contains(text.toLowerCase()) ||
-          employee.id!.contains(text)) {
+          employee.id.contains(text)) {
         controller.suggestionsList.add(employee);
       }
     });

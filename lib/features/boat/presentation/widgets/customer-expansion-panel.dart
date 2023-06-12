@@ -1,9 +1,14 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/booking-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
+import 'package:temple_adventures/features/boat/models/boat-details.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/customer-expansion-panel-controller.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/counter-model.dart';
@@ -12,11 +17,11 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 
 class CustomersExpansionPanel extends StatefulWidget {
   final List<ItemModel>? items;
-  bool searchBar = true;
-  Function? onSearchTap;
+  final bool showSearchBar;
+  final Function? onSearchTap;
 
   CustomersExpansionPanel(
-      {this.items, this.onSearchTap, required this.searchBar});
+      {this.items, this.onSearchTap, this.showSearchBar = true});
 
   @override
   State<CustomersExpansionPanel> createState() =>
@@ -24,7 +29,7 @@ class CustomersExpansionPanel extends StatefulWidget {
 }
 
 class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
-  final CustomerListWidgetLogic logic = CustomerListWidgetLogic();
+  final CustomerExpansionPanelLogic logic = CustomerExpansionPanelLogic();
 
   final CustomerSearchController searchController =
       Get.put(CustomerSearchController());
@@ -55,7 +60,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     return GetBuilder<CustomerSearchController>(builder: (controller) {
       return Column(
         children: [
-          if (widget.searchBar == true) buildSearchBar(),
+          if (widget.showSearchBar == true) buildSearchBar(),
           if (controller.showSearchField)
             ...generateList(
                 widget.items!.where((ItemModel item) {
@@ -106,7 +111,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
       }
     }
 
-    return GetBuilder<CustomerListWidgetController>(builder: (controller) {
+    return GetBuilder<CustomerExpansionPanelController>(builder: (controller) {
       return AnimatedContainer(
         duration: Duration(milliseconds: 200),
         curve: Curves.easeInCubic,
@@ -121,7 +126,6 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
         ),
         child: Container(
           decoration: BoxDecoration(
-            // color: getColor(),
             borderRadius: BorderRadius.circular(10),
           ),
           child: Column(
@@ -226,15 +230,38 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                                     ),
                                   ),
                                   InkWell(
-                                    onTap: () {
-                                      showModalBottomSheet(
-                                        context: context,
-                                        isDismissible: false,
-                                        isScrollControlled: true,
-                                        builder: (BuildContext context) {
-                                          return EmpSelectorBottomSheet();
-                                        },
+                                    onTap: () async {
+                                      List<Instructor>? instructors =
+                                          await EmpSelectorBottomSheet.show(
+                                        context,
+                                        initialSelectedEmployees: itemModel
+                                                .bookingModel
+                                                ?.boatDetails
+                                                ?.instructors ??
+                                            [],
                                       );
+
+                                      log("lajshjc  $instructors");
+
+                                      BoatDetails? boatDetails = itemModel
+                                          .bookingModel?.boatDetails
+                                          ?.copyWith(instructors: instructors);
+                                      if (boatDetails == null) {
+                                        boatDetails = BoatDetails(
+                                          instructors: instructors,
+                                        );
+                                      }
+
+                                      log("lajshjc  $boatDetails");
+
+                                      await FirebaseFirestore.instance
+                                          .collection('bookings')
+                                          .doc(itemModel.bookingModel?.id ?? "")
+                                          .set({
+                                        "boatDetails": boatDetails.toMap()
+                                      }, SetOptions(merge: true));
+
+                                      controller.update();
                                     },
                                     child: Container(
                                       height: 31,
@@ -259,10 +286,21 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                                 ],
                               ),
                               SizedBox(height: 10),
-                              buildDiverName().paddingOnly(bottom: 6),
-                              buildDiverName().paddingOnly(bottom: 6),
-                              buildDiverName().paddingOnly(bottom: 6),
-                              buildDiverName().paddingOnly(bottom: 6),
+                              if (itemModel
+                                      .bookingModel?.boatDetails?.instructors !=
+                                  null)
+                                ...itemModel
+                                    .bookingModel!.boatDetails!.instructors!
+                                    .map(
+                                  (e) {
+                                    return buildDiverName(
+                                            e.name,
+                                            itemModel.bookingModel!.boatDetails!
+                                                .instructors!
+                                                .indexOf(e))
+                                        .paddingOnly(bottom: 6);
+                                  },
+                                ),
                               SizedBox(height: 20),
                               Row(
                                 children: [
@@ -398,7 +436,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     }).paddingSymmetric(vertical: 10);
   }
 
-  Row buildBookingStatus(CustomerListWidgetController controller) {
+  Widget buildBookingStatus(CustomerExpansionPanelController controller) {
     return Row(
       children: [
         GestureDetector(
@@ -459,10 +497,10 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     );
   }
 
-  Widget buildDiverName() {
+  Widget buildDiverName(String text, int index) {
     return RichText(
       text: TextSpan(
-        text: '1   ',
+        text: (index + 1).toString(),
         style: TextStyle(
           color: Colors.grey[700],
           fontFamily: "Nunito",
@@ -471,9 +509,9 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
           fontWeight: FontWeight.w600,
           height: 1.3,
         ),
-        children: const <TextSpan>[
+        children: <TextSpan>[
           TextSpan(
-            text: 'Mohana',
+            text: "   $text",
             style: TextStyle(
               color: Colors.black,
             ),
@@ -668,230 +706,10 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
   }
 }
 
-class EmpSelectorBottomSheet extends StatefulWidget {
-  const EmpSelectorBottomSheet({
-    Key? key,
-  }) : super(key: key);
-
-  static show(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      isScrollControlled: true,
-      builder: (BuildContext context) {
-        return EmpSelectorBottomSheet();
-      },
-    );
-  }
-
-  @override
-  State<EmpSelectorBottomSheet> createState() => _EmpSelectorBottomSheetState();
-}
-
-class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
-  final CollectionReference employeesCollection =
-      FirebaseFirestore.instance.collection('employees');
-  List<Employee> selectedEmployees = [];
-
-  @override
-  Widget build(BuildContext context) {
-    print(selectedEmployees);
-    return Container(
-      height: 700,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          30,
-        ),
-      ),
-      child: Column(
-        children: [
-          SizedBox(
-            height: 10,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              SizedBox(
-                width: 30,
-              ),
-              Text(
-                "Manage Divers",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                ),
-              ).paddingOnly(top: 8),
-              Spacer(),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () {
-                  Navigator.pop(context,selectedEmployees);
-                },
-              ),
-              SizedBox(
-                width: 30,
-              ),
-            ],
-          ),
-          if (selectedEmployees.isNotEmpty)
-            Wrap(
-              alignment: WrapAlignment.start,
-              runAlignment: WrapAlignment.start,
-              children: selectedEmployees
-                  .map((e) => InkWell(
-                        onTap: () {
-                          selectedEmployees.remove(e);
-                          setState(() {});
-                        },
-                        child: Container(
-                          height: 30,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 2.0,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(e.name),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Icon(
-                                Icons.close,
-                                size: 16,
-                                color: Colors.grey,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ))
-                  .toList(),
-              spacing: 10,
-              runSpacing: 10,
-            ).paddingOnly(left: 15, top: 20),
-          Expanded(
-            child: StreamBuilder<QuerySnapshot>(
-              stream: employeesCollection.snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (snapshot.hasError) {
-                  return Text('Error: ${snapshot.error}');
-                }
-
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
-                }
-
-                if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-                  return Text('No employees found.');
-                }
-
-                return ListView(
-                  children:
-                      snapshot.data!.docs.map((DocumentSnapshot document) {
-                    try {
-                      Employee employee = Employee.fromMap(
-                          document.data() as Map<String, dynamic>);
-
-                      return InkWell(
-                        onTap: () {
-                          if (selectedEmployees.contains(employee)) {
-                            selectedEmployees.remove(employee);
-                          } else {
-                            selectedEmployees.add(employee);
-                          }
-                          setState(() {});
-                        },
-                        child: Row(
-                          children: [
-                            Container(
-                              child: Text(
-                                employee.name,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                ),
-                              ).paddingOnly(
-                                left: 30,
-                                top: 10,
-                                bottom: 10,
-                              ),
-                            ),
-                            Spacer(),
-                            if (selectedEmployees.contains(employee))
-                              Icon(
-                                Icons.check_circle,
-                                color: Colors.green,
-                              ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                          ],
-                        ),
-                      );
-                    } catch (e) {
-                      return SizedBox();
-                    }
-                  }).toList(),
-                ).paddingOnly(top: 20);
-              },
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 int getCount() {
   if (counterModel != null && counterModel!.employee != null)
     return counterModel?.employee ?? 100;
   return 100;
-}
-
-class CustomerListWidgetLogic {
-  CustomerListWidgetController controller =
-      Get.put(CustomerListWidgetController());
-
-  void onBookingStatusRightArrowPressed() {
-    if (controller.customerStatus < 4) {
-      controller.customerStatus += 1;
-      print(controller.customerStatus);
-    }
-  }
-
-  void onBookingStatusLeftArrowPressed() {
-    if (controller.customerStatus > 0 && controller.customerStatus <= 4) {
-      controller.customerStatus -= 1;
-      print(controller.customerStatus);
-    }
-  }
-}
-
-class CustomerListWidgetController extends GetxController {
-  TextEditingController customTED = TextEditingController();
-  List<bool> isExpanded = [];
-  int customerStatus = 0;
-  TextEditingController boatTED = TextEditingController();
-  List<String> allBoats = [
-    "Tucy",
-    "007",
-    "Batman",
-    "Ranga",
-    "Traveller",
-    "Class Room",
-  ];
-  List<String> bookingStatus = [
-    "Booking Done",
-    "Paper work",
-    "Pool Session",
-    "Dive Session",
-    "Left Dive Center"
-  ];
 }
 
 class CustomerSearchController extends GetxController {
