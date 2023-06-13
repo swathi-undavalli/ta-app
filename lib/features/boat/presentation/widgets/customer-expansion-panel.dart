@@ -43,24 +43,12 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
   BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
       BookingsCalenderWidgetLogicNew();
 
-  generateList(List<ItemModel> itemsList, BuildContext context) {
-    if (itemsList.isEmpty) return [Text("No Results Found")];
-    logic.controller.isExpanded = [];
-    expansions = [];
-    for (int i = 0; i < itemsList.length; i++) {
-      logic.controller.isExpanded.add(false);
-      expansions.add(buildCustomerDetails(
-          itemModel: itemsList[i], i: i, context: context));
-    }
-    return expansions;
-  }
-
   @override
   Widget build(BuildContext context) {
     return GetBuilder<CustomerSearchController>(builder: (controller) {
       return Column(
         children: [
-          if (widget.showSearchBar == true) buildSearchBar(),
+          if (widget.showSearchBar == true) _buildSearchBar(),
           if (controller.showSearchField)
             ...generateList(
                 widget.items!.where((ItemModel item) {
@@ -80,24 +68,36 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     });
   }
 
-  ///====================UI==================///
-  Widget buildCustomerDetails(
-      {ItemModel? itemModel, int? i, required BuildContext context}) {
+  List<Widget> generateList(List<ItemModel> itemsList, BuildContext context) {
+    if (itemsList.isEmpty) return [Text("No Results Found")];
+    logic.controller.isExpanded = [];
+    expansions = [];
+    for (int i = 0; i < itemsList.length; i++) {
+      logic.controller.isExpanded.add(false);
+      expansions.add(_buildCustomerDetails(
+          bookingItemModel: itemsList[i], i: i, context: context));
+    }
+    return expansions;
+  }
+
+  Widget _buildCustomerDetails(
+      {ItemModel? bookingItemModel, int? i, required BuildContext context}) {
     getColor() {
-      if (itemModel!.bookingModel?.cancelBooking == true) {
+      if (bookingItemModel!.bookingModel?.cancelBooking == true) {
         return Color(0xffEE9A9D);
       } else {
         String cc = '';
 
-        if (colorsData!.blue.contains(itemModel.activity))
+        if (colorsData!.blue.contains(bookingItemModel.activity))
           cc = "Blue";
-        else if (colorsData!.purple.contains(itemModel.activity))
+        else if (colorsData!.purple.contains(bookingItemModel.activity))
           cc = "Purple";
-        else if (colorsData!.red.contains(itemModel.activity))
+        else if (colorsData!.red.contains(bookingItemModel.activity))
           cc = "Red";
-        else if (colorsData!.green.contains(itemModel.activity))
+        else if (colorsData!.green.contains(bookingItemModel.activity))
           cc = "Green";
-        else if (colorsData!.white.contains(itemModel.activity)) cc = "White";
+        else if (colorsData!.white.contains(bookingItemModel.activity))
+          cc = "White";
 
         if (cc == "Blue")
           return Color(0xffA9EBF8).withOpacity(0.3);
@@ -111,332 +111,369 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
       }
     }
 
+    final DocumentReference bookingDoc = FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(bookingItemModel?.bookingID);
+    log("aggipetti");
     return GetBuilder<CustomerExpansionPanelController>(builder: (controller) {
-      return AnimatedContainer(
-        duration: Duration(milliseconds: 200),
-        curve: Curves.easeInCubic,
-        alignment: Alignment.topCenter,
-        constraints: BoxConstraints(
-          minHeight: controller.isExpanded[i!] ? 500 : 50,
-        ),
-        width: Get.width,
-        decoration: BoxDecoration(
-          color: getColor(),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
+      return StreamBuilder(
+        stream: bookingDoc.snapshots(),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text('Error: ${snapshot.error}');
+          }
+
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Text('Loading...');
+          }
+          final data = snapshot.data?.data();
+
+          if (data == null) {
+            return Text('Document does not exist');
+          }
+          BookingModel bookingModel =
+              BookingModel.fromMap(data as Map<String, dynamic>);
+          log("booking model ${bookingModel.toMap()}");
+          ItemModel itemModel = ItemModel.fromBookings(bookingModel);
+          log("item model ${itemModel}");
+
+          return AnimatedContainer(
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeInCubic,
+            alignment: Alignment.topCenter,
+            constraints: BoxConstraints(
+              minHeight: controller.isExpanded[i!] ? 500 : 50,
+            ),
+            width: Get.width,
+            decoration: BoxDecoration(
+              color: getColor(),
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
-                    width: Get.width - 103,
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: Get.width - 200,
-                          child: Text(
-                            "${itemModel!.name!.toLowerCase().capitalizeFirst!}  x  ${(itemModel.bookingModel!.noOfPersons.toString())}",
-                            style: TextStyle(
-                                color: AppColors.text.black,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600),
-                          ),
-                        ),
-                        Spacer(),
-                        Container(
-                          height: 18,
-                          decoration: BoxDecoration(
-                              color:
-                                  getProgressColor(controller.customerStatus),
-                              borderRadius: BorderRadius.circular(3)),
-                          child: Center(
-                            child: Text(
-                              controller
-                                  .bookingStatus[controller.customerStatus],
-                              style: TextStyle(
-                                  fontSize: FontSize.small,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                          ).paddingSymmetric(horizontal: 3),
-                        ),
-                      ],
-                    ),
-                  ).paddingOnly(left: 15),
-                  Spacer(),
-                  IconButton(
-                    splashRadius: 20,
-                    icon: Icon(controller.isExpanded[i]
-                        ? Icons.keyboard_arrow_up_rounded
-                        : Icons.keyboard_arrow_down_rounded),
-                    onPressed: () {
-                      controller.isExpanded[i] = !controller.isExpanded[i];
-                      controller.update();
-                    },
-                  ),
-                ],
-              ).paddingSymmetric(vertical: 3),
-              controller.isExpanded[i]
-                  ? FutureBuilder(
-                      future: Future.delayed(Duration(milliseconds: 200)),
-                      initialData: SizedBox(),
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.done) {
-                          return Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              SizedBox(height: 10),
-                              Text(
-                                "Booking Details : ",
+                  Row(
+                    children: [
+                      Container(
+                        width: Get.width - 103,
+                        child: Row(
+                          children: [
+                            SizedBox(
+                              width: Get.width - 200,
+                              child: Text(
+                                "${itemModel.name!.toLowerCase().capitalizeFirst!}  x  ${(itemModel.bookingModel!.noOfPersons.toString())}",
                                 style: TextStyle(
-                                    fontSize: FontSize.textSize,
+                                    color: AppColors.text.black,
+                                    fontSize: 14,
                                     fontWeight: FontWeight.w600),
                               ),
-                              SizedBox(height: 10),
-                              buildKeyValuePairs(
-                                  "Course Name", itemModel.activity),
-                              buildKeyValuePairs(
-                                "Balance",
-                                "${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} / -",
-                              ),
-                              buildKeyValuePairs("Session", itemModel.session),
-                              buildKeyValuePairs(
-                                "Registered",
-                                "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
-                                isDanger:
-                                    ((itemModel.bookingModel!.pax!.length -
+                            ),
+                            Spacer(),
+                            Container(
+                              height: 18,
+                              decoration: BoxDecoration(
+                                  color: getProgressColor(
+                                      controller.customerStatus),
+                                  borderRadius: BorderRadius.circular(3)),
+                              child: Center(
+                                child: Text(
+                                  controller
+                                      .bookingStatus[controller.customerStatus],
+                                  style: TextStyle(
+                                      fontSize: FontSize.small,
+                                      fontWeight: FontWeight.w600),
+                                ),
+                              ).paddingSymmetric(horizontal: 3),
+                            ),
+                          ],
+                        ),
+                      ).paddingOnly(left: 15),
+                      Spacer(),
+                      IconButton(
+                        splashRadius: 20,
+                        icon: Icon(controller.isExpanded[i]
+                            ? Icons.keyboard_arrow_up_rounded
+                            : Icons.keyboard_arrow_down_rounded),
+                        onPressed: () {
+                          controller.isExpanded[i] = !controller.isExpanded[i];
+                          controller.update();
+                        },
+                      ),
+                    ],
+                  ).paddingSymmetric(vertical: 3),
+                  controller.isExpanded[i]
+                      ? FutureBuilder(
+                          future: Future.delayed(Duration(milliseconds: 200)),
+                          initialData: SizedBox(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.done) {
+                              return Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  SizedBox(height: 10),
+                                  Text(
+                                    "Booking Details : ",
+                                    style: TextStyle(
+                                        fontSize: FontSize.textSize,
+                                        fontWeight: FontWeight.w600),
+                                  ),
+                                  SizedBox(height: 10),
+                                  _buildKeyValuePairs(
+                                      "Course Name", itemModel.activity),
+                                  _buildKeyValuePairs(
+                                    "Balance",
+                                    "${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} / -",
+                                  ),
+                                  _buildKeyValuePairs(
+                                      "Session", itemModel.session),
+                                  _buildKeyValuePairs(
+                                    "Registered",
+                                    "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
+                                    isDanger: ((itemModel
+                                                .bookingModel!.pax!.length -
                                             1) !=
                                         (itemModel.bookingModel!.noOfPersons)),
-                              ),
-                              SizedBox(height: 20),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  SizedBox(
-                                    width: Get.width - 170,
-                                    child: Text(
-                                      "Instructors / Dive-Buddies :",
-                                      style: TextStyle(
-                                        fontSize: FontSize.textSize,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
                                   ),
-                                  InkWell(
-                                    onTap: () async {
-                                      List<Instructor>? instructors =
-                                          await EmpSelectorBottomSheet.show(
-                                        context,
-                                        initialSelectedEmployees: itemModel
-                                                .bookingModel
-                                                ?.boatDetails
-                                                ?.instructors ??
-                                            [],
-                                      );
-
-                                      log("lajshjc  $instructors");
-
-                                      BoatDetails? boatDetails = itemModel
-                                          .bookingModel?.boatDetails
-                                          ?.copyWith(instructors: instructors);
-                                      if (boatDetails == null) {
-                                        boatDetails = BoatDetails(
-                                          instructors: instructors,
-                                        );
-                                      }
-
-                                      log("lajshjc  $boatDetails");
-
-                                      await FirebaseFirestore.instance
-                                          .collection('bookings')
-                                          .doc(itemModel.bookingModel?.id ?? "")
-                                          .set({
-                                        "boatDetails": boatDetails.toMap()
-                                      }, SetOptions(merge: true));
-
-                                      controller.update();
-                                    },
-                                    child: Container(
-                                      height: 31,
-                                      width: 100,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black,
-                                        borderRadius: BorderRadius.circular(
-                                          30,
-                                        ),
-                                      ),
-                                      child: Center(
+                                  SizedBox(height: 20),
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      SizedBox(
+                                        width: Get.width - 170,
                                         child: Text(
-                                          "Manage",
+                                          "Instructors / Dive-Buddies :",
                                           style: TextStyle(
-                                            fontSize: 12,
-                                            color: Colors.white,
+                                            fontSize: FontSize.textSize,
+                                            fontWeight: FontWeight.w600,
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              SizedBox(height: 10),
-                              if (itemModel
-                                      .bookingModel?.boatDetails?.instructors !=
-                                  null)
-                                ...itemModel
-                                    .bookingModel!.boatDetails!.instructors!
-                                    .map(
-                                  (e) {
-                                    return buildDiverName(
-                                            e.name,
-                                            itemModel.bookingModel!.boatDetails!
-                                                .instructors!
-                                                .indexOf(e))
-                                        .paddingOnly(bottom: 6);
-                                  },
-                                ),
-                              SizedBox(height: 20),
-                              Row(
-                                children: [
-                                  buildBookingStatus(controller),
-                                  Spacer(),
-                                  PopupMenuButton<String>(
-                                    child: (logic.controller.boatTED.text == "")
-                                        ? Column(
-                                            children: [
-                                              Container(
-                                                height: 31,
-                                                width: 100,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.black,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20)),
-                                                child: Center(
-                                                  child: Text("Select Boat",
-                                                      style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.white)),
-                                                ),
-                                              ),
-                                            ],
-                                          )
-                                        : Column(
-                                            children: [
-                                              Text(
-                                                "Selected Boat :",
-                                                style: TextStyle(
-                                                  fontSize: 14,
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold,
-                                                  // decoration: TextDecoration.underline
-                                                ),
-                                              ).paddingAll(5),
-                                              Row(
-                                                children: [
-                                                  Text(
-                                                    logic.controller.boatTED
-                                                        .text,
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      color: Colors.black,
-                                                      // fontWeight: FontWeight.bold,
-                                                    ),
-                                                  ).paddingAll(5),
-                                                  Text(
-                                                    "Change",
-                                                    style: TextStyle(
-                                                        fontSize: 12,
-                                                        color: Colors.blue,
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline),
-                                                  ).paddingOnly(
-                                                      left: 10, right: 7),
-                                                  Icon(
-                                                    Icons.edit,
-                                                    size: 12,
-                                                    color: Colors.blue,
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
+                                      InkWell(
+                                        onTap: () async {
+                                          List<Instructor>? instructors =
+                                              await EmpSelectorBottomSheet.show(
+                                            context,
+                                            initialSelectedEmployees: itemModel
+                                                    .bookingModel
+                                                    ?.boatDetails
+                                                    ?.instructors ??
+                                                [],
+                                          );
+
+                                          log("lajshjc  $instructors");
+
+                                          BoatDetails? boatDetails = itemModel
+                                              .bookingModel?.boatDetails
+                                              ?.copyWith(
+                                                  instructors: instructors);
+                                          if (boatDetails == null) {
+                                            boatDetails = BoatDetails(
+                                              instructors: instructors,
+                                            );
+                                          }
+
+                                          log("lajshjc  $boatDetails");
+
+                                          await FirebaseFirestore.instance
+                                              .collection('bookings')
+                                              .doc(itemModel.bookingModel?.id ??
+                                                  "")
+                                              .set({
+                                            "boatDetails": boatDetails.toMap()
+                                          }, SetOptions(merge: true));
+
+                                          controller.update();
+                                        },
+                                        child: Container(
+                                          height: 31,
+                                          width: 100,
+                                          decoration: BoxDecoration(
+                                            color: Colors.black,
+                                            borderRadius: BorderRadius.circular(
+                                              30,
+                                            ),
                                           ),
-                                    itemBuilder: (BuildContext context) {
-                                      return [
-                                        ...logic.controller.allBoats.map(
-                                          (e) => PopupMenuItem<String>(
-                                            value: e,
-                                            onTap: () {
-                                              setState(() {
-                                                logic.controller.boatTED.text =
-                                                    e;
-                                              });
-                                            },
+                                          child: Center(
                                             child: Text(
-                                              e,
-                                              style: TextStyle(fontSize: 12),
+                                              "Manage",
+                                              style: TextStyle(
+                                                fontSize: 12,
+                                                color: Colors.white,
+                                              ),
                                             ),
                                           ),
                                         ),
-                                        PopupMenuItem<String>(
-                                          value: "Add custom",
-                                          onTap: () {},
-                                          child: Column(
-                                            children: [
-                                              Divider(
-                                                color: Colors.black26,
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 10),
+                                  if (itemModel.bookingModel?.boatDetails
+                                          ?.instructors !=
+                                      null)
+                                    ...itemModel
+                                        .bookingModel!.boatDetails!.instructors!
+                                        .map(
+                                      (e) {
+                                        return _buildDiverName(
+                                                e.name,
+                                                itemModel.bookingModel!
+                                                    .boatDetails!.instructors!
+                                                    .indexOf(e))
+                                            .paddingOnly(bottom: 6);
+                                      },
+                                    ),
+                                  SizedBox(height: 20),
+                                  Row(
+                                    children: [
+                                      _buildBookingStatus(controller),
+                                      Spacer(),
+                                      PopupMenuButton<String>(
+                                        child: (logic.controller.boatTED.text ==
+                                                "")
+                                            ? Column(
+                                                children: [
+                                                  Container(
+                                                    height: 31,
+                                                    width: 100,
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.black,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20)),
+                                                    child: Center(
+                                                      child: Text("Select Boat",
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              color: Colors
+                                                                  .white)),
+                                                    ),
+                                                  ),
+                                                ],
+                                              )
+                                            : Column(
+                                                children: [
+                                                  Text(
+                                                    "Selected Boat :",
+                                                    style: TextStyle(
+                                                      fontSize: 14,
+                                                      color: Colors.black,
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      // decoration: TextDecoration.underline
+                                                    ),
+                                                  ).paddingAll(5),
+                                                  Row(
+                                                    children: [
+                                                      Text(
+                                                        logic.controller.boatTED
+                                                            .text,
+                                                        style: TextStyle(
+                                                          fontSize: 12,
+                                                          color: Colors.black,
+                                                          // fontWeight: FontWeight.bold,
+                                                        ),
+                                                      ).paddingAll(5),
+                                                      Text(
+                                                        "Change",
+                                                        style: TextStyle(
+                                                            fontSize: 12,
+                                                            color: Colors.blue,
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .underline),
+                                                      ).paddingOnly(
+                                                          left: 10, right: 7),
+                                                      Icon(
+                                                        Icons.edit,
+                                                        size: 12,
+                                                        color: Colors.blue,
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
                                               ),
-                                              SizedBox(height: 5),
-                                              Text(
-                                                "Add custom",
-                                                style: TextStyle(fontSize: 12),
-                                              ).paddingOnly(bottom: 2),
-                                            ],
-                                          ),
-                                        ),
-                                      ];
+                                        itemBuilder: (BuildContext context) {
+                                          return [
+                                            ...logic.controller.allBoats.map(
+                                              (e) => PopupMenuItem<String>(
+                                                value: e,
+                                                onTap: () {
+                                                  setState(() {
+                                                    logic.controller.boatTED
+                                                        .text = e;
+                                                  });
+                                                },
+                                                child: Text(
+                                                  e,
+                                                  style:
+                                                      TextStyle(fontSize: 12),
+                                                ),
+                                              ),
+                                            ),
+                                            PopupMenuItem<String>(
+                                              value: "Add custom",
+                                              onTap: () {},
+                                              child: Column(
+                                                children: [
+                                                  Divider(
+                                                    color: Colors.black26,
+                                                  ),
+                                                  SizedBox(height: 5),
+                                                  Text(
+                                                    "Add custom",
+                                                    style:
+                                                        TextStyle(fontSize: 12),
+                                                  ).paddingOnly(bottom: 2),
+                                                ],
+                                              ),
+                                            ),
+                                          ];
+                                        },
+                                        onSelected: (String value) {
+                                          if (value == 'Add custom') {
+                                            showTextFieldDialog(context);
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(height: 20),
+                                  AppTextField(
+                                    hintText: "Equipment Notes",
+                                    errorValidator: () {
+                                      return null;
                                     },
-                                    onSelected: (String value) {
-                                      if (value == 'Add custom') {
-                                        showTextFieldDialog(context);
-                                      }
+                                    validator: (_) {
+                                      return null;
                                     },
                                   ),
+                                  SizedBox(height: 20),
+                                  SizedBox(height: 20),
                                 ],
-                              ),
-                              SizedBox(height: 20),
-                              AppTextField(
-                                hintText: "Equipment Notes",
-                                errorValidator: () {
-                                  return null;
-                                },
-                                validator: (_) {
-                                  return null;
-                                },
-                              ),
-                              SizedBox(height: 20),
-                              SizedBox(height: 20),
-                            ],
-                          ).paddingSymmetric(horizontal: 15);
-                        }
-                        return SizedBox();
-                      })
-                  : SizedBox(),
-            ],
-          ),
-        ),
+                              ).paddingSymmetric(horizontal: 15);
+                            }
+                            return SizedBox();
+                          })
+                      : SizedBox(),
+                ],
+              ),
+            ),
+          );
+        },
       );
     }).paddingSymmetric(vertical: 10);
   }
 
-  Widget buildBookingStatus(CustomerExpansionPanelController controller) {
+  Widget _buildBookingStatus(CustomerExpansionPanelController controller) {
     return Row(
       children: [
         GestureDetector(
@@ -497,7 +534,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     );
   }
 
-  Widget buildDiverName(String text, int index) {
+  Widget _buildDiverName(String text, int index) {
     return RichText(
       text: TextSpan(
         text: (index + 1).toString(),
@@ -537,22 +574,6 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     }
   }
 
-  Widget buildCircle({required Color color}) {
-    return Container(
-      width: 13,
-      height: 13,
-      decoration: BoxDecoration(
-          border: Border.all(color: color), shape: BoxShape.circle),
-      child: Center(
-        child: Icon(
-          Icons.circle,
-          size: 10,
-          color: color,
-        ),
-      ),
-    );
-  }
-
   String getBalance(List<PaymentModel> payments, double deposit, double total) {
     double t = deposit;
     payments.forEach((payment) {
@@ -561,7 +582,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     return (total - t).toInt().toString();
   }
 
-  Widget buildKeyValuePairs(
+  Widget _buildKeyValuePairs(
     String key,
     String value, {
     bool isDanger = false,
@@ -647,7 +668,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     );
   }
 
-  Widget buildSearchBar() {
+  Widget _buildSearchBar() {
     return GetBuilder<CustomerSearchController>(builder: (controller) {
       return (controller.showSearchField && widget.items!.length > 5)
           ? Padding(

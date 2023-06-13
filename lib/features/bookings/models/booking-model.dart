@@ -83,37 +83,38 @@ class BookingModel {
     }
 
     return BookingModel(
-        pax: List<Map<String, dynamic>>.from(json["PAX"].map((x) => x)),
-        activity: List<ActivityModel>.from(
-            json["activity"].map((x) => ActivityModel.fromMap(x))),
-        payments: List<PaymentModel>.from(
-            (json["payments"] ?? []).map((x) => PaymentModel.fromMap(x))),
-        noOfPersons: json["noOfPersons"],
-        createdAt: parseDateOrNull(json["createdAt"]),
-        discount: json["discount"] * 1.0,
-        discountType: json["discountSwitch"],
-        price: json["price"] * 1.0,
-        tax: json["tax"] * 1.0,
-        paid: json["paid"] * 1.0,
-        paymentMode: json["paymentMode"],
-        receiptNo: json["receiptNo"],
-        remarks: json["remarks"],
-        employeeName: json["employeeName"],
-        id: json["id"],
-        location: json["location"],
-        paymentTransactionId: json["paymentTransactionId"],
-        bookingDate: List<String>.from(json["bookingDate"].map((x) => x)),
-        idProofs: List<String>.from(json["idProofs"] ?? [].map((x) => x)),
-        // payments: List<dynamic>.from(json["payments"] ?? [].map((x) => x * 1.0)),
-        theoryDate: List<DateTime>.from(
-            json["theoryDate"].map((x) => parseDateOrNull(x))),
-        poolDate: List<DateTime>.from(
-            json["poolDate"].map((x) => parseDateOrNull(x))),
-        diveDate: List<DateTime>.from(
-            json["diveDate"].map((x) => parseDateOrNull(x))),
-        cancelBooking: json["cancelBooking"],
-        cancellationReason: json["cancellationReason"],
-        boatDetails: json["boatDetails"]);
+      pax: List<Map<String, dynamic>>.from(json["PAX"].map((x) => x)),
+      activity: List<ActivityModel>.from(
+          json["activity"].map((x) => ActivityModel.fromMap(x))),
+      payments: List<PaymentModel>.from(
+          (json["payments"] ?? []).map((x) => PaymentModel.fromMap(x))),
+      noOfPersons: json["noOfPersons"],
+      createdAt: parseDateOrNull(json["createdAt"]),
+      discount: json["discount"] * 1.0,
+      discountType: json["discountSwitch"],
+      price: json["price"] * 1.0,
+      tax: json["tax"] * 1.0,
+      paid: json["paid"] * 1.0,
+      paymentMode: json["paymentMode"],
+      receiptNo: json["receiptNo"],
+      remarks: json["remarks"],
+      employeeName: json["employeeName"],
+      id: json["id"],
+      location: json["location"],
+      paymentTransactionId: json["paymentTransactionId"],
+      bookingDate: List<String>.from(json["bookingDate"].map((x) => x)),
+      idProofs: List<String>.from(json["idProofs"] ?? [].map((x) => x)),
+      // payments: List<dynamic>.from(json["payments"] ?? [].map((x) => x * 1.0)),
+      theoryDate: List<DateTime>.from(
+          json["theoryDate"].map((x) => parseDateOrNull(x))),
+      poolDate:
+          List<DateTime>.from(json["poolDate"].map((x) => parseDateOrNull(x))),
+      diveDate:
+          List<DateTime>.from(json["diveDate"].map((x) => parseDateOrNull(x))),
+      cancelBooking: json["cancelBooking"],
+      cancellationReason: json["cancellationReason"],
+      boatDetails: BoatDetails.fromJson(json["boatDetails"] ?? {}),
+    );
   }
 
   Map<String, dynamic> toMap() {
@@ -145,7 +146,7 @@ class BookingModel {
           List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
       "cancelBooking": cancelBooking,
       "cancellationReason": cancellationReason,
-      "boatDetails": boatDetails
+      "boatDetails": boatDetails?.toMap(),
     };
   }
 

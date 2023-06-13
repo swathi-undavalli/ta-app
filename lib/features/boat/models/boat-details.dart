@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:temple_adventures/features/home/model/employee.dart';
 
 class BoatDetails {
@@ -37,14 +36,16 @@ class BoatDetails {
 
   String toRawJson() => json.encode(toMap());
 
-  factory BoatDetails.fromJson(Map<String, dynamic> json) => BoatDetails(
-        boatId: json["boatId"],
-        boatName: json["boatName"],
-        bookingStatus: json["bookingStatus"],
-        employeeNotes: json["employeeNotes"],
-        instructors: List<Instructor>.from(
-            json["instructors"].map((x) => Instructor.fromJson(x))),
-      );
+  factory BoatDetails.fromJson(Map<String, dynamic> json) {
+    return BoatDetails(
+      boatId: json["boatId"],
+      boatName: json["boatName"],
+      bookingStatus: json["bookingStatus"],
+      employeeNotes: json["employeeNotes"],
+      instructors: List<Instructor>.from(
+          (json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
+    );
+  }
 
   Map<String, dynamic> toMap() => {
         "boatId": boatId,
