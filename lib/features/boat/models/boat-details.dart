@@ -4,7 +4,7 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 class BoatDetails {
   final String? boatId;
   final String? boatName;
-  final String? bookingStatus;
+  final int? bookingStatus;
   final String? employeeNotes;
   final List<Instructor>? instructors;
 
@@ -19,7 +19,7 @@ class BoatDetails {
   BoatDetails copyWith({
     String? boatId,
     String? boatName,
-    String? bookingStatus,
+    int? bookingStatus,
     String? employeeNotes,
     List<Instructor>? instructors,
   }) =>

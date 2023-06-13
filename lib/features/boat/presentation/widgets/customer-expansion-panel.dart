@@ -15,6 +15,8 @@ import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/home/model/colors_data.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 
+import '../../../conditions/controller/conditions-controller.dart';
+
 class CustomersExpansionPanel extends StatefulWidget {
   final List<ItemModel>? items;
   final bool showSearchBar;
@@ -82,7 +84,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
 
   Widget _buildCustomerDetails(
       {ItemModel? bookingItemModel, int? i, required BuildContext context}) {
-    getColor() {
+    Color getColor() {
       if (bookingItemModel!.bookingModel?.cancelBooking == true) {
         return Color(0xffEE9A9D);
       } else {
@@ -109,429 +111,181 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
           return Color(0xff96F1BD);
         else if (cc == "White") return Color(0xffE0E0E0);
       }
+      return Colors.white;
     }
 
     final DocumentReference bookingDoc = FirebaseFirestore.instance
         .collection('bookings')
         .doc(bookingItemModel?.bookingID);
-    log("aggipetti");
-    return GetBuilder<CustomerExpansionPanelController>(builder: (controller) {
-      return StreamBuilder(
-        stream: bookingDoc.snapshots(),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text('Error: ${snapshot.error}');
-          }
+    return StreamBuilder(
+      stream: bookingDoc.snapshots(),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text('Error: ${snapshot.error}');
+        }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text('Loading...');
-          }
-          final data = snapshot.data?.data();
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text('Loading...');
+        }
+        final data = snapshot.data?.data();
 
-          if (data == null) {
-            return Text('Document does not exist');
-          }
-          BookingModel bookingModel =
-              BookingModel.fromMap(data as Map<String, dynamic>);
-          log("booking model ${bookingModel.toMap()}");
-          ItemModel itemModel = ItemModel.fromBookings(bookingModel);
-          log("item model ${itemModel}");
+        if (data == null) {
+          return Text('Document does not exist');
+        }
+        BookingModel bookingModel =
+            BookingModel.fromMap(data as Map<String, dynamic>);
+        log("booking model ${bookingModel.toMap()}");
+        ItemModel itemModel = ItemModel.fromBookings(bookingModel);
+        log("item model ${itemModel}");
 
-          return AnimatedContainer(
-            duration: Duration(milliseconds: 200),
-            curve: Curves.easeInCubic,
-            alignment: Alignment.topCenter,
-            constraints: BoxConstraints(
-              minHeight: controller.isExpanded[i!] ? 500 : 50,
-            ),
-            width: Get.width,
-            decoration: BoxDecoration(
-              color: getColor(),
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
+        return ExpandableListTile(
+          expandedChild: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              SizedBox(height: 10),
+              Text(
+                "Booking Details : ",
+                style: TextStyle(
+                    fontSize: FontSize.textSize, fontWeight: FontWeight.w600),
               ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
+              SizedBox(height: 10),
+              _buildKeyValuePairs("Course Name", itemModel.activity),
+              _buildKeyValuePairs(
+                "Balance",
+                "${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} / -",
+              ),
+              _buildKeyValuePairs("Session", itemModel.session),
+              _buildKeyValuePairs(
+                "Registered",
+                "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
+                isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
+                    (itemModel.bookingModel!.noOfPersons)),
+              ),
+              SizedBox(height: 20),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: Get.width - 103,
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              width: Get.width - 200,
-                              child: Text(
-                                "${itemModel.name!.toLowerCase().capitalizeFirst!}  x  ${(itemModel.bookingModel!.noOfPersons.toString())}",
-                                style: TextStyle(
-                                    color: AppColors.text.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600),
-                              ),
-                            ),
-                            Spacer(),
-                            Container(
-                              height: 18,
-                              decoration: BoxDecoration(
-                                  color: getProgressColor(
-                                      controller.customerStatus),
-                                  borderRadius: BorderRadius.circular(3)),
-                              child: Center(
-                                child: Text(
-                                  controller
-                                      .bookingStatus[controller.customerStatus],
-                                  style: TextStyle(
-                                      fontSize: FontSize.small,
-                                      fontWeight: FontWeight.w600),
-                                ),
-                              ).paddingSymmetric(horizontal: 3),
-                            ),
-                          ],
-                        ),
-                      ).paddingOnly(left: 15),
-                      Spacer(),
-                      IconButton(
-                        splashRadius: 20,
-                        icon: Icon(controller.isExpanded[i]
-                            ? Icons.keyboard_arrow_up_rounded
-                            : Icons.keyboard_arrow_down_rounded),
-                        onPressed: () {
-                          controller.isExpanded[i] = !controller.isExpanded[i];
-                          controller.update();
-                        },
+                  SizedBox(
+                    width: Get.width - 170,
+                    child: Text(
+                      "Instructors / Dive-Buddies :",
+                      style: TextStyle(
+                        fontSize: FontSize.textSize,
+                        fontWeight: FontWeight.w600,
                       ),
-                    ],
-                  ).paddingSymmetric(vertical: 3),
-                  controller.isExpanded[i]
-                      ? FutureBuilder(
-                          future: Future.delayed(Duration(milliseconds: 200)),
-                          initialData: SizedBox(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.done) {
-                              return Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  SizedBox(height: 10),
-                                  Text(
-                                    "Booking Details : ",
-                                    style: TextStyle(
-                                        fontSize: FontSize.textSize,
-                                        fontWeight: FontWeight.w600),
-                                  ),
-                                  SizedBox(height: 10),
-                                  _buildKeyValuePairs(
-                                      "Course Name", itemModel.activity),
-                                  _buildKeyValuePairs(
-                                    "Balance",
-                                    "${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} / -",
-                                  ),
-                                  _buildKeyValuePairs(
-                                      "Session", itemModel.session),
-                                  _buildKeyValuePairs(
-                                    "Registered",
-                                    "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
-                                    isDanger: ((itemModel
-                                                .bookingModel!.pax!.length -
-                                            1) !=
-                                        (itemModel.bookingModel!.noOfPersons)),
-                                  ),
-                                  SizedBox(height: 20),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width: Get.width - 170,
-                                        child: Text(
-                                          "Instructors / Dive-Buddies :",
-                                          style: TextStyle(
-                                            fontSize: FontSize.textSize,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                        ),
-                                      ),
-                                      InkWell(
-                                        onTap: () async {
-                                          List<Instructor>? instructors =
-                                              await EmpSelectorBottomSheet.show(
-                                            context,
-                                            initialSelectedEmployees: itemModel
-                                                    .bookingModel
-                                                    ?.boatDetails
-                                                    ?.instructors ??
-                                                [],
-                                          );
+                    ),
+                  ),
+                  InkWell(
+                    onTap: () async {
+                      List<Instructor>? instructors =
+                          await EmpSelectorBottomSheet.show(
+                        context,
+                        initialSelectedEmployees:
+                            itemModel.bookingModel?.boatDetails?.instructors ??
+                                [],
+                      );
 
-                                          log("lajshjc  $instructors");
-
-                                          BoatDetails? boatDetails = itemModel
-                                              .bookingModel?.boatDetails
-                                              ?.copyWith(
-                                                  instructors: instructors);
-                                          if (boatDetails == null) {
-                                            boatDetails = BoatDetails(
-                                              instructors: instructors,
-                                            );
-                                          }
-
-                                          log("lajshjc  $boatDetails");
-
-                                          await FirebaseFirestore.instance
-                                              .collection('bookings')
-                                              .doc(itemModel.bookingModel?.id ??
-                                                  "")
-                                              .set({
-                                            "boatDetails": boatDetails.toMap()
-                                          }, SetOptions(merge: true));
-
-                                          controller.update();
-                                        },
-                                        child: Container(
-                                          height: 31,
-                                          width: 100,
-                                          decoration: BoxDecoration(
-                                            color: Colors.black,
-                                            borderRadius: BorderRadius.circular(
-                                              30,
-                                            ),
-                                          ),
-                                          child: Center(
-                                            child: Text(
-                                              "Manage",
-                                              style: TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 10),
-                                  if (itemModel.bookingModel?.boatDetails
-                                          ?.instructors !=
-                                      null)
-                                    ...itemModel
-                                        .bookingModel!.boatDetails!.instructors!
-                                        .map(
-                                      (e) {
-                                        return _buildDiverName(
-                                                e.name,
-                                                itemModel.bookingModel!
-                                                    .boatDetails!.instructors!
-                                                    .indexOf(e))
-                                            .paddingOnly(bottom: 6);
-                                      },
-                                    ),
-                                  SizedBox(height: 20),
-                                  Row(
-                                    children: [
-                                      _buildBookingStatus(controller),
-                                      Spacer(),
-                                      PopupMenuButton<String>(
-                                        child: (logic.controller.boatTED.text ==
-                                                "")
-                                            ? Column(
-                                                children: [
-                                                  Container(
-                                                    height: 31,
-                                                    width: 100,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.black,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(20)),
-                                                    child: Center(
-                                                      child: Text("Select Boat",
-                                                          style: TextStyle(
-                                                              fontSize: 12,
-                                                              color: Colors
-                                                                  .white)),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            : Column(
-                                                children: [
-                                                  Text(
-                                                    "Selected Boat :",
-                                                    style: TextStyle(
-                                                      fontSize: 14,
-                                                      color: Colors.black,
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      // decoration: TextDecoration.underline
-                                                    ),
-                                                  ).paddingAll(5),
-                                                  Row(
-                                                    children: [
-                                                      Text(
-                                                        logic.controller.boatTED
-                                                            .text,
-                                                        style: TextStyle(
-                                                          fontSize: 12,
-                                                          color: Colors.black,
-                                                          // fontWeight: FontWeight.bold,
-                                                        ),
-                                                      ).paddingAll(5),
-                                                      Text(
-                                                        "Change",
-                                                        style: TextStyle(
-                                                            fontSize: 12,
-                                                            color: Colors.blue,
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline),
-                                                      ).paddingOnly(
-                                                          left: 10, right: 7),
-                                                      Icon(
-                                                        Icons.edit,
-                                                        size: 12,
-                                                        color: Colors.blue,
-                                                      ),
-                                                    ],
-                                                  ),
-                                                ],
-                                              ),
-                                        itemBuilder: (BuildContext context) {
-                                          return [
-                                            ...logic.controller.allBoats.map(
-                                              (e) => PopupMenuItem<String>(
-                                                value: e,
-                                                onTap: () {
-                                                  setState(() {
-                                                    logic.controller.boatTED
-                                                        .text = e;
-                                                  });
-                                                },
-                                                child: Text(
-                                                  e,
-                                                  style:
-                                                      TextStyle(fontSize: 12),
-                                                ),
-                                              ),
-                                            ),
-                                            PopupMenuItem<String>(
-                                              value: "Add custom",
-                                              onTap: () {},
-                                              child: Column(
-                                                children: [
-                                                  Divider(
-                                                    color: Colors.black26,
-                                                  ),
-                                                  SizedBox(height: 5),
-                                                  Text(
-                                                    "Add custom",
-                                                    style:
-                                                        TextStyle(fontSize: 12),
-                                                  ).paddingOnly(bottom: 2),
-                                                ],
-                                              ),
-                                            ),
-                                          ];
-                                        },
-                                        onSelected: (String value) {
-                                          if (value == 'Add custom') {
-                                            showTextFieldDialog(context);
-                                          }
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 20),
-                                  AppTextField(
-                                    hintText: "Equipment Notes",
-                                    errorValidator: () {
-                                      return null;
-                                    },
-                                    validator: (_) {
-                                      return null;
-                                    },
-                                  ),
-                                  SizedBox(height: 20),
-                                  SizedBox(height: 20),
-                                ],
-                              ).paddingSymmetric(horizontal: 15);
-                            }
-                            return SizedBox();
-                          })
-                      : SizedBox(),
+                      await updateBoatDetails(itemModel,
+                          instructors: instructors);
+                    },
+                    child: Container(
+                      height: 31,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        color: Colors.black,
+                        borderRadius: BorderRadius.circular(
+                          30,
+                        ),
+                      ),
+                      child: Center(
+                        child: Text(
+                          "Manage",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
-          );
-        },
-      );
-    }).paddingSymmetric(vertical: 10);
+              SizedBox(height: 10),
+              if (itemModel.bookingModel?.boatDetails?.instructors != null)
+                ...itemModel.bookingModel!.boatDetails!.instructors!.map(
+                  (e) {
+                    return _buildDiverName(
+                            e.name,
+                            itemModel.bookingModel!.boatDetails!.instructors!
+                                .indexOf(e))
+                        .paddingOnly(bottom: 6);
+                  },
+                ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  BookingStatus(
+                    initialStatus: bookingModel.boatDetails?.bookingStatus ?? 0,
+                    onChanged: (int status) async {
+                      await updateBoatDetails(itemModel, bookingStatus: status);
+                    },
+                  ),
+                  Spacer(),
+                  BoatSelector(),
+                ],
+              ),
+              SizedBox(height: 20),
+              AppTextField(
+                hintText: "Equipment Notes",
+                errorValidator: () {
+                  return null;
+                },
+                validator: (_) {
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              SizedBox(height: 20),
+            ],
+          ),
+          title:
+              "${itemModel.name!.toLowerCase().capitalizeFirst!}  x  ${(itemModel.bookingModel!.noOfPersons.toString())}",
+          color: getColor(),
+        );
+      },
+    ).paddingSymmetric(vertical: 10);
   }
 
-  Widget _buildBookingStatus(CustomerExpansionPanelController controller) {
-    return Row(
-      children: [
-        GestureDetector(
-          onTap: () {
-            logic.onBookingStatusLeftArrowPressed();
-            controller.update();
-          },
-          child: Container(
-            height: 33,
-            width: 27,
-            decoration: BoxDecoration(
-              color: getProgressColor(controller.customerStatus),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
-            ),
-            child: Icon(
-              Icons.arrow_left,
-              size: 16,
-            ),
-          ),
-        ),
-        SizedBox(width: 2),
-        Container(
-          height: 33,
-          decoration: BoxDecoration(
-            color: getProgressColor(controller.customerStatus),
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
-          ),
-          child: Text(
-            controller.bookingStatus[controller.customerStatus],
-            style: TextStyle(
-                fontSize: FontSize.small, fontWeight: FontWeight.w600),
-          ).paddingOnly(left: 15, right: 15, top: 8),
-        ),
-        SizedBox(width: 2),
-        GestureDetector(
-          onTap: () {
-            logic.onBookingStatusRightArrowPressed();
-            controller.update();
-          },
-          child: Container(
-            height: 33,
-            width: 27,
-            decoration: BoxDecoration(
-              color: getProgressColor(controller.customerStatus),
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(4),
-                  bottomRight: Radius.circular(4)),
-            ),
-            child: Icon(
-              Icons.arrow_right,
-              size: 16,
-            ),
-          ),
-        )
-      ],
+  Future<void> updateBoatDetails(
+    ItemModel itemModel, {
+    String? boatId,
+    String? boatName,
+    int? bookingStatus,
+    String? employeeNotes,
+    List<Instructor>? instructors,
+  }) async {
+    BoatDetails? boatDetails = itemModel.bookingModel?.boatDetails?.copyWith(
+      instructors: instructors,
+      boatId: boatId,
+      boatName: boatName,
+      employeeNotes: employeeNotes,
+      bookingStatus: bookingStatus,
     );
+
+    if (boatDetails == null) {
+      boatDetails = BoatDetails(
+        instructors: instructors,
+      );
+    }
+
+    log("lajshjc  $boatDetails");
+
+    await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(itemModel.bookingModel?.id ?? "")
+        .set({"boatDetails": boatDetails.toMap()}, SetOptions(merge: true));
   }
 
   Widget _buildDiverName(String text, int index) {
@@ -630,43 +384,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     ).paddingOnly(bottom: 6);
   }
 
-  void showTextFieldDialog(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Add New Boat'),
-          content: AppTextField(
-            controller: logic.controller.customTED,
-            hintText: "Add",
-            errorValidator: () {
-              return null;
-            },
-            validator: (_) {
-              return null;
-            },
-          ),
-          actions: [
-            TextButton(
-              child: Text('Cancel', style: TextStyle(color: Colors.black)),
-              onPressed: () {
-                Get.back();
-                logic.controller.customTED.text = "";
-              },
-            ),
-            TextButton(
-              child: Text('Ok', style: TextStyle(color: Colors.black)),
-              onPressed: () {
-                logic.controller.allBoats.add(logic.controller.customTED.text);
-                Get.back();
-                logic.controller.customTED.text = "";
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+
 
   Widget _buildSearchBar() {
     return GetBuilder<CustomerSearchController>(builder: (controller) {
