@@ -411,6 +411,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
               onSearchTap!();
             }
           },
+          selectedDate: controller.selectedDate,
         );
       }
       return SizedBox();

@@ -1,47 +1,45 @@
-import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_utils/src/extensions/widget_extensions.dart';
-import 'package:temple_adventures/features/boat/models/boat-details.dart';
+import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 
-class EmpSelectorBottomSheet extends StatefulWidget {
-  final List<Instructor> initialSelectedInstructors;
+class CaptainSelectorBottomSheet extends StatefulWidget {
+  final Employee? initialCaptain;
 
-  const EmpSelectorBottomSheet({
+  const CaptainSelectorBottomSheet({
     Key? key,
-    required this.initialSelectedInstructors,
+    required this.initialCaptain,
   }) : super(key: key);
 
-  static Future<List<Instructor>?> show(
-    BuildContext context, {
-    required List<Instructor> initialSelectedEmployees,
-  }) async {
+  static Future<Employee?> show(BuildContext context,
+      {required Employee? initialSelectedCaptain}) async {
     var data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
-        return EmpSelectorBottomSheet(
-          initialSelectedInstructors: initialSelectedEmployees,
+        return CaptainSelectorBottomSheet(
+          initialCaptain: initialSelectedCaptain,
         );
       },
     );
 
-    return data as List<Instructor>?;
+    return data as Employee?;
   }
 
   @override
-  State<EmpSelectorBottomSheet> createState() => _EmpSelectorBottomSheetState();
+  State<CaptainSelectorBottomSheet> createState() =>
+      _CaptainSelectorBottomSheetState();
 }
 
-class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
+class _CaptainSelectorBottomSheetState
+    extends State<CaptainSelectorBottomSheet> {
   final CollectionReference employeesCollection =
       FirebaseFirestore.instance.collection('employees');
-  List<Instructor> selectedInstructors = [];
+  Employee? selectedCaptain;
 
   @override
   void initState() {
-    selectedInstructors = widget.initialSelectedInstructors;
+    selectedCaptain = widget.initialCaptain;
     super.initState();
   }
 
@@ -66,7 +64,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                 width: 30,
               ),
               Text(
-                "Manage Divers",
+                "Add Captain",
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 20,
@@ -76,7 +74,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
               IconButton(
                 icon: Icon(Icons.close),
                 onPressed: () async {
-                  Navigator.pop(context, selectedInstructors);
+                  Navigator.pop(context, selectedCaptain);
                 },
               ),
               SizedBox(
@@ -84,48 +82,39 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
               ),
             ],
           ),
-          if (selectedInstructors.isNotEmpty)
-            Wrap(
-              alignment: WrapAlignment.start,
-              runAlignment: WrapAlignment.start,
-              children: selectedInstructors
-                  .map((e) => InkWell(
-                        onTap: () {
-                          selectedInstructors.remove(e);
-                          setState(() {});
-                        },
-                        child: Container(
-                          height: 30,
-                          padding:
-                              EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            color: Colors.white,
-                            border: Border.all(
-                              color: Colors.grey,
-                              width: 2.0,
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(e.name),
-                              SizedBox(
-                                width: 5,
-                              ),
-                              Icon(
-                                Icons.close,
-                                size: 16,
-                                color: Colors.grey,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ))
-                  .toList(),
-              spacing: 10,
-              runSpacing: 10,
-            ).paddingOnly(left: 15, top: 20),
+          if (selectedCaptain != null)
+            InkWell(
+              onTap: () {
+                selectedCaptain = null;
+                setState(() {});
+              },
+              child: Container(
+                height: 30,
+                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                  border: Border.all(
+                    color: Colors.grey,
+                    width: 2.0,
+                  ),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(selectedCaptain?.name ?? ""),
+                    SizedBox(
+                      width: 5,
+                    ),
+                    Icon(
+                      Icons.close,
+                      size: 16,
+                      color: Colors.grey,
+                    ),
+                  ],
+                ),
+              ),
+            ),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: employeesCollection.snapshots(),
@@ -150,16 +139,9 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                       Employee employee = Employee.fromMap(
                           document.data() as Map<String, dynamic>);
 
-                      Instructor instructor = Instructor.fromEmployee(employee);
-
                       return InkWell(
                         onTap: () {
-                          if (selectedInstructors.contains(instructor)) {
-                            selectedInstructors.remove(instructor);
-                          } else {
-                            selectedInstructors.add(instructor);
-                            log(selectedInstructors.toString());
-                          }
+                          selectedCaptain = employee;
                           setState(() {});
                         },
                         child: Row(
@@ -177,11 +159,10 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                               ),
                             ),
                             Spacer(),
-                            if (selectedInstructors.contains(employee))
-                              Icon(
-                                Icons.check_circle,
-                                color: Colors.green,
-                              ),
+                            // Icon(
+                            //   Icons.check_circle,
+                            //   color: Colors.green,
+                            // ),
                             SizedBox(
                               width: 30,
                             ),

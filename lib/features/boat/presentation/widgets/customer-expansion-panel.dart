@@ -7,7 +7,10 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/booking-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/boat-selector.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/customer-booking-status.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/customer-expansion-panel-controller.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/customer-expandable-listTile.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
@@ -21,9 +24,13 @@ class CustomersExpansionPanel extends StatefulWidget {
   final List<ItemModel>? items;
   final bool showSearchBar;
   final Function? onSearchTap;
+  final DateTime selectedDate;
 
   CustomersExpansionPanel(
-      {this.items, this.onSearchTap, this.showSearchBar = true});
+      {this.items,
+      this.onSearchTap,
+      this.showSearchBar = true,
+      required this.selectedDate});
 
   @override
   State<CustomersExpansionPanel> createState() =>
@@ -35,8 +42,6 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
 
   final CustomerSearchController searchController =
       Get.put(CustomerSearchController());
-
-  DateTime date = DateTime.now();
 
   List<Widget> expansions = [];
 
@@ -233,7 +238,15 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                     },
                   ),
                   Spacer(),
-                  BoatSelector(),
+                  BoatSelector(
+                    boatName: bookingModel.boatDetails?.boatName ?? "",
+                    boatId: bookingModel.boatDetails?.boatId ?? "",
+                    onChanged: (List<String> boatDetails) async {
+                      await updateBoatDetails(itemModel,
+                          boatId: boatDetails[0], boatName: boatDetails[1]);
+                    },
+                    selectedDate: widget.selectedDate,
+                  ),
                 ],
               ),
               SizedBox(height: 20),
@@ -383,8 +396,6 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
       ],
     ).paddingOnly(bottom: 6);
   }
-
-
 
   Widget _buildSearchBar() {
     return GetBuilder<CustomerSearchController>(builder: (controller) {

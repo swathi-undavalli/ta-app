@@ -83,20 +83,20 @@ class NavDrawer extends StatelessWidget {
                 Get.offAndToNamed(LogScreen.id);
               },
             ),
-            buildMenuItem(
-              icon: Icons.directions_boat_sharp,
-              text: 'Add Boats',
-              onTap: () {
-                Get.toNamed(NewBoatPage.id);
-              },
-            ),
-            buildMenuItem(
-              icon: Icons.houseboat_rounded,
-              text: 'All Boats',
-              onTap: () {
-                Get.toNamed(AllBoatsPage.id);
-              },
-            ),
+            // buildMenuItem(
+            //   icon: Icons.directions_boat_sharp,
+            //   text: 'Add Boats',
+            //   onTap: () {
+            //     // Get.toNamed(NewBoatPage.id);
+            //   },
+            // ),
+            // buildMenuItem(
+            //   icon: Icons.houseboat_rounded,
+            //   text: 'All Boats',
+            //   onTap: () {
+            //     Get.toNamed(AllBoatsPage.id);
+            //   },
+            // ),
             // buildMenuItem(
             //   icon: Icons.logout,
             //   text: 'Log out',
