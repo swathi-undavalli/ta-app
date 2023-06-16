@@ -4,14 +4,12 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 class BoatDetails {
   final String? boatId;
   final String? boatName;
-  final int? bookingStatus;
   final String? employeeNotes;
   final List<Instructor>? instructors;
 
   BoatDetails({
     this.boatId,
     this.boatName,
-    this.bookingStatus,
     this.employeeNotes,
     this.instructors,
   });
@@ -19,14 +17,12 @@ class BoatDetails {
   BoatDetails copyWith({
     String? boatId,
     String? boatName,
-    int? bookingStatus,
     String? employeeNotes,
     List<Instructor>? instructors,
   }) =>
       BoatDetails(
         boatId: boatId ?? this.boatId,
         boatName: boatName ?? this.boatName,
-        bookingStatus: bookingStatus ?? this.bookingStatus,
         employeeNotes: employeeNotes ?? this.employeeNotes,
         instructors: instructors ?? this.instructors,
       );
@@ -40,7 +36,6 @@ class BoatDetails {
     return BoatDetails(
       boatId: json["boatId"],
       boatName: json["boatName"],
-      bookingStatus: json["bookingStatus"],
       employeeNotes: json["employeeNotes"],
       instructors: List<Instructor>.from(
           (json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
@@ -50,7 +45,6 @@ class BoatDetails {
   Map<String, dynamic> toMap() => {
         "boatId": boatId,
         "boatName": boatName,
-        "bookingStatus": bookingStatus,
         "employeeNotes": employeeNotes,
         "instructors":
             List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
