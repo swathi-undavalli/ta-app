@@ -46,8 +46,7 @@ class BoatDetails {
         "boatId": boatId,
         "boatName": boatName,
         "employeeNotes": employeeNotes,
-        "instructors":
-            List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
+        "instructors": List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
       };
 }
 
