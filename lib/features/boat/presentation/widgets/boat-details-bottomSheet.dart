@@ -3,9 +3,12 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
+import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/boat/models/boat-model.dart';
+import 'package:temple_adventures/features/boat/models/boats.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/captain-selector-bottomSheet.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/conditions/controller/conditions-controller.dart';
@@ -20,7 +23,7 @@ class BoatDetailsBottomSheet extends StatefulWidget {
 
   final DateTime selectedDate;
 
-  static Future<BoatDetails?> show(BuildContext context,
+  static Future<BoatsModel?> show(BuildContext context,
       {required DateTime date}) async {
     var data = await showModalBottomSheet(
       context: context,
@@ -33,7 +36,7 @@ class BoatDetailsBottomSheet extends StatefulWidget {
       },
     );
 
-    return data as BoatDetails?;
+    return data as BoatsModel?;
   }
 
   @override
@@ -44,6 +47,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   final CollectionReference employeesCollection =
       FirebaseFirestore.instance.collection('employees');
   Employee? selectedCaptain;
+  TextEditingController boatTED = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -149,16 +153,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 ),
           AppTextField(
             hintText: "Boat name",
-            errorValidator: () {
-              return null;
-            },
-            validator: (_) {
-              return null;
-            },
-          ),
-          AppTextField(
-            hintText: "Boat Capacity",
-            keyboardType: TextInputType.number,
+            controller: boatTED,
             errorValidator: () {
               return null;
             },
@@ -173,12 +168,40 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               width: 145,
               text: "Submit",
               onTap: () async {
-                var d = await FirebaseFirestore.instance
-                    .collection("dailyBoats")
-                    .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
-                    .get();
-                Map<String, dynamic>? data = d.data();
-                if (data != null) {}
+                if (boatTED.text != "" && selectedCaptain != null) {
+                  int boatId;
+                  var d = await FirebaseFirestore.instance
+                      .collection("dailyBoats")
+                      .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
+                      .get();
+                  Map<String, dynamic>? data = d.data();
+                  log("data.toString()");
+                  log(data.toString());
+                  BoatsModel? boatsModel = BoatsModel.fromJson(data);
+
+                  if (data != null) {
+                    boatId = boatsModel.boats!.length;
+                  } else {
+                    boatId = 0;
+                  }
+
+                  Boat boat = Boat(
+                      captainId: selectedCaptain?.id ?? "",
+                      captainName: selectedCaptain?.name ?? "",
+                      id: boatId.toString(),
+                      name: boatTED.text);
+
+                  boatsModel.boats?.add(boat);
+                  log(boatsModel.toJson().toString());
+
+                  Navigator.pop(context, boatsModel);
+                } else {
+                  if (boatTED.text == "") {
+                    showToast("please enter the boat details");
+                  } else {
+                    showToast("please select the captain");
+                  }
+                }
               },
               textColor: Colors.white,
               color: Colors.black,

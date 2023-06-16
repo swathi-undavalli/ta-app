@@ -142,7 +142,11 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
             BookingModel.fromMap(data as Map<String, dynamic>);
         log("booking model ${bookingModel.toMap()}");
         ItemModel itemModel = ItemModel.fromBookings(bookingModel);
-        log("item model ${itemModel}");
+        log("item model $itemModel");
+        log("equipmentNotes : ${itemModel.bookingModel!.boatDetails?.employeeNotes}");
+
+        TextEditingController equipmentNotesTED = TextEditingController(
+            text: itemModel.bookingModel!.boatDetails?.employeeNotes);
 
         return ExpandableListTile(
           expandedChild: Column(
@@ -251,6 +255,18 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
               ),
               SizedBox(height: 20),
               AppTextField(
+                suffixIcon: GestureDetector(
+                  onTap: () {
+                    updateBoatDetails(itemModel,
+                        employeeNotes: equipmentNotesTED.text);
+                  },
+                  child: Icon(
+                    Icons.check_circle_outline_rounded,
+                    color: AppColors.text.black,
+                    size: 20,
+                  ),
+                ),
+                controller: equipmentNotesTED,
                 hintText: "Equipment Notes",
                 errorValidator: () {
                   return null;

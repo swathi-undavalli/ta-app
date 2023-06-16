@@ -1,8 +1,10 @@
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
-import 'package:temple_adventures/features/boat/models/boat-model.dart';
+import 'package:temple_adventures/features/boat/models/boats.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/boat-details-bottomSheet.dart';
-import 'package:temple_adventures/features/conditions/controller/conditions-controller.dart';
+import 'package:intl/intl.dart';
 
 class BoatSelector extends StatefulWidget {
   const BoatSelector(
@@ -22,57 +24,38 @@ class BoatSelector extends StatefulWidget {
 }
 
 class _BoatSelectorState extends State<BoatSelector> {
-  List<BoatsModel> allBoats = [
-    BoatsModel(
-      id: "1",
-      boatName: "Tucy",
-      captainId: "Das",
-      capacity: 30,
-    ),
-    BoatsModel(
-      id: "2",
-      boatName: "Ranga",
-      captainId: "Das",
-      capacity: 30,
-    ),
-    BoatsModel(
-      id: "3",
-      boatName: "BatMan",
-      captainId: "Das",
-      capacity: 30,
-    ),
-    BoatsModel(
-      id: "4",
-      boatName: "007",
-      captainId: "Das",
-      capacity: 30,
-    ),
-    BoatsModel(
-      id: "5",
-      boatName: "ClassRoom",
-      captainId: "Das",
-      capacity: 30,
-    ),
-  ];
+  List<Boat>? allBoats;
+  @override
+  void initState() {
+    initialData();
+    super.initState();
+  }
+
+  Future<void> initialData() async {
+    var d = await FirebaseFirestore.instance
+        .collection("dailyBoats")
+        .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
+        .get();
+    Map<String, dynamic>? data = d.data();
+    log("data.toString()");
+    log(data.toString());
+    BoatsModel? boatsModel = BoatsModel.fromJson(data);
+    allBoats = boatsModel.boats;
+  }
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<String>(
       child: (widget.boatName == "")
-          ? Column(
-              children: [
-                Container(
-                  height: 31,
-                  width: 100,
-                  decoration: BoxDecoration(
-                      color: Colors.black,
-                      borderRadius: BorderRadius.circular(20)),
-                  child: Center(
-                    child: Text("Select Boat",
-                        style: TextStyle(fontSize: 12, color: Colors.white)),
-                  ),
-                ),
-              ],
+          ? Container(
+              height: 31,
+              width: 100,
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(20)),
+              child: Center(
+                child: Text("Select Boat",
+                    style: TextStyle(fontSize: 12, color: Colors.white)),
+              ),
             )
           : Column(
               children: [
@@ -101,7 +84,7 @@ class _BoatSelectorState extends State<BoatSelector> {
                           fontSize: 12,
                           color: Colors.blue,
                           decoration: TextDecoration.underline),
-                    ).paddingOnly(left: 10, right: 7),
+                    ).paddingOnly(left: 5, right: 5),
                     Icon(
                       Icons.edit,
                       size: 12,
@@ -113,20 +96,21 @@ class _BoatSelectorState extends State<BoatSelector> {
             ),
       itemBuilder: (BuildContext context) {
         return [
-          ...allBoats.map(
-            (e) => PopupMenuItem<String>(
-              value: e.boatName,
-              onTap: () {
-                setState(() {
-                  widget.onChanged([e.id!, e.boatName!]);
-                });
-              },
-              child: Text(
-                e.boatName!,
-                style: TextStyle(fontSize: 12),
+          if (allBoats != null)
+            ...allBoats!.map(
+              (e) => PopupMenuItem<String>(
+                value: e.name,
+                onTap: () {
+                  setState(() {
+                    widget.onChanged([e.id, e.name]);
+                  });
+                },
+                child: Text(
+                  e.name,
+                  style: TextStyle(fontSize: 12),
+                ),
               ),
             ),
-          ),
           PopupMenuItem<String>(
             value: "Add custom",
             onTap: () {},
@@ -145,9 +129,17 @@ class _BoatSelectorState extends State<BoatSelector> {
           ),
         ];
       },
-      onSelected: (String value) {
+      onSelected: (String value) async {
         if (value == 'Add custom') {
-          BoatDetailsBottomSheet.show(context, date: widget.selectedDate);
+          BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(context,
+              date: widget.selectedDate);
+          if (boatsModel != null) {
+            await FirebaseFirestore.instance
+                .collection("dailyBoats")
+                .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
+                .set(boatsModel.toJson());
+            initialData();
+          }
         }
       },
     );

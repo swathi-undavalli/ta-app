@@ -7,6 +7,7 @@ class AppTextField extends StatefulWidget {
   int? minLines;
   int? maxLines;
   Widget? icon;
+  Widget? suffixIcon;
   double width;
   String? hintText;
   bool required;
@@ -20,7 +21,6 @@ class AppTextField extends StatefulWidget {
   TextInputAction textInputAction;
   bool enableSuggestions;
   Function? finalSubmit;
-  // Function onChanged;
   String? labelText;
   bool isStrictNumber;
 
@@ -41,6 +41,7 @@ class AppTextField extends StatefulWidget {
     this.errorValidator,
     this.onChangedCallBack,
     this.width = 320,
+    this.suffixIcon,
     this.required = false,
     this.keyboardType = TextInputType.name,
     this.textInputAction = TextInputAction.go,
@@ -83,6 +84,7 @@ class _AppTextFieldsState extends State<AppTextField> {
               color: Colors.redAccent,
               fontWeight: FontWeight.bold,
             ),
+            suffixIcon: widget.suffixIcon,
             icon: widget.icon,
             errorText: widget.errorValidator!(),
             labelStyle: TextStyle(

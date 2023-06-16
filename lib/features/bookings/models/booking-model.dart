@@ -74,14 +74,6 @@ class BookingModel {
       return DateTime.parse(date);
     }
 
-    double? checkDouble(dynamic value) {
-      if (value is String) {
-        return double.parse(value);
-      } else {
-        return value.toDouble();
-      }
-    }
-
     return BookingModel(
       pax: List<Map<String, dynamic>>.from(json["PAX"].map((x) => x)),
       activity: List<ActivityModel>.from(
