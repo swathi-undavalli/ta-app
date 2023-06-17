@@ -16,9 +16,7 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/home/model/colors_data.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
-
-import '../../../conditions/controller/conditions-controller.dart';
+import 'package:intl/intl.dart';
 
 class CustomersExpansionPanel extends StatefulWidget {
   final List<ItemModel>? items;
@@ -26,22 +24,29 @@ class CustomersExpansionPanel extends StatefulWidget {
   final Function? onSearchTap;
   final DateTime selectedDate;
 
-  CustomersExpansionPanel({this.items, this.onSearchTap, this.showSearchBar = true, required this.selectedDate});
+  CustomersExpansionPanel(
+      {this.items,
+      this.onSearchTap,
+      this.showSearchBar = true,
+      required this.selectedDate});
 
   @override
-  State<CustomersExpansionPanel> createState() => _CustomersExpansionPanelState();
+  State<CustomersExpansionPanel> createState() =>
+      _CustomersExpansionPanelState();
 }
 
 class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
   final CustomerExpansionPanelLogic logic = CustomerExpansionPanelLogic();
 
-  final CustomerSearchController searchController = Get.put(CustomerSearchController());
+  final CustomerSearchController searchController =
+      Get.put(CustomerSearchController());
 
   List<Widget> expansions = [];
 
   TextEditingController searchTED = TextEditingController();
 
-  BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
+  BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
+      BookingsCalenderWidgetLogicNew();
 
   @override
   Widget build(BuildContext context) {
@@ -52,8 +57,12 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
           if (controller.showSearchField)
             ...generateList(
                 widget.items!.where((ItemModel item) {
-                  if (item.bookingID!.contains(searchTED.text.trim())) return true;
-                  if (item.name!.toLowerCase().contains(searchTED.text.trim().toLowerCase())) return true;
+                  if (item.bookingID!.contains(searchTED.text.trim()))
+                    return true;
+                  if (item.name!
+                      .toLowerCase()
+                      .contains(searchTED.text.trim().toLowerCase()))
+                    return true;
                   return false;
                 }).toList(),
                 context)
@@ -70,12 +79,14 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     expansions = [];
     for (int i = 0; i < itemsList.length; i++) {
       logic.controller.isExpanded.add(false);
-      expansions.add(_buildCustomerDetails(bookingItemModel: itemsList[i], i: i, context: context));
+      expansions.add(_buildCustomerDetails(
+          bookingItemModel: itemsList[i], i: i, context: context));
     }
     return expansions;
   }
 
-  Widget _buildCustomerDetails({ItemModel? bookingItemModel, int? i, required BuildContext context}) {
+  Widget _buildCustomerDetails(
+      {ItemModel? bookingItemModel, int? i, required BuildContext context}) {
     Color getColor() {
       if (bookingItemModel!.bookingModel?.cancelBooking == true) {
         return Color(0xffEE9A9D);
@@ -90,7 +101,8 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
           cc = "Red";
         else if (colorsData!.green.contains(bookingItemModel.activity))
           cc = "Green";
-        else if (colorsData!.white.contains(bookingItemModel.activity)) cc = "White";
+        else if (colorsData!.white.contains(bookingItemModel.activity))
+          cc = "White";
 
         if (cc == "Blue")
           return Color(0xffA9EBF8).withOpacity(0.3);
@@ -105,11 +117,13 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
       return Colors.white;
     }
 
-    final DocumentReference bookingDoc =
-        FirebaseFirestore.instance.collection('bookings').doc(bookingItemModel?.bookingID);
+    final DocumentReference bookingDoc = FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(bookingItemModel?.bookingID);
     return StreamBuilder(
       stream: bookingDoc.snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
         if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
         }
@@ -122,14 +136,17 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
         if (data == null) {
           return Text('Document does not exist');
         }
-        BookingModel bookingModel = BookingModel.fromMap(data as Map<String, dynamic>);
+        BookingModel bookingModel =
+            BookingModel.fromMap(data as Map<String, dynamic>);
         log("booking model ${bookingModel.toMap()}");
         ItemModel itemModel = ItemModel.fromBookings(bookingModel);
         log("item model $itemModel");
-        log("equipmentNotes : ${itemModel.bookingModel!.boatDetails?.employeeNotes}");
 
-        TextEditingController equipmentNotesTED =
-            TextEditingController(text: itemModel.bookingModel!.boatDetails?.employeeNotes);
+        TextEditingController employeeNotesTED = TextEditingController(
+            text: itemModel.bookingModel!
+                    .getBoatDetails(widget.selectedDate)
+                    ?.employeeNotes ??
+                "");
 
         return ExpandableListTile(
           expandedChild: Column(
@@ -139,7 +156,8 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
               SizedBox(height: 10),
               Text(
                 "Booking Details : ",
-                style: TextStyle(fontSize: FontSize.textSize, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    fontSize: FontSize.textSize, fontWeight: FontWeight.w600),
               ),
               SizedBox(height: 10),
               _buildKeyValuePairs("Course Name", itemModel.activity),
@@ -151,7 +169,8 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
               _buildKeyValuePairs(
                 "Registered",
                 "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
-                isDanger: ((itemModel.bookingModel!.pax!.length - 1) != (itemModel.bookingModel!.noOfPersons)),
+                isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
+                    (itemModel.bookingModel!.noOfPersons)),
               ),
               SizedBox(height: 20),
               Row(
@@ -169,12 +188,22 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                   ),
                   InkWell(
                     onTap: () async {
-                      List<Instructor>? instructors = await EmpSelectorBottomSheet.show(
+                      List<Instructor>? instructors =
+                          await EmpSelectorBottomSheet.show(
                         context,
-                        initialSelectedEmployees: itemModel.bookingModel?.boatDetails?.instructors ?? [],
+                        initialSelectedEmployees: itemModel.bookingModel
+                                ?.getBoatDetails(widget.selectedDate)
+                                ?.instructors ??
+                            [],
                       );
 
-                      // await updateBoatDetails(itemModel, instructors: instructors);
+                      log("tap instructors");
+
+                      await updateBoatDetails(
+                        instructors: instructors,
+                        bookingModel: bookingModel,
+                        selectedDate: widget.selectedDate,
+                      );
                     },
                     child: Container(
                       height: 31,
@@ -199,10 +228,21 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                 ],
               ),
               SizedBox(height: 10),
-              if (itemModel.bookingModel?.boatDetails?.instructors != null)
-                ...itemModel.bookingModel!.boatDetails!.instructors!.map(
+              if (itemModel.bookingModel
+                      ?.getBoatDetails(widget.selectedDate)
+                      ?.instructors !=
+                  null)
+                ...itemModel.bookingModel!
+                    .getBoatDetails(widget.selectedDate)!
+                    .instructors!
+                    .map(
                   (e) {
-                    return _buildDiverName(e.name, itemModel.bookingModel!.boatDetails!.instructors!.indexOf(e))
+                    return _buildDiverName(
+                            e.name,
+                            itemModel.bookingModel!
+                                .getBoatDetails(widget.selectedDate)!
+                                .instructors!
+                                .indexOf(e))
                         .paddingOnly(bottom: 6);
                   },
                 ),
@@ -210,17 +250,30 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
               Row(
                 children: [
                   BookingStatus(
-                    initialStatus: bookingModel.boatDetails?.bookingStatus ?? 0,
+                    initialStatus: bookingModel.bookingStatus ?? 0,
                     onChanged: (int status) async {
-                      // await updateBoatDetails(itemModel, bookingStatus: status);
+                      await updateBoatDetails(
+                          bookingModel: bookingModel,
+                          bookingStatus: status,
+                          selectedDate: widget.selectedDate);
                     },
                   ),
                   Spacer(),
                   BoatSelector(
-                    boatName: bookingModel.boatDetails?.boatName ?? "",
-                    boatId: bookingModel.boatDetails?.boatId ?? "",
+                    boatName: bookingModel
+                            .getBoatDetails(widget.selectedDate)
+                            ?.boatName ??
+                        "",
+                    boatId: bookingModel
+                            .getBoatDetails(widget.selectedDate)
+                            ?.boatId ??
+                        "",
                     onChanged: (List<String> boatDetails) async {
-                      // await updateBoatDetails(itemModel, boatId: boatDetails[0], boatName: boatDetails[1]);
+                      await updateBoatDetails(
+                          bookingModel: bookingModel,
+                          boatId: boatDetails[0],
+                          boatName: boatDetails[1],
+                          selectedDate: widget.selectedDate);
                     },
                     selectedDate: widget.selectedDate,
                   ),
@@ -230,7 +283,10 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
               AppTextField(
                 suffixIcon: GestureDetector(
                   onTap: () {
-                    // updateBoatDetails(itemModel.bookingModel, employeeNotes: equipmentNotesTED.text);
+                    updateBoatDetails(
+                        bookingModel: bookingModel,
+                        employeeNotes: employeeNotesTED.text,
+                        selectedDate: widget.selectedDate);
                   },
                   child: Icon(
                     Icons.check_circle_outline_rounded,
@@ -238,7 +294,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                     size: 20,
                   ),
                 ),
-                controller: equipmentNotesTED,
+                controller: employeeNotesTED,
                 hintText: "Equipment Notes",
                 errorValidator: () {
                   return null;
@@ -272,6 +328,8 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
       bookingModel.bookingStatus = bookingStatus;
     } else {
       BoatDetails? boatDetails = bookingModel.getBoatDetails(selectedDate);
+      log(instructors?.toList().toString() ?? "empty");
+      log(boatDetails?.toMap().toString() ?? "");
 
       if (boatDetails == null) {
         boatDetails = BoatDetails(
@@ -295,7 +353,10 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
       );
     }
 
-    await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(
+    await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(bookingModel.id)
+        .set(
           bookingModel.toMap(),
         );
   }
@@ -360,14 +421,22 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
           Text(
             key,
             style: TextStyle(
-                color: Colors.grey[700], fontSize: 13, letterSpacing: 0.3, fontWeight: FontWeight.w600, height: 1.3),
+                color: Colors.grey[700],
+                fontSize: 13,
+                letterSpacing: 0.3,
+                fontWeight: FontWeight.w600,
+                height: 1.3),
           ).paddingOnly(right: 10)
         else
           Expanded(
             child: Text(
               key,
               style: TextStyle(
-                  color: Colors.grey[700], fontSize: 13, letterSpacing: 0.3, fontWeight: FontWeight.w600, height: 1.3),
+                  color: Colors.grey[700],
+                  fontSize: 13,
+                  letterSpacing: 0.3,
+                  fontWeight: FontWeight.w600,
+                  height: 1.3),
             ),
           ),
         Container(
@@ -404,7 +473,8 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.search, size: 20, color: AppColors.text.darkgrey),
+                    Icon(Icons.search,
+                        size: 20, color: AppColors.text.darkgrey),
                     SizedBox(width: 15),
                     Container(
                       width: controller.showSearchField ? 240 : 0,
@@ -413,9 +483,12 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                           widget.onSearchTap!();
                         },
                         decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                            focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                            disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                            enabledBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            focusedBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            disabledBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
                             hintText: 'Search...',
                             hintStyle: TextStyle(fontSize: 14, height: 1)),
                         controller: searchTED,
@@ -430,7 +503,8 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                               searchTED.text = "";
                               searchController.update();
                             },
-                            child: Icon(Icons.close_outlined, size: 20, color: AppColors.text.darkgrey),
+                            child: Icon(Icons.close_outlined,
+                                size: 20, color: AppColors.text.darkgrey),
                           )
                         : SizedBox(),
                   ],
@@ -443,7 +517,8 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
 }
 
 int getCount() {
-  if (counterModel != null && counterModel!.employee != null) return counterModel?.employee ?? 100;
+  if (counterModel != null && counterModel!.employee != null)
+    return counterModel?.employee ?? 100;
   return 100;
 }
 
