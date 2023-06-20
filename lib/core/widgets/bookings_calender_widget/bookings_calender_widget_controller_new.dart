@@ -4,12 +4,12 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import '../../../features/boat/models/boats.dart';
 import '../booking-expansion-panel.dart';
 import 'package:intl/intl.dart';
 
 class BookingsCalenderWidgetLogicNew {
-  BookingsCalenderWidgetControllerNew controller =
-      Get.put(BookingsCalenderWidgetControllerNew());
+  BookingsCalenderWidgetControllerNew controller = Get.put(BookingsCalenderWidgetControllerNew());
 
   Future<void> getBookings(DateTime date) async {
     log("BookingsCalenderWidgetLogicNew : getBookings ${DateFormat("dd-MM-yyyy").format(date)}");
@@ -222,8 +222,7 @@ class BookingsCalenderWidgetLogicNew {
         controller.selectedType = FilterType.Theory;
       else if (controller.poolCount != 0)
         controller.selectedType = FilterType.Pool;
-      else if (controller.diveCount != 0)
-        controller.selectedType = FilterType.Dive;
+      else if (controller.diveCount != 0) controller.selectedType = FilterType.Dive;
     }
 
     controller.expansionItemModels = newItemsList;
@@ -286,8 +285,7 @@ class BookingsCalenderWidgetLogicNew {
       else
         temp = temp.add(Duration(hours: 1));
 
-      if (temp.hour != 0 && temp.hour < endHour + 1)
-        controller.timeTable.add(temp);
+      if (temp.hour != 0 && temp.hour < endHour + 1) controller.timeTable.add(temp);
     }
   }
 
@@ -306,6 +304,7 @@ class BookingsCalenderWidgetLogicNew {
     controller.diveCountA = 0;
     controller.selectedDate = controller.calenderDates[index];
     controller.selectedType = null;
+    controller.selectedBoat = null;
     getBookings(controller.calenderDates[index]);
     getTime();
   }
@@ -317,6 +316,7 @@ class BookingsCalenderWidgetControllerNew extends GetxController {
   List<ItemModel> _expansionBookings = [];
 
   DateTime? _startDate;
+  Boat? selectedBoat;
   bool _showLoading = false;
 
   DateTime _selectedDate = DateTime(

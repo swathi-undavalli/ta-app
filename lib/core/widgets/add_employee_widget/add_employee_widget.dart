@@ -9,10 +9,9 @@ import '../app-button.dart';
 class AddEmployeeWidget extends StatelessWidget {
   String text;
   String subText;
-Function   onTap;
+  Function onTap;
 
-
-  AddEmployeeWidget({required this.text, required this.subText,required this.onTap});
+  AddEmployeeWidget({required this.text, required this.subText, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +59,7 @@ Function   onTap;
                 padding: const EdgeInsets.only(bottom: 20),
                 child: AppButton.miniFlat(
                   onTap: onTap,
-                    // Get.toNamed(AllEmployeesScreen.id);
+                  // Get.toNamed(AllEmployeesScreen.id);
                   text: 'VIEW',
                 ),
               ),
@@ -70,5 +69,4 @@ Function   onTap;
       ),
     );
   }
-
 }

@@ -31,7 +31,6 @@ class ManageBoatsPage extends StatelessWidget {
         isBookingScreen: false,
       );
       return Scaffold(
-        // floatingActionButton: buildFloatingActionButton(),
         backgroundColor: AppColors.background.lightBlue,
         body: RefreshIndicator(
           color: Colors.black,
@@ -75,15 +74,6 @@ class ManageBoatsPage extends StatelessWidget {
   }
 
   ///=========================UI========================///
-
-  Widget buildFloatingActionButton() {
-    return FloatingActionButton(
-      elevation: 0,
-      onPressed: () {},
-      backgroundColor: AppColors.background.black,
-      child: Icon(Icons.add),
-    );
-  }
 
   Widget buildCalendarIcon(BuildContext context, BookingsCalenderWidgetControllerNew controller) {
     return IconButton(

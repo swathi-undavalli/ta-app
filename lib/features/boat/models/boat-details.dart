@@ -3,26 +3,22 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 
 class BoatDetails {
   final String? boatId;
-  final String? boatName;
   final String? employeeNotes;
   final List<Instructor>? instructors;
 
   BoatDetails({
     this.boatId,
-    this.boatName,
     this.employeeNotes,
     this.instructors,
   });
 
   BoatDetails copyWith({
     String? boatId,
-    String? boatName,
     String? employeeNotes,
     List<Instructor>? instructors,
   }) =>
       BoatDetails(
         boatId: boatId ?? this.boatId,
-        boatName: boatName ?? this.boatName,
         employeeNotes: employeeNotes ?? this.employeeNotes,
         instructors: instructors ?? this.instructors,
       );
@@ -35,7 +31,6 @@ class BoatDetails {
   factory BoatDetails.fromJson(Map<String, dynamic> json) {
     return BoatDetails(
       boatId: json["boatId"],
-      boatName: json["boatName"],
       employeeNotes: json["employeeNotes"],
       instructors: List<Instructor>.from(
           (json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
@@ -44,7 +39,6 @@ class BoatDetails {
 
   Map<String, dynamic> toMap() => {
         "boatId": boatId,
-        "boatName": boatName,
         "employeeNotes": employeeNotes,
         "instructors": List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
       };

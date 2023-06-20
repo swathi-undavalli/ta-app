@@ -3,9 +3,7 @@ import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 
 class BookingStatus extends StatefulWidget {
-  const BookingStatus(
-      {Key? key, required this.initialStatus, required this.onChanged})
-      : super(key: key);
+  const BookingStatus({Key? key, required this.initialStatus, required this.onChanged}) : super(key: key);
   final int initialStatus;
   final Function(int status) onChanged;
 
@@ -40,8 +38,7 @@ class _BookingStatusState extends State<BookingStatus> {
             width: 27,
             decoration: BoxDecoration(
               color: getProgressColor(status),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
             ),
             child: Icon(
               Icons.arrow_left,
@@ -54,13 +51,14 @@ class _BookingStatusState extends State<BookingStatus> {
           height: 33,
           decoration: BoxDecoration(
             color: getProgressColor(status),
-            borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
+            // borderRadius: BorderRadius.only(
+            //   topLeft: Radius.circular(4),
+            //   bottomLeft: Radius.circular(4),
+            // ),
           ),
           child: Text(
             bookingStatus[status],
-            style: TextStyle(
-                fontSize: FontSize.small, fontWeight: FontWeight.w600),
+            style: TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.w600),
           ).paddingOnly(left: 15, right: 15, top: 8),
         ),
         SizedBox(width: 2),
@@ -78,9 +76,7 @@ class _BookingStatusState extends State<BookingStatus> {
             width: 27,
             decoration: BoxDecoration(
               color: getProgressColor(status),
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(4),
-                  bottomRight: Radius.circular(4)),
+              borderRadius: BorderRadius.only(topRight: Radius.circular(4), bottomRight: Radius.circular(4)),
             ),
             child: Icon(
               Icons.arrow_right,
@@ -108,11 +104,5 @@ class _BookingStatusState extends State<BookingStatus> {
     }
   }
 
-  List<String> bookingStatus = [
-    "Booking Done",
-    "Paper work",
-    "Pool Session",
-    "Dive Session",
-    "Left Dive Center"
-  ];
+  List<String> bookingStatus = ["Booking Done", "Paper work", "Pool Session", "Dive Session", "Left Dive Center"];
 }

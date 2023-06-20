@@ -31,6 +31,9 @@ class EmployeeAccess extends StatelessWidget {
 
 class AccessRights {
   static AccessLevels? get accessLevel {
+    if(currentEmployee == null){
+      currentEmployee = Employee(id: "");
+    }
     return currentEmployee!.accessLevels;
   }
 

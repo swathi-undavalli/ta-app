@@ -7,54 +7,51 @@ import 'package:temple_adventures/features/boat/presentation/widgets/boat-detail
 import 'package:intl/intl.dart';
 
 class BoatSelector extends StatefulWidget {
-  const BoatSelector(
-      {Key? key,
-      required this.boatName,
-      required this.selectedDate,
-      required this.boatId,
-      required this.onChanged})
+  const BoatSelector({Key? key, required this.selectedDate, required this.selectedBoatId, required this.onChanged})
       : super(key: key);
 
-  final String boatName;
-  final String boatId;
+  final String selectedBoatId;
   final DateTime selectedDate;
-  final Function(List<String> boatDetails) onChanged;
+  final Function(Boat boatDetails) onChanged;
   @override
   State<BoatSelector> createState() => _BoatSelectorState();
 }
 
 class _BoatSelectorState extends State<BoatSelector> {
-  List<Boat>? allBoats;
+  List<Boat> allBoats = [];
+  Boat? selectedBoat;
   @override
   void initState() {
-    initialData();
+    init();
     super.initState();
   }
 
-  Future<void> initialData() async {
+  Future<void> init() async {
     var d = await FirebaseFirestore.instance
         .collection("dailyBoats")
         .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
         .get();
     Map<String, dynamic>? data = d.data();
-    log("data.toString()");
-    log(data.toString());
     BoatsModel? boatsModel = BoatsModel.fromJson(data);
-    allBoats = boatsModel.boats;
+    allBoats = boatsModel.boats ?? [];
+    allBoats.forEach((boat) {
+      if (boat.id == widget.selectedBoatId) {
+        selectedBoat = boat;
+      }
+    });
+    setState(() {});
   }
 
   @override
   Widget build(BuildContext context) {
-    return PopupMenuButton<String>(
-      child: (widget.boatName == "")
+    return PopupMenuButton<Boat>(
+      child: (selectedBoat == null)
           ? Container(
               height: 31,
               width: 100,
-              decoration: BoxDecoration(
-                  color: Colors.black, borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(20)),
               child: Center(
-                child: Text("Select Boat",
-                    style: TextStyle(fontSize: 12, color: Colors.white)),
+                child: Text("Select Boat", style: TextStyle(fontSize: 12, color: Colors.white)),
               ),
             )
           : Column(
@@ -71,7 +68,7 @@ class _BoatSelectorState extends State<BoatSelector> {
                 Row(
                   children: [
                     Text(
-                      widget.boatName,
+                      selectedBoat?.name ?? "-",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.black,
@@ -80,10 +77,7 @@ class _BoatSelectorState extends State<BoatSelector> {
                     ).paddingAll(5),
                     Text(
                       "Change",
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline),
+                      style: TextStyle(fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
                     ).paddingOnly(left: 5, right: 5),
                     Icon(
                       Icons.edit,
@@ -96,23 +90,27 @@ class _BoatSelectorState extends State<BoatSelector> {
             ),
       itemBuilder: (BuildContext context) {
         return [
-          if (allBoats != null)
-            ...allBoats!.map(
-              (e) => PopupMenuItem<String>(
-                value: e.name,
-                onTap: () {
-                  setState(() {
-                    widget.onChanged([e.id, e.name]);
-                  });
-                },
-                child: Text(
-                  e.name,
-                  style: TextStyle(fontSize: 12),
-                ),
+          ...allBoats.map(
+            (Boat boat) => PopupMenuItem<Boat>(
+              value: boat,
+              onTap: () {
+                setState(() {
+                  widget.onChanged(boat);
+                });
+              },
+              child: Text(
+                boat.name,
+                style: TextStyle(fontSize: 12),
               ),
             ),
-          PopupMenuItem<String>(
-            value: "Add custom",
+          ),
+          PopupMenuItem<Boat>(
+            value: Boat(
+              id: "Add new",
+              captainId: '',
+              captainName: '',
+              name: '',
+            ),
             onTap: () {},
             child: Column(
               children: [
@@ -129,16 +127,16 @@ class _BoatSelectorState extends State<BoatSelector> {
           ),
         ];
       },
-      onSelected: (String value) async {
-        if (value == 'Add custom') {
-          BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(context,
-              date: widget.selectedDate);
+      onSelected: (Boat value) async {
+        if (value.id == "Add new") {
+          BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(context, date: widget.selectedDate);
+
           if (boatsModel != null) {
             await FirebaseFirestore.instance
                 .collection("dailyBoats")
                 .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
                 .set(boatsModel.toJson());
-            initialData();
+            init();
           }
         }
       },
