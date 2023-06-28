@@ -19,12 +19,18 @@ class BoatDetailsBottomSheet extends StatefulWidget {
   const BoatDetailsBottomSheet({
     Key? key,
     required this.selectedDate,
+    required this.isBoatEdit,
+    this.boat,
   }) : super(key: key);
 
   final DateTime selectedDate;
+  final Boat? boat;
+  final bool isBoatEdit;
 
   static Future<BoatsModel?> show(BuildContext context,
-      {required DateTime date}) async {
+      {required DateTime date,
+      required bool isBoatEdit,
+      Boat? initialBoat}) async {
     var data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -32,6 +38,8 @@ class BoatDetailsBottomSheet extends StatefulWidget {
       builder: (BuildContext context) {
         return BoatDetailsBottomSheet(
           selectedDate: date,
+          isBoatEdit: isBoatEdit,
+          boat: initialBoat,
         );
       },
     );
@@ -44,13 +52,26 @@ class BoatDetailsBottomSheet extends StatefulWidget {
 }
 
 class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
-  final CollectionReference employeesCollection =
-      FirebaseFirestore.instance.collection('employees');
+  final CollectionReference employeesCollection = FirebaseFirestore.instance.collection('employees');
   Employee? selectedCaptain;
-  TextEditingController boatTED = TextEditingController();
+  late TextEditingController boatTED;
   @override
   void initState() {
+    boatTED = TextEditingController(text: widget.boat?.name ?? "");
+
+    if (widget.isBoatEdit) fetchEmployeeData();
     super.initState();
+  }
+
+  Future<void> fetchEmployeeData() async {
+    var data = await FirebaseFirestore.instance
+        .collection('employees')
+        .doc(widget.boat?.captainId)
+        .get();
+
+    var doc = data.data();
+    selectedCaptain = Employee.fromMap(doc as Map<String, dynamic>);
+    if (mounted) setState(() {});
   }
 
   @override
@@ -166,35 +187,10 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             child: AppButton.flat(
               height: 50,
               width: 145,
-              text: "Submit",
+              text: (widget.isBoatEdit) ? "Update" : "Submit",
               onTap: () async {
                 if (boatTED.text != "" && selectedCaptain != null) {
-                  int boatId;
-                  var d = await FirebaseFirestore.instance
-                      .collection("dailyBoats")
-                      .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
-                      .get();
-                  Map<String, dynamic>? data = d.data();
-                  log("data.toString()");
-                  log(data.toString());
-                  BoatsModel? boatsModel = BoatsModel.fromJson(data);
-
-                  if (data != null) {
-                    boatId = boatsModel.boats!.length;
-                  } else {
-                    boatId = 0;
-                  }
-
-                  Boat boat = Boat(
-                      captainId: selectedCaptain?.id ?? "",
-                      captainName: selectedCaptain?.name ?? "",
-                      id: boatId.toString(),
-                      name: boatTED.text);
-
-                  boatsModel.boats?.add(boat);
-                  log(boatsModel.toJson().toString());
-
-                  Navigator.pop(context, boatsModel);
+                  await addEditBoat(context);
                 } else {
                   if (boatTED.text == "") {
                     showToast("please enter the boat details");
@@ -211,5 +207,41 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         ],
       ),
     );
+  }
+
+  Future<void> addEditBoat(BuildContext context) async {
+    String boatId;
+    var d = await FirebaseFirestore.instance
+        .collection("dailyBoats")
+        .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
+        .get();
+    Map<String, dynamic>? data = d.data();
+    log(data.toString());
+    BoatsModel? boatsModel = BoatsModel.fromJson(data);
+
+    if (!widget.isBoatEdit) {
+      if (data != null) {
+        boatId = boatsModel.boats!.length.toString();
+      } else {
+        boatId = "0";
+      }
+      Boat boat = Boat(
+          captainId: selectedCaptain?.id ?? "",
+          captainName: selectedCaptain?.name ?? "",
+          id: boatId,
+          name: boatTED.text);
+      boatsModel.boats?.add(boat);
+    } else {
+      boatId = widget.boat!.id;
+      Boat boat = Boat(
+          captainId: selectedCaptain?.id ?? "",
+          captainName: selectedCaptain?.name ?? "",
+          id: boatId,
+          name: boatTED.text);
+
+      boatsModel.boats?.removeWhere((b) => b.id == boatId);
+      boatsModel.boats?.add(boat);
+    }
+    Navigator.pop(context, boatsModel);
   }
 }

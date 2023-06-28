@@ -1,13 +1,20 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:temple_adventures/features/boat/models/boats.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/boat-details-bottomSheet.dart';
 import 'package:intl/intl.dart';
 
+import '../screens/edit-boat-details.dart';
+
 class BoatSelector extends StatefulWidget {
-  const BoatSelector({Key? key, required this.selectedDate, required this.selectedBoatId, required this.onChanged})
+  const BoatSelector(
+      {Key? key,
+      required this.selectedDate,
+      required this.selectedBoatId,
+      required this.onChanged})
       : super(key: key);
 
   final String selectedBoatId;
@@ -49,9 +56,11 @@ class _BoatSelectorState extends State<BoatSelector> {
           ? Container(
               height: 31,
               width: 100,
-              decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(20)),
               child: Center(
-                child: Text("Select Boat", style: TextStyle(fontSize: 12, color: Colors.white)),
+                child: Text("Select Boat",
+                    style: TextStyle(fontSize: 12, color: Colors.white)),
               ),
             )
           : Column(
@@ -77,7 +86,10 @@ class _BoatSelectorState extends State<BoatSelector> {
                     ).paddingAll(5),
                     Text(
                       "Change",
-                      style: TextStyle(fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
+                      style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline),
                     ).paddingOnly(left: 5, right: 5),
                     Icon(
                       Icons.edit,
@@ -129,7 +141,8 @@ class _BoatSelectorState extends State<BoatSelector> {
       },
       onSelected: (Boat value) async {
         if (value.id == "Add new") {
-          BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(context, date: widget.selectedDate);
+          BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(context,
+              date: widget.selectedDate, isBoatEdit: false);
 
           if (boatsModel != null) {
             await FirebaseFirestore.instance

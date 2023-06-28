@@ -1,25 +1,11 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/booking-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
-import 'package:temple_adventures/features/boat/models/boat-details.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/boat-selector.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/customer-booking-status.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/customer-expansion-panel-controller.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/customer-expandable-listTile.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
-import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/home/model/colors_data.dart';
-import 'package:intl/intl.dart';
-
-import '../../models/boats.dart';
 
 class CustomersExpansionPanel extends StatefulWidget {
   final List<ItemModel>? items;
@@ -27,22 +13,29 @@ class CustomersExpansionPanel extends StatefulWidget {
   final Function? onSearchTap;
   final DateTime selectedDate;
 
-  CustomersExpansionPanel({this.items, this.onSearchTap, this.showSearchBar = true, required this.selectedDate});
+  CustomersExpansionPanel(
+      {this.items,
+      this.onSearchTap,
+      this.showSearchBar = true,
+      required this.selectedDate});
 
   @override
-  State<CustomersExpansionPanel> createState() => _CustomersExpansionPanelState();
+  State<CustomersExpansionPanel> createState() =>
+      _CustomersExpansionPanelState();
 }
 
 class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
   final CustomerExpansionPanelLogic logic = CustomerExpansionPanelLogic();
 
-  final CustomerSearchController searchController = Get.put(CustomerSearchController());
+  final CustomerSearchController searchController =
+      Get.put(CustomerSearchController());
 
   List<Widget> expansions = [];
 
   TextEditingController searchTED = TextEditingController();
 
-  BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
+  BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
+      BookingsCalenderWidgetLogicNew();
 
   @override
   Widget build(BuildContext context) {
@@ -53,8 +46,12 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
           if (controller.showSearchField)
             ...generateList(
                 widget.items!.where((ItemModel item) {
-                  if (item.bookingID!.contains(searchTED.text.trim())) return true;
-                  if (item.name!.toLowerCase().contains(searchTED.text.trim().toLowerCase())) return true;
+                  if (item.bookingID!.contains(searchTED.text.trim()))
+                    return true;
+                  if (item.name!
+                      .toLowerCase()
+                      .contains(searchTED.text.trim().toLowerCase()))
+                    return true;
                   return false;
                 }).toList(),
                 context)
@@ -71,12 +68,14 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
     expansions = [];
     for (int i = 0; i < itemsList.length; i++) {
       logic.controller.isExpanded.add(false);
-      expansions.add(_buildCustomerDetails(itemModel: itemsList[i], i: i, context: context));
+      expansions.add(_buildCustomerDetails(
+          itemModel: itemsList[i], i: i, context: context));
     }
     return expansions;
   }
 
-  Widget _buildCustomerDetails({required ItemModel itemModel, int? i, required BuildContext context}) {
+  Widget _buildCustomerDetails(
+      {required ItemModel itemModel, int? i, required BuildContext context}) {
     Color getColor() {
       if (itemModel.bookingModel?.cancelBooking == true) {
         return Color(0xffEE9A9D);
@@ -106,7 +105,6 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
       return Colors.white;
     }
 
-
     return CustomerExpandableListTile(
       title:
           "${itemModel.name!.toLowerCase().capitalizeFirst!}  x  ${(itemModel.bookingModel!.noOfPersons.toString())}",
@@ -132,7 +130,8 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Icon(Icons.search, size: 20, color: AppColors.text.darkgrey),
+                    Icon(Icons.search,
+                        size: 20, color: AppColors.text.darkgrey),
                     SizedBox(width: 15),
                     Container(
                       width: controller.showSearchField ? 240 : 0,
@@ -141,9 +140,12 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                           widget.onSearchTap!();
                         },
                         decoration: InputDecoration(
-                            enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                            focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                            disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                            enabledBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            focusedBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
+                            disabledBorder:
+                                OutlineInputBorder(borderSide: BorderSide.none),
                             hintText: 'Search...',
                             hintStyle: TextStyle(fontSize: 14, height: 1)),
                         controller: searchTED,
@@ -158,7 +160,8 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                               searchTED.text = "";
                               searchController.update();
                             },
-                            child: Icon(Icons.close_outlined, size: 20, color: AppColors.text.darkgrey),
+                            child: Icon(Icons.close_outlined,
+                                size: 20, color: AppColors.text.darkgrey),
                           )
                         : SizedBox(),
                   ],

@@ -6,7 +6,7 @@
 // import 'package:temple_adventures/core/constants/constants.dart';
 // import 'package:temple_adventures/core/util/ta-image.dart';
 // import 'package:temple_adventures/features/boat/models/boat-model.dart';
-// import 'package:temple_adventures/features/boat/presentation/screens/editBoat-page.dart';
+// import 'package:temple_adventures/features/boat/presentation/screens/edit-boat-details.dart';
 // import 'package:url_launcher/url_launcher.dart';
 //
 // class AllBoatsExpansionPanelWidget extends StatefulWidget {

@@ -20,7 +20,7 @@ import 'package:temple_adventures/d2.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/editBoat-page.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/edit-boat-details.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/newBoat-page.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
@@ -130,8 +130,6 @@ class MyApp extends StatelessWidget {
       ),
       routes: {
         AllActivitiesScreen.id: (context) => AllActivitiesScreen(),
-        // EditBoatPage.id: (context) => EditBoatPage(),
-        // NewBoatPage.id: (context) => NewBoatPage(),
         AddNewActivityScreen.id: (context) => AddNewActivityScreen(),
         ActivityEditScreen.id: (context) => ActivityEditScreen(),
         AllBookingsScreen.id: (context) => AllBookingsScreen(),
@@ -153,7 +151,6 @@ class MyApp extends StatelessWidget {
         EmployeeDetailsScreen.id: (context) => EmployeeDetailsScreen(),
         AutoUpdateView.id: (context) => AutoUpdateView(),
         Dummy.id: (context) => Dummy(),
-        // ChooseBoatPage.id: (context) => ChooseBoatPage(),
         D2.id: (context) => D2(),
         IDProofScreen.id: (context) => IDProofScreen(),
         AllIDProofsScreen.id: (context) => AllIDProofsScreen(),
@@ -161,7 +158,6 @@ class MyApp extends StatelessWidget {
         AllFreelancersScreen.id: (context) => AllFreelancersScreen(),
         AddFreelanceScreen.id: (context) => AddFreelanceScreen(),
         FreelanceDetailsScreen.id: (context) => FreelanceDetailsScreen(),
-        // AllBoatsPage.id: (context) => AllBoatsPage(),
         AddPaymentsScreen.id: (context) => AddPaymentsScreen(),
         EditPaymentsScreen.id: (context) => EditPaymentsScreen(),
         AdminPortalScreen.id: (context) => AdminPortalScreen(),
