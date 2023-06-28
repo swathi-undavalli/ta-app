@@ -92,23 +92,23 @@ class _BookingStatusState extends State<BookingStatus> {
 
   Color getProgressColor(int index) {
     if (index == 0) {
-      return Colors.white70;
+      return Colors.white24;
     } else if (index == 1) {
-      return Colors.black26;
+      return Colors.white54;
     } else if (index == 2) {
-      return AppColors.text.skyBlue.withOpacity(0.5);
-    } else if (index == 3) {
-      return Colors.red.withOpacity(0.7);
-    } else if (index == 4) {
-      return Colors.yellow.withOpacity(0.7);
-    } else if (index == 5) {
       return Colors.white70;
-    } else if (index == 6) {
-      return Colors.black26;
-    } else if (index == 7) {
+    } else if (index == 3) {
+      return Colors.white.withOpacity(0.8);
+    } else if (index == 4) {
+      return AppColors.text.skyBlue.withOpacity(0.25);
+    } else if (index == 5) {
       return AppColors.text.skyBlue.withOpacity(0.5);
-    } else if (index == 8) {
+    } else if (index == 6) {
+      return Colors.red.withOpacity(0.5);
+    } else if (index == 7) {
       return Colors.red.withOpacity(0.7);
+    } else if (index == 8) {
+      return Colors.yellow.withOpacity(0.5);
     } else if (index == 9) {
       return Colors.yellow.withOpacity(0.7);
     } else {
