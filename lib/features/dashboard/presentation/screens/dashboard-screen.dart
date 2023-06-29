@@ -1,21 +1,13 @@
-import 'dart:developer';
-
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/boat-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/dashboard/controller/dashboard-controller.dart';
 import 'package:temple_adventures/features/home/presentation/screens/home-page.dart';
 import 'package:temple_adventures/features/home/presentation/widgets/nav-drawer.dart';
-import 'package:temple_adventures/features/weather/presentation/screens/weather-page.dart';
 import 'package:temple_adventures/main.dart';
-
-import '../../../../notification-screen.dart';
 import '../../../conditions/screens/conditions-screen.dart';
 
 late DashBoardScreenLogic dashboardLogic;

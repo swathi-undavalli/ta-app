@@ -19,9 +19,11 @@ class ActivityEditScreen extends StatelessWidget {
   final ActivityModel? activityArg = Get.arguments;
   ActivityEditLogic logic = ActivityEditLogic();
   AllActivitiesLogic allActivitiesLogic = AllActivitiesLogic();
+
   ActivityEditScreen() {
     logic.controller.priceTED.text = activityArg!.price.toString();
     logic.controller.nameTED.text = activityArg!.name!;
+    logic.controller.shortNameTED.text = activityArg?.shortName ?? "";
     logic.controller.colorTED.text = activityArg!.color!;
   }
 
@@ -45,6 +47,10 @@ class ActivityEditScreen extends StatelessWidget {
                     buildTextFields(
                         name: "Activity Name",
                         textEditingController: controller.nameTED,
+                        keyBoardType: TextInputType.name),
+                    buildTextFields(
+                        name: "Short Name",
+                        textEditingController: controller.shortNameTED,
                         keyBoardType: TextInputType.name),
                     buildTextFields(
                         name: "Price",
@@ -126,6 +132,7 @@ class ActivityEditScreen extends StatelessWidget {
               textColor: AppColors.text.white,
               onTap: () async {
                 activityArg!.name = controller.nameTED.text;
+                activityArg!.shortName = controller.shortNameTED.text;
                 activityArg!.price = int.parse(controller.priceTED.text);
                 activityArg!.color = controller.colorTED.text;
                 await FirebaseFirestore.instance

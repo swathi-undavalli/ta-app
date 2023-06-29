@@ -2,20 +2,24 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
+import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 
 class EmpSelectorBottomSheet extends StatefulWidget {
   final List<Instructor> initialSelectedInstructors;
+  final bool isCaptainSelector;
 
   const EmpSelectorBottomSheet({
     Key? key,
     required this.initialSelectedInstructors,
+    required this.isCaptainSelector,
   }) : super(key: key);
 
   static Future<List<Instructor>?> show(
     BuildContext context, {
     required List<Instructor> initialSelectedEmployees,
+    required bool captainSelector,
   }) async {
     var data = await showModalBottomSheet(
       context: context,
@@ -23,6 +27,7 @@ class EmpSelectorBottomSheet extends StatefulWidget {
       builder: (BuildContext context) {
         return EmpSelectorBottomSheet(
           initialSelectedInstructors: initialSelectedEmployees,
+          isCaptainSelector: captainSelector,
         );
       },
     );
@@ -150,44 +155,54 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                       Employee employee = Employee.fromMap(
                           document.data() as Map<String, dynamic>);
 
-                      Instructor instructor = Instructor.fromEmployee(employee);
+                      if (employee.role == 'Dive Team' ||
+                          employee.role == 'Captain Team') {
+                        Instructor instructor =
+                            Instructor.fromEmployee(employee);
 
-                      return InkWell(
-                        onTap: () {
-                          if (selectedInstructors.contains(instructor)) {
-                            selectedInstructors.remove(instructor);
-                          } else {
-                            selectedInstructors.add(instructor);
-                            log(selectedInstructors.toString());
-                          }
-                          setState(() {});
-                        },
-                        child: Row(
-                          children: [
-                            Container(
-                              child: Text(
-                                employee.name,
-                                style: TextStyle(
-                                  fontSize: 16,
+                        return InkWell(
+                          onTap: () {
+                            if (selectedInstructors.contains(instructor)) {
+                              selectedInstructors.remove(instructor);
+                            } else {
+                              if (!widget.isCaptainSelector ||
+                                  selectedInstructors.length < 2) {
+                                selectedInstructors.add(instructor);
+                              } else {
+                                showToast("Only two captains can be selected");
+                              }
+                            }
+                            setState(() {});
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                child: Text(
+                                  employee.name,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ).paddingOnly(
+                                  left: 30,
+                                  top: 10,
+                                  bottom: 10,
                                 ),
-                              ).paddingOnly(
-                                left: 30,
-                                top: 10,
-                                bottom: 10,
                               ),
-                            ),
-                            Spacer(),
-                            if (selectedInstructors.contains(employee))
-                              Icon(
-                                Icons.check_circle,
-                                color: Colors.green,
+                              Spacer(),
+                              if (selectedInstructors.contains(employee))
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                ),
+                              SizedBox(
+                                width: 30,
                               ),
-                            SizedBox(
-                              width: 30,
-                            ),
-                          ],
-                        ),
-                      );
+                            ],
+                          ),
+                        );
+                      } else {
+                        return SizedBox();
+                      }
                     } catch (e) {
                       return SizedBox();
                     }

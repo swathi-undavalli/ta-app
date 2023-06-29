@@ -1,18 +1,13 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
-import 'package:temple_adventures/features/boat/models/boat-model.dart';
 import 'package:temple_adventures/features/boat/models/boats.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/captain-selector-bottomSheet.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
-import 'package:temple_adventures/features/conditions/controller/conditions-controller.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:intl/intl.dart';
 
 class BoatDetailsBottomSheet extends StatefulWidget {
@@ -52,26 +47,58 @@ class BoatDetailsBottomSheet extends StatefulWidget {
 }
 
 class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
-  final CollectionReference employeesCollection = FirebaseFirestore.instance.collection('employees');
-  Employee? selectedCaptain;
+  final CollectionReference employeesCollection =
+      FirebaseFirestore.instance.collection('employees');
+  List<Instructor> selectedCaptains = [];
   late TextEditingController boatTED;
+  late TextEditingController surfaceSupportTED;
+  late TextEditingController notesTED;
+  int nitroxInt = 0;
+  int airInt = 0;
+  TimeOfDay? selectedTime;
+
   @override
   void initState() {
     boatTED = TextEditingController(text: widget.boat?.name ?? "");
-
+    surfaceSupportTED =
+        TextEditingController(text: widget.boat?.surfaceSupport ?? "");
+    notesTED = TextEditingController(text: widget.boat?.notes ?? "");
+    nitroxInt = widget.boat?.nitroxInt ?? 0;
+    airInt = widget.boat?.airInt ?? 0;
     if (widget.isBoatEdit) fetchEmployeeData();
     super.initState();
   }
 
   Future<void> fetchEmployeeData() async {
-    var data = await FirebaseFirestore.instance
-        .collection('employees')
-        .doc(widget.boat?.captainId)
-        .get();
+    if (widget.boat?.captains != null) {
+      log(widget.boat!.captains.toString());
 
-    var doc = data.data();
-    selectedCaptain = Employee.fromMap(doc as Map<String, dynamic>);
+      selectedCaptains.addAll(widget.boat!.captains as Iterable<Instructor>);
+      log(selectedCaptains.toString());
+    }
+
     if (mounted) setState(() {});
+  }
+
+  Future<void> selectTime(BuildContext context) async {
+    final TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: selectedTime ?? TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        selectedTime = pickedTime;
+      });
+    }
+  }
+
+  String formatTime(TimeOfDay time) {
+    final now = DateTime.now();
+    final selectedDateTime =
+        DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    final formattedTime = DateFormat('hh:mm a').format(selectedDateTime);
+    return formattedTime;
   }
 
   @override
@@ -95,7 +122,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Text(
-                "Add Boat",
+                (widget.isBoatEdit) ? "Edit Boat" : "Add Boat",
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 20,
@@ -111,48 +138,55 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             ],
           ),
           SizedBox(height: 20),
-          (selectedCaptain == null)
+          (selectedCaptains.isEmpty)
               ? AppButton.miniFlat(
-                  text: "Add Captain",
+                  text: "Add Captains",
                   onTap: () async {
-                    selectedCaptain = await CaptainSelectorBottomSheet.show(
-                      context,
-                      initialSelectedCaptain: selectedCaptain,
-                    );
+                    selectedCaptains = (await EmpSelectorBottomSheet.show(
+                            context,
+                            initialSelectedEmployees: selectedCaptains,
+                            captainSelector: true)) ??
+                        [];
                     setState(() {});
-                    log(selectedCaptain.toString());
                   },
                 )
               : Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Selected Captain :",
+                      "Selected Captains :",
                       style: TextStyle(
                         fontSize: 14,
                         color: Colors.black,
                         fontWeight: FontWeight.bold,
-                        // decoration: TextDecoration.underline
                       ),
                     ),
                     SizedBox(height: 10),
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          selectedCaptain?.name ?? "",
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.black,
-                            // fontWeight: FontWeight.bold,
-                          ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            ...selectedCaptains.map(
+                              (e) => Text(
+                                "${e.name}",
+                                style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.black,
+                                ),
+                              ).paddingOnly(bottom: 4),
+                            ),
+                          ],
                         ),
                         GestureDetector(
                           onTap: () async {
-                            selectedCaptain =
-                                await CaptainSelectorBottomSheet.show(
-                              context,
-                              initialSelectedCaptain: selectedCaptain,
-                            );
+                            selectedCaptains =
+                                (await EmpSelectorBottomSheet.show(context,
+                                        initialSelectedEmployees:
+                                            selectedCaptains,
+                                        captainSelector: true)) ??
+                                    [];
                             setState(() {});
                           },
                           child: Text(
@@ -183,13 +217,76 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             },
           ),
           SizedBox(height: 20),
+          Row(
+            children: [
+              Text(
+                "Boat time",
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(width: 20),
+              GestureDetector(
+                onTap: () {
+                  log(selectedTime.toString());
+                  selectTime(context);
+                },
+                child: Container(
+                  height: 30,
+                  width: 100,
+                  decoration: BoxDecoration(
+                      border: Border.all(color: Colors.black),
+                      borderRadius: BorderRadius.circular(5)),
+                  child: Center(
+                    child: Text(
+                      selectedTime != null
+                          ? formatTime(selectedTime!)
+                          : 'No time selected',
+                      style:
+                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+              )
+            ],
+          ),
+          AppTextField(
+            hintText: "Surface Support",
+            controller: surfaceSupportTED,
+            errorValidator: () {
+              return null;
+            },
+            validator: (_) {
+              return null;
+            },
+          ),
+          AppTextField(
+            hintText: "Notes",
+            controller: notesTED,
+            errorValidator: () {
+              return null;
+            },
+            validator: (_) {
+              return null;
+            },
+          ),
+          SizedBox(height: 20),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              buildAirNitrox(title: 'Nitrox', isNitrox: true),
+              buildAirNitrox(title: 'Air', isNitrox: false),
+            ],
+          ),
+          SizedBox(height: 30),
           Center(
             child: AppButton.flat(
               height: 50,
               width: 145,
               text: (widget.isBoatEdit) ? "Update" : "Submit",
               onTap: () async {
-                if (boatTED.text != "" && selectedCaptain != null) {
+                if (boatTED.text != "" && selectedCaptains != []) {
                   await addEditBoat(context);
                 } else {
                   if (boatTED.text == "") {
@@ -209,6 +306,63 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     );
   }
 
+  Widget buildAirNitrox({required String title, required bool isNitrox}) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 15),
+        Row(
+          children: [
+            buildIncrementDecrement(
+                onTap: () {
+                  if (isNitrox) {
+                    nitroxInt += 1;
+                  } else {
+                    airInt += 1;
+                  }
+                  setState(() {});
+                },
+                icon: Icons.add),
+            SizedBox(width: 15),
+            Text((isNitrox) ? nitroxInt.toString() : airInt.toString()),
+            SizedBox(width: 15),
+            buildIncrementDecrement(
+                onTap: () {
+                  if (isNitrox && nitroxInt > 0) {
+                    nitroxInt -= 1;
+                  } else if (airInt > 0) {
+                    airInt -= 1;
+                  }
+                  setState(() {});
+                },
+                icon: Icons.remove),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildIncrementDecrement(
+      {required Function onTap, required IconData icon}) {
+    return GestureDetector(
+        onTap: () {
+          onTap();
+        },
+        child: Container(
+          height: 30,
+          width: 30,
+          child: Icon(icon, size: 14),
+          color: Colors.grey.shade400,
+        ));
+  }
+
   Future<void> addEditBoat(BuildContext context) async {
     String boatId;
     var d = await FirebaseFirestore.instance
@@ -226,18 +380,24 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         boatId = "0";
       }
       Boat boat = Boat(
-          captainId: selectedCaptain?.id ?? "",
-          captainName: selectedCaptain?.name ?? "",
+          captains: selectedCaptains,
           id: boatId,
-          name: boatTED.text);
+          name: boatTED.text,
+          surfaceSupport: surfaceSupportTED.text,
+          notes: notesTED.text,
+          nitroxInt: nitroxInt,
+          airInt: airInt);
       boatsModel.boats?.add(boat);
     } else {
       boatId = widget.boat!.id;
       Boat boat = Boat(
-          captainId: selectedCaptain?.id ?? "",
-          captainName: selectedCaptain?.name ?? "",
+          captains: selectedCaptains,
           id: boatId,
-          name: boatTED.text);
+          name: boatTED.text,
+          surfaceSupport: surfaceSupportTED.text,
+          notes: notesTED.text,
+          nitroxInt: nitroxInt,
+          airInt: airInt);
 
       boatsModel.boats?.removeWhere((b) => b.id == boatId);
       boatsModel.boats?.add(boat);

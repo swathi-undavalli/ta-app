@@ -9,6 +9,7 @@ import 'package:temple_adventures/features/bookings/presentation/widgets/app-tex
 class AddNewActivityScreen extends StatelessWidget {
   static const String id = "AddNewActivityScreen";
   final AddNewActivityLogic logic = AddNewActivityLogic();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +31,11 @@ class AddNewActivityScreen extends StatelessWidget {
                       buildTextFields(
                           name: "Name",
                           textEditingController: controller.nameTED,
+                          focusNode: controller.nameNode,
+                          nextFocusNode: controller.priceNode),
+                      buildTextFields(
+                          name: "Short name",
+                          textEditingController: controller.shortNameTED,
                           focusNode: controller.nameNode,
                           nextFocusNode: controller.priceNode),
                       buildTextFields(

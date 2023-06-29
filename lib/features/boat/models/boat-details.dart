@@ -2,24 +2,28 @@ import 'dart:convert';
 import 'package:temple_adventures/features/home/model/employee.dart';
 
 class BoatDetails {
-  final String? boatId;
+  int? bookingStatus;
   final String? employeeNotes;
   final List<Instructor>? instructors;
+  Map<String, dynamic>? boatId;
 
   BoatDetails({
+    this.bookingStatus,
     this.boatId,
     this.employeeNotes,
     this.instructors,
   });
 
   BoatDetails copyWith({
-    String? boatId,
+    Map<String, dynamic>? boatId,
     String? employeeNotes,
+    int? bookingStatus,
     List<Instructor>? instructors,
   }) =>
       BoatDetails(
         boatId: boatId ?? this.boatId,
         employeeNotes: employeeNotes ?? this.employeeNotes,
+        bookingStatus: bookingStatus ?? this.bookingStatus,
         instructors: instructors ?? this.instructors,
       );
 
@@ -28,10 +32,12 @@ class BoatDetails {
 
   String toRawJson() => json.encode(toMap());
 
-  factory BoatDetails.fromJson(Map<String, dynamic> json) {
+  factory BoatDetails.fromJson(Map<String, dynamic>? json) {
+    if (json == null) return BoatDetails();
     return BoatDetails(
-      boatId: json["boatId"],
+      boatId: json["boatId"] ?? {},
       employeeNotes: json["employeeNotes"],
+      bookingStatus: json["bookingStatus"],
       instructors: List<Instructor>.from(
           (json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
     );
@@ -39,8 +45,10 @@ class BoatDetails {
 
   Map<String, dynamic> toMap() => {
         "boatId": boatId,
+        "bookingStatus": bookingStatus,
         "employeeNotes": employeeNotes,
-        "instructors": List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
+        "instructors":
+            List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
       };
 }
 

@@ -8,6 +8,7 @@ class ActivityEditLogic {
 class ActivityEditController extends GetxController {
   TextEditingController priceTED = TextEditingController();
   TextEditingController nameTED = TextEditingController();
+  TextEditingController shortNameTED = TextEditingController();
   TextEditingController colorTED = TextEditingController();
 
   List<String> colorCode = ['Blue', 'Green', 'Purple', 'Red', 'White'];
@@ -16,5 +17,6 @@ class ActivityEditController extends GetxController {
     priceTED.text = "";
     colorTED.text = "";
     nameTED.text = "";
+    shortNameTED.text = "";
   }
 }

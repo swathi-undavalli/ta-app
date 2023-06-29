@@ -11,8 +11,6 @@ import 'package:temple_adventures/features/Freelancers/presentation/screens/all-
 import 'package:temple_adventures/features/Freelancers/presentation/screens/freelance-details-screen.dart';
 import 'package:temple_adventures/features/admin-portal/presentation/admin-portal-screen.dart';
 import 'package:temple_adventures/features/admin-portal/presentation/image-view-page.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/all-boats-page.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/chooseBoat-page.dart';
 import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/d1.dart';
@@ -20,9 +18,7 @@ import 'package:temple_adventures/d2.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/edit-boat-details.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/newBoat-page.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-guest-details-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-payments-screen.dart';

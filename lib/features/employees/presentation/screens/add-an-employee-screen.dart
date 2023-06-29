@@ -91,14 +91,10 @@ class AddAnUser extends StatelessWidget {
                             logic.controller.roleNode.requestFocus();
                           },
                           onChanged: (phone) {
-                            // logic.controller.phoneNumberTED.text = phone.number;
                             logic.controller.countryCodeTED.text =
                                 phone.countryCode;
                             logic.controller.countryISoCOde =
                                 phone.countryISOCode;
-                            //print(phone.number);
-                            //print(phone.countryISOCode);
-                            //print(phone.countryCode);
                           },
                         ),
                         buildSubtitle("Role *"),
@@ -244,7 +240,8 @@ class AddAnUser extends StatelessWidget {
     });
   }
 
-  Widget buildSwitch({required String text, Function? onChanged, required bool switchValue}) {
+  Widget buildSwitch(
+      {required String text, Function? onChanged, required bool switchValue}) {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: Row(

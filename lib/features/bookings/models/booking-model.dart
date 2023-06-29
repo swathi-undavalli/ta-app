@@ -61,7 +61,7 @@ class BookingModel {
   DateTime? createdAt;
   bool? cancelBooking;
   String? cancellationReason;
-  dynamic boatDetails;
+  BoatDetails? boatDetails;
 
   factory BookingModel.fromMap(Map<String, dynamic> json) {
     //log("fromMap");
@@ -101,7 +101,7 @@ class BookingModel {
           List<DateTime>.from(json["diveDate"].map((x) => parseDateOrNull(x))),
       cancelBooking: json["cancelBooking"],
       cancellationReason: json["cancellationReason"],
-      boatDetails: json["boatDetails"],
+      boatDetails: BoatDetails.fromJson(json["boatDetails"]),
     );
   }
 
@@ -134,7 +134,7 @@ class BookingModel {
           List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
       "cancelBooking": cancelBooking,
       "cancellationReason": cancellationReason,
-      "boatDetails": boatDetails,
+      "boatDetails": boatDetails?.toMap(),
     };
   }
 
@@ -208,32 +208,17 @@ class BookingModel {
     return val;
   }
 
-  int? get bookingStatus {
-    if (boatDetails == null) return null;
-
-    return (boatDetails as Map<String, dynamic>)["bookingStatus"] as int?;
-  }
-
-  set bookingStatus(int? status) {
-    if (boatDetails == null) {
-      boatDetails = {};
-    }
-    boatDetails["bookingStatus"] = status;
-  }
-
-  BoatDetails? getBoatDetails(DateTime date) {
+  String? getBoatID(DateTime date) {
     String d = DateFormat("dd-MM-yyyy").format(date);
-    if (boatDetails == null) return null;
-    if (boatDetails[d] == null) return null;
-    return BoatDetails.fromJson((boatDetails)[d]);
+    return boatDetails?.boatId?[d];
   }
 
-  void setBoatDetails(DateTime date, BoatDetails boat) {
+  void setBoatID(DateTime date, String boatID) {
     String d = DateFormat("dd-MM-yyyy").format(date);
-    if (boatDetails == null) {
-      boatDetails = {};
+    if (boatDetails?.boatId == null) {
+      boatDetails?.boatId = {};
     }
-    boatDetails[d] = boat.toMap();
+    boatDetails?.boatId?[d] = boatID;
   }
 }
 

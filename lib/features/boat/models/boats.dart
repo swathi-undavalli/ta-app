@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'boat-details.dart';
+
 class BoatsModel {
   final List<Boat>? boats;
 
@@ -30,28 +32,40 @@ class BoatsModel {
 }
 
 class Boat {
-  final String captainId;
-  final String captainName;
+  final List<Instructor>? captains;
   final String id;
+  final String? surfaceSupport;
+  final String? notes;
+  final int? nitroxInt;
+  final int? airInt;
   final String name;
 
   Boat({
-    required this.captainId,
-    required this.captainName,
+    required this.captains,
     required this.id,
+    required this.nitroxInt,
+    required this.airInt,
+    required this.surfaceSupport,
+    required this.notes,
     required this.name,
   });
 
   Boat copyWith({
-    String? captainId,
-    String? captainName,
+    List<Instructor>? captains,
     String? id,
+    int? nitroxInt,
+    int? airInt,
+    String? notes,
+    String? surfaceSupport,
     String? name,
   }) =>
       Boat(
-        captainId: captainId ?? this.captainId,
-        captainName: captainName ?? this.captainName,
+        captains: captains ?? this.captains,
         id: id ?? this.id,
+        airInt: airInt ?? this.airInt,
+        nitroxInt: nitroxInt ?? this.nitroxInt,
+        surfaceSupport: surfaceSupport ?? this.surfaceSupport,
+        notes: notes ?? this.notes,
         name: name ?? this.name,
       );
 
@@ -60,16 +74,23 @@ class Boat {
   String toRawJson() => json.encode(toJson());
 
   factory Boat.fromJson(Map<String, dynamic> json) => Boat(
-        captainId: json["captainId"],
-        captainName: json["captainName"],
+        captains: List<Instructor>.from(
+            (json["captains"] ?? []).map((x) => Instructor.fromJson(x))),
         id: json["id"],
+        notes: json["notes"],
+        nitroxInt: json["nitroxInt"],
+        airInt: json["airInt"],
+        surfaceSupport: json["surfaceSupport"],
         name: json["name"],
       );
 
   Map<String, dynamic> toJson() => {
-        "captainId": captainId,
-        "captainName": captainName,
+        "captains": List<dynamic>.from((captains ?? []).map((x) => x.toJson())),
         "id": id,
+        "surfaceSupport": surfaceSupport,
+        "notes": notes,
+        "airInt": airInt,
+        "nitroxInt": nitroxInt,
         "name": name,
       };
 }

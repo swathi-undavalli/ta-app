@@ -29,6 +29,7 @@ class AddNewActivityLogic {
         controller.colorTED.text != "") {
       ActivityModel activityModel = ActivityModel(
           name: controller.nameTED.text,
+          shortName: controller.shortNameTED.text,
           price: int.parse(controller.priceTED.text),
           priority: int.parse(controller.priorityTED.text),
           color: controller.colorTED.text,
@@ -59,6 +60,7 @@ class AddNewActivityLogic {
 
 class AddNewActivityController extends GetxController {
   TextEditingController nameTED = TextEditingController();
+  TextEditingController shortNameTED = TextEditingController();
   TextEditingController priceTED = TextEditingController();
   TextEditingController priorityTED = TextEditingController();
   TextEditingController colorTED = TextEditingController();

@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -6,8 +5,6 @@ import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:temple_adventures/features/boat/models/boats.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/boat-details-bottomSheet.dart';
 import 'package:intl/intl.dart';
-
-import '../screens/edit-boat-details.dart';
 
 class BoatSelector extends StatefulWidget {
   const BoatSelector(
@@ -20,6 +17,7 @@ class BoatSelector extends StatefulWidget {
   final String selectedBoatId;
   final DateTime selectedDate;
   final Function(Boat boatDetails) onChanged;
+
   @override
   State<BoatSelector> createState() => _BoatSelectorState();
 }
@@ -27,6 +25,7 @@ class BoatSelector extends StatefulWidget {
 class _BoatSelectorState extends State<BoatSelector> {
   List<Boat> allBoats = [];
   Boat? selectedBoat;
+
   @override
   void initState() {
     init();
@@ -119,9 +118,12 @@ class _BoatSelectorState extends State<BoatSelector> {
           PopupMenuItem<Boat>(
             value: Boat(
               id: "Add new",
-              captainId: '',
-              captainName: '',
+              captains: [],
               name: '',
+              surfaceSupport: '',
+              notes: '',
+              nitroxInt: 0,
+              airInt: 0,
             ),
             onTap: () {},
             child: Column(

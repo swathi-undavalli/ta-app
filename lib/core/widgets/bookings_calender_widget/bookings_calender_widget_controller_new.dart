@@ -9,7 +9,8 @@ import '../booking-expansion-panel.dart';
 import 'package:intl/intl.dart';
 
 class BookingsCalenderWidgetLogicNew {
-  BookingsCalenderWidgetControllerNew controller = Get.put(BookingsCalenderWidgetControllerNew());
+  BookingsCalenderWidgetControllerNew controller =
+      Get.put(BookingsCalenderWidgetControllerNew());
 
   Future<void> getBookings(DateTime date) async {
     log("BookingsCalenderWidgetLogicNew : getBookings ${DateFormat("dd-MM-yyyy").format(date)}");
@@ -34,6 +35,7 @@ class BookingsCalenderWidgetLogicNew {
         } catch (e) {
           log("Error in getting booking model");
           log("$e");
+          log("ohohohho");
           log(element.data().toString());
           print(e);
         }
@@ -222,7 +224,8 @@ class BookingsCalenderWidgetLogicNew {
         controller.selectedType = FilterType.Theory;
       else if (controller.poolCount != 0)
         controller.selectedType = FilterType.Pool;
-      else if (controller.diveCount != 0) controller.selectedType = FilterType.Dive;
+      else if (controller.diveCount != 0)
+        controller.selectedType = FilterType.Dive;
     }
 
     controller.expansionItemModels = newItemsList;
@@ -285,7 +288,8 @@ class BookingsCalenderWidgetLogicNew {
       else
         temp = temp.add(Duration(hours: 1));
 
-      if (temp.hour != 0 && temp.hour < endHour + 1) controller.timeTable.add(temp);
+      if (temp.hour != 0 && temp.hour < endHour + 1)
+        controller.timeTable.add(temp);
     }
   }
 

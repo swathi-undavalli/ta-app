@@ -5,16 +5,12 @@ import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/all-boats-page.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/newBoat-page.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/employee-profile-screen.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/all-activities-screen.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
-import '../../../../core/authentication/firebase-authentication.dart';
 import '../../../admin-portal/presentation/admin-portal-screen.dart';
-import '../../../login/presentation/screens/login-page.dart';
 
 class NavDrawer extends StatelessWidget {
   static const String id = "sideMenuWidget";

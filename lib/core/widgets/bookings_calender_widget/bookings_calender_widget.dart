@@ -492,9 +492,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
         // boatDetailsExpansionList = bookingExpansionList;
         if (controller.selectedBoat != null) {
           bookingExpansionList.forEach((itemModel) {
-            if (itemModel.bookingModel
-                    ?.getBoatDetails(controller.selectedDate)
-                    ?.boatId ==
+            if (itemModel.bookingModel?.getBoatID(controller.selectedDate) ==
                 (controller.selectedBoat?.id ?? "-")) {
               boatDetailsExpansionList.add(itemModel);
             }
