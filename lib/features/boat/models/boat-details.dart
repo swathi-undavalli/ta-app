@@ -5,11 +5,11 @@ class BoatDetails {
   int? bookingStatus;
   final String? employeeNotes;
   final List<Instructor>? instructors;
-  Map<String, dynamic>? boatId;
+  Map<String, dynamic>? boat;
 
   BoatDetails({
     this.bookingStatus,
-    this.boatId,
+    this.boat,
     this.employeeNotes,
     this.instructors,
   });
@@ -21,7 +21,7 @@ class BoatDetails {
     List<Instructor>? instructors,
   }) =>
       BoatDetails(
-        boatId: boatId ?? this.boatId,
+        boat: boatId ?? this.boat,
         employeeNotes: employeeNotes ?? this.employeeNotes,
         bookingStatus: bookingStatus ?? this.bookingStatus,
         instructors: instructors ?? this.instructors,
@@ -35,7 +35,7 @@ class BoatDetails {
   factory BoatDetails.fromJson(Map<String, dynamic>? json) {
     if (json == null) return BoatDetails();
     return BoatDetails(
-      boatId: json["boatId"] ?? {},
+      boat: json["boat"] ?? {},
       employeeNotes: json["employeeNotes"],
       bookingStatus: json["bookingStatus"],
       instructors: List<Instructor>.from(
@@ -44,7 +44,7 @@ class BoatDetails {
   }
 
   Map<String, dynamic> toMap() => {
-        "boatId": boatId,
+        "boat": boat,
         "bookingStatus": bookingStatus,
         "employeeNotes": employeeNotes,
         "instructors":
@@ -75,12 +75,14 @@ class Instructor {
 
   String toRawJson() => json.encode(toJson());
 
-  factory Instructor.fromJson(Map<String, dynamic> json) => Instructor(
+  factory Instructor.fromJson(Map<String, dynamic> json) =>
+      Instructor(
         id: json["id"],
         name: json["name"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "id": id,
         "name": name,
       };
@@ -105,3 +107,43 @@ class Instructor {
     return false;
   }
 }
+
+class BoatInfo {
+  final String id;
+  final int air;
+  final int nitrox;
+
+  BoatInfo({
+    required this.id,
+    required this.air,
+    required this.nitrox,
+  });
+
+  BoatInfo copyWith({
+    String? id,
+    int? air,
+    int? nitrox,
+  }) =>
+      BoatInfo(
+        id: id ?? this.id,
+        air: air ?? this.air,
+        nitrox: nitrox ?? this.nitrox,
+      );
+
+  factory BoatInfo.fromJson(String str) => BoatInfo.fromMap(json.decode(str));
+
+  String toJson() => json.encode(toMap());
+
+  factory BoatInfo.fromMap(Map<String, dynamic> json) => BoatInfo(
+    id: json["id"],
+    air: json["air"],
+    nitrox: json["nitrox"],
+  );
+
+  Map<String, dynamic> toMap() => {
+    "id": id,
+    "air": air,
+    "nitrox": nitrox,
+  };
+}
+

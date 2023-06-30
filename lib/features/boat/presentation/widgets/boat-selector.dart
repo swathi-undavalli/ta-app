@@ -7,11 +7,7 @@ import 'package:temple_adventures/features/boat/presentation/widgets/boat-detail
 import 'package:intl/intl.dart';
 
 class BoatSelector extends StatefulWidget {
-  const BoatSelector(
-      {Key? key,
-      required this.selectedDate,
-      required this.selectedBoatId,
-      required this.onChanged})
+  const BoatSelector({Key? key, required this.selectedDate, required this.selectedBoatId, required this.onChanged})
       : super(key: key);
 
   final String selectedBoatId;
@@ -55,48 +51,44 @@ class _BoatSelectorState extends State<BoatSelector> {
           ? Container(
               height: 31,
               width: 100,
-              decoration: BoxDecoration(
-                  color: Colors.black, borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(20)),
               child: Center(
-                child: Text("Select Boat",
-                    style: TextStyle(fontSize: 12, color: Colors.white)),
+                child: Text("Select Boat", style: TextStyle(fontSize: 12, color: Colors.white)),
               ),
             )
           : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  "Selected Boat :",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    // decoration: TextDecoration.underline
-                  ),
-                ).paddingAll(5),
                 Row(
                   children: [
                     Text(
-                      selectedBoat?.name ?? "-",
+                      "Selected Boat :",
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.black,
-                        // fontWeight: FontWeight.bold,
+                        fontWeight: FontWeight.bold,
+                        // decoration: TextDecoration.underline
                       ),
                     ).paddingAll(5),
                     Text(
                       "Change",
-                      style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.blue,
-                          decoration: TextDecoration.underline),
+                      style: TextStyle(fontSize: 10, color: Colors.blue, decoration: TextDecoration.underline),
                     ).paddingOnly(left: 5, right: 5),
                     Icon(
                       Icons.edit,
-                      size: 12,
+                      size: 10,
                       color: Colors.blue,
                     ),
                   ],
                 ),
+                Text(
+                  "${selectedBoat?.name} @ ${selectedBoat?.time}",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
+                    // fontWeight: FontWeight.bold,
+                  ),
+                ).paddingAll(5),
               ],
             ),
       itemBuilder: (BuildContext context) {
@@ -110,7 +102,7 @@ class _BoatSelectorState extends State<BoatSelector> {
                 });
               },
               child: Text(
-                boat.name,
+                "${boat.name} @ ${boat.time}",
                 style: TextStyle(fontSize: 12),
               ),
             ),
@@ -122,8 +114,10 @@ class _BoatSelectorState extends State<BoatSelector> {
               name: '',
               surfaceSupport: '',
               notes: '',
-              nitroxInt: 0,
-              airInt: 0,
+              nitrox: 0,
+              air: 0,
+              time: '',
+              diveSite: '',
             ),
             onTap: () {},
             child: Column(
@@ -143,8 +137,8 @@ class _BoatSelectorState extends State<BoatSelector> {
       },
       onSelected: (Boat value) async {
         if (value.id == "Add new") {
-          BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(context,
-              date: widget.selectedDate, isBoatEdit: false);
+          BoatsModel? boatsModel =
+              await BoatDetailsBottomSheet.show(context, date: widget.selectedDate, isBoatEdit: false);
 
           if (boatsModel != null) {
             await FirebaseFirestore.instance

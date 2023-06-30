@@ -10,6 +10,8 @@ import 'package:temple_adventures/features/boat/presentation/widgets/employee-se
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:intl/intl.dart';
 
+import 'customer-expandable-listTile.dart';
+
 class BoatDetailsBottomSheet extends StatefulWidget {
   const BoatDetailsBottomSheet({
     Key? key,
@@ -23,9 +25,7 @@ class BoatDetailsBottomSheet extends StatefulWidget {
   final bool isBoatEdit;
 
   static Future<BoatsModel?> show(BuildContext context,
-      {required DateTime date,
-      required bool isBoatEdit,
-      Boat? initialBoat}) async {
+      {required DateTime date, required bool isBoatEdit, Boat? initialBoat}) async {
     var data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -47,26 +47,41 @@ class BoatDetailsBottomSheet extends StatefulWidget {
 }
 
 class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
-  final CollectionReference employeesCollection =
-      FirebaseFirestore.instance.collection('employees');
+  final CollectionReference employeesCollection = FirebaseFirestore.instance.collection('employees');
   List<Instructor> selectedCaptains = [];
   late TextEditingController boatTED;
+  late TextEditingController diveSiteTED;
   late TextEditingController surfaceSupportTED;
   late TextEditingController notesTED;
-  int nitroxInt = 0;
-  int airInt = 0;
-  TimeOfDay? selectedTime;
+  int nitrox = 0;
+  int air = 0;
+  late TimeOfDay selectedTime;
+  String formattedTime = '';
 
   @override
   void initState() {
     boatTED = TextEditingController(text: widget.boat?.name ?? "");
-    surfaceSupportTED =
-        TextEditingController(text: widget.boat?.surfaceSupport ?? "");
+    surfaceSupportTED = TextEditingController(text: widget.boat?.surfaceSupport ?? "");
     notesTED = TextEditingController(text: widget.boat?.notes ?? "");
-    nitroxInt = widget.boat?.nitroxInt ?? 0;
-    airInt = widget.boat?.airInt ?? 0;
+    diveSiteTED = TextEditingController(text: widget.boat?.diveSite);
+    nitrox = widget.boat?.nitrox ?? 0;
+    air = widget.boat?.air ?? 0;
+
+    if (widget.boat?.time != null)
+      selectedTime = convertTimeStringToTimeOfDay(widget.boat?.time ?? '');
+    else
+      selectedTime = TimeOfDay.now();
     if (widget.isBoatEdit) fetchEmployeeData();
     super.initState();
+  }
+
+  TimeOfDay convertTimeStringToTimeOfDay(String timeString) {
+    final formatter = DateFormat('hh:mm a');
+    final dateTime = formatter.parse(timeString);
+    final hour = dateTime.hour;
+    final minute = dateTime.minute;
+
+    return TimeOfDay(hour: hour, minute: minute);
   }
 
   Future<void> fetchEmployeeData() async {
@@ -83,7 +98,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   Future<void> selectTime(BuildContext context) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
-      initialTime: selectedTime ?? TimeOfDay.now(),
+      initialTime: selectedTime,
     );
 
     if (pickedTime != null) {
@@ -93,274 +108,214 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     }
   }
 
-  String formatTime(TimeOfDay time) {
+  String? formatTime(TimeOfDay time) {
     final now = DateTime.now();
-    final selectedDateTime =
-        DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    final formattedTime = DateFormat('hh:mm a').format(selectedDateTime);
+    final selectedDateTime = DateTime(now.year, now.month, now.day, time.hour, time.minute);
+    formattedTime = DateFormat('hh:mm a').format(selectedDateTime);
     return formattedTime;
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-          top: 20,
-          left: 25,
-          right: 20),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, top: 20, left: 25, right: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(
           30,
         ),
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Text(
-                (widget.isBoatEdit) ? "Edit Boat" : "Add Boat",
-                style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20,
-                ),
-              ).paddingOnly(top: 8),
-              Spacer(),
-              IconButton(
-                icon: Icon(Icons.close),
-                onPressed: () async {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-          SizedBox(height: 20),
-          (selectedCaptains.isEmpty)
-              ? AppButton.miniFlat(
-                  text: "Add Captains",
-                  onTap: () async {
-                    selectedCaptains = (await EmpSelectorBottomSheet.show(
-                            context,
-                            initialSelectedEmployees: selectedCaptains,
-                            captainSelector: true)) ??
-                        [];
-                    setState(() {});
+      child: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
+                  (widget.isBoatEdit) ? "Edit Boat" : "Add Boat",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w600,
+                    fontSize: 20,
+                  ),
+                ).paddingOnly(top: 8),
+                Spacer(),
+                IconButton(
+                  icon: Icon(Icons.close),
+                  onPressed: () async {
+                    Navigator.pop(context);
                   },
-                )
-              : Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Selected Captains :",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
+                ),
+              ],
+            ),
+            SizedBox(height: 20),
+            (selectedCaptains.isEmpty)
+                ? AppButton.miniFlat(
+                    text: "Add Captains",
+                    onTap: () async {
+                      selectedCaptains = (await EmpSelectorBottomSheet.show(context,
+                              initialSelectedEmployees: selectedCaptains, captainSelector: true)) ??
+                          [];
+                      setState(() {});
+                    },
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Selected Captains :",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            ...selectedCaptains.map(
-                              (e) => Text(
-                                "${e.name}",
-                                style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.black,
-                                ),
-                              ).paddingOnly(bottom: 4),
-                            ),
-                          ],
-                        ),
-                        GestureDetector(
-                          onTap: () async {
-                            selectedCaptains =
-                                (await EmpSelectorBottomSheet.show(context,
-                                        initialSelectedEmployees:
-                                            selectedCaptains,
-                                        captainSelector: true)) ??
-                                    [];
-                            setState(() {});
-                          },
-                          child: Text(
-                            "Change",
-                            style: TextStyle(
-                                fontSize: 12,
-                                color: Colors.blue,
-                                decoration: TextDecoration.underline),
-                          ).paddingOnly(left: 10, right: 7),
-                        ),
-                        Icon(
-                          Icons.edit,
-                          size: 12,
-                          color: Colors.blue,
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-          AppTextField(
-            hintText: "Boat name",
-            controller: boatTED,
-            errorValidator: () {
-              return null;
-            },
-            validator: (_) {
-              return null;
-            },
-          ),
-          SizedBox(height: 20),
-          Row(
-            children: [
-              Text(
-                "Boat time",
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.black,
-                ),
-              ),
-              SizedBox(width: 20),
-              GestureDetector(
-                onTap: () {
-                  log(selectedTime.toString());
-                  selectTime(context);
-                },
-                child: Container(
-                  height: 30,
-                  width: 100,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black),
-                      borderRadius: BorderRadius.circular(5)),
-                  child: Center(
-                    child: Text(
-                      selectedTime != null
-                          ? formatTime(selectedTime!)
-                          : 'No time selected',
-                      style:
-                          TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
-                    ),
+                      SizedBox(height: 10),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ...selectedCaptains.map(
+                                (e) => Text(
+                                  "${e.name}",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                  ),
+                                ).paddingOnly(bottom: 4),
+                              ),
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              selectedCaptains = (await EmpSelectorBottomSheet.show(context,
+                                      initialSelectedEmployees: selectedCaptains, captainSelector: true)) ??
+                                  [];
+                              setState(() {});
+                            },
+                            child: Text(
+                              "Change",
+                              style: TextStyle(fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
+                            ).paddingOnly(left: 10, right: 7),
+                          ),
+                          Icon(
+                            Icons.edit,
+                            size: 12,
+                            color: Colors.blue,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+            AppTextField(
+              hintText: "Boat name",
+              controller: boatTED,
+              errorValidator: () {
+                return null;
+              },
+              validator: (_) {
+                return null;
+              },
+            ),
+            AppTextField(
+              hintText: "Dive Site",
+              controller: diveSiteTED,
+              errorValidator: () {
+                return null;
+              },
+              validator: (_) {
+                return null;
+              },
+            ),
+            SizedBox(height: 20),
+            Row(
+              children: [
+                Text(
+                  "Boat time",
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.black,
                   ),
                 ),
-              )
-            ],
-          ),
-          AppTextField(
-            hintText: "Surface Support",
-            controller: surfaceSupportTED,
-            errorValidator: () {
-              return null;
-            },
-            validator: (_) {
-              return null;
-            },
-          ),
-          AppTextField(
-            hintText: "Notes",
-            controller: notesTED,
-            errorValidator: () {
-              return null;
-            },
-            validator: (_) {
-              return null;
-            },
-          ),
-          SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              buildAirNitrox(title: 'Nitrox', isNitrox: true),
-              buildAirNitrox(title: 'Air', isNitrox: false),
-            ],
-          ),
-          SizedBox(height: 30),
-          Center(
-            child: AppButton.flat(
-              height: 50,
-              width: 145,
-              text: (widget.isBoatEdit) ? "Update" : "Submit",
-              onTap: () async {
-                if (boatTED.text != "" && selectedCaptains != []) {
-                  await addEditBoat(context);
-                } else {
-                  if (boatTED.text == "") {
-                    showToast("please enter the boat details");
-                  } else {
-                    showToast("please select the captain");
-                  }
-                }
-              },
-              textColor: Colors.white,
-              color: Colors.black,
+                SizedBox(width: 20),
+                GestureDetector(
+                  onTap: () {
+                    log(selectedTime.toString());
+                    selectTime(context);
+                  },
+                  child: Container(
+                    height: 30,
+                    width: 100,
+                    decoration:
+                        BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(5)),
+                    child: Center(
+                      child: Text(
+                        formatTime(selectedTime) ?? 'No time selected',
+                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                  ),
+                )
+              ],
             ),
-          ),
-          SizedBox(height: 20),
-        ],
-      ),
-    );
-  }
-
-  Widget buildAirNitrox({required String title, required bool isNitrox}) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 15),
-        Row(
-          children: [
-            buildIncrementDecrement(
-                onTap: () {
-                  if (isNitrox) {
-                    nitroxInt += 1;
+            AppTextField(
+              hintText: "Surface Support",
+              controller: surfaceSupportTED,
+              errorValidator: () {
+                return null;
+              },
+              validator: (_) {
+                return null;
+              },
+            ),
+            AppTextField(
+              hintText: "Notes",
+              controller: notesTED,
+              errorValidator: () {
+                return null;
+              },
+              validator: (_) {
+                return null;
+              },
+            ),
+            SizedBox(height: 20),
+            TankCounter(
+              onChanged: (int n, int a) {
+                nitrox = n;
+                air = a;
+                setState(() {});
+              },
+              nitrox: nitrox,
+              air: air,
+            ),
+            SizedBox(height: 30),
+            Center(
+              child: AppButton.flat(
+                height: 50,
+                width: 145,
+                text: (widget.isBoatEdit) ? "Update" : "Submit",
+                onTap: () async {
+                  if (boatTED.text != "" && selectedCaptains != []) {
+                    await addEditBoat(context);
                   } else {
-                    airInt += 1;
+                    if (boatTED.text == "") {
+                      showToast("please enter the boat details");
+                    } else {
+                      showToast("please select the captain");
+                    }
                   }
-                  setState(() {});
                 },
-                icon: Icons.add),
-            SizedBox(width: 15),
-            Text((isNitrox) ? nitroxInt.toString() : airInt.toString()),
-            SizedBox(width: 15),
-            buildIncrementDecrement(
-                onTap: () {
-                  if (isNitrox && nitroxInt > 0) {
-                    nitroxInt -= 1;
-                  } else if (airInt > 0) {
-                    airInt -= 1;
-                  }
-                  setState(() {});
-                },
-                icon: Icons.remove),
+                textColor: Colors.white,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(height: 20),
           ],
         ),
-      ],
+      ),
     );
-  }
-
-  Widget buildIncrementDecrement(
-      {required Function onTap, required IconData icon}) {
-    return GestureDetector(
-        onTap: () {
-          onTap();
-        },
-        child: Container(
-          height: 30,
-          width: 30,
-          child: Icon(icon, size: 14),
-          color: Colors.grey.shade400,
-        ));
   }
 
   Future<void> addEditBoat(BuildContext context) async {
@@ -380,24 +335,30 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         boatId = "0";
       }
       Boat boat = Boat(
-          captains: selectedCaptains,
-          id: boatId,
-          name: boatTED.text,
-          surfaceSupport: surfaceSupportTED.text,
-          notes: notesTED.text,
-          nitroxInt: nitroxInt,
-          airInt: airInt);
+        captains: selectedCaptains,
+        id: boatId,
+        name: boatTED.text,
+        surfaceSupport: surfaceSupportTED.text,
+        notes: notesTED.text,
+        nitrox: nitrox,
+        air: air,
+        time: formattedTime,
+        diveSite: diveSiteTED.text,
+      );
       boatsModel.boats?.add(boat);
     } else {
       boatId = widget.boat!.id;
       Boat boat = Boat(
-          captains: selectedCaptains,
-          id: boatId,
-          name: boatTED.text,
-          surfaceSupport: surfaceSupportTED.text,
-          notes: notesTED.text,
-          nitroxInt: nitroxInt,
-          airInt: airInt);
+        captains: selectedCaptains,
+        id: boatId,
+        name: boatTED.text,
+        surfaceSupport: surfaceSupportTED.text,
+        notes: notesTED.text,
+        nitrox: nitrox,
+        air: air,
+        time: formattedTime,
+        diveSite: diveSiteTED.text,
+      );
 
       boatsModel.boats?.removeWhere((b) => b.id == boatId);
       boatsModel.boats?.add(boat);

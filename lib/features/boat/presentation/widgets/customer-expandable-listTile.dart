@@ -30,21 +30,18 @@ class CustomerExpandableListTile extends StatefulWidget {
   final Color color;
 
   @override
-  State<CustomerExpandableListTile> createState() =>
-      _CustomerExpandableListTileState();
+  State<CustomerExpandableListTile> createState() => _CustomerExpandableListTileState();
 }
 
-class _CustomerExpandableListTileState
-    extends State<CustomerExpandableListTile> {
+class _CustomerExpandableListTileState extends State<CustomerExpandableListTile> {
   bool isExpanded = false;
-
+  int nitrox = 0;
+  int air = 0;
   ItemModel get itemModel => widget.itemModel;
 
   @override
   Widget build(BuildContext context) {
-    final DocumentReference bookingDoc = FirebaseFirestore.instance
-        .collection('bookings')
-        .doc(itemModel.bookingID);
+    final DocumentReference bookingDoc = FirebaseFirestore.instance.collection('bookings').doc(itemModel.bookingID);
 
     return AnimatedContainer(
       duration: Duration(milliseconds: 200),
@@ -75,19 +72,14 @@ class _CustomerExpandableListTileState
                   width: Get.width - 200,
                   child: Text(
                     widget.title,
-                    style: TextStyle(
-                        color: AppColors.text.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600),
+                    style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
                 Spacer(),
                 StreamBuilder(
                     stream: bookingDoc.snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (snapshot.hasError ||
-                          snapshot.connectionState == ConnectionState.waiting) {
+                    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
                         return SizedBox(
                           height: 15,
                           width: 15,
@@ -107,13 +99,11 @@ class _CustomerExpandableListTileState
                         );
                       }
 
-                      BookingModel bookingModel =
-                          BookingModel.fromMap(data as Map<String, dynamic>);
+                      BookingModel bookingModel = BookingModel.fromMap(data as Map<String, dynamic>);
 
                       return Row(
                         children: [
-                          if ((bookingModel.boatDetails?.instructors ?? [])
-                              .isNotEmpty)
+                          if ((bookingModel.boatDetails?.instructors ?? []).isNotEmpty)
                             Icon(
                               Icons.scuba_diving,
                               size: 15,
@@ -121,9 +111,7 @@ class _CustomerExpandableListTileState
                           SizedBox(
                             width: 10,
                           ),
-                          if ((bookingModel.getBoatID(widget.selectedDate) ??
-                                  '')
-                              .isNotEmpty)
+                          if ((bookingModel.getBoatInfo(widget.selectedDate)?.id ?? '').isNotEmpty)
                             Icon(
                               Icons.directions_boat,
                               size: 15,
@@ -133,9 +121,7 @@ class _CustomerExpandableListTileState
                     }),
                 IconButton(
                   splashRadius: 20,
-                  icon: Icon(isExpanded
-                      ? Icons.keyboard_arrow_up_rounded
-                      : Icons.keyboard_arrow_down_rounded),
+                  icon: Icon(isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded),
                   onPressed: () {
                     setState(() {
                       isExpanded = !isExpanded;
@@ -157,15 +143,11 @@ class _CustomerExpandableListTileState
                             SizedBox(height: 10),
                             Text(
                               "Booking Details : ",
-                              style: TextStyle(
-                                  fontSize: FontSize.textSize,
-                                  fontWeight: FontWeight.w600),
+                              style: TextStyle(fontSize: FontSize.textSize, fontWeight: FontWeight.w600),
                             ),
                             SizedBox(height: 10),
-                            _buildKeyValuePairs(
-                                "Booking Id", itemModel.bookingID ?? "-"),
-                            _buildKeyValuePairs(
-                                "Course Name", itemModel.activity),
+                            _buildKeyValuePairs("Booking Id", itemModel.bookingID ?? "-"),
+                            _buildKeyValuePairs("Course Name", itemModel.activity),
                             _buildKeyValuePairs(
                               "Balance",
                               "${getBalance(itemModel.bookingModel?.payments ?? [], double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} / -",
@@ -175,20 +157,17 @@ class _CustomerExpandableListTileState
                               "Registered",
                               "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
                               isDanger:
-                                  ((itemModel.bookingModel!.pax!.length - 1) !=
-                                      (itemModel.bookingModel!.noOfPersons)),
+                                  ((itemModel.bookingModel!.pax!.length - 1) != (itemModel.bookingModel!.noOfPersons)),
                             ),
                             SizedBox(height: 20),
                             StreamBuilder(
                                 stream: bookingDoc.snapshots(),
-                                builder: (BuildContext context,
-                                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                                   if (snapshot.hasError) {
                                     return Text('Error: ${snapshot.error}');
                                   }
 
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
+                                  if (snapshot.connectionState == ConnectionState.waiting) {
                                     return Text('Loading...');
                                   }
                                   final data = snapshot.data?.data();
@@ -198,28 +177,20 @@ class _CustomerExpandableListTileState
                                   }
 
                                   log("New chnage macha");
-                                  BookingModel bookingModel =
-                                      BookingModel.fromMap(
-                                          data as Map<String, dynamic>);
+                                  BookingModel bookingModel = BookingModel.fromMap(data as Map<String, dynamic>);
                                   log("booking model ${bookingModel.toMap()}");
-                                  ItemModel bookingItemModel =
-                                      ItemModel.fromBookings(bookingModel);
+                                  ItemModel bookingItemModel = ItemModel.fromBookings(bookingModel);
                                   log("item model $bookingItemModel");
 
-                                  TextEditingController employeeNotesTED =
-                                      TextEditingController(
-                                          text: bookingItemModel.bookingModel!
-                                                  .boatDetails?.employeeNotes ??
-                                              "");
+                                  TextEditingController employeeNotesTED = TextEditingController(
+                                      text: bookingItemModel.bookingModel!.boatDetails?.employeeNotes ?? "");
 
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                         children: [
                                           SizedBox(
                                             width: Get.width - 170,
@@ -233,16 +204,10 @@ class _CustomerExpandableListTileState
                                           ),
                                           InkWell(
                                             onTap: () async {
-                                              List<Instructor>? instructors =
-                                                  await EmpSelectorBottomSheet
-                                                      .show(
+                                              List<Instructor>? instructors = await EmpSelectorBottomSheet.show(
                                                 context,
                                                 initialSelectedEmployees:
-                                                    bookingItemModel
-                                                            .bookingModel
-                                                            ?.boatDetails
-                                                            ?.instructors ??
-                                                        [],
+                                                    bookingItemModel.bookingModel?.boatDetails?.instructors ?? [],
                                                 captainSelector: false,
                                               );
 
@@ -251,8 +216,7 @@ class _CustomerExpandableListTileState
                                               await updateBoatDetails(
                                                 instructors: instructors,
                                                 bookingModel: bookingModel,
-                                                selectedDate:
-                                                    widget.selectedDate,
+                                                selectedDate: widget.selectedDate,
                                               );
                                             },
                                             child: Container(
@@ -260,8 +224,7 @@ class _CustomerExpandableListTileState
                                               width: 100,
                                               decoration: BoxDecoration(
                                                 color: Colors.black,
-                                                borderRadius:
-                                                    BorderRadius.circular(
+                                                borderRadius: BorderRadius.circular(
                                                   30,
                                                 ),
                                               ),
@@ -279,20 +242,11 @@ class _CustomerExpandableListTileState
                                         ],
                                       ),
                                       SizedBox(height: 10),
-                                      if (bookingItemModel.bookingModel
-                                              ?.boatDetails?.instructors !=
-                                          null)
-                                        ...?bookingItemModel.bookingModel!
-                                            .boatDetails?.instructors
-                                            ?.map(
+                                      if (bookingItemModel.bookingModel?.boatDetails?.instructors != null)
+                                        ...?bookingItemModel.bookingModel!.boatDetails?.instructors?.map(
                                           (e) {
-                                            return _buildDiverName(
-                                                    e.name,
-                                                    bookingItemModel
-                                                        .bookingModel!
-                                                        .boatDetails!
-                                                        .instructors!
-                                                        .indexOf(e))
+                                            return _buildDiverName(e.name,
+                                                    bookingItemModel.bookingModel!.boatDetails!.instructors!.indexOf(e))
                                                 .paddingOnly(bottom: 6);
                                           },
                                         ),
@@ -300,31 +254,24 @@ class _CustomerExpandableListTileState
                                       Row(
                                         children: [
                                           BookingStatus(
-                                            initialStatus: bookingModel
-                                                    .boatDetails
-                                                    ?.bookingStatus ??
-                                                0,
+                                            initialStatus: bookingModel.boatDetails?.bookingStatus ?? 0,
                                             onChanged: (int status) async {
                                               await updateBoatDetails(
                                                   bookingModel: bookingModel,
                                                   bookingStatus: status,
-                                                  selectedDate:
-                                                      widget.selectedDate);
+                                                  selectedDate: widget.selectedDate);
                                             },
                                           ),
                                           Spacer(),
                                           BoatSelector(
                                             key: UniqueKey(),
-                                            selectedBoatId:
-                                                bookingModel.getBoatID(
-                                                        widget.selectedDate) ??
-                                                    "",
+                                            selectedBoatId: bookingModel.getBoatInfo(widget.selectedDate)?.id ?? "",
                                             onChanged: (Boat boat) async {
+                                              log("kameba0");
                                               await updateBoatDetails(
                                                 bookingModel: bookingModel,
                                                 boatId: boat.id,
-                                                selectedDate:
-                                                    widget.selectedDate,
+                                                selectedDate: widget.selectedDate,
                                               );
                                             },
                                             selectedDate: widget.selectedDate,
@@ -332,20 +279,20 @@ class _CustomerExpandableListTileState
                                         ],
                                       ),
                                       SizedBox(height: 20),
+                                      TankCounter(
+                                        onChanged: (int nitrox, int air) {
+                                          updateBoatDetails(
+                                            bookingModel: bookingModel,
+                                            selectedDate: widget.selectedDate,
+                                            nitrox: nitrox,
+                                            air: air,
+                                          );
+                                        },
+                                        nitrox: bookingModel.getBoatInfo(widget.selectedDate)?.nitrox ?? 0,
+                                        air: bookingModel.getBoatInfo(widget.selectedDate)?.air ?? 0,
+                                      ),
+                                      SizedBox(height: 20),
                                       AppTextField(
-                                        // suffixIcon: GestureDetector(
-                                        //   onTap: () {
-                                        //     updateBoatDetails(
-                                        //         bookingModel: bookingModel,
-                                        //         employeeNotes: employeeNotesTED.text,
-                                        //         selectedDate: widget.selectedDate);
-                                        //   },
-                                        //   child: Icon(
-                                        //     Icons.check_circle_outline_rounded,
-                                        //     color: AppColors.text.black,
-                                        //     size: 20,
-                                        //   ),
-                                        // ),
                                         controller: employeeNotesTED,
                                         hintText: "Equipment Notes",
                                         minLines: 3,
@@ -369,8 +316,7 @@ class _CustomerExpandableListTileState
                                           onTap: () {
                                             updateBoatDetails(
                                               bookingModel: bookingModel,
-                                              employeeNotes:
-                                                  employeeNotesTED.text,
+                                              employeeNotes: employeeNotesTED.text,
                                               selectedDate: widget.selectedDate,
                                             );
                                           },
@@ -391,6 +337,62 @@ class _CustomerExpandableListTileState
         ),
       ),
     );
+  }
+
+  Widget buildAirNitrox({required String title, required bool isNitrox}) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 15),
+        Row(
+          children: [
+            buildIncrementDecrement(
+                onTap: () {
+                  if (isNitrox) {
+                    nitrox += 1;
+                  } else {
+                    air += 1;
+                  }
+                  setState(() {});
+                },
+                icon: Icons.add),
+            SizedBox(width: 15),
+            Text((isNitrox) ? nitrox.toString() : air.toString()),
+            SizedBox(width: 15),
+            buildIncrementDecrement(
+                onTap: () {
+                  if (isNitrox && nitrox > 0) {
+                    nitrox -= 1;
+                  } else if (air > 0) {
+                    air -= 1;
+                  }
+                  setState(() {});
+                },
+                icon: Icons.remove),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildIncrementDecrement({required Function onTap, required IconData icon}) {
+    return GestureDetector(
+        onTap: () {
+          onTap();
+        },
+        child: Container(
+          height: 30,
+          width: 30,
+          child: Icon(icon, size: 14),
+          color: Colors.grey.shade400,
+        ));
   }
 
   Widget _buildDiverName(String text, int index) {
@@ -429,22 +431,14 @@ class _CustomerExpandableListTileState
           Text(
             key,
             style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 13,
-                letterSpacing: 0.3,
-                fontWeight: FontWeight.w600,
-                height: 1.3),
+                color: Colors.grey[700], fontSize: 13, letterSpacing: 0.3, fontWeight: FontWeight.w600, height: 1.3),
           ).paddingOnly(right: 10)
         else
           Expanded(
             child: Text(
               key,
               style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 13,
-                  letterSpacing: 0.3,
-                  fontWeight: FontWeight.w600,
-                  height: 1.3),
+                  color: Colors.grey[700], fontSize: 13, letterSpacing: 0.3, fontWeight: FontWeight.w600, height: 1.3),
             ),
           ),
         Container(
@@ -479,15 +473,26 @@ class _CustomerExpandableListTileState
     String? boatId,
     String? boatName,
     int? bookingStatus,
+    int? nitrox,
+    int? air,
     String? employeeNotes,
     List<Instructor>? instructors,
   }) async {
+    log("kameba1");
     if (bookingStatus != null) {
       bookingModel.boatDetails?.bookingStatus = bookingStatus;
-    } else if (boatId != null) {
-      bookingModel.setBoatID(
+    } else if (boatId != null || air != null || nitrox != null) {
+      log("kameba");
+      BoatInfo? boatInfo = bookingModel.getBoatInfo(selectedDate);
+      if (boatInfo == null) {
+        boatInfo = BoatInfo(id: boatId ?? '', air: air ?? 0, nitrox: nitrox ?? 0);
+      } else {
+        boatInfo = boatInfo.copyWith(id: boatId, air: air, nitrox: nitrox);
+      }
+
+      bookingModel.setBoatInfo(
         selectedDate,
-        boatId,
+        boatInfo,
       );
     }
 
@@ -497,11 +502,111 @@ class _CustomerExpandableListTileState
       instructors: instructors,
     );
 
-    await FirebaseFirestore.instance
-        .collection('bookings')
-        .doc(bookingModel.id)
-        .set(
+    await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(
           bookingModel.toMap(),
         );
+  }
+}
+
+class TankCounter extends StatefulWidget {
+  const TankCounter({
+    Key? key,
+    required this.onChanged,
+    required this.nitrox,
+    required this.air,
+  }) : super(key: key);
+
+  final Function(int nitrox, int air) onChanged;
+  final int nitrox;
+  final int air;
+
+  @override
+  State<TankCounter> createState() => _TankCounterState();
+}
+
+class _TankCounterState extends State<TankCounter> {
+  int air = 0, nitrox = 0;
+
+  @override
+  void initState() {
+    air = widget.air;
+    nitrox = widget.nitrox;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        buildAirNitrox(title: "Nirtox", isNitrox: true),
+        buildAirNitrox(title: "Air", isNitrox: false),
+      ],
+    );
+  }
+
+  Widget buildIncrementDecrement({required Function onTap, required IconData icon}) {
+    return InkWell(
+        onTap: () {
+          onTap();
+        },
+        child: Container(
+          height: 35,
+          width: 35,
+          child: Icon(
+            icon,
+            size: 14,
+            // color: Colors.white,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.text.skyBlue.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(3),
+          ),
+        ));
+  }
+
+  Widget buildAirNitrox({required String title, required bool isNitrox}) {
+    return Column(
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 15),
+        Row(
+          children: [
+            buildIncrementDecrement(
+                onTap: () {
+                  if (isNitrox) {
+                    nitrox += 1;
+                  } else {
+                    air += 1;
+                  }
+                  widget.onChanged(nitrox, air);
+                  setState(() {});
+                },
+                icon: Icons.add),
+            SizedBox(width: 15),
+            Text((isNitrox) ? nitrox.toString() : air.toString()),
+            SizedBox(width: 15),
+            buildIncrementDecrement(
+                onTap: () {
+                  if (isNitrox && nitrox > 0) {
+                    nitrox -= 1;
+                  } else if (air > 0) {
+                    air -= 1;
+                  }
+                  widget.onChanged(nitrox, air);
+                  setState(() {});
+                },
+                icon: Icons.remove),
+          ],
+        ),
+      ],
+    );
   }
 }
