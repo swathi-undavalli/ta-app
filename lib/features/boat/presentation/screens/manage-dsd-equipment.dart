@@ -4,6 +4,7 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/boat/controller/manage-dsd-equipment-controller.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/customer-expandable-listTile.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 
 class ManageDSDEquipment extends StatefulWidget {
@@ -32,11 +33,26 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
           return true;
         },
         child: SafeArea(
-          child: GetBuilder<ManageDSDEquipmentController>(builder: (controller) {
+          child:
+              GetBuilder<ManageDSDEquipmentController>(builder: (controller) {
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  SizedBox(height: 20),
+                  Text(
+                    "BCD : ",
+                    style: TextStyle(
+                        fontSize: FontSize.textSize,
+                        color: AppColors.text.black,
+                        fontFamily: AppFonts.nunito,
+                        fontWeight: FontWeight.w600),
+                  ),
+                  SizedBox(height: 20),
+                  SizeCounter(
+                    onChanged: (int count) {},
+                    sizes: controller.BCDSizes,
+                  ),
                   AppTextField(
                     hintText: "BCD",
                     controller: controller.bdcTED,

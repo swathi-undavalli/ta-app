@@ -87,6 +87,7 @@ class ManageDSDEquipmentController extends GetxController {
   TextEditingController windsTED = TextEditingController();
 
   BoatsModel? boatsModel;
+  List<String> BCDSizes = ["XS","S","M","L","XL","XXL"];
 
   reset() {
     bdcTED.text = "";

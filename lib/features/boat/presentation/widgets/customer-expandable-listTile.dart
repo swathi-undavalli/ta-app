@@ -30,10 +30,12 @@ class CustomerExpandableListTile extends StatefulWidget {
   final Color color;
 
   @override
-  State<CustomerExpandableListTile> createState() => _CustomerExpandableListTileState();
+  State<CustomerExpandableListTile> createState() =>
+      _CustomerExpandableListTileState();
 }
 
-class _CustomerExpandableListTileState extends State<CustomerExpandableListTile> {
+class _CustomerExpandableListTileState
+    extends State<CustomerExpandableListTile> {
   bool isExpanded = false;
   int nitrox = 0;
   int air = 0;
@@ -41,7 +43,9 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
 
   @override
   Widget build(BuildContext context) {
-    final DocumentReference bookingDoc = FirebaseFirestore.instance.collection('bookings').doc(itemModel.bookingID);
+    final DocumentReference bookingDoc = FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(itemModel.bookingID);
 
     return AnimatedContainer(
       duration: Duration(milliseconds: 200),
@@ -72,14 +76,19 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                   width: Get.width - 200,
                   child: Text(
                     widget.title,
-                    style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
+                    style: TextStyle(
+                        color: AppColors.text.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600),
                   ),
                 ),
                 Spacer(),
                 StreamBuilder(
                     stream: bookingDoc.snapshots(),
-                    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+                    builder: (BuildContext context,
+                        AsyncSnapshot<DocumentSnapshot> snapshot) {
+                      if (snapshot.hasError ||
+                          snapshot.connectionState == ConnectionState.waiting) {
                         return SizedBox(
                           height: 15,
                           width: 15,
@@ -99,11 +108,13 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                         );
                       }
 
-                      BookingModel bookingModel = BookingModel.fromMap(data as Map<String, dynamic>);
+                      BookingModel bookingModel =
+                          BookingModel.fromMap(data as Map<String, dynamic>);
 
                       return Row(
                         children: [
-                          if ((bookingModel.boatDetails?.instructors ?? []).isNotEmpty)
+                          if ((bookingModel.boatDetails?.instructors ?? [])
+                              .isNotEmpty)
                             Icon(
                               Icons.scuba_diving,
                               size: 15,
@@ -111,7 +122,11 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                           SizedBox(
                             width: 10,
                           ),
-                          if ((bookingModel.getBoatInfo(widget.selectedDate)?.id ?? '').isNotEmpty)
+                          if ((bookingModel
+                                      .getBoatInfo(widget.selectedDate)
+                                      ?.id ??
+                                  '')
+                              .isNotEmpty)
                             Icon(
                               Icons.directions_boat,
                               size: 15,
@@ -121,7 +136,9 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                     }),
                 IconButton(
                   splashRadius: 20,
-                  icon: Icon(isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded),
+                  icon: Icon(isExpanded
+                      ? Icons.keyboard_arrow_up_rounded
+                      : Icons.keyboard_arrow_down_rounded),
                   onPressed: () {
                     setState(() {
                       isExpanded = !isExpanded;
@@ -143,11 +160,15 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                             SizedBox(height: 10),
                             Text(
                               "Booking Details : ",
-                              style: TextStyle(fontSize: FontSize.textSize, fontWeight: FontWeight.w600),
+                              style: TextStyle(
+                                  fontSize: FontSize.textSize,
+                                  fontWeight: FontWeight.w600),
                             ),
                             SizedBox(height: 10),
-                            _buildKeyValuePairs("Booking Id", itemModel.bookingID ?? "-"),
-                            _buildKeyValuePairs("Course Name", itemModel.activity),
+                            _buildKeyValuePairs(
+                                "Booking Id", itemModel.bookingID ?? "-"),
+                            _buildKeyValuePairs(
+                                "Course Name", itemModel.activity),
                             _buildKeyValuePairs(
                               "Balance",
                               "${getBalance(itemModel.bookingModel?.payments ?? [], double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} / -",
@@ -157,17 +178,20 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                               "Registered",
                               "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
                               isDanger:
-                                  ((itemModel.bookingModel!.pax!.length - 1) != (itemModel.bookingModel!.noOfPersons)),
+                                  ((itemModel.bookingModel!.pax!.length - 1) !=
+                                      (itemModel.bookingModel!.noOfPersons)),
                             ),
                             SizedBox(height: 20),
                             StreamBuilder(
                                 stream: bookingDoc.snapshots(),
-                                builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                                builder: (BuildContext context,
+                                    AsyncSnapshot<DocumentSnapshot> snapshot) {
                                   if (snapshot.hasError) {
                                     return Text('Error: ${snapshot.error}');
                                   }
 
-                                  if (snapshot.connectionState == ConnectionState.waiting) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
                                     return Text('Loading...');
                                   }
                                   final data = snapshot.data?.data();
@@ -176,21 +200,26 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                                     return Text('Document does not exist');
                                   }
 
-                                  log("New chnage macha");
-                                  BookingModel bookingModel = BookingModel.fromMap(data as Map<String, dynamic>);
-                                  log("booking model ${bookingModel.toMap()}");
-                                  ItemModel bookingItemModel = ItemModel.fromBookings(bookingModel);
-                                  log("item model $bookingItemModel");
+                                  BookingModel bookingModel =
+                                      BookingModel.fromMap(
+                                          data as Map<String, dynamic>);
+                                  ItemModel bookingItemModel =
+                                      ItemModel.fromBookings(bookingModel);
 
-                                  TextEditingController employeeNotesTED = TextEditingController(
-                                      text: bookingItemModel.bookingModel!.boatDetails?.employeeNotes ?? "");
+                                  TextEditingController employeeNotesTED =
+                                      TextEditingController(
+                                          text: bookingItemModel.bookingModel!
+                                                  .boatDetails?.employeeNotes ??
+                                              "");
 
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.start,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
                                         children: [
                                           SizedBox(
                                             width: Get.width - 170,
@@ -204,10 +233,16 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                                           ),
                                           InkWell(
                                             onTap: () async {
-                                              List<Instructor>? instructors = await EmpSelectorBottomSheet.show(
+                                              List<Instructor>? instructors =
+                                                  await EmpSelectorBottomSheet
+                                                      .show(
                                                 context,
                                                 initialSelectedEmployees:
-                                                    bookingItemModel.bookingModel?.boatDetails?.instructors ?? [],
+                                                    bookingItemModel
+                                                            .bookingModel
+                                                            ?.boatDetails
+                                                            ?.instructors ??
+                                                        [],
                                                 captainSelector: false,
                                               );
 
@@ -216,7 +251,8 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                                               await updateBoatDetails(
                                                 instructors: instructors,
                                                 bookingModel: bookingModel,
-                                                selectedDate: widget.selectedDate,
+                                                selectedDate:
+                                                    widget.selectedDate,
                                               );
                                             },
                                             child: Container(
@@ -224,7 +260,8 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                                               width: 100,
                                               decoration: BoxDecoration(
                                                 color: Colors.black,
-                                                borderRadius: BorderRadius.circular(
+                                                borderRadius:
+                                                    BorderRadius.circular(
                                                   30,
                                                 ),
                                               ),
@@ -242,11 +279,20 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                                         ],
                                       ),
                                       SizedBox(height: 10),
-                                      if (bookingItemModel.bookingModel?.boatDetails?.instructors != null)
-                                        ...?bookingItemModel.bookingModel!.boatDetails?.instructors?.map(
+                                      if (bookingItemModel.bookingModel
+                                              ?.boatDetails?.instructors !=
+                                          null)
+                                        ...?bookingItemModel.bookingModel!
+                                            .boatDetails?.instructors
+                                            ?.map(
                                           (e) {
-                                            return _buildDiverName(e.name,
-                                                    bookingItemModel.bookingModel!.boatDetails!.instructors!.indexOf(e))
+                                            return _buildDiverName(
+                                                    e.name,
+                                                    bookingItemModel
+                                                        .bookingModel!
+                                                        .boatDetails!
+                                                        .instructors!
+                                                        .indexOf(e))
                                                 .paddingOnly(bottom: 6);
                                           },
                                         ),
@@ -254,24 +300,32 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                                       Row(
                                         children: [
                                           BookingStatus(
-                                            initialStatus: bookingModel.boatDetails?.bookingStatus ?? 0,
+                                            initialStatus: bookingModel
+                                                    .boatDetails
+                                                    ?.bookingStatus ??
+                                                0,
                                             onChanged: (int status) async {
                                               await updateBoatDetails(
                                                   bookingModel: bookingModel,
                                                   bookingStatus: status,
-                                                  selectedDate: widget.selectedDate);
+                                                  selectedDate:
+                                                      widget.selectedDate);
                                             },
                                           ),
                                           Spacer(),
                                           BoatSelector(
                                             key: UniqueKey(),
-                                            selectedBoatId: bookingModel.getBoatInfo(widget.selectedDate)?.id ?? "",
+                                            selectedBoatId: bookingModel
+                                                    .getBoatInfo(
+                                                        widget.selectedDate)
+                                                    ?.id ??
+                                                "",
                                             onChanged: (Boat boat) async {
-                                              log("kameba0");
                                               await updateBoatDetails(
                                                 bookingModel: bookingModel,
                                                 boatId: boat.id,
-                                                selectedDate: widget.selectedDate,
+                                                selectedDate:
+                                                    widget.selectedDate,
                                               );
                                             },
                                             selectedDate: widget.selectedDate,
@@ -288,8 +342,16 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                                             air: air,
                                           );
                                         },
-                                        nitrox: bookingModel.getBoatInfo(widget.selectedDate)?.nitrox ?? 0,
-                                        air: bookingModel.getBoatInfo(widget.selectedDate)?.air ?? 0,
+                                        nitrox: bookingModel
+                                                .getBoatInfo(
+                                                    widget.selectedDate)
+                                                ?.nitrox ??
+                                            0,
+                                        air: bookingModel
+                                                .getBoatInfo(
+                                                    widget.selectedDate)
+                                                ?.air ??
+                                            0,
                                       ),
                                       SizedBox(height: 20),
                                       AppTextField(
@@ -316,7 +378,8 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                                           onTap: () {
                                             updateBoatDetails(
                                               bookingModel: bookingModel,
-                                              employeeNotes: employeeNotesTED.text,
+                                              employeeNotes:
+                                                  employeeNotesTED.text,
                                               selectedDate: widget.selectedDate,
                                             );
                                           },
@@ -337,62 +400,6 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
         ),
       ),
     );
-  }
-
-  Widget buildAirNitrox({required String title, required bool isNitrox}) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 15),
-        Row(
-          children: [
-            buildIncrementDecrement(
-                onTap: () {
-                  if (isNitrox) {
-                    nitrox += 1;
-                  } else {
-                    air += 1;
-                  }
-                  setState(() {});
-                },
-                icon: Icons.add),
-            SizedBox(width: 15),
-            Text((isNitrox) ? nitrox.toString() : air.toString()),
-            SizedBox(width: 15),
-            buildIncrementDecrement(
-                onTap: () {
-                  if (isNitrox && nitrox > 0) {
-                    nitrox -= 1;
-                  } else if (air > 0) {
-                    air -= 1;
-                  }
-                  setState(() {});
-                },
-                icon: Icons.remove),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget buildIncrementDecrement({required Function onTap, required IconData icon}) {
-    return GestureDetector(
-        onTap: () {
-          onTap();
-        },
-        child: Container(
-          height: 30,
-          width: 30,
-          child: Icon(icon, size: 14),
-          color: Colors.grey.shade400,
-        ));
   }
 
   Widget _buildDiverName(String text, int index) {
@@ -431,14 +438,22 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
           Text(
             key,
             style: TextStyle(
-                color: Colors.grey[700], fontSize: 13, letterSpacing: 0.3, fontWeight: FontWeight.w600, height: 1.3),
+                color: Colors.grey[700],
+                fontSize: 13,
+                letterSpacing: 0.3,
+                fontWeight: FontWeight.w600,
+                height: 1.3),
           ).paddingOnly(right: 10)
         else
           Expanded(
             child: Text(
               key,
               style: TextStyle(
-                  color: Colors.grey[700], fontSize: 13, letterSpacing: 0.3, fontWeight: FontWeight.w600, height: 1.3),
+                  color: Colors.grey[700],
+                  fontSize: 13,
+                  letterSpacing: 0.3,
+                  fontWeight: FontWeight.w600,
+                  height: 1.3),
             ),
           ),
         Container(
@@ -485,7 +500,8 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
       log("kameba");
       BoatInfo? boatInfo = bookingModel.getBoatInfo(selectedDate);
       if (boatInfo == null) {
-        boatInfo = BoatInfo(id: boatId ?? '', air: air ?? 0, nitrox: nitrox ?? 0);
+        boatInfo =
+            BoatInfo(id: boatId ?? '', air: air ?? 0, nitrox: nitrox ?? 0);
       } else {
         boatInfo = boatInfo.copyWith(id: boatId, air: air, nitrox: nitrox);
       }
@@ -502,7 +518,10 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
       instructors: instructors,
     );
 
-    await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(
+    await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(bookingModel.id)
+        .set(
           bookingModel.toMap(),
         );
   }
@@ -539,13 +558,14 @@ class _TankCounterState extends State<TankCounter> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        buildAirNitrox(title: "Nirtox", isNitrox: true),
+        buildAirNitrox(title: "Nitrox", isNitrox: true),
         buildAirNitrox(title: "Air", isNitrox: false),
       ],
     );
   }
 
-  Widget buildIncrementDecrement({required Function onTap, required IconData icon}) {
+  Widget buildIncrementDecrement(
+      {required Function onTap, required IconData icon}) {
     return InkWell(
         onTap: () {
           onTap();
@@ -581,20 +601,6 @@ class _TankCounterState extends State<TankCounter> {
           children: [
             buildIncrementDecrement(
                 onTap: () {
-                  if (isNitrox) {
-                    nitrox += 1;
-                  } else {
-                    air += 1;
-                  }
-                  widget.onChanged(nitrox, air);
-                  setState(() {});
-                },
-                icon: Icons.add),
-            SizedBox(width: 15),
-            Text((isNitrox) ? nitrox.toString() : air.toString()),
-            SizedBox(width: 15),
-            buildIncrementDecrement(
-                onTap: () {
                   if (isNitrox && nitrox > 0) {
                     nitrox -= 1;
                   } else if (air > 0) {
@@ -604,9 +610,92 @@ class _TankCounterState extends State<TankCounter> {
                   setState(() {});
                 },
                 icon: Icons.remove),
+            SizedBox(width: 15),
+            Text((isNitrox) ? nitrox.toString() : air.toString()),
+            SizedBox(width: 15),
+            buildIncrementDecrement(
+                onTap: () {
+                  if (isNitrox) {
+                    nitrox += 1;
+                  } else {
+                    air += 1;
+                  }
+                  widget.onChanged(nitrox, air);
+                  setState(() {});
+                },
+                icon: Icons.add),
           ],
         ),
       ],
     );
+  }
+}
+
+class SizeCounter extends StatefulWidget {
+  SizeCounter({Key? key, required this.onChanged, required this.sizes})
+      : super(key: key);
+
+  final Function(int count) onChanged;
+  final List<String> sizes;
+
+  @override
+  State<SizeCounter> createState() => _SizeCounterState();
+}
+
+class _SizeCounterState extends State<SizeCounter> {
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        ...widget.sizes.map((e) => buildCounter(e)).toList(),
+      ],
+    );
+  }
+
+  Widget buildCounter(String e) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        SizedBox(
+          width: 30,
+          child: Text(e,
+              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
+        ),
+        SizedBox(width: 15),
+        buildIncrementDecrement(onTap: () {}, icon: Icons.add),
+        SizedBox(width: 15),
+        SizedBox(
+          width: 35,
+          height: 20,
+          child: TextField(
+            decoration: InputDecoration(
+              labelText: '',
+            ),
+          ),
+        ),
+        SizedBox(width: 15),
+        buildIncrementDecrement(onTap: () {}, icon: Icons.remove),
+      ],
+    ).paddingOnly(bottom: 10);
+  }
+
+  Widget buildIncrementDecrement(
+      {required Function onTap, required IconData icon}) {
+    return InkWell(
+        onTap: () {
+          onTap();
+        },
+        child: Container(
+          height: 30,
+          width: 30,
+          child: Icon(
+            icon,
+            size: 14,
+          ),
+          decoration: BoxDecoration(
+            color: AppColors.text.skyBlue.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(3),
+          ),
+        ));
   }
 }
