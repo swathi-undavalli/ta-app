@@ -1,16 +1,5 @@
-import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/app-button.dart';
-import 'package:temple_adventures/features/boat/models/boat-details.dart';
-import 'package:temple_adventures/features/boat/models/boat-model.dart';
 import 'package:temple_adventures/features/conditions/repositories/conditions-repository.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
-
-import '../../bookings/presentation/widgets/app-text-fields.dart';
 import '../models/conditions-model.dart';
 import '../screens/add-conditions-screen.dart';
 

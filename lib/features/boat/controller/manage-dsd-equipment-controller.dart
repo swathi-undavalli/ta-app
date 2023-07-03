@@ -2,11 +2,13 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/boat/models/boats.dart';
 import 'package:intl/intl.dart';
 
 class ManageDSDEquipmentLogic {
-  ManageDSDEquipmentController controller = Get.put(ManageDSDEquipmentController());
+  ManageDSDEquipmentController controller =
+      Get.put(ManageDSDEquipmentController());
 
   Future<void> init() async {
     var d = await FirebaseFirestore.instance
@@ -28,7 +30,8 @@ class ManageDSDEquipmentLogic {
 
       controller.dayOffTED.text = controller.boatsModel?.dsd.dayOff ?? '';
       controller.leavesTED.text = controller.boatsModel?.dsd.leaves ?? '';
-      controller.generalNotesTED.text = controller.boatsModel?.dsd.generalNotes ?? '';
+      controller.generalNotesTED.text =
+          controller.boatsModel?.dsd.generalNotes ?? '';
       controller.highTideTED.text = controller.boatsModel?.dsd.highTides ?? '';
       controller.lowTideTED.text = controller.boatsModel?.dsd.lowTides ?? '';
       controller.wavesTED.text = controller.boatsModel?.dsd.waves ?? '';
@@ -87,7 +90,23 @@ class ManageDSDEquipmentController extends GetxController {
   TextEditingController windsTED = TextEditingController();
 
   BoatsModel? boatsModel;
-  List<String> BCDSizes = ["XS","S","M","L","XL","XXL"];
+  List<String> bcdSizes = ["XS", "S", "M", "L", "XL", "XXL"];
+  List<String> weights = ["3 kg", "4 kg", "5 kg", "6 kg", "7 kg"];
+  bool _showLoading = false;
+
+  DateTime selectedDate = DateTime.now();
+
+  DateTime highTideTime = DateTime.now();
+  DateTime lowTideTime = DateTime.now();
+
+  List<Instructor>? dayOffEmployees;
+
+  bool get showLoading => _showLoading;
+
+  set showLoading(bool value) {
+    _showLoading = value;
+    update();
+  }
 
   reset() {
     bdcTED.text = "";

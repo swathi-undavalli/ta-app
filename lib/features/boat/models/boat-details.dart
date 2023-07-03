@@ -3,12 +3,14 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 
 class BoatDetails {
   int? bookingStatus;
+  List<String>? interns;
   final String? employeeNotes;
   final List<Instructor>? instructors;
   Map<String, dynamic>? boat;
 
   BoatDetails({
     this.bookingStatus,
+    this.interns,
     this.boat,
     this.employeeNotes,
     this.instructors,
@@ -17,11 +19,13 @@ class BoatDetails {
   BoatDetails copyWith({
     Map<String, dynamic>? boatId,
     String? employeeNotes,
+    List<String>? interns,
     int? bookingStatus,
     List<Instructor>? instructors,
   }) =>
       BoatDetails(
         boat: boatId ?? this.boat,
+        interns: interns ?? this.interns,
         employeeNotes: employeeNotes ?? this.employeeNotes,
         bookingStatus: bookingStatus ?? this.bookingStatus,
         instructors: instructors ?? this.instructors,
@@ -40,6 +44,7 @@ class BoatDetails {
       bookingStatus: json["bookingStatus"],
       instructors: List<Instructor>.from(
           (json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
+      interns: List<String>.from((json["interns"] ?? []).map((x) => x)),
     );
   }
 
@@ -49,6 +54,7 @@ class BoatDetails {
         "employeeNotes": employeeNotes,
         "instructors":
             List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
+        "interns": List<dynamic>.from((interns ?? []).map((x) => x)),
       };
 }
 
@@ -75,14 +81,12 @@ class Instructor {
 
   String toRawJson() => json.encode(toJson());
 
-  factory Instructor.fromJson(Map<String, dynamic> json) =>
-      Instructor(
+  factory Instructor.fromJson(Map<String, dynamic> json) => Instructor(
         id: json["id"],
         name: json["name"],
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
       };
@@ -135,15 +139,14 @@ class BoatInfo {
   String toJson() => json.encode(toMap());
 
   factory BoatInfo.fromMap(Map<String, dynamic> json) => BoatInfo(
-    id: json["id"],
-    air: json["air"],
-    nitrox: json["nitrox"],
-  );
+        id: json["id"],
+        air: json["air"],
+        nitrox: json["nitrox"],
+      );
 
   Map<String, dynamic> toMap() => {
-    "id": id,
-    "air": air,
-    "nitrox": nitrox,
-  };
+        "id": id,
+        "air": air,
+        "nitrox": nitrox,
+      };
 }
-

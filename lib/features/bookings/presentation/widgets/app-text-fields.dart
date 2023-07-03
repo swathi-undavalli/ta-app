@@ -10,6 +10,7 @@ class AppTextField extends StatefulWidget {
   Widget? suffixIcon;
   double width;
   String? hintText;
+  String? suffixText;
   bool required;
   Function(String?)? validator;
   Function(String)? onChangedCallBack;
@@ -28,6 +29,7 @@ class AppTextField extends StatefulWidget {
     this.maxLimit,
     this.isStrictNumber = false,
     this.labelText,
+    this.suffixText,
     this.minLines,
     this.maxLines,
     this.icon,
@@ -84,6 +86,7 @@ class _AppTextFieldsState extends State<AppTextField> {
               color: Colors.redAccent,
               fontWeight: FontWeight.bold,
             ),
+            suffixText: widget.suffixText,
             suffixIcon: widget.suffixIcon,
             icon: widget.icon,
             errorText: widget.errorValidator!(),

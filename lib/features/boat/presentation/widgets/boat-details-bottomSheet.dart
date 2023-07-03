@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
+import 'package:temple_adventures/core/widgets/time-picker.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/boat/models/boats.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
@@ -11,6 +12,7 @@ import 'package:temple_adventures/features/bookings/presentation/widgets/app-tex
 import 'package:intl/intl.dart';
 
 import 'customer-expandable-listTile.dart';
+import 'tank-counter.dart';
 
 class BoatDetailsBottomSheet extends StatefulWidget {
   const BoatDetailsBottomSheet({
@@ -25,7 +27,9 @@ class BoatDetailsBottomSheet extends StatefulWidget {
   final bool isBoatEdit;
 
   static Future<BoatsModel?> show(BuildContext context,
-      {required DateTime date, required bool isBoatEdit, Boat? initialBoat}) async {
+      {required DateTime date,
+      required bool isBoatEdit,
+      Boat? initialBoat}) async {
     var data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -47,7 +51,8 @@ class BoatDetailsBottomSheet extends StatefulWidget {
 }
 
 class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
-  final CollectionReference employeesCollection = FirebaseFirestore.instance.collection('employees');
+  final CollectionReference employeesCollection =
+      FirebaseFirestore.instance.collection('employees');
   List<Instructor> selectedCaptains = [];
   late TextEditingController boatTED;
   late TextEditingController diveSiteTED;
@@ -55,33 +60,25 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   late TextEditingController notesTED;
   int nitrox = 0;
   int air = 0;
-  late TimeOfDay selectedTime;
+  late DateTime selectedTime;
   String formattedTime = '';
 
   @override
   void initState() {
     boatTED = TextEditingController(text: widget.boat?.name ?? "");
-    surfaceSupportTED = TextEditingController(text: widget.boat?.surfaceSupport ?? "");
+    surfaceSupportTED =
+        TextEditingController(text: widget.boat?.surfaceSupport ?? "");
     notesTED = TextEditingController(text: widget.boat?.notes ?? "");
     diveSiteTED = TextEditingController(text: widget.boat?.diveSite);
     nitrox = widget.boat?.nitrox ?? 0;
     air = widget.boat?.air ?? 0;
 
     if (widget.boat?.time != null)
-      selectedTime = convertTimeStringToTimeOfDay(widget.boat?.time ?? '');
+      selectedTime = TimePicker.getDateTime(widget.boat?.time ?? '');
     else
-      selectedTime = TimeOfDay.now();
+      selectedTime = DateTime.now();
     if (widget.isBoatEdit) fetchEmployeeData();
     super.initState();
-  }
-
-  TimeOfDay convertTimeStringToTimeOfDay(String timeString) {
-    final formatter = DateFormat('hh:mm a');
-    final dateTime = formatter.parse(timeString);
-    final hour = dateTime.hour;
-    final minute = dateTime.minute;
-
-    return TimeOfDay(hour: hour, minute: minute);
   }
 
   Future<void> fetchEmployeeData() async {
@@ -96,8 +93,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   }
 
   Future<void> selectTime(BuildContext context) async {
-    final TimeOfDay? pickedTime = await showTimePicker(
-      context: context,
+    final DateTime? pickedTime = await TimePicker.show(
+      context,
       initialTime: selectedTime,
     );
 
@@ -108,17 +105,14 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     }
   }
 
-  String? formatTime(TimeOfDay time) {
-    final now = DateTime.now();
-    final selectedDateTime = DateTime(now.year, now.month, now.day, time.hour, time.minute);
-    formattedTime = DateFormat('hh:mm a').format(selectedDateTime);
-    return formattedTime;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, top: 20, left: 25, right: 20),
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          top: 20,
+          left: 25,
+          right: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(
           30,
@@ -153,8 +147,10 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 ? AppButton.miniFlat(
                     text: "Add Captains",
                     onTap: () async {
-                      selectedCaptains = (await EmpSelectorBottomSheet.show(context,
-                              initialSelectedEmployees: selectedCaptains, captainSelector: true)) ??
+                      selectedCaptains = (await EmpSelectorBottomSheet.show(
+                              context,
+                              initialSelectedEmployees: selectedCaptains,
+                              captainSelector: true)) ??
                           [];
                       setState(() {});
                     },
@@ -190,14 +186,21 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                           ),
                           GestureDetector(
                             onTap: () async {
-                              selectedCaptains = (await EmpSelectorBottomSheet.show(context,
-                                      initialSelectedEmployees: selectedCaptains, captainSelector: true)) ??
-                                  [];
+                              selectedCaptains =
+                                  (await EmpSelectorBottomSheet.show(
+                                          context,
+                                          initialSelectedEmployees:
+                                              selectedCaptains,
+                                          captainSelector: true)) ??
+                                      [];
                               setState(() {});
                             },
                             child: Text(
                               "Change",
-                              style: TextStyle(fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline),
                             ).paddingOnly(left: 10, right: 7),
                           ),
                           Icon(
@@ -248,12 +251,15 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   child: Container(
                     height: 30,
                     width: 100,
-                    decoration:
-                        BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(5)),
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black),
+                        borderRadius: BorderRadius.circular(5)),
                     child: Center(
                       child: Text(
-                        formatTime(selectedTime) ?? 'No time selected',
-                        style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        TimePicker.getFormattedTime(selectedTime) ??
+                            'No time selected',
+                        style: TextStyle(
+                            fontSize: 12, fontWeight: FontWeight.bold),
                       ),
                     ),
                   ),

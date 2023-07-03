@@ -165,8 +165,8 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                             if (selectedInstructors.contains(instructor)) {
                               selectedInstructors.remove(instructor);
                             } else {
-                              if (!widget.isCaptainSelector ||
-                                  selectedInstructors.length < 2) {
+                              if ((!widget.isCaptainSelector ||
+                                  selectedInstructors.length < 2)) {
                                 selectedInstructors.add(instructor);
                               } else {
                                 showToast("Only two captains can be selected");

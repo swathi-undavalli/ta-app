@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/tank-counter.dart';
 
 import '../../../../core/widgets/app-button.dart';
 import '../../../../core/widgets/booking-expansion-panel.dart';
@@ -14,6 +15,7 @@ import '../../models/boats.dart';
 import 'boat-selector.dart';
 import 'customer-booking-status.dart';
 import 'employee-selector-bottomSheet.dart';
+import 'interns-bottomSheet.dart';
 
 class CustomerExpandableListTile extends StatefulWidget {
   const CustomerExpandableListTile({
@@ -39,6 +41,7 @@ class _CustomerExpandableListTileState
   bool isExpanded = false;
   int nitrox = 0;
   int air = 0;
+
   ItemModel get itemModel => widget.itemModel;
 
   @override
@@ -217,86 +220,10 @@ class _CustomerExpandableListTileState
                                     crossAxisAlignment:
                                         CrossAxisAlignment.start,
                                     children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          SizedBox(
-                                            width: Get.width - 170,
-                                            child: Text(
-                                              "Instructors / Dive-Buddies :",
-                                              style: TextStyle(
-                                                fontSize: FontSize.textSize,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                          InkWell(
-                                            onTap: () async {
-                                              List<Instructor>? instructors =
-                                                  await EmpSelectorBottomSheet
-                                                      .show(
-                                                context,
-                                                initialSelectedEmployees:
-                                                    bookingItemModel
-                                                            .bookingModel
-                                                            ?.boatDetails
-                                                            ?.instructors ??
-                                                        [],
-                                                captainSelector: false,
-                                              );
-
-                                              log("tap instructors $instructors");
-
-                                              await updateBoatDetails(
-                                                instructors: instructors,
-                                                bookingModel: bookingModel,
-                                                selectedDate:
-                                                    widget.selectedDate,
-                                              );
-                                            },
-                                            child: Container(
-                                              height: 31,
-                                              width: 100,
-                                              decoration: BoxDecoration(
-                                                color: Colors.black,
-                                                borderRadius:
-                                                    BorderRadius.circular(
-                                                  30,
-                                                ),
-                                              ),
-                                              child: Center(
-                                                child: Text(
-                                                  "Manage",
-                                                  style: TextStyle(
-                                                    fontSize: 12,
-                                                    color: Colors.white,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      SizedBox(height: 10),
-                                      if (bookingItemModel.bookingModel
-                                              ?.boatDetails?.instructors !=
-                                          null)
-                                        ...?bookingItemModel.bookingModel!
-                                            .boatDetails?.instructors
-                                            ?.map(
-                                          (e) {
-                                            return _buildDiverName(
-                                                    e.name,
-                                                    bookingItemModel
-                                                        .bookingModel!
-                                                        .boatDetails!
-                                                        .instructors!
-                                                        .indexOf(e))
-                                                .paddingOnly(bottom: 6);
-                                          },
-                                        ),
-                                      SizedBox(height: 20),
+                                      buildManageInstructors(
+                                          bookingItemModel, bookingModel),
+                                      buildManageInterns(
+                                          bookingItemModel, bookingModel),
                                       Row(
                                         children: [
                                           BookingStatus(
@@ -402,6 +329,157 @@ class _CustomerExpandableListTileState
     );
   }
 
+  Widget buildManageInstructors(
+      ItemModel bookingItemModel, BookingModel bookingModel) {
+    if (widget.itemModel.activity != "Discover Scuba Diving")
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(
+                width: Get.width - 170,
+                child: Text(
+                  "Instructors / Dive-Buddies :",
+                  style: TextStyle(
+                    fontSize: FontSize.textSize,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              InkWell(
+                onTap: () async {
+                  List<Instructor>? instructors =
+                      await EmpSelectorBottomSheet.show(
+                    context,
+                    initialSelectedEmployees: bookingItemModel
+                            .bookingModel?.boatDetails?.instructors ??
+                        [],
+                    captainSelector: false,
+                  );
+
+                  log("tap instructors $instructors");
+
+                  await updateBoatDetails(
+                    instructors: instructors,
+                    bookingModel: bookingModel,
+                    selectedDate: widget.selectedDate,
+                  );
+                },
+                child: Container(
+                  height: 31,
+                  width: 100,
+                  decoration: BoxDecoration(
+                    color: Colors.black,
+                    borderRadius: BorderRadius.circular(
+                      30,
+                    ),
+                  ),
+                  child: Center(
+                    child: Text(
+                      "Manage",
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: 10),
+          if (bookingItemModel.bookingModel?.boatDetails?.instructors != null)
+            ...?bookingItemModel.bookingModel!.boatDetails?.instructors?.map(
+              (e) {
+                return _buildDiverName(
+                        e.name,
+                        bookingItemModel.bookingModel!.boatDetails!.instructors!
+                            .indexOf(e))
+                    .paddingOnly(bottom: 6);
+              },
+            ),
+          SizedBox(height: 20),
+        ],
+      );
+    return SizedBox();
+  }
+
+  Widget buildManageInterns(
+      ItemModel bookingItemModel, BookingModel bookingModel) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: Get.width - 170,
+              child: Text(
+                "Interns :",
+                style: TextStyle(
+                  fontSize: FontSize.textSize,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ),
+            InkWell(
+              onTap: () async {
+                List<String>? interns = await InternsBottomSheet.show(
+                  context,
+                  initialInterns:
+                      bookingItemModel.bookingModel?.boatDetails?.interns ?? [],
+                );
+
+                log("tap instructors $interns");
+
+                await updateBoatDetails(
+                  interns: interns,
+                  bookingModel: bookingModel,
+                  selectedDate: widget.selectedDate,
+                );
+              },
+              child: Container(
+                height: 31,
+                width: 100,
+                decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(
+                    30,
+                  ),
+                ),
+                child: Center(
+                  child: Text(
+                    "Manage",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        SizedBox(height: 10),
+        if (bookingItemModel.bookingModel?.boatDetails?.interns != null)
+          ...?bookingItemModel.bookingModel!.boatDetails?.interns?.map(
+            (e) {
+              return _buildDiverName(
+                      e,
+                      bookingItemModel.bookingModel!.boatDetails!.interns!
+                          .indexOf(e))
+                  .paddingOnly(bottom: 6);
+            },
+          ),
+        SizedBox(height: 20),
+      ],
+    );
+  }
+
   Widget _buildDiverName(String text, int index) {
     return RichText(
       text: TextSpan(
@@ -487,6 +565,7 @@ class _CustomerExpandableListTileState
     required DateTime selectedDate,
     String? boatId,
     String? boatName,
+    List<String>? interns,
     int? bookingStatus,
     int? nitrox,
     int? air,
@@ -513,10 +592,10 @@ class _CustomerExpandableListTileState
     }
 
     bookingModel.boatDetails = bookingModel.boatDetails?.copyWith(
-      bookingStatus: bookingStatus,
-      employeeNotes: employeeNotes,
-      instructors: instructors,
-    );
+        bookingStatus: bookingStatus,
+        employeeNotes: employeeNotes,
+        instructors: instructors,
+        interns: interns);
 
     await FirebaseFirestore.instance
         .collection('bookings')
@@ -527,175 +606,4 @@ class _CustomerExpandableListTileState
   }
 }
 
-class TankCounter extends StatefulWidget {
-  const TankCounter({
-    Key? key,
-    required this.onChanged,
-    required this.nitrox,
-    required this.air,
-  }) : super(key: key);
 
-  final Function(int nitrox, int air) onChanged;
-  final int nitrox;
-  final int air;
-
-  @override
-  State<TankCounter> createState() => _TankCounterState();
-}
-
-class _TankCounterState extends State<TankCounter> {
-  int air = 0, nitrox = 0;
-
-  @override
-  void initState() {
-    air = widget.air;
-    nitrox = widget.nitrox;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        buildAirNitrox(title: "Nitrox", isNitrox: true),
-        buildAirNitrox(title: "Air", isNitrox: false),
-      ],
-    );
-  }
-
-  Widget buildIncrementDecrement(
-      {required Function onTap, required IconData icon}) {
-    return InkWell(
-        onTap: () {
-          onTap();
-        },
-        child: Container(
-          height: 35,
-          width: 35,
-          child: Icon(
-            icon,
-            size: 14,
-            // color: Colors.white,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.text.skyBlue.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(3),
-          ),
-        ));
-  }
-
-  Widget buildAirNitrox({required String title, required bool isNitrox}) {
-    return Column(
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 15),
-        Row(
-          children: [
-            buildIncrementDecrement(
-                onTap: () {
-                  if (isNitrox && nitrox > 0) {
-                    nitrox -= 1;
-                  } else if (air > 0) {
-                    air -= 1;
-                  }
-                  widget.onChanged(nitrox, air);
-                  setState(() {});
-                },
-                icon: Icons.remove),
-            SizedBox(width: 15),
-            Text((isNitrox) ? nitrox.toString() : air.toString()),
-            SizedBox(width: 15),
-            buildIncrementDecrement(
-                onTap: () {
-                  if (isNitrox) {
-                    nitrox += 1;
-                  } else {
-                    air += 1;
-                  }
-                  widget.onChanged(nitrox, air);
-                  setState(() {});
-                },
-                icon: Icons.add),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class SizeCounter extends StatefulWidget {
-  SizeCounter({Key? key, required this.onChanged, required this.sizes})
-      : super(key: key);
-
-  final Function(int count) onChanged;
-  final List<String> sizes;
-
-  @override
-  State<SizeCounter> createState() => _SizeCounterState();
-}
-
-class _SizeCounterState extends State<SizeCounter> {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ...widget.sizes.map((e) => buildCounter(e)).toList(),
-      ],
-    );
-  }
-
-  Widget buildCounter(String e) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(
-          width: 30,
-          child: Text(e,
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-        ),
-        SizedBox(width: 15),
-        buildIncrementDecrement(onTap: () {}, icon: Icons.add),
-        SizedBox(width: 15),
-        SizedBox(
-          width: 35,
-          height: 20,
-          child: TextField(
-            decoration: InputDecoration(
-              labelText: '',
-            ),
-          ),
-        ),
-        SizedBox(width: 15),
-        buildIncrementDecrement(onTap: () {}, icon: Icons.remove),
-      ],
-    ).paddingOnly(bottom: 10);
-  }
-
-  Widget buildIncrementDecrement(
-      {required Function onTap, required IconData icon}) {
-    return InkWell(
-        onTap: () {
-          onTap();
-        },
-        child: Container(
-          height: 30,
-          width: 30,
-          child: Icon(
-            icon,
-            size: 14,
-          ),
-          decoration: BoxDecoration(
-            color: AppColors.text.skyBlue.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(3),
-          ),
-        ));
-  }
-}

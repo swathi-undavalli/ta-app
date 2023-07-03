@@ -1,6 +1,3 @@
-// To parse this JSON data, do
-//
-//     final boatPassengersModel = boatPassengersModelFromMap(jsonString);
 
 import 'dart:convert';
 
