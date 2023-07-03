@@ -117,7 +117,7 @@ class _BoatSelectorState extends State<BoatSelector> {
               nitrox: 0,
               air: 0,
               time: '',
-              diveSite: '',
+              diveSite: '', dsdInstructors: [],
             ),
             onTap: () {},
             child: Column(

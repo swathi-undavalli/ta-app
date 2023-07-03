@@ -206,7 +206,7 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
                   context,
                   initialSelectedEmployees:
                       logic.controller.dayOffEmployees ?? [],
-                  captainSelector: false,
+                  instructorLimit: -1,
                 );
                 logic.controller.update();
               },

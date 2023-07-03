@@ -8,26 +8,27 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 
 class EmpSelectorBottomSheet extends StatefulWidget {
   final List<Instructor> initialSelectedInstructors;
-  final bool isCaptainSelector;
+  final int instructorLimit;
 
   const EmpSelectorBottomSheet({
     Key? key,
     required this.initialSelectedInstructors,
-    required this.isCaptainSelector,
+    required this.instructorLimit,
   }) : super(key: key);
 
   static Future<List<Instructor>?> show(
     BuildContext context, {
     required List<Instructor> initialSelectedEmployees,
-    required bool captainSelector,
+    required int instructorLimit,
   }) async {
     var data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
+      isDismissible: false,
       builder: (BuildContext context) {
         return EmpSelectorBottomSheet(
           initialSelectedInstructors: initialSelectedEmployees,
-          isCaptainSelector: captainSelector,
+          instructorLimit: instructorLimit,
         );
       },
     );
@@ -165,11 +166,13 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                             if (selectedInstructors.contains(instructor)) {
                               selectedInstructors.remove(instructor);
                             } else {
-                              if ((!widget.isCaptainSelector ||
-                                  selectedInstructors.length < 2)) {
+                              if (selectedInstructors.length <
+                                  widget.instructorLimit) {
+                                selectedInstructors.add(instructor);
+                              } else if (widget.instructorLimit == -1) {
                                 selectedInstructors.add(instructor);
                               } else {
-                                showToast("Only two captains can be selected");
+                                showToast("Limit exceeded");
                               }
                             }
                             setState(() {});

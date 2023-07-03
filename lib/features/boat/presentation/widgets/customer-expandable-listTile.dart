@@ -39,8 +39,6 @@ class CustomerExpandableListTile extends StatefulWidget {
 class _CustomerExpandableListTileState
     extends State<CustomerExpandableListTile> {
   bool isExpanded = false;
-  int nitrox = 0;
-  int air = 0;
 
   ItemModel get itemModel => widget.itemModel;
 
@@ -357,7 +355,7 @@ class _CustomerExpandableListTileState
                     initialSelectedEmployees: bookingItemModel
                             .bookingModel?.boatDetails?.instructors ??
                         [],
-                    captainSelector: false,
+                    instructorLimit: 1,
                   );
 
                   log("tap instructors $instructors");
@@ -401,6 +399,21 @@ class _CustomerExpandableListTileState
                     .paddingOnly(bottom: 6);
               },
             ),
+          SizedBox(height: 10),
+          TankCounter(
+            onChanged: (int nitrox, int air) {
+              updateBoatDetails(
+                bookingModel: bookingModel,
+                selectedDate: widget.selectedDate,
+                instructorNitrox: nitrox,
+                instructorAir: air,
+              );
+            },
+            nitrox:
+                bookingModel.getInstructorTanks(widget.selectedDate)?.nitrox ??
+                    0,
+            air: bookingModel.getInstructorTanks(widget.selectedDate)?.air ?? 0,
+          ),
           SizedBox(height: 20),
         ],
       );
@@ -569,14 +582,14 @@ class _CustomerExpandableListTileState
     int? bookingStatus,
     int? nitrox,
     int? air,
+    int? instructorNitrox,
+    int? instructorAir,
     String? employeeNotes,
     List<Instructor>? instructors,
   }) async {
-    log("kameba1");
     if (bookingStatus != null) {
       bookingModel.boatDetails?.bookingStatus = bookingStatus;
     } else if (boatId != null || air != null || nitrox != null) {
-      log("kameba");
       BoatInfo? boatInfo = bookingModel.getBoatInfo(selectedDate);
       if (boatInfo == null) {
         boatInfo =
@@ -588,6 +601,21 @@ class _CustomerExpandableListTileState
       bookingModel.setBoatInfo(
         selectedDate,
         boatInfo,
+      );
+    } else if (instructorAir != null || instructorNitrox != null) {
+      InstructorTanks? instructorTanks =
+          bookingModel.getInstructorTanks(selectedDate);
+      if (instructorTanks == null) {
+        instructorTanks = InstructorTanks(
+            air: instructorAir ?? 0, nitrox: instructorNitrox ?? 0);
+      } else {
+        instructorTanks =
+            instructorTanks.copyWith(air: instructorAir, nitrox: instructorAir);
+      }
+
+      bookingModel.setInstructorTanks(
+        selectedDate,
+        instructorTanks,
       );
     }
 
@@ -605,5 +633,3 @@ class _CustomerExpandableListTileState
         );
   }
 }
-
-

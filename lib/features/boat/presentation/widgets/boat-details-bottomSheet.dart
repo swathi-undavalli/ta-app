@@ -54,6 +54,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   final CollectionReference employeesCollection =
       FirebaseFirestore.instance.collection('employees');
   List<Instructor> selectedCaptains = [];
+  List<Instructor> selectedDsdInstructors = [];
   late TextEditingController boatTED;
   late TextEditingController diveSiteTED;
   late TextEditingController surfaceSupportTED;
@@ -61,7 +62,6 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   int nitrox = 0;
   int air = 0;
   late DateTime selectedTime;
-  String formattedTime = '';
 
   @override
   void initState() {
@@ -88,7 +88,13 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       selectedCaptains.addAll(widget.boat!.captains as Iterable<Instructor>);
       log(selectedCaptains.toString());
     }
+    if (widget.boat?.dsdInstructors != null) {
+      log(widget.boat!.dsdInstructors.toString());
 
+      selectedDsdInstructors
+          .addAll(widget.boat!.dsdInstructors as Iterable<Instructor>);
+      log(selectedDsdInstructors.toString());
+    }
     if (mounted) setState(() {});
   }
 
@@ -110,7 +116,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     return Container(
       padding: EdgeInsets.only(
           bottom: MediaQuery.of(context).viewInsets.bottom,
-          top: 20,
+          top: 40,
           left: 25,
           right: 20),
       decoration: BoxDecoration(
@@ -150,7 +156,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                       selectedCaptains = (await EmpSelectorBottomSheet.show(
                               context,
                               initialSelectedEmployees: selectedCaptains,
-                              captainSelector: true)) ??
+                              instructorLimit: 2)) ??
                           [];
                       setState(() {});
                     },
@@ -191,7 +197,78 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                                           context,
                                           initialSelectedEmployees:
                                               selectedCaptains,
-                                          captainSelector: true)) ??
+                                          instructorLimit: 2)) ??
+                                      [];
+                              setState(() {});
+                            },
+                            child: Text(
+                              "Change",
+                              style: TextStyle(
+                                  fontSize: 12,
+                                  color: Colors.blue,
+                                  decoration: TextDecoration.underline),
+                            ).paddingOnly(left: 10, right: 7),
+                          ),
+                          Icon(
+                            Icons.edit,
+                            size: 12,
+                            color: Colors.blue,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+            (selectedDsdInstructors.isEmpty)
+                ? AppButton.miniFlat(
+                    text: "Add Instructors",
+                    onTap: () async {
+                      selectedDsdInstructors =
+                          (await EmpSelectorBottomSheet.show(
+                                context,
+                                initialSelectedEmployees:
+                                    selectedDsdInstructors,
+                                instructorLimit: -1,
+                              )) ??
+                              [];
+                      setState(() {});
+                    },
+                  )
+                : Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Selected Instructors :",
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      SizedBox(height: 10),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              ...selectedDsdInstructors.map(
+                                (e) => Text(
+                                  "${e.name}",
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.black,
+                                  ),
+                                ).paddingOnly(bottom: 4),
+                              ),
+                            ],
+                          ),
+                          GestureDetector(
+                            onTap: () async {
+                              selectedDsdInstructors =
+                                  (await EmpSelectorBottomSheet.show(context,
+                                          initialSelectedEmployees:
+                                              selectedDsdInstructors,
+                                          instructorLimit: -1)) ??
                                       [];
                               setState(() {});
                             },
@@ -296,7 +373,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               nitrox: nitrox,
               air: air,
             ),
-            SizedBox(height: 30),
+            SizedBox(height: 50),
             Center(
               child: AppButton.flat(
                 height: 50,
@@ -317,7 +394,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 30),
           ],
         ),
       ),
@@ -348,8 +425,9 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         notes: notesTED.text,
         nitrox: nitrox,
         air: air,
-        time: formattedTime,
+        time: TimePicker.getFormattedTime(selectedTime)!,
         diveSite: diveSiteTED.text,
+        dsdInstructors: selectedDsdInstructors,
       );
       boatsModel.boats?.add(boat);
     } else {
@@ -362,8 +440,9 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         notes: notesTED.text,
         nitrox: nitrox,
         air: air,
-        time: formattedTime,
+        time: TimePicker.getFormattedTime(selectedTime)!,
         diveSite: diveSiteTED.text,
+        dsdInstructors: selectedDsdInstructors,
       );
 
       boatsModel.boats?.removeWhere((b) => b.id == boatId);
