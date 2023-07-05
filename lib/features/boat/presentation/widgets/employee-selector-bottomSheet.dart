@@ -166,10 +166,10 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                             if (selectedInstructors.contains(instructor)) {
                               selectedInstructors.remove(instructor);
                             } else {
-                              if (selectedInstructors.length <
-                                  widget.instructorLimit) {
+                              if (widget.instructorLimit == -1) {
                                 selectedInstructors.add(instructor);
-                              } else if (widget.instructorLimit == -1) {
+                              } else if (selectedInstructors.length <
+                                  widget.instructorLimit) {
                                 selectedInstructors.add(instructor);
                               } else {
                                 showToast("Limit exceeded");

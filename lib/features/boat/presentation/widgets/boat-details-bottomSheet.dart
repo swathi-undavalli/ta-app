@@ -149,146 +149,15 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               ],
             ),
             SizedBox(height: 20),
-            (selectedCaptains.isEmpty)
-                ? AppButton.miniFlat(
-                    text: "Add Captains",
-                    onTap: () async {
-                      selectedCaptains = (await EmpSelectorBottomSheet.show(
-                              context,
-                              initialSelectedEmployees: selectedCaptains,
-                              instructorLimit: 2)) ??
-                          [];
-                      setState(() {});
-                    },
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Selected Captains :",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ...selectedCaptains.map(
-                                (e) => Text(
-                                  "${e.name}",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                  ),
-                                ).paddingOnly(bottom: 4),
-                              ),
-                            ],
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              selectedCaptains =
-                                  (await EmpSelectorBottomSheet.show(
-                                          context,
-                                          initialSelectedEmployees:
-                                              selectedCaptains,
-                                          instructorLimit: 2)) ??
-                                      [];
-                              setState(() {});
-                            },
-                            child: Text(
-                              "Change",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline),
-                            ).paddingOnly(left: 10, right: 7),
-                          ),
-                          Icon(
-                            Icons.edit,
-                            size: 12,
-                            color: Colors.blue,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-            (selectedDsdInstructors.isEmpty)
-                ? AppButton.miniFlat(
-                    text: "Add Instructors",
-                    onTap: () async {
-                      selectedDsdInstructors =
-                          (await EmpSelectorBottomSheet.show(
-                                context,
-                                initialSelectedEmployees:
-                                    selectedDsdInstructors,
-                                instructorLimit: -1,
-                              )) ??
-                              [];
-                      setState(() {});
-                    },
-                  )
-                : Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Selected Instructors :",
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 10),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              ...selectedDsdInstructors.map(
-                                (e) => Text(
-                                  "${e.name}",
-                                  style: TextStyle(
-                                    fontSize: 12,
-                                    color: Colors.black,
-                                  ),
-                                ).paddingOnly(bottom: 4),
-                              ),
-                            ],
-                          ),
-                          GestureDetector(
-                            onTap: () async {
-                              selectedDsdInstructors =
-                                  (await EmpSelectorBottomSheet.show(context,
-                                          initialSelectedEmployees:
-                                              selectedDsdInstructors,
-                                          instructorLimit: -1)) ??
-                                      [];
-                              setState(() {});
-                            },
-                            child: Text(
-                              "Change",
-                              style: TextStyle(
-                                  fontSize: 12,
-                                  color: Colors.blue,
-                                  decoration: TextDecoration.underline),
-                            ).paddingOnly(left: 10, right: 7),
-                          ),
-                          Icon(
-                            Icons.edit,
-                            size: 12,
-                            color: Colors.blue,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+            buildEmployeeSelector(
+                employees: selectedCaptains,
+                title: "Selected Captains : ",
+                employeeLimit: 2),
+            SizedBox(height: 20),
+            buildEmployeeSelector(
+                employees: selectedDsdInstructors,
+                title: "Selected Instructors : ",
+                employeeLimit: -1),
             AppTextField(
               hintText: "Boat name",
               controller: boatTED,
@@ -398,6 +267,78 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildEmployeeSelector(
+      {required List<Instructor> employees,
+      required String title,
+      required int employeeLimit}) {
+    if (employees.isEmpty) {
+      return AppButton.miniFlat(
+        text: "Add Captains",
+        onTap: () async {
+          employees = (await EmpSelectorBottomSheet.show(context,
+                  initialSelectedEmployees: employees,
+                  instructorLimit: employeeLimit)) ??
+              [];
+          setState(() {});
+        },
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 10),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...employees.map(
+                  (e) => Text(
+                    "${e.name}",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black,
+                    ),
+                  ).paddingOnly(bottom: 4),
+                ),
+              ],
+            ),
+            GestureDetector(
+              onTap: () async {
+                employees = (await EmpSelectorBottomSheet.show(context,
+                        initialSelectedEmployees: employees,
+                        instructorLimit: employeeLimit)) ??
+                    [];
+                setState(() {});
+              },
+              child: Text(
+                "Change",
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline),
+              ).paddingOnly(left: 10, right: 7),
+            ),
+            Icon(
+              Icons.edit,
+              size: 12,
+              color: Colors.blue,
+            ),
+          ],
+        ),
+      ],
     );
   }
 
