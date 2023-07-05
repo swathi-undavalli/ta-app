@@ -105,92 +105,96 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
                     ),
                     buildSectionTitle("BCD : "),
                     CounterWidget(
-                        size: "XS",
+                        label: "XS",
                         onChanged: (int count) {
                           controller.currentDsd.bcd?.xs = count;
                         },
                         initialValue: controller.currentDsd.bcd?.xs ?? 0),
                     CounterWidget(
-                        size: "S",
+                        label: "S",
                         onChanged: (int count) {
                           controller.currentDsd.bcd?.s = count;
                         },
                         initialValue: controller.currentDsd.bcd?.s ?? 0),
                     CounterWidget(
-                        size: "M",
+                        label: "M",
                         onChanged: (int count) {
                           controller.currentDsd.bcd?.m = count;
                         },
                         initialValue: controller.currentDsd.bcd?.m ?? 0),
                     CounterWidget(
-                        size: "L",
+                        label: "L",
                         onChanged: (int count) {
                           controller.currentDsd.bcd?.l = count;
                         },
                         initialValue: controller.currentDsd.bcd?.l ?? 0),
                     CounterWidget(
-                        size: "XL",
+                        label: "XL",
                         onChanged: (int count) {
                           controller.currentDsd.bcd?.xl = count;
                         },
                         initialValue: controller.currentDsd.bcd?.xl ?? 0),
                     CounterWidget(
-                        size: "XXL",
+                        label: "XXL",
                         onChanged: (int count) {
                           controller.currentDsd.bcd?.xxl = count;
                         },
                         initialValue: controller.currentDsd.bcd?.xxl ?? 0),
                     buildSectionTitle("Regulator : "),
                     CounterWidget(
-                        onChanged: (int count) {
-                          controller.currentDsd.regulator = count;
-                        },
-                        initialValue: controller.currentDsd.regulator ?? 0),
+                      onChanged: (int count) {
+                        controller.currentDsd.regulator = count;
+                      },
+                      initialValue: controller.currentDsd.regulator ?? 0,
+                    ).paddingOnly(left: 40),
                     buildSectionTitle("Mask : "),
                     CounterWidget(
-                        onChanged: (int count) {
-                          controller.currentDsd.mask = count;
-                        },
-                        initialValue: controller.currentDsd.mask ?? 0),
+                      onChanged: (int count) {
+                        controller.currentDsd.mask = count;
+                      },
+                      initialValue: controller.currentDsd.mask ?? 0,
+                    ).paddingOnly(left: 40),
                     buildSectionTitle("Power Mask : "),
                     CounterWidget(
-                        onChanged: (int count) {
-                          controller.currentDsd.powerMask = count;
-                        },
-                        initialValue: controller.currentDsd.powerMask ?? 0),
+                      onChanged: (int count) {
+                        controller.currentDsd.powerMask = count;
+                      },
+                      initialValue: controller.currentDsd.powerMask ?? 0,
+                    ).paddingOnly(left: 40),
                     buildSectionTitle("Fins : "),
                     CounterWidget(
-                        onChanged: (int count) {
-                          controller.currentDsd.fins = count;
-                        },
-                        initialValue: controller.currentDsd.fins ?? 0),
+                      onChanged: (int count) {
+                        controller.currentDsd.fins = count;
+                      },
+                      initialValue: controller.currentDsd.fins ?? 0,
+                    ).paddingOnly(left: 40),
                     buildSectionTitle("Weights : "),
                     CounterWidget(
-                        size: "3 kg",
+                        label: "3 kg",
                         onChanged: (int count) {
                           controller.currentDsd.weights?.w3 = count;
                         },
                         initialValue: controller.currentDsd.weights?.w3 ?? 0),
                     CounterWidget(
-                        size: "4 kg",
+                        label: "4 kg",
                         onChanged: (int count) {
                           controller.currentDsd.weights?.w4 = count;
                         },
                         initialValue: controller.currentDsd.weights?.w4 ?? 0),
                     CounterWidget(
-                        size: "5 kg",
+                        label: "5 kg",
                         onChanged: (int count) {
                           controller.currentDsd.weights?.w5 = count;
                         },
                         initialValue: controller.currentDsd.weights?.w5 ?? 0),
                     CounterWidget(
-                        size: "6 kg",
+                        label: "6 kg",
                         onChanged: (int count) {
                           controller.currentDsd.weights?.w6 = count;
                         },
                         initialValue: controller.currentDsd.weights?.w6 ?? 0),
                     CounterWidget(
-                        size: "7 kg",
+                        label: "7 kg",
                         onChanged: (int count) {
                           controller.currentDsd.weights?.w7 = count;
                         },

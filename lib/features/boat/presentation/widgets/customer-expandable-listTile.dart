@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/tank-counter.dart';
 
 import '../../../../core/widgets/app-button.dart';
@@ -258,25 +259,67 @@ class _CustomerExpandableListTileState
                                         ],
                                       ),
                                       SizedBox(height: 20),
-                                      TankCounter(
-                                        onChanged: (int nitrox, int air) {
-                                          updateBoatDetails(
-                                            bookingModel: bookingModel,
-                                            selectedDate: widget.selectedDate,
-                                            nitrox: nitrox,
-                                            air: air,
-                                          );
-                                        },
-                                        nitrox: bookingModel
-                                                .getBoatInfo(
-                                                    widget.selectedDate)
-                                                ?.nitrox ??
-                                            0,
-                                        air: bookingModel
-                                                .getBoatInfo(
-                                                    widget.selectedDate)
-                                                ?.air ??
-                                            0,
+                                      Container(
+                                        child: Row(
+                                          children: [
+                                            Column(
+                                              children: [
+                                                Text(
+                                                  "Nitrox",
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ).paddingOnly(bottom: 10),
+                                                Container(
+                                                  child: CounterWidget(
+                                                      onChanged: (int val) {
+                                                        updateBoatDetails(
+                                                          bookingModel:
+                                                              bookingModel,
+                                                          selectedDate: widget
+                                                              .selectedDate,
+                                                          nitrox: val,
+                                                        );
+                                                      },
+                                                      initialValue: bookingModel
+                                                              .getBoatInfo(widget
+                                                                  .selectedDate)
+                                                              ?.nitrox ??
+                                                          0),
+                                                )
+                                              ],
+                                            ),
+                                            Column(
+                                              children: [
+                                                Text(
+                                                  "Air",
+                                                  style: TextStyle(
+                                                    fontSize: 14,
+                                                    color: Colors.black,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ).paddingOnly(bottom: 10),
+                                                CounterWidget(
+                                                    onChanged: (int val) {
+                                                      updateBoatDetails(
+                                                        bookingModel:
+                                                            bookingModel,
+                                                        selectedDate:
+                                                            widget.selectedDate,
+                                                        air: val,
+                                                      );
+                                                    },
+                                                    initialValue: bookingModel
+                                                            .getBoatInfo(widget
+                                                                .selectedDate)
+                                                            ?.air ??
+                                                        0)
+                                              ],
+                                            ),
+                                          ],
+                                        ),
                                       ),
                                       SizedBox(height: 20),
                                       AppTextField(
@@ -400,19 +443,61 @@ class _CustomerExpandableListTileState
               },
             ),
           SizedBox(height: 10),
-          TankCounter(
-            onChanged: (int nitrox, int air) {
-              updateBoatDetails(
-                bookingModel: bookingModel,
-                selectedDate: widget.selectedDate,
-                instructorNitrox: nitrox,
-                instructorAir: air,
-              );
-            },
-            nitrox:
-                bookingModel.getInstructorTanks(widget.selectedDate)?.nitrox ??
-                    0,
-            air: bookingModel.getInstructorTanks(widget.selectedDate)?.air ?? 0,
+          Container(
+            child: Row(
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      "Nitrox",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ).paddingOnly(bottom: 10),
+                    Container(
+                      child: CounterWidget(
+                          onChanged: (int val) {
+                            updateBoatDetails(
+                              bookingModel: bookingModel,
+                              selectedDate: widget.selectedDate,
+                              instructorNitrox: val,
+                            );
+                          },
+                          initialValue: bookingModel
+                                  .getInstructorTanks(widget.selectedDate)
+                                  ?.nitrox ??
+                              0),
+                    )
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      "Air",
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ).paddingOnly(bottom: 10),
+                    CounterWidget(
+                        onChanged: (int val) {
+                          updateBoatDetails(
+                            bookingModel: bookingModel,
+                            selectedDate: widget.selectedDate,
+                            instructorAir: val,
+                          );
+                        },
+                        initialValue: bookingModel
+                                .getInstructorTanks(widget.selectedDate)
+                                ?.air ??
+                            0)
+                  ],
+                ),
+              ],
+            ),
           ),
           SizedBox(height: 20),
         ],
@@ -609,8 +694,8 @@ class _CustomerExpandableListTileState
         instructorTanks = InstructorTanks(
             air: instructorAir ?? 0, nitrox: instructorNitrox ?? 0);
       } else {
-        instructorTanks =
-            instructorTanks.copyWith(air: instructorAir, nitrox: instructorAir);
+        instructorTanks = instructorTanks.copyWith(
+            air: instructorAir, nitrox: instructorNitrox);
       }
 
       bookingModel.setInstructorTanks(

@@ -4,11 +4,14 @@ import 'package:temple_adventures/core/constants/constants.dart';
 
 class CounterWidget extends StatefulWidget {
   CounterWidget(
-      {Key? key, required this.onChanged, this.size, required this.initialValue})
+      {Key? key,
+      required this.onChanged,
+      this.label,
+      required this.initialValue})
       : super(key: key);
 
   final Function(int count) onChanged;
-  final String? size;
+  final String? label;
   final int initialValue;
 
   @override
@@ -28,19 +31,21 @@ class _CounterWidgetState extends State<CounterWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return buildCounter(widget.size ?? "");
+    return buildCounter(widget.label);
   }
 
-  Widget buildCounter(String e) {
+  Widget buildCounter(String? e) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        SizedBox(
-          width: 40,
-          child: Center(
-              child: Text(e,
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600))),
-        ),
+        if (e != null)
+          SizedBox(
+            width: 40,
+            child: Center(
+                child: Text(e,
+                    style:
+                        TextStyle(fontSize: 14, fontWeight: FontWeight.w600))),
+          ),
         SizedBox(width: 15),
         buildIncrementDecrement(
             onTap: () {
