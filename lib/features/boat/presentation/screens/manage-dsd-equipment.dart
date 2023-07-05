@@ -25,6 +25,7 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
 
   @override
   void initState() {
+    logic.controller.selectedDate = DateTime.now();
     logic.init().whenComplete(() => logic.controller.update());
     super.initState();
   }
@@ -65,126 +66,204 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
           return true;
         },
         child: SafeArea(
-          child:
-              GetBuilder<ManageDSDEquipmentController>(builder: (controller) {
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(height: 20),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Text(
-                        DateFormat('dd-MMM-yyyy')
-                            .format(controller.selectedDate),
-                        style: TextStyle(
-                            fontSize: 14, fontWeight: FontWeight.w600),
-                      ),
-                      IconButton(
-                        splashRadius: 20,
-                        onPressed: () {
-                          selectDate(context);
-                        },
-                        icon: Icon(
-                          Icons.calendar_today_outlined,
-                          size: 17,
+          child: GetBuilder<ManageDSDEquipmentController>(
+            builder: (controller) {
+              if (controller.showLoading)
+                return Container(
+                  height: Get.height,
+                  width: Get.width,
+                  child: Center(
+                      child: CircularProgressIndicator(
+                    color: Colors.black,
+                  )),
+                );
+              return SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(height: 20),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          DateFormat('dd-MMM-yyyy')
+                              .format(controller.selectedDate),
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w600),
                         ),
+                        IconButton(
+                          splashRadius: 20,
+                          onPressed: () {
+                            selectDate(context);
+                          },
+                          icon: Icon(
+                            Icons.calendar_today_outlined,
+                            size: 17,
+                          ),
+                        ),
+                      ],
+                    ),
+                    buildSectionTitle("BCD : "),
+                    CounterWidget(
+                        size: "XS",
+                        onChanged: (int count) {
+                          controller.currentDsd.bcd?.xs = count;
+                        },
+                        initialValue: controller.currentDsd.bcd?.xs ?? 0),
+                    CounterWidget(
+                        size: "S",
+                        onChanged: (int count) {
+                          controller.currentDsd.bcd?.s = count;
+                        },
+                        initialValue: controller.currentDsd.bcd?.s ?? 0),
+                    CounterWidget(
+                        size: "M",
+                        onChanged: (int count) {
+                          controller.currentDsd.bcd?.m = count;
+                        },
+                        initialValue: controller.currentDsd.bcd?.m ?? 0),
+                    CounterWidget(
+                        size: "L",
+                        onChanged: (int count) {
+                          controller.currentDsd.bcd?.l = count;
+                        },
+                        initialValue: controller.currentDsd.bcd?.l ?? 0),
+                    CounterWidget(
+                        size: "XL",
+                        onChanged: (int count) {
+                          controller.currentDsd.bcd?.xl = count;
+                        },
+                        initialValue: controller.currentDsd.bcd?.xl ?? 0),
+                    CounterWidget(
+                        size: "XXL",
+                        onChanged: (int count) {
+                          controller.currentDsd.bcd?.xxl = count;
+                        },
+                        initialValue: controller.currentDsd.bcd?.xxl ?? 0),
+                    buildSectionTitle("Regulator : "),
+                    CounterWidget(
+                        onChanged: (int count) {
+                          controller.currentDsd.regulator = count;
+                        },
+                        initialValue: controller.currentDsd.regulator ?? 0),
+                    buildSectionTitle("Mask : "),
+                    CounterWidget(
+                        onChanged: (int count) {
+                          controller.currentDsd.mask = count;
+                        },
+                        initialValue: controller.currentDsd.mask ?? 0),
+                    buildSectionTitle("Power Mask : "),
+                    CounterWidget(
+                        onChanged: (int count) {
+                          controller.currentDsd.powerMask = count;
+                        },
+                        initialValue: controller.currentDsd.powerMask ?? 0),
+                    buildSectionTitle("Fins : "),
+                    CounterWidget(
+                        onChanged: (int count) {
+                          controller.currentDsd.fins = count;
+                        },
+                        initialValue: controller.currentDsd.fins ?? 0),
+                    buildSectionTitle("Weights : "),
+                    CounterWidget(
+                        size: "3 kg",
+                        onChanged: (int count) {
+                          controller.currentDsd.weights?.w3 = count;
+                        },
+                        initialValue: controller.currentDsd.weights?.w3 ?? 0),
+                    CounterWidget(
+                        size: "4 kg",
+                        onChanged: (int count) {
+                          controller.currentDsd.weights?.w4 = count;
+                        },
+                        initialValue: controller.currentDsd.weights?.w4 ?? 0),
+                    CounterWidget(
+                        size: "5 kg",
+                        onChanged: (int count) {
+                          controller.currentDsd.weights?.w5 = count;
+                        },
+                        initialValue: controller.currentDsd.weights?.w5 ?? 0),
+                    CounterWidget(
+                        size: "6 kg",
+                        onChanged: (int count) {
+                          controller.currentDsd.weights?.w6 = count;
+                        },
+                        initialValue: controller.currentDsd.weights?.w6 ?? 0),
+                    CounterWidget(
+                        size: "7 kg",
+                        onChanged: (int count) {
+                          controller.currentDsd.weights?.w7 = count;
+                        },
+                        initialValue: controller.currentDsd.weights?.w7 ?? 0),
+                    SizedBox(height: 20),
+                    buildSectionTitle("Employees : "),
+                    SizedBox(height: 10),
+                    buildDayOffs(),
+                    AppTextField(
+                      controller: controller.generalNotesTED,
+                      hintText: "General Notes",
+                      minLines: 2,
+                      errorValidator: () {
+                        return null;
+                      },
+                      validator: (_) {
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    buildSectionTitle("Weather : "),
+                    buildTides(context,
+                        time: controller.highTideTime,
+                        title: "High Tide : ", onTap: () {
+                      selectHighTideTime(context);
+                    }),
+                    SizedBox(height: 10),
+                    buildTides(context,
+                        time: controller.lowTideTime,
+                        title: "Low Tide : ", onTap: () {
+                      selectLowTideTime(context);
+                    }),
+                    AppTextField(
+                      controller: controller.wavesTED,
+                      hintText: "Waves",
+                      suffixText: "mt/s",
+                      keyboardType: TextInputType.number,
+                      errorValidator: () {
+                        return null;
+                      },
+                      validator: (_) {
+                        return null;
+                      },
+                    ),
+                    AppTextField(
+                      controller: controller.windsTED,
+                      hintText: "Winds",
+                      keyboardType: TextInputType.number,
+                      suffixText: "km/hr",
+                      errorValidator: () {
+                        return null;
+                      },
+                      validator: (_) {
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 50),
+                    Center(
+                      child: AppButton.flat(
+                        text: "Submit",
+                        onTap: () {
+                          logic.onSubmitPressed();
+                        },
+                        color: Colors.black,
+                        textColor: Colors.white,
                       ),
-                    ],
-                  ),
-                  buildSectionTitle("BCD : "),
-                  ...controller.bcdSizes.map(
-                    (e) => CounterWidget(
-                      onChanged: (int count) {
-                        log(count.toString());
-                      },
-                      size: e,
-                      countValue: 0,
                     ),
-                  ),
-                  buildSectionTitle("Regulator : "),
-                  CounterWidget(onChanged: (int count) {}, countValue: 0),
-                  buildSectionTitle("Mask : "),
-                  CounterWidget(onChanged: (int count) {}, countValue: 0),
-                  buildSectionTitle("Power Mask : "),
-                  CounterWidget(onChanged: (int count) {}, countValue: 0),
-                  buildSectionTitle("Fins : "),
-                  CounterWidget(onChanged: (int count) {}, countValue: 0),
-                  buildSectionTitle("Weights : "),
-                  ...controller.weights.map((e) => CounterWidget(
-                        onChanged: (int count) {},
-                        countValue: 0,
-                        size: e,
-                      )),
-                  SizedBox(height: 20),
-                  buildSectionTitle("Employees : "),
-                  SizedBox(height: 10),
-                  buildDayOffs(),
-                  AppTextField(
-                    controller: controller.generalNotesTED,
-                    hintText: "General Notes",
-                    minLines: 2,
-                    errorValidator: () {
-                      return null;
-                    },
-                    validator: (_) {
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 10),
-                  buildSectionTitle("Weather : "),
-                  buildTides(context,
-                      time: controller.highTideTime,
-                      title: "High Tide : ", onTap: () {
-                    selectHighTideTime(context);
-                  }),
-                  SizedBox(height: 10),
-                  buildTides(context,
-                      time: controller.lowTideTime,
-                      title: "Low Tide : ", onTap: () {
-                    selectLowTideTime(context);
-                  }),
-                  AppTextField(
-                    controller: controller.wavesTED,
-                    hintText: "Waves",
-                    suffixText: "mt/s",
-                    keyboardType: TextInputType.number,
-                    errorValidator: () {
-                      return null;
-                    },
-                    validator: (_) {
-                      return null;
-                    },
-                  ),
-                  AppTextField(
-                    controller: controller.windsTED,
-                    hintText: "Winds",
-                    keyboardType: TextInputType.number,
-                    suffixText: "km/hr",
-                    errorValidator: () {
-                      return null;
-                    },
-                    validator: (_) {
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 50),
-                  Center(
-                    child: AppButton.flat(
-                      text: "Submit",
-                      onTap: () {
-                        logic.onSubmitPressed();
-                      },
-                      color: Colors.black,
-                      textColor: Colors.white,
-                    ),
-                  ),
-                  SizedBox(height: 40),
-                ],
-              ).paddingSymmetric(horizontal: 20),
-            );
-          }),
+                    SizedBox(height: 40),
+                  ],
+                ).paddingSymmetric(horizontal: 20),
+              );
+            },
+          ),
         ),
       ),
     );
@@ -201,11 +280,11 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
             SizedBox(width: 20),
             InkWell(
               onTap: () async {
-                logic.controller.dayOffEmployees =
+                logic.controller.currentDsd.dayOffs =
                     await EmpSelectorBottomSheet.show(
                   context,
                   initialSelectedEmployees:
-                      logic.controller.dayOffEmployees ?? [],
+                      logic.controller.currentDsd.dayOffs ?? [],
                   instructorLimit: -1,
                 );
                 logic.controller.update();
@@ -233,9 +312,9 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
           ],
         ),
         SizedBox(height: 15),
-        if (logic.controller.dayOffEmployees != null)
-          ...?logic.controller.dayOffEmployees?.map((e) => Text(
-                  "${(logic.controller.dayOffEmployees?.indexOf(e))! + 1} .  ${e.name}",
+        if (logic.controller.currentDsd.dayOffs != null)
+          ...?logic.controller.currentDsd.dayOffs?.map((e) => Text(
+                  "${(logic.controller.currentDsd.dayOffs?.indexOf(e))! + 1} .  ${e.name}",
                   style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500))
               .paddingOnly(top: 5))
       ],
@@ -302,7 +381,7 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
     if (date != null) {
       logic.controller.selectedDate = date;
       logic.controller.showLoading = true;
-      // await logic.getLatestConditions();
+      await logic.init();
       logic.controller.showLoading = false;
     }
   }

@@ -4,7 +4,7 @@ import 'package:temple_adventures/features/boat/models/boat-details.dart';
 
 class BoatsModel {
   final List<Boat>? boats;
-  final Dsd dsd;
+  final Dsd? dsd;
 
   BoatsModel({
     required this.boats,
@@ -33,37 +33,32 @@ class BoatsModel {
 
   Map<String, dynamic> toJson() => {
         "boats": List<dynamic>.from((boats ?? []).map((x) => x.toJson())),
-        "dsd": dsd.toJson(),
+        "dsd": dsd?.toJson(),
       };
 }
 
 class Dsd {
-  final String? bcd;
-  final String? boots;
-  final String? fins;
-  final String? mask;
-  final String? powerMask;
-  final String? reg;
-  final String? weight;
-
-  final String? dayOff;
-  final String? leaves;
-  final String? generalNotes;
-  final String? highTides;
-  final String? lowTides;
-  final String? waves;
-  final String? winds;
+  Bcd? bcd;
+  int? fins;
+  int? mask;
+  int? regulator;
+  Weights? weights;
+  int? powerMask;
+  List<Instructor>? dayOffs;
+  String? generalNotes;
+  String? highTides;
+  String? waves;
+  String? lowTides;
+  String? winds;
 
   Dsd({
     required this.bcd,
-    required this.boots,
     required this.fins,
     required this.mask,
+    required this.regulator,
     required this.powerMask,
-    required this.reg,
-    required this.weight,
-    required this.dayOff,
-    required this.leaves,
+    required this.weights,
+    required this.dayOffs,
     required this.generalNotes,
     required this.highTides,
     required this.lowTides,
@@ -72,15 +67,13 @@ class Dsd {
   });
 
   Dsd copyWith({
-    String? bcd,
-    String? boots,
-    String? fins,
-    String? mask,
-    String? powerMask,
-    String? reg,
-    String? weight,
-    String? dayOff,
-    String? leaves,
+    Bcd? bcd,
+    int? fins,
+    int? mask,
+    int? regulator,
+    int? powerMask,
+    Weights? weights,
+    List<Instructor>? dayOffs,
     String? generalNotes,
     String? highTides,
     String? lowTides,
@@ -89,14 +82,12 @@ class Dsd {
   }) =>
       Dsd(
         bcd: bcd ?? this.bcd,
-        boots: boots ?? this.boots,
         fins: fins ?? this.fins,
+        regulator: regulator ?? this.regulator,
         mask: mask ?? this.mask,
         powerMask: powerMask ?? this.powerMask,
-        reg: reg ?? this.reg,
-        weight: weight ?? this.weight,
-        dayOff: dayOff ?? this.dayOff,
-        leaves: leaves ?? this.leaves,
+        weights: weights ?? this.weights,
+        dayOffs: dayOffs ?? this.dayOffs,
         generalNotes: generalNotes ?? this.generalNotes,
         highTides: highTides ?? this.highTides,
         lowTides: lowTides ?? this.lowTides,
@@ -109,15 +100,14 @@ class Dsd {
   String toRawJson() => json.encode(toJson());
 
   factory Dsd.fromJson(Map<String, dynamic> json) => Dsd(
-        bcd: json["bcd"],
-        boots: json["boots"],
+        bcd: Bcd.fromJson((json["bcd"]) ?? {}),
         fins: json["fins"],
+        regulator: json["regulator"],
         mask: json["mask"],
         powerMask: json["powerMask"],
-        reg: json["reg"],
-        weight: json["weight"],
-        dayOff: json["dayOff"],
-        leaves: json["leaves"],
+        weights: Weights.fromJson((json["weights"]) ?? {}),
+        dayOffs: List<Instructor>.from(
+            ((json["dayOffs"]) ?? []).map((x) => Instructor.fromJson(x))),
         generalNotes: json["generalNotes"],
         highTides: json["highTides"],
         lowTides: json["lowTides"],
@@ -126,15 +116,13 @@ class Dsd {
       );
 
   Map<String, dynamic> toJson() => {
-        "bcd": bcd,
-        "boots": boots,
+        "bcd": bcd?.toJson(),
         "fins": fins,
+        "regulator": regulator,
         "mask": mask,
         "powerMask": powerMask,
-        "reg": reg,
-        "weight": weight,
-        "dayOff": dayOff,
-        "leaves": leaves,
+        "weights": weights?.toJson(),
+        "dayOffs": List<dynamic>.from((dayOffs ?? []).map((x) => x.toJson())),
         "generalNotes": generalNotes,
         "highTides": highTides,
         "lowTides": lowTides,
@@ -143,9 +131,119 @@ class Dsd {
       };
 }
 
+class Bcd {
+  int? xs;
+  int? s;
+  int? m;
+  int? l;
+  int? xl;
+  int? xxl;
+
+  Bcd({
+    required this.xs,
+    required this.s,
+    required this.m,
+    required this.l,
+    required this.xl,
+    required this.xxl,
+  });
+
+  Bcd copyWith({
+    int? xs,
+    int? s,
+    int? m,
+    int? l,
+    int? xl,
+    int? xxl,
+  }) =>
+      Bcd(
+        xs: xs ?? this.xs,
+        s: s ?? this.s,
+        m: m ?? this.m,
+        l: l ?? this.l,
+        xl: xl ?? this.xl,
+        xxl: xxl ?? this.xxl,
+      );
+
+  factory Bcd.fromRawJson(String str) => Bcd.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Bcd.fromJson(Map<String, dynamic> json) => Bcd(
+        xs: json["XS"],
+        s: json["S"],
+        m: json["M"],
+        l: json["L"],
+        xl: json["XL"],
+        xxl: json["XXL"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "XS": xs,
+        "S": s,
+        "M": m,
+        "L": l,
+        "XL": xl,
+        "XXL": xxl,
+      };
+}
+
+class Weights {
+  int? w3;
+  int? w4;
+  int? w5;
+  int? w6;
+  int? w7;
+
+  Weights({
+    required this.w3,
+    required this.w4,
+    required this.w5,
+    required this.w6,
+    required this.w7,
+  });
+
+  Weights copyWith({
+    int? w3,
+    int? w4,
+    int? w5,
+    int? w6,
+    int? w7,
+  }) =>
+      Weights(
+        w3: w3 ?? this.w3,
+        w4: w4 ?? this.w4,
+        w5: w5 ?? this.w5,
+        w6: w6 ?? this.w6,
+        w7: w7 ?? this.w7,
+      );
+
+  factory Weights.fromRawJson(String str) => Weights.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Weights.fromJson(Map<String, dynamic> json) => Weights(
+        w3: json["w3"],
+        w4: json["w4"],
+        w5: json["w5"],
+        w6: json["w6"],
+        w7: json["w7"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "w3": w3,
+        "w4": w4,
+        "w5": w5,
+        "w6": w6,
+        "w7": w7,
+      };
+}
+
 class Boat {
   final List<Instructor>? captains;
   final List<Instructor>? dsdInstructors;
+  final List<Instructor>? photographer;
+  final List<Instructor>? videographer;
   final String id;
   final String time;
   final String? surfaceSupport;
@@ -159,6 +257,8 @@ class Boat {
   Boat({
     required this.captains,
     required this.dsdInstructors,
+    required this.photographer,
+    required this.videographer,
     required this.time,
     required this.id,
     required this.nitrox,
@@ -172,6 +272,8 @@ class Boat {
   Boat copyWith({
     List<Instructor>? captains,
     List<Instructor>? dsdInstructors,
+    List<Instructor>? videographer,
+    List<Instructor>? photographer,
     String? id,
     String? time,
     int? nitrox,
@@ -184,6 +286,8 @@ class Boat {
       Boat(
         captains: captains ?? this.captains,
         dsdInstructors: dsdInstructors ?? this.dsdInstructors,
+        photographer: photographer ?? this.photographer,
+        videographer: videographer ?? this.videographer,
         id: id ?? this.id,
         time: time ?? this.time,
         air: airInt ?? this.air,
@@ -203,6 +307,10 @@ class Boat {
             (json["captains"] ?? []).map((x) => Instructor.fromJson(x))),
         dsdInstructors: List<Instructor>.from(
             (json["dsdInstructors"] ?? []).map((x) => Instructor.fromJson(x))),
+        videographer: List<Instructor>.from(
+            (json["videographer"] ?? []).map((x) => Instructor.fromJson(x))),
+        photographer: List<Instructor>.from(
+            (json["photographer"] ?? []).map((x) => Instructor.fromJson(x))),
         id: json["id"],
         time: json["time"],
         notes: json["notes"],
@@ -217,6 +325,10 @@ class Boat {
         "captains": List<dynamic>.from((captains ?? []).map((x) => x.toJson())),
         "dsdInstructors":
             List<dynamic>.from((dsdInstructors ?? []).map((x) => x.toJson())),
+        "photographer":
+            List<dynamic>.from((photographer ?? []).map((x) => x.toJson())),
+        "videographer":
+            List<dynamic>.from((videographer ?? []).map((x) => x.toJson())),
         "id": id,
         "time": time,
         "surfaceSupport": surfaceSupport,

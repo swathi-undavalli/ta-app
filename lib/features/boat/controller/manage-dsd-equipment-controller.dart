@@ -2,6 +2,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/core/widgets/time-picker.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/boat/models/boats.dart';
 import 'package:intl/intl.dart';
@@ -11,81 +12,55 @@ class ManageDSDEquipmentLogic {
       Get.put(ManageDSDEquipmentController());
 
   Future<void> init() async {
+    controller.showLoading = true;
     var d = await FirebaseFirestore.instance
         .collection("dailyBoats")
-        .doc(DateFormat("dd-MM-yyyy").format(DateTime.now()))
+        .doc(DateFormat("dd-MM-yyyy").format(controller.selectedDate))
         .get();
 
     Map<String, dynamic>? data = d.data();
-    if (data != null) {
-      controller.boatsModel = BoatsModel.fromJson(data);
-
-      controller.bdcTED.text = controller.boatsModel?.dsd.bcd ?? '';
-      controller.regTED.text = controller.boatsModel?.dsd.reg ?? '';
-      controller.maskTED.text = controller.boatsModel?.dsd.mask ?? '';
-      controller.powerMaskTED.text = controller.boatsModel?.dsd.powerMask ?? '';
-      controller.finsTED.text = controller.boatsModel?.dsd.fins ?? '';
-      controller.bootsTED.text = controller.boatsModel?.dsd.boots ?? '';
-      controller.weightsTED.text = controller.boatsModel?.dsd.weight ?? '';
-
-      controller.dayOffTED.text = controller.boatsModel?.dsd.dayOff ?? '';
-      controller.leavesTED.text = controller.boatsModel?.dsd.leaves ?? '';
-      controller.generalNotesTED.text =
-          controller.boatsModel?.dsd.generalNotes ?? '';
-      controller.highTideTED.text = controller.boatsModel?.dsd.highTides ?? '';
-      controller.lowTideTED.text = controller.boatsModel?.dsd.lowTides ?? '';
-      controller.wavesTED.text = controller.boatsModel?.dsd.waves ?? '';
-      controller.windsTED.text = controller.boatsModel?.dsd.winds ?? '';
+    BoatsModel? boatsModel = BoatsModel.fromJson(data);
+    if (boatsModel.dsd == null) {
+      controller.currentDsd = Dsd(
+        bcd: Bcd(xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0),
+        fins: 0,
+        mask: 0,
+        regulator: 0,
+        powerMask: 0,
+        weights: Weights(w3: 0, w4: 0, w5: 0, w6: 0, w7: 0),
+        dayOffs: [],
+        generalNotes: null,
+        highTides: null,
+        lowTides: null,
+        waves: null,
+        winds: null,
+      );
+    } else {
+      controller.currentDsd = boatsModel.dsd!;
     }
+    controller.showLoading = false;
   }
 
   Future<void> onSubmitPressed() async {
-    Dsd dsd = Dsd(
-      bcd: controller.bdcTED.text,
-      boots: controller.bootsTED.text,
-      fins: controller.finsTED.text,
-      mask: controller.maskTED.text,
-      powerMask: controller.powerMaskTED.text,
-      reg: controller.regTED.text,
-      weight: controller.weightsTED.text,
-      dayOff: controller.dayOffTED.text,
-      leaves: controller.leavesTED.text,
-      generalNotes: controller.generalNotesTED.text,
-      highTides: controller.highTideTED.text,
-      lowTides: controller.lowTideTED.text,
-      waves: controller.wavesTED.text,
-      winds: controller.windsTED.text,
-    );
+    controller.currentDsd.highTides =
+        TimePicker.getFormattedTime(controller.highTideTime);
+    controller.currentDsd.lowTides =
+        TimePicker.getFormattedTime(controller.lowTideTime);
 
-    log("done");
-    controller.boatsModel = controller.boatsModel?.copyWith(dsd: dsd);
-    log("done");
-    log(controller.boatsModel!.toJson().toString());
+    controller.currentDsd.generalNotes = controller.generalNotesTED.text;
+    controller.currentDsd.winds = controller.windsTED.text;
+    controller.currentDsd.waves = controller.wavesTED.text;
 
-    if (controller.boatsModel != null)
-      await FirebaseFirestore.instance
-          .collection("dailyBoats")
-          .doc(DateFormat("dd-MM-yyyy").format(DateTime.now()))
-          .set(controller.boatsModel!.toJson());
-
-    log("done");
+    await FirebaseFirestore.instance
+        .collection("dailyBoats")
+        .doc(DateFormat("dd-MM-yyyy").format(controller.selectedDate))
+        .set({'dsd': controller.currentDsd.toJson()}, SetOptions(merge: true));
     Get.back();
   }
 }
 
 class ManageDSDEquipmentController extends GetxController {
-  TextEditingController bdcTED = TextEditingController();
-  TextEditingController regTED = TextEditingController();
-  TextEditingController maskTED = TextEditingController();
-  TextEditingController powerMaskTED = TextEditingController();
-  TextEditingController finsTED = TextEditingController();
-  TextEditingController bootsTED = TextEditingController();
-  TextEditingController weightsTED = TextEditingController();
-  TextEditingController dayOffTED = TextEditingController();
-  TextEditingController leavesTED = TextEditingController();
   TextEditingController generalNotesTED = TextEditingController();
-  TextEditingController highTideTED = TextEditingController();
-  TextEditingController lowTideTED = TextEditingController();
   TextEditingController wavesTED = TextEditingController();
   TextEditingController windsTED = TextEditingController();
 
@@ -99,7 +74,7 @@ class ManageDSDEquipmentController extends GetxController {
   DateTime highTideTime = DateTime.now();
   DateTime lowTideTime = DateTime.now();
 
-  List<Instructor>? dayOffEmployees;
+  late Dsd currentDsd;
 
   bool get showLoading => _showLoading;
 
@@ -109,19 +84,11 @@ class ManageDSDEquipmentController extends GetxController {
   }
 
   reset() {
-    bdcTED.text = "";
-    regTED.text = "";
-    maskTED.text = "";
-    powerMaskTED.text = "";
-    finsTED.text = "";
-    bootsTED.text = "";
-    weightsTED.text = "";
-    dayOffTED.text = "";
-    leavesTED.text = "";
     generalNotesTED.text = "";
-    highTideTED.text = "";
-    lowTideTED.text = "";
     wavesTED.text = "";
     windsTED.text = "";
+    highTideTime = DateTime.now();
+    lowTideTime = DateTime.now();
+    selectedDate = DateTime.now();
   }
 }

@@ -55,6 +55,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       FirebaseFirestore.instance.collection('employees');
   List<Instructor> selectedCaptains = [];
   List<Instructor> selectedDsdInstructors = [];
+  List<Instructor> selectedPhotographer = [];
+  List<Instructor> selectedVideographer = [];
   late TextEditingController boatTED;
   late TextEditingController diveSiteTED;
   late TextEditingController surfaceSupportTED;
@@ -74,7 +76,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     air = widget.boat?.air ?? 0;
 
     if (widget.boat?.time != null)
-      selectedTime = TimePicker.getDateTime(widget.boat?.time ?? '');
+      selectedTime =
+          TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
     else
       selectedTime = DateTime.now();
     if (widget.isBoatEdit) fetchEmployeeData();
@@ -88,12 +91,29 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       selectedCaptains.addAll(widget.boat!.captains as Iterable<Instructor>);
       log(selectedCaptains.toString());
     }
+
     if (widget.boat?.dsdInstructors != null) {
       log(widget.boat!.dsdInstructors.toString());
 
       selectedDsdInstructors
           .addAll(widget.boat!.dsdInstructors as Iterable<Instructor>);
       log(selectedDsdInstructors.toString());
+    }
+
+    if (widget.boat?.photographer != null) {
+      log(widget.boat!.photographer.toString());
+
+      selectedPhotographer
+          .addAll(widget.boat!.photographer as Iterable<Instructor>);
+      log(selectedPhotographer.toString());
+    }
+
+    if (widget.boat?.videographer != null) {
+      log(widget.boat!.videographer.toString());
+
+      selectedVideographer
+          .addAll(widget.boat!.videographer as Iterable<Instructor>);
+      log(selectedVideographer.toString());
     }
     if (mounted) setState(() {});
   }
@@ -151,13 +171,23 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             SizedBox(height: 20),
             buildEmployeeSelector(
                 employees: selectedCaptains,
-                title: "Selected Captains : ",
+                title: "Captains",
                 employeeLimit: 2),
             SizedBox(height: 20),
             buildEmployeeSelector(
                 employees: selectedDsdInstructors,
-                title: "Selected Instructors : ",
+                title: "Instructors",
                 employeeLimit: -1),
+            SizedBox(height: 20),
+            buildEmployeeSelector(
+                employees: selectedPhotographer,
+                title: "Photographer",
+                employeeLimit: 1),
+            SizedBox(height: 20),
+            buildEmployeeSelector(
+                employees: selectedVideographer,
+                title: "Videographer",
+                employeeLimit: 1),
             AppTextField(
               hintText: "Boat name",
               controller: boatTED,
@@ -276,7 +306,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       required int employeeLimit}) {
     if (employees.isEmpty) {
       return AppButton.miniFlat(
-        text: "Add Captains",
+        text: "Add $title",
         onTap: () async {
           employees = (await EmpSelectorBottomSheet.show(context,
                   initialSelectedEmployees: employees,
@@ -290,7 +320,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          title,
+          "Selected $title",
           style: TextStyle(
             fontSize: 14,
             color: Colors.black,
@@ -359,17 +389,18 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         boatId = "0";
       }
       Boat boat = Boat(
-        captains: selectedCaptains,
-        id: boatId,
-        name: boatTED.text,
-        surfaceSupport: surfaceSupportTED.text,
-        notes: notesTED.text,
-        nitrox: nitrox,
-        air: air,
-        time: TimePicker.getFormattedTime(selectedTime)!,
-        diveSite: diveSiteTED.text,
-        dsdInstructors: selectedDsdInstructors,
-      );
+          captains: selectedCaptains,
+          id: boatId,
+          name: boatTED.text,
+          surfaceSupport: surfaceSupportTED.text,
+          notes: notesTED.text,
+          nitrox: nitrox,
+          air: air,
+          time: TimePicker.getFormattedTime(selectedTime)!,
+          diveSite: diveSiteTED.text,
+          dsdInstructors: selectedDsdInstructors,
+          photographer: selectedPhotographer,
+          videographer: selectedVideographer);
       boatsModel.boats?.add(boat);
     } else {
       boatId = widget.boat!.id;
@@ -384,6 +415,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         time: TimePicker.getFormattedTime(selectedTime)!,
         diveSite: diveSiteTED.text,
         dsdInstructors: selectedDsdInstructors,
+        photographer: selectedPhotographer,
+        videographer: selectedVideographer,
       );
 
       boatsModel.boats?.removeWhere((b) => b.id == boatId);

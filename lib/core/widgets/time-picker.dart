@@ -15,10 +15,13 @@ class TimePicker {
   }
 
   ///  parses from 'hh:mm a' to DateTime object
-  static DateTime getDateTime(String timeString) {
-    final formatter = DateFormat('hh:mm a');
-    final dateTime = formatter.parse(timeString);
-    return dateTime;
+  static DateTime? getDateTime(String? timeString) {
+    if (timeString != null) {
+      final formatter = DateFormat('hh:mm a');
+      final dateTime = formatter.parse(timeString);
+      return dateTime;
+    }
+    return null;
   }
 
   static String? getFormattedTime(DateTime time) {

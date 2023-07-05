@@ -4,12 +4,12 @@ import 'package:temple_adventures/core/constants/constants.dart';
 
 class CounterWidget extends StatefulWidget {
   CounterWidget(
-      {Key? key, required this.onChanged, this.size, required this.countValue})
+      {Key? key, required this.onChanged, this.size, required this.initialValue})
       : super(key: key);
 
   final Function(int count) onChanged;
   final String? size;
-  final int countValue;
+  final int initialValue;
 
   @override
   State<CounterWidget> createState() => _CounterWidgetState();
@@ -21,8 +21,8 @@ class _CounterWidgetState extends State<CounterWidget> {
 
   @override
   void initState() {
-    controller = TextEditingController(text: widget.countValue.toString());
-    counter = widget.countValue;
+    controller = TextEditingController(text: widget.initialValue.toString());
+    counter = widget.initialValue;
     super.initState();
   }
 

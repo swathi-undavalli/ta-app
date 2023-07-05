@@ -7,7 +7,11 @@ import 'package:temple_adventures/features/boat/presentation/widgets/boat-detail
 import 'package:intl/intl.dart';
 
 class BoatSelector extends StatefulWidget {
-  const BoatSelector({Key? key, required this.selectedDate, required this.selectedBoatId, required this.onChanged})
+  const BoatSelector(
+      {Key? key,
+      required this.selectedDate,
+      required this.selectedBoatId,
+      required this.onChanged})
       : super(key: key);
 
   final String selectedBoatId;
@@ -51,9 +55,11 @@ class _BoatSelectorState extends State<BoatSelector> {
           ? Container(
               height: 31,
               width: 100,
-              decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(20)),
               child: Center(
-                child: Text("Select Boat", style: TextStyle(fontSize: 12, color: Colors.white)),
+                child: Text("Select Boat",
+                    style: TextStyle(fontSize: 12, color: Colors.white)),
               ),
             )
           : Column(
@@ -72,7 +78,10 @@ class _BoatSelectorState extends State<BoatSelector> {
                     ).paddingAll(5),
                     Text(
                       "Change",
-                      style: TextStyle(fontSize: 10, color: Colors.blue, decoration: TextDecoration.underline),
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline),
                     ).paddingOnly(left: 5, right: 5),
                     Icon(
                       Icons.edit,
@@ -117,7 +126,10 @@ class _BoatSelectorState extends State<BoatSelector> {
               nitrox: 0,
               air: 0,
               time: '',
-              diveSite: '', dsdInstructors: [],
+              diveSite: '',
+              dsdInstructors: [],
+              photographer: [],
+              videographer: [],
             ),
             onTap: () {},
             child: Column(
@@ -137,8 +149,8 @@ class _BoatSelectorState extends State<BoatSelector> {
       },
       onSelected: (Boat value) async {
         if (value.id == "Add new") {
-          BoatsModel? boatsModel =
-              await BoatDetailsBottomSheet.show(context, date: widget.selectedDate, isBoatEdit: false);
+          BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(context,
+              date: widget.selectedDate, isBoatEdit: false);
 
           if (boatsModel != null) {
             await FirebaseFirestore.instance
