@@ -278,6 +278,7 @@ class Boat {
   final int? photoNitrox;
   final String name;
   final String? diveSite;
+  int? boatStatus;
 
   Boat({
     required this.captains,
@@ -293,6 +294,7 @@ class Boat {
     required this.notes,
     required this.name,
     required this.diveSite,
+    required this.boatStatus,
   });
 
   Boat copyWith({
@@ -303,6 +305,7 @@ class Boat {
     String? time,
     int? nitrox,
     int? air,
+    int? boatStatus,
     int? photoNitrox,
     int? photoAir,
     String? notes,
@@ -324,6 +327,7 @@ class Boat {
         notes: notes ?? this.notes,
         name: name ?? this.name,
         diveSite: diveSite ?? this.diveSite,
+        boatStatus: boatStatus ?? this.boatStatus,
       );
 
   factory Boat.fromRawJson(String str) => Boat.fromJson(json.decode(str));
@@ -348,6 +352,7 @@ class Boat {
             (json["surfaceSupport"] ?? []).map((x) => Instructor.fromJson(x))),
         diveSite: json["diveSite"],
         name: json["name"],
+        boatStatus: json["boatStatus"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -367,5 +372,6 @@ class Boat {
         "diveSite": diveSite,
         "nitrox": nitrox,
         "name": name,
+        "boatStatus": boatStatus,
       };
 }

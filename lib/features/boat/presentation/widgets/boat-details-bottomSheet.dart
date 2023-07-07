@@ -8,11 +8,13 @@ import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/time-picker.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/boat/models/boats.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/boat-selector.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:intl/intl.dart';
 
+import 'boat-status.dart';
 import 'customer-expandable-listTile.dart';
 import 'tank-counter.dart';
 
@@ -68,6 +70,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   int photoAir = 0;
   int photoNitrox = 0;
   late DateTime selectedTime;
+  int boatStatus = 0;
 
   @override
   void initState() {
@@ -78,7 +81,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     air = widget.boat?.air ?? 0;
     photoAir = widget.boat?.photoAir ?? 0;
     photoNitrox = widget.boat?.photoNitrox ?? 0;
-
+    boatStatus = widget.boat?.boatStatus ?? 0;
     if (widget.boat?.time != null)
       selectedTime =
           TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
@@ -171,6 +174,13 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   },
                 ),
               ],
+            ),
+            SizedBox(height: 20),
+            BoatStatus(
+              initialStatus: boatStatus,
+              onChanged: (int status) {
+                boatStatus = status;
+              },
             ),
             SizedBox(height: 20),
             buildEmployeeSelector(
@@ -500,6 +510,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         photographer: selectedPhotographer,
         photoAir: photoAir,
         photoNitrox: photoNitrox,
+        boatStatus: boatStatus,
       );
       boatsModel.boats?.add(boat);
     } else {
@@ -518,6 +529,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         photographer: selectedPhotographer,
         photoAir: photoAir,
         photoNitrox: photoNitrox,
+        boatStatus: boatStatus,
       );
 
       boatsModel.boats?.removeWhere((b) => b.id == boatId);

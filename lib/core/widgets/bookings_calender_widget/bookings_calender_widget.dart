@@ -471,7 +471,6 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
         );
       else if (showDetails && !isBookingScreen) {
         List<ItemModel> boatDetailsExpansionList = [];
-        // boatDetailsExpansionList = bookingExpansionList;
         if (controller.selectedBoat != null) {
           bookingExpansionList.forEach((itemModel) {
             bool isIdSame = itemModel.bookingModel
