@@ -28,7 +28,7 @@ class _BoatStatusState extends State<BoatStatus> {
       children: [
         GestureDetector(
           onTap: () {
-            if (status > 0 && status <= 5) {
+            if (status > 0 && status <= 6) {
               status -= 1;
 
               widget.onChanged(status);
@@ -64,7 +64,7 @@ class _BoatStatusState extends State<BoatStatus> {
         SizedBox(width: 2),
         GestureDetector(
           onTap: () {
-            if (status < 5) {
+            if (status < 6) {
               status += 1;
 
               widget.onChanged(status);
@@ -94,26 +94,29 @@ class _BoatStatusState extends State<BoatStatus> {
     if (index == 0) {
       return Colors.grey.shade400;
     } else if (index == 1) {
-      return Colors.orange;
+      return Colors.orange.shade300;
     } else if (index == 2) {
-      return Colors.red;
+      return Colors.red.shade400;
     } else if (index == 3) {
-      return AppColors.text.skyBlue.withOpacity(0.5);
+      return Colors.green.shade300;
     } else if (index == 4) {
-      return AppColors.text.skyBlue;
+      return AppColors.text.skyBlue.withOpacity(0.5);
     } else if (index == 5) {
-      return Colors.yellow;
+      return Colors.purpleAccent.shade100;
+    } else if (index == 6) {
+      return Colors.yellow.shade300;
     } else {
       return Colors.white70;
     }
   }
 
   List<String> boatStatus = [
-    "At Harbour",
-    "About to Start",
+    "Boat Ready",
+    "Waiting for Captains",
     "Left Harbour",
-    "At Dive site",
-    "Started from Dive site",
-    "Reached Harbour",
+    "Reached Dive site",
+    "Diving",
+    "Dives done",
+    "Docked at Harbour",
   ];
 }
