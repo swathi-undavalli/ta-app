@@ -22,21 +22,32 @@ class ManageDSDEquipmentLogic {
     BoatsModel? boatsModel = BoatsModel.fromJson(data);
     if (boatsModel.dsd == null) {
       controller.currentDsd = Dsd(
-        bcd: Bcd(xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0),
-        fins: 0,
-        mask: 0,
-        regulator: 0,
-        powerMask: 0,
-        weights: Weights(w3: 0, w4: 0, w5: 0, w6: 0, w7: 0),
-        dayOffs: [],
-        generalNotes: null,
-        highTides: null,
-        lowTides: null,
-        waves: null,
-        winds: null,
-      );
+          bcd: Bcd(xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0),
+          fins: 0,
+          mask: 0,
+          regulator: 0,
+          powerMask: 0,
+          weights: Weights(w3: 0, w4: 0, w5: 0, w6: 0, w7: 0),
+          dayOffs: [],
+          generalNotes: null,
+          highTides: null,
+          lowTides: null,
+          waves: null,
+          winds: null,
+          leaves: [],
+          dsdLeader: null,
+          dsdPool: null,
+          powerNotes: null);
     } else {
       controller.currentDsd = boatsModel.dsd!;
+
+      controller.generalNotesTED.text =
+          controller.currentDsd.generalNotes ?? "";
+      controller.windsTED.text = controller.currentDsd.winds ?? "";
+      controller.wavesTED.text = controller.currentDsd.waves ?? "";
+      controller.dsdLeaderTED.text = controller.currentDsd.dsdLeader ?? "";
+      controller.dsdPoolTED.text = controller.currentDsd.dsdPool ?? "";
+      controller.powerNotesTED.text = controller.currentDsd.powerNotes ?? "";
     }
     controller.showLoading = false;
   }
@@ -50,6 +61,9 @@ class ManageDSDEquipmentLogic {
     controller.currentDsd.generalNotes = controller.generalNotesTED.text;
     controller.currentDsd.winds = controller.windsTED.text;
     controller.currentDsd.waves = controller.wavesTED.text;
+    controller.currentDsd.dsdLeader = controller.dsdLeaderTED.text;
+    controller.currentDsd.dsdPool = controller.dsdPoolTED.text;
+    controller.currentDsd.powerNotes = controller.powerNotesTED.text;
 
     await FirebaseFirestore.instance
         .collection("dailyBoats")
@@ -63,17 +77,16 @@ class ManageDSDEquipmentController extends GetxController {
   TextEditingController generalNotesTED = TextEditingController();
   TextEditingController wavesTED = TextEditingController();
   TextEditingController windsTED = TextEditingController();
-
+  TextEditingController dsdLeaderTED = TextEditingController();
+  TextEditingController powerNotesTED = TextEditingController();
+  TextEditingController dsdPoolTED = TextEditingController();
   BoatsModel? boatsModel;
   List<String> bcdSizes = ["XS", "S", "M", "L", "XL", "XXL"];
   List<String> weights = ["3 kg", "4 kg", "5 kg", "6 kg", "7 kg"];
   bool _showLoading = false;
-
   DateTime selectedDate = DateTime.now();
-
   DateTime highTideTime = DateTime.now();
   DateTime lowTideTime = DateTime.now();
-
   late Dsd currentDsd;
 
   bool get showLoading => _showLoading;
@@ -87,6 +100,9 @@ class ManageDSDEquipmentController extends GetxController {
     generalNotesTED.text = "";
     wavesTED.text = "";
     windsTED.text = "";
+    powerNotesTED.text = "";
+    dsdPoolTED.text = "";
+    dsdLeaderTED.text = "";
     highTideTime = DateTime.now();
     lowTideTime = DateTime.now();
     selectedDate = DateTime.now();

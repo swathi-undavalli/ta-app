@@ -154,14 +154,48 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
                       },
                       initialValue: controller.currentDsd.mask ?? 0,
                     ).paddingOnly(left: 40),
-                    buildSectionTitle("Power Mask : "),
-                    CounterWidget(
-                      onChanged: (int count) {
-                        controller.currentDsd.powerMask = count;
-                      },
-                      initialValue: controller.currentDsd.powerMask ?? 0,
-                    ).paddingOnly(left: 40),
-                    buildSectionTitle("Fins : "),
+                    SizedBox(height: 20),
+                    Text(
+                      "Power Mask :",
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.text.black,
+                          fontFamily: AppFonts.nunito,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    Row(
+                      children: [
+                        CounterWidget(
+                          onChanged: (int count) {
+                            controller.currentDsd.powerMask = count;
+                          },
+                          initialValue: controller.currentDsd.powerMask ?? 0,
+                        ),
+                        SizedBox(width: 30),
+                        Expanded(
+                          child: AppTextField(
+                            controller: controller.powerNotesTED,
+                            hintText: "Power Notes",
+                            keyboardType: TextInputType.number,
+                            errorValidator: () {
+                              return null;
+                            },
+                            validator: (_) {
+                              return null;
+                            },
+                          ).paddingOnly(bottom: 30),
+                        ),
+                      ],
+                    ),
+                    Text(
+                      "Fins :",
+                      style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.text.black,
+                          fontFamily: AppFonts.nunito,
+                          fontWeight: FontWeight.w600),
+                    ),
+                    SizedBox(height: 20),
                     CounterWidget(
                       onChanged: (int count) {
                         controller.currentDsd.fins = count;
@@ -201,8 +235,37 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
                         initialValue: controller.currentDsd.weights?.w7 ?? 0),
                     SizedBox(height: 20),
                     buildSectionTitle("Employees : "),
+                    AppTextField(
+                      controller: controller.dsdLeaderTED,
+                      hintText: "DSD Leader",
+                      errorValidator: () {
+                        return null;
+                      },
+                      validator: (_) {
+                        return null;
+                      },
+                    ),
                     SizedBox(height: 10),
-                    buildDayOffs(),
+                    AppTextField(
+                      controller: controller.dsdPoolTED,
+                      hintText: "DSD Pool",
+                      errorValidator: () {
+                        return null;
+                      },
+                      validator: (_) {
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 10),
+                    buildEmployeeSelector(
+                        employees: logic.controller.currentDsd.dayOffs ?? [],
+                        title: "Day Offs",
+                        employeeLimit: -1),
+                    SizedBox(height: 10),
+                    buildEmployeeSelector(
+                        employees: logic.controller.currentDsd.leaves ?? [],
+                        title: "Leaves",
+                        employeeLimit: -1),
                     AppTextField(
                       controller: controller.generalNotesTED,
                       hintText: "General Notes",
@@ -273,54 +336,74 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
     );
   }
 
-  Widget buildDayOffs() {
+  Widget buildEmployeeSelector(
+      {required List<Instructor> employees,
+      required String title,
+      required int employeeLimit}) {
+    if (employees.isEmpty) {
+      return AppButton.miniFlat(
+        text: "Add $title",
+        onTap: () async {
+          employees = (await EmpSelectorBottomSheet.show(context,
+                  initialSelectedEmployees: employees,
+                  instructorLimit: employeeLimit)) ??
+              [];
+          setState(() {});
+        },
+      );
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        Text(
+          "$title",
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 10),
         Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Day Offs : ",
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600)),
-            SizedBox(width: 20),
-            InkWell(
-              onTap: () async {
-                logic.controller.currentDsd.dayOffs =
-                    await EmpSelectorBottomSheet.show(
-                  context,
-                  initialSelectedEmployees:
-                      logic.controller.currentDsd.dayOffs ?? [],
-                  instructorLimit: -1,
-                );
-                logic.controller.update();
-              },
-              child: Container(
-                height: 31,
-                width: 100,
-                decoration: BoxDecoration(
-                  color: Colors.black,
-                  borderRadius: BorderRadius.circular(
-                    30,
-                  ),
-                ),
-                child: Center(
-                  child: Text(
-                    "Manage",
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...employees.map(
+                  (e) => Text(
+                    "${e.name}",
                     style: TextStyle(
                       fontSize: 12,
-                      color: Colors.white,
+                      color: Colors.black,
                     ),
-                  ),
+                  ).paddingOnly(bottom: 4),
                 ),
-              ),
+              ],
+            ),
+            GestureDetector(
+              onTap: () async {
+                employees = (await EmpSelectorBottomSheet.show(context,
+                        initialSelectedEmployees: employees,
+                        instructorLimit: employeeLimit)) ??
+                    [];
+                setState(() {});
+              },
+              child: Text(
+                "Change",
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline),
+              ).paddingOnly(left: 10, right: 7),
+            ),
+            Icon(
+              Icons.edit,
+              size: 12,
+              color: Colors.blue,
             ),
           ],
         ),
-        SizedBox(height: 15),
-        if (logic.controller.currentDsd.dayOffs != null)
-          ...?logic.controller.currentDsd.dayOffs?.map((e) => Text(
-                  "${(logic.controller.currentDsd.dayOffs?.indexOf(e))! + 1} .  ${e.name}",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500))
-              .paddingOnly(top: 5))
       ],
     );
   }

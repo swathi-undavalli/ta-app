@@ -45,7 +45,11 @@ class Dsd {
   Weights? weights;
   int? powerMask;
   List<Instructor>? dayOffs;
+  List<Instructor>? leaves;
   String? generalNotes;
+  String? dsdLeader;
+  String? powerNotes;
+  String? dsdPool;
   String? highTides;
   String? waves;
   String? lowTides;
@@ -55,11 +59,15 @@ class Dsd {
     required this.bcd,
     required this.fins,
     required this.mask,
+    required this.powerNotes,
     required this.regulator,
+    required this.leaves,
     required this.powerMask,
     required this.weights,
     required this.dayOffs,
     required this.generalNotes,
+    required this.dsdLeader,
+    required this.dsdPool,
     required this.highTides,
     required this.lowTides,
     required this.waves,
@@ -74,7 +82,11 @@ class Dsd {
     int? powerMask,
     Weights? weights,
     List<Instructor>? dayOffs,
+    List<Instructor>? leaves,
     String? generalNotes,
+    String? powerNotes,
+    String? dsdLeader,
+    String? dsdPool,
     String? highTides,
     String? lowTides,
     String? waves,
@@ -83,16 +95,20 @@ class Dsd {
       Dsd(
         bcd: bcd ?? this.bcd,
         fins: fins ?? this.fins,
+        powerNotes: powerNotes ?? this.powerNotes,
         regulator: regulator ?? this.regulator,
         mask: mask ?? this.mask,
         powerMask: powerMask ?? this.powerMask,
         weights: weights ?? this.weights,
         dayOffs: dayOffs ?? this.dayOffs,
+        leaves: leaves ?? this.leaves,
         generalNotes: generalNotes ?? this.generalNotes,
         highTides: highTides ?? this.highTides,
         lowTides: lowTides ?? this.lowTides,
         waves: waves ?? this.waves,
         winds: winds ?? this.winds,
+        dsdPool: dsdPool ?? this.dsdPool,
+        dsdLeader: dsdLeader ?? this.dsdLeader,
       );
 
   factory Dsd.fromRawJson(String str) => Dsd.fromJson(json.decode(str));
@@ -103,31 +119,40 @@ class Dsd {
         bcd: Bcd.fromJson((json["bcd"]) ?? {}),
         fins: json["fins"],
         regulator: json["regulator"],
+        powerNotes: json["powerNotes"],
         mask: json["mask"],
         powerMask: json["powerMask"],
         weights: Weights.fromJson((json["weights"]) ?? {}),
         dayOffs: List<Instructor>.from(
             ((json["dayOffs"]) ?? []).map((x) => Instructor.fromJson(x))),
+        leaves: List<Instructor>.from(
+            ((json["leaves"]) ?? []).map((x) => Instructor.fromJson(x))),
         generalNotes: json["generalNotes"],
         highTides: json["highTides"],
         lowTides: json["lowTides"],
         waves: json["waves"],
         winds: json["winds"],
+        dsdLeader: json["dsdLeader"],
+        dsdPool: json["dsdPool"],
       );
 
   Map<String, dynamic> toJson() => {
         "bcd": bcd?.toJson(),
         "fins": fins,
         "regulator": regulator,
+        "powerNotes": powerNotes,
         "mask": mask,
         "powerMask": powerMask,
         "weights": weights?.toJson(),
         "dayOffs": List<dynamic>.from((dayOffs ?? []).map((x) => x.toJson())),
+        "leaves": List<dynamic>.from((leaves ?? []).map((x) => x.toJson())),
         "generalNotes": generalNotes,
         "highTides": highTides,
         "lowTides": lowTides,
         "waves": waves,
         "winds": winds,
+        "dsdLeader": dsdLeader,
+        "dsdPool": dsdPool,
       };
 }
 
@@ -243,14 +268,14 @@ class Boat {
   final List<Instructor>? captains;
   final List<Instructor>? dsdInstructors;
   final List<Instructor>? photographer;
-  final List<Instructor>? videographer;
   final String id;
   final String time;
-  final String? surfaceSupport;
+  final List<Instructor>? surfaceSupport;
   final String? notes;
-
   final int? nitrox;
   final int? air;
+  final int? photoAir;
+  final int? photoNitrox;
   final String name;
   final String? diveSite;
 
@@ -258,7 +283,8 @@ class Boat {
     required this.captains,
     required this.dsdInstructors,
     required this.photographer,
-    required this.videographer,
+    required this.photoAir,
+    required this.photoNitrox,
     required this.time,
     required this.id,
     required this.nitrox,
@@ -272,14 +298,15 @@ class Boat {
   Boat copyWith({
     List<Instructor>? captains,
     List<Instructor>? dsdInstructors,
-    List<Instructor>? videographer,
     List<Instructor>? photographer,
     String? id,
     String? time,
     int? nitrox,
-    int? airInt,
+    int? air,
+    int? photoNitrox,
+    int? photoAir,
     String? notes,
-    String? surfaceSupport,
+    List<Instructor>? surfaceSupport,
     String? name,
     String? diveSite,
   }) =>
@@ -287,11 +314,12 @@ class Boat {
         captains: captains ?? this.captains,
         dsdInstructors: dsdInstructors ?? this.dsdInstructors,
         photographer: photographer ?? this.photographer,
-        videographer: videographer ?? this.videographer,
         id: id ?? this.id,
         time: time ?? this.time,
-        air: airInt ?? this.air,
+        air: air ?? this.air,
         nitrox: nitrox ?? this.nitrox,
+        photoAir: photoAir ?? this.photoAir,
+        photoNitrox: photoNitrox ?? this.photoNitrox,
         surfaceSupport: surfaceSupport ?? this.surfaceSupport,
         notes: notes ?? this.notes,
         name: name ?? this.name,
@@ -307,8 +335,6 @@ class Boat {
             (json["captains"] ?? []).map((x) => Instructor.fromJson(x))),
         dsdInstructors: List<Instructor>.from(
             (json["dsdInstructors"] ?? []).map((x) => Instructor.fromJson(x))),
-        videographer: List<Instructor>.from(
-            (json["videographer"] ?? []).map((x) => Instructor.fromJson(x))),
         photographer: List<Instructor>.from(
             (json["photographer"] ?? []).map((x) => Instructor.fromJson(x))),
         id: json["id"],
@@ -316,7 +342,10 @@ class Boat {
         notes: json["notes"],
         nitrox: json["nitrox"],
         air: json["air"],
-        surfaceSupport: json["surfaceSupport"],
+        photoNitrox: json["photoNitrox"],
+        photoAir: json["photoAir"],
+        surfaceSupport: List<Instructor>.from(
+            (json["surfaceSupport"] ?? []).map((x) => Instructor.fromJson(x))),
         diveSite: json["diveSite"],
         name: json["name"],
       );
@@ -327,13 +356,14 @@ class Boat {
             List<dynamic>.from((dsdInstructors ?? []).map((x) => x.toJson())),
         "photographer":
             List<dynamic>.from((photographer ?? []).map((x) => x.toJson())),
-        "videographer":
-            List<dynamic>.from((videographer ?? []).map((x) => x.toJson())),
         "id": id,
         "time": time,
-        "surfaceSupport": surfaceSupport,
+        "surfaceSupport":
+            List<dynamic>.from((surfaceSupport ?? []).map((x) => x.toJson())),
         "notes": notes,
         "air": air,
+        "photoAir": photoAir,
+        "photoNitrox": photoNitrox,
         "diveSite": diveSite,
         "nitrox": nitrox,
         "name": name,

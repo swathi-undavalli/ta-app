@@ -121,7 +121,7 @@ class _BoatSelectorState extends State<BoatSelector> {
               id: "Add new",
               captains: [],
               name: '',
-              surfaceSupport: '',
+              surfaceSupport: [],
               notes: '',
               nitrox: 0,
               air: 0,
@@ -129,7 +129,8 @@ class _BoatSelectorState extends State<BoatSelector> {
               diveSite: '',
               dsdInstructors: [],
               photographer: [],
-              videographer: [],
+              photoAir: 0,
+              photoNitrox: 0,
             ),
             onTap: () {},
             child: Column(

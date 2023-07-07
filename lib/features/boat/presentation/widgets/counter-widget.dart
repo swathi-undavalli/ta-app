@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 
@@ -64,13 +65,18 @@ class _CounterWidgetState extends State<CounterWidget> {
             style: TextStyle(fontSize: 14),
             controller: controller,
             keyboardType: TextInputType.number,
+            inputFormatters: [
+              FilteringTextInputFormatter.digitsOnly, // Only allow digits
+              FilteringTextInputFormatter.allow(RegExp(r'^[0-9]{1,2}$')),
+            ],
             onChanged: (value) {
-              if (value.isNotEmpty) {
+              if (value.isNotEmpty && (int.tryParse(value))! < 100) {
                 counter = int.parse(value);
               } else {
                 counter = 0;
               }
               widget.onChanged(counter);
+              setState(() {});
             },
             decoration: InputDecoration(
               labelText: '',
@@ -80,10 +86,12 @@ class _CounterWidgetState extends State<CounterWidget> {
         SizedBox(width: 15),
         buildIncrementDecrement(
             onTap: () {
-              counter += 1;
-              controller.text = counter.toString();
-              widget.onChanged(counter);
-              setState(() {});
+              if (counter < 99) {
+                counter += 1;
+                controller.text = counter.toString();
+                widget.onChanged(counter);
+                setState(() {});
+              }
             },
             icon: Icons.add),
       ],
