@@ -2,19 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
+import 'package:temple_adventures/features/boat/models/boat-details.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 
 class InternsBottomSheet extends StatefulWidget {
-  final List<String> initialSelectedInterns;
+  final List<Intern> initialSelectedInterns;
 
   const InternsBottomSheet({
     Key? key,
     required this.initialSelectedInterns,
   }) : super(key: key);
 
-  static Future<List<String>?> show(
+  static Future<List<Intern>?> show(
     BuildContext context, {
-    required List<String> initialInterns,
+    required List<Intern> initialInterns,
   }) async {
     var data = await showModalBottomSheet(
       context: context,
@@ -27,7 +29,7 @@ class InternsBottomSheet extends StatefulWidget {
       },
     );
 
-    return data as List<String>?;
+    return data as List<Intern>?;
   }
 
   @override
@@ -36,8 +38,9 @@ class InternsBottomSheet extends StatefulWidget {
 
 class _InternsBottomSheetState extends State<InternsBottomSheet> {
   late TextEditingController controller;
-  List<String> interns = [];
-
+  List<Intern> interns = [];
+  int air = 0;
+  int nitrox = 0;
   @override
   void initState() {
     controller = TextEditingController();
@@ -102,7 +105,15 @@ class _InternsBottomSheetState extends State<InternsBottomSheet> {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text(e),
+                            Text(
+                              "${e.name} (A-${e.air} / N-${e.nitrox})",
+                              style: TextStyle(
+                                color: Colors.grey[700],
+                                fontFamily: "Nunito",
+                                fontSize: 13,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
                             SizedBox(
                               width: 5,
                             ),
@@ -129,6 +140,48 @@ class _InternsBottomSheetState extends State<InternsBottomSheet> {
               return null;
             },
           ),
+          Row(
+            children: [
+              Column(
+                children: [
+                  Text(
+                    "Nitrox",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ).paddingOnly(bottom: 10),
+                  CounterWidget(
+                    key: UniqueKey(),
+                    onChanged: (int val) {
+                      nitrox = val;
+                    },
+                    initialValue: nitrox,
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    "Air",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ).paddingOnly(bottom: 10),
+                  CounterWidget(
+                    key: UniqueKey(),
+                    onChanged: (int val) {
+                      air = val;
+                    },
+                    initialValue: air,
+                  )
+                ],
+              ),
+            ],
+          ),
           Container(
             width: Get.width,
             alignment: Alignment.centerRight,
@@ -136,8 +189,11 @@ class _InternsBottomSheetState extends State<InternsBottomSheet> {
               text: "Add",
               onTap: () {
                 if (controller.text.isNotEmpty) {
-                  interns.add(controller.text);
+                  interns.add(
+                      Intern(name: controller.text, air: air, nitrox: nitrox));
                   controller.text = "";
+                  air = 0;
+                  nitrox = 0;
                 }
                 setState(() {});
               },

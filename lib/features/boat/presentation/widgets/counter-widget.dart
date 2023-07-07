@@ -25,9 +25,9 @@ class _CounterWidgetState extends State<CounterWidget> {
 
   @override
   void initState() {
+    super.initState();
     controller = TextEditingController(text: widget.initialValue.toString());
     counter = widget.initialValue;
-    super.initState();
   }
 
   @override

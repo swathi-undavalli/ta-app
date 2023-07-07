@@ -3,7 +3,7 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 
 class BoatDetails {
   int? bookingStatus;
-  List<String>? interns;
+  List<Intern>? interns;
   final String? employeeNotes;
   final List<Instructor>? instructors;
   Map<String, dynamic>? boat;
@@ -22,7 +22,7 @@ class BoatDetails {
     Map<String, dynamic>? boatId,
     Map<String, dynamic>? instructorTank,
     String? employeeNotes,
-    List<String>? interns,
+    List<Intern>? interns,
     int? bookingStatus,
     List<Instructor>? instructors,
   }) =>
@@ -49,7 +49,8 @@ class BoatDetails {
       bookingStatus: json["bookingStatus"],
       instructors: List<Instructor>.from(
           (json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
-      interns: List<String>.from((json["interns"] ?? []).map((x) => x)),
+      interns: List<Intern>.from(
+          (json["interns"] ?? []).map((x) => Intern.fromJson(x))),
     );
   }
 
@@ -60,7 +61,7 @@ class BoatDetails {
         "employeeNotes": employeeNotes,
         "instructors":
             List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
-        "interns": List<dynamic>.from((interns ?? []).map((x) => x)),
+        "interns": List<dynamic>.from((interns ?? []).map((x) => x.toJson())),
       };
 }
 
@@ -186,6 +187,45 @@ class InstructorTanks {
       );
 
   Map<String, dynamic> toMap() => {
+        "air": air,
+        "nitrox": nitrox,
+      };
+}
+
+class Intern {
+  final String name;
+  final int air;
+  final int nitrox;
+
+  Intern({
+    required this.name,
+    required this.air,
+    required this.nitrox,
+  });
+
+  Intern copyWith({
+    String? name,
+    int? air,
+    int? nitrox,
+  }) =>
+      Intern(
+        name: name ?? this.name,
+        air: air ?? this.air,
+        nitrox: nitrox ?? this.nitrox,
+      );
+
+  factory Intern.fromRawJson(String str) => Intern.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Intern.fromJson(Map<String, dynamic> json) => Intern(
+        name: json["name"],
+        air: json["air"],
+        nitrox: json["nitrox"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "name": name,
         "air": air,
         "nitrox": nitrox,
       };

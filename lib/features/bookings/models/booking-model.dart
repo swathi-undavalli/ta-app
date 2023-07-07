@@ -92,7 +92,6 @@ class BookingModel {
       paymentTransactionId: json["paymentTransactionId"],
       bookingDate: List<String>.from(json["bookingDate"].map((x) => x)),
       idProofs: List<String>.from(json["idProofs"] ?? [].map((x) => x)),
-      // payments: List<dynamic>.from(json["payments"] ?? [].map((x) => x * 1.0)),
       theoryDate: List<DateTime>.from(
           json["theoryDate"].map((x) => parseDateOrNull(x))),
       poolDate:

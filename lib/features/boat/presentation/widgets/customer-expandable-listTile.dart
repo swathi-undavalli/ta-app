@@ -517,7 +517,7 @@ class _CustomerExpandableListTileState
             SizedBox(
               width: Get.width - 170,
               child: Text(
-                "Interns :",
+                "Interns (A - N) :",
                 style: TextStyle(
                   fontSize: FontSize.textSize,
                   fontWeight: FontWeight.w600,
@@ -526,7 +526,7 @@ class _CustomerExpandableListTileState
             ),
             InkWell(
               onTap: () async {
-                List<String>? interns = await InternsBottomSheet.show(
+                List<Intern>? interns = await InternsBottomSheet.show(
                   context,
                   initialInterns:
                       bookingItemModel.bookingModel?.boatDetails?.interns ?? [],
@@ -567,7 +567,7 @@ class _CustomerExpandableListTileState
           ...?bookingItemModel.bookingModel!.boatDetails?.interns?.map(
             (e) {
               return _buildDiverName(
-                      e,
+                      "${e.name} (${e.air} - ${e.nitrox})",
                       bookingItemModel.bookingModel!.boatDetails!.interns!
                           .indexOf(e))
                   .paddingOnly(bottom: 6);
@@ -663,7 +663,7 @@ class _CustomerExpandableListTileState
     required DateTime selectedDate,
     String? boatId,
     String? boatName,
-    List<String>? interns,
+    List<Intern>? interns,
     int? bookingStatus,
     int? nitrox,
     int? air,
