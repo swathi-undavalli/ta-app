@@ -132,6 +132,7 @@ class _BoatSelectorState extends State<BoatSelector> {
               photoAir: 0,
               photoNitrox: 0,
               boatStatus: 0,
+              internPhotographer: [],
             ),
             onTap: () {},
             child: Column(

@@ -268,6 +268,7 @@ class Boat {
   final List<Instructor>? captains;
   final List<Instructor>? dsdInstructors;
   final List<Instructor>? photographer;
+  final List<Intern>? internPhotographer;
   final String id;
   final String time;
   final List<Instructor>? surfaceSupport;
@@ -284,6 +285,7 @@ class Boat {
     required this.captains,
     required this.dsdInstructors,
     required this.photographer,
+    required this.internPhotographer,
     required this.photoAir,
     required this.photoNitrox,
     required this.time,
@@ -301,6 +303,7 @@ class Boat {
     List<Instructor>? captains,
     List<Instructor>? dsdInstructors,
     List<Instructor>? photographer,
+    List<Intern>? internPhotographer,
     String? id,
     String? time,
     int? nitrox,
@@ -317,6 +320,7 @@ class Boat {
         captains: captains ?? this.captains,
         dsdInstructors: dsdInstructors ?? this.dsdInstructors,
         photographer: photographer ?? this.photographer,
+        internPhotographer: internPhotographer ?? this.internPhotographer,
         id: id ?? this.id,
         time: time ?? this.time,
         air: air ?? this.air,
@@ -341,6 +345,8 @@ class Boat {
             (json["dsdInstructors"] ?? []).map((x) => Instructor.fromJson(x))),
         photographer: List<Instructor>.from(
             (json["photographer"] ?? []).map((x) => Instructor.fromJson(x))),
+        internPhotographer: List<Intern>.from(
+            (json["internPhotographer"] ?? []).map((x) => Intern.fromJson(x))),
         id: json["id"],
         time: json["time"],
         notes: json["notes"],
@@ -361,6 +367,8 @@ class Boat {
             List<dynamic>.from((dsdInstructors ?? []).map((x) => x.toJson())),
         "photographer":
             List<dynamic>.from((photographer ?? []).map((x) => x.toJson())),
+    "internPhotographer":
+            List<dynamic>.from((internPhotographer ?? []).map((x) => x.toJson())),
         "id": id,
         "time": time,
         "surfaceSupport":

@@ -11,6 +11,7 @@ import 'package:temple_adventures/features/boat/models/boats.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/boat-selector.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/interns-bottomSheet.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:intl/intl.dart';
 
@@ -62,6 +63,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   List<Instructor> selectedPhotographer = [];
   List<Instructor> selectedVideographer = [];
   List<Instructor> surfaceSupport = [];
+  List<Intern> selectedInternsPhotographers = [];
   late TextEditingController boatTED;
   late TextEditingController diveSiteTED;
   late TextEditingController notesTED;
@@ -112,6 +114,13 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
 
       selectedPhotographer
           .addAll(widget.boat!.photographer as Iterable<Instructor>);
+      log(selectedPhotographer.toString());
+    }
+    if (widget.boat?.internPhotographer != null) {
+      log(widget.boat!.internPhotographer.toString());
+
+      selectedInternsPhotographers
+          .addAll(widget.boat!.internPhotographer as Iterable<Intern>);
       log(selectedPhotographer.toString());
     }
 
@@ -199,6 +208,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 employeeLimit: 2),
             SizedBox(height: 20),
             buildVideoPhotoTankCount(),
+            SizedBox(height: 20),
+            buildInternPhotographers(),
             SizedBox(height: 20),
             buildEmployeeSelector(
               employees: surfaceSupport,
@@ -305,6 +316,73 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget buildInternPhotographers() {
+    if (selectedInternsPhotographers.isEmpty) {
+      return AppButton.miniFlat(
+        text: "Add Interns",
+        onTap: () async {
+          selectedInternsPhotographers = await InternsBottomSheet.show(context,
+              initialInterns: selectedInternsPhotographers) as List<Intern>;
+          setState(() {});
+        },
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Intern Photographer / Videographer",
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 10),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...selectedInternsPhotographers.map(
+                  (e) => Text(
+                    "${e.name}",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black,
+                    ),
+                  ).paddingOnly(bottom: 4),
+                ),
+              ],
+            ),
+            GestureDetector(
+              onTap: () async {
+                selectedInternsPhotographers = await InternsBottomSheet.show(
+                        context,
+                        initialInterns: selectedInternsPhotographers)
+                    as List<Intern>;
+                setState(() {});
+              },
+              child: Text(
+                "Change",
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline),
+              ).paddingOnly(left: 10, right: 7),
+            ),
+            Icon(
+              Icons.edit,
+              size: 12,
+              color: Colors.blue,
+            ),
+          ],
+        ),
+      ],
     );
   }
 
@@ -511,6 +589,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         photoAir: photoAir,
         photoNitrox: photoNitrox,
         boatStatus: boatStatus,
+        internPhotographer: selectedInternsPhotographers,
       );
       boatsModel.boats?.add(boat);
     } else {
@@ -530,6 +609,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         photoAir: photoAir,
         photoNitrox: photoNitrox,
         boatStatus: boatStatus,
+        internPhotographer: selectedInternsPhotographers,
       );
 
       boatsModel.boats?.removeWhere((b) => b.id == boatId);
