@@ -269,6 +269,7 @@ class Boat {
   final List<Instructor>? dsdInstructors;
   final List<Instructor>? photographer;
   final List<Intern>? internPhotographer;
+  final List<Intern>? internSurfaceSupport;
   final String id;
   final String time;
   final List<Instructor>? surfaceSupport;
@@ -286,6 +287,7 @@ class Boat {
     required this.dsdInstructors,
     required this.photographer,
     required this.internPhotographer,
+    required this.internSurfaceSupport,
     required this.photoAir,
     required this.photoNitrox,
     required this.time,
@@ -321,6 +323,7 @@ class Boat {
         dsdInstructors: dsdInstructors ?? this.dsdInstructors,
         photographer: photographer ?? this.photographer,
         internPhotographer: internPhotographer ?? this.internPhotographer,
+        internSurfaceSupport: internSurfaceSupport ?? this.internSurfaceSupport,
         id: id ?? this.id,
         time: time ?? this.time,
         air: air ?? this.air,
@@ -347,6 +350,9 @@ class Boat {
             (json["photographer"] ?? []).map((x) => Instructor.fromJson(x))),
         internPhotographer: List<Intern>.from(
             (json["internPhotographer"] ?? []).map((x) => Intern.fromJson(x))),
+        internSurfaceSupport: List<Intern>.from(
+            (json["internSurfaceSupport"] ?? [])
+                .map((x) => Intern.fromJson(x))),
         id: json["id"],
         time: json["time"],
         notes: json["notes"],
@@ -367,8 +373,10 @@ class Boat {
             List<dynamic>.from((dsdInstructors ?? []).map((x) => x.toJson())),
         "photographer":
             List<dynamic>.from((photographer ?? []).map((x) => x.toJson())),
-    "internPhotographer":
-            List<dynamic>.from((internPhotographer ?? []).map((x) => x.toJson())),
+        "internPhotographer": List<dynamic>.from(
+            (internPhotographer ?? []).map((x) => x.toJson())),
+        "internSurfaceSupport": List<dynamic>.from(
+            (internSurfaceSupport ?? []).map((x) => x.toJson())),
         "id": id,
         "time": time,
         "surfaceSupport":

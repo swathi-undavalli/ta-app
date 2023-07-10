@@ -41,6 +41,7 @@ class _InternsBottomSheetState extends State<InternsBottomSheet> {
   List<Intern> interns = [];
   int air = 0;
   int nitrox = 0;
+
   @override
   void initState() {
     controller = TextEditingController();
@@ -140,6 +141,7 @@ class _InternsBottomSheetState extends State<InternsBottomSheet> {
               return null;
             },
           ),
+          SizedBox(height: 20),
           Row(
             children: [
               Column(

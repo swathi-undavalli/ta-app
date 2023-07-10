@@ -64,6 +64,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   List<Instructor> selectedVideographer = [];
   List<Instructor> surfaceSupport = [];
   List<Intern> selectedInternsPhotographers = [];
+  List<Intern> selectedInternsSurfaceSupport = [];
   late TextEditingController boatTED;
   late TextEditingController diveSiteTED;
   late TextEditingController notesTED;
@@ -122,6 +123,14 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       selectedInternsPhotographers
           .addAll(widget.boat!.internPhotographer as Iterable<Intern>);
       log(selectedPhotographer.toString());
+    }
+
+    if (widget.boat?.internSurfaceSupport != null) {
+      log(widget.boat!.internSurfaceSupport.toString());
+
+      selectedInternsSurfaceSupport
+          .addAll(widget.boat!.internSurfaceSupport as Iterable<Intern>);
+      log(selectedInternsSurfaceSupport.toString());
     }
 
     if (widget.boat?.surfaceSupport != null) {
@@ -209,13 +218,19 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             SizedBox(height: 20),
             buildVideoPhotoTankCount(),
             SizedBox(height: 20),
-            buildInternPhotographers(),
+            buildInternPhotographers(
+                interns: selectedInternsPhotographers,
+                title: 'Intern Photographer / Videographer'),
             SizedBox(height: 20),
             buildEmployeeSelector(
               employees: surfaceSupport,
               title: "Surface Support",
               employeeLimit: -1,
             ),
+            SizedBox(height: 20),
+            buildInternPhotographers(
+                interns: selectedInternsSurfaceSupport,
+                title: 'Intern Surface Support'),
             AppTextField(
               hintText: "Boat name",
               controller: boatTED,
@@ -319,13 +334,15 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     );
   }
 
-  Widget buildInternPhotographers() {
-    if (selectedInternsPhotographers.isEmpty) {
+  Widget buildInternPhotographers(
+      {required List<Intern> interns, required String title}) {
+    if (interns.isEmpty) {
       return AppButton.miniFlat(
-        text: "Add Interns",
+        text: "Add $title",
         onTap: () async {
-          selectedInternsPhotographers = await InternsBottomSheet.show(context,
-              initialInterns: selectedInternsPhotographers) as List<Intern>;
+          interns =
+              await InternsBottomSheet.show(context, initialInterns: interns)
+                  as List<Intern>;
           setState(() {});
         },
       );
@@ -334,7 +351,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Intern Photographer / Videographer",
+          title,
+          // "Intern Photographer / Videographer",
           style: TextStyle(
             fontSize: 14,
             color: Colors.black,
@@ -348,7 +366,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                ...selectedInternsPhotographers.map(
+                ...interns.map(
                   (e) => Text(
                     "${e.name}",
                     style: TextStyle(
@@ -361,10 +379,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             ),
             GestureDetector(
               onTap: () async {
-                selectedInternsPhotographers = await InternsBottomSheet.show(
-                        context,
-                        initialInterns: selectedInternsPhotographers)
-                    as List<Intern>;
+                interns = await InternsBottomSheet.show(context,
+                    initialInterns: interns) as List<Intern>;
                 setState(() {});
               },
               child: Text(
@@ -590,6 +606,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         photoNitrox: photoNitrox,
         boatStatus: boatStatus,
         internPhotographer: selectedInternsPhotographers,
+        internSurfaceSupport: selectedInternsSurfaceSupport,
       );
       boatsModel.boats?.add(boat);
     } else {
@@ -610,6 +627,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         photoNitrox: photoNitrox,
         boatStatus: boatStatus,
         internPhotographer: selectedInternsPhotographers,
+        internSurfaceSupport: selectedInternsSurfaceSupport,
       );
 
       boatsModel.boats?.removeWhere((b) => b.id == boatId);

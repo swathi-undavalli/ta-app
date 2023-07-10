@@ -258,70 +258,7 @@ class _CustomerExpandableListTileState
                                           ),
                                         ],
                                       ),
-                                      SizedBox(height: 20),
-                                      Container(
-                                        child: Row(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  "Nitrox",
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ).paddingOnly(bottom: 10),
-                                                Container(
-                                                  child: CounterWidget(
-                                                      onChanged: (int val) {
-                                                        updateBoatDetails(
-                                                          bookingModel:
-                                                              bookingModel,
-                                                          selectedDate: widget
-                                                              .selectedDate,
-                                                          nitrox: val,
-                                                        );
-                                                      },
-                                                      initialValue: bookingModel
-                                                              .getBoatInfo(widget
-                                                                  .selectedDate)
-                                                              ?.nitrox ??
-                                                          0),
-                                                )
-                                              ],
-                                            ),
-                                            Column(
-                                              children: [
-                                                Text(
-                                                  "Air",
-                                                  style: TextStyle(
-                                                    fontSize: 14,
-                                                    color: Colors.black,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                ).paddingOnly(bottom: 10),
-                                                CounterWidget(
-                                                    onChanged: (int val) {
-                                                      updateBoatDetails(
-                                                        bookingModel:
-                                                            bookingModel,
-                                                        selectedDate:
-                                                            widget.selectedDate,
-                                                        air: val,
-                                                      );
-                                                    },
-                                                    initialValue: bookingModel
-                                                            .getBoatInfo(widget
-                                                                .selectedDate)
-                                                            ?.air ??
-                                                        0)
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(height: 20),
+                                      buildCustomerTanks(bookingModel),
                                       AppTextField(
                                         controller: employeeNotesTED,
                                         hintText: "Equipment Notes",
@@ -368,6 +305,71 @@ class _CustomerExpandableListTileState
         ),
       ),
     );
+  }
+
+  Widget buildCustomerTanks(BookingModel bookingModel) {
+    if (widget.itemModel.activity != "Discover Scuba Diving")
+      return Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 20),
+          Row(
+            children: [
+              Column(
+                children: [
+                  Text(
+                    "Nitrox",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ).paddingOnly(bottom: 10),
+                  Container(
+                    child: CounterWidget(
+                        onChanged: (int val) {
+                          updateBoatDetails(
+                            bookingModel: bookingModel,
+                            selectedDate: widget.selectedDate,
+                            nitrox: val,
+                          );
+                        },
+                        initialValue: bookingModel
+                                .getBoatInfo(widget.selectedDate)
+                                ?.nitrox ??
+                            0),
+                  )
+                ],
+              ),
+              Column(
+                children: [
+                  Text(
+                    "Air",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ).paddingOnly(bottom: 10),
+                  CounterWidget(
+                      onChanged: (int val) {
+                        updateBoatDetails(
+                          bookingModel: bookingModel,
+                          selectedDate: widget.selectedDate,
+                          air: val,
+                        );
+                      },
+                      initialValue:
+                          bookingModel.getBoatInfo(widget.selectedDate)?.air ??
+                              0)
+                ],
+              ),
+            ],
+          ),
+        ],
+      );
+    return SizedBox();
   }
 
   Widget buildManageInstructors(
