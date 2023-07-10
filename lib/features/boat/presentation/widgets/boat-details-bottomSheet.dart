@@ -61,7 +61,6 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   List<Instructor> selectedCaptains = [];
   List<Instructor> selectedDsdInstructors = [];
   List<Instructor> selectedPhotographer = [];
-  List<Instructor> selectedVideographer = [];
   List<Instructor> surfaceSupport = [];
   List<Intern> selectedInternsPhotographers = [];
   List<Intern> selectedInternsSurfaceSupport = [];
@@ -188,7 +187,16 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 IconButton(
                   icon: Icon(Icons.close),
                   onPressed: () async {
-                    Navigator.pop(context);
+                    if (boatTED.text != "" && selectedCaptains.isNotEmpty) {
+                      await addEditBoat(context);
+                    } else {
+                      if (boatTED.text == "") {
+                        showToast("please enter the boat details");
+                      } else {
+                        showToast("please select the captain");
+                      }
+                    }
+                    // Navigator.pop(context);
                   },
                 ),
               ],
@@ -201,36 +209,6 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               },
             ),
             SizedBox(height: 20),
-            buildEmployeeSelector(
-                employees: selectedCaptains,
-                title: "Captains",
-                employeeLimit: 2),
-            SizedBox(height: 20),
-            buildEmployeeSelector(
-                employees: selectedDsdInstructors,
-                title: "DSD Instructors",
-                employeeLimit: -1),
-            SizedBox(height: 20),
-            buildEmployeeSelector(
-                employees: selectedPhotographer,
-                title: "Photographer / Videographer",
-                employeeLimit: 2),
-            SizedBox(height: 20),
-            buildVideoPhotoTankCount(),
-            SizedBox(height: 20),
-            buildInternPhotographers(
-                interns: selectedInternsPhotographers,
-                title: 'Intern Photographer / Videographer'),
-            SizedBox(height: 20),
-            buildEmployeeSelector(
-              employees: surfaceSupport,
-              title: "Surface Support",
-              employeeLimit: -1,
-            ),
-            SizedBox(height: 20),
-            buildInternPhotographers(
-                interns: selectedInternsSurfaceSupport,
-                title: 'Intern Surface Support'),
             AppTextField(
               hintText: "Boat name",
               controller: boatTED,
@@ -285,6 +263,32 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 )
               ],
             ),
+            SizedBox(height: 20),
+            buildEmployeeSelector(
+                employees: selectedCaptains,
+                title: "Captains",
+                employeeLimit: 2),
+            SizedBox(height: 20),
+            buildEmployeeSelector(
+                employees: selectedDsdInstructors,
+                title: "DSD Instructors",
+                employeeLimit: -1),
+            SizedBox(height: 20),
+            buildEmployeeSelector(
+                employees: selectedPhotographer,
+                title: "Photographer / Videographer",
+                employeeLimit: 2),
+            SizedBox(height: 20),
+            buildVideoPhotoTankCount(),
+            buildInternPhotographers(
+                interns: selectedInternsPhotographers,
+                title: 'Intern Photographer / Videographer (A - N)',
+                isSurfaceSupport: false),
+            SizedBox(height: 20),
+            buildInternPhotographers(
+                interns: selectedInternsSurfaceSupport,
+                title: 'Surface Support',
+                isSurfaceSupport: true),
             AppTextField(
               hintText: "Notes",
               controller: notesTED,
@@ -335,14 +339,16 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   }
 
   Widget buildInternPhotographers(
-      {required List<Intern> interns, required String title}) {
+      {required List<Intern> interns,
+      required String title,
+      required bool isSurfaceSupport}) {
     if (interns.isEmpty) {
       return AppButton.miniFlat(
         text: "Add $title",
         onTap: () async {
-          interns =
-              await InternsBottomSheet.show(context, initialInterns: interns)
-                  as List<Intern>;
+          interns = await InternsBottomSheet.show(context,
+              initialInterns: interns,
+              surfaceSupport: isSurfaceSupport) as List<Intern>;
           setState(() {});
         },
       );
@@ -352,7 +358,6 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       children: [
         Text(
           title,
-          // "Intern Photographer / Videographer",
           style: TextStyle(
             fontSize: 14,
             color: Colors.black,
@@ -367,12 +372,23 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ...interns.map(
-                  (e) => Text(
-                    "${e.name}",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.black,
-                    ),
+                  (e) => Row(
+                    children: [
+                      Text(
+                        "${e.name} ",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Text(
+                        (!isSurfaceSupport) ? "( ${e.air} - ${e.nitrox} )" : "",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
                   ).paddingOnly(bottom: 4),
                 ),
               ],
@@ -380,7 +396,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             GestureDetector(
               onTap: () async {
                 interns = await InternsBottomSheet.show(context,
-                    initialInterns: interns) as List<Intern>;
+                    initialInterns: interns,
+                    surfaceSupport: isSurfaceSupport) as List<Intern>;
                 setState(() {});
               },
               child: Text(
@@ -453,53 +470,55 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   }
 
   Widget buildVideoPhotoTankCount() {
-    return Container(
-      child: Row(
-        children: [
-          Column(
-            children: [
-              Text(
-                "Nitrox",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ).paddingOnly(bottom: 15),
-              Container(
-                child: CounterWidget(
+    if (selectedPhotographer.isNotEmpty)
+      return Container(
+        child: Row(
+          children: [
+            Column(
+              children: [
+                Text(
+                  "Nitrox",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ).paddingOnly(bottom: 15),
+                Container(
+                  child: CounterWidget(
+                    onChanged: (int val) {
+                      photoNitrox = val;
+                      setState(() {});
+                    },
+                    initialValue: photoNitrox,
+                  ),
+                )
+              ],
+            ),
+            SizedBox(width: 20),
+            Column(
+              children: [
+                Text(
+                  "Air",
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ).paddingOnly(bottom: 15),
+                CounterWidget(
                   onChanged: (int val) {
-                    photoNitrox = val;
+                    photoAir = val;
                     setState(() {});
                   },
-                  initialValue: photoNitrox,
-                ),
-              )
-            ],
-          ),
-          SizedBox(width: 20),
-          Column(
-            children: [
-              Text(
-                "Air",
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ).paddingOnly(bottom: 15),
-              CounterWidget(
-                onChanged: (int val) {
-                  photoAir = val;
-                  setState(() {});
-                },
-                initialValue: photoAir,
-              )
-            ],
-          ),
-        ],
-      ),
-    );
+                  initialValue: photoAir,
+                )
+              ],
+            ),
+          ],
+        ),
+      ).paddingOnly(bottom: 20);
+    return SizedBox();
   }
 
   Widget buildEmployeeSelector(

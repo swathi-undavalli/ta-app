@@ -445,65 +445,69 @@ class _CustomerExpandableListTileState
               },
             ),
           SizedBox(height: 10),
-          Container(
-            child: Row(
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      "Nitrox",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ).paddingOnly(bottom: 10),
-                    Container(
-                      child: CounterWidget(
-                          onChanged: (int val) {
-                            updateBoatDetails(
-                              bookingModel: bookingModel,
-                              selectedDate: widget.selectedDate,
-                              instructorNitrox: val,
-                            );
-                          },
-                          initialValue: bookingModel
-                                  .getInstructorTanks(widget.selectedDate)
-                                  ?.nitrox ??
-                              0),
-                    )
-                  ],
-                ),
-                Column(
-                  children: [
-                    Text(
-                      "Air",
-                      style: TextStyle(
-                        fontSize: 14,
-                        color: Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ).paddingOnly(bottom: 10),
-                    CounterWidget(
-                        onChanged: (int val) {
-                          updateBoatDetails(
-                            bookingModel: bookingModel,
-                            selectedDate: widget.selectedDate,
-                            instructorAir: val,
-                          );
-                        },
-                        initialValue: bookingModel
-                                .getInstructorTanks(widget.selectedDate)
-                                ?.air ??
-                            0)
-                  ],
-                ),
-              ],
-            ),
-          ),
+          buildInstructorTanks(bookingModel, bookingItemModel),
           SizedBox(height: 20),
         ],
       );
+    return SizedBox();
+  }
+
+  Widget buildInstructorTanks(
+      BookingModel bookingModel, ItemModel bookingItemModel) {
+    if(bookingItemModel.bookingModel?.boatDetails?.instructors?.length != 0)
+    return Row(
+      children: [
+        Column(
+          children: [
+            Text(
+              "Nitrox",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ).paddingOnly(bottom: 10),
+            Container(
+              child: CounterWidget(
+                  onChanged: (int val) {
+                    updateBoatDetails(
+                      bookingModel: bookingModel,
+                      selectedDate: widget.selectedDate,
+                      instructorNitrox: val,
+                    );
+                  },
+                  initialValue: bookingModel
+                          .getInstructorTanks(widget.selectedDate)
+                          ?.nitrox ??
+                      0),
+            )
+          ],
+        ),
+        Column(
+          children: [
+            Text(
+              "Air",
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ).paddingOnly(bottom: 10),
+            CounterWidget(
+                onChanged: (int val) {
+                  updateBoatDetails(
+                    bookingModel: bookingModel,
+                    selectedDate: widget.selectedDate,
+                    instructorAir: val,
+                  );
+                },
+                initialValue:
+                    bookingModel.getInstructorTanks(widget.selectedDate)?.air ??
+                        0)
+          ],
+        ),
+      ],
+    );
     return SizedBox();
   }
 
@@ -532,6 +536,7 @@ class _CustomerExpandableListTileState
                   context,
                   initialInterns:
                       bookingItemModel.bookingModel?.boatDetails?.interns ?? [],
+                  surfaceSupport: false,
                 );
 
                 log("tap instructors $interns");

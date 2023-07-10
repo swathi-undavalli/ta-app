@@ -8,16 +8,16 @@ import 'package:temple_adventures/features/bookings/presentation/widgets/app-tex
 
 class InternsBottomSheet extends StatefulWidget {
   final List<Intern> initialSelectedInterns;
-
+  final bool isSurfaceSupport;
   const InternsBottomSheet({
     Key? key,
     required this.initialSelectedInterns,
+    required this.isSurfaceSupport,
   }) : super(key: key);
 
-  static Future<List<Intern>?> show(
-    BuildContext context, {
-    required List<Intern> initialInterns,
-  }) async {
+  static Future<List<Intern>?> show(BuildContext context,
+      {required List<Intern> initialInterns,
+      required bool surfaceSupport}) async {
     var data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -25,6 +25,7 @@ class InternsBottomSheet extends StatefulWidget {
       builder: (BuildContext context) {
         return InternsBottomSheet(
           initialSelectedInterns: initialInterns,
+          isSurfaceSupport: surfaceSupport,
         );
       },
     );
@@ -107,7 +108,7 @@ class _InternsBottomSheetState extends State<InternsBottomSheet> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              "${e.name} (A-${e.air} / N-${e.nitrox})",
+                              "${e.name} ",
                               style: TextStyle(
                                 color: Colors.grey[700],
                                 fontFamily: "Nunito",
@@ -115,6 +116,16 @@ class _InternsBottomSheetState extends State<InternsBottomSheet> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
+                            if (!widget.isSurfaceSupport)
+                              Text(
+                                "(A-${e.air} / N-${e.nitrox})",
+                                style: TextStyle(
+                                  color: Colors.grey[700],
+                                  fontFamily: "Nunito",
+                                  fontSize: 13,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
                             SizedBox(
                               width: 5,
                             ),
@@ -142,48 +153,7 @@ class _InternsBottomSheetState extends State<InternsBottomSheet> {
             },
           ),
           SizedBox(height: 20),
-          Row(
-            children: [
-              Column(
-                children: [
-                  Text(
-                    "Nitrox",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ).paddingOnly(bottom: 10),
-                  CounterWidget(
-                    key: UniqueKey(),
-                    onChanged: (int val) {
-                      nitrox = val;
-                    },
-                    initialValue: nitrox,
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  Text(
-                    "Air",
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ).paddingOnly(bottom: 10),
-                  CounterWidget(
-                    key: UniqueKey(),
-                    onChanged: (int val) {
-                      air = val;
-                    },
-                    initialValue: air,
-                  )
-                ],
-              ),
-            ],
-          ),
+          buildTanks(),
           Container(
             width: Get.width,
             alignment: Alignment.centerRight,
@@ -204,5 +174,52 @@ class _InternsBottomSheetState extends State<InternsBottomSheet> {
         ],
       ).paddingSymmetric(horizontal: 20),
     );
+  }
+
+  Widget buildTanks() {
+    if (!widget.isSurfaceSupport)
+      return Row(
+        children: [
+          Column(
+            children: [
+              Text(
+                "Nitrox",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ).paddingOnly(bottom: 10),
+              CounterWidget(
+                key: UniqueKey(),
+                onChanged: (int val) {
+                  nitrox = val;
+                },
+                initialValue: nitrox,
+              )
+            ],
+          ),
+          Column(
+            children: [
+              Text(
+                "Air",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ).paddingOnly(bottom: 10),
+              CounterWidget(
+                key: UniqueKey(),
+                onChanged: (int val) {
+                  air = val;
+                },
+                initialValue: air,
+              )
+            ],
+          ),
+        ],
+      );
+    return SizedBox();
   }
 }
