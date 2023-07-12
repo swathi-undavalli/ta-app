@@ -68,19 +68,27 @@ class BoatDetails {
 class Instructor {
   final String id;
   final String name;
+  int? air;
+  int? nitrox;
 
   Instructor({
     required this.id,
     required this.name,
+    required this.air,
+    required this.nitrox,
   });
 
   Instructor copyWith({
     String? id,
     String? name,
+    int? air,
+    int? nitrox,
   }) =>
       Instructor(
         id: id ?? this.id,
         name: name ?? this.name,
+        air: this.air,
+        nitrox: this.nitrox,
       );
 
   factory Instructor.fromRawJson(String str) =>
@@ -91,15 +99,24 @@ class Instructor {
   factory Instructor.fromJson(Map<String, dynamic> json) => Instructor(
         id: json["id"],
         name: json["name"],
+        air: json["air"],
+        nitrox: json["nitrox"],
       );
 
   Map<String, dynamic> toJson() => {
         "id": id,
         "name": name,
+        "nitrox": nitrox,
+        "air": air,
       };
 
   factory Instructor.fromEmployee(Employee employee) {
-    return Instructor(id: employee.id, name: employee.name);
+    return Instructor(
+      id: employee.id,
+      name: employee.name,
+      air: null,
+      nitrox: null,
+    );
   }
 
   @override

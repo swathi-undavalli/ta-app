@@ -7,10 +7,12 @@ class TankCounter extends StatefulWidget {
     required this.onChanged,
     required this.nitrox,
     required this.air,
+    this.titleColor,
   }) : super(key: key);
 
   final Function(int nitrox, int air) onChanged;
   final int nitrox;
+  final Color? titleColor;
   final int air;
 
   @override
@@ -66,7 +68,7 @@ class _TankCounterState extends State<TankCounter> {
           title,
           style: TextStyle(
             fontSize: 14,
-            color: Colors.black,
+            color: widget.titleColor ?? Colors.black,
             fontWeight: FontWeight.bold,
           ),
         ),
