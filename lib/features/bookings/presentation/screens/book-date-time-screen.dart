@@ -5,7 +5,6 @@ import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
 import 'package:intl/intl.dart';
-
 import '../../models/activity-model.dart';
 
 class BookDateTime extends StatelessWidget {

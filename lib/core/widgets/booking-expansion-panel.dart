@@ -529,6 +529,12 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         ],
                                       ),
                                     ).paddingOnly(right: 10, bottom: 15),
+                                  if (itemModel.bookingModel!.parentBookingId !=
+                                          null &&
+                                      itemModel.bookingModel!.parentBookingId !=
+                                          "")
+                                    buildKeyValuePairs("Parent Booking Id",
+                                        itemModel.parentBookingID!),
                                   buildKeyValuePairs(
                                       "Booking Id", itemModel.bookingID!),
                                   buildKeyValuePairs(
@@ -1181,7 +1187,7 @@ Regards,
         ),
         Container(
           height: 16,
-          width: 200,
+          width: 180,
           child: Text(
             value,
             overflow: TextOverflow.ellipsis,
@@ -1564,6 +1570,7 @@ class ItemModel {
   String session;
   final String? email;
   final String? bookingID;
+  final String? parentBookingID;
   final String? phone;
   final String activity;
   final String colorCode;
@@ -1581,6 +1588,7 @@ class ItemModel {
 
   ItemModel({
     required this.phone,
+    required this.parentBookingID,
     required this.activity,
     required this.bookingID,
     required this.colorCode,
@@ -1651,6 +1659,7 @@ class ItemModel {
       session: getSessions(),
       employeeName: bookingModel.employeeName,
       bookingModel: bookingModel,
+      parentBookingID: bookingModel.parentBookingId,
     );
   }
 }

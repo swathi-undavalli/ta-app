@@ -71,6 +71,8 @@ convertToEnum(String? e) {
       return LogType.deleteEmployee;
     case "bookingPaxDeleted":
       return LogType.bookingPaxDeleted;
+    case "quickBookingCreated":
+      return LogType.quickBookingCreated;
   }
 }
 
@@ -98,5 +100,7 @@ convertToString(LogType e) {
       return "deleteEmployee";
     case LogType.bookingPaxDeleted:
       return "bookingPaxDeleted";
+    case LogType.quickBookingCreated:
+      return "quickBookingCreated";
   }
 }

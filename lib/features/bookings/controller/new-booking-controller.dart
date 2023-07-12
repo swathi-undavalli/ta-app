@@ -372,8 +372,69 @@ class NewBookingLogic {
                     controller.bookingModel.diveDate!.add(selectedDiveDate);
                     controller.bookingModel.diveDate =
                         controller.bookingModel.diveDate!.toSet().toList();
+                    controller.update();
+                    Get.back();
+                  },
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+      radius: 10,
+    );
+  }
 
-                    //print(controller.bookingModel.diveDate);
+  addQuickDiveSessionDateTime() {
+    DateTime? selectedDiveDate;
+    Get.defaultDialog(
+      title: "",
+      titlePadding: EdgeInsets.all(0),
+      titleStyle: TextStyle(fontSize: 0, height: 0),
+      content: Container(
+        height: 480,
+        width: 400,
+        child: Column(
+          children: [
+            Container(
+              alignment: Alignment.centerLeft,
+              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: Text(
+                "Choose Date",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+            BookingsCalenderWidgetOld(
+              autoScrollController: autoScrollControllerDive,
+              highlightInvalidTime: true,
+              startDate: DateTime.now(),
+              calenderType: FilterType.Dive,
+              onDateTimeSelected: (date) {
+                selectedDiveDate = date;
+              },
+              isDiveSession: true,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                AppButton.miniText(
+                  text: "Cancel",
+                  onTap: () {
+                    Get.back();
+                  },
+                ),
+                AppButton.miniFlat(
+                  text: "Okay",
+                  bgColor: AppColors.background.black,
+                  textColor: AppColors.text.white,
+                  onTap: () {
+                    if (controller.quickDiveDates == null)
+                      controller.quickDiveDates = [];
+                    controller.quickDiveDates!.add(selectedDiveDate);
+                    controller.quickDiveDates =
+                        controller.quickDiveDates!.toSet().toList();
                     controller.update();
                     Get.back();
                   },
@@ -453,6 +514,69 @@ class NewBookingLogic {
   }
 
   createBooking() async {
+    if (controller.isQuickBooking) {
+      List<String> bookingDates = [];
+
+      if (controller.quickNameTED.text != "" &&
+          controller.quickNoOfPersonsTED.text != "" &&
+          controller.quickSelectedActivity != null) {
+
+
+        controller.quickShowLoading = true;
+        if (controller.quickDiveDates != null &&
+            controller.quickDiveDates!.isNotEmpty) {
+          controller.quickDiveDates!.forEach((element) {
+            bookingDates.add(getStringDate(element!));
+          });
+        }
+
+        BookingModel bookingModel = BookingModel(
+          activity: [controller.quickSelectedActivity!],
+          noOfPersons: int.parse(controller.quickNoOfPersonsTED.text),
+          id: controller.quickBookingIdTED.text,
+          pax: [
+            {
+              "first-name": controller.quickNameTED.text,
+              "email": "quickBooking@temple.com",
+              "last-name": "",
+              "countryCode": "+91",
+              "phoneNumber": "9876543210",
+              "isoCode": "IN",
+              "dob": DateTime.now(),
+            }
+          ],
+          diveDate: controller.quickDiveDates,
+          bookingDate: bookingDates,
+          employeeName: currentEmployee?.name ?? "quick",
+          paymentMode: "Cash",
+          paymentTransactionId: "quickBooking",
+          theoryDate: [],
+          poolDate: [],
+          receiptNo: "quick",
+          remarks: "quick",
+          idProofs: [],
+          payments: [],
+          createdAt: DateTime.now(),
+          isQuickBooking: true,
+          parentBookingId: controller.quickBookingIdTED.text,
+        );
+
+        controller.bookingId = await FirebaseApi.addNewBooking(bookingModel);
+        LogModel logModel = LogModel(
+            type: LogType.quickBookingCreated, bookingId: controller.bookingId);
+        FirebaseFirestore.instance
+            .collection("logs")
+            .doc()
+            .set(logModel.toMap());
+        controller.update();
+        controller.isQuickBooking = false;
+        return;
+      } else {
+        showToast("Invalid  input");
+        return;
+      }
+    }
+
     controller.bookingModel.bookingDate = [];
     if (controller.bookingModel.theoryDate != null &&
         controller.bookingModel.theoryDate!.isNotEmpty) {
@@ -552,6 +676,20 @@ class NewBookingController extends GetxController {
   TextEditingController phoneNumberTED = TextEditingController();
   TextEditingController remarksTED = TextEditingController();
   TextEditingController priceTED = TextEditingController();
+  TextEditingController quickBookingIdTED = TextEditingController();
+  TextEditingController quickNameTED = TextEditingController();
+  TextEditingController quickNoOfPersonsTED = TextEditingController();
+  ActivityModel? quickSelectedActivity;
+  List<DateTime?>? quickDiveDates;
+
+  bool _quickShowLoading = false;
+
+  bool get quickShowLoading => _quickShowLoading;
+
+  set quickShowLoading(bool value) {
+    _quickShowLoading = value;
+    update();
+  }
 
   FocusNode emailNode = FocusNode();
   FocusNode priceNode = FocusNode();
@@ -567,6 +705,7 @@ class NewBookingController extends GetxController {
   String _diveLocation = "Pondicherry";
 
   bool _discountSwitch = true;
+  bool _isQuickBooking = false;
 
   DateTime _paymentDate = DateTime.now();
 
@@ -585,6 +724,13 @@ class NewBookingController extends GetxController {
   bool get taxable => _taxable;
 
   bool get getDetailsPressed => _getDetailsPressed;
+
+  bool get isQuickBooking => _isQuickBooking;
+
+  set isQuickBooking(bool value) {
+    _isQuickBooking = value;
+    update();
+  }
 
   set getDetailsPressed(bool value) {
     _getDetailsPressed = value;
@@ -684,6 +830,13 @@ class NewBookingController extends GetxController {
     taxable = true;
     showLoading = false;
     getDetailsPressed = false;
+    isQuickBooking = false;
+    quickShowLoading = false;
+    quickNoOfPersonsTED.text = "";
+    quickDiveDates = [];
+    quickSelectedActivity = null;
+    quickNameTED.text = "";
+    quickBookingIdTED.text = "";
   }
 
   bool _showLoading = true;

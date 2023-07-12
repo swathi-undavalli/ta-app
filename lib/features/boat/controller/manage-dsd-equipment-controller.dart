@@ -81,8 +81,6 @@ class ManageDSDEquipmentController extends GetxController {
   TextEditingController powerNotesTED = TextEditingController();
   TextEditingController dsdPoolTED = TextEditingController();
   BoatsModel? boatsModel;
-  List<String> bcdSizes = ["XS", "S", "M", "L", "XL", "XXL"];
-  List<String> weights = ["3 kg", "4 kg", "5 kg", "6 kg", "7 kg"];
   bool _showLoading = false;
   DateTime selectedDate = DateTime.now();
   DateTime highTideTime = DateTime.now();

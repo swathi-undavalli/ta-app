@@ -64,6 +64,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   List<Instructor> surfaceSupport = [];
   List<Intern> selectedInternsPhotographers = [];
   List<Intern> selectedInternsSurfaceSupport = [];
+  List<int> dsdInstructorAir = [];
+  List<int> dsdInstructorNitrox = [];
   late TextEditingController boatTED;
   late TextEditingController diveSiteTED;
   late TextEditingController notesTED;
@@ -267,17 +269,20 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             buildEmployeeSelector(
                 employees: selectedCaptains,
                 title: "Captains",
-                employeeLimit: 2),
+                employeeLimit: 2,
+                isTanksRequired: false),
             SizedBox(height: 20),
             buildEmployeeSelector(
                 employees: selectedDsdInstructors,
                 title: "DSD Instructors",
-                employeeLimit: -1),
+                employeeLimit: -1,
+                isTanksRequired: true),
             SizedBox(height: 20),
             buildEmployeeSelector(
                 employees: selectedPhotographer,
                 title: "Photographer / Videographer",
-                employeeLimit: 2),
+                employeeLimit: 2,
+                isTanksRequired: false),
             SizedBox(height: 20),
             buildVideoPhotoTankCount(),
             buildInternPhotographers(
@@ -524,7 +529,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   Widget buildEmployeeSelector(
       {required List<Instructor> employees,
       required String title,
-      required int employeeLimit}) {
+      required int employeeLimit,
+      required bool isTanksRequired}) {
     if (employees.isEmpty) {
       return AppButton.miniFlat(
         text: "Add $title",
@@ -533,6 +539,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   initialSelectedEmployees: employees,
                   instructorLimit: employeeLimit)) ??
               [];
+
           setState(() {});
         },
       );
@@ -541,7 +548,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "$title",
+          "$title (A - N)",
           style: TextStyle(
             fontSize: 14,
             color: Colors.black,
@@ -556,36 +563,110 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 ...employees.map(
-                  (e) => Text(
-                    "${e.name}",
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.black,
-                    ),
+                  (e) => Row(
+                    children: [
+                      Text(
+                        "${e.name}",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black,
+                        ),
+                      ),
+                      if (isTanksRequired)
+                        Text(
+                          " (${dsdInstructorAir[employees.indexOf(e)]} - ${dsdInstructorNitrox[employees.indexOf(e)]})",
+                          style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.black,
+                          ),
+                        ),
+                    ],
                   ).paddingOnly(bottom: 4),
                 ),
               ],
             ),
-            GestureDetector(
-              onTap: () async {
-                employees = (await EmpSelectorBottomSheet.show(context,
-                        initialSelectedEmployees: employees,
-                        instructorLimit: employeeLimit)) ??
-                    [];
-                setState(() {});
-              },
-              child: Text(
-                "Change",
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline),
-              ).paddingOnly(left: 10, right: 7),
-            ),
-            Icon(
-              Icons.edit,
-              size: 12,
-              color: Colors.blue,
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    GestureDetector(
+                      onTap: () async {
+                        employees = (await EmpSelectorBottomSheet.show(context,
+                                initialSelectedEmployees: employees,
+                                instructorLimit: employeeLimit)) ??
+                            [];
+
+                        setState(() {});
+                      },
+                      child: Text(
+                        "Change",
+                        style: TextStyle(
+                            fontSize: 12,
+                            color: Colors.blue,
+                            decoration: TextDecoration.underline),
+                      ).paddingOnly(left: 10, right: 7),
+                    ),
+                    Icon(
+                      Icons.edit,
+                      size: 12,
+                      color: Colors.blue,
+                    ),
+                  ],
+                ),
+                SizedBox(height: 5),
+                if (isTanksRequired)
+                  Row(
+                    children: [
+                      GestureDetector(
+                        onTap: () async {
+                          dsdInstructorAir =
+                              List.generate(employees.length, (index) => 0);
+                          dsdInstructorNitrox =
+                              List.generate(employees.length, (index) => 0);
+                          Map<Instructor, List<int>>? dsdInstructorTanks =
+                              await InstructorTanksBottomSheet.show(
+                            context,
+                            initialSelectedEmployees: employees,
+                            air: dsdInstructorAir,
+                            nitrox: dsdInstructorNitrox,
+                          );
+
+                          // log(dsdInstructorTanks.toString());
+                          // log(dsdInstructorTanks![employees[0]].toString() ??
+                          //     "");
+
+                          if (dsdInstructorTanks != null)
+                            dsdInstructorNitrox = [];
+                          dsdInstructorAir = [];
+                          for (Instructor instructor in employees) {
+                            dsdInstructorNitrox
+                                .add(dsdInstructorTanks![instructor]![0]);
+                            dsdInstructorAir
+                                .add(dsdInstructorTanks[instructor]![1]);
+                          }
+
+                          log(dsdInstructorNitrox.toString());
+                          log(dsdInstructorAir.toString());
+
+                          setState(() {});
+                        },
+                        child: Text(
+                          "Add Tanks",
+                          style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline),
+                        ).paddingOnly(left: 10, right: 7),
+                      ),
+                      Icon(
+                        Icons.edit,
+                        size: 12,
+                        color: Colors.blue,
+                      ),
+                    ],
+                  ),
+              ],
             ),
           ],
         ),
@@ -653,5 +734,118 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       boatsModel.boats?.add(boat);
     }
     Navigator.pop(context, boatsModel);
+  }
+}
+
+class InstructorTanksBottomSheet extends StatefulWidget {
+  final List<Instructor> instructors;
+  final List<int> air;
+  final List<int> nitrox;
+
+  const InstructorTanksBottomSheet({
+    Key? key,
+    required this.instructors,
+    required this.air,
+    required this.nitrox,
+  }) : super(key: key);
+
+  static Future<Map<Instructor, List<int>>?> show(
+    BuildContext context, {
+    required List<Instructor> initialSelectedEmployees,
+    required List<int> air,
+    required List<int> nitrox,
+  }) async {
+    var data = await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      builder: (BuildContext context) {
+        return InstructorTanksBottomSheet(
+          instructors: initialSelectedEmployees,
+          air: air,
+          nitrox: nitrox,
+        );
+      },
+    );
+
+    return data as Map<Instructor, List<int>>?;
+  }
+
+  @override
+  State<InstructorTanksBottomSheet> createState() =>
+      _InstructorTanksBottomSheetState();
+}
+
+class _InstructorTanksBottomSheetState
+    extends State<InstructorTanksBottomSheet> {
+  late Map<Instructor, List<int>> instructorTanks;
+
+  @override
+  void initState() {
+    super.initState();
+    instructorTanks = {};
+    for (int i = 0; i < widget.nitrox.length; i++) {
+      instructorTanks[widget.instructors[i]] = [
+        widget.nitrox[i],
+        widget.air[i]
+      ];
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 700,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(
+          30,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Text(
+                "Manage Divers",
+                style: TextStyle(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
+              ).paddingOnly(top: 8),
+              Spacer(),
+              IconButton(
+                icon: Icon(Icons.close),
+                onPressed: () async {
+                  Navigator.pop(context, instructorTanks);
+                },
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+          ...widget.instructors.map(
+            (instructor) => Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "${instructor.name} : ",
+                  style: TextStyle(fontWeight: FontWeight.w700),
+                ),
+                SizedBox(height: 15),
+                TankCounter(
+                    onChanged: (n, a) {
+                      instructorTanks[instructor]![0] = n;
+                      instructorTanks[instructor]![1] = a;
+                    },
+                    nitrox: instructorTanks[instructor]![0],
+                    air: instructorTanks[instructor]![1])
+              ],
+            ).paddingOnly(bottom: 30),
+          )
+        ],
+      ).paddingSymmetric(horizontal: 25),
+    );
   }
 }

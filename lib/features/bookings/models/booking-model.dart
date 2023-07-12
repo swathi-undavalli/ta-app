@@ -35,6 +35,8 @@ class BookingModel {
     this.cancelBooking,
     this.cancellationReason,
     this.boatDetails,
+    this.parentBookingId,
+    this.isQuickBooking = false,
   });
 
   List<ActivityModel?>? activity;
@@ -62,6 +64,8 @@ class BookingModel {
   bool? cancelBooking;
   String? cancellationReason;
   BoatDetails? boatDetails;
+  bool isQuickBooking;
+  String? parentBookingId;
 
   factory BookingModel.fromMap(Map<String, dynamic> json) {
     //log("fromMap");
@@ -86,9 +90,11 @@ class BookingModel {
       paymentMode: json["paymentMode"],
       receiptNo: json["receiptNo"],
       remarks: json["remarks"],
+      isQuickBooking: json["isQuickBooking"] ?? false,
       employeeName: json["employeeName"],
       id: json["id"],
       location: json["location"],
+      parentBookingId: json["parentBookingId"],
       paymentTransactionId: json["paymentTransactionId"],
       bookingDate: List<String>.from(json["bookingDate"].map((x) => x)),
       idProofs: List<String>.from(json["idProofs"] ?? [].map((x) => x)),
@@ -115,6 +121,7 @@ class BookingModel {
       "id": id,
       "payments": List<dynamic>.from((payments ?? []).map((x) => x.toMap())),
       "remarks": remarks,
+      "isQuickBooking": isQuickBooking,
       "employeeName": employeeName,
       "discountSwitch": discountType,
       "tax": tax,
@@ -132,6 +139,7 @@ class BookingModel {
       "diveDate":
           List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
       "cancelBooking": cancelBooking,
+      "parentBookingId": parentBookingId,
       "cancellationReason": cancellationReason,
       "boatDetails": boatDetails?.toMap(),
     };

@@ -14,6 +14,7 @@ import '../../../../notification-screen.dart';
 
 class LogScreen extends StatelessWidget {
   static const String id = "LogScreen";
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -211,6 +212,8 @@ class LogScreen extends StatelessWidget {
           return "Deleted ${log.employeeName}";
         case LogType.bookingPaxDeleted:
           return "PAX Deleted";
+        case LogType.quickBookingCreated:
+          return "Quick Booking Created";
       }
     }
 
@@ -337,6 +340,7 @@ enum LogType {
   signedIn,
   signedOut,
   bookingCreated,
+  quickBookingCreated,
   bookingDeleted,
   bookingPaxDeleted,
   bookingEdited,
