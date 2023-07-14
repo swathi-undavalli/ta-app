@@ -177,18 +177,21 @@ class _CustomerExpandableListTileState
                                 "Booking Id", itemModel.bookingID ?? "-"),
                             _buildKeyValuePairs(
                                 "Course Name", itemModel.activity),
-                            _buildKeyValuePairs(
-                              "Balance",
-                              "${getBalance(itemModel.bookingModel?.payments ?? [], double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} / -",
-                            ),
+                            if (!itemModel.bookingModel!.isQuickBooking)
+                              _buildKeyValuePairs(
+                                "Balance",
+                                "${getBalance(itemModel.bookingModel?.payments ?? [], double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} / -",
+                              ),
                             _buildKeyValuePairs("Session", itemModel.session),
-                            _buildKeyValuePairs(
-                              "Registered",
-                              "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
-                              isDanger:
-                                  ((itemModel.bookingModel!.pax!.length - 1) !=
-                                      (itemModel.bookingModel!.noOfPersons)),
-                            ),
+                            if (!itemModel.bookingModel!.isQuickBooking)
+                              _buildKeyValuePairs(
+                                "Registered",
+                                "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
+                                isDanger:
+                                    ((itemModel.bookingModel!.pax!.length -
+                                            1) !=
+                                        (itemModel.bookingModel!.noOfPersons)),
+                              ),
                             SizedBox(height: 20),
                             StreamBuilder(
                                 stream: bookingDoc.snapshots(),

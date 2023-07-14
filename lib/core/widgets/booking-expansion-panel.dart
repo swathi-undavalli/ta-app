@@ -339,7 +339,10 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
           curve: Curves.easeInCubic,
           alignment: Alignment.topCenter,
           constraints: BoxConstraints(
-            minHeight: controller.isExpanded[i!] ? 500 : 50,
+            minHeight: (controller.isExpanded[i!] &&
+                    !(itemModel?.bookingModel?.isQuickBooking ?? true))
+                ? 500
+                : 50,
           ),
           width: Get.width,
           decoration: BoxDecoration(
@@ -348,12 +351,12 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
           ),
           child: Container(
             decoration: BoxDecoration(
-              color: getColor(),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Padding(
               padding: const EdgeInsets.only(left: 15),
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -455,58 +458,62 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   SizedBox(height: 5),
-                                  Row(
-                                    children: [
-                                      Spacer(),
-                                      IconButton(
-                                        splashRadius: 20,
-                                        icon: Icon(Icons.call_rounded,
-                                            color: AppColors.background.black),
-                                        iconSize: 15,
-                                        onPressed: () {
-                                          log(double.parse(itemModel.balance)
-                                              .floorToDouble()
-                                              .toString());
-                                          makingPhoneCall(itemModel.phone);
-                                        },
-                                      ),
-                                      EmployeeAccess(
-                                        access: AccessRights.editBookings,
-                                        child: IconButton(
+                                  if (!itemModel.bookingModel!.isQuickBooking)
+                                    Row(
+                                      children: [
+                                        Spacer(),
+                                        IconButton(
                                           splashRadius: 20,
-                                          icon: Icon(Icons.delete,
+                                          icon: Icon(Icons.call_rounded,
                                               color:
                                                   AppColors.background.black),
                                           iconSize: 15,
                                           onPressed: () {
-                                            if (itemModel.bookingModel
-                                                    ?.cancelBooking !=
-                                                true)
-                                              _bookingCancellationDialog(
-                                                  context, itemModel);
-                                            else
-                                              showToast(
-                                                  "Booking Cancelled successfully");
+                                            log(double.parse(itemModel.balance)
+                                                .floorToDouble()
+                                                .toString());
+                                            makingPhoneCall(itemModel.phone);
                                           },
                                         ),
-                                      ),
-                                      EmployeeAccess(
-                                        access: AccessRights.editBookings,
-                                        child: IconButton(
-                                          splashRadius: 20,
-                                          icon: Icon(Icons.edit,
-                                              color:
-                                                  AppColors.background.black),
-                                          iconSize: 15,
-                                          onPressed: () {
-                                            var model = itemModel.bookingModel;
-                                            Get.toNamed(EditBookingNewScreen.id,
-                                                arguments: model);
-                                          },
+                                        EmployeeAccess(
+                                          access: AccessRights.editBookings,
+                                          child: IconButton(
+                                            splashRadius: 20,
+                                            icon: Icon(Icons.delete,
+                                                color:
+                                                    AppColors.background.black),
+                                            iconSize: 15,
+                                            onPressed: () {
+                                              if (itemModel.bookingModel
+                                                      ?.cancelBooking !=
+                                                  true)
+                                                _bookingCancellationDialog(
+                                                    context, itemModel);
+                                              else
+                                                showToast(
+                                                    "Booking Cancelled successfully");
+                                            },
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ).paddingOnly(bottom: 15),
+                                        EmployeeAccess(
+                                          access: AccessRights.editBookings,
+                                          child: IconButton(
+                                            splashRadius: 20,
+                                            icon: Icon(Icons.edit,
+                                                color:
+                                                    AppColors.background.black),
+                                            iconSize: 15,
+                                            onPressed: () {
+                                              var model =
+                                                  itemModel.bookingModel;
+                                              Get.toNamed(
+                                                  EditBookingNewScreen.id,
+                                                  arguments: model);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ).paddingOnly(bottom: 15),
                                   if (itemModel.bookingModel
                                               ?.cancellationReason !=
                                           null &&
@@ -543,75 +550,88 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                       "Booking Id", itemModel.bookingID!),
                                   buildKeyValuePairs(
                                       "Activity", itemModel.activity),
-                                  buildKeyValuePairs(
-                                      "Total Cost",
-                                      double.parse(itemModel.cost)
-                                          .roundToDouble()
-                                          .toString()),
-                                  buildKeyValuePairs(
-                                      "Deposit",
-                                      double.parse(itemModel.paid)
-                                          .roundToDouble()
-                                          .toString()),
-                                  buildKeyValuePairs(
-                                    "Balance",
-                                    getBalance(
-                                        itemModel.bookingModel!.payments!,
-                                        double.parse(itemModel.paid)
-                                            .roundToDouble(),
+                                  if (!itemModel.bookingModel!.isQuickBooking)
+                                    buildKeyValuePairs(
+                                        "Total Cost",
                                         double.parse(itemModel.cost)
-                                            .roundToDouble()),
-                                  ),
+                                            .roundToDouble()
+                                            .toString()),
+                                  if (!itemModel.bookingModel!.isQuickBooking)
+                                    buildKeyValuePairs(
+                                        "Deposit",
+                                        double.parse(itemModel.paid)
+                                            .roundToDouble()
+                                            .toString()),
+                                  if (!itemModel.bookingModel!.isQuickBooking)
+                                    buildKeyValuePairs(
+                                      "Balance",
+                                      getBalance(
+                                          itemModel.bookingModel!.payments!,
+                                          double.parse(itemModel.paid)
+                                              .roundToDouble(),
+                                          double.parse(itemModel.cost)
+                                              .roundToDouble()),
+                                    ),
                                   buildKeyValuePairs(
                                       "Pax",
                                       itemModel.bookingModel!.noOfPersons
                                           .toString()),
-                                  ((itemModel != null) &&
-                                          (itemModel.receiptNo != null))
-                                      ? buildKeyValuePairs(
-                                          "Invoice no", itemModel.receiptNo!)
-                                      : buildKeyValuePairs("Invoice no", "-"),
-                                  (itemModel.remarks == "")
-                                      ? buildKeyValuePairs("Remarks", "-")
-                                      : buildKeyValuePairs("Remarks",
-                                          itemModel.remarks.toString()),
-                                  buildKeyValuePairs("Phone", itemModel.phone!),
-                                  buildKeyValuePairs("Email", itemModel.email!),
+                                  if (!itemModel.bookingModel!.isQuickBooking)
+                                    (itemModel.receiptNo != null)
+                                        ? buildKeyValuePairs(
+                                            "Invoice no", itemModel.receiptNo!)
+                                        : buildKeyValuePairs("Invoice no", "-"),
+                                  if (!itemModel.bookingModel!.isQuickBooking)
+                                    (itemModel.remarks == "")
+                                        ? buildKeyValuePairs("Remarks", "-")
+                                        : buildKeyValuePairs("Remarks",
+                                            itemModel.remarks.toString()),
+                                  if (!itemModel.bookingModel!.isQuickBooking)
+                                    buildKeyValuePairs(
+                                        "Phone", itemModel.phone!),
+                                  if (!itemModel.bookingModel!.isQuickBooking)
+                                    buildKeyValuePairs(
+                                        "Email", itemModel.email!),
                                   buildKeyValuePairs("Time", itemModel.time),
                                   buildKeyValuePairs("Date", itemModel.date),
                                   buildKeyValuePairs(
                                       "Session", itemModel.session),
-                                  buildKeyValuePairs(
-                                    "Registered",
-                                    "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
-                                    isDanger: ((itemModel
-                                                .bookingModel!.pax!.length -
-                                            1) !=
-                                        (itemModel.bookingModel!.noOfPersons)),
-                                  ),
+                                  if (!itemModel.bookingModel!.isQuickBooking)
+                                    buildKeyValuePairs(
+                                      "Registered",
+                                      "${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}",
+                                      isDanger: ((itemModel
+                                                  .bookingModel!.pax!.length -
+                                              1) !=
+                                          (itemModel
+                                              .bookingModel!.noOfPersons)),
+                                    ),
                                   SizedBox(height: 30),
-                                  buildPaymentStatus(
-                                    itemModel: itemModel,
-                                    totalAmount:
-                                        itemModel.bookingModel!.totalCost,
-                                    payments: [
-                                      PaymentModel(
-                                        amount: double.parse(itemModel.paid)
-                                            .roundToDouble(),
-                                        collectedBy: itemModel.employeeName,
-                                        reciptNo: itemModel.receiptNo,
-                                        referenceNo: itemModel
-                                            .bookingModel!.paymentTransactionId,
-                                        remarks: "",
-                                        paymentMode:
-                                            itemModel.bookingModel!.paymentMode,
-                                        time: itemModel.bookingModel!.createdAt,
-                                      ),
-                                      ...itemModel.bookingModel!.payments!
-                                    ],
-                                  ),
+                                  if (!itemModel.bookingModel!.isQuickBooking)
+                                    buildPaymentStatus(
+                                      itemModel: itemModel,
+                                      totalAmount:
+                                          itemModel.bookingModel!.totalCost,
+                                      payments: [
+                                        PaymentModel(
+                                          amount: double.parse(itemModel.paid)
+                                              .roundToDouble(),
+                                          collectedBy: itemModel.employeeName,
+                                          reciptNo: itemModel.receiptNo,
+                                          referenceNo: itemModel.bookingModel!
+                                              .paymentTransactionId,
+                                          remarks: "",
+                                          paymentMode: itemModel
+                                              .bookingModel!.paymentMode,
+                                          time:
+                                              itemModel.bookingModel!.createdAt,
+                                        ),
+                                        ...itemModel.bookingModel!.payments!
+                                      ],
+                                    ),
                                   SizedBox(height: 10),
-                                  if (itemModel.colorCode == "Blue")
+                                  if (itemModel.colorCode == "Blue" &&
+                                      (!itemModel.bookingModel!.isQuickBooking))
                                     Column(
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
@@ -677,7 +697,8 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         SizedBox(height: 20),
                                       ],
                                     ),
-                                  if (itemModel.colorCode != "Blue")
+                                  if (itemModel.colorCode != "Blue" &&
+                                      (!itemModel.bookingModel!.isQuickBooking))
                                     Row(
                                       children: [
                                         AppButton.miniFlat(
@@ -736,187 +757,179 @@ Regards,
                                         ).paddingOnly(right: 15),
                                       ],
                                     ),
-                                  Row(
-                                    children: [
-                                      // if (bookingCalenderLogicNew
-                                      //             .controller.selectedType ==
-                                      //         FilterType.Dive &&
-                                      //     itemModel.bookingModel!.pax!.length -
-                                      //             1 ==
-                                      //         itemModel
-                                      //             .bookingModel!.noOfPersons)
-                                      //   SelectSeatsWidget(
-                                      //       itemModel.bookingModel),
-                                      Spacer(),
-                                      if (itemModel.colorCode == "Blue") button,
-                                      if (itemModel.colorCode == "Blue")
-                                        AppButton.miniFlat(
-                                          text: "PaperWork",
-                                          bgColor: AppColors.text.green
-                                              .withOpacity(0.8),
-                                          onTap: () async {
-                                            String bookingId =
-                                                itemModel.bookingModel!.id!;
-                                            String bs64 = base64
-                                                .encode(bookingId.codeUnits);
-                                            print(bs64);
-                                            String link =
-                                                "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=";
+                                  if (!itemModel.bookingModel!.isQuickBooking)
+                                    Row(
+                                      children: [
+                                        Spacer(),
+                                        if (itemModel.colorCode == "Blue")
+                                          button,
+                                        if (itemModel.colorCode == "Blue")
+                                          AppButton.miniFlat(
+                                            text: "PaperWork",
+                                            bgColor: AppColors.text.green
+                                                .withOpacity(0.8),
+                                            onTap: () async {
+                                              String bookingId =
+                                                  itemModel.bookingModel!.id!;
+                                              String bs64 = base64
+                                                  .encode(bookingId.codeUnits);
+                                              print(bs64);
+                                              String link =
+                                                  "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=";
 
-                                            showModalBottomSheet(
-                                                backgroundColor:
-                                                    Colors.transparent,
-                                                isScrollControlled: true,
-                                                context: context,
-                                                useRootNavigator: true,
-                                                builder: (context) {
-                                                  return Container(
-                                                    padding: EdgeInsets.only(
-                                                        bottom: MediaQuery.of(
-                                                                context)
-                                                            .viewInsets
-                                                            .bottom,
-                                                        top: 30,
-                                                        left: 30,
-                                                        right: 30),
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.only(
-                                                              topLeft: Radius
-                                                                  .circular(15),
-                                                              topRight: Radius
-                                                                  .circular(
-                                                                      15)),
-                                                    ),
-                                                    child: Column(
-                                                      mainAxisSize:
-                                                          MainAxisSize.min,
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Row(
-                                                          children: [
-                                                            Container(
-                                                              width: 150,
-                                                              child: Text(
-                                                                "${itemModel.name!.capitalizeFirst! + "x" + itemModel.pax.toString()}",
-                                                                style: TextStyle(
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontSize:
-                                                                        FontSize
-                                                                            .textSize),
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                              ),
-                                                            ),
-                                                            const Spacer(),
-                                                            Material(
-                                                              color: Colors
-                                                                  .transparent,
-                                                              child: InkWell(
-                                                                  highlightColor: Colors
-                                                                      .blue
-                                                                      .withOpacity(
-                                                                          0.2),
-                                                                  splashColor: Colors
-                                                                      .grey
-                                                                      .withOpacity(
-                                                                          0.3),
-                                                                  borderRadius:
-                                                                      BorderRadius
-                                                                          .circular(
-                                                                              20),
-                                                                  radius: 100,
-                                                                  onTap: () {
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                    // provider.onCancelPressed();
-                                                                  },
-                                                                  child: Icon(Icons
-                                                                      .close)),
-                                                            )
-                                                          ],
-                                                        ),
-                                                        SizedBox(height: 50),
-                                                        Container(
-                                                          height: 50,
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            borderRadius:
-                                                                BorderRadius
+                                              showModalBottomSheet(
+                                                  backgroundColor:
+                                                      Colors.transparent,
+                                                  isScrollControlled: true,
+                                                  context: context,
+                                                  useRootNavigator: true,
+                                                  builder: (context) {
+                                                    return Container(
+                                                      padding: EdgeInsets.only(
+                                                          bottom: MediaQuery.of(
+                                                                  context)
+                                                              .viewInsets
+                                                              .bottom,
+                                                          top: 30,
+                                                          left: 30,
+                                                          right: 30),
+                                                      decoration:
+                                                          const BoxDecoration(
+                                                        color: Colors.white,
+                                                        borderRadius:
+                                                            BorderRadius.only(
+                                                                topLeft: Radius
                                                                     .circular(
-                                                                        20),
-                                                            color: AppColors
-                                                                .text
-                                                                .lightSkyBlue
-                                                                .withOpacity(
-                                                                    0.1),
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .start,
-                                                            crossAxisAlignment:
-                                                                CrossAxisAlignment
-                                                                    .center,
+                                                                        15),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        15)),
+                                                      ),
+                                                      child: Column(
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        children: [
+                                                          Row(
                                                             children: [
-                                                              SizedBox(
-                                                                  width: 15),
                                                               Container(
-                                                                width: 200,
+                                                                width: 150,
                                                                 child: Text(
-                                                                  "temple_paperwork/?bookingId..",
+                                                                  "${itemModel.name!.capitalizeFirst! + "x" + itemModel.pax.toString()}",
+                                                                  style: TextStyle(
+                                                                      fontWeight:
+                                                                          FontWeight
+                                                                              .w600,
+                                                                      fontSize:
+                                                                          FontSize
+                                                                              .textSize),
                                                                   overflow:
                                                                       TextOverflow
                                                                           .ellipsis,
                                                                 ),
                                                               ),
-                                                              Spacer(),
-                                                              IconButton(
-                                                                  onPressed:
-                                                                      () async {
-                                                                    await Clipboard.setData(
-                                                                        ClipboardData(
-                                                                            text:
-                                                                                link));
-                                                                    Fluttertoast
-                                                                        .showToast(
-                                                                            msg:
-                                                                                "Link copied to Clipboard");
-                                                                  },
-                                                                  icon: Icon(
-                                                                      Icons
-                                                                          .copy_outlined,
-                                                                      size:
-                                                                          20)),
+                                                              const Spacer(),
+                                                              Material(
+                                                                color: Colors
+                                                                    .transparent,
+                                                                child: InkWell(
+                                                                    highlightColor: Colors
+                                                                        .blue
+                                                                        .withOpacity(
+                                                                            0.2),
+                                                                    splashColor: Colors
+                                                                        .grey
+                                                                        .withOpacity(
+                                                                            0.3),
+                                                                    borderRadius:
+                                                                        BorderRadius.circular(
+                                                                            20),
+                                                                    radius: 100,
+                                                                    onTap: () {
+                                                                      Navigator.pop(
+                                                                          context);
+                                                                      // provider.onCancelPressed();
+                                                                    },
+                                                                    child: Icon(
+                                                                        Icons
+                                                                            .close)),
+                                                              )
                                                             ],
                                                           ),
-                                                        ),
-                                                        SizedBox(height: 50),
-                                                        Container(
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: QRImage(
-                                                              height: 150,
-                                                              width: 150,
-                                                              data:
-                                                                  "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ="),
-                                                        ),
-                                                        SizedBox(height: 50),
-                                                      ],
-                                                    ),
-                                                  );
-                                                });
-                                          },
-                                        ).paddingOnly(right: 15),
-                                    ],
-                                  ),
+                                                          SizedBox(height: 50),
+                                                          Container(
+                                                            height: 50,
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          20),
+                                                              color: AppColors
+                                                                  .text
+                                                                  .lightSkyBlue
+                                                                  .withOpacity(
+                                                                      0.1),
+                                                            ),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .start,
+                                                              crossAxisAlignment:
+                                                                  CrossAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                SizedBox(
+                                                                    width: 15),
+                                                                Container(
+                                                                  width: 200,
+                                                                  child: Text(
+                                                                    "temple_paperwork/?bookingId..",
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                  ),
+                                                                ),
+                                                                Spacer(),
+                                                                IconButton(
+                                                                    onPressed:
+                                                                        () async {
+                                                                      await Clipboard.setData(
+                                                                          ClipboardData(
+                                                                              text: link));
+                                                                      Fluttertoast
+                                                                          .showToast(
+                                                                              msg: "Link copied to Clipboard");
+                                                                    },
+                                                                    icon: Icon(
+                                                                        Icons
+                                                                            .copy_outlined,
+                                                                        size:
+                                                                            20)),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                          SizedBox(height: 50),
+                                                          Container(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: QRImage(
+                                                                height: 150,
+                                                                width: 150,
+                                                                data:
+                                                                    "https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ="),
+                                                          ),
+                                                          SizedBox(height: 50),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  });
+                                            },
+                                          ).paddingOnly(right: 15),
+                                      ],
+                                    ),
                                   SizedBox(height: 20),
                                   Row(
                                     children: [
@@ -945,140 +958,145 @@ Regards,
                                           ),
                                         ),
                                       Spacer(),
-                                      (itemModel.colorCode == "Blue")
-                                          ? AppButton.miniFlat(
-                                              text: "Manage PAX",
-                                              onTap: () async {
-                                                BookingModel? bookingModel =
-                                                    itemModel.bookingModel;
-                                                showModalBottomSheet(
-                                                    backgroundColor:
-                                                        Colors.transparent,
-                                                    isScrollControlled: true,
-                                                    context: context,
-                                                    useRootNavigator: true,
-                                                    builder: (context) {
-                                                      return Container(
-                                                        padding: EdgeInsets.only(
-                                                            bottom:
-                                                                MediaQuery.of(
-                                                                        context)
-                                                                    .viewInsets
-                                                                    .bottom,
-                                                            top: 30,
-                                                            left: 30,
-                                                            right: 30),
-                                                        constraints:
-                                                            BoxConstraints(
-                                                                minHeight: 300),
-                                                        decoration:
-                                                            const BoxDecoration(
-                                                          color: Colors.white,
-                                                          borderRadius:
-                                                              BorderRadius.only(
-                                                                  topLeft: Radius
-                                                                      .circular(
-                                                                          15),
-                                                                  topRight: Radius
-                                                                      .circular(
-                                                                          15)),
-                                                        ),
-                                                        child: Column(
-                                                          mainAxisSize:
-                                                              MainAxisSize.min,
-                                                          crossAxisAlignment:
-                                                              CrossAxisAlignment
-                                                                  .start,
-                                                          children: [
-                                                            Row(
-                                                              children: [
-                                                                Container(
-                                                                  width: 150,
-                                                                  child: Text(
-                                                                    "${itemModel.name!.capitalizeFirst! + " X " + itemModel.pax.toString()}",
-                                                                    style: TextStyle(
-                                                                        fontWeight:
-                                                                            FontWeight
-                                                                                .w600,
-                                                                        fontSize:
-                                                                            FontSize.textSize),
-                                                                    overflow:
-                                                                        TextOverflow
-                                                                            .ellipsis,
-                                                                  ),
-                                                                ),
-                                                                const Spacer(),
-                                                                Material(
-                                                                  color: Colors
-                                                                      .transparent,
-                                                                  child: InkWell(
-                                                                      highlightColor: Colors.blue.withOpacity(0.2),
-                                                                      splashColor: Colors.grey.withOpacity(0.3),
-                                                                      borderRadius: BorderRadius.circular(20),
-                                                                      radius: 100,
-                                                                      onTap: () {
-                                                                        Navigator.pop(
-                                                                            context);
-                                                                        // provider.onCancelPressed();
-                                                                      },
-                                                                      child: Icon(Icons.close)),
-                                                                )
-                                                              ],
-                                                            ),
-                                                            SizedBox(
-                                                                height: 20),
-                                                            ...bookingModel!
-                                                                .pax!
-                                                                .asMap()
-                                                                .entries
-                                                                .map((e) {
-                                                              int index = e.key;
-                                                              String? email =
-                                                                  e.value[
-                                                                      "email"];
-                                                              if (index == 0)
-                                                                return SizedBox();
-                                                              return Row(
-                                                                mainAxisAlignment:
-                                                                    MainAxisAlignment
-                                                                        .spaceBetween,
+                                      if (!itemModel
+                                          .bookingModel!.isQuickBooking)
+                                        (itemModel.colorCode == "Blue")
+                                            ? AppButton.miniFlat(
+                                                text: "Manage PAX",
+                                                onTap: () async {
+                                                  BookingModel? bookingModel =
+                                                      itemModel.bookingModel;
+                                                  showModalBottomSheet(
+                                                      backgroundColor:
+                                                          Colors.transparent,
+                                                      isScrollControlled: true,
+                                                      context: context,
+                                                      useRootNavigator: true,
+                                                      builder: (context) {
+                                                        return Container(
+                                                          padding: EdgeInsets.only(
+                                                              bottom: MediaQuery
+                                                                      .of(context)
+                                                                  .viewInsets
+                                                                  .bottom,
+                                                              top: 30,
+                                                              left: 30,
+                                                              right: 30),
+                                                          constraints:
+                                                              BoxConstraints(
+                                                                  minHeight:
+                                                                      300),
+                                                          decoration:
+                                                              const BoxDecoration(
+                                                            color: Colors.white,
+                                                            borderRadius: BorderRadius.only(
+                                                                topLeft: Radius
+                                                                    .circular(
+                                                                        15),
+                                                                topRight: Radius
+                                                                    .circular(
+                                                                        15)),
+                                                          ),
+                                                          child: Column(
+                                                            mainAxisSize:
+                                                                MainAxisSize
+                                                                    .min,
+                                                            crossAxisAlignment:
+                                                                CrossAxisAlignment
+                                                                    .start,
+                                                            children: [
+                                                              Row(
                                                                 children: [
-                                                                  Text(email!),
-                                                                  IconButton(
-                                                                    onPressed:
-                                                                        () {
-                                                                      onDeletePaxPressed(
-                                                                          bookingModel,
-                                                                          index);
-                                                                    },
-                                                                    icon: Icon(
-                                                                      Icons
-                                                                          .delete,
-                                                                      size: 20,
+                                                                  Container(
+                                                                    width: 150,
+                                                                    child: Text(
+                                                                      "${itemModel.name!.capitalizeFirst! + " X " + itemModel.pax.toString()}",
+                                                                      style: TextStyle(
+                                                                          fontWeight: FontWeight
+                                                                              .w600,
+                                                                          fontSize:
+                                                                              FontSize.textSize),
+                                                                      overflow:
+                                                                          TextOverflow
+                                                                              .ellipsis,
                                                                     ),
                                                                   ),
+                                                                  const Spacer(),
+                                                                  Material(
+                                                                    color: Colors
+                                                                        .transparent,
+                                                                    child: InkWell(
+                                                                        highlightColor: Colors.blue.withOpacity(0.2),
+                                                                        splashColor: Colors.grey.withOpacity(0.3),
+                                                                        borderRadius: BorderRadius.circular(20),
+                                                                        radius: 100,
+                                                                        onTap: () {
+                                                                          Navigator.pop(
+                                                                              context);
+                                                                          // provider.onCancelPressed();
+                                                                        },
+                                                                        child: Icon(Icons.close)),
+                                                                  )
                                                                 ],
-                                                              );
-                                                            }),
-                                                          ],
-                                                        ),
-                                                      );
-                                                    });
-                                              },
-                                            ).paddingOnly(right: 15)
-                                          : AppButton.miniFlat(
-                                              text: "Booking Info",
-                                              bgColor: AppColors.text.orange
-                                                  .withOpacity(0.8),
-                                              onTap: () async {
-                                                File pdfFile =
-                                                    await ShareBookingDetails
-                                                        .generatePdf(itemModel
-                                                            .bookingModel!);
-                                                Share.shareFiles(
-                                                    [pdfFile.path]);
-                                              },
-                                            ).paddingOnly(right: 15),
+                                                              ),
+                                                              SizedBox(
+                                                                  height: 20),
+                                                              ...bookingModel!
+                                                                  .pax!
+                                                                  .asMap()
+                                                                  .entries
+                                                                  .map((e) {
+                                                                int index =
+                                                                    e.key;
+                                                                String? email =
+                                                                    e.value[
+                                                                        "email"];
+                                                                if (index == 0)
+                                                                  return SizedBox();
+                                                                return Row(
+                                                                  mainAxisAlignment:
+                                                                      MainAxisAlignment
+                                                                          .spaceBetween,
+                                                                  children: [
+                                                                    Text(
+                                                                        email!),
+                                                                    IconButton(
+                                                                      onPressed:
+                                                                          () {
+                                                                        onDeletePaxPressed(
+                                                                            bookingModel,
+                                                                            index);
+                                                                      },
+                                                                      icon:
+                                                                          Icon(
+                                                                        Icons
+                                                                            .delete,
+                                                                        size:
+                                                                            20,
+                                                                      ),
+                                                                    ),
+                                                                  ],
+                                                                );
+                                                              }),
+                                                            ],
+                                                          ),
+                                                        );
+                                                      });
+                                                },
+                                              ).paddingOnly(right: 15)
+                                            : AppButton.miniFlat(
+                                                text: "Booking Info",
+                                                bgColor: AppColors.text.orange
+                                                    .withOpacity(0.8),
+                                                onTap: () async {
+                                                  File pdfFile =
+                                                      await ShareBookingDetails
+                                                          .generatePdf(itemModel
+                                                              .bookingModel!);
+                                                  Share.shareFiles(
+                                                      [pdfFile.path]);
+                                                },
+                                              ).paddingOnly(right: 15),
                                     ],
                                   ),
                                   SizedBox(height: 20),

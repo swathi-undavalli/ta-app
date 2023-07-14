@@ -502,7 +502,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
 
   Widget buildFloatingActionButton() {
     return GetBuilder<NewBookingController>(builder: (controller) {
-      if (controller.getDetailsPressed)
+      if (controller.getDetailsPressed && !controller.isQuickBooking)
         return FloatingActionButton(
           onPressed: () {
             logic.onCheckPressed();

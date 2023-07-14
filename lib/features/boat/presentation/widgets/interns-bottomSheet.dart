@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
+import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
@@ -171,7 +172,8 @@ class _InternsBottomSheetState extends State<InternsBottomSheet> {
                 setState(() {});
               },
             ),
-          ).paddingOnly(top: 10)
+          ),
+          Spacing.h20,
         ],
       ).paddingSymmetric(horizontal: 20),
     );
