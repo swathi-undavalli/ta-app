@@ -287,12 +287,12 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             buildInternPhotographers(
                 interns: selectedInternsPhotographers,
                 title: 'Intern Photographer / Videographer (A - N)',
-                isSurfaceSupport: false),
+                isTanksRequired: true),
             SizedBox(height: 20),
             buildInternPhotographers(
-                interns: selectedInternsSurfaceSupport,
-                title: 'Surface Support',
-                isSurfaceSupport: true),
+              interns: selectedInternsSurfaceSupport,
+              title: 'Surface Support',
+            ),
             AppTextField(
               hintText: "Notes",
               controller: notesTED,
@@ -345,14 +345,14 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   Widget buildInternPhotographers(
       {required List<Intern> interns,
       required String title,
-      required bool isSurfaceSupport}) {
+      bool isTanksRequired = false}) {
     if (interns.isEmpty) {
       return AppButton.miniFlat(
         text: "Add $title",
         onTap: () async {
           interns = await InternsBottomSheet.show(context,
               initialInterns: interns,
-              surfaceSupport: isSurfaceSupport) as List<Intern>;
+              tanksRequired: isTanksRequired) as List<Intern>;
           setState(() {});
         },
       );
@@ -386,7 +386,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                         ),
                       ),
                       Text(
-                        (!isSurfaceSupport) ? "( ${e.air} - ${e.nitrox} )" : "",
+                        (!isTanksRequired) ? "( ${e.air} - ${e.nitrox} )" : "",
                         style: TextStyle(
                           fontSize: 12,
                           color: Colors.black,
@@ -401,7 +401,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               onTap: () async {
                 interns = await InternsBottomSheet.show(context,
                     initialInterns: interns,
-                    surfaceSupport: isSurfaceSupport) as List<Intern>;
+                    tanksRequired: isTanksRequired) as List<Intern>;
                 setState(() {});
               },
               child: Text(

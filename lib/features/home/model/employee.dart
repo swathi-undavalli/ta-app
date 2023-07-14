@@ -36,6 +36,7 @@ class Employee {
         editActivityPrices: false,
         addActivity: false,
         notifications: false,
+        boatPlan: false,
       );
   }
 
@@ -70,7 +71,8 @@ class Employee {
     if ((other is Employee || other is Instructor)) {
       if (other is Instructor) {
         return id == other.id;
-      }if (other is Employee) {
+      }
+      if (other is Employee) {
         return id == other.id;
       }
     }
@@ -133,6 +135,7 @@ class AccessLevels {
     required this.editActivityPrices,
     required this.addActivity,
     required this.notifications,
+    required this.boatPlan,
   });
 
   bool? viewBookings;
@@ -148,9 +151,11 @@ class AccessLevels {
   bool? editActivityPrices;
   bool? addActivity;
   bool? notifications;
+  bool? boatPlan;
 
   factory AccessLevels.fromMap(Map<String, dynamic> json) => AccessLevels(
         viewBookings: json["viewBookings"],
+        boatPlan: json["boatPlan"],
         createBookings: json["createBookings"],
         editBookings: json["editBookings"],
         viewEmployees: json["viewEmployees"],
@@ -167,6 +172,7 @@ class AccessLevels {
 
   Map<String, dynamic> toMap() => {
         "viewBookings": viewBookings,
+        "boatPlan": boatPlan,
         "createBookings": createBookings,
         "editBookings": editBookings,
         "viewEmployees": viewEmployees,

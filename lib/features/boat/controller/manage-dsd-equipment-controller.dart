@@ -35,9 +35,11 @@ class ManageDSDEquipmentLogic {
           waves: null,
           winds: null,
           leaves: [],
-          dsdLeader: null,
-          dsdPool: null,
-          powerNotes: null);
+          powerNotes: null,
+          dsdPools: [],
+          dsdOceanLead: [],
+          coursesCenter: [],
+          dsdCenterStaff: []);
     } else {
       controller.currentDsd = boatsModel.dsd!;
 
@@ -45,8 +47,6 @@ class ManageDSDEquipmentLogic {
           controller.currentDsd.generalNotes ?? "";
       controller.windsTED.text = controller.currentDsd.winds ?? "";
       controller.wavesTED.text = controller.currentDsd.waves ?? "";
-      controller.dsdLeaderTED.text = controller.currentDsd.dsdLeader ?? "";
-      controller.dsdPoolTED.text = controller.currentDsd.dsdPool ?? "";
       controller.powerNotesTED.text = controller.currentDsd.powerNotes ?? "";
     }
     controller.showLoading = false;
@@ -61,8 +61,6 @@ class ManageDSDEquipmentLogic {
     controller.currentDsd.generalNotes = controller.generalNotesTED.text;
     controller.currentDsd.winds = controller.windsTED.text;
     controller.currentDsd.waves = controller.wavesTED.text;
-    controller.currentDsd.dsdLeader = controller.dsdLeaderTED.text;
-    controller.currentDsd.dsdPool = controller.dsdPoolTED.text;
     controller.currentDsd.powerNotes = controller.powerNotesTED.text;
 
     await FirebaseFirestore.instance
@@ -77,15 +75,21 @@ class ManageDSDEquipmentController extends GetxController {
   TextEditingController generalNotesTED = TextEditingController();
   TextEditingController wavesTED = TextEditingController();
   TextEditingController windsTED = TextEditingController();
-  TextEditingController dsdLeaderTED = TextEditingController();
+
+  // TextEditingController dsdLeaderTED = TextEditingController();
   TextEditingController powerNotesTED = TextEditingController();
-  TextEditingController dsdPoolTED = TextEditingController();
+
+  // TextEditingController dsdPoolTED = TextEditingController();
   BoatsModel? boatsModel;
   bool _showLoading = false;
   DateTime selectedDate = DateTime.now();
   DateTime highTideTime = DateTime.now();
   DateTime lowTideTime = DateTime.now();
   late Dsd currentDsd;
+  List<Intern> dsdPool = [];
+  List<Intern> dsdOceanLead = [];
+  List<Intern> coursesCenter = [];
+  List<Intern> dsdCenterStaff = [];
 
   bool get showLoading => _showLoading;
 
@@ -99,8 +103,6 @@ class ManageDSDEquipmentController extends GetxController {
     wavesTED.text = "";
     windsTED.text = "";
     powerNotesTED.text = "";
-    dsdPoolTED.text = "";
-    dsdLeaderTED.text = "";
     highTideTime = DateTime.now();
     lowTideTime = DateTime.now();
     selectedDate = DateTime.now();

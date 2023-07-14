@@ -87,7 +87,7 @@ class FreelanceLogic {
             weatherReport: controller.weatherReport,
             editActivityPrices: controller.editActivityPrices,
             addActivity: controller.addActivity,
-            notifications: controller.notifications,
+            notifications: controller.notifications, boatPlan: controller.boatPlan,
           ),
         );
         // viewBookings: controller.viewBookings,
@@ -161,7 +161,7 @@ class FreelanceLogic {
           weatherReport: controller.weatherReport,
           editActivityPrices: controller.editActivityPrices,
           addActivity: controller.addActivity,
-          notifications: controller.notifications,
+          notifications: controller.notifications, boatPlan: controller.boatPlan,
         ),
       );
       // viewBookings: controller.viewBookings,
@@ -268,7 +268,15 @@ class FreelanceController extends GetxController {
   bool? _createEmployees = false;
   bool? _viewEmployees = false;
   bool? _notifications = false;
+  bool? _boatPlan = false;
 
+
+  bool? get boatPlan => _boatPlan;
+
+  set boatPlan(bool? value) {
+    _boatPlan = value;
+    update();
+  }
   bool? get notifications => _notifications;
 
   set notifications(bool? value) {

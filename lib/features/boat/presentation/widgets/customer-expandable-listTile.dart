@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/tank-counter.dart';
 
@@ -69,86 +70,91 @@ class _CustomerExpandableListTileState
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                SizedBox(
-                  width: 10,
-                ),
-                SizedBox(
-                  width: Get.width - 200,
-                  child: Text(
-                    widget.title,
-                    style: TextStyle(
-                        color: AppColors.text.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600),
-                  ),
-                ),
-                Spacer(),
-                StreamBuilder(
-                    stream: bookingDoc.snapshots(),
-                    builder: (BuildContext context,
-                        AsyncSnapshot<DocumentSnapshot> snapshot) {
-                      if (snapshot.hasError ||
-                          snapshot.connectionState == ConnectionState.waiting) {
-                        return SizedBox(
-                          height: 15,
-                          width: 15,
-                          child: CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.black,
-                          ),
-                        );
-                      }
+            StreamBuilder(
+                stream: bookingDoc.snapshots(),
+                builder: (BuildContext context,
+                    AsyncSnapshot<DocumentSnapshot> snapshot) {
+                  if (snapshot.hasError ||
+                      snapshot.connectionState == ConnectionState.waiting) {
+                    return SizedBox(
+                      height: 15,
+                      width: 15,
+                      child: CircularProgressIndicator(
+                        strokeWidth: 2,
+                        color: Colors.black,
+                      ),
+                    );
+                  }
 
-                      final data = snapshot.data?.data();
+                  final data = snapshot.data?.data();
 
-                      if (data == null) {
-                        return Icon(
-                          Icons.warning,
-                          size: 15,
-                        );
-                      }
+                  if (data == null) {
+                    return Icon(
+                      Icons.warning,
+                      size: 15,
+                    );
+                  }
 
-                      BookingModel bookingModel =
-                          BookingModel.fromMap(data as Map<String, dynamic>);
+                  BookingModel bookingModel =
+                      BookingModel.fromMap(data as Map<String, dynamic>);
 
-                      return Row(
-                        children: [
-                          if ((bookingModel.boatDetails?.instructors ?? [])
-                              .isNotEmpty)
-                            Icon(
-                              Icons.scuba_diving,
-                              size: 15,
+                  return Row(
+                    children: [
+                      Expanded(
+                        child: Row(
+                          children: [
+                            Spacing.w10,
+                            Flexible(
+                              child: Text(
+                                widget.title,
+                                style: TextStyle(
+                                    color: AppColors.text.black,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                              ),
                             ),
-                          SizedBox(
-                            width: 10,
-                          ),
-                          if ((bookingModel
-                                      .getBoatInfo(widget.selectedDate)
-                                      ?.id ??
-                                  '')
-                              .isNotEmpty)
-                            Icon(
-                              Icons.directions_boat,
-                              size: 15,
-                            ),
-                        ],
-                      );
-                    }),
-                IconButton(
-                  splashRadius: 20,
-                  icon: Icon(isExpanded
-                      ? Icons.keyboard_arrow_up_rounded
-                      : Icons.keyboard_arrow_down_rounded),
-                  onPressed: () {
-                    setState(() {
-                      isExpanded = !isExpanded;
-                    });
-                  },
-                ),
-              ],
-            ).paddingSymmetric(vertical: 3),
+                            Spacing.w10,
+                            if ((bookingModel.boatDetails?.instructors ?? [])
+                                .isNotEmpty)
+                              Icon(
+                                Icons.scuba_diving,
+                                size: 13,
+                              ),
+                            Spacing.w10,
+                            if ((bookingModel
+                                        .getBoatInfo(widget.selectedDate)
+                                        ?.id ??
+                                    '')
+                                .isNotEmpty)
+                              Icon(
+                                Icons.directions_boat,
+                                size: 13,
+                              ),
+                          ],
+                        ),
+                      ),
+                      if (widget.itemModel.bookingModel?.isQuickBooking ??
+                          false)
+                        Text(
+                          "  (Quick)",
+                          style: TextStyle(
+                              fontSize: FontSize.small,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      IconButton(
+                        splashRadius: 20,
+                        icon: Icon(isExpanded
+                            ? Icons.keyboard_arrow_up_rounded
+                            : Icons.keyboard_arrow_down_rounded),
+                        onPressed: () {
+                          setState(() {
+                            isExpanded = !isExpanded;
+                          });
+                        },
+                      ),
+                    ],
+                  ).paddingSymmetric(vertical: 3);
+                }),
             isExpanded
                 ? FutureBuilder(
                     future: Future.delayed(Duration(milliseconds: 200)),
@@ -454,60 +460,61 @@ class _CustomerExpandableListTileState
 
   Widget buildInstructorTanks(
       BookingModel bookingModel, ItemModel bookingItemModel) {
-    if(bookingItemModel.bookingModel?.boatDetails?.instructors?.length != 0)
-    return Row(
-      children: [
-        Column(
-          children: [
-            Text(
-              "Nitrox",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ).paddingOnly(bottom: 10),
-            Container(
-              child: CounterWidget(
+    if (bookingItemModel.bookingModel?.boatDetails?.instructors?.length != 0)
+      return Row(
+        children: [
+          Column(
+            children: [
+              Text(
+                "Nitrox",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ).paddingOnly(bottom: 10),
+              Container(
+                child: CounterWidget(
+                    onChanged: (int val) {
+                      updateBoatDetails(
+                        bookingModel: bookingModel,
+                        selectedDate: widget.selectedDate,
+                        instructorNitrox: val,
+                      );
+                    },
+                    initialValue: bookingModel
+                            .getInstructorTanks(widget.selectedDate)
+                            ?.nitrox ??
+                        0),
+              )
+            ],
+          ),
+          Column(
+            children: [
+              Text(
+                "Air",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+              ).paddingOnly(bottom: 10),
+              CounterWidget(
                   onChanged: (int val) {
                     updateBoatDetails(
                       bookingModel: bookingModel,
                       selectedDate: widget.selectedDate,
-                      instructorNitrox: val,
+                      instructorAir: val,
                     );
                   },
                   initialValue: bookingModel
                           .getInstructorTanks(widget.selectedDate)
-                          ?.nitrox ??
-                      0),
-            )
-          ],
-        ),
-        Column(
-          children: [
-            Text(
-              "Air",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
-              ),
-            ).paddingOnly(bottom: 10),
-            CounterWidget(
-                onChanged: (int val) {
-                  updateBoatDetails(
-                    bookingModel: bookingModel,
-                    selectedDate: widget.selectedDate,
-                    instructorAir: val,
-                  );
-                },
-                initialValue:
-                    bookingModel.getInstructorTanks(widget.selectedDate)?.air ??
-                        0)
-          ],
-        ),
-      ],
-    );
+                          ?.air ??
+                      0)
+            ],
+          ),
+        ],
+      );
     return SizedBox();
   }
 
@@ -536,7 +543,7 @@ class _CustomerExpandableListTileState
                   context,
                   initialInterns:
                       bookingItemModel.bookingModel?.boatDetails?.interns ?? [],
-                  surfaceSupport: false,
+                  tanksRequired: false,
                 );
 
                 log("tap instructors $interns");

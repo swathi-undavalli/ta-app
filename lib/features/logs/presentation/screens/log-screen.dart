@@ -62,10 +62,6 @@ class LogScreen extends StatelessWidget {
     );
   }
 
-  // Widget checkFireBase() {
-  //   return;
-  // }
-
   Widget buildLog({required LogModel log}) {
     dev.log("building .......");
     getIcon() {
@@ -73,6 +69,7 @@ class LogScreen extends StatelessWidget {
         case LogType.bookingCreated:
         case LogType.bookingDeleted:
         case LogType.bookingEdited:
+        case LogType.quickBookingCreated:
           return Text(
             log.bookingId!,
             style: TextStyle(
@@ -140,51 +137,26 @@ class LogScreen extends StatelessWidget {
         case LogType.bookingCreated:
         case LogType.bookingEdited:
         case LogType.bookingDeleted:
-          // return Color(0xff454444);
           return AppColors.text.skyBlue;
         case LogType.signedIn:
-          // return AppColors.text.black;
-          // return Color(0xff94FAC0);
           return AppColors.text.skyBlue;
-        // return Color(0xff454444);
         case LogType.signedOut:
-          // return AppColors.text.black;
-          // return Color(0xffEC748C);
           return AppColors.text.skyBlue;
-        // return Color(0xff454444);
         case LogType.addActivity:
-          // return AppColors.text.black;
-          // return Color(0xff7DA2B4);
           return AppColors.text.skyBlue;
-        // return Color(0xff454444);
         case LogType.editActivity:
-          // return AppColors.text.black;
-          // return Color(0xff7DA2B4);
           return AppColors.text.skyBlue;
-        // return Color(0xff454444);
         case LogType.addEmployee:
-          // return AppColors.text.black;
-          // return Color(0xff707070);
           return AppColors.text.skyBlue;
-        // return Color(0xff454444);
         case LogType.editEmployee:
-          // return AppColors.text.black;
-          // return Color(0xff707070);
           return AppColors.text.skyBlue;
-        // return Color(0xff454444);
         case LogType.deleteEmployee:
-          // return AppColors.text.black;
-          // return Color(0xff707070);
           return AppColors.text.skyBlue;
-
         case LogType.bookingPaxDeleted:
-          // return AppColors.text.black;
-          // return Color(0xff707070);
           return AppColors.text.orange;
 
         default:
           return AppColors.text.skyBlue;
-        // return Color(0xff454444);
       }
     }
 

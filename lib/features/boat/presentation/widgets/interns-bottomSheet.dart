@@ -8,16 +8,17 @@ import 'package:temple_adventures/features/bookings/presentation/widgets/app-tex
 
 class InternsBottomSheet extends StatefulWidget {
   final List<Intern> initialSelectedInterns;
-  final bool isSurfaceSupport;
+  final bool isTanksRequired;
+
   const InternsBottomSheet({
     Key? key,
     required this.initialSelectedInterns,
-    required this.isSurfaceSupport,
+    required this.isTanksRequired,
   }) : super(key: key);
 
   static Future<List<Intern>?> show(BuildContext context,
       {required List<Intern> initialInterns,
-      required bool surfaceSupport}) async {
+      required bool tanksRequired}) async {
     var data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -25,7 +26,7 @@ class InternsBottomSheet extends StatefulWidget {
       builder: (BuildContext context) {
         return InternsBottomSheet(
           initialSelectedInterns: initialInterns,
-          isSurfaceSupport: surfaceSupport,
+          isTanksRequired: tanksRequired,
         );
       },
     );
@@ -116,7 +117,7 @@ class _InternsBottomSheetState extends State<InternsBottomSheet> {
                                 fontWeight: FontWeight.w600,
                               ),
                             ),
-                            if (!widget.isSurfaceSupport)
+                            if (widget.isTanksRequired)
                               Text(
                                 "(A-${e.air} / N-${e.nitrox})",
                                 style: TextStyle(
@@ -177,7 +178,7 @@ class _InternsBottomSheetState extends State<InternsBottomSheet> {
   }
 
   Widget buildTanks() {
-    if (!widget.isSurfaceSupport)
+    if (widget.isTanksRequired)
       return Row(
         children: [
           Column(

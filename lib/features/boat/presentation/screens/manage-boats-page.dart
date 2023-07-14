@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
@@ -12,7 +13,8 @@ class ManageBoatsPage extends StatelessWidget {
   final ManageBoatsLogic logic = ManageBoatsLogic();
   final AutoScrollController autoScrollController = AutoScrollController();
   var bookings = [DateTime.now()];
-  BookingsCalenderWidgetLogicNew calenderLogic = BookingsCalenderWidgetLogicNew();
+  BookingsCalenderWidgetLogicNew calenderLogic =
+      BookingsCalenderWidgetLogicNew();
   ScrollController scrollController = ScrollController();
   late BookingsCalenderWidgetNew bookingsCalenderWidget;
 
@@ -32,38 +34,48 @@ class ManageBoatsPage extends StatelessWidget {
       );
       return Scaffold(
         backgroundColor: AppColors.background.lightBlue,
-        body: RefreshIndicator(
-          color: Colors.black,
-          onRefresh: () async {
-            if (calenderLogic.controller.lastSelectedIndex == null) calenderLogic.controller.lastSelectedIndex = 50;
-            bookingsCalenderWidget.scrollToIndex(calenderLogic.controller.lastSelectedIndex!);
-            await calenderLogic.onDateSelected(calenderLogic.controller.lastSelectedIndex!);
-          },
-          child: SafeArea(
-            child: SingleChildScrollView(
-              controller: scrollController,
-              physics: BouncingScrollPhysics(),
-              child: Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 40, bottom: 50),
-                child: Column(
-                  children: [
-                    GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
-                      DateTime date = controller.selectedDate;
-                      String formattedDate = DateFormat('dd-MMM-yyyy').format(date);
-                      return Row(
-                        children: [
-                          buildTitle("Calendar"),
-                          Spacer(),
-                          Text(formattedDate),
-                          buildCalendarIcon(context, controller),
-                        ],
-                      );
-                    }),
-                    bookingsCalenderWidget,
-                    SizedBox(
-                      height: 200,
-                    ),
-                  ],
+        body: EmployeeAccess(
+          access: AccessRights.boatPlan,
+          showMessage: true,
+          child: RefreshIndicator(
+            color: Colors.black,
+            onRefresh: () async {
+              if (calenderLogic.controller.lastSelectedIndex == null)
+                calenderLogic.controller.lastSelectedIndex = 50;
+              bookingsCalenderWidget
+                  .scrollToIndex(calenderLogic.controller.lastSelectedIndex!);
+              await calenderLogic
+                  .onDateSelected(calenderLogic.controller.lastSelectedIndex!);
+            },
+            child: SafeArea(
+              child: SingleChildScrollView(
+                controller: scrollController,
+                physics: BouncingScrollPhysics(),
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 20, right: 20, top: 40, bottom: 50),
+                  child: Column(
+                    children: [
+                      GetBuilder<BookingsCalenderWidgetControllerNew>(
+                          builder: (controller) {
+                        DateTime date = controller.selectedDate;
+                        String formattedDate =
+                            DateFormat('dd-MMM-yyyy').format(date);
+                        return Row(
+                          children: [
+                            buildTitle("Calendar"),
+                            Spacer(),
+                            Text(formattedDate),
+                            buildCalendarIcon(context, controller),
+                          ],
+                        );
+                      }),
+                      bookingsCalenderWidget,
+                      SizedBox(
+                        height: 200,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),
@@ -75,7 +87,8 @@ class ManageBoatsPage extends StatelessWidget {
 
   ///=========================UI========================///
 
-  Widget buildCalendarIcon(BuildContext context, BookingsCalenderWidgetControllerNew controller) {
+  Widget buildCalendarIcon(
+      BuildContext context, BookingsCalenderWidgetControllerNew controller) {
     return IconButton(
       splashRadius: 20,
       onPressed: () {
@@ -95,12 +108,16 @@ class ManageBoatsPage extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-            fontSize: 16, color: AppColors.text.black, fontWeight: FontWeight.bold, fontFamily: AppFonts.nunito),
+            fontSize: 16,
+            color: AppColors.text.black,
+            fontWeight: FontWeight.bold,
+            fontFamily: AppFonts.nunito),
       ),
     );
   }
 
-  void onSelectDataPressed(BuildContext context, BookingsCalenderWidgetControllerNew controller) async {
+  void onSelectDataPressed(BuildContext context,
+      BookingsCalenderWidgetControllerNew controller) async {
     final DateTime? selected = await showDatePicker(
       context: context,
       initialDate: controller.selectedDate,
@@ -117,7 +134,8 @@ class ManageBoatsPage extends StatelessWidget {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 primary: AppColors.text.black,
-                textStyle: TextStyle(fontWeight: FontWeight.w500), // button text color
+                textStyle:
+                    TextStyle(fontWeight: FontWeight.w500), // button text color
               ),
             ),
           ),

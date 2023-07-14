@@ -229,6 +229,13 @@ class AddAnUser extends StatelessWidget {
             },
           ),
           buildSwitch(
+            text: "Boat Plan",
+            switchValue: controller.boatPlan!,
+            onChanged: (value) {
+              controller.boatPlan = value;
+            },
+          ),
+          buildSwitch(
             text: "Subscribe Notifications",
             switchValue: controller.notifications!,
             onChanged: (value) {

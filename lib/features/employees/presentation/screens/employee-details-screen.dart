@@ -298,12 +298,9 @@ class EmployeeDetailsScreen extends StatelessWidget {
     var info = await FirebaseFirestore.instance
         .collection("employees")
         .doc(employeeArgument!.id)
-        // .collection("employeeFullInformation")
-        // .doc("employeeData")
         .get();
     if (info.data() != null) {
       Employee employee = Employee.fromMap(info.data()!);
-      //print(info.data());
       final DateTime date = employee.shiftTiming!;
       final DateFormat formatter = DateFormat('HH:mm');
       final String shiftTiming = formatter.format(date);
@@ -325,6 +322,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
       logic.controller.createEmployees = employee.accessLevels!.createEmployees;
       logic.controller.editEmployees = employee.accessLevels!.editEmployees;
       logic.controller.notifications = employee.accessLevels!.notifications;
+      logic.controller.boatPlan = employee.accessLevels!.boatPlan;
       logic.controller.personalProfileEdit =
           employee.accessLevels!.personalProfileEdit;
       logic.controller.personalAttendanceReport =

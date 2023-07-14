@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 
 class EmployeeAccess extends StatelessWidget {
@@ -12,7 +13,7 @@ class EmployeeAccess extends StatelessWidget {
   Widget build(BuildContext context) {
     if ((!access) && showMessage != null && showMessage!)
       return SizedBox(
-        height: 300,
+        height: Get.height,
         child: Center(
           child: Text("You Don't have Access to this page"),
         ),
@@ -31,7 +32,7 @@ class EmployeeAccess extends StatelessWidget {
 
 class AccessRights {
   static AccessLevels? get accessLevel {
-    if(currentEmployee == null){
+    if (currentEmployee == null) {
       currentEmployee = Employee(id: "");
     }
     return currentEmployee!.accessLevels;
@@ -63,4 +64,6 @@ class AccessRights {
       accessLevel?.editActivityPrices ?? false;
 
   static bool get addActivity => accessLevel?.addActivity ?? false;
+
+  static bool get boatPlan => accessLevel?.boatPlan ?? false;
 }

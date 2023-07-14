@@ -10,6 +10,7 @@ import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/customer-expandable-listTile.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/interns-bottomSheet.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:intl/intl.dart';
 
@@ -235,26 +236,21 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
                         initialValue: controller.currentDsd.weights?.w7 ?? 0),
                     SizedBox(height: 20),
                     buildSectionTitle("Employees : "),
-                    AppTextField(
-                      controller: controller.dsdLeaderTED,
-                      hintText: "DSD Leader",
-                      errorValidator: () {
-                        return null;
-                      },
-                      validator: (_) {
-                        return null;
-                      },
+                    buildDsdPoolStaff(
+                      interns: logic.controller.currentDsd.dsdPools ?? [],
+                      title: "DSD Pool",
                     ),
-                    SizedBox(height: 10),
-                    AppTextField(
-                      controller: controller.dsdPoolTED,
-                      hintText: "DSD Pool",
-                      errorValidator: () {
-                        return null;
-                      },
-                      validator: (_) {
-                        return null;
-                      },
+                    buildDsdPoolStaff(
+                      interns: logic.controller.currentDsd.dsdOceanLead ?? [],
+                      title: "DSD Ocean Leader",
+                    ),
+                    buildDsdPoolStaff(
+                      interns: logic.controller.currentDsd.dsdCenterStaff ?? [],
+                      title: "DSD Center Staff",
+                    ),
+                    buildDsdPoolStaff(
+                      interns: logic.controller.currentDsd.coursesCenter ?? [],
+                      title: "Courses Center",
                     ),
                     SizedBox(height: 10),
                     buildEmployeeSelector(
@@ -333,6 +329,87 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
           ),
         ),
       ),
+    );
+  }
+
+  Widget buildDsdPoolStaff(
+      {required List<Intern> interns,
+      required String title,
+      bool isTanksRequired = false}) {
+    if (interns.isEmpty) {
+      return AppButton.miniFlat(
+        text: "Add $title",
+        onTap: () async {
+          interns = await InternsBottomSheet.show(context,
+              initialInterns: interns,
+              tanksRequired: isTanksRequired) as List<Intern>;
+          setState(() {});
+        },
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 10),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...interns.map(
+                  (e) => Row(
+                    children: [
+                      Text(
+                        "${e.name} ",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black,
+                        ),
+                      ),
+                      Text(
+                        (isTanksRequired) ? "( ${e.air} - ${e.nitrox} )" : "",
+                        style: TextStyle(
+                          fontSize: 12,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ],
+                  ).paddingOnly(bottom: 4),
+                ),
+              ],
+            ),
+            GestureDetector(
+              onTap: () async {
+                interns = await InternsBottomSheet.show(context,
+                    initialInterns: interns,
+                    tanksRequired: isTanksRequired) as List<Intern>;
+                setState(() {});
+              },
+              child: Text(
+                "Change",
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline),
+              ).paddingOnly(left: 10, right: 7),
+            ),
+            Icon(
+              Icons.edit,
+              size: 12,
+              color: Colors.blue,
+            ),
+          ],
+        ),
+      ],
     );
   }
 

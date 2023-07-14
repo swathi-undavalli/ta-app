@@ -141,69 +141,58 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                       }
                     });
 
-                    return Container(
-                      width: Get.width,
-                      decoration: BoxDecoration(
-                        color: Colors.transparent,
-                        borderRadius: BorderRadiusDirectional.circular(10),
-                      ),
-                      child: Wrap(
-                          children: (boatsModel.boats ?? [])
-                              .map((Boat boat) => InkWell(
-                                    onLongPress: () async {
-                                      BoatsModel? boatsModel =
-                                          await BoatDetailsBottomSheet.show(
-                                              context,
-                                              initialBoat: boat,
-                                              isBoatEdit: true,
-                                              date: controller.selectedDate);
-                                      if (boatsModel != null) {
-                                        await FirebaseFirestore.instance
-                                            .collection("dailyBoats")
-                                            .doc(DateFormat("dd-MM-yyyy")
-                                                .format(
-                                                    controller.selectedDate))
-                                            .set(boatsModel.toJson());
-                                      }
-                                    },
-                                    onTap: () {
-                                      controller.selectedBoat = boat;
-                                      controller.update();
-                                    },
-                                    child: Container(
-                                      height: 30,
-                                      width: 150,
-                                      margin: EdgeInsets.all(5),
-                                      padding: EdgeInsets.symmetric(
-                                          horizontal: 8, vertical: 3),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
+                    return Wrap(
+                        children: (boatsModel.boats ?? [])
+                            .map((Boat boat) => InkWell(
+                                  onLongPress: () async {
+                                    BoatsModel? boatsModel =
+                                        await BoatDetailsBottomSheet.show(
+                                            context,
+                                            initialBoat: boat,
+                                            isBoatEdit: true,
+                                            date: controller.selectedDate);
+                                    if (boatsModel != null) {
+                                      await FirebaseFirestore.instance
+                                          .collection("dailyBoats")
+                                          .doc(DateFormat("dd-MM-yyyy")
+                                              .format(controller.selectedDate))
+                                          .set(boatsModel.toJson());
+                                    }
+                                  },
+                                  onTap: () {
+                                    controller.selectedBoat = boat;
+                                    controller.update();
+                                  },
+                                  child: Container(
+                                    height: 30,
+                                    margin: EdgeInsets.all(5),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: (boat.id ==
+                                              controller.selectedBoat?.id)
+                                          ? AppColors.background.skyBlue
+                                          : Colors.white,
+                                    ),
+                                    child: Text(
+                                      "${boat.name} @ ${boat.time}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: FontSize.small,
                                         color: (boat.id ==
-                                                controller.selectedBoat?.id)
-                                            ? AppColors.background.skyBlue
-                                            : Colors.white,
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          "${boat.name} @ ${boat.time}",
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: FontSize.small,
-                                            color: (boat.id ==
-                                                        controller
-                                                            .selectedBoat?.id &&
-                                                    boat.time ==
-                                                        controller
-                                                            .selectedBoat?.time)
-                                                ? Colors.white
-                                                : Colors.black,
-                                          ),
-                                        ),
+                                                    controller
+                                                        .selectedBoat?.id &&
+                                                boat.time ==
+                                                    controller
+                                                        .selectedBoat?.time)
+                                            ? Colors.white
+                                            : Colors.black,
                                       ),
                                     ),
-                                  ))
-                              .toList()),
-                    );
+                                  ),
+                                ))
+                            .toList());
                   }),
             SizedBox(height: 20),
             _buildTimeTable(),
@@ -738,23 +727,6 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
         });
       }
     });
-
-    // int totalPax = 0;
-    // for (DateTime booking in logic.controller.bookingTimings) {
-    //   if (controller.isDiveSession) {
-    //     if (booking.hour == date.hour &&
-    //         booking.day == date.day &&
-    //         booking.minute == date.minute) {
-    //       totalBookings++;
-    //       show = true;
-    //     }
-    //   } else {
-    //     if (booking.hour == date.hour && booking.day == date.day) {
-    //       totalBookings++;
-    //       show = true;
-    //     }
-    //   }
-    // }
     if (show)
       return Container(
         height: 12,

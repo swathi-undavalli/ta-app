@@ -47,9 +47,11 @@ class Dsd {
   List<Instructor>? dayOffs;
   List<Instructor>? leaves;
   String? generalNotes;
-  String? dsdLeader;
+  List<Intern>? dsdPools;
+  List<Intern>? dsdOceanLead;
+  List<Intern>? coursesCenter;
+  List<Intern>? dsdCenterStaff;
   String? powerNotes;
-  String? dsdPool;
   String? highTides;
   String? waves;
   String? lowTides;
@@ -66,8 +68,10 @@ class Dsd {
     required this.weights,
     required this.dayOffs,
     required this.generalNotes,
-    required this.dsdLeader,
-    required this.dsdPool,
+    required this.dsdPools,
+    required this.dsdOceanLead,
+    required this.coursesCenter,
+    required this.dsdCenterStaff,
     required this.highTides,
     required this.lowTides,
     required this.waves,
@@ -83,10 +87,12 @@ class Dsd {
     Weights? weights,
     List<Instructor>? dayOffs,
     List<Instructor>? leaves,
+    List<Intern>? dsdCenterStaff,
+    List<Intern>? coursesCenter,
+    List<Intern>? dsdOceanLead,
+    List<Intern>? dsdPools,
     String? generalNotes,
     String? powerNotes,
-    String? dsdLeader,
-    String? dsdPool,
     String? highTides,
     String? lowTides,
     String? waves,
@@ -107,8 +113,10 @@ class Dsd {
         lowTides: lowTides ?? this.lowTides,
         waves: waves ?? this.waves,
         winds: winds ?? this.winds,
-        dsdPool: dsdPool ?? this.dsdPool,
-        dsdLeader: dsdLeader ?? this.dsdLeader,
+        dsdPools: dsdPools ?? this.dsdPools,
+        dsdCenterStaff: dsdCenterStaff ?? this.dsdCenterStaff,
+        coursesCenter: coursesCenter ?? this.coursesCenter,
+        dsdOceanLead: dsdOceanLead ?? this.dsdOceanLead,
       );
 
   factory Dsd.fromRawJson(String str) => Dsd.fromJson(json.decode(str));
@@ -127,13 +135,19 @@ class Dsd {
             ((json["dayOffs"]) ?? []).map((x) => Instructor.fromJson(x))),
         leaves: List<Instructor>.from(
             ((json["leaves"]) ?? []).map((x) => Instructor.fromJson(x))),
+        dsdPools: List<Intern>.from(
+            ((json["dsdPools"]) ?? []).map((x) => Intern.fromJson(x))),
+        dsdCenterStaff: List<Intern>.from(
+            ((json["dsdCenterStaff"]) ?? []).map((x) => Intern.fromJson(x))),
+        coursesCenter: List<Intern>.from(
+            ((json["coursesCenter"]) ?? []).map((x) => Intern.fromJson(x))),
+        dsdOceanLead: List<Intern>.from(
+            ((json["dsdOceanLead"]) ?? []).map((x) => Intern.fromJson(x))),
         generalNotes: json["generalNotes"],
         highTides: json["highTides"],
         lowTides: json["lowTides"],
         waves: json["waves"],
         winds: json["winds"],
-        dsdLeader: json["dsdLeader"],
-        dsdPool: json["dsdPool"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -146,13 +160,18 @@ class Dsd {
         "weights": weights?.toJson(),
         "dayOffs": List<dynamic>.from((dayOffs ?? []).map((x) => x.toJson())),
         "leaves": List<dynamic>.from((leaves ?? []).map((x) => x.toJson())),
+        "dsdOceanLead":
+            List<dynamic>.from((dsdOceanLead ?? []).map((x) => x.toJson())),
+        "coursesCenter":
+            List<dynamic>.from((coursesCenter ?? []).map((x) => x.toJson())),
+        "dsdCenterStaff":
+            List<dynamic>.from((dsdCenterStaff ?? []).map((x) => x.toJson())),
+        "dsdPools": List<dynamic>.from((dsdPools ?? []).map((x) => x.toJson())),
         "generalNotes": generalNotes,
         "highTides": highTides,
         "lowTides": lowTides,
         "waves": waves,
         "winds": winds,
-        "dsdLeader": dsdLeader,
-        "dsdPool": dsdPool,
       };
 }
 

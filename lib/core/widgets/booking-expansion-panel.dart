@@ -347,9 +347,6 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
             borderRadius: BorderRadius.circular(10),
           ),
           child: Container(
-            // constraints: BoxConstraints(
-            //   minHeight: controller.isExpanded[i] ? 500 : 50,
-            // ),
             decoration: BoxDecoration(
               color: getColor(),
               borderRadius: BorderRadius.circular(10),
@@ -425,6 +422,13 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                             ],
                           ),
                         ),
+                        if (itemModel.bookingModel?.isQuickBooking ?? false)
+                          Text(
+                            "  (Quick)",
+                            style: TextStyle(
+                                fontSize: FontSize.small,
+                                fontWeight: FontWeight.bold),
+                          ),
                         IconButton(
                           splashRadius: 20,
                           icon: Icon(controller.isExpanded[i]
