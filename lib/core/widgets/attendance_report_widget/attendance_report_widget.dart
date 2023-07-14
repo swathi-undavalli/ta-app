@@ -343,7 +343,7 @@ class AttendanceReportWidgetLogic {
 
     //print(data);
 
-    Map<String, dynamic> fData = data.data()!;
+    Map<String, dynamic>? fData = data.data();
     // log(fData.toString());
     // fData.forEach((key, value) {
     //   log(value.toString());
@@ -360,35 +360,36 @@ class AttendanceReportWidgetLogic {
     var now = DateTime.now();
     //log(fData.toString());
 
-    fData.forEach((key, value) {
-      if (value.runtimeType != String) {
-        var employee = EmployeeMiniModel.fromMap(value);
-        DateTime empShiftTime = DateTime(
-          now.year,
-          now.month,
-          now.day,
-          int.parse(employee.shiftTime!.split(":")[0]),
-          int.parse(employee.shiftTime!.split(":")[1]),
-          int.parse(employee.shiftTime!.split(":")[2]),
-        );
+    if (fData != null)
+      fData.forEach((key, value) {
+        if (value.runtimeType != String) {
+          var employee = EmployeeMiniModel.fromMap(value);
+          DateTime empShiftTime = DateTime(
+            now.year,
+            now.month,
+            now.day,
+            int.parse(employee.shiftTime!.split(":")[0]),
+            int.parse(employee.shiftTime!.split(":")[1]),
+            int.parse(employee.shiftTime!.split(":")[2]),
+          );
 
-        // log(employee.punctual);
-        if (employee.logTime == null) {
-          log(employee.name! + "   " + employee.id!);
-          //log(DateTime.now().difference(empShiftTime).inHours.toString());
-          if (DateTime.now().difference(empShiftTime).inHours >= 6) {
-            employee.punctual = "Absent";
+          // log(employee.punctual);
+          if (employee.logTime == null) {
+            log(employee.name! + "   " + employee.id!);
+            //log(DateTime.now().difference(empShiftTime).inHours.toString());
+            if (DateTime.now().difference(empShiftTime).inHours >= 6) {
+              employee.punctual = "Absent";
+            }
+            //log(employee.punctual);
           }
-          //log(employee.punctual);
+          // log(employee.punctual);
+          controller.employeesList.add(employee);
         }
-        // log(employee.punctual);
-        controller.employeesList.add(employee);
-      }
-    });
+      });
     //print(controller.employeesList);
 
-    controller.employeesList
-        .sort((a, b) => int.parse(a.id!).compareTo(int.parse(b.id!)));
+    controller.employeesList.sort((a, b) => (int.tryParse(a.id ?? '') ?? 0)
+        .compareTo((int.tryParse(b.id ?? '') ?? 0)));
 
     controller.employeesList.forEach((element) {
       // //print(element.punctual);

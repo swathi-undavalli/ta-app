@@ -315,24 +315,33 @@ class EmployeeDetailsScreen extends StatelessWidget {
       logic.controller.genderTED.text = employee.gender ?? "";
       logic.controller.roleTED.text = employee.role ?? "";
       logic.controller.agencyIdTED.text = employee.agencyId ?? "";
-      logic.controller.viewBookings = employee.accessLevels!.viewBookings;
-      logic.controller.createBookings = employee.accessLevels!.createBookings;
-      logic.controller.editBookings = employee.accessLevels!.editBookings;
-      logic.controller.viewEmployees = employee.accessLevels!.viewEmployees;
-      logic.controller.createEmployees = employee.accessLevels!.createEmployees;
-      logic.controller.editEmployees = employee.accessLevels!.editEmployees;
-      logic.controller.notifications = employee.accessLevels!.notifications;
-      logic.controller.boatPlan = employee.accessLevels!.boatPlan;
+      logic.controller.viewBookings =
+          employee.accessLevels?.viewBookings ?? false;
+      logic.controller.createBookings =
+          employee.accessLevels?.createBookings ?? false;
+      logic.controller.editBookings =
+          employee.accessLevels?.editBookings ?? false;
+      logic.controller.viewEmployees =
+          employee.accessLevels?.viewEmployees ?? false;
+      logic.controller.createEmployees =
+          employee.accessLevels?.createEmployees ?? false;
+      logic.controller.editEmployees =
+          employee.accessLevels?.editEmployees ?? false;
+      logic.controller.notifications =
+          employee.accessLevels?.notifications ?? false;
+      logic.controller.boatPlan = employee.accessLevels?.boatPlan ?? false;
       logic.controller.personalProfileEdit =
-          employee.accessLevels!.personalProfileEdit;
+          employee.accessLevels?.personalProfileEdit ?? false;
       logic.controller.personalAttendanceReport =
-          employee.accessLevels!.personalAttendanceReport;
+          employee.accessLevels?.personalAttendanceReport ?? false;
       logic.controller.attendanceReport =
-          employee.accessLevels!.attendanceReport;
-      logic.controller.weatherReport = employee.accessLevels!.weatherReport;
+          employee.accessLevels?.attendanceReport ?? false;
+      logic.controller.weatherReport =
+          employee.accessLevels?.weatherReport ?? false;
       logic.controller.editActivityPrices =
-          employee.accessLevels!.editActivityPrices;
-      logic.controller.addActivity = employee.accessLevels!.addActivity;
+          employee.accessLevels?.editActivityPrices ?? false;
+      logic.controller.addActivity =
+          employee.accessLevels?.addActivity ?? false;
 
       return true;
     }

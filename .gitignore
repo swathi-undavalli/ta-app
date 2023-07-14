@@ -53,3 +53,4 @@ Thumbs.db
 /.flutter-plugins
 /.flutter-plugins-dependencies
 /.packages
+/ios/build/
