@@ -546,7 +546,7 @@ class _CustomerExpandableListTileState
                   context,
                   initialInterns:
                       bookingItemModel.bookingModel?.boatDetails?.interns ?? [],
-                  tanksRequired: false,
+                  tanksRequired: true,
                 );
 
                 log("tap instructors $interns");
