@@ -51,7 +51,7 @@ class ActivityEditScreen extends StatelessWidget {
                     buildTextFields(
                         name: "Short Name",
                         textEditingController: controller.shortNameTED,
-                        keyBoardType: TextInputType.name),
+                        keyBoardType: TextInputType.text),
                     buildTextFields(
                         name: "Price",
                         textEditingController: controller.priceTED,
