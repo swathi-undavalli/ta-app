@@ -9,8 +9,6 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/attendance/attendance-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart' as path;
-import 'package:temple_adventures/features/home/model/employee.dart';
 
 class FirebaseApi {
   static Future<DocumentSnapshot<Map<String, dynamic>>>
@@ -169,7 +167,7 @@ class FirebaseApi {
         .set(attendance.toMap());
   }
 
-  static uploadPDF(File file, String email, Function onSuccess) async {
+  static uploadPDF(File? file, String email, Function onSuccess) async {
     if (file == null) return;
     String fileExtension = file.path.split('.').last;
     String fileName =
@@ -192,12 +190,13 @@ class FirebaseApi {
         .onError((dynamic error, stackTrace) async {
           showToast(error.toString());
         })
-        .catchError((error) => showToast(error.toString()));
+        .catchError((error) {
+          showToast(error.toString());
+        });
   }
 
-  static uploadIdProof(File file, String email, Function onSuccess) async {
+  static uploadIdProof(File? file, String email, Function onSuccess) async {
     if (file == null) return;
-    String dir = path.dirname(file.path);
     String fileExtension = file.path.split('.').last;
     String fileName = email + "." + fileExtension;
 
@@ -217,6 +216,8 @@ class FirebaseApi {
         .onError((dynamic error, stackTrace) async {
           showToast(error.toString());
         })
-        .catchError((error) => showToast(error.toString()));
+        .catchError((error) {
+          showToast(error.toString());
+        });
   }
 }

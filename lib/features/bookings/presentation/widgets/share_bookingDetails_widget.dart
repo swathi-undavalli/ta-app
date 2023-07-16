@@ -1,14 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
-// import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import 'package:share/share.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:http/http.dart' as http;
 import 'package:path/path.dart';

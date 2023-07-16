@@ -1,9 +1,6 @@
-import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/attendance/attendance-model.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
@@ -90,22 +87,23 @@ class AttendancePageLogic {
       controller.update();
     },
         currentTime: controller.selectedDate,
-        theme: DatePickerTheme(
-          cancelStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            color: Colors.black87,
-          ),
-          doneStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-          itemStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ));
+        // theme: DatePickerTheme(
+        //   cancelStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     color: Colors.black87,
+        //   ),
+        //   doneStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     fontWeight: FontWeight.bold,
+        //     color: Colors.black,
+        //   ),
+        //   itemStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     fontWeight: FontWeight.bold,
+        //     fontSize: 16,
+        //   ),
+        // ),
+    );
   }
 
   getClockData() async {
@@ -133,7 +131,6 @@ class AttendancePageLogic {
   getTimeFromSeconds(int sec) {
     int hours = sec ~/ 3600;
     int minutes = (sec ~/ 60) % 60;
-    int seconds = sec - (hours * 3600 + minutes * 60);
     hours = getPositiveNumber(hours);
     minutes = getPositiveNumber(minutes);
     return "${(hours < 10) ? "0$hours" : "$hours"} : ${(minutes < 10) ? "0$minutes" : "$minutes"}";

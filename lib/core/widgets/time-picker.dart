@@ -10,6 +10,7 @@ class TimePicker {
     );
     if (pickedTime == null) return null;
     final selectedDateTime = DateTime.now()
+        // ignore: sdk_version_since
         .copyWith(hour: pickedTime.hour, minute: pickedTime.minute);
     return selectedDateTime;
   }

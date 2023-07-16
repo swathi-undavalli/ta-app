@@ -10,6 +10,7 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/models/customer-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 
+// ignore: must_be_immutable
 class GuestsEditScreen extends StatelessWidget {
   static const String id = "GuestsEditScreen";
   CustomerModel? customerArg = Get.arguments[0] as CustomerModel?;

@@ -8,6 +8,7 @@ import 'package:temple_adventures/features/Activities/presentation/screens/activ
 import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 
+// ignore: must_be_immutable
 class AllActivitiesScreen extends StatelessWidget {
   static const String id = "PriceEditingScreen";
   AllActivitiesLogic logic = AllActivitiesLogic();

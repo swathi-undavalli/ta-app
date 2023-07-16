@@ -16,7 +16,6 @@ import 'package:temple_adventures/features/bookings/presentation/widgets/app-tex
 import 'package:intl/intl.dart';
 
 import 'boat-status.dart';
-import 'instructor_bottom_sheet.dart';
 
 class BoatDetailsBottomSheet extends StatefulWidget {
   const BoatDetailsBottomSheet({

@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 
+// ignore: must_be_immutable
 class EditPaymentsScreen extends StatelessWidget {
   static const String id = "EditPaymentsScreen";
   EditPaymentsLogic logic = EditPaymentsLogic();

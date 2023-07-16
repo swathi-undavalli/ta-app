@@ -12,6 +12,7 @@ import '../../../conditions/screens/conditions-screen.dart';
 
 late DashBoardScreenLogic dashboardLogic;
 
+// ignore: must_be_immutable
 class DashBoardScreen extends StatelessWidget {
   static const String id = "DashBoardScreen";
   final screens = [

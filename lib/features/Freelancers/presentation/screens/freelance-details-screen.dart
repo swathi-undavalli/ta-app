@@ -9,16 +9,13 @@ import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/features/Freelancers/controller/add-freelance-controller.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/add-freelance-screen.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
-import 'package:temple_adventures/features/counter-model.dart';
-import 'package:temple_adventures/features/employees/controllers/add-an-employee-controller.dart';
-import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
-import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class FreelanceDetailsScreen extends StatelessWidget {
   static const String id = "FreelanceDetailsScreen";
   final freelanceArgument = Get.arguments;

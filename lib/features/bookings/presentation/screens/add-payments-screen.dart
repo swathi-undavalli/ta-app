@@ -8,6 +8,7 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class AddPaymentsScreen extends StatelessWidget {
   static const String id = "AddPaymentsScreen";
   AddPaymentsLogic logic = AddPaymentsLogic();

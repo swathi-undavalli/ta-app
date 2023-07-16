@@ -10,6 +10,7 @@ import 'package:temple_adventures/features/bookings/controller/booking-controlle
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class BookingScreen extends StatelessWidget {
   static const String id = "BookingPage";
   final BookingScreenLogic logic = BookingScreenLogic();

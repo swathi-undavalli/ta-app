@@ -27,7 +27,6 @@ class Validator {
   static String? validateCountryCode(String code) {
     try {
       if (code.isEmpty) return null;
-      int num = int.parse(code);
       if (code.length > 3) return 'Limit Exceeded';
       return null;
     } catch (e) {
@@ -38,7 +37,6 @@ class Validator {
   static String? validatePhoneNumber(String number) {
     try {
       if (number.isEmpty) return null;
-      int num = int.parse(number);
       if(number.length < 10) return 'Invalid PhoneNumber';
       if (number.length > 10) return 'Limit exceeded';
       return null;
@@ -61,7 +59,7 @@ class Validator {
   }
 
   static String? validatePassword(String password) {
-    if (password.isEmpty || password == null) return null;
+    if (password.isEmpty) return null;
     if (password.length < 8) return 'Should be more than 8';
     bool isPasswordValid =
         RegularExpressions.passwordRegularExpression.hasMatch(password);
@@ -71,8 +69,7 @@ class Validator {
 
   static String? validatePinCode(String pinCode) {
     try {
-      if (pinCode.isEmpty || pinCode == null) return null;
-      int num = int.parse(pinCode);
+      if (pinCode.isEmpty) return null;
       return null;
     } catch (e) {
       return 'Invalid PinCode';

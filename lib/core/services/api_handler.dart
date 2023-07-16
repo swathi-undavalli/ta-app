@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:flutter/cupertino.dart';
 import 'package:http/http.dart' as http;
 
 enum RequestType { Get, Post }
@@ -23,7 +20,7 @@ class API {
       response = await http.post(Uri.parse(url), headers: header, body: body,);
     }
 
-    if (response.body != null) {
+    if (response.body != "") {
       return response.body;
     } else {
       return null;

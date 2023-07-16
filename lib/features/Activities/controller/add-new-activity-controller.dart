@@ -3,12 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
-import 'package:temple_adventures/features/Activities/controller/activity-edit-controller.dart';
 import 'package:temple_adventures/features/Activities/controller/all-activities-controller.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
-
 import '../../counter-model.dart';
 
 class AddNewActivityLogic {

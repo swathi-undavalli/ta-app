@@ -1,8 +1,3 @@
-// To parse this JSON data, do
-//
-//     final booking = bookingFromMap(jsonString);
-
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 ColorsDataModel? colorsData;

@@ -6,6 +6,7 @@ import 'package:temple_adventures/core/util/ta-image.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class ShareBookingWidget extends StatelessWidget {
   BookingModel booking;
 

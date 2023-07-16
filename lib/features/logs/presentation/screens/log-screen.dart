@@ -10,7 +10,6 @@ import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/details-screen.dart';
 import 'dart:developer' as dev;
 
-import '../../../../notification-screen.dart';
 
 class LogScreen extends StatelessWidget {
   static const String id = "LogScreen";

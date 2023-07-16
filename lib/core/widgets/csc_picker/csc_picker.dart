@@ -9,7 +9,9 @@ import 'dropdown_with_search.dart';
 import 'model/select_status_model.dart';
 
 enum Layout { vertical, horizontal }
+
 enum CountryFlag { SHOW_IN_DROP_DOWN_ONLY, ENABLE, DISABLE }
+
 enum DefaultCountry {
   Afghanistan,
   Aland_Islands,
@@ -262,6 +264,7 @@ enum DefaultCountry {
   Curacao,
   Sint_Maarten_Dutch_part
 }
+
 const Map<DefaultCountry, int> DefaultCountries = {
   DefaultCountry.Afghanistan: 0,
   DefaultCountry.Aland_Islands: 1,
@@ -576,27 +579,15 @@ class _CSCPickerState extends State<CSCPicker> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    // _selectedCity = widget.cityPlaceHolder;
-    // _selectedState = widget.statePlaceHolder;
-    // _selectedCountry = widget.countryPlaceHolder;
+    super.initState();
     getCounty().then((value) {
-      //print("Getting Country Data==================================:)");
-      //print(_selectedCountry);
-      //print(_selectedState);
-      //print(_selectedCity);
-      //print(_country);
-      if (widget.countryPlaceHolder != null) {
-        _onSelectedCountry(widget.countryPlaceHolder);
-        _selectedCountry = widget.countryPlaceHolder;
-      }
+      _onSelectedCountry(widget.countryPlaceHolder);
+      _selectedCountry = widget.countryPlaceHolder;
       getState().then((value) {
         setState(() {
           _states = _states;
         });
-        //print(_states);
-        //print('State Data is found');
-        if (widget.statePlaceHolder != null){
+        if (widget.statePlaceHolder.isNotEmpty) {
           _onSelectedState(widget.statePlaceHolder);
           _selectedState = widget.statePlaceHolder;
         }
@@ -604,31 +595,21 @@ class _CSCPickerState extends State<CSCPicker> {
         setState(() {
           _states = _states;
         });
-        //print(_states);
         getCity().then((value) {
           setState(() {
             _cities = _cities;
-            //print(_cities);
           });
-          //print('City Data is found');
-          if (widget.cityPlaceHolder != null)
-            _onSelectedCity(widget.cityPlaceHolder);
+          _onSelectedCity(widget.cityPlaceHolder);
           setState(() {
             _cities = _cities;
-            //print(_cities);
           });
         });
       });
-      // if (_selectedState.isNotEmpty && _selectedState != "State")
-      //   _onSelectedState(widget.statePlaceHolder);
-      // if (_selectedCity.isNotEmpty && _selectedCity != "City")
-      //   _onSelectedCountry(widget.cityPlaceHolder);
     });
   }
 
   void _setDefaultCountry() {
     if (widget.defaultCountry != null) {
-      //print(_country[DefaultCountries[widget.defaultCountry]]);
       _onSelectedCountry(_country[DefaultCountries[widget.defaultCountry]!]);
     }
   }
@@ -636,8 +617,7 @@ class _CSCPickerState extends State<CSCPicker> {
   ///Read JSON country data from assets
   Future getResponse() async {
     //print("getResponse");
-    var res = await rootBundle
-        .loadString('images/assets/country.json');
+    var res = await rootBundle.loadString('images/assets/country.json');
     return jsonDecode(res);
   }
 
@@ -654,9 +634,7 @@ class _CSCPickerState extends State<CSCPicker> {
       setState(() {
         widget.flagState == CountryFlag.ENABLE ||
                 widget.flagState == CountryFlag.SHOW_IN_DROP_DOWN_ONLY
-            ? _country.add(model.emoji! +
-                "    " +
-                model.name!) /* : _country.add(model.name)*/
+            ? _country.add(model.emoji! + "    " + model.name!)
             : _country.add(model.name);
       });
     });
@@ -669,9 +647,7 @@ class _CSCPickerState extends State<CSCPicker> {
 
   ///get states from json response
   Future getState() async {
-    //print("getState");
     _states.clear();
-    ////print(_selectedCountry);
     var response = await getResponse();
     var takeState = widget.flagState == CountryFlag.ENABLE ||
             widget.flagState == CountryFlag.SHOW_IN_DROP_DOWN_ONLY

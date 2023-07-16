@@ -208,22 +208,23 @@ class NewBookingLogic {
       controller.update();
     },
         currentTime: controller.paymentDate,
-        theme: DatePickerTheme(
-          cancelStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            color: Colors.black87,
-          ),
-          doneStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-          itemStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ));
+        // theme: DatePickerTheme(
+        //   cancelStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     color: Colors.black87,
+        //   ),
+        //   doneStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     fontWeight: FontWeight.bold,
+        //     color: Colors.black,
+        //   ),
+        //   itemStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     fontWeight: FontWeight.bold,
+        //     fontSize: 16,
+        //   ),
+        // ),
+    );
   }
 
   dobDatePicker(context) {
@@ -240,22 +241,23 @@ class NewBookingLogic {
       controller.update();
     },
         currentTime: controller.dob,
-        theme: DatePickerTheme(
-          cancelStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            color: Colors.black87,
-          ),
-          doneStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-          itemStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ));
+        // theme: DatePickerTheme(
+        //   cancelStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     color: Colors.black87,
+        //   ),
+        //   doneStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     fontWeight: FontWeight.bold,
+        //     color: Colors.black,
+        //   ),
+        //   itemStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     fontWeight: FontWeight.bold,
+        //     fontSize: 16,
+        //   ),
+        // ),
+    );
   }
 
   addPoolSessionDateTime() {

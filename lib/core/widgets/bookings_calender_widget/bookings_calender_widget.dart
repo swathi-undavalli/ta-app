@@ -14,6 +14,7 @@ import 'package:temple_adventures/features/boat/presentation/widgets/boat-detail
 import '../../../features/boat/models/boats.dart';
 import '../../../features/boat/presentation/widgets/customer-expansion-panel.dart';
 
+// ignore: must_be_immutable
 class BookingsCalenderWidgetNew extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
   final bool isDiveSession;

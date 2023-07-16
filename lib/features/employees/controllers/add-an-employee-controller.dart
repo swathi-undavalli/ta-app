@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
@@ -156,22 +155,23 @@ class AddAnUserLogic {
       controller.shiftTimeTED.text = formatter.format(newTime);
     },
         currentTime: controller.pickedTime,
-        theme: DatePickerTheme(
-          cancelStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            color: Colors.black87,
-          ),
-          doneStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-          itemStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ));
+        // theme: DatePickerTheme(
+        //   cancelStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     color: Colors.black87,
+        //   ),
+        //   doneStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     fontWeight: FontWeight.bold,
+        //     color: Colors.black,
+        //   ),
+        //   itemStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     fontWeight: FontWeight.bold,
+        //     fontSize: 16,
+        //   ),
+        // ),
+    );
   }
 }
 

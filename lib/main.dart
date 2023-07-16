@@ -13,7 +13,6 @@ import 'package:temple_adventures/features/admin-portal/presentation/admin-porta
 import 'package:temple_adventures/features/admin-portal/presentation/image-view-page.dart';
 import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/d1.dart';
 import 'package:temple_adventures/d2.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
@@ -21,7 +20,6 @@ import 'package:temple_adventures/features/all-bookings/presentation/screens/all
 import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-dsd-equipment.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/add-guest-details-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-payments-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/all-idProofs-screen.dart';
@@ -50,23 +48,25 @@ import 'features/employees/presentation/screens/employee-details-screen.dart';
 import 'features/employees/presentation/screens/employee-profile-screen.dart';
 import 'features/login/presentation/screens/login-page.dart';
 
-import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
 Future<void> backgroundHandler(RemoteMessage message) async {
   print("called onBackgroundMessage");
 }
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  LocalNotificationService.initialize();
+  try {
+    LocalNotificationService.initialize();
+  } catch (e) {
+    print("error starting notification listener");
+  }
   if (Platform.isIOS) {
     await Firebase.initializeApp(
         options: const FirebaseOptions(
             apiKey: "AIzaSyAJFHDoc1lfQtTRtEpRmCJue2kwfB5jUh8",
             appId: "1:671883511961:ios:99961ae0cf633ff7b05008",
             messagingSenderId: "671883511961",
-            iosClientId: "671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com",
+            iosClientId:
+                "671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com",
             projectId: "seismic-glow-283418"));
   } else {
     await Firebase.initializeApp();
@@ -149,13 +149,12 @@ class MyApp extends StatelessWidget {
         D2.id: (context) => D2(),
         IDProofScreen.id: (context) => IDProofScreen(),
         AllIDProofsScreen.id: (context) => AllIDProofsScreen(),
-        GuestDetailsScreen.id: (context) => GuestDetailsScreen(),
         AllFreelancersScreen.id: (context) => AllFreelancersScreen(),
         AddFreelanceScreen.id: (context) => AddFreelanceScreen(),
         FreelanceDetailsScreen.id: (context) => FreelanceDetailsScreen(),
         AddPaymentsScreen.id: (context) => AddPaymentsScreen(),
         EditPaymentsScreen.id: (context) => EditPaymentsScreen(),
-        AdminPortalScreen.id: (context) => AdminPortalScreen(),
+        // AdminPortalScreen.id: (context) => AdminPortalScreen(),
         ImageViewPage.id: (context) => ImageViewPage(),
         NotificationsScreen.id: (context) => NotificationsScreen(),
         DetailsScreen.id: (context) => DetailsScreen(),
@@ -175,7 +174,8 @@ class FirebaseNotificationService {
   }
 
   static handleTerminatedNavigation() async {
-    RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? message =
+        await FirebaseMessaging.instance.getInitialMessage();
 
     if (message != null) {
       Get.toNamed(NotificationsScreen.id, arguments: message);

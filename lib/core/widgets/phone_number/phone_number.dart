@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class PhoneNumber {
   String? countryISOCode;
   String countryCode;

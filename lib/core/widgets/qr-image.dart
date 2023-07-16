@@ -1,8 +1,7 @@
-import 'dart:convert';
-
 import 'package:barcode_widget/barcode_widget.dart';
 import 'package:flutter/material.dart';
 
+// ignore: must_be_immutable
 class QRImage extends StatefulWidget {
   QRImage({this.height, this.width, this.data, Key? key}) : super(key: key);
 

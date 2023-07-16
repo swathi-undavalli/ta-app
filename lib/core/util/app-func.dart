@@ -15,7 +15,7 @@ getStringDate(DateTime newDate) {
   return DateFormat('dd-MM-yyyy').format(newDate);
 }
 
-checkDate(DateTime? a, DateTime b) {
+checkDate(DateTime? a, DateTime? b) {
   if (a == null || b == null) return false;
   return ((a.day == b.day) && (a.month == b.month) && (a.year == b.year));
 }

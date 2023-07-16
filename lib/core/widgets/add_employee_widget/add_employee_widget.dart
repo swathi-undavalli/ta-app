@@ -3,6 +3,7 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/access_levels.dart';
 import '../app-button.dart';
 
+// ignore: must_be_immutable
 class AddEmployeeWidget extends StatelessWidget {
   String text;
   String subText;

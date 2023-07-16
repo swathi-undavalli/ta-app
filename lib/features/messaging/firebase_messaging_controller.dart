@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/features/messaging/notification_service.dart';
@@ -9,32 +7,29 @@ class FirebaseMessagingLogic {
       Get.put(FirebaseMessagingController());
 
   FirebaseMessagingLogic() {
-    getToken();
+    // getToken();
     configureFirebaseListeners();
   }
 
-  getToken() async {
-    // firebaseMessaging.getToken().then((deviceToken) {
-    //   //print("Device Token : $deviceToken");
-    // });
-    var deviceToken = await FirebaseMessaging.instance.getToken();
-    //log("DeviceToken : $deviceToken");
-  }
+  // getToken() async {
+  //   // firebaseMessaging.getToken().then((deviceToken) {
+  //   //   //print("Device Token : $deviceToken");
+  //   // });
+  //   var deviceToken = await FirebaseMessaging.instance.getToken();
+  //   //log("DeviceToken : $deviceToken");
+  // }
 
   configureFirebaseListeners() {
 
     ///completely terminated
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
-        //log('onLaunch data: ${message}');
       }
     });
 
     ///app is open
     FirebaseMessaging.onMessage.listen((message) {
       if (message.notification != null) {
-        //log("Hello mawa notification ochindi");
-        //log("onMessage data: ${message.notification.body}");
       }
       LocalNotificationService.display(message);
     });
@@ -42,7 +37,6 @@ class FirebaseMessagingLogic {
     ///app is in Background
 
     FirebaseMessaging.onMessageOpenedApp.listen((message) {
-      //print('onMessageOpenedApp data:${message.data}');
     });
   }
 }

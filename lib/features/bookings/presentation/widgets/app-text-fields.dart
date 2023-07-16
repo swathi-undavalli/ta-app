@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 
+// ignore: must_be_immutable
 class AppTextField extends StatefulWidget {
   int? maxLimit;
   int? minLines;

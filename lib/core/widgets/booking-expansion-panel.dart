@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -30,10 +29,10 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'dart:ui' as ui;
 import 'package:http/http.dart' as http;
 import '../../features/home/model/colors_data.dart';
 
+// ignore: must_be_immutable
 class BookingsExpansionPanel extends StatelessWidget {
   final ExpansionPanelLogic logic = ExpansionPanelLogic();
   final SearchController searchController = Get.put(SearchController());
@@ -1470,54 +1469,54 @@ Regards,
     return (total - t).toInt().toString();
   }
 
-  Future<Uint8List> _createImageFromWidget(
-    Widget widget, {
-    Duration wait = const Duration(milliseconds: 450),
-  }) async {
-    final RenderRepaintBoundary repaintBoundary = RenderRepaintBoundary();
-    Size logicalSize = ui.window.physicalSize / ui.window.devicePixelRatio;
-    double pixelRatio = ui.window.devicePixelRatio;
-    final RenderView renderView = RenderView(
-      window: ui.window,
-      child: RenderPositionedBox(
-          alignment: Alignment.center,
-          // heightFactor: Get.height,
-          child: repaintBoundary),
-      configuration: ViewConfiguration(
-        size: logicalSize,
-        devicePixelRatio: pixelRatio,
-      ),
-    );
-
-    final PipelineOwner pipelineOwner = PipelineOwner();
-    final BuildOwner buildOwner = BuildOwner(focusManager: FocusManager());
-    pipelineOwner.rootNode = renderView;
-    renderView.prepareInitialFrame();
-    final RenderObjectToWidgetElement<RenderBox> rootElement =
-        RenderObjectToWidgetAdapter<RenderBox>(
-      container: repaintBoundary,
-      child: Directionality(
-        textDirection: TextDirection.ltr,
-        child: widget,
-      ),
-    ).attachToRenderTree(buildOwner);
-    buildOwner.buildScope(rootElement);
-
-    await Future.delayed(wait);
-
-    buildOwner.buildScope(rootElement);
-    buildOwner.finalizeTree();
-    pipelineOwner.flushLayout();
-    pipelineOwner.flushCompositingBits();
-    pipelineOwner.flushPaint();
-
-    final ui.Image image =
-        await repaintBoundary.toImage(pixelRatio: pixelRatio);
-    //final ui.Image image = await repaintBoundary.toImage(pixelRatio: 1);
-    final ByteData byteData =
-        (await image.toByteData(format: ui.ImageByteFormat.png))!;
-    return byteData.buffer.asUint8List();
-  }
+  // Future<Uint8List> _createImageFromWidget(
+  //   Widget widget, {
+  //   Duration wait = const Duration(milliseconds: 450),
+  // }) async {
+  //   final RenderRepaintBoundary repaintBoundary = RenderRepaintBoundary();
+  //   Size logicalSize = ui.window.physicalSize / ui.window.devicePixelRatio;
+  //   double pixelRatio = ui.window.devicePixelRatio;
+  //   final RenderView renderView = RenderView(
+  //     window: ui.window,
+  //     child: RenderPositionedBox(
+  //         alignment: Alignment.center,
+  //         // heightFactor: Get.height,
+  //         child: repaintBoundary),
+  //     configuration: ViewConfiguration(
+  //       size: logicalSize,
+  //       devicePixelRatio: pixelRatio,
+  //     ),
+  //   );
+  //
+  //   final PipelineOwner pipelineOwner = PipelineOwner();
+  //   final BuildOwner buildOwner = BuildOwner(focusManager: FocusManager());
+  //   pipelineOwner.rootNode = renderView;
+  //   renderView.prepareInitialFrame();
+  //   final RenderObjectToWidgetElement<RenderBox> rootElement =
+  //       RenderObjectToWidgetAdapter<RenderBox>(
+  //     container: repaintBoundary,
+  //     child: Directionality(
+  //       textDirection: TextDirection.ltr,
+  //       child: widget,
+  //     ),
+  //   ).attachToRenderTree(buildOwner);
+  //   buildOwner.buildScope(rootElement);
+  //
+  //   await Future.delayed(wait);
+  //
+  //   buildOwner.buildScope(rootElement);
+  //   buildOwner.finalizeTree();
+  //   pipelineOwner.flushLayout();
+  //   pipelineOwner.flushCompositingBits();
+  //   pipelineOwner.flushPaint();
+  //
+  //   final ui.Image image =
+  //       await repaintBoundary.toImage(pixelRatio: pixelRatio);
+  //   //final ui.Image image = await repaintBoundary.toImage(pixelRatio: 1);
+  //   final ByteData byteData =
+  //       (await image.toByteData(format: ui.ImageByteFormat.png))!;
+  //   return byteData.buffer.asUint8List();
+  // }
 
   Future<void> onDeletePaxPressed(BookingModel bookingModel, int index) async {
     Get.defaultDialog(

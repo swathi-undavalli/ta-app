@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:intl/intl.dart';
@@ -49,22 +48,23 @@ class EditBookingNewLogic {
       controller.update();
     },
         currentTime: controller.dob,
-        theme: DatePickerTheme(
-          cancelStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            color: Colors.black87,
-          ),
-          doneStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-          itemStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ));
+        // theme: DatePickerTheme(
+        //   cancelStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     color: Colors.black87,
+        //   ),
+        //   doneStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     fontWeight: FontWeight.bold,
+        //     color: Colors.black,
+        //   ),
+        //   itemStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     fontWeight: FontWeight.bold,
+        //     fontSize: 16,
+        //   ),
+        // ),
+    );
   }
 }
 

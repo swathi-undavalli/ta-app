@@ -38,17 +38,16 @@ ThemeData darkTheme = ThemeData(
   ),
   appBarTheme: AppBarTheme(
     elevation: 0,
-    brightness: Brightness.light,
     iconTheme: IconThemeData(color: Colors.white),
     centerTitle: true,
-    textTheme: TextTheme(
-      headline6: TextStyle(
-        color: Colors.white,
-        fontSize: 20,
-        fontFamily: AppFonts.nunito,
-        fontWeight: FontWeight.w700,
-      ),
-    ),
+    // textTheme: TextTheme(
+    //   headline6: TextStyle(
+    //     color: Colors.white,
+    //     fontSize: 20,
+    //     fontFamily: AppFonts.nunito,
+    //     fontWeight: FontWeight.w700,
+    //   ),
+    // ),
   ),
 );
 
@@ -82,7 +81,7 @@ ThemeData lightTheme = ThemeData(
   appBarTheme: AppBarTheme(
     elevation: 0,
     color: Colors.white,
-    brightness: Brightness.light,
+    // brightness: Brightness.light,
     centerTitle: true,
   ),
 );

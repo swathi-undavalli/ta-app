@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/auto-update.dart';
-import 'package:temple_adventures/core/authentication/firebase-authentication.dart';
 import 'package:temple_adventures/features/login/presentation/screens/login-page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -31,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
         AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
         await autoUpdateLogic.checkForUpdate();
       }
-    } catch (e, s) {
+    } catch (e) {
       print(e);
     }
   }

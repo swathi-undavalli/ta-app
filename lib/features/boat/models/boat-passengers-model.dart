@@ -1,7 +1,6 @@
 
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 
 BoatPassengersModel boatPassengersModelFromMap(String str) =>
     BoatPassengersModel.fromMap(json.decode(str));

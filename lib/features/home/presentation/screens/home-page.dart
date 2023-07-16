@@ -8,10 +8,8 @@ import '../../../../core/widgets/attendance_report_widget/attendance_report_widg
 import '../../../../core/widgets/attendance_widget/attandence_widget_controller.dart';
 import '../../../../core/widgets/attendance_widget/attendence_widget.dart';
 import '../../../login/presentation/screens/login-page.dart';
-import '../../controller/home-page-controller.dart';
 
 class HomePage extends StatelessWidget {
-  final HomePageLogic logic = HomePageLogic();
   final now = DateTime.now();
   @override
   Widget build(BuildContext context) {

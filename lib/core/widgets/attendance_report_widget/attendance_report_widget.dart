@@ -409,25 +409,11 @@ class AttendanceReportWidgetLogic {
             int.parse(element.shiftTime!.split(":")[2]),
           ).difference(DateTime.now()).inMinutes <
           0) {
-        // //log(DateTime(
-        //   now.year,
-        //   now.month,
-        //   now.day,
-        //   int.parse(element.shiftTime.split(":")[0]),
-        //   int.parse(element.shiftTime.split(":")[1]),
-        //   int.parse(element.shiftTime.split(":")[2]),
-        // ).difference(DateTime.now()).inMinutes.toString());
-        // //log(element.name);
-        // //log(element.shiftTime);
+
         controller.notYetSignedInEmployeesList.add(element);
       }
     });
-    //log("====================");
-    //log(controller.lateEmployeesList.toString());
-    //log(controller.onTimeEmployeesList.toString());
-    //log(controller.absentEmployeesList.toString());
-    //log(controller.notYetSignedInEmployeesList.toString());
-    //log("====================");
+
     controller.notYetSignedInEmployeesList =
         controller.absentEmployeesList + controller.notYetSignedInEmployeesList;
     controller.selectedList = controller.lateEmployeesList;

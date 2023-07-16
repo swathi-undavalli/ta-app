@@ -7,6 +7,7 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/models/customer-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/guests-edit-screen.dart';
 
+// ignore: must_be_immutable
 class GuestsExpansionPanel extends StatefulWidget {
   GuestsExpansionPanel({required this.customer,required this.booking});
 

@@ -1,13 +1,10 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
-import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/counter-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:intl/intl.dart';
@@ -17,7 +14,7 @@ import 'package:temple_adventures/features/logs/presentation/screens/log-screen.
 class FreelanceLogic {
   FreelanceController controller = Get.put(FreelanceController());
   Employee? freelance;
-  // Employee employee;
+
 
   DateTime pickedTime = DateTime.now();
 
@@ -28,34 +25,6 @@ class FreelanceLogic {
         .doc("count")
         .get();
     CounterModel counterModel = CounterModel.fromMap(data.data()!);
-    // if (int.parse(controller.freelanceIdTED.text) <= counterModel.freelance) {
-    //   Get.defaultDialog(
-    //     contentPadding:
-    //         EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 40),
-    //     title: "\n Oops!",
-    //     middleText: "You Entered Existing Employee ID.",
-    //     backgroundColor: Colors.white,
-    //     titleStyle: TextStyle(
-    //         color: AppColors.text.black,
-    //         fontFamily: AppFonts.nunito,
-    //         fontSize: 16,
-    //         fontWeight: FontWeight.bold),
-    //     middleTextStyle: TextStyle(
-    //         color: AppColors.text.black,
-    //         fontFamily: AppFonts.nunito,
-    //         fontSize: 16,
-    //         fontWeight: FontWeight.bold),
-    //     cancel: AppButton.miniFlat(
-    //       text: 'OK',
-    //       onTap: () {
-    //         Get.back();
-    //       },
-    //     ),
-    //     barrierDismissible: false,
-    //     radius: 10,
-    //   );
-    //   return;
-    // }
     try {
       if (controller.firstNameTED.text != "" &&
           controller.freelanceIdTED.text != "" &&
@@ -87,10 +56,10 @@ class FreelanceLogic {
             weatherReport: controller.weatherReport,
             editActivityPrices: controller.editActivityPrices,
             addActivity: controller.addActivity,
-            notifications: controller.notifications, boatPlan: controller.boatPlan,
+            notifications: controller.notifications,
+            boatPlan: controller.boatPlan,
           ),
         );
-        // viewBookings: controller.viewBookings,
         log(controller.firstNameTED.text);
         log(controller.lastNameTED.text);
         log(controller.freelanceIdTED.text);
@@ -104,8 +73,6 @@ class FreelanceLogic {
         FirebaseFirestore.instance
             .collection('freelance')
             .doc(freelance.id)
-            // .collection('employeeFullInformation')
-            // .doc('employeeData')
             .set(freelance.toMap());
         if (counterModel.freelance != null) {
           counterModel.freelance = counterModel.freelance! + 1;
@@ -161,15 +128,13 @@ class FreelanceLogic {
           weatherReport: controller.weatherReport,
           editActivityPrices: controller.editActivityPrices,
           addActivity: controller.addActivity,
-          notifications: controller.notifications, boatPlan: controller.boatPlan,
+          notifications: controller.notifications,
+          boatPlan: controller.boatPlan,
         ),
       );
-      // viewBookings: controller.viewBookings,
       FirebaseFirestore.instance
           .collection('freelance')
           .doc(freelance.id)
-          // .collection('employeeFullInformation')
-          // .doc('employeeData')
           .set(freelance.toMap());
       LogModel logModel = LogModel(
           type: LogType.editEmployee,
@@ -188,31 +153,30 @@ class FreelanceLogic {
   timePicker(context) {
     DatePicker.showTimePicker(context, showTitleActions: true,
         onChanged: (time) {
-      //print('change $time');
       pickedTime = time;
       controller.shiftTimeTED.text = DateFormat.Hm().format(time);
     }, onConfirm: (newTime) {
-      //print('confirm $pickedTime');
       pickedTime = newTime;
       controller.shiftTimeTED.text = DateFormat.Hm().format(pickedTime);
     },
         currentTime: pickedTime,
-        theme: DatePickerTheme(
-          cancelStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            color: Colors.black87,
-          ),
-          doneStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
-          itemStyle: TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-        ));
+        // theme: DatePickerTheme(
+        //   cancelStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     color: Colors.black87,
+        //   ),
+        //   doneStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     fontWeight: FontWeight.bold,
+        //     color: Colors.black,
+        //   ),
+        //   itemStyle: TextStyle(
+        //     fontFamily: AppFonts.nunito,
+        //     fontWeight: FontWeight.bold,
+        //     fontSize: 16,
+        //   ),
+        // ),
+    );
   }
 }
 
@@ -270,13 +234,13 @@ class FreelanceController extends GetxController {
   bool? _notifications = false;
   bool? _boatPlan = false;
 
-
   bool? get boatPlan => _boatPlan;
 
   set boatPlan(bool? value) {
     _boatPlan = value;
     update();
   }
+
   bool? get notifications => _notifications;
 
   set notifications(bool? value) {

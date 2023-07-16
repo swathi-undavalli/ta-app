@@ -1,24 +1,16 @@
 import 'package:get/get.dart';
-import 'package:temple_adventures/features/weather/models/tide_response.dart';
 import 'package:temple_adventures/features/weather/models/weatherPage_model.dart';
 import 'package:temple_adventures/features/weather/repository/weather_repository.dart';
-import 'package:intl/intl.dart';
 
 class WeatherPageLogic {
   WeatherPageController controller = Get.put(WeatherPageController());
   WeatherRepository weatherRepository = WeatherRepository();
 
-  WeatherPageLogic() {
-    // onTodayPressed();
-  }
+
 
   getWeatherData(DateTime date) async {
     controller.showLoading = true;
     controller.weatherPageModel = await weatherRepository.getWeatherData(date);
-    //print(controller.weatherPageModel.waveHeight);
-    //print(controller.weatherPageModel.heightUnits);
-    //print(controller.weatherPageModel.windSpeed);
-    //print(controller.weatherPageModel.speedUnits);
     controller.showLoading = false;
   }
 

@@ -1,14 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_state_manager/src/simple/get_state.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
-import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/features/weather/controller/weather-controller.dart';
 import 'package:temple_adventures/features/weather/models/tide_response.dart';
-import 'package:temple_adventures/features/weather/models/tide_response.dart'
-    as tide;
+
 import 'package:intl/intl.dart';
 
 class WeatherPage extends StatelessWidget {

@@ -6,7 +6,6 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/attendance/attendance-page-controller.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
 
 class AttendancePage extends StatelessWidget {
   static const String id = "AttendancePage";

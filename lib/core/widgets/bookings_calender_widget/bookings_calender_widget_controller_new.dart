@@ -28,21 +28,7 @@ class BookingsCalenderWidgetLogicNew {
           .get();
 
       data.docs.forEach((element) {
-        log("===========s${element.data().toString()}");
-
-        try {
-          BookingModel booking = BookingModel.fromMap(element.data());
-        } catch (e) {
-          log("Error in getting booking model");
-          log("$e");
-          log("ohohohho");
-          log(element.data().toString());
-          print(e);
-        }
         BookingModel booking = BookingModel.fromMap(element.data());
-
-        //print(booking.toMap());
-        //print("=============");
 
         if (booking.diveDate != null) {
           controller.bookingTimings.addAll(booking.diveDate!);

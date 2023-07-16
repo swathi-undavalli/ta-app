@@ -6,6 +6,7 @@ import 'package:temple_adventures/features/bookings/controller/idProof-controlle
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/all-idProofs-screen.dart';
 
+// ignore: must_be_immutable
 class IDProofScreen extends StatelessWidget {
   static const String id = "IDProofScreen";
   BookingModel? bookingArg = Get.arguments;

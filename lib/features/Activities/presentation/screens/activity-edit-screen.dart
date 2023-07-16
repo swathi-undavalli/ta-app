@@ -14,6 +14,7 @@ import 'package:temple_adventures/features/logs/presentation/screens/log-screen.
 
 import '../../../home/model/colors_data.dart';
 
+// ignore: must_be_immutable
 class ActivityEditScreen extends StatelessWidget {
   static const String id = "PriceEditScreen";
   final ActivityModel? activityArg = Get.arguments;

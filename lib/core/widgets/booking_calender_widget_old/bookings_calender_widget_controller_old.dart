@@ -1,15 +1,9 @@
 import 'dart:developer';
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
-import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-
 import '../booking-expansion-panel.dart';
 import 'package:intl/intl.dart';
 
@@ -32,32 +26,15 @@ class BookingsCalenderWidgetLogic {
           .get();
 
       data.docs.forEach((element) {
-        // log("===========s${element.data().toString()}");
-
-        try {
-          BookingModel booking = BookingModel.fromMap(element.data());
-        } catch (e) {
-          log("Error in getting booking model");
-          log("$e");
-          log(element.data().toString());
-          print(e);
-        }
         BookingModel booking = BookingModel.fromMap(element.data());
-
-        //print(booking.toMap());
-        //print("=============");
-
         if (booking.diveDate != null) {
           controller.bookingTimings.addAll(booking.diveDate!);
-          //print(booking.diveDate);
         }
         if (booking.poolDate != null) {
           controller.bookingTimings.addAll(booking.poolDate!);
-          //print(booking.poolDate);
         }
         if (booking.theoryDate != null) {
           controller.bookingTimings.addAll(booking.theoryDate!);
-          //print(booking.theoryDate);
         }
 
         controller.bookings.add(booking);

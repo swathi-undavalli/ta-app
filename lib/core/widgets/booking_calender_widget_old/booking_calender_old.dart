@@ -1,6 +1,4 @@
 import 'dart:developer';
-import 'dart:math' as math;
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -9,11 +7,10 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
-import 'package:temple_adventures/core/widgets/booking-expansion-panel.dart';
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
+// ignore: must_be_immutable
 class BookingsCalenderWidgetOld extends StatelessWidget {
   final void Function(DateTime) onDateTimeSelected;
   final bool isDiveSession;
@@ -33,8 +30,6 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
     this.calenderType,
     required this.autoScrollController,
   }) {
-    //print("new instance");
-    if (startDate == null) startDate = DateTime.now();
     startDate = startDate.subtract(Duration(days: 1));
     logic.controller.startDate = startDate;
     logic.controller.showDetails = showDetails;

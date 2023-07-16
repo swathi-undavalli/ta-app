@@ -8,6 +8,7 @@ import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings
 import 'package:temple_adventures/features/boat/controller/manage-boats-controller.dart';
 import 'package:intl/intl.dart';
 
+// ignore: must_be_immutable
 class ManageBoatsPage extends StatelessWidget {
   static const String id = "ManageBoatsPage";
   final ManageBoatsLogic logic = ManageBoatsLogic();

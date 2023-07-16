@@ -220,12 +220,12 @@ class BookingModel {
     return BoatInfo.fromMap(boatDetails?.boat?[d]);
   }
 
-  void setBoatInfo(DateTime date, BoatInfo boatInfo) {
+  void setBoatInfo(DateTime date, BoatInfo? boatInfo) {
     String d = DateFormat("dd-MM-yyyy").format(date);
     if (boatDetails?.boat == null) {
       boatDetails?.boat = {};
     }
-    boatDetails?.boat?[d] = boatInfo.toMap();
+    boatDetails?.boat?[d] = boatInfo?.toMap();
   }
 
   InstructorTanks? getInstructorTanks(DateTime date) {

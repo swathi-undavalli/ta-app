@@ -30,6 +30,7 @@ class FileUploader {
     } catch (e) {
       showToast("Error occurred while uploading image");
     }
+    return null;
   }
 
   static Future<String?> uploadCustomerID({
@@ -46,7 +47,7 @@ class FileUploader {
     try {
       await idProofsRef.putFile(file, metadata);
       String link = await idProofsRef.getDownloadURL();
-      if (link != null && link.isNotEmpty) {
+      if (link != "" && link.isNotEmpty) {
         return link;
       } else {
         showToast("Error occurred while uploading image");
@@ -54,6 +55,7 @@ class FileUploader {
     } catch (e) {
       showToast("Error occurred while uploading image");
     }
+    return null;
   }
 
   static Future<String?> uploadFile({
@@ -70,7 +72,7 @@ class FileUploader {
     try {
       await idProofsRef.putFile(file, metadata);
       String link = await idProofsRef.getDownloadURL();
-      if (link != null && link.isNotEmpty) {
+      if (link.isNotEmpty) {
         return link;
       } else {
         showToast("Error occurred while uploading image");
@@ -78,6 +80,7 @@ class FileUploader {
     } catch (e) {
       showToast("Error occurred while uploading image");
     }
+    return null;
   }
 
   static Future<String?> uploadPDFFile({
@@ -94,7 +97,7 @@ class FileUploader {
     try {
       await idProofsRef.putFile(file, metadata);
       String link = await idProofsRef.getDownloadURL();
-      if (link != null && link.isNotEmpty) {
+      if (link.isNotEmpty) {
         return link;
       } else {
         showToast("Error occurred while uploading image");
@@ -102,6 +105,7 @@ class FileUploader {
     } catch (e) {
       showToast("Error occurred while uploading image");
     }
+    return null;
   }
 
 // static Future<String> uploadIDProof({

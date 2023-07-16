@@ -2,9 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:temple_adventures/core/services/firebase_api.dart';
 import 'package:temple_adventures/features/attendance/attendance-model.dart';
-import 'package:intl/intl.dart';
 import 'dart:math' as math;
-
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 

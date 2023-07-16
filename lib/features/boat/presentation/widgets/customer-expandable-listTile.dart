@@ -1,13 +1,10 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/tank-counter.dart';
-
 import '../../../../core/widgets/app-button.dart';
 import '../../../../core/widgets/booking-expansion-panel.dart';
 import '../../../bookings/models/booking-model.dart';
@@ -255,13 +252,21 @@ class _CustomerExpandableListTileState
                                                         widget.selectedDate)
                                                     ?.id ??
                                                 "",
-                                            onChanged: (Boat boat) async {
-                                              await updateBoatDetails(
-                                                bookingModel: bookingModel,
-                                                boatId: boat.id,
-                                                selectedDate:
-                                                    widget.selectedDate,
-                                              );
+                                            onChanged: (Boat? boat) async {
+                                              if (boat != null) {
+                                                await updateBoatDetails(
+                                                  bookingModel: bookingModel,
+                                                  boatId: boat.id,
+                                                  selectedDate:
+                                                      widget.selectedDate,
+                                                );
+                                              } else {
+                                                await removeBoat(
+                                                  bookingModel: bookingModel,
+                                                  selectedDate:
+                                                      widget.selectedDate,
+                                                );
+                                              }
                                             },
                                             selectedDate: widget.selectedDate,
                                           ),
@@ -726,6 +731,23 @@ class _CustomerExpandableListTileState
         employeeNotes: employeeNotes,
         instructors: instructors,
         interns: interns);
+
+    await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(bookingModel.id)
+        .set(
+          bookingModel.toMap(),
+        );
+  }
+
+  Future<void> removeBoat({
+    required BookingModel bookingModel,
+    required DateTime selectedDate,
+  }) async {
+    bookingModel.setBoatInfo(
+      selectedDate,
+      null,
+    );
 
     await FirebaseFirestore.instance
         .collection('bookings')

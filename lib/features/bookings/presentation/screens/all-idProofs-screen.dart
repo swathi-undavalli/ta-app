@@ -11,6 +11,7 @@ import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/bookings/controller/idProof-controller.dart';
 import 'package:http/http.dart' as http;
 
+// ignore: must_be_immutable
 class AllIDProofsScreen extends StatelessWidget {
   static const String id = "AllIDProofsScreen";
   final imageID = Get.arguments;

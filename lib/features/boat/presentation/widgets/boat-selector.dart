@@ -16,7 +16,7 @@ class BoatSelector extends StatefulWidget {
 
   final String selectedBoatId;
   final DateTime selectedDate;
-  final Function(Boat boatDetails) onChanged;
+  final Function(Boat? boatDetails) onChanged;
 
   @override
   State<BoatSelector> createState() => _BoatSelectorState();
@@ -116,6 +116,40 @@ class _BoatSelectorState extends State<BoatSelector> {
               ),
             ),
           ),
+          if (selectedBoat != null)
+            PopupMenuItem<Boat>(
+              value: Boat(
+                id: "Un-assign",
+                captains: [],
+                name: '',
+                surfaceSupport: [],
+                notes: '',
+                nitrox: 0,
+                air: 0,
+                time: '',
+                diveSite: '',
+                dsdInstructors: [],
+                photographer: [],
+                // photoAir: 0,
+                // photoNitrox: 0,
+                boatStatus: 0,
+                internPhotographer: [],
+                internSurfaceSupport: [],
+              ),
+              onTap: () {},
+              child: Column(
+                children: [
+                  Divider(
+                    color: Colors.black26,
+                  ),
+                  SizedBox(height: 5),
+                  Text(
+                    "Un-Assign Boat",
+                    style: TextStyle(fontSize: 12),
+                  ).paddingOnly(bottom: 2),
+                ],
+              ),
+            ),
           PopupMenuItem<Boat>(
             value: Boat(
               id: "Add new",
@@ -163,6 +197,10 @@ class _BoatSelectorState extends State<BoatSelector> {
                 .set(boatsModel.toJson());
             init();
           }
+        } else if (value.id == "Un-assign") {
+          setState(() {
+            widget.onChanged(null);
+          });
         }
       },
     );

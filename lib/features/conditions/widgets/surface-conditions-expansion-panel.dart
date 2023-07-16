@@ -7,6 +7,7 @@ import 'package:temple_adventures/core/constants/constants.dart';
 
 import '../models/conditions-model.dart';
 
+// ignore: must_be_immutable
 class SurfaceConditionsExpansionWidget extends StatefulWidget {
   SurfaceConditionsExpansionWidget(
       {required this.surfaceConditions,
