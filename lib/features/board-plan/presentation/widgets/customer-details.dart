@@ -915,9 +915,7 @@ int getTotalPAXCount(
       getTotalInternsCount(bookings, boat) +
       (boat.dsdInstructors?.length ?? 0) +
       (boat.photographer?.length ?? 0) +
-      (boat.internSurfaceSupport?.length ?? 0) +
-      (boat.internPhotographer?.length ?? 0) +
-      (boat.captains?.length ?? 0);
+      (boat.internPhotographer?.length ?? 0);
 }
 
 int getTotalDSDPAXCount(
