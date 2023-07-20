@@ -216,7 +216,7 @@ class GuestDetailsController extends GetxController {
   CustomerModel? customerModel = CustomerModel();
 
   String? _idProofLink;
-  BookingModel? bookingModel;
+  Booking? bookingModel;
 
   bool _getDetailsPressed = false;
 

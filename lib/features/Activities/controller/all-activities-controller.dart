@@ -16,7 +16,7 @@ class AllActivitiesLogic {
       if (element.id == 'colors') {
         continue;
       }
-      ActivityModel activity = ActivityModel.fromMap(element.data());
+      Activity activity = Activity.fromMap(element.data());
       controller.allActivitiesList.add(activity);
     }
 
@@ -33,7 +33,7 @@ class AllActivitiesLogic {
 }
 
 class AllActivitiesController extends GetxController {
-  List<ActivityModel> allActivitiesList = [];
+  List<Activity> allActivitiesList = [];
 
   bool _showLoading = true;
 

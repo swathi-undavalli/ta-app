@@ -88,7 +88,7 @@ class AddPaymentsController extends GetxController {
   FocusNode depositNode = FocusNode();
   FocusNode paymentReferenceNode = FocusNode();
   FocusNode receiptNoNode = FocusNode();
-  BookingModel? bookingModel;
+  Booking? bookingModel;
 
   reset() {
     depositTED.text = "";

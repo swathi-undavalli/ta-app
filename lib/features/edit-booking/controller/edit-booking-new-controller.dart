@@ -20,7 +20,7 @@ class EditBookingNewLogic {
     controller.activities = [];
     for (int i = 0; i < catalogue.docs.length; i++) {
       if (catalogue.docs[i].id == 'colors') continue;
-      ActivityModel activity = ActivityModel.fromMap(catalogue.docs[i].data());
+      Activity activity = Activity.fromMap(catalogue.docs[i].data());
       controller.activities.add(activity);
       controller.activities
           .sort((a1, a2) => a2.priority!.compareTo(a1.priority!));
@@ -69,7 +69,7 @@ class EditBookingNewLogic {
 }
 
 class EditBookingNewController extends GetxController {
-  BookingModel? bookingModel;
+  Booking? bookingModel;
   TextEditingController activityNAmeTED = TextEditingController();
   TextEditingController depositTED = TextEditingController();
   TextEditingController balanceTED = TextEditingController();
@@ -109,7 +109,7 @@ class EditBookingNewController extends GetxController {
 
   bool _discountSwitch = true;
 
-  List<ActivityModel> activities = [];
+  List<Activity> activities = [];
 
   bool _showLoading = true;
 

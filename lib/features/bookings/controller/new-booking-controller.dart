@@ -48,7 +48,7 @@ class NewBookingLogic {
     controller.activities = [];
     for (int i = 0; i < catalogue.docs.length; i++) {
       if (catalogue.docs[i].id == 'colors') continue;
-      ActivityModel activity = ActivityModel.fromMap(catalogue.docs[i].data());
+      Activity activity = Activity.fromMap(catalogue.docs[i].data());
       controller.activities.add(activity);
       controller.activities
           .sort((a1, a2) => a2.priority!.compareTo(a1.priority!));
@@ -532,7 +532,7 @@ class NewBookingLogic {
           });
         }
 
-        BookingModel bookingModel = BookingModel(
+        Booking bookingModel = Booking(
           activity: [controller.quickSelectedActivity!],
           noOfPersons: int.parse(controller.quickNoOfPersonsTED.text),
           id: controller.quickBookingIdTED.text,
@@ -681,7 +681,7 @@ class NewBookingController extends GetxController {
   TextEditingController quickBookingIdTED = TextEditingController();
   TextEditingController quickNameTED = TextEditingController();
   TextEditingController quickNoOfPersonsTED = TextEditingController();
-  ActivityModel? quickSelectedActivity;
+  Activity? quickSelectedActivity;
   List<DateTime?>? quickDiveDates;
 
   bool _quickShowLoading = false;
@@ -770,7 +770,7 @@ class NewBookingController extends GetxController {
   TextEditingController locationTED = TextEditingController();
   FocusNode locationNode = FocusNode();
 
-  BookingModel _bookingModel = BookingModel();
+  Booking _bookingModel = Booking();
 
   FocusNode noOfPersonsNode = FocusNode();
   FocusNode payingNowNode = FocusNode();
@@ -789,7 +789,7 @@ class NewBookingController extends GetxController {
   TextEditingController dobTED = TextEditingController();
 
   DateTime? _dob = DateTime.now();
-  ActivityModel? selectedActivity;
+  Activity? selectedActivity;
 
   double _cost = 0;
   double _balance = 0;
@@ -797,7 +797,7 @@ class NewBookingController extends GetxController {
   double _totalCost = 0;
   double _taxableAmount = 0;
 
-  List<ActivityModel> activities = [];
+  List<Activity> activities = [];
 
   reset() {
     dobTED.text = "";
@@ -807,7 +807,7 @@ class NewBookingController extends GetxController {
     _discountSwitch = true;
     _paymentDate = DateTime.now();
     locationTED.text = "";
-    bookingModel = BookingModel();
+    bookingModel = Booking();
     emailTED.text = "";
     fNameTED.text = "";
     lNameTED.text = "";
@@ -868,7 +868,7 @@ class NewBookingController extends GetxController {
 
   double get discount => _discount;
 
-  BookingModel get bookingModel => _bookingModel;
+  Booking get bookingModel => _bookingModel;
 
   double get taxableAmount => _taxableAmount;
 
@@ -887,7 +887,7 @@ class NewBookingController extends GetxController {
     update();
   }
 
-  set bookingModel(BookingModel value) {
+  set bookingModel(Booking value) {
     _bookingModel = value;
     update();
   }

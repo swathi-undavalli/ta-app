@@ -25,7 +25,7 @@ class AddNewActivityLogic {
         controller.priceTED.text != "" &&
         controller.priorityTED.text != "" &&
         controller.colorTED.text != "") {
-      ActivityModel activityModel = ActivityModel(
+      Activity activityModel = Activity(
           name: controller.nameTED.text,
           shortName: controller.shortNameTED.text,
           price: int.parse(controller.priceTED.text),

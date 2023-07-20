@@ -92,8 +92,8 @@ class _CustomerExpandableListTileState
                     );
                   }
 
-                  BookingModel bookingModel =
-                      BookingModel.fromMap(data as Map<String, dynamic>);
+                  Booking bookingModel =
+                      Booking.fromMap(data as Map<String, dynamic>);
 
                   return Row(
                     children: [
@@ -208,9 +208,8 @@ class _CustomerExpandableListTileState
                                     return Text('Document does not exist');
                                   }
 
-                                  BookingModel bookingModel =
-                                      BookingModel.fromMap(
-                                          data as Map<String, dynamic>);
+                                  Booking bookingModel = Booking.fromMap(
+                                      data as Map<String, dynamic>);
                                   ItemModel bookingItemModel =
                                       ItemModel.fromBookings(bookingModel);
 
@@ -321,7 +320,7 @@ class _CustomerExpandableListTileState
     );
   }
 
-  Widget buildCustomerTanks(BookingModel bookingModel) {
+  Widget buildCustomerTanks(Booking bookingModel) {
     if (widget.itemModel.activity != "Discover Scuba Diving")
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -387,7 +386,7 @@ class _CustomerExpandableListTileState
   }
 
   Widget buildManageInstructors(
-      ItemModel bookingItemModel, BookingModel bookingModel) {
+      ItemModel bookingItemModel, Booking bookingModel) {
     if (widget.itemModel.activity != "Discover Scuba Diving")
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
@@ -467,7 +466,7 @@ class _CustomerExpandableListTileState
   }
 
   Widget buildInstructorTanks(
-      BookingModel bookingModel, ItemModel bookingItemModel) {
+      Booking bookingModel, ItemModel bookingItemModel) {
     if (bookingItemModel.bookingModel?.boatDetails?.instructors?.length != 0)
       return Row(
         children: [
@@ -526,8 +525,7 @@ class _CustomerExpandableListTileState
     return SizedBox();
   }
 
-  Widget buildManageInterns(
-      ItemModel bookingItemModel, BookingModel bookingModel) {
+  Widget buildManageInterns(ItemModel bookingItemModel, Booking bookingModel) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -681,7 +679,7 @@ class _CustomerExpandableListTileState
   }
 
   Future<void> updateBoatDetails({
-    required BookingModel bookingModel,
+    required Booking bookingModel,
     required DateTime selectedDate,
     String? boatId,
     String? boatName,
@@ -741,7 +739,7 @@ class _CustomerExpandableListTileState
   }
 
   Future<void> removeBoat({
-    required BookingModel bookingModel,
+    required Booking bookingModel,
     required DateTime selectedDate,
   }) async {
     bookingModel.setBoatInfo(

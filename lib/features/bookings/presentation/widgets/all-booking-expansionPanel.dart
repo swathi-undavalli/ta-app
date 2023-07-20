@@ -17,7 +17,7 @@ import '../screens/add-payments-screen.dart';
 
 // ignore: must_be_immutable
 class AllBookingsExpansionPanel extends StatefulWidget {
-  BookingModel booking;
+  Booking booking;
 
   AllBookingsExpansionPanel({required this.booking});
 
@@ -672,7 +672,7 @@ class ItemModel {
   final bool registration;
   final String? receiptNo;
   final String? employeeName;
-  BookingModel? bookingModel;
+  Booking? bookingModel;
 
   ItemModel({
     required this.phone,
@@ -697,7 +697,7 @@ class ItemModel {
     this.bookingModel,
   });
 
-  factory ItemModel.fromBookings(BookingModel bookingModel) {
+  factory ItemModel.fromBookings(Booking bookingModel) {
     getSessions() {
       var d = "";
       if (bookingModel.theoryDate != null) d = d + "Theory, ";

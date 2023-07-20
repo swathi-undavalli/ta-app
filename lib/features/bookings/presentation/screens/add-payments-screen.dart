@@ -13,7 +13,7 @@ class AddPaymentsScreen extends StatelessWidget {
   static const String id = "AddPaymentsScreen";
   AddPaymentsLogic logic = AddPaymentsLogic();
 
-  BookingModel? bookingArg = Get.arguments;
+  Booking? bookingArg = Get.arguments;
 
   @override
   Widget build(BuildContext context) {

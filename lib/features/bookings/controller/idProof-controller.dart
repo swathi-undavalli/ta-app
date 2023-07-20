@@ -7,7 +7,7 @@ import 'package:temple_adventures/core/services/file-uploader.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 
 class IDProofLogic {
-  BookingModel? bookingModel;
+  Booking? bookingModel;
 
   IDProofController controller = Get.put(IDProofController());
 

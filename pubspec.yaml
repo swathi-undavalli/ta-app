@@ -3,7 +3,7 @@ description: Temple Adventures Mobile Admin App
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.1.1+69
+version: 1.1.1+70
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -12,27 +12,12 @@ dependencies:
   flutter:
     sdk: flutter
 
-  #-----------------------------------------
-
-  #------------------------------------------
-  #           State Management and Storage
 
   get: ^4.6.5
   get_storage: ^2.0.3
-  #------------------------------------------
-  #------------------------------------------
-  #           Network & Testing
-  #------------------------------------------
-  #------------------------------------------
-  #           UI and Animations
-
-  #  docx_template: ^0.3.3
-  #  flutter_document_picker: ^5.1.0
   pdf: ^3.8.4
-  #  printing: ^5.9.3
-  #  syncfusion_flutter_xlsio: ^20.4.44-beta
-  #  syncfusion_flutter_pdf: ^20.4.44
   intl:
+  flutter_share: ^2.0.0
   font_awesome_flutter: ^10.3.0
   flutter_svg: ^1.1.6
   octo_image: ^1.0.2
@@ -57,17 +42,12 @@ dependencies:
   gallery_saver: ^2.3.2
   story_view: ^0.14.0
   flutter_pdfview: ^1.2.5
-  #  downloads_path_provider_28: ^0.1.2
   barcode_widget: ^2.0.3
 
 
-  #------------------------------------------
-  #------------------------------------------
-  #             Auth and Firebase
-
   firebase_auth: ^4.2.2
   firebase_core: ^2.7.0
-  cloud_firestore: ^4.4.3
+  cloud_firestore: ^4.8.1
   firebase_storage: ^11.0.14
   firebase_messaging: ^14.2.5
   flutter_local_notifications: ^13.0.0

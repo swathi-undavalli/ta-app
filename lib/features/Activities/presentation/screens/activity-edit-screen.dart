@@ -17,7 +17,7 @@ import '../../../home/model/colors_data.dart';
 // ignore: must_be_immutable
 class ActivityEditScreen extends StatelessWidget {
   static const String id = "PriceEditScreen";
-  final ActivityModel? activityArg = Get.arguments;
+  final Activity? activityArg = Get.arguments;
   ActivityEditLogic logic = ActivityEditLogic();
   AllActivitiesLogic allActivitiesLogic = AllActivitiesLogic();
 

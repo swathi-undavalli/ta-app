@@ -1,5 +1,5 @@
-class ActivityModel {
-  ActivityModel(
+class Activity {
+  Activity(
       {this.name,
       this.shortName,
       this.price,
@@ -14,7 +14,7 @@ class ActivityModel {
   int? priority;
   String? color;
 
-  factory ActivityModel.fromMap(Map<String, dynamic> json) => ActivityModel(
+  factory Activity.fromMap(Map<String, dynamic> json) => Activity(
         name: json["name"],
         shortName: json["shortName"],
         price: json["price"],
@@ -33,7 +33,7 @@ class ActivityModel {
       };
 
   bool operator ==(dynamic other) {
-    return other != null && other is ActivityModel && this.name == other.name;
+    return other != null && other is Activity && this.name == other.name;
   }
 
   @override

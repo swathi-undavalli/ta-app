@@ -84,7 +84,7 @@ class _AllBookingsScreenState extends State<AllBookingsScreen> {
 
                     try {
                       if (data != null) {
-                        BookingModel booking = BookingModel.fromMap(data);
+                        Booking booking = Booking.fromMap(data);
                         return AllBookingsExpansionPanel(booking: booking);
                       }
                     } catch (e) {

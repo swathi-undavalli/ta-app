@@ -26,7 +26,7 @@ class NotificationsScreen extends StatelessWidget {
         .collection("bookings")
         .doc(message!.data["booking_id"])
         .get();
-    logic.controller.bookingModel = BookingModel.fromMap(data.data()!);
+    logic.controller.bookingModel = Booking.fromMap(data.data()!);
     logic.controller.update();
     logic.controller.loading = false;
   }
@@ -264,7 +264,7 @@ class NotificationLogic {
 }
 
 class NotificationController extends GetxController {
-  BookingModel? bookingModel;
+  Booking? bookingModel;
   bool _loading = false;
 
   bool get loading => _loading;

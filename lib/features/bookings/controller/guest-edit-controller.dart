@@ -195,7 +195,7 @@ class GuestsEditLogic {
 
 class GuestsEditController extends GetxController {
   CustomerModel? customerModel;
-  BookingModel? bookingModel;
+  Booking? bookingModel;
 
   TextEditingController firstNameTED = TextEditingController();
   TextEditingController lastNameTED = TextEditingController();

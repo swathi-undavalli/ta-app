@@ -3,13 +3,13 @@ import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 import 'package:intl/intl.dart';
 
-BookingModel bookingModelFromMap(String str) =>
-    BookingModel.fromMap(json.decode(str));
+Booking bookingModelFromMap(String str) =>
+    Booking.fromMap(json.decode(str));
 
-String bookingModelToMap(BookingModel data) => json.encode(data.toMap());
+String bookingModelToMap(Booking data) => json.encode(data.toMap());
 
-class BookingModel {
-  BookingModel({
+class Booking {
+  Booking({
     this.activity,
     this.pax,
     this.noOfPersons = 1,
@@ -39,7 +39,7 @@ class BookingModel {
     this.isQuickBooking = false,
   });
 
-  List<ActivityModel?>? activity;
+  List<Activity?>? activity;
   List<Map<String, dynamic>>? pax;
   List<PaymentModel>? payments;
   List<String?>? idProofs;
@@ -67,17 +67,17 @@ class BookingModel {
   bool isQuickBooking;
   String? parentBookingId;
 
-  factory BookingModel.fromMap(Map<String, dynamic> json) {
+  factory Booking.fromMap(Map<String, dynamic> json) {
     //log("fromMap");
     parseDateOrNull(date) {
       if (date == null) return null;
       return DateTime.parse(date);
     }
 
-    return BookingModel(
+    return Booking(
       pax: List<Map<String, dynamic>>.from(json["PAX"].map((x) => x)),
-      activity: List<ActivityModel>.from(
-          json["activity"].map((x) => ActivityModel.fromMap(x))),
+      activity: List<Activity>.from(
+          json["activity"].map((x) => Activity.fromMap(x))),
       payments: List<PaymentModel>.from(
           (json["payments"] ?? []).map((x) => PaymentModel.fromMap(x))),
       noOfPersons: json["noOfPersons"],
@@ -212,6 +212,11 @@ class BookingModel {
     }
 
     return val;
+  }
+
+  Instructor? get instructor {
+    if (boatDetails?.instructors?.isEmpty ?? false) return null;
+    return boatDetails?.instructors?[0];
   }
 
   BoatInfo? getBoatInfo(DateTime date) {

@@ -79,7 +79,7 @@ class AllActivitiesScreen extends StatelessWidget {
     });
   }
 
-  Widget buildActivities(ActivityModel activityModel) {
+  Widget buildActivities(Activity activityModel) {
     return GestureDetector(
       onTap: () {
         Get.toNamed(ActivityEditScreen.id, arguments: activityModel);

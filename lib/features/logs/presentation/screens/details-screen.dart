@@ -18,7 +18,7 @@ class DetailsScreen extends StatelessWidget {
   }
 
   checkFireBase() async {
-    logic.controller.bookingModel = BookingModel.fromMap(booking);
+    logic.controller.bookingModel = Booking.fromMap(booking);
     logic.controller.update();
     log(logic.controller.bookingModel.id!);
   }
@@ -230,5 +230,5 @@ class DetailsLogic {
 }
 
 class DetailsController extends GetxController {
-  late BookingModel bookingModel;
+  late Booking bookingModel;
 }

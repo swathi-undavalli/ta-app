@@ -264,7 +264,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                   underline: Container(height: 1, color: Colors.black45),
                   isExpanded: true,
                   value: controller.quickSelectedActivity,
-                  onChanged: (ActivityModel? activity) {
+                  onChanged: (Activity? activity) {
                     if (activity != null) {
                       controller.quickSelectedActivity = activity;
                       logic.controller.update();

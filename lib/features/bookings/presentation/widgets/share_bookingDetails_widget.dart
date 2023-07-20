@@ -11,7 +11,7 @@ import 'package:path/path.dart';
 import 'package:intl/intl.dart';
 
 class ShareBookingDetails {
-  static Future<File> generatePdf(BookingModel booking) async {
+  static Future<File> generatePdf(Booking booking) async {
     final pdf = pw.Document();
     // String fileName = "images/AppLogoPondy.png";
     final imageByteData = await rootBundle.load('images/AppLogoPondy.png');
@@ -198,7 +198,7 @@ class ShareBookingDetails {
     );
   }
 
-  static pw.Widget buildAllTransactions(BookingModel booking) {
+  static pw.Widget buildAllTransactions(Booking booking) {
     return pw.Padding(
       padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
       child: pw.Column(

@@ -9,7 +9,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/add-freelance-screen.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/freelance-details-screen.dart';
-import 'package:temple_adventures/features/admin-portal/presentation/admin-portal-screen.dart';
 import 'package:temple_adventures/features/admin-portal/presentation/image-view-page.dart';
 import 'package:temple_adventures/auto-update.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
@@ -17,6 +16,7 @@ import 'package:temple_adventures/d2.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
+import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-dsd-equipment.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
@@ -154,7 +154,6 @@ class MyApp extends StatelessWidget {
         FreelanceDetailsScreen.id: (context) => FreelanceDetailsScreen(),
         AddPaymentsScreen.id: (context) => AddPaymentsScreen(),
         EditPaymentsScreen.id: (context) => EditPaymentsScreen(),
-        // AdminPortalScreen.id: (context) => AdminPortalScreen(),
         ImageViewPage.id: (context) => ImageViewPage(),
         NotificationsScreen.id: (context) => NotificationsScreen(),
         DetailsScreen.id: (context) => DetailsScreen(),
@@ -162,6 +161,7 @@ class MyApp extends StatelessWidget {
         AddConditionsScreen.id: (context) => AddConditionsScreen(),
         ManageBoatsPage.id: (context) => ManageBoatsPage(),
         ManageDSDEquipment.id: (context) => ManageDSDEquipment(),
+        BoardPlanView.id: (context) => BoardPlanView(),
       },
     );
   }

@@ -12,7 +12,7 @@ class GuestsExpansionPanel extends StatefulWidget {
   GuestsExpansionPanel({required this.customer,required this.booking});
 
   CustomerModel customer;
-  BookingModel? booking;
+  Booking? booking;
 
   @override
   State<GuestsExpansionPanel> createState() => _GuestsExpansionPanelState();

@@ -74,11 +74,8 @@ class ManageDSDEquipmentController extends GetxController {
   TextEditingController generalNotesTED = TextEditingController();
   TextEditingController wavesTED = TextEditingController();
   TextEditingController windsTED = TextEditingController();
-
-  // TextEditingController dsdLeaderTED = TextEditingController();
   TextEditingController powerNotesTED = TextEditingController();
 
-  // TextEditingController dsdPoolTED = TextEditingController();
   BoatsModel? boatsModel;
   bool _showLoading = false;
   DateTime selectedDate = DateTime.now();

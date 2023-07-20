@@ -22,7 +22,7 @@ import 'package:temple_adventures/features/logs/presentation/screens/log-screen.
 class EditBookingNewScreen extends StatelessWidget {
   static const String id = "EditBookingNewScreen";
   EditBookingNewLogic logic = EditBookingNewLogic();
-  final BookingModel? bookingArg = Get.arguments;
+  final Booking? bookingArg = Get.arguments;
   final AutoScrollController autoScrollControllerTheory =
       AutoScrollController();
   final AutoScrollController autoScrollControllerPool = AutoScrollController();

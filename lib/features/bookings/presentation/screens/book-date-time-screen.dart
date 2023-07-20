@@ -76,7 +76,7 @@ class BookDateTime extends StatelessWidget {
                   underline: Container(height: 1, color: Colors.black45),
                   isExpanded: true,
                   value: controller.selectedActivity,
-                  onChanged: (ActivityModel? activity) {
+                  onChanged: (Activity? activity) {
                     if (activity != null) {
                       controller.selectedActivity = activity;
                       controller.priceTED.text = activity.price.toString();

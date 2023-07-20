@@ -41,7 +41,7 @@ class FirebaseApi {
         .get();
   }
 
-  static addNewBooking(BookingModel booking) async {
+  static addNewBooking(Booking booking) async {
     log("addNewBooking");
 
     DocumentReference counterRef =

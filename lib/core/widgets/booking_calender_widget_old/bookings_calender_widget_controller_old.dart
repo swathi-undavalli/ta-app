@@ -26,7 +26,7 @@ class BookingsCalenderWidgetLogic {
           .get();
 
       data.docs.forEach((element) {
-        BookingModel booking = BookingModel.fromMap(element.data());
+        Booking booking = Booking.fromMap(element.data());
         if (booking.diveDate != null) {
           controller.bookingTimings.addAll(booking.diveDate!);
         }
@@ -280,7 +280,7 @@ class BookingsCalenderWidgetLogic {
 
 class BookingsCalenderWidgetController extends GetxController {
   List<DateTime?> bookingTimings = [];
-  List<BookingModel> bookings = [];
+  List<Booking> bookings = [];
   List<ItemModel> _expansionBookings = [];
 
   DateTime? _startDate;

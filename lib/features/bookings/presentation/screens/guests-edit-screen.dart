@@ -14,7 +14,7 @@ import 'package:temple_adventures/features/bookings/presentation/widgets/app-tex
 class GuestsEditScreen extends StatelessWidget {
   static const String id = "GuestsEditScreen";
   CustomerModel? customerArg = Get.arguments[0] as CustomerModel?;
-  BookingModel? bookingArg = Get.arguments[1] as BookingModel?;
+  Booking? bookingArg = Get.arguments[1] as Booking?;
   GuestsEditLogic logic = GuestsEditLogic();
 
   GuestsEditScreen() {

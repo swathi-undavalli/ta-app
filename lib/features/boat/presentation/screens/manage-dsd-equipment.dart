@@ -175,7 +175,8 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
                           child: AppTextField(
                             controller: controller.powerNotesTED,
                             hintText: "Power Notes",
-                            keyboardType: TextInputType.number,
+                            keyboardType:
+                                TextInputType.numberWithOptions(signed: true),
                             errorValidator: () {
                               return null;
                             },
@@ -288,7 +289,8 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
                       controller: controller.wavesTED,
                       hintText: "Waves",
                       suffixText: "mt/s",
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          TextInputType.numberWithOptions(signed: true),
                       errorValidator: () {
                         return null;
                       },
@@ -299,7 +301,8 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
                     AppTextField(
                       controller: controller.windsTED,
                       hintText: "Winds",
-                      keyboardType: TextInputType.number,
+                      keyboardType:
+                          TextInputType.numberWithOptions(signed: true),
                       suffixText: "km/hr",
                       errorValidator: () {
                         return null;

@@ -17,10 +17,6 @@ class ConditionsLogic {
   getLatestConditions() async {
     controller.conditions =
         await conditionsRepo.getConditions(controller.selectedDate);
-    // if (controller.conditions != null) {
-    //   log(controller.conditions!.toMap().toString());
-    // }
-    // }
   }
 
   void onFloatingActionButtonPressed() {
@@ -71,5 +67,3 @@ class ConditionsController extends GetxController {
     update();
   }
 }
-
-
