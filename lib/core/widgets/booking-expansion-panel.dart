@@ -513,6 +513,46 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         ),
                                       ],
                                     ).paddingOnly(bottom: 15),
+                                  if (itemModel.bookingModel!.isQuickBooking)
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.end,
+                                      children: [
+                                        GestureDetector(
+                                          onTap: () {
+                                            var model = itemModel.bookingModel;
+                                            Get.toNamed(EditBookingNewScreen.id,
+                                                arguments: model);
+                                          },
+                                          child: Text(
+                                            "Edit",
+                                            style: TextStyle(
+                                                fontSize: 13,
+                                                color: AppColors.text.black,
+                                                fontFamily: AppFonts.nunito,
+                                                decoration:
+                                                    TextDecoration.underline,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                        ),
+                                        EmployeeAccess(
+                                          access: AccessRights.editBookings,
+                                          child: IconButton(
+                                            splashRadius: 20,
+                                            icon: Icon(Icons.edit,
+                                                color:
+                                                    AppColors.background.black),
+                                            iconSize: 15,
+                                            onPressed: () {
+                                              var model =
+                                                  itemModel.bookingModel;
+                                              Get.toNamed(
+                                                  EditBookingNewScreen.id,
+                                                  arguments: model);
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   if (itemModel.bookingModel
                                               ?.cancellationReason !=
                                           null &&
