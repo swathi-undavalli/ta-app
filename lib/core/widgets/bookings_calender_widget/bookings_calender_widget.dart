@@ -120,7 +120,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                     }
 
                     BoatsModel? boatsModel =
-                        BoatsModel.fromJson(data as Map<String, dynamic>);
+                        BoatsModel.fromMap(data as Map<String, dynamic>);
 
                     if ((boatsModel.boats ?? []).isEmpty) {
                       return Text(
@@ -157,7 +157,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                                           .collection("dailyBoats")
                                           .doc(DateFormat("dd-MM-yyyy")
                                               .format(controller.selectedDate))
-                                          .set(boatsModel.toJson());
+                                          .set(boatsModel.toMap());
                                     }
                                   },
                                   onTap: () {

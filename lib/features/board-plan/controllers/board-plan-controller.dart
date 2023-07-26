@@ -24,7 +24,7 @@ class BoardPlanLogic {
         .doc(DateFormat("dd-MM-yyyy").format(date))
         .get();
 
-    BoatsModel boatsModel = BoatsModel.fromJson(data.data());
+    BoatsModel boatsModel = BoatsModel.fromMap(data.data());
     controller.boats.addAll(boatsModel.boats as Iterable<Boat>);
     if (controller.boats.isNotEmpty)
       controller.selectedBoat = controller.boats[0];

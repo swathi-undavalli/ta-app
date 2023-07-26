@@ -21,17 +21,17 @@ class BoatsModel {
       );
 
   factory BoatsModel.fromRawJson(String str) =>
-      BoatsModel.fromJson(json.decode(str));
+      BoatsModel.fromMap(json.decode(str));
 
-  String toRawJson() => json.encode(toJson());
+  String toRawJson() => json.encode(toMap());
 
-  factory BoatsModel.fromJson(Map<String, dynamic>? json) => BoatsModel(
+  factory BoatsModel.fromMap(Map<String, dynamic>? json) => BoatsModel(
         boats: List<Boat>.from(
             (json?["boats"] ?? ([])).map((x) => Boat.fromJson(x))),
         dsd: Dsd.fromJson(json?["dsd"] ?? {}),
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         "boats": List<dynamic>.from((boats ?? []).map((x) => x.toJson())),
         "dsd": dsd?.toJson(),
       };

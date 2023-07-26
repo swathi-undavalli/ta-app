@@ -38,7 +38,7 @@ class _BoatSelectorState extends State<BoatSelector> {
         .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
         .get();
     Map<String, dynamic>? data = d.data();
-    BoatsModel? boatsModel = BoatsModel.fromJson(data);
+    BoatsModel? boatsModel = BoatsModel.fromMap(data);
     allBoats = boatsModel.boats ?? [];
     allBoats.forEach((boat) {
       if (boat.id == widget.selectedBoatId) {
@@ -130,8 +130,6 @@ class _BoatSelectorState extends State<BoatSelector> {
                 diveSite: '',
                 dsdInstructors: [],
                 photographer: [],
-                // photoAir: 0,
-                // photoNitrox: 0,
                 boatStatus: 0,
                 internPhotographer: [],
                 internSurfaceSupport: [],
@@ -163,8 +161,6 @@ class _BoatSelectorState extends State<BoatSelector> {
               diveSite: '',
               dsdInstructors: [],
               photographer: [],
-              // photoAir: 0,
-              // photoNitrox: 0,
               boatStatus: 0,
               internPhotographer: [],
               internSurfaceSupport: [],
@@ -194,7 +190,7 @@ class _BoatSelectorState extends State<BoatSelector> {
             await FirebaseFirestore.instance
                 .collection("dailyBoats")
                 .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
-                .set(boatsModel.toJson());
+                .set(boatsModel.toMap());
             init();
           }
         } else if (value.id == "Un-assign") {

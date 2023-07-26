@@ -40,8 +40,8 @@ class EmpSelectorBottomSheet extends StatefulWidget {
 }
 
 class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
-  final CollectionReference employeesCollection =
-      FirebaseFirestore.instance.collection('employees');
+  final Query<Map<String, dynamic>> employeesCollection =
+      FirebaseFirestore.instance.collection('employees').orderBy('firstName');
   List<Instructor> selectedInstructors = [];
 
   @override

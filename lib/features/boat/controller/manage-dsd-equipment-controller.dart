@@ -18,7 +18,7 @@ class ManageDSDEquipmentLogic {
         .get();
 
     Map<String, dynamic>? data = d.data();
-    BoatsModel? boatsModel = BoatsModel.fromJson(data);
+    BoatsModel? boatsModel = BoatsModel.fromMap(data);
     if (boatsModel.dsd == null) {
       controller.currentDsd = Dsd(
           bcd: Bcd(xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0),
@@ -42,6 +42,12 @@ class ManageDSDEquipmentLogic {
     } else {
       controller.currentDsd = boatsModel.dsd!;
 
+      controller.highTideTime =
+          TimePicker.getDateTime(controller.currentDsd.highTides) ??
+              DateTime.now();
+      controller.lowTideTime =
+          TimePicker.getDateTime(controller.currentDsd.lowTides) ??
+              DateTime.now();
       controller.generalNotesTED.text =
           controller.currentDsd.generalNotes ?? "";
       controller.windsTED.text = controller.currentDsd.winds ?? "";

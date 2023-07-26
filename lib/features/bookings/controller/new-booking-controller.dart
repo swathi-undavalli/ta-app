@@ -198,65 +198,70 @@ class NewBookingLogic {
   }
 
   paymentDatePicker(context) {
-    DatePicker.showDatePicker(context,
-        showTitleActions: true,
-        minTime: DateTime.now().subtract(Duration(days: 36500)),
-        maxTime: DateTime.now(), onChanged: (date) {
-      controller.paymentDate = date;
-    }, onConfirm: (date) {
-      controller.paymentDate = date;
-      controller.update();
-    },
-        currentTime: controller.paymentDate,
-        // theme: DatePickerTheme(
-        //   cancelStyle: TextStyle(
-        //     fontFamily: AppFonts.nunito,
-        //     color: Colors.black87,
-        //   ),
-        //   doneStyle: TextStyle(
-        //     fontFamily: AppFonts.nunito,
-        //     fontWeight: FontWeight.bold,
-        //     color: Colors.black,
-        //   ),
-        //   itemStyle: TextStyle(
-        //     fontFamily: AppFonts.nunito,
-        //     fontWeight: FontWeight.bold,
-        //     fontSize: 16,
-        //   ),
-        // ),
+    DatePicker.showDatePicker(
+      context,
+      showTitleActions: true,
+      minTime: DateTime.now().subtract(Duration(days: 36500)),
+      maxTime: DateTime.now(),
+      onChanged: (date) {
+        controller.paymentDate = date;
+      },
+      onConfirm: (date) {
+        controller.paymentDate = date;
+        controller.update();
+      },
+      currentTime: controller.paymentDate,
+      // theme: DatePickerTheme(
+      //   cancelStyle: TextStyle(
+      //     fontFamily: AppFonts.nunito,
+      //     color: Colors.black87,
+      //   ),
+      //   doneStyle: TextStyle(
+      //     fontFamily: AppFonts.nunito,
+      //     fontWeight: FontWeight.bold,
+      //     color: Colors.black,
+      //   ),
+      //   itemStyle: TextStyle(
+      //     fontFamily: AppFonts.nunito,
+      //     fontWeight: FontWeight.bold,
+      //     fontSize: 16,
+      //   ),
+      // ),
     );
   }
 
   dobDatePicker(context) {
-    DatePicker.showDatePicker(context,
-        showTitleActions: true,
-        minTime: DateTime.now().subtract(Duration(days: 36500)),
-        maxTime: DateTime.now().subtract(Duration(days: 2920)),
-        onChanged: (date) {
-      controller.dob = date;
-      controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
-    }, onConfirm: (date) {
-      controller.dob = date;
-      controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
-      controller.update();
-    },
-        currentTime: controller.dob,
-        // theme: DatePickerTheme(
-        //   cancelStyle: TextStyle(
-        //     fontFamily: AppFonts.nunito,
-        //     color: Colors.black87,
-        //   ),
-        //   doneStyle: TextStyle(
-        //     fontFamily: AppFonts.nunito,
-        //     fontWeight: FontWeight.bold,
-        //     color: Colors.black,
-        //   ),
-        //   itemStyle: TextStyle(
-        //     fontFamily: AppFonts.nunito,
-        //     fontWeight: FontWeight.bold,
-        //     fontSize: 16,
-        //   ),
-        // ),
+    DatePicker.showDatePicker(
+      context,
+      showTitleActions: true,
+      minTime: DateTime.now().subtract(Duration(days: 36500)),
+      maxTime: DateTime.now().subtract(Duration(days: 2920)),
+      onChanged: (date) {
+        controller.dob = date;
+        controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
+      },
+      onConfirm: (date) {
+        controller.dob = date;
+        controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
+        controller.update();
+      },
+      currentTime: controller.dob,
+      // theme: DatePickerTheme(
+      //   cancelStyle: TextStyle(
+      //     fontFamily: AppFonts.nunito,
+      //     color: Colors.black87,
+      //   ),
+      //   doneStyle: TextStyle(
+      //     fontFamily: AppFonts.nunito,
+      //     fontWeight: FontWeight.bold,
+      //     color: Colors.black,
+      //   ),
+      //   itemStyle: TextStyle(
+      //     fontFamily: AppFonts.nunito,
+      //     fontWeight: FontWeight.bold,
+      //     fontSize: 16,
+      //   ),
+      // ),
     );
   }
 
@@ -522,8 +527,6 @@ class NewBookingLogic {
       if (controller.quickNameTED.text != "" &&
           controller.quickNoOfPersonsTED.text != "" &&
           controller.quickSelectedActivity != null) {
-
-
         controller.quickShowLoading = true;
         if (controller.quickDiveDates != null &&
             controller.quickDiveDates!.isNotEmpty) {
@@ -570,8 +573,11 @@ class NewBookingLogic {
             .collection("logs")
             .doc()
             .set(logModel.toMap());
+        controller.quickShowLoading = false;
+        controller.reset();
+        Get.back();
         controller.update();
-        controller.isQuickBooking = false;
+
         return;
       } else {
         showToast("Invalid  input");

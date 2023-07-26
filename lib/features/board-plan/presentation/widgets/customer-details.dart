@@ -295,6 +295,10 @@ class CustomerListState extends State<CustomerList> {
                   "${getTotalPAXCount(widget.bookings, widget.boat)}",
                 ),
                 buildHeadingItem(
+                  "DSD Instructors : ",
+                  "${widget.boat.dsdInstructors?.length}",
+                ),
+                buildHeadingItem(
                   "Total DSD PAX : ",
                   "${getTotalDSDPAXCount(widget.bookings, widget.boat)}",
                 ),

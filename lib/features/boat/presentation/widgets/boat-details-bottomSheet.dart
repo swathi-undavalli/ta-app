@@ -1,9 +1,11 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
+import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/time-picker.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
@@ -12,6 +14,7 @@ import 'package:temple_adventures/features/boat/presentation/widgets/counter-wid
 import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/interns-bottomSheet.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/tank-counter.dart';
+import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:intl/intl.dart';
 
@@ -81,8 +84,6 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     diveSiteTED = TextEditingController(text: widget.boat?.diveSite);
     nitrox = widget.boat?.nitrox ?? 0;
     air = widget.boat?.air ?? 0;
-    // photoAir = widget.boat?.photoAir ?? 0;
-    // photoNitrox = widget.boat?.photoNitrox ?? 0;
     boatStatus = widget.boat?.boatStatus ?? 0;
     if (widget.boat?.time != null)
       selectedTime =
@@ -201,12 +202,18 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 ),
               ],
             ),
-            SizedBox(height: 20),
-            BoatStatus(
-              initialStatus: boatStatus,
-              onChanged: (int status) {
-                boatStatus = status;
-              },
+            Spacing.h20,
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                BoatStatus(
+                  initialStatus: boatStatus,
+                  onChanged: (int status) {
+                    boatStatus = status;
+                  },
+                ),
+                if (widget.isBoatEdit) buildDeleteBoat(),
+              ],
             ),
             SizedBox(height: 20),
             AppTextField(
@@ -339,6 +346,111 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         ),
       ),
     );
+  }
+
+  Widget buildDeleteBoat() {
+    return TextButton(
+      onPressed: () {
+        _deleteBoat();
+      },
+      child: Row(
+        children: [
+          Text(
+            "Delete Boat",
+            style: TextStyle(
+                fontSize: 13,
+                color: AppColors.text.black,
+                fontFamily: AppFonts.nunito,
+                decoration: TextDecoration.underline,
+                fontWeight: FontWeight.w600),
+          ),
+          Spacing.w10,
+          Icon(
+            Icons.delete,
+            color: Colors.black,
+            size: 15,
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<void> _deleteBoat() async {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Are you Sure! You want to delete?',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            ),
+            content: Text(
+              "${widget.boat?.name} @ ${widget.boat?.time}" ?? "",
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                decoration: TextDecoration.underline,
+              ),
+            ),
+            actions: <Widget>[
+              AppButton.miniText(
+                text: "Cancel",
+                onTap: () {
+                  Get.back();
+                },
+              ),
+              Spacer(),
+              AppButton.miniFlat(
+                text: "Okay",
+                onTap: () async {
+                  var bookingSnapShots = await FirebaseFirestore.instance
+                      .collection('bookings')
+                      .where(
+                        'boatDetails.boat.${DateFormat("dd-MM-yyyy").format(widget.selectedDate)}.id',
+                        isEqualTo: widget.boat?.id ?? '',
+                      )
+                      .get();
+ 
+                  List<Booking> bookings = [];
+                  bookingSnapShots.docs.forEach((doc) {
+                    Booking booking = Booking.fromMap(doc.data());
+                    bookings.add(booking);
+                  });
+
+                  // un-assign
+                  for (Booking booking in bookings) {
+                    booking.setBoatInfo(widget.selectedDate, null);
+                    await FirebaseFirestore.instance
+                        .collection('bookings')
+                        .doc(booking.id)
+                        .set(booking.toMap());
+                  }
+
+                  //delete boat
+                  var d = await FirebaseFirestore.instance
+                      .collection("dailyBoats")
+                      .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
+                      .get();
+
+                  Map<String, dynamic>? data = d.data();
+                  BoatsModel? boatsModel = BoatsModel.fromMap(data);
+
+                  (boatsModel.boats ?? [])
+                      .removeWhere((boat) => boat.id == widget.boat?.id);
+
+                  await FirebaseFirestore.instance
+                      .collection("dailyBoats")
+                      .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
+                      .set(boatsModel.toMap());
+                  Get.back();
+                  Get.back();
+                  setState(() {});
+                  log("deleted");
+                },
+              ),
+            ],
+          );
+        });
   }
 
   Widget buildInternPhotographers(
@@ -628,7 +740,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         .get();
     Map<String, dynamic>? data = d.data();
     log(data.toString());
-    BoatsModel? boatsModel = BoatsModel.fromJson(data);
+    BoatsModel? boatsModel = BoatsModel.fromMap(data);
 
     if (!widget.isBoatEdit) {
       if (data != null) {

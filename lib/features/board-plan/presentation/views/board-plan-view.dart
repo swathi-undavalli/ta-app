@@ -350,7 +350,7 @@ class DSDTable extends StatelessWidget {
           if (data == null) {
             return const Text("No data added");
           }
-          BoatsModel boatsModel = BoatsModel.fromJson(data);
+          BoatsModel boatsModel = BoatsModel.fromMap(data);
 
           return Container(
             decoration: BoxDecoration(
@@ -613,12 +613,15 @@ class DSDTable extends StatelessWidget {
                               fontWeight: FontWeight.bold, fontSize: 11),
                         ).left,
                         Spacing.h3,
-                        Text(
-                          (boatsModel.dsd?.generalNotes != null &&
-                                  boatsModel.dsd?.generalNotes != "")
-                              ? boatsModel.dsd!.generalNotes!
-                              : '-',
-                          style: const TextStyle(fontSize: 11),
+                        SizedBox(
+                          width: 90,
+                          child: Text(
+                            (boatsModel.dsd?.generalNotes != null &&
+                                    boatsModel.dsd?.generalNotes != "")
+                                ? boatsModel.dsd!.generalNotes!
+                                : '-',
+                            style: const TextStyle(fontSize: 11),
+                          ),
                         ),
                       ],
                     ),
