@@ -385,7 +385,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             content: Text(
-              "${widget.boat?.name} @ ${widget.boat?.time}" ?? "",
+              "${widget.boat?.name} @ ${widget.boat?.time}",
               style: TextStyle(
                 fontSize: 16,
                 fontWeight: FontWeight.w600,
@@ -410,7 +410,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                         isEqualTo: widget.boat?.id ?? '',
                       )
                       .get();
- 
+
                   List<Booking> bookings = [];
                   bookingSnapShots.docs.forEach((doc) {
                     Booking booking = Booking.fromMap(doc.data());

@@ -64,12 +64,14 @@ class AddNewActivityController extends GetxController {
   TextEditingController colorTED = TextEditingController();
 
   FocusNode nameNode = FocusNode();
+  FocusNode shortNameNode = FocusNode();
   FocusNode priceNode = FocusNode();
   FocusNode priorityNode = FocusNode();
   FocusNode colorNode = FocusNode();
 
   reset() {
     nameTED.text = "";
+    shortNameTED.text = "";
     priceTED.text = "";
     priorityTED.text = "";
     colorTED.text = "";

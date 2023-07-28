@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
 import '../../../../core/authentication/firebase-authentication.dart';
 import '../../../../core/constants/constants.dart';
@@ -7,12 +8,16 @@ import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
 import '../../../../core/widgets/attendance_report_widget/attendance_report_widget.dart';
 import '../../../../core/widgets/attendance_widget/attandence_widget_controller.dart';
 import '../../../../core/widgets/attendance_widget/attendence_widget.dart';
+import '../../../board-plan/presentation/widgets/customer-details.dart';
 import '../../../login/presentation/screens/login-page.dart';
 
 class HomePage extends StatelessWidget {
   final now = DateTime.now();
+
   @override
   Widget build(BuildContext context) {
+    selectedDate = DateTime.now();
+
     return RefreshIndicator(
       color: Colors.black,
       onRefresh: () async {
@@ -70,7 +75,8 @@ class HomePage extends StatelessWidget {
                     },
                   ),
                   SizedBox(height: 20),
-                  AttendanceReportWidget(),
+                  // AttendanceReportWidget(),
+                  DSDTable(),
                   SizedBox(height: 100),
                   SizedBox(
                     height: 50,

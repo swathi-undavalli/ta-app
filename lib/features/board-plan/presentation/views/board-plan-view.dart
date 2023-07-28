@@ -33,6 +33,8 @@ class _BoardPlanViewState extends State<BoardPlanView> {
 
   @override
   void initState() {
+    selectedDate = DateTime.now();
+
     logic.init(selectedDate).whenComplete(() => logic.controller.update());
     super.initState();
   }
@@ -93,11 +95,11 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                     children: [
                       buildChip(
                         onTap: () {
-                          controller.isDSDEquipmentSelected = true;
+                          controller.isGeneralInfoSelected = true;
                           controller.selectedBoat = null;
                           controller.update();
                         },
-                        color: (controller.isDSDEquipmentSelected)
+                        color: (controller.isGeneralInfoSelected)
                             ? AppColors.text.lightSkyBlue
                             : Colors.white,
                         title: "General Info",
@@ -106,7 +108,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                         (boat) => buildChip(
                           onTap: () {
                             controller.selectedBoat = boat;
-                            controller.isDSDEquipmentSelected = false;
+                            controller.isGeneralInfoSelected = false;
                             controller.update();
                           },
                           color: (boat.id == controller.selectedBoat?.id)
@@ -119,7 +121,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                   ),
                   Spacing.h20,
                   if (controller.selectedBoat != null &&
-                      !controller.isDSDEquipmentSelected)
+                      !controller.isGeneralInfoSelected)
                     StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                         stream: FirebaseFirestore.instance
                             .collection("bookings")
@@ -160,7 +162,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                             ).paddingOnly(bottom: 1000),
                           );
                         }),
-                  if (controller.isDSDEquipmentSelected)
+                  if (controller.isGeneralInfoSelected)
                     Transform.scale(
                       scale: 1,
                       alignment: Alignment.topLeft,
@@ -362,16 +364,30 @@ class DSDTable extends StatelessWidget {
                 Spacing.h10,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    buildSectionTitle("Equipment :"),
-                    Text(
-                      DateFormat("dd-MM-yyyy").format(selectedDate),
-                      style: TextStyle(
-                          fontSize: 13,
-                          color: AppColors.text.black,
-                          fontFamily: AppFonts.nunito,
-                          fontWeight: FontWeight.w600),
-                    ).paddingSymmetric(vertical: 5),
+                    buildSectionTitle("General Info :"),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          DateFormat("dd-MM-yyyy").format(selectedDate),
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.text.black,
+                              fontFamily: AppFonts.nunito,
+                              fontWeight: FontWeight.w600),
+                        ).paddingSymmetric(vertical: 5),
+                        Text(
+                          DateFormat('EEEE').format(selectedDate),
+                          style: TextStyle(
+                              fontSize: 13,
+                              color: AppColors.text.black,
+                              fontFamily: AppFonts.nunito,
+                              fontWeight: FontWeight.w600),
+                        ),
+                      ],
+                    ),
                   ],
                 ),
                 Spacing.h3,

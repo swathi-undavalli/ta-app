@@ -17,7 +17,7 @@ class BoardPlanLogic {
   Future<void> getAllBoats(DateTime date) async {
     controller.boats = [];
     controller.selectedBoat = null;
-    controller.isDSDEquipmentSelected = false;
+    controller.isGeneralInfoSelected = false;
 
     var data = await FirebaseFirestore.instance
         .collection('dailyBoats')
@@ -29,7 +29,7 @@ class BoardPlanLogic {
     if (controller.boats.isNotEmpty)
       controller.selectedBoat = controller.boats[0];
     else
-      controller.isDSDEquipmentSelected = true;
+      controller.isGeneralInfoSelected = true;
   }
 
   Future<void> onDateChanged(DateTime date) async {
@@ -42,7 +42,7 @@ class BoardPlanLogic {
 
 class BoardPlanController extends GetxController {
   bool _showLoading = true;
-  bool _isDSDEquipmentSelected = false;
+  bool _isGeneralInfoSelected = false;
   Boat? selectedBoat;
 
   List<Boat> boats = [];
@@ -51,10 +51,10 @@ class BoardPlanController extends GetxController {
 
   bool get showLoading => _showLoading;
 
-  bool get isDSDEquipmentSelected => _isDSDEquipmentSelected;
+  bool get isGeneralInfoSelected => _isGeneralInfoSelected;
 
-  set isDSDEquipmentSelected(bool value) {
-    _isDSDEquipmentSelected = value;
+  set isGeneralInfoSelected(bool value) {
+    _isGeneralInfoSelected = value;
     update();
   }
 

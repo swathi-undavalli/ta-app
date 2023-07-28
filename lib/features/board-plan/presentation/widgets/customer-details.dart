@@ -432,60 +432,49 @@ class CustomerListState extends State<CustomerList> {
             ? Colors.white
             : AppColors.text.skyBlue.withOpacity(0.2),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: Column(
         children: [
-          Spacing.w3,
-          SizedBox(
-            width: 10,
-            child: Text(slNo,
-                style: TextStyle(
-                  fontFamily: AppFonts.nunito,
-                  fontSize: 7.0,
-                )),
-          ),
-          SizedBox(
-            width: 70,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  "${bookings[index].pax?[0]['first-name']} x ${bookings[index].noOfPersons}",
-                  style: TextStyle(
-                    fontFamily: AppFonts.nunito,
-                    fontSize: 7.0,
-                  ),
-                ),
-                if ((bookings[index].boatDetails?.interns ?? []).isNotEmpty)
-                  ...(bookings[index].boatDetails?.interns ?? [])
-                      .map(
-                        (intern) => Text(
-                          intern.name.capitalizeFirst ?? "-",
-                          style: TextStyle(
-                              fontFamily: AppFonts.nunito,
-                              fontSize: 7.0,
-                              color: Colors.green),
-                        ),
-                      )
-                      .toList(),
-                if (bookings[index].boatDetails?.employeeNotes != null)
-                  Text(
-                    "Notes: ${bookings[index].boatDetails?.employeeNotes}",
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Spacing.w3,
+              SizedBox(
+                width: 10,
+                child: Text(slNo,
                     style: TextStyle(
+                      fontFamily: AppFonts.nunito,
+                      fontSize: 7.0,
+                    )),
+              ),
+              SizedBox(
+                width: 70,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "${bookings[index].pax?[0]['first-name']} x ${bookings[index].noOfPersons}",
+                      style: TextStyle(
                         fontFamily: AppFonts.nunito,
                         fontSize: 7.0,
-                        color: Colors.grey),
-                  ),
-              ],
-            ),
-          ),
-          SizedBox(
-            width: 22,
-            child: Column(
-              children: [
-                Row(
+                      ),
+                    ),
+                    if (bookings[index].boatDetails?.employeeNotes != null &&
+                        bookings[index].boatDetails?.employeeNotes != "")
+                      Text(
+                        "Notes: ${bookings[index].boatDetails?.employeeNotes}",
+                        style: TextStyle(
+                            fontFamily: AppFonts.nunito,
+                            fontSize: 7.0,
+                            color: Colors.grey),
+                      ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                width: 22,
+                child: Row(
                   children: [
                     Text(
                         (bookings[index].activity![0]!.id == "11")
@@ -508,69 +497,110 @@ class CustomerListState extends State<CustomerList> {
                             color: Colors.green)),
                   ],
                 ),
-                if ((bookings[index].boatDetails?.interns ?? []).isNotEmpty)
-                  ...(bookings[index].boatDetails?.interns ?? [])
-                      .map(
-                        (intern) => Row(
-                          children: [
-                            Text("${intern.air}",
-                                style: TextStyle(
-                                    fontFamily: AppFonts.nunito,
-                                    fontSize: 7.0,
-                                    color: Colors.blue)),
-                            Text(" - ",
-                                style: TextStyle(
+              ),
+              FutureBuilder<String?>(
+                future: getActivityShortName(bookings[index].activity?[0]),
+                builder:
+                    (BuildContext context, AsyncSnapshot<String?> snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const SizedBox(
+                        height: 5,
+                        width: 5,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 0.5,
+                          color: Colors.black,
+                        )); // Show a loading indicator
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return buildText(" ${snapshot.data}", 30);
+                  }
+                },
+              ),
+              Spacing.w5,
+              Container(
+                decoration: BoxDecoration(
+                  color: getProgressColor(
+                      bookings[index].boatDetails?.bookingStatus ?? 0),
+                  borderRadius: BorderRadius.circular(2),
+                ),
+                child: buildText(
+                        bookingStatus[
+                            bookings[index].boatDetails?.bookingStatus ?? 0],
+                        40,
+                        Colors.white,
+                        true)
+                    .paddingOnly(top: 2, left: 1, right: 1),
+              )
+            ],
+          ).paddingOnly(top: 3),
+          buildInternsList(bookings, index),
+        ],
+      ),
+    );
+  }
+
+  Widget buildInternsList(List<Booking> bookings, int index) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Spacing.w3,
+        Spacing.w10,
+        SizedBox(
+          width: 70,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              if ((bookings[index].boatDetails?.interns ?? []).isNotEmpty)
+                ...(bookings[index].boatDetails?.interns ?? [])
+                    .map(
+                      (intern) => Text(
+                        intern.name.capitalizeFirst ?? "-",
+                        style: TextStyle(
+                            fontFamily: AppFonts.nunito,
+                            fontSize: 7.0,
+                            color: Colors.green),
+                      ),
+                    )
+                    .toList(),
+            ],
+          ),
+        ),
+        SizedBox(
+          width: 22,
+          child: Column(
+            children: [
+              if ((bookings[index].boatDetails?.interns ?? []).isNotEmpty)
+                ...(bookings[index].boatDetails?.interns ?? [])
+                    .map(
+                      (intern) => Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text("${intern.air}",
+                              style: TextStyle(
                                   fontFamily: AppFonts.nunito,
                                   fontSize: 7.0,
-                                )),
-                            Text("${intern.nitrox}",
-                                style: TextStyle(
-                                    fontFamily: AppFonts.nunito,
-                                    fontSize: 7.0,
-                                    color: Colors.green)),
-                          ],
-                        ),
-                      )
-                      .toList()
-              ],
-            ),
+                                  color: Colors.blue)),
+                          Text(" - ",
+                              style: TextStyle(
+                                fontFamily: AppFonts.nunito,
+                                fontSize: 7.0,
+                              )),
+                          Text("${intern.nitrox}",
+                              style: TextStyle(
+                                  fontFamily: AppFonts.nunito,
+                                  fontSize: 7.0,
+                                  color: Colors.green)),
+                        ],
+                      ),
+                    )
+                    .toList()
+            ],
           ),
-          FutureBuilder<String?>(
-            future: getActivityShortName(bookings[index].activity?[0]),
-            builder: (BuildContext context, AsyncSnapshot<String?> snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const SizedBox(
-                    height: 5,
-                    width: 5,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 0.5,
-                      color: Colors.black,
-                    )); // Show a loading indicator
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}');
-              } else {
-                return buildText(" ${snapshot.data}", 30);
-              }
-            },
-          ),
-          Spacing.w5,
-          Container(
-            decoration: BoxDecoration(
-              color: getProgressColor(
-                  bookings[index].boatDetails?.bookingStatus ?? 0),
-              borderRadius: BorderRadius.circular(2),
-            ),
-            child: buildText(
-                    bookingStatus[
-                        bookings[index].boatDetails?.bookingStatus ?? 0],
-                    40,
-                    Colors.white,
-                    true)
-                .paddingOnly(top: 2, left: 1, right: 1),
-          )
-          // getProgressColor(bookings[index].boatDetails?.bookingStatus ?? 0)),
-        ],
-      ).paddingOnly(top: 3),
+        ),
+      ],
     );
   }
 

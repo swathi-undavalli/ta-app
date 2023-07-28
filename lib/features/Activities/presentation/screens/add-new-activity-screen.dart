@@ -29,15 +29,17 @@ class AddNewActivityScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       buildTextFields(
-                          name: "Name",
-                          textEditingController: controller.nameTED,
-                          focusNode: controller.nameNode,
-                          nextFocusNode: controller.priceNode),
+                        name: "Name",
+                        textEditingController: controller.nameTED,
+                        focusNode: controller.nameNode,
+                        nextFocusNode: controller.shortNameNode,
+                      ),
                       buildTextFields(
-                          name: "Short name",
-                          textEditingController: controller.shortNameTED,
-                          focusNode: controller.nameNode,
-                          nextFocusNode: controller.priceNode),
+                        name: "Short name",
+                        textEditingController: controller.shortNameTED,
+                        focusNode: controller.shortNameNode,
+                        nextFocusNode: controller.priceNode,
+                      ),
                       buildTextFields(
                         name: "Price",
                         textEditingController: controller.priceTED,
