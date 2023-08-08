@@ -8,17 +8,20 @@ import 'package:temple_adventures/features/home/model/employee.dart';
 class EmpSelectorBottomSheet extends StatefulWidget {
   final List<Instructor> initialSelectedInstructors;
   final int instructorLimit;
+  final bool showAllEmployees;
 
   const EmpSelectorBottomSheet({
     Key? key,
     required this.initialSelectedInstructors,
     required this.instructorLimit,
+    this.showAllEmployees = false,
   }) : super(key: key);
 
   static Future<List<Instructor>?> show(
     BuildContext context, {
     required List<Instructor> initialSelectedEmployees,
     required int instructorLimit,
+    bool showAllEmployees = false,
   }) async {
     var data = await showModalBottomSheet(
       context: context,
@@ -28,6 +31,7 @@ class EmpSelectorBottomSheet extends StatefulWidget {
         return EmpSelectorBottomSheet(
           initialSelectedInstructors: initialSelectedEmployees,
           instructorLimit: instructorLimit,
+          showAllEmployees: showAllEmployees,
         );
       },
     );
@@ -157,6 +161,52 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
 
                       if (employee.role == 'Dive Team' ||
                           employee.role == 'Captain Team') {
+                        Instructor instructor =
+                            Instructor.fromEmployee(employee);
+
+                        return InkWell(
+                          onTap: () {
+                            if (selectedInstructors.contains(instructor)) {
+                              selectedInstructors.remove(instructor);
+                            } else {
+                              if (widget.instructorLimit == -1) {
+                                selectedInstructors.add(instructor);
+                              } else if (selectedInstructors.length <
+                                  widget.instructorLimit) {
+                                selectedInstructors.add(instructor);
+                              } else {
+                                showToast("Limit exceeded");
+                              }
+                            }
+                            setState(() {});
+                          },
+                          child: Row(
+                            children: [
+                              Container(
+                                child: Text(
+                                  employee.name,
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                  ),
+                                ).paddingOnly(
+                                  left: 30,
+                                  top: 10,
+                                  bottom: 10,
+                                ),
+                              ),
+                              Spacer(),
+                              if (selectedInstructors.contains(employee))
+                                Icon(
+                                  Icons.check_circle,
+                                  color: Colors.green,
+                                ),
+                              SizedBox(
+                                width: 30,
+                              ),
+                            ],
+                          ),
+                        );
+                      } else if (widget.showAllEmployees) {
                         Instructor instructor =
                             Instructor.fromEmployee(employee);
 

@@ -253,14 +253,16 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
                     ),
                     SizedBox(height: 10),
                     buildEmployeeSelector(
-                        employees: logic.controller.currentDsd.dayOffs ?? [],
-                        title: "Day Offs",
-                        employeeLimit: -1),
+                      employees: logic.controller.currentDsd.dayOffs ?? [],
+                      title: "Day Offs",
+                      employeeLimit: -1,
+                    ),
                     SizedBox(height: 10),
                     buildEmployeeSelector(
-                        employees: logic.controller.currentDsd.leaves ?? [],
-                        title: "Leaves",
-                        employeeLimit: -1),
+                      employees: logic.controller.currentDsd.leaves ?? [],
+                      title: "Leaves",
+                      employeeLimit: -1,
+                    ),
                     AppTextField(
                       controller: controller.generalNotesTED,
                       hintText: "General Notes",
@@ -424,7 +426,8 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
         onTap: () async {
           employees = (await EmpSelectorBottomSheet.show(context,
                   initialSelectedEmployees: employees,
-                  instructorLimit: employeeLimit)) ??
+                  instructorLimit: employeeLimit,
+                  showAllEmployees: true)) ??
               [];
           setState(() {});
         },
@@ -586,4 +589,3 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
     );
   }
 }
-
