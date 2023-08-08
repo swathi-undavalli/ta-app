@@ -46,7 +46,7 @@ class AppTextField extends StatefulWidget {
     this.width = 320,
     this.suffixIcon,
     this.required = false,
-    this.keyboardType = TextInputType.name,
+    this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.go,
   });
 

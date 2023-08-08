@@ -77,6 +77,15 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                           buildTitle(
                               DateFormat('dd-MM-yyyy').format(selectedDate)),
                           Spacing.w15,
+                          Text(
+                            "${DateFormat('EEEE').format(selectedDate)}",
+                            style: TextStyle(
+                                fontSize: 13,
+                                color: AppColors.text.black,
+                                fontFamily: AppFonts.nunito,
+                                fontWeight: FontWeight.w600),
+                          ),
+                          Spacing.w15,
                           buildButton(
                               onTap: () {
                                 logic.onDateChanged(
@@ -231,11 +240,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
       File(tempPath).writeAsBytesSync(pngBytes);
       log("3..");
       log("started sharingg..");
-      try {
-        Share.shareFiles([tempPath]);
-      } catch (e) {
-        log("ended sharing..3 $e");
-      }
+      shareImages([tempPath]);
       log("4..");
       log("ended sharing..");
     } catch (e) {
@@ -243,20 +248,92 @@ class _BoardPlanViewState extends State<BoardPlanView> {
     }
   }
 
+  Future<void> shareImages(List<String> images) async {
+    try {
+      Share.shareFiles(images);
+    } catch (e) {
+      log("Error while sharing images $e");
+    }
+  }
+
+  Future<String?> captureImage() async {
+    try {
+      RenderRepaintBoundary boundary =
+          widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      log("1..");
+      ui.Image image = await boundary.toImage(pixelRatio: 10);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      log("2..");
+      final tempDir = await getTemporaryDirectory();
+      final tempPath =
+          '${tempDir.path}/screenshot${DateTime.now().toIso8601String()}.png';
+      File(tempPath).writeAsBytesSync(pngBytes);
+      log("3..");
+      log("started sharing..");
+      return tempPath;
+    } catch (e) {
+      print('Error while capturing the screenshot: $e');
+    }
+    return null;
+  }
+
   Widget buildFloatingActionButton() {
     return GetBuilder<BoardPlanController>(
       assignId: true,
       builder: (controller) {
         if (controller.boats.isNotEmpty)
-          return FloatingActionButton(
-            elevation: 0,
-            onPressed: () async {
-              log("chinni");
-              await _captureAndShare();
-              log("swathi");
-            },
-            backgroundColor: AppColors.background.black,
-            child: Icon(Icons.share),
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              FloatingActionButton(
+                elevation: 0,
+                onPressed: () async {
+                  log("chinni");
+                  await _captureAndShare();
+                  log("swathi");
+                },
+                backgroundColor: AppColors.background.black,
+                child: Icon(Icons.share),
+              ),
+              Spacing.h20,
+              FloatingActionButton(
+                elevation: 0,
+                onPressed: () async {
+                  List<String> images = [];
+
+                  controller.selectedBoat = null;
+                  controller.isGeneralInfoSelected = true;
+                  await Future.delayed(Duration(seconds: 1));
+                  controller.isGeneralInfoSelected = false;
+
+                  //General Info
+                  String? image = await captureImage();
+                  if (image != null) {
+                    images.add(image);
+                  }
+
+                  for (Boat boat in controller.boats) {
+                    controller.selectedBoat = boat;
+                    controller.update();
+                    await Future.delayed(Duration(seconds: 1));
+
+                    //Boats
+                    String? boatImage = await captureImage();
+                    if (boatImage != null) {
+                      images.add(boatImage);
+                    }
+                  }
+
+                  controller.isGeneralInfoSelected = false;
+
+                  await shareImages(images);
+                },
+                backgroundColor: AppColors.background.black,
+                child: Icon(Icons.directions_boat_filled_rounded),
+              ),
+            ],
           );
         return SizedBox();
       },
@@ -278,7 +355,6 @@ class _BoardPlanViewState extends State<BoardPlanView> {
 
   Widget buildTitle(String text) {
     return Container(
-      padding: const EdgeInsets.only(left: 20, right: 20),
       alignment: Alignment.centerLeft,
       child: Text(
         text,
@@ -322,6 +398,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
       logic.onDateChanged(date);
     }
   }
+
 }
 
 class DSDTable extends StatelessWidget {

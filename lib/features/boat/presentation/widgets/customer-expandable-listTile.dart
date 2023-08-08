@@ -189,6 +189,10 @@ class _CustomerExpandableListTileState
                                             1) !=
                                         (itemModel.bookingModel!.noOfPersons)),
                               ),
+                            (itemModel.remarks == "")
+                                ? _buildKeyValuePairs("Remarks", "-")
+                                : _buildKeyValuePairs(
+                                    "Remarks", itemModel.remarks.toString()),
                             SizedBox(height: 20),
                             StreamBuilder(
                                 stream: bookingDoc.snapshots(),
@@ -629,41 +633,42 @@ class _CustomerExpandableListTileState
     bool shrinkKey = false,
   }) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         if (shrinkKey)
           Text(
             key,
             style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 13,
-                letterSpacing: 0.3,
-                fontWeight: FontWeight.w600,
-                height: 1.3),
+              color: Colors.grey[700],
+              fontSize: 13,
+              letterSpacing: 0.3,
+              fontWeight: FontWeight.w600,
+            ),
           ).paddingOnly(right: 10)
         else
           Expanded(
             child: Text(
               key,
               style: TextStyle(
-                  color: Colors.grey[700],
-                  fontSize: 13,
-                  letterSpacing: 0.3,
-                  fontWeight: FontWeight.w600,
-                  height: 1.3),
+                color: Colors.grey[700],
+                fontSize: 13,
+                letterSpacing: 0.3,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ),
         Container(
-          height: 16,
           width: 170,
           child: Text(
             value,
-            overflow: TextOverflow.ellipsis,
+            // overflow: TextOverflow.ellipsis,
             style: TextStyle(
-                color: isDanger ? Colors.red : Colors.black,
-                fontSize: 13,
-                fontWeight: FontWeight.w600,
-                letterSpacing: 0.3,
-                height: 1.3),
+              color: isDanger ? Colors.red : Colors.black,
+              fontSize: 13,
+              fontWeight: FontWeight.w600,
+              letterSpacing: 0.3,
+            ),
           ),
         ),
       ],

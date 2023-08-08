@@ -559,26 +559,29 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                       itemModel.bookingModel
                                               ?.cancellationReason !=
                                           "")
-                                    RichText(
-                                      text: TextSpan(
-                                        text: "Cancellation Reason : ",
-                                        style: TextStyle(
-                                          fontFamily: AppFonts.nunito,
-                                          fontWeight: FontWeight.w600,
-                                          color: AppColors.text.black,
-                                          fontSize: 13,
-                                        ),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                            text: itemModel.bookingModel
-                                                ?.cancellationReason,
-                                            style: TextStyle(
-                                              color: Colors.grey[700],
-                                            ),
+                                    SizedBox(
+                                      width: Get.width,
+                                      child: RichText(
+                                        text: TextSpan(
+                                          text: "Cancellation Reason : ",
+                                          style: TextStyle(
+                                            fontFamily: AppFonts.nunito,
+                                            fontWeight: FontWeight.w600,
+                                            color: AppColors.text.black,
+                                            fontSize: 13,
                                           ),
-                                        ],
-                                      ),
-                                    ).paddingOnly(right: 10, bottom: 15),
+                                          children: <TextSpan>[
+                                            TextSpan(
+                                              text: itemModel.bookingModel
+                                                  ?.cancellationReason,
+                                              style: TextStyle(
+                                                color: Colors.grey[700],
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ).paddingOnly(right: 10, bottom: 15),
+                                    ),
                                   if (itemModel.bookingModel!.parentBookingId !=
                                           null &&
                                       itemModel.bookingModel!.parentBookingId !=
@@ -1234,6 +1237,8 @@ Regards,
 
   Widget buildKeyValuePairs(String key, String value, {bool isDanger = false}) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: Text(
@@ -1247,11 +1252,10 @@ Regards,
           ),
         ),
         Container(
-          height: 16,
           width: 180,
           child: Text(
             value,
-            overflow: TextOverflow.ellipsis,
+            // overflow: TextOverflow.ellipsis,
             style: TextStyle(
                 color: isDanger ? Colors.red : Colors.black,
                 fontSize: 13,
@@ -1434,44 +1438,45 @@ Regards,
               color: Colors.green, borderRadius: BorderRadius.circular(10)),
         ).paddingOnly(top: 2),
         SizedBox(width: 10),
-        Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              // width: Get.width - 50 - 25,
-              child: Text(
+        Container(
+          width: Get.width - 73,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
                 "Payment ${payment.amount!.round()} by ${payment.paymentMode ?? "-"} collected by ${payment.collectedBy}",
-                overflow: TextOverflow.ellipsis,
                 style: TextStyle(
                   fontSize: 10,
                   fontWeight: FontWeight.w600,
                   wordSpacing: 2,
-                  overflow: TextOverflow.ellipsis,
                 ),
               ),
-            ),
-            SizedBox(height: 2),
-            if (payment.time != null &&
-                now.day == payment.time!.day &&
-                now.month == payment.time!.month &&
-                now.year == payment.time!.year)
-              Text(
-                "Today - ${intl.DateFormat("hh:mm a").format(payment.time!)}",
-                style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
-              )
-            else if (payment.time != null)
-              Text(
-                intl.DateFormat("EEE dd MMM yy - hh:mm a")
-                    .format(payment.time!),
-                style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
-              )
-            else
-              Text(
-                "Initial Deposit",
-                style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
-              ),
-          ],
+              SizedBox(height: 2),
+              if (payment.time != null &&
+                  now.day == payment.time!.day &&
+                  now.month == payment.time!.month &&
+                  now.year == payment.time!.year)
+                Text(
+                  "Today - ${intl.DateFormat("hh:mm a").format(payment.time!)}",
+                  style:
+                      TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+                )
+              else if (payment.time != null)
+                Text(
+                  intl.DateFormat("EEE dd MMM yy - hh:mm a")
+                      .format(payment.time!),
+                  style:
+                      TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+                )
+              else
+                Text(
+                  "Initial Deposit",
+                  style:
+                      TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+                ),
+            ],
+          ),
         ),
       ],
     ).paddingOnly(bottom: 10);

@@ -295,9 +295,7 @@ class Boat {
   final String? notes;
   final int? nitrox;
   final int? air;
-
-  // final int? photoAir;
-  // final int? photoNitrox;
+  final bool? showBoat;
   final String name;
   final String? diveSite;
   int? boatStatus;
@@ -308,9 +306,8 @@ class Boat {
     required this.photographer,
     required this.internPhotographer,
     required this.internSurfaceSupport,
-    // required this.photoAir,
-    // required this.photoNitrox,
     required this.time,
+    required this.showBoat,
     required this.id,
     required this.nitrox,
     required this.air,
@@ -330,9 +327,8 @@ class Boat {
     String? time,
     int? nitrox,
     int? air,
+    bool? hideBoat,
     int? boatStatus,
-    // int? photoNitrox,
-    // int? photoAir,
     String? notes,
     List<Instructor>? surfaceSupport,
     String? name,
@@ -348,8 +344,7 @@ class Boat {
         time: time ?? this.time,
         air: air ?? this.air,
         nitrox: nitrox ?? this.nitrox,
-        // photoAir: photoAir ?? this.photoAir,
-        // photoNitrox: photoNitrox ?? this.photoNitrox,
+        showBoat: hideBoat ?? this.showBoat,
         surfaceSupport: surfaceSupport ?? this.surfaceSupport,
         notes: notes ?? this.notes,
         name: name ?? this.name,
@@ -378,8 +373,7 @@ class Boat {
         notes: json["notes"],
         nitrox: json["nitrox"],
         air: json["air"],
-        // photoNitrox: json["photoNitrox"],
-        // photoAir: json["photoAir"],
+        showBoat: json["hideBoat"],
         surfaceSupport: List<Instructor>.from(
             (json["surfaceSupport"] ?? []).map((x) => Instructor.fromJson(x))),
         diveSite: json["diveSite"],
@@ -403,8 +397,7 @@ class Boat {
             List<dynamic>.from((surfaceSupport ?? []).map((x) => x.toJson())),
         "notes": notes,
         "air": air,
-        // "photoAir": photoAir,
-        // "photoNitrox": photoNitrox,
+        "hideBoat": showBoat,
         "diveSite": diveSite,
         "nitrox": nitrox,
         "name": name,

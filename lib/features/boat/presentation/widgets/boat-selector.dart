@@ -133,6 +133,7 @@ class _BoatSelectorState extends State<BoatSelector> {
                 boatStatus: 0,
                 internPhotographer: [],
                 internSurfaceSupport: [],
+                showBoat: null,
               ),
               onTap: () {},
               child: Column(
@@ -164,6 +165,7 @@ class _BoatSelectorState extends State<BoatSelector> {
               boatStatus: 0,
               internPhotographer: [],
               internSurfaceSupport: [],
+              showBoat: true,
             ),
             onTap: () {},
             child: Column(

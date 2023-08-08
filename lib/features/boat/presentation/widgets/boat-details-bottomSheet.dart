@@ -76,6 +76,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   int photoNitrox = 0;
   late DateTime selectedTime;
   int boatStatus = 0;
+  bool showBoat = true;
 
   @override
   void initState() {
@@ -85,6 +86,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     nitrox = widget.boat?.nitrox ?? 0;
     air = widget.boat?.air ?? 0;
     boatStatus = widget.boat?.boatStatus ?? 0;
+    showBoat = ((widget.boat?.showBoat)) ?? showBoat;
     if (widget.boat?.time != null)
       selectedTime =
           TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
@@ -215,7 +217,29 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 if (widget.isBoatEdit) buildDeleteBoat(),
               ],
             ),
-            SizedBox(height: 20),
+            Spacing.h10,
+            Row(
+              children: [
+                Text("Show Boat",
+                    style: TextStyle(
+                        fontSize: 13,
+                        color: AppColors.text.black,
+                        fontFamily: AppFonts.nunito,
+                        decoration: TextDecoration.underline,
+                        fontWeight: FontWeight.w600)),
+                Spacing.w10,
+                Switch(
+                    value: showBoat,
+                    activeColor: AppColors.text.skyBlue,
+                    onChanged: (bool value) {
+                      setState(() {
+                        showBoat = value;
+                        log(showBoat.toString());
+                      });
+                    }),
+              ],
+            ),
+            Spacing.h20,
             AppTextField(
               hintText: "Boat name",
               controller: boatTED,
@@ -399,7 +423,6 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   Get.back();
                 },
               ),
-              Spacer(),
               AppButton.miniFlat(
                 text: "Okay",
                 onTap: () async {
@@ -449,6 +472,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 },
               ),
             ],
+            actionsAlignment: MainAxisAlignment.spaceBetween,
           );
         });
   }
@@ -760,11 +784,10 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         diveSite: diveSiteTED.text,
         dsdInstructors: selectedDsdInstructors,
         photographer: selectedPhotographer,
-        // photoAir: photoAir,
-        // photoNitrox: photoNitrox,
         boatStatus: boatStatus,
         internPhotographer: selectedInternsPhotographers,
         internSurfaceSupport: selectedInternsSurfaceSupport,
+        showBoat: showBoat,
       );
       boatsModel.boats?.add(boat);
     } else {
@@ -781,11 +804,10 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         diveSite: diveSiteTED.text,
         dsdInstructors: selectedDsdInstructors,
         photographer: selectedPhotographer,
-        // photoAir: photoAir,
-        // photoNitrox: photoNitrox,
         boatStatus: boatStatus,
         internPhotographer: selectedInternsPhotographers,
         internSurfaceSupport: selectedInternsSurfaceSupport,
+        showBoat: showBoat,
       );
 
       boatsModel.boats?.removeWhere((b) => b.id == boatId);
