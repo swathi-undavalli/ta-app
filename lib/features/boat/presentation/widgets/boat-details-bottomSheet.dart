@@ -190,14 +190,10 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 IconButton(
                   icon: Icon(Icons.close),
                   onPressed: () async {
-                    if (boatTED.text != "" && selectedCaptains.isNotEmpty) {
-                      await addEditBoat(context);
+                    if (boatTED.text != "") {
+                      await  addEditBoat(context);
                     } else {
-                      if (boatTED.text == "") {
-                        showToast("please enter the boat details");
-                      } else {
-                        showToast("please select the captain");
-                      }
+                      showToast("please enter the boat details");
                     }
                     // Navigator.pop(context);
                   },
@@ -351,14 +347,10 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 width: 145,
                 text: (widget.isBoatEdit) ? "Update" : "Submit",
                 onTap: () async {
-                  if (boatTED.text != "" && selectedCaptains != []) {
+                  if (boatTED.text != "") {
                     await addEditBoat(context);
                   } else {
-                    if (boatTED.text == "") {
-                      showToast("please enter the boat details");
-                    } else {
-                      showToast("please select the captain");
-                    }
+                    showToast("please enter the boat name");
                   }
                 },
                 textColor: Colors.white,

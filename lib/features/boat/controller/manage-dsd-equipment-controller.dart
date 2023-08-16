@@ -6,9 +6,9 @@ import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/boat/models/boats.dart';
 import 'package:intl/intl.dart';
 
-class ManageDSDEquipmentLogic {
-  ManageDSDEquipmentController controller =
-      Get.put(ManageDSDEquipmentController());
+class ManageGeneralInfoLogic {
+  ManageGeneralInfoController controller =
+      Get.put(ManageGeneralInfoController());
 
   Future<void> init() async {
     controller.showLoading = true;
@@ -57,6 +57,13 @@ class ManageDSDEquipmentLogic {
     controller.showLoading = false;
   }
 
+  Future<void> onDateChanged(DateTime date) async {
+    controller.selectedDate = date;
+    controller.showLoading = true;
+    await init();
+    controller.showLoading = false;
+  }
+
   Future<void> onSubmitPressed() async {
     controller.currentDsd.highTides =
         TimePicker.getFormattedTime(controller.highTideTime);
@@ -76,7 +83,7 @@ class ManageDSDEquipmentLogic {
   }
 }
 
-class ManageDSDEquipmentController extends GetxController {
+class ManageGeneralInfoController extends GetxController {
   TextEditingController generalNotesTED = TextEditingController();
   TextEditingController wavesTED = TextEditingController();
   TextEditingController windsTED = TextEditingController();

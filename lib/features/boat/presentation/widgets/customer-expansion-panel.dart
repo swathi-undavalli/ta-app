@@ -78,7 +78,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
       {required ItemModel itemModel, int? i, required BuildContext context}) {
     Color getColor() {
       if (itemModel.bookingModel?.cancelBooking == true) {
-        return Color(0xffEE9A9D);
+        return Colors.red.shade200;
       } else {
         String cc = '';
 

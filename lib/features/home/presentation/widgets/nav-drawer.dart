@@ -56,7 +56,7 @@ class NavDrawer extends StatelessWidget {
               icon: Icons.scuba_diving_rounded,
               text: 'General Info',
               onTap: () {
-                Get.toNamed(ManageDSDEquipment.id);
+                Get.toNamed(ManageGeneralInfo.id);
               },
             ),
             EmployeeAccess(

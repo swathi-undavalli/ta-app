@@ -160,7 +160,7 @@ class MyApp extends StatelessWidget {
         SplashScreen.id: (context) => SplashScreen(),
         AddConditionsScreen.id: (context) => AddConditionsScreen(),
         ManageBoatsPage.id: (context) => ManageBoatsPage(),
-        ManageDSDEquipment.id: (context) => ManageDSDEquipment(),
+        ManageGeneralInfo.id: (context) => ManageGeneralInfo(),
         BoardPlanView.id: (context) => BoardPlanView(),
       },
     );

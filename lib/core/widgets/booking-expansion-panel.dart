@@ -38,7 +38,6 @@ class BookingsExpansionPanel extends StatelessWidget {
   final SearchController searchController = Get.put(SearchController());
   final List<ItemModel>? items;
   bool searchBar = true;
-  DateTime date = DateTime.now();
   Function? onDeletePressed;
   Function? onSearchTap;
   List<Widget> expansions = [];
@@ -151,7 +150,7 @@ class BookingsExpansionPanel extends StatelessWidget {
   Widget buildExpansion({ItemModel? itemModel, int? i}) {
     getColor() {
       if (itemModel!.bookingModel?.cancelBooking == true) {
-        return Color(0xffEE9A9D);
+        return Colors.red.shade200;
       } else {
         String cc = '';
 
@@ -485,12 +484,13 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                             onPressed: () {
                                               if (itemModel.bookingModel
                                                       ?.cancelBooking !=
-                                                  true)
+                                                  true) {
                                                 _bookingCancellationDialog(
                                                     context, itemModel);
-                                              else
+                                              } else {
                                                 showToast(
                                                     "Booking Cancelled successfully");
+                                              }
                                             },
                                           ),
                                         ),
@@ -1203,6 +1203,13 @@ Regards,
                             logic.controller.cancelMessage.text
                       }, SetOptions(merge: true));
                     }
+                    if (itemModel.bookingModel?.boatDetails?.boat != null) {
+                      removeBoat(
+                        bookingModel: itemModel.bookingModel!,
+                        selectedDate:
+                            bookingCalenderLogicNew.controller.selectedDate,
+                      );
+                    }
                     LogModel logModel = LogModel(
                         type: LogType.bookingDeleted,
                         bookingId: itemModel.bookingModel!.id);
@@ -1224,6 +1231,23 @@ Regards,
             ],
           );
         });
+  }
+
+  Future<void> removeBoat({
+    required Booking bookingModel,
+    required DateTime selectedDate,
+  }) async {
+    bookingModel.setBoatInfo(
+      selectedDate,
+      null,
+    );
+
+    await FirebaseFirestore.instance
+        .collection('bookings')
+        .doc(bookingModel.id)
+        .set(
+          bookingModel.toMap(),
+        );
   }
 
   makingPhoneCall(String? phoneNumber) async {

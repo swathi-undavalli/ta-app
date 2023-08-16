@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/time-picker.dart';
@@ -12,15 +15,15 @@ import 'package:temple_adventures/features/boat/presentation/widgets/interns-bot
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:intl/intl.dart';
 
-class ManageDSDEquipment extends StatefulWidget {
+class ManageGeneralInfo extends StatefulWidget {
   static const String id = "ManageDSDEquipment";
 
   @override
-  State<ManageDSDEquipment> createState() => _ManageDSDEquipmentState();
+  State<ManageGeneralInfo> createState() => _ManageGeneralInfoState();
 }
 
-class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
-  final ManageDSDEquipmentLogic logic = ManageDSDEquipmentLogic();
+class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
+  final ManageGeneralInfoLogic logic = ManageGeneralInfoLogic();
 
   @override
   void initState() {
@@ -65,7 +68,7 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
           return true;
         },
         child: SafeArea(
-          child: GetBuilder<ManageDSDEquipmentController>(
+          child: GetBuilder<ManageGeneralInfoController>(
             builder: (controller) {
               if (controller.showLoading)
                 return Container(
@@ -82,13 +85,32 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
                   children: [
                     SizedBox(height: 20),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          DateFormat('dd-MMM-yyyy')
-                              .format(controller.selectedDate),
-                          style: TextStyle(
-                              fontSize: 14, fontWeight: FontWeight.w600),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            buildButton(
+                                onTap: () {
+                                  logic.onDateChanged(controller.selectedDate
+                                      .subtract(const Duration(days: 1)));
+                                },
+                                icon: Icons.arrow_back_ios_rounded),
+                            Spacing.w20,
+                            Text(
+                              DateFormat('dd-MMM-yyyy')
+                                  .format(controller.selectedDate),
+                              style: TextStyle(
+                                  fontSize: 14, fontWeight: FontWeight.w600),
+                            ),
+                            Spacing.w20,
+                            buildButton(
+                                onTap: () {
+                                  logic.onDateChanged(controller.selectedDate
+                                      .add(const Duration(days: 1)));
+                                },
+                                icon: Icons.arrow_forward_ios_rounded),
+                          ],
                         ),
                         IconButton(
                           splashRadius: 20,
@@ -256,12 +278,14 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
                       employees: logic.controller.currentDsd.dayOffs ?? [],
                       title: "Day Offs",
                       employeeLimit: -1,
+                      showAllEmployees: true,
                     ),
                     SizedBox(height: 10),
                     buildEmployeeSelector(
                       employees: logic.controller.currentDsd.leaves ?? [],
                       title: "Leaves",
                       employeeLimit: -1,
+                      showAllEmployees: true,
                     ),
                     AppTextField(
                       controller: controller.generalNotesTED,
@@ -416,18 +440,22 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
     );
   }
 
-  Widget buildEmployeeSelector(
-      {required List<Instructor> employees,
-      required String title,
-      required int employeeLimit}) {
+  Widget buildEmployeeSelector({
+    required List<Instructor> employees,
+    required String title,
+    required int employeeLimit,
+    required bool showAllEmployees,
+  }) {
     if (employees.isEmpty) {
       return AppButton.miniFlat(
         text: "Add $title",
         onTap: () async {
-          employees = (await EmpSelectorBottomSheet.show(context,
-                  initialSelectedEmployees: employees,
-                  instructorLimit: employeeLimit,
-                  showAllEmployees: true)) ??
+          employees = (await EmpSelectorBottomSheet.show(
+                context,
+                initialSelectedEmployees: employees,
+                instructorLimit: employeeLimit,
+                showAll: showAllEmployees,
+              )) ??
               [];
           setState(() {});
         },
@@ -466,6 +494,7 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
               onTap: () async {
                 employees = (await EmpSelectorBottomSheet.show(context,
                         initialSelectedEmployees: employees,
+                        showAll: showAllEmployees,
                         instructorLimit: employeeLimit)) ??
                     [];
                 setState(() {});
@@ -547,10 +576,7 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
     );
 
     if (date != null) {
-      logic.controller.selectedDate = date;
-      logic.controller.showLoading = true;
-      await logic.init();
-      logic.controller.showLoading = false;
+      logic.onDateChanged(date);
     }
   }
 
@@ -569,23 +595,36 @@ class _ManageDSDEquipmentState extends State<ManageDSDEquipment> {
     return AppBar(
       toolbarHeight: 70,
       centerTitle: true,
-      title: buildAppBarTitle(),
+      title: Text(
+        'General Info',
+        style: TextStyle(
+          color: AppColors.text.black,
+          fontSize: 20,
+          fontFamily: AppFonts.nunito,
+          fontWeight: FontWeight.normal,
+          letterSpacing: 1.2,
+        ),
+      ),
       leading: BackNavigationIcon(),
       elevation: 0,
       backgroundColor: AppColors.background.white,
     );
   }
 
-  Widget buildAppBarTitle() {
-    return Text(
-      'DSD Equipment',
-      style: TextStyle(
-        color: AppColors.text.black,
-        fontSize: 20,
-        fontFamily: AppFonts.nunito,
-        fontWeight: FontWeight.normal,
-        letterSpacing: 1.2,
-      ),
-    );
+  Widget buildButton({required Function onTap, required IconData icon}) {
+    return SizedBox(
+        height: 20,
+        width: 20,
+        child: IconButton(
+            splashRadius: 30,
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              onTap();
+            },
+            icon: Icon(
+              icon,
+              color: Colors.black,
+              size: 14,
+            )));
   }
 }

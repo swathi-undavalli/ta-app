@@ -29,7 +29,6 @@ class AddAnUserLogic {
         controller.shiftTimeTED.text != "" &&
         controller.phoneNumberTED.text != "" &&
         controller.countryCodeTED.text != "" &&
-        // controller.genderTED.text != "" &&
         controller.roleTED.text != "") {
       Employee employee = Employee(
         firstName: controller.firstNameTED.text,
@@ -55,18 +54,17 @@ class AddAnUserLogic {
           weatherReport: controller.weatherReport,
           editActivityPrices: controller.editActivityPrices,
           addActivity: controller.addActivity,
-          notifications: controller.notifications, boatPlan: controller.boatPlan,
+          notifications: controller.notifications,
+          boatPlan: controller.boatPlan,
         ),
       );
-      // viewBookings: controller.viewBookings,
       FirebaseFirestore.instance
           .collection('employees')
           .doc(employee.id)
-          // .collection('employeeFullInformation')
-          // .doc('employeeData')
           .set(employee.toMap());
 
-      if (counterModel.employee != null) {
+      if (counterModel.employee != null &&
+          int.parse(controller.employeeIdTED.text) < 900) {
         counterModel.employee = counterModel.employee! + 1;
       }
 
@@ -121,12 +119,9 @@ class AddAnUserLogic {
           boatPlan: controller.boatPlan,
         ),
       );
-      // viewBookings: controller.viewBookings,
       FirebaseFirestore.instance
           .collection('employees')
           .doc(employee.id)
-          // .collection('employeeFullInformation')
-          // .doc('employeeData')
           .set(employee.toMap());
       LogModel logModel =
           LogModel(type: LogType.editEmployee, employeeName: employee.name);
@@ -144,33 +139,37 @@ class AddAnUserLogic {
   }
 
   timePicker(context) {
-    DatePicker.showTimePicker(context,
-        showTitleActions: true, showSecondsColumn: false, onChanged: (time) {
-      //print('change $time');
-      controller.pickedTime = time;
-      controller.shiftTimeTED.text = formatter.format(time);
-    }, onConfirm: (newTime) {
-      //print('confirm $pickedTime');
-      controller.pickedTime = newTime;
-      controller.shiftTimeTED.text = formatter.format(newTime);
-    },
-        currentTime: controller.pickedTime,
-        // theme: DatePickerTheme(
-        //   cancelStyle: TextStyle(
-        //     fontFamily: AppFonts.nunito,
-        //     color: Colors.black87,
-        //   ),
-        //   doneStyle: TextStyle(
-        //     fontFamily: AppFonts.nunito,
-        //     fontWeight: FontWeight.bold,
-        //     color: Colors.black,
-        //   ),
-        //   itemStyle: TextStyle(
-        //     fontFamily: AppFonts.nunito,
-        //     fontWeight: FontWeight.bold,
-        //     fontSize: 16,
-        //   ),
-        // ),
+    DatePicker.showTimePicker(
+      context,
+      showTitleActions: true,
+      showSecondsColumn: false,
+      onChanged: (time) {
+        //print('change $time');
+        controller.pickedTime = time;
+        controller.shiftTimeTED.text = formatter.format(time);
+      },
+      onConfirm: (newTime) {
+        //print('confirm $pickedTime');
+        controller.pickedTime = newTime;
+        controller.shiftTimeTED.text = formatter.format(newTime);
+      },
+      currentTime: controller.pickedTime,
+      // theme: DatePickerTheme(
+      //   cancelStyle: TextStyle(
+      //     fontFamily: AppFonts.nunito,
+      //     color: Colors.black87,
+      //   ),
+      //   doneStyle: TextStyle(
+      //     fontFamily: AppFonts.nunito,
+      //     fontWeight: FontWeight.bold,
+      //     color: Colors.black,
+      //   ),
+      //   itemStyle: TextStyle(
+      //     fontFamily: AppFonts.nunito,
+      //     fontWeight: FontWeight.bold,
+      //     fontSize: 16,
+      //   ),
+      // ),
     );
   }
 }
