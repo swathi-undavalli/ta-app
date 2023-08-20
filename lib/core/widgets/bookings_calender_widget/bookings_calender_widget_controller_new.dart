@@ -58,8 +58,6 @@ class BookingsCalenderWidgetLogicNew {
           im.session = "";
           im.time = "";
 
-
-
           booking.theoryDate!.forEach((date) {
             if (checkDate(date, controller.selectedDate)) {
               controller.theoryCountN += booking.noOfPersons!;
@@ -96,7 +94,6 @@ class BookingsCalenderWidgetLogicNew {
         });
         controller.expansionItemModels = newItemsList;
       });
-
     } catch (e) {}
 
     controller.showLoading = false;
@@ -104,10 +101,7 @@ class BookingsCalenderWidgetLogicNew {
   }
 
   filterBookingsList() {
-
-    controller.bookings.forEach((element) {
-
-    });
+    controller.bookings.forEach((element) {});
 
     List<ItemModel> newItemsList = [];
 
@@ -120,7 +114,6 @@ class BookingsCalenderWidgetLogicNew {
 
       if (booking.theoryDate != null && booking.theoryDate!.isNotEmpty) {
         booking.theoryDate!.forEach((date) {
-
           if (isSameMinute(date!, controller.selectedDate)) {
             im.session = "Theory";
             im.time = DateFormat("hh:mm").format(date);
@@ -131,7 +124,6 @@ class BookingsCalenderWidgetLogicNew {
       }
       if (booking.poolDate != null && booking.poolDate!.isNotEmpty) {
         booking.poolDate!.forEach((date) {
-
           if (isSameMinute(date!, controller.selectedDate)) {
             im.session = "Pool";
             im.time = DateFormat("hh:mm").format(date);
@@ -150,9 +142,7 @@ class BookingsCalenderWidgetLogicNew {
       }
     });
 
-    newItemsList.forEach((element) {
-
-    });
+    newItemsList.forEach((element) {});
 
     if (controller.selectedType == null) {
       if (controller.theoryCount != 0)
@@ -165,7 +155,6 @@ class BookingsCalenderWidgetLogicNew {
 
     controller.expansionItemModels = newItemsList;
     controller.update();
-
   }
 
   getDates() {
@@ -292,7 +281,6 @@ class BookingsCalenderWidgetControllerNew extends GetxController {
   late bool isDiveSession;
 
   FilterType? calenderType;
-
 
   get selectedDate => _selectedDate;
 

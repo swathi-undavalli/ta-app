@@ -87,6 +87,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     air = widget.boat?.air ?? 0;
     boatStatus = widget.boat?.boatStatus ?? 0;
     showBoat = ((widget.boat?.showBoat)) ?? showBoat;
+    log("start ${showBoat.toString()}");
     if (widget.boat?.time != null)
       selectedTime =
           TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
@@ -191,7 +192,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   icon: Icon(Icons.close),
                   onPressed: () async {
                     if (boatTED.text != "") {
-                      await  addEditBoat(context);
+                      await addEditBoat(context);
                     } else {
                       showToast("please enter the boat details");
                     }

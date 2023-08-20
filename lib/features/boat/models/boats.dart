@@ -51,6 +51,7 @@ class Dsd {
   List<Intern>? dsdOceanLead;
   List<Intern>? coursesCenter;
   List<Intern>? dsdCenterStaff;
+  List<Intern>? harbourStaff;
   String? powerNotes;
   String? highTides;
   String? waves;
@@ -72,6 +73,7 @@ class Dsd {
     required this.dsdOceanLead,
     required this.coursesCenter,
     required this.dsdCenterStaff,
+    required this.harbourStaff,
     required this.highTides,
     required this.lowTides,
     required this.waves,
@@ -91,6 +93,7 @@ class Dsd {
     List<Intern>? coursesCenter,
     List<Intern>? dsdOceanLead,
     List<Intern>? dsdPools,
+    List<Intern>? harbourStaff,
     String? generalNotes,
     String? powerNotes,
     String? highTides,
@@ -117,6 +120,7 @@ class Dsd {
         dsdCenterStaff: dsdCenterStaff ?? this.dsdCenterStaff,
         coursesCenter: coursesCenter ?? this.coursesCenter,
         dsdOceanLead: dsdOceanLead ?? this.dsdOceanLead,
+        harbourStaff: harbourStaff ?? this.harbourStaff,
       );
 
   factory Dsd.fromRawJson(String str) => Dsd.fromJson(json.decode(str));
@@ -143,6 +147,8 @@ class Dsd {
             ((json["coursesCenter"]) ?? []).map((x) => Intern.fromJson(x))),
         dsdOceanLead: List<Intern>.from(
             ((json["dsdOceanLead"]) ?? []).map((x) => Intern.fromJson(x))),
+        harbourStaff: List<Intern>.from(
+            ((json["harbourStaff"]) ?? []).map((x) => Intern.fromJson(x))),
         generalNotes: json["generalNotes"],
         highTides: json["highTides"],
         lowTides: json["lowTides"],
@@ -167,6 +173,8 @@ class Dsd {
         "dsdCenterStaff":
             List<dynamic>.from((dsdCenterStaff ?? []).map((x) => x.toJson())),
         "dsdPools": List<dynamic>.from((dsdPools ?? []).map((x) => x.toJson())),
+        "harbourStaff":
+            List<dynamic>.from((harbourStaff ?? []).map((x) => x.toJson())),
         "generalNotes": generalNotes,
         "highTides": highTides,
         "lowTides": lowTides,
@@ -176,6 +184,8 @@ class Dsd {
 }
 
 class Bcd {
+  int? kids;
+  int? xxs;
   int? xs;
   int? s;
   int? m;
@@ -184,6 +194,8 @@ class Bcd {
   int? xxl;
 
   Bcd({
+    required this.kids,
+    required this.xxs,
     required this.xs,
     required this.s,
     required this.m,
@@ -193,6 +205,8 @@ class Bcd {
   });
 
   Bcd copyWith({
+    int? kids,
+    int? xxs,
     int? xs,
     int? s,
     int? m,
@@ -201,6 +215,8 @@ class Bcd {
     int? xxl,
   }) =>
       Bcd(
+        kids: kids ?? this.kids,
+        xxs: xxs ?? this.xxs,
         xs: xs ?? this.xs,
         s: s ?? this.s,
         m: m ?? this.m,
@@ -214,6 +230,8 @@ class Bcd {
   String toRawJson() => json.encode(toJson());
 
   factory Bcd.fromJson(Map<String, dynamic> json) => Bcd(
+        kids: json["kids"],
+        xxs: json["XXS"],
         xs: json["XS"],
         s: json["S"],
         m: json["M"],
@@ -223,6 +241,8 @@ class Bcd {
       );
 
   Map<String, dynamic> toJson() => {
+        "kids": kids,
+        "XXS": xxs,
         "XS": xs,
         "S": s,
         "M": m,

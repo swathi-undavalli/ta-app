@@ -14,6 +14,13 @@ class ConditionsLogic {
     controller.showLoading = false;
   }
 
+  Future<void> onDateChanged(DateTime date) async {
+    controller.selectedDate = date;
+    controller.showLoading = true;
+    await getLatestConditions();
+    controller.showLoading = false;
+  }
+
   getLatestConditions() async {
     controller.conditions =
         await conditionsRepo.getConditions(controller.selectedDate);

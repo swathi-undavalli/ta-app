@@ -1189,6 +1189,14 @@ Regards,
               AppButton.miniFlat(
                 text: "Okay",
                 onTap: () {
+                  if (itemModel.bookingModel?.boatDetails?.boat != null) {
+                    removeBoat(
+                      bookingModel: itemModel.bookingModel!,
+                      selectedDate:
+                          bookingCalenderLogicNew.controller.selectedDate,
+                    );
+                  }
+
                   if (itemModel.bookingModel != null &&
                       logic.controller.cancelMessage.text != "") {
                     log(logic.controller.cancelMessage.text);
@@ -1203,13 +1211,7 @@ Regards,
                             logic.controller.cancelMessage.text
                       }, SetOptions(merge: true));
                     }
-                    if (itemModel.bookingModel?.boatDetails?.boat != null) {
-                      removeBoat(
-                        bookingModel: itemModel.bookingModel!,
-                        selectedDate:
-                            bookingCalenderLogicNew.controller.selectedDate,
-                      );
-                    }
+
                     LogModel logModel = LogModel(
                         type: LogType.bookingDeleted,
                         bookingId: itemModel.bookingModel!.id);

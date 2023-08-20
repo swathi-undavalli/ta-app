@@ -64,9 +64,9 @@ class HomePage extends StatelessWidget {
                       ],
                     ),
                   ),
-                  SizedBox(height: 10),
-                  AttendanceWidget(),
                   SizedBox(height: 20),
+                  // AttendanceWidget(),
+                  // SizedBox(height: 20),
                   AddEmployeeWidget(
                     text: "Add Employees",
                     subText: "Only admins can modify",

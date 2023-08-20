@@ -21,7 +21,7 @@ class ManageGeneralInfoLogic {
     BoatsModel? boatsModel = BoatsModel.fromMap(data);
     if (boatsModel.dsd == null) {
       controller.currentDsd = Dsd(
-          bcd: Bcd(xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0),
+          bcd: Bcd(xs: 0, s: 0, m: 0, l: 0, xl: 0, xxl: 0, kids: 0, xxs: 0),
           fins: 0,
           mask: 0,
           regulator: 0,
@@ -38,6 +38,7 @@ class ManageGeneralInfoLogic {
           dsdPools: [],
           dsdOceanLead: [],
           coursesCenter: [],
+          harbourStaff: [],
           dsdCenterStaff: []);
     } else {
       controller.currentDsd = boatsModel.dsd!;

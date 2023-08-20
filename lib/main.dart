@@ -18,7 +18,7 @@ import 'package:temple_adventures/features/Activities/presentation/screens/add-n
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/manage-dsd-equipment.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/manage-general-info.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-payments-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';

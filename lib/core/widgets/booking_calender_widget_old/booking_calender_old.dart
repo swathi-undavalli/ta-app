@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
+import 'package:temple_adventures/core/util/alignment_extensions.dart';
 import 'package:temple_adventures/core/util/app-func.dart';
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
@@ -20,6 +21,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   final bool highlightInvalidTime;
   final FilterType? calenderType;
   final AutoScrollController? autoScrollController;
+
   BookingsCalenderWidgetOld({
     required this.onDateTimeSelected,
     this.onSearchTap,
@@ -80,7 +82,6 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
             _buildDaySelector(),
             if (showDetails) SizedBox(height: 20),
             _buildTimeTable(),
-            // _buildBookingDetails(),
             SizedBox(height: 20),
           ],
         );
@@ -102,39 +103,32 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
-                    children: [
-                      _buildTitle("Bookings"),
-                      SizedBox(width: 3),
-                      controller.showLoading
-                          ? SizedBox(
-                              width: 10,
-                              height: 10,
-                              child: CircularProgressIndicator(
-                                color: AppColors.background.black,
-                                strokeWidth: 1,
-                              ),
-                            )
-                          : SizedBox(),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 10, bottom: 10),
+            Row(
+              children: [
+                _buildTitle("Bookings"),
+                SizedBox(width: 3),
+                controller.showLoading
+                    ? SizedBox(
+                        width: 10,
+                        height: 10,
+                        child: CircularProgressIndicator(
+                          color: AppColors.background.black,
+                          strokeWidth: 1,
+                        ),
+                      )
+                    : SizedBox(),
+              ],
+            ).paddingOnly(top: 15, left: 20, right: 20),
+            Container(
+              height: 210,
               child: Wrap(
-                  spacing: 0,
-                  runSpacing: 5,
-                  children: controller.timeTable
-                      .map((date) => _buildTimings(date))
-                      .toList()),
+                      spacing: 0,
+                      runSpacing: 5,
+                      children: controller.timeTable
+                          .map((date) => _buildTimings(date))
+                          .toList())
+                  .paddingSymmetric(horizontal: 20, vertical: 7)
+                  .scrollable,
             ),
             if (!controller.showLoading)
               Column(
@@ -152,7 +146,6 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
                           : SizedBox(),
                     ),
                   ),
-                  // SizedBox(height: 10),
                 ],
               ),
           ],
@@ -368,31 +361,12 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
       allBookingsList.addAll(booking.theoryDate!);
       allBookingsList.forEach((bookingDate) {
         if (isSameMinute(date, bookingDate)) {
-          //print("++++++++++++++++++++:)");
-          //print(booking.id);
-          //print(booking.noOfPersons);
           totalBookings += booking.noOfPersons!;
           show = true;
         }
       });
     });
 
-    // int totalPax = 0;
-    // for (DateTime booking in logic.controller.bookingTimings) {
-    //   if (controller.isDiveSession) {
-    //     if (booking.hour == date.hour &&
-    //         booking.day == date.day &&
-    //         booking.minute == date.minute) {
-    //       totalBookings++;
-    //       show = true;
-    //     }
-    //   } else {
-    //     if (booking.hour == date.hour && booking.day == date.day) {
-    //       totalBookings++;
-    //       show = true;
-    //     }
-    //   }
-    // }
     if (show)
       return Container(
         height: 12,
@@ -410,7 +384,4 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
     else
       return null;
   }
-
-
-  void clearSearch() {}
 }

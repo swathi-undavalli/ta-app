@@ -132,7 +132,6 @@ class BookingsCalenderWidgetLogic {
       log("1.1");
 
       if (booking.theoryDate != null && booking.theoryDate!.isNotEmpty) {
-
         log("1.2");
 
         booking.theoryDate!.forEach((date) {
@@ -216,21 +215,21 @@ class BookingsCalenderWidgetLogic {
       if (controller.isDiveSession && controller.showDetails!)
         return 18 + 12;
       else if (controller.isDiveSession && controller.showDetails == false)
-        return 18 + 2;
+        return 18 + 10;
       else
         return 18;
     }
 
     controller.timeTable = [];
-    var hour = 3;
+    var startHour = 3;
     if (controller.calenderType == null)
-      hour = controller.showDetails! ? 3 : 5;
+      startHour = controller.showDetails! ? 3 : 5;
     else {
       if (controller.calenderType == FilterType.Theory)
-        hour = 7;
+        startHour = 7;
       else if (controller.calenderType == FilterType.Pool)
-        hour = 5;
-      else if (controller.calenderType == FilterType.Dive) hour = 5;
+        startHour = 5;
+      else if (controller.calenderType == FilterType.Dive) startHour = 5;
     }
     var endHour = 23;
     if (controller.calenderType == null)
@@ -246,7 +245,7 @@ class BookingsCalenderWidgetLogic {
       controller.selectedDate.year,
       controller.selectedDate.month,
       controller.selectedDate.day,
-      hour - 1,
+      startHour - 1,
     );
     for (int i = 0; i < getLimit(); i++) {
       if (controller.isDiveSession)
@@ -260,7 +259,6 @@ class BookingsCalenderWidgetLogic {
   }
 
   onDateSelected(int index) {
-    // appExpansionPanelController.bookings = [];
     controller.lastDateIndex = index;
     controller.expansionItemModels = [];
     controller.poolCount = 0;
@@ -271,9 +269,7 @@ class BookingsCalenderWidgetLogic {
     controller.diveCountN = 0;
     controller.selectedDate = controller.calenderDates[index];
     controller.selectedType = null;
-    //print("===========started${controller.calenderDates[index]}");
     getBookings(controller.calenderDates[index]);
-    //print("===========ended${controller.calenderDates[index]}");
     getTime();
   }
 }

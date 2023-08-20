@@ -7,7 +7,7 @@ import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/time-picker.dart';
-import 'package:temple_adventures/features/boat/controller/manage-dsd-equipment-controller.dart';
+import 'package:temple_adventures/features/boat/controller/manage-general-info-controller.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
@@ -85,33 +85,29 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
                   children: [
                     SizedBox(height: 20),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            buildButton(
-                                onTap: () {
-                                  logic.onDateChanged(controller.selectedDate
-                                      .subtract(const Duration(days: 1)));
-                                },
-                                icon: Icons.arrow_back_ios_rounded),
-                            Spacing.w20,
-                            Text(
-                              DateFormat('dd-MMM-yyyy')
-                                  .format(controller.selectedDate),
-                              style: TextStyle(
-                                  fontSize: 14, fontWeight: FontWeight.w600),
-                            ),
-                            Spacing.w20,
-                            buildButton(
-                                onTap: () {
-                                  logic.onDateChanged(controller.selectedDate
-                                      .add(const Duration(days: 1)));
-                                },
-                                icon: Icons.arrow_forward_ios_rounded),
-                          ],
+                        buildButton(
+                            onTap: () {
+                              logic.onDateChanged(controller.selectedDate
+                                  .subtract(const Duration(days: 1)));
+                            },
+                            icon: Icons.arrow_back_ios_rounded),
+                        Spacing.w20,
+                        Text(
+                          DateFormat('dd-MMM-yyyy')
+                              .format(controller.selectedDate),
+                          style: TextStyle(
+                              fontSize: 14, fontWeight: FontWeight.w600),
                         ),
+                        Spacing.w20,
+                        buildButton(
+                            onTap: () {
+                              logic.onDateChanged(controller.selectedDate
+                                  .add(const Duration(days: 1)));
+                            },
+                            icon: Icons.arrow_forward_ios_rounded),
+                        Spacer(),
                         IconButton(
                           splashRadius: 20,
                           onPressed: () {
@@ -122,9 +118,22 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
                             size: 17,
                           ),
                         ),
+
                       ],
                     ),
                     buildSectionTitle("BCD : "),
+                    CounterWidget(
+                        label: "Kids",
+                        onChanged: (int count) {
+                          controller.currentDsd.bcd?.kids = count;
+                        },
+                        initialValue: controller.currentDsd.bcd?.kids ?? 0),
+                    CounterWidget(
+                        label: "XXS",
+                        onChanged: (int count) {
+                          controller.currentDsd.bcd?.xxs = count;
+                        },
+                        initialValue: controller.currentDsd.bcd?.xxs ?? 0),
                     CounterWidget(
                         label: "XS",
                         onChanged: (int count) {
@@ -261,26 +270,34 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
                       interns: logic.controller.currentDsd.dsdPools ?? [],
                       title: "DSD Pool",
                     ),
+                    Spacing.h10,
                     buildDsdPoolStaff(
                       interns: logic.controller.currentDsd.dsdOceanLead ?? [],
                       title: "DSD Ocean Leader",
                     ),
+                    Spacing.h10,
                     buildDsdPoolStaff(
                       interns: logic.controller.currentDsd.dsdCenterStaff ?? [],
                       title: "DSD Center Staff",
                     ),
+                    Spacing.h10,
                     buildDsdPoolStaff(
                       interns: logic.controller.currentDsd.coursesCenter ?? [],
                       title: "Courses Center",
                     ),
-                    SizedBox(height: 10),
+                    Spacing.h10,
+                    buildDsdPoolStaff(
+                      interns: logic.controller.currentDsd.harbourStaff ?? [],
+                      title: "Harbour Staff",
+                    ),
+                    Spacing.h10,
                     buildEmployeeSelector(
                       employees: logic.controller.currentDsd.dayOffs ?? [],
                       title: "Day Offs",
                       employeeLimit: -1,
                       showAllEmployees: true,
                     ),
-                    SizedBox(height: 10),
+                    Spacing.h10,
                     buildEmployeeSelector(
                       employees: logic.controller.currentDsd.leaves ?? [],
                       title: "Leaves",
@@ -298,7 +315,7 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
                         return null;
                       },
                     ),
-                    SizedBox(height: 10),
+                    Spacing.h10,
                     buildSectionTitle("Weather : "),
                     buildTides(context,
                         time: controller.highTideTime,
@@ -314,7 +331,7 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
                     AppTextField(
                       controller: controller.wavesTED,
                       hintText: "Waves",
-                      suffixText: "mt/s",
+                      suffixText: "m",
                       keyboardType:
                           TextInputType.numberWithOptions(signed: true),
                       errorValidator: () {

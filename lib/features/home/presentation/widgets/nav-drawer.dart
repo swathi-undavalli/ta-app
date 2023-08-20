@@ -5,7 +5,7 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/access_levels.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/manage-dsd-equipment.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/manage-general-info.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/employee-profile-screen.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
@@ -59,20 +59,20 @@ class NavDrawer extends StatelessWidget {
                 Get.toNamed(ManageGeneralInfo.id);
               },
             ),
-            EmployeeAccess(
-              access: AccessRights.personalAttendanceReport,
-              child: buildMenuItem(
-                  icon: Icons.collections_bookmark_rounded,
-                  text: 'Attendance',
-                  onTap: () {
-                    Get.offAndToNamed(AttendancePage.id);
-                  }),
-            ),
+            // EmployeeAccess(
+            //   access: AccessRights.personalAttendanceReport,
+            //   child: buildMenuItem(
+            //       icon: Icons.collections_bookmark_rounded,
+            //       text: 'Attendance',
+            //       onTap: () {
+            //         Get.offAndToNamed(AttendancePage.id);
+            //       }),
+            // ),
             EmployeeAccess(
               access: AccessRights.editActivityPrices,
               child: buildMenuItem(
                 icon: Icons.edit,
-                text: 'Edit Prices',
+                text: 'Programs List',
                 onTap: () {
                   Get.offAndToNamed(AllActivitiesScreen.id);
                 },

@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/util/spacing-widget.dart';
 
 import '../controller/conditions-controller.dart';
 import '../models/conditions-model.dart';
@@ -46,6 +47,13 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
                       SizedBox(height: 20),
                       Row(
                         children: [
+                          buildButton(
+                              onTap: () {
+                                logic.onDateChanged(controller.selectedDate
+                                    .subtract(const Duration(days: 1)));
+                              },
+                              icon: Icons.arrow_back_ios_rounded),
+                          Spacing.w20,
                           Container(
                             width: 103,
                             child: Text(
@@ -55,6 +63,13 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
                                   fontSize: 16, fontWeight: FontWeight.w600),
                             ),
                           ),
+                          Spacing.w20,
+                          buildButton(
+                              onTap: () {
+                                logic.onDateChanged(controller.selectedDate
+                                    .add(const Duration(days: 1)));
+                              },
+                              icon: Icons.arrow_forward_ios_rounded),
                           Spacer(),
                           IconButton(
                             splashRadius: 20,
@@ -140,6 +155,23 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
 
   ///=========================UI=======================///
 
+  Widget buildButton({required Function onTap, required IconData icon}) {
+    return SizedBox(
+        height: 20,
+        width: 20,
+        child: IconButton(
+            splashRadius: 30,
+            padding: EdgeInsets.zero,
+            onPressed: () {
+              onTap();
+            },
+            icon: Icon(
+              icon,
+              color: Colors.black,
+              size: 14,
+            )));
+  }
+
   Widget buildSurfaceConditions({required String title, required String text}) {
     return Row(
       children: [
@@ -191,10 +223,7 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
     );
 
     if (date != null) {
-      logic.controller.selectedDate = date;
-      logic.controller.showLoading = true;
-      await logic.getLatestConditions();
-      logic.controller.showLoading = false;
+      logic.onDateChanged(date);
     }
   }
 
