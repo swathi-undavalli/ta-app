@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
+import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/boat/models/boats.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/boat-details-bottomSheet.dart';
-import 'package:intl/intl.dart';
 
 class BoatSelector extends StatefulWidget {
   const BoatSelector(
@@ -133,7 +133,7 @@ class _BoatSelectorState extends State<BoatSelector> {
                 boatStatus: 0,
                 internPhotographer: [],
                 internSurfaceSupport: [],
-                showBoat: null,
+                hideBoat: null,
               ),
               onTap: () {},
               child: Column(
@@ -165,7 +165,7 @@ class _BoatSelectorState extends State<BoatSelector> {
               boatStatus: 0,
               internPhotographer: [],
               internSurfaceSupport: [],
-              showBoat: true,
+              hideBoat: true,
             ),
             onTap: () {},
             child: Column(
