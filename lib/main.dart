@@ -6,11 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/services/auto-update.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/add-freelance-screen.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/freelance-details-screen.dart';
-import 'package:temple_adventures/core/services/auto-update.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
@@ -18,9 +18,9 @@ import 'package:temple_adventures/features/boat/presentation/screens/manage-gene
 import 'package:temple_adventures/features/bookings/presentation/screens/add-payments-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/edit-payments-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
 import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
@@ -29,10 +29,11 @@ import 'package:temple_adventures/features/employees/presentation/screens/all-em
 import 'package:temple_adventures/features/logs/presentation/screens/details-screen.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:temple_adventures/features/messaging/firebase_messaging_controller.dart';
+import 'package:temple_adventures/features/messaging/notification-screen.dart';
 import 'package:temple_adventures/features/messaging/notification_service.dart';
 import 'package:temple_adventures/features/splash/view/splash-screen.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
-import 'package:temple_adventures/features/notifications/notification-screen.dart';
+
 import 'features/activities/presentation/screens/activity-edit-screen.dart';
 import 'features/activities/presentation/screens/add-new-activity-screen.dart';
 import 'features/activities/presentation/screens/all-activities-screen.dart';

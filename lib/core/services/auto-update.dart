@@ -1,13 +1,15 @@
 import 'dart:developer';
-import 'package:firebase_messaging/firebase_messaging.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../features/notifications/notification-screen.dart';
+
+import '../../features/messaging/notification-screen.dart';
 
 class AutoUpdateView extends StatelessWidget {
   AutoUpdateView({Key? key}) : super(key: key);
@@ -109,7 +111,10 @@ class AutoUpdateLogic {
 
   openLink() async {
     try {
-      await launch(controller.downloadLink!);
+      Uri? uri = Uri.tryParse(controller.downloadLink ?? '');
+      if (uri != null) {
+        await launchUrl(uri);
+      }
     } catch (e) {
       Get.defaultDialog(
         title: "\nError Occured",
