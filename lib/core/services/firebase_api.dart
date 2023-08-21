@@ -1,10 +1,6 @@
 import 'dart:developer';
-import 'dart:io';
-import 'package:mime/mime.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:temple_adventures/core/util/app-func.dart';
-import 'package:temple_adventures/core/widgets/attendance_report_widget/mini_employee_model.dart';
+import 'package:temple_adventures/core/models/mini_employee_model.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/attendance/attendance-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
@@ -167,57 +163,57 @@ class FirebaseApi {
         .set(attendance.toMap());
   }
 
-  static uploadPDF(File? file, String email, Function onSuccess) async {
-    if (file == null) return;
-    String fileExtension = file.path.split('.').last;
-    String fileName =
-        DateTime.now().millisecondsSinceEpoch.toString() + "." + fileExtension;
+  // static uploadPDF(File? file, String email, Function onSuccess) async {
+  //   if (file == null) return;
+  //   String fileExtension = file.path.split('.').last;
+  //   String fileName =
+  //       DateTime.now().millisecondsSinceEpoch.toString() + "." + fileExtension;
+  //
+  //   final metadata = SettableMetadata(
+  //       contentType: lookupMimeType(file.path),
+  //       customMetadata: {'picked-file-path': file.path});
+  //
+  //   await FirebaseStorage.instance
+  //       .ref("customers")
+  //       .child("/paperwork")
+  //       .child("/$email")
+  //       .child("/$fileName")
+  //       .putFile(file, metadata)
+  //       .then((TaskSnapshot v) async {
+  //         onSuccess(await v.ref.getDownloadURL());
+  //       })
+  //       .whenComplete(() => showToast("Pdf Upload Success"))
+  //       .onError((dynamic error, stackTrace) async {
+  //         showToast(error.toString());
+  //       })
+  //       .catchError((error) {
+  //         showToast(error.toString());
+  //       });
+  // }
 
-    final metadata = SettableMetadata(
-        contentType: lookupMimeType(file.path),
-        customMetadata: {'picked-file-path': file.path});
-
-    await FirebaseStorage.instance
-        .ref("customers")
-        .child("/paperwork")
-        .child("/$email")
-        .child("/$fileName")
-        .putFile(file, metadata)
-        .then((TaskSnapshot v) async {
-          onSuccess(await v.ref.getDownloadURL());
-        })
-        .whenComplete(() => showToast("Pdf Upload Success"))
-        .onError((dynamic error, stackTrace) async {
-          showToast(error.toString());
-        })
-        .catchError((error) {
-          showToast(error.toString());
-        });
-  }
-
-  static uploadIdProof(File? file, String email, Function onSuccess) async {
-    if (file == null) return;
-    String fileExtension = file.path.split('.').last;
-    String fileName = email + "." + fileExtension;
-
-    final metadata = SettableMetadata(
-        contentType: lookupMimeType(file.path),
-        customMetadata: {'picked-file-path': file.path});
-
-    await FirebaseStorage.instance
-        .ref("customers")
-        .child("/idProofs")
-        .child("/$fileName")
-        .putFile(file, metadata)
-        .then((TaskSnapshot v) async {
-          onSuccess(await v.ref.getDownloadURL());
-        })
-        .whenComplete(() => showToast("Id proof upload Success"))
-        .onError((dynamic error, stackTrace) async {
-          showToast(error.toString());
-        })
-        .catchError((error) {
-          showToast(error.toString());
-        });
-  }
+  // static uploadIdProof(File? file, String email, Function onSuccess) async {
+  //   if (file == null) return;
+  //   String fileExtension = file.path.split('.').last;
+  //   String fileName = email + "." + fileExtension;
+  //
+  //   final metadata = SettableMetadata(
+  //       contentType: lookupMimeType(file.path),
+  //       customMetadata: {'picked-file-path': file.path});
+  //
+  //   await FirebaseStorage.instance
+  //       .ref("customers")
+  //       .child("/idProofs")
+  //       .child("/$fileName")
+  //       .putFile(file, metadata)
+  //       .then((TaskSnapshot v) async {
+  //         onSuccess(await v.ref.getDownloadURL());
+  //       })
+  //       .whenComplete(() => showToast("Id proof upload Success"))
+  //       .onError((dynamic error, stackTrace) async {
+  //         showToast(error.toString());
+  //       })
+  //       .catchError((error) {
+  //         showToast(error.toString());
+  //       });
+  // }
 }

@@ -2,7 +2,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
-import 'package:temple_adventures/core/util/app-func.dart';
+import 'package:temple_adventures/core/util/utils.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import '../../../features/boat/models/boats.dart';
 import '../booking-expansion-panel.dart';

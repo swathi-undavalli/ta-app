@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/auto-update.dart';
+import 'package:temple_adventures/core/services/auto-update.dart';
 import 'package:temple_adventures/features/login/presentation/screens/login-page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -20,6 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   init() async {
+    log("in splash screen");
     await Future.delayed(Duration(microseconds: 500));
 
     try {

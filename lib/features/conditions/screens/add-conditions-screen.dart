@@ -1,4 +1,4 @@
-import 'package:temple_adventures/core/util/app-func.dart';
+import 'package:temple_adventures/core/util/utils.dart';
 import 'package:temple_adventures/features/conditions/models/conditions-model.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';

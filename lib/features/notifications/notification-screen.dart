@@ -11,9 +11,9 @@ import 'package:intl/intl.dart';
 class NotificationsScreen extends StatelessWidget {
   static const String id = "NotificationsScreen";
 
-  NotificationLogic logic = NotificationLogic();
+  final NotificationLogic logic = NotificationLogic();
 
-  RemoteMessage? message = Get.arguments;
+  final RemoteMessage? message = Get.arguments;
 
   NotificationsScreen() {
     checkFireBase();

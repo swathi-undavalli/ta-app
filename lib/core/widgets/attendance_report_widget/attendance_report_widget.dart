@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/access_levels.dart';
+import 'package:temple_adventures/core/widgets/access_levels.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'mini_employee_model.dart';
+import '../../models/mini_employee_model.dart';
 import 'package:intl/intl.dart';
 
 class AttendanceReportWidget extends StatefulWidget {

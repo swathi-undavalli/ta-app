@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
-import 'package:temple_adventures/access_levels.dart';
+import 'package:temple_adventures/core/widgets/access_levels.dart';
 import 'package:temple_adventures/features/Freelancers/controller/add-freelance-controller.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/add-freelance-screen.dart';
 import 'package:temple_adventures/features/attendance/attendance-page.dart';
@@ -170,18 +170,18 @@ class FreelanceDetailsScreen extends StatelessWidget {
                       buildEmployeeInfo(
                           subHeading: "Login Location", text: "Pondicherry"),
                       SizedBox(height: 10),
-                      Container(
-                        alignment: Alignment.centerRight,
-                        child: AppButton.miniFlat(
-                          onTap: () {
-                            Get.toNamed(AttendancePage.id,
-                                arguments: freelanceArgument);
-                          },
-                          text: "View all ",
-                          bgColor: AppColors.background.lightSkyBlue,
-                          textColor: Colors.black,
-                        ),
-                      )
+                      // Container(
+                      //   alignment: Alignment.centerRight,
+                      //   child: AppButton.miniFlat(
+                      //     onTap: () {
+                      //       Get.toNamed(AttendancePage.id,
+                      //           arguments: freelanceArgument);
+                      //     },
+                      //     text: "View all ",
+                      //     bgColor: AppColors.background.lightSkyBlue,
+                      //     textColor: Colors.black,
+                      //   ),
+                      // )
                     ],
                   ),
                 ),

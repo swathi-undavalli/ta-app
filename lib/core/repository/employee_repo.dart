@@ -2,7 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:temple_adventures/core/services/firebase_api.dart';
-import 'package:temple_adventures/core/util/app-func.dart';
+import 'package:temple_adventures/core/util/utils.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 
 class EmployeeRepo {

@@ -11,7 +11,7 @@ import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
 import 'package:temple_adventures/features/Freelancers/controller/add-freelance-controller.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
-import 'package:temple_adventures/features/counter-model.dart';
+import 'package:temple_adventures/core/models/counter-model.dart';
 
 class AddFreelanceScreen extends StatelessWidget {
   static const String id = "AddFreelanceScreen";

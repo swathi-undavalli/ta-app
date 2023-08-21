@@ -10,22 +10,18 @@ import 'package:temple_adventures/features/Freelancers/presentation/screens/add-
 import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/freelance-details-screen.dart';
 import 'package:temple_adventures/features/admin-portal/presentation/image-view-page.dart';
-import 'package:temple_adventures/auto-update.dart';
+import 'package:temple_adventures/core/services/auto-update.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/d2.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
 import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-general-info.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/IDProofScreen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add-payments-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/all-idProofs-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/edit-payments-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/guests-edit-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/new-booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
@@ -40,7 +36,7 @@ import 'package:temple_adventures/features/messaging/firebase_messaging_controll
 import 'package:temple_adventures/features/messaging/notification_service.dart';
 import 'package:temple_adventures/features/splash/view/splash-screen.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
-import 'package:temple_adventures/notification-screen.dart';
+import 'package:temple_adventures/features/notifications/notification-screen.dart';
 import 'features/Activities/presentation/screens/all-activities-screen.dart';
 import 'features/conditions/screens/add-conditions-screen.dart';
 import 'features/dashboard/controller/dashboard-controller.dart';
@@ -109,19 +105,19 @@ class MyApp extends StatelessWidget {
       initialRoute: SplashScreen.id,
       theme: ThemeData(
         textTheme: TextTheme(
-          headline1: TextStyle(fontFamily: AppFonts.nunito),
-          headline2: TextStyle(fontFamily: AppFonts.nunito),
-          headline3: TextStyle(fontFamily: AppFonts.nunito),
-          headline4: TextStyle(fontFamily: AppFonts.nunito),
-          headline5: TextStyle(fontFamily: AppFonts.nunito),
-          headline6: TextStyle(fontFamily: AppFonts.nunito),
-          subtitle1: TextStyle(fontFamily: AppFonts.nunito),
-          subtitle2: TextStyle(fontFamily: AppFonts.nunito),
-          bodyText1: TextStyle(fontFamily: AppFonts.nunito),
-          bodyText2: TextStyle(fontFamily: AppFonts.nunito),
-          caption: TextStyle(fontFamily: AppFonts.nunito),
-          button: TextStyle(fontFamily: AppFonts.nunito),
-          overline: TextStyle(fontFamily: AppFonts.nunito),
+          displayLarge: TextStyle(fontFamily: AppFonts.nunito),
+          displayMedium: TextStyle(fontFamily: AppFonts.nunito),
+          displaySmall: TextStyle(fontFamily: AppFonts.nunito),
+          headlineMedium: TextStyle(fontFamily: AppFonts.nunito),
+          headlineSmall: TextStyle(fontFamily: AppFonts.nunito),
+          titleLarge: TextStyle(fontFamily: AppFonts.nunito),
+          titleMedium: TextStyle(fontFamily: AppFonts.nunito),
+          titleSmall: TextStyle(fontFamily: AppFonts.nunito),
+          bodyLarge: TextStyle(fontFamily: AppFonts.nunito),
+          bodyMedium: TextStyle(fontFamily: AppFonts.nunito),
+          bodySmall: TextStyle(fontFamily: AppFonts.nunito),
+          labelLarge: TextStyle(fontFamily: AppFonts.nunito),
+          labelSmall: TextStyle(fontFamily: AppFonts.nunito),
         ),
       ),
       routes: {
@@ -133,22 +129,22 @@ class MyApp extends StatelessWidget {
         PaymentDetailsScreen.id: (context) => PaymentDetailsScreen(),
         BookDateTime.id: (context) => BookDateTime(),
         NewBookingScreen.id: (context) => NewBookingScreen(),
-        AttendancePage.id: (context) => AttendancePage(),
+        // AttendancePage.id: (context) => AttendancePage(),
         LoginScreen.id: (context) => LoginScreen(),
         EditBookingNewScreen.id: (context) => EditBookingNewScreen(),
         WelcomeScreen.id: (context) => WelcomeScreen(),
         DashBoardScreen.id: (context) => DashBoardScreen(),
         AddAnUser.id: (context) => AddAnUser(),
-        GuestsEditScreen.id: (context) => GuestsEditScreen(),
+        // GuestsEditScreen.id: (context) => GuestsEditScreen(),
         AddCustomerDetailsScreen.id: (context) => AddCustomerDetailsScreen(),
         AllEmployeesScreen.id: (context) => AllEmployeesScreen(),
         LogScreen.id: (context) => LogScreen(),
         EmployeeProfileScreen.id: (context) => EmployeeProfileScreen(),
         EmployeeDetailsScreen.id: (context) => EmployeeDetailsScreen(),
         AutoUpdateView.id: (context) => AutoUpdateView(),
-        D2.id: (context) => D2(),
-        IDProofScreen.id: (context) => IDProofScreen(),
-        AllIDProofsScreen.id: (context) => AllIDProofsScreen(),
+        // D2.id: (context) => D2(),
+        // IDProofScreen.id: (context) => IDProofScreen(),
+        // AllIDProofsScreen.id: (context) => AllIDProofsScreen(),
         AllFreelancersScreen.id: (context) => AllFreelancersScreen(),
         AddFreelanceScreen.id: (context) => AddFreelanceScreen(),
         FreelanceDetailsScreen.id: (context) => FreelanceDetailsScreen(),

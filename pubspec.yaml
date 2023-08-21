@@ -12,55 +12,46 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   get: ^4.6.5
   get_storage: ^2.0.3
   pdf: ^3.8.4
   intl:
   flutter_share: ^2.0.0
-  font_awesome_flutter: ^10.3.0
   flutter_svg: ^1.1.6
   octo_image: ^1.0.2
   cached_network_image: ^3.2.3
   cupertino_icons: ^1.0.5
-  image_picker: ^0.8.6+1
-  step_progress_indicator: ^1.0.2
-  image_cropper: ^3.0.1
   http: ^0.13.5
   permission_handler: ^10.2.0
-  file_picker: ^5.2.5
-  geolocator: ^9.0.2
-  location: ^4.4.0
   fluttertoast: ^8.1.1
   flutter_datetime_picker: ^1.5.1
-  path_provider: ^2.0.12
   share: ^2.0.4
-  dio: ^4.0.6
   url_launcher: ^6.1.8
-  shimmer: ^2.0.0
   scroll_to_index: ^3.0.1
-  gallery_saver: ^2.3.2
-  story_view: ^0.14.0
-  flutter_pdfview: ^1.2.5
   barcode_widget: ^2.0.3
-
-
   firebase_auth: ^4.2.2
   firebase_core: ^2.7.0
   cloud_firestore: ^4.8.1
-  firebase_storage: ^11.0.14
   firebase_messaging: ^14.2.5
   flutter_local_notifications: ^13.0.0
-  ota_update: ^4.0.2
-  flutter_app_installer: ^0.0.3
-  package_info_plus: ^3.0.2
+  package_info_plus:
   pin_code_fields: ^7.4.0
-  otp_autofill: ^2.1.0
 
-
-
-  #------------------------------------------
-
+#  dio: ^4.0.6
+#  path_provider: ^2.0.12
+#  shimmer: ^2.0.0
+#  file_picker: ^5.2.5
+#  geolocator: ^9.0.2
+#  location: ^4.4.0
+#  font_awesome_flutter: ^10.3.0
+#  image_picker: ^0.8.6+1
+#  step_progress_indicator: ^1.0.2
+#  gallery_saver: ^2.3.2
+#  story_view: ^0.14.0
+#  flutter_pdfview: ^1.2.5
+#  otp_autofill: ^2.1.0
+#  firebase_storage: ^11.0.14
+#  image_cropper: ^3.0.1
 
 dev_dependencies:
   flutter_test:

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/repository/employee_repo.dart';
-import 'package:temple_adventures/features/counter-model.dart';
+import 'package:temple_adventures/core/models/counter-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import '../../home/model/colors_data.dart';
 
