@@ -1,8 +1,7 @@
 import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
@@ -176,52 +175,9 @@ class LoginScreenLogic {
 }
 
 class LoginScreenController extends GetxController {
-  List<FocusNode> keyboardFocusNodes = [
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-  ];
-
-  List<TextEditingController> textEditingControllersOTP = [
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-    TextEditingController(),
-  ];
-
-  List<FocusNode> focusNodesOTP = [
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-  ];
-
-  List<FocusNode> keyboardFocusNodesOTP = [
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-    FocusNode(),
-  ];
-
   TextEditingController phoneNumberTED = TextEditingController();
   TextEditingController countryCodeTED = TextEditingController();
   TextEditingController employeeIdTED = TextEditingController();
-
-  FocusNode? phoneNumberNode;
-  FocusNode? countryCodeNode;
 
   String _otpStatus = "";
   bool _showFab = true;

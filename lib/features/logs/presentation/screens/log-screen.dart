@@ -1,14 +1,14 @@
+import 'dart:developer' as dev;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
-import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/details-screen.dart';
-import 'dart:developer' as dev;
 
 
 class LogScreen extends StatelessWidget {
