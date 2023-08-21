@@ -1,8 +1,6 @@
 import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:temple_adventures/core/models/mini_employee_model.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:temple_adventures/features/attendance/attendance-model.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:intl/intl.dart';
 
@@ -96,72 +94,72 @@ class FirebaseApi {
     return diffInSeconds;
   }
 
-  static updateAttendance(Attendance attendance) async {
-    var date = DateFormat("dd-M-yyyy").format(DateTime.now());
-
-    if (attendance.checkOutLocation == null) {
-      DocumentReference dailyAttendanceLog = FirebaseFirestore.instance
-          .collection('dailyAttendanceLogs')
-          .doc(date);
-
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        var now = DateTime.now();
-        var shift = DateTime(0, 0, 0, currentEmployee!.shiftTiming!.hour,
-            currentEmployee!.shiftTiming!.minute);
-        var present = DateTime(0, 0, 0, now.hour, now.minute);
-        var status = "On-Time";
-        if (present.difference(shift).inMinutes > 10) status = "Late";
-        if (present.difference(shift).inHours > 6) status = "Absent";
-        attendance.punctual = status;
-
-        var cData = await FirebaseFirestore.instance
-            .collection('employees')
-            .doc(currentEmployee!.id)
-            .collection('attendanceClock')
-            .doc(DateFormat("MM-yyyy").format(DateTime.now()))
-            .get();
-        Map<String, dynamic>? clockData = cData.data();
-
-        if (clockData == null || clockData["clockDuration"] == null) {
-          clockData = {};
-          clockData["clockDuration"] =
-              getDifferenceInSeconds(currentEmployee!.shiftTiming!);
-        } else {
-          var clock = clockData["clockDuration"];
-          clock = clock + getDifferenceInSeconds(currentEmployee!.shiftTiming!);
-          clockData["clockDuration"] = clock;
-        }
-
-        FirebaseFirestore.instance
-            .collection('employees')
-            .doc(currentEmployee!.id)
-            .collection('attendanceClock')
-            .doc(DateFormat("MM-yyyy").format(DateTime.now()))
-            .set(clockData);
-
-        DocumentSnapshot counterSnapshot =
-            await transaction.get(dailyAttendanceLog);
-        Map<String, dynamic> data = counterSnapshot.data() as Map<String, dynamic>;
-        EmployeeMiniModel newData = EmployeeMiniModel(
-          shiftTime: DateFormat("hh:mm:ss").format(currentEmployee!.shiftTiming!),
-          phone: currentEmployee!.phoneNumber,
-          name: currentEmployee!.firstName! + " " + currentEmployee!.lastName!,
-          logTime: Timestamp.now(),
-          id: currentEmployee!.id,
-          punctual: status,
-        );
-        data[currentEmployee!.id] = newData.toMap();
-        transaction.update(dailyAttendanceLog, data);
-      });
-    }
-
-    await FirebaseFirestore.instance
-        .collection('employees')
-        .doc(currentEmployee!.id)
-        .collection('attendance')
-        .doc(date)
-        .set(attendance.toMap());
-  }
+  // static updateAttendance(Attendance attendance) async {
+  //   var date = DateFormat("dd-M-yyyy").format(DateTime.now());
+  //
+  //   if (attendance.checkOutLocation == null) {
+  //     DocumentReference dailyAttendanceLog = FirebaseFirestore.instance
+  //         .collection('dailyAttendanceLogs')
+  //         .doc(date);
+  //
+  //     await FirebaseFirestore.instance.runTransaction((transaction) async {
+  //       var now = DateTime.now();
+  //       var shift = DateTime(0, 0, 0, currentEmployee!.shiftTiming!.hour,
+  //           currentEmployee!.shiftTiming!.minute);
+  //       var present = DateTime(0, 0, 0, now.hour, now.minute);
+  //       var status = "On-Time";
+  //       if (present.difference(shift).inMinutes > 10) status = "Late";
+  //       if (present.difference(shift).inHours > 6) status = "Absent";
+  //       attendance.punctual = status;
+  //
+  //       var cData = await FirebaseFirestore.instance
+  //           .collection('employees')
+  //           .doc(currentEmployee!.id)
+  //           .collection('attendanceClock')
+  //           .doc(DateFormat("MM-yyyy").format(DateTime.now()))
+  //           .get();
+  //       Map<String, dynamic>? clockData = cData.data();
+  //
+  //       if (clockData == null || clockData["clockDuration"] == null) {
+  //         clockData = {};
+  //         clockData["clockDuration"] =
+  //             getDifferenceInSeconds(currentEmployee!.shiftTiming!);
+  //       } else {
+  //         var clock = clockData["clockDuration"];
+  //         clock = clock + getDifferenceInSeconds(currentEmployee!.shiftTiming!);
+  //         clockData["clockDuration"] = clock;
+  //       }
+  //
+  //       FirebaseFirestore.instance
+  //           .collection('employees')
+  //           .doc(currentEmployee!.id)
+  //           .collection('attendanceClock')
+  //           .doc(DateFormat("MM-yyyy").format(DateTime.now()))
+  //           .set(clockData);
+  //
+  //       DocumentSnapshot counterSnapshot =
+  //           await transaction.get(dailyAttendanceLog);
+  //       Map<String, dynamic> data = counterSnapshot.data() as Map<String, dynamic>;
+  //       EmployeeMiniModel newData = EmployeeMiniModel(
+  //         shiftTime: DateFormat("hh:mm:ss").format(currentEmployee!.shiftTiming!),
+  //         phone: currentEmployee!.phoneNumber,
+  //         name: currentEmployee!.firstName! + " " + currentEmployee!.lastName!,
+  //         logTime: Timestamp.now(),
+  //         id: currentEmployee!.id,
+  //         punctual: status,
+  //       );
+  //       data[currentEmployee!.id] = newData.toMap();
+  //       transaction.update(dailyAttendanceLog, data);
+  //     });
+  //   }
+  //
+  //   await FirebaseFirestore.instance
+  //       .collection('employees')
+  //       .doc(currentEmployee!.id)
+  //       .collection('attendance')
+  //       .doc(date)
+  //       .set(attendance.toMap());
+  // }
 
   // static uploadPDF(File? file, String email, Function onSuccess) async {
   //   if (file == null) return;

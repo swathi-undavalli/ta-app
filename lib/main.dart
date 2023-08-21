@@ -29,7 +29,6 @@ import 'package:temple_adventures/features/dashboard/presentation/screens/dashbo
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
-import 'package:temple_adventures/features/attendance/attendance-page.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/details-screen.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:temple_adventures/features/messaging/firebase_messaging_controller.dart';

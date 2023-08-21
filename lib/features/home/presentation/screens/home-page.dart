@@ -5,9 +5,6 @@ import 'package:temple_adventures/features/employees/presentation/screens/all-em
 import '../../../../core/authentication/firebase-authentication.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
-import '../../../../core/widgets/attendance_report_widget/attendance_report_widget.dart';
-import '../../../../core/widgets/attendance_widget/attandence_widget_controller.dart';
-import '../../../../core/widgets/attendance_widget/attendence_widget.dart';
 import '../../../board-plan/presentation/widgets/customer-details.dart';
 import '../../../login/presentation/screens/login-page.dart';
 
@@ -18,71 +15,56 @@ class HomePage extends StatelessWidget {
   Widget build(BuildContext context) {
     selectedDate = DateTime.now();
 
-    return RefreshIndicator(
-      color: Colors.black,
-      onRefresh: () async {
-        var futures = <Future>[];
-
-        AttendanceWidgetLogic attendanceWidgetLogic = AttendanceWidgetLogic();
-        AttendanceReportWidgetLogic attendanceReportWidgetLogic =
-            AttendanceReportWidgetLogic();
-
-        futures.add(attendanceWidgetLogic.reloadData());
-        futures.add(attendanceReportWidgetLogic.reloadData());
-
-        await Future.wait(futures);
-      },
-      child: Scaffold(
-        backgroundColor: AppColors.background.lightBlue,
-        body: SafeArea(
-          child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20),
-              child: Column(
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 0, top: 10),
-                    width: MediaQuery.of(context).size.width,
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          onPressed: () {
-                            dashboardDrawerKey.currentState!.openDrawer();
-                          },
-                          icon: Icon(Icons.menu_rounded),
-                        ),
-                        IconButton(
-                          onPressed: () {
-                            FirebaseAuthentication.logout();
-                            Get.offAndToNamed(LoginScreen.id);
-                          },
-                          icon: Icon(Icons.logout),
-                        ),
-                      ],
-                    ),
+    return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: BouncingScrollPhysics(),
+          child: Padding(
+            padding: const EdgeInsets.only(left: 20, right: 20),
+            child: Column(
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 0, top: 10),
+                  width: MediaQuery.of(context).size.width,
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          dashboardDrawerKey.currentState!.openDrawer();
+                        },
+                        icon: Icon(Icons.menu_rounded),
+                      ),
+                      IconButton(
+                        onPressed: () {
+                          FirebaseAuthentication.logout();
+                          Get.offAndToNamed(LoginScreen.id);
+                        },
+                        icon: Icon(Icons.logout),
+                      ),
+                    ],
                   ),
-                  SizedBox(height: 20),
-                  // AttendanceWidget(),
-                  // SizedBox(height: 20),
-                  AddEmployeeWidget(
-                    text: "Add Employees",
-                    subText: "Only admins can modify",
-                    onTap: () {
-                      Get.toNamed(AllEmployeesScreen.id);
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  // AttendanceReportWidget(),
-                  DSDTable(),
-                  SizedBox(height: 100),
-                  SizedBox(
-                    height: 50,
-                  )
-                ],
-              ),
+                ),
+                SizedBox(height: 20),
+                // AttendanceWidget(),
+                // SizedBox(height: 20),
+                AddEmployeeWidget(
+                  text: "Add Employees",
+                  subText: "Only admins can modify",
+                  onTap: () {
+                    Get.toNamed(AllEmployeesScreen.id);
+                  },
+                ),
+                SizedBox(height: 20),
+                // AttendanceReportWidget(),
+                DSDTable(),
+                SizedBox(height: 100),
+                SizedBox(
+                  height: 50,
+                )
+              ],
             ),
           ),
         ),

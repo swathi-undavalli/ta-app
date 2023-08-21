@@ -1,8 +1,4 @@
-
 import 'package:flutter/material.dart';
-import 'package:get_storage/get_storage.dart';
-
-final attendanceBox = GetStorage();
 
 final GlobalKey<ScaffoldState> dashboardDrawerKey = GlobalKey();
 

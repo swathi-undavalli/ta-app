@@ -7,8 +7,8 @@ class FirebaseAuthentication {
     await auth.signOut();
   }
 
-  static String userId() {
-    return auth.currentUser!.uid;
+  static String? userId() {
+    return auth.currentUser?.uid;
   }
 
   static isUserLoggedIn() {
