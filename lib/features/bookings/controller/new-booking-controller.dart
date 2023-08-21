@@ -1,8 +1,10 @@
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
@@ -19,10 +21,9 @@ import 'package:temple_adventures/features/bookings/presentation/screens/new-boo
 import 'package:temple_adventures/features/bookings/presentation/screens/payment-details-screen.dart';
 import 'package:temple_adventures/features/dashboard/controller/dashboard-controller.dart';
 import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
-import 'package:intl/intl.dart';
 
 class NewBookingLogic {
   NewBookingLogic() {

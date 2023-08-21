@@ -1,9 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/repository/employee_repo.dart';
 import 'package:temple_adventures/core/models/counter-model.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
-import '../../home/model/colors_data.dart';
+import 'package:temple_adventures/core/repository/employee_repo.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
+
+import '../../activities/model/colors_data.dart';
 
 class DashBoardScreenLogic {
   DashBoardScreenController controller = Get.find();
@@ -20,8 +21,6 @@ class DashBoardScreenLogic {
         .doc("count")
         .get();
     counterModel = CounterModel.fromMap(data.data()!);
-    var count = counterModel!.employee;
-    //print(count);
   }
 
   getColorsData() async {
@@ -29,7 +28,7 @@ class DashBoardScreenLogic {
         .collection("catalogue")
         .doc("colors")
         .get();
-    colorsData = ColorsDataModel.fromMap(data.data()!);
+    colorsData = ColorsDataModel.fromMap(data.data() ?? {});
   }
 
   reloadAfter1Sec() {

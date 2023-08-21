@@ -1,22 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/widgets/access_levels.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
-import 'package:temple_adventures/core/widgets/access_levels.dart';
 import 'package:temple_adventures/features/employees/controllers/add-an-employee-controller.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:intl/intl.dart';
 
 class EmployeeDetailsScreen extends StatelessWidget {
   static const String id = "EmployeeDetailsScreen";
   final Employee? employeeArgument = Get.arguments as Employee?;
-  AddAnUserLogic logic = AddAnUserLogic();
+  final AddAnEmployeeLogic logic = AddAnEmployeeLogic();
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                       child: buildIcons(Icons.edit, () async {
                         if (await checkFirebase()) {
                           await Future.delayed(Duration(milliseconds: 300));
-                          Get.toNamed(AddAnUser.id, arguments: true);
+                          Get.toNamed(AddAnEmployeeScreen.id, arguments: true);
                         }
                       }),
                     ),
@@ -256,8 +256,10 @@ class EmployeeDetailsScreen extends StatelessWidget {
 
   makingPhoneCall(String phoneNumber, String code) async {
     String url = 'tel:${code + phoneNumber}';
-    if (await canLaunch(url)) {
-      await launch(url);
+    Uri? uri = Uri.tryParse(url);
+
+    if (uri != null && await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     } else {
       throw 'Could not launch $url';
     }

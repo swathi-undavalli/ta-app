@@ -1,15 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/spacing-widget.dart';
-import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/access_levels.dart';
+import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/employees/controllers/all-employees-controller.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/employee-details-screen.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
+
 import 'add-an-employee-screen.dart';
 
 class AllEmployeesScreen extends StatefulWidget {
@@ -132,7 +131,7 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
       access: AccessRights.createEmployees,
       child: FloatingActionButton(
         onPressed: () {
-          Get.toNamed(AddAnUser.id);
+          Get.toNamed(AddAnEmployeeScreen.id);
         },
         backgroundColor: AppColors.background.black,
         child: Icon(Icons.add),

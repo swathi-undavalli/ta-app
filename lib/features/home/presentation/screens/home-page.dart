@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
+
 import '../../../../core/authentication/firebase-authentication.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
@@ -9,7 +10,6 @@ import '../../../board-plan/presentation/widgets/customer-details.dart';
 import '../../../login/presentation/screens/login-page.dart';
 
 class HomePage extends StatelessWidget {
-  final now = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -21,11 +21,11 @@ class HomePage extends StatelessWidget {
         child: SingleChildScrollView(
           physics: BouncingScrollPhysics(),
           child: Padding(
-            padding: const EdgeInsets.only(left: 20, right: 20),
+            padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
                 Container(
-                  margin: EdgeInsets.only(left: 0, top: 10),
+                  margin: EdgeInsets.only(top: 10),
                   width: MediaQuery.of(context).size.width,
                   alignment: Alignment.centerLeft,
                   child: Row(
@@ -82,11 +82,4 @@ class HomePage extends StatelessWidget {
 
     return d.replaceAll(getFirstName(d), "").trim();
   }
-}
-
-getString(List<String> sublist) {
-  if (sublist.length != 0) {
-    return sublist[0];
-  }
-  return "";
 }

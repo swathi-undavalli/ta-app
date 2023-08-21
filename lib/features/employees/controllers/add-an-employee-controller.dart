@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/util/utils.dart';
-import 'package:temple_adventures/core/models/counter-model.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_adventures/core/models/counter-model.dart';
+import 'package:temple_adventures/core/util/utils.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
-class AddAnUserLogic {
+class AddAnEmployeeLogic {
   final DateFormat formatter = DateFormat('HH:mm');
 
-  AddAnUserController controller = Get.put(AddAnUserController());
+  AddAnEmployeeController controller = Get.put(AddAnEmployeeController());
   Employee? employee;
 
   createEmployee() async {
@@ -174,7 +174,7 @@ class AddAnUserLogic {
   }
 }
 
-class AddAnUserController extends GetxController {
+class AddAnEmployeeController extends GetxController {
   DateTime? pickedTime = DateTime.now();
 
   TextEditingController firstNameTED = TextEditingController();

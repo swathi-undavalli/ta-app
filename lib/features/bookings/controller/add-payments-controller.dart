@@ -5,7 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 
 class AddPaymentsLogic {
   AddPaymentsController controller = Get.put(AddPaymentsController());

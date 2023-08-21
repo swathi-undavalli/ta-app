@@ -3,11 +3,10 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_utils/src/extensions/widget_extensions.dart';
-import 'package:temple_adventures/core/util/utils.dart';
 import 'package:temple_adventures/core/util/spacing-widget.dart';
+import 'package:temple_adventures/core/util/utils.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 
 import '../../../../core/constants/constants.dart';
 

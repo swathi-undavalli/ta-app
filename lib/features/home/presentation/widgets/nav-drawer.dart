@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/services/auto-update.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/services/auto-update.dart';
 import 'package:temple_adventures/core/widgets/access_levels.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-general-info.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/employee-profile-screen.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 import '../../../activities/presentation/screens/all-activities-screen.dart';

@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:intl/intl.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/conditions/controller/conditions-controller.dart';
 import 'package:temple_adventures/features/conditions/models/conditions-model.dart';
 import 'package:temple_adventures/features/conditions/repositories/conditions-repository.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 
 class AddConditionsLogic {
   AddConditionsController controller = Get.put(AddConditionsController());

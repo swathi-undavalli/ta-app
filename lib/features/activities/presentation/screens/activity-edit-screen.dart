@@ -10,9 +10,9 @@ import 'package:temple_adventures/features/bookings/presentation/widgets/app-tex
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
-import '../../../home/model/colors_data.dart';
 import '../../controller/activity-edit-controller.dart';
 import '../../controller/all-activities-controller.dart';
+import '../../model/colors_data.dart';
 
 // ignore: must_be_immutable
 class ActivityEditScreen extends StatelessWidget {

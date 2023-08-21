@@ -8,9 +8,6 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/services/auto-update.dart';
-import 'package:temple_adventures/features/Freelancers/presentation/screens/add-freelance-screen.dart';
-import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
-import 'package:temple_adventures/features/Freelancers/presentation/screens/freelance-details-screen.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
@@ -125,16 +122,13 @@ class MyApp extends StatelessWidget {
         EditBookingNewScreen.id: (context) => EditBookingNewScreen(),
         WelcomeScreen.id: (context) => WelcomeScreen(),
         DashBoardScreen.id: (context) => DashBoardScreen(),
-        AddAnUser.id: (context) => AddAnUser(),
+        AddAnEmployeeScreen.id: (context) => AddAnEmployeeScreen(),
         AddCustomerDetailsScreen.id: (context) => AddCustomerDetailsScreen(),
         AllEmployeesScreen.id: (context) => AllEmployeesScreen(),
         LogScreen.id: (context) => LogScreen(),
         EmployeeProfileScreen.id: (context) => EmployeeProfileScreen(),
         EmployeeDetailsScreen.id: (context) => EmployeeDetailsScreen(),
         AutoUpdateView.id: (context) => AutoUpdateView(),
-        AllFreelancersScreen.id: (context) => AllFreelancersScreen(),
-        AddFreelanceScreen.id: (context) => AddFreelanceScreen(),
-        FreelanceDetailsScreen.id: (context) => FreelanceDetailsScreen(),
         AddPaymentsScreen.id: (context) => AddPaymentsScreen(),
         EditPaymentsScreen.id: (context) => EditPaymentsScreen(),
         NotificationsScreen.id: (context) => NotificationsScreen(),

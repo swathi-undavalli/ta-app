@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/models/counter-model.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
-import 'package:temple_adventures/core/models/counter-model.dart';
 import 'package:temple_adventures/features/employees/controllers/add-an-employee-controller.dart';
 
-class AddAnUser extends StatelessWidget {
-  static const String id = "AddAnUser";
-  final AddAnUserLogic logic = AddAnUserLogic();
+class AddAnEmployeeScreen extends StatelessWidget {
+  static const String id = "AddAnEmployeeScreen";
+  final AddAnEmployeeLogic logic = AddAnEmployeeLogic();
   final bool isEdit = (Get.arguments) ?? false;
 
   @override
@@ -142,7 +142,7 @@ class AddAnUser extends StatelessWidget {
   ///===============UI==============///
 
   Widget buildAccessLevels() {
-    return GetBuilder<AddAnUserController>(builder: (controller) {
+    return GetBuilder<AddAnEmployeeController>(builder: (controller) {
       return Column(
         children: [
           buildSwitch(
@@ -442,7 +442,7 @@ class AddAnUser extends StatelessWidget {
   }
 
   Widget buildRolesList() {
-    return GetBuilder<AddAnUserController>(builder: (controller) {
+    return GetBuilder<AddAnEmployeeController>(builder: (controller) {
       return Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: DropdownButton(
@@ -468,7 +468,7 @@ class AddAnUser extends StatelessWidget {
   }
 
   Widget buildGender() {
-    return GetBuilder<AddAnUserController>(builder: (controller) {
+    return GetBuilder<AddAnEmployeeController>(builder: (controller) {
       return Padding(
         padding: const EdgeInsets.only(left: 10, right: 10),
         child: DropdownButton(

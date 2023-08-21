@@ -2,11 +2,6 @@ import 'package:temple_adventures/features/boat/models/boat-details.dart';
 
 Employee? currentEmployee;
 
-enum AttendanceType {
-  CheckIn,
-  CheckOut,
-}
-
 class Employee {
   Employee({
     required this.id,

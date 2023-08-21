@@ -3,9 +3,10 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/booking-expansion-panel.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/customer-expansion-panel-controller.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/customer-expandable-listTile.dart';
-import 'package:temple_adventures/features/home/model/colors_data.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/customer-expansion-panel-controller.dart';
+
+import '../../../activities/model/colors_data.dart';
 
 class CustomersExpansionPanel extends StatefulWidget {
   final List<ItemModel>? items;

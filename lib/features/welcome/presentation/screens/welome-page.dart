@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard-screen.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 
 class WelcomeScreen extends StatelessWidget {
   static const String id = "WelcomeScreen";

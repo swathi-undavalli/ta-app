@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/widgets/access_levels.dart';
+import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/widgets/access_levels.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
-import 'package:temple_adventures/features/home/model/colors_data.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../../activities/model/colors_data.dart';
 import '../screens/add-payments-screen.dart';
 
 // ignore: must_be_immutable
@@ -586,8 +586,8 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
 
   makingPhoneCall(String? phoneNumber) async {
     String url = 'tel:$phoneNumber';
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
     } else {
       throw 'Could not launch $url';
     }

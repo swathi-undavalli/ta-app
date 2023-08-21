@@ -1,15 +1,15 @@
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/bookings/controller/edit-payments-controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 
 // ignore: must_be_immutable
 class EditPaymentsScreen extends StatelessWidget {

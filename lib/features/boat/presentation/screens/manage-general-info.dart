@@ -1,7 +1,7 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
@@ -13,7 +13,6 @@ import 'package:temple_adventures/features/boat/presentation/widgets/counter-wid
 import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/interns-bottomSheet.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
-import 'package:intl/intl.dart';
 
 class ManageGeneralInfo extends StatefulWidget {
   static const String id = "ManageDSDEquipment";
@@ -581,7 +580,7 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                primary: AppColors.text.black,
+                foregroundColor: AppColors.text.black,
                 textStyle:
                     TextStyle(fontWeight: FontWeight.w500), // button text color
               ),

@@ -1,36 +1,38 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart' as intl;
 import 'package:share/share.dart';
 import 'package:temple_adventures/core/constants/assets.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/utils.dart';
-import 'package:temple_adventures/core/widgets/ta-image.dart';
+import 'package:temple_adventures/core/widgets/access_levels.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
-import 'package:temple_adventures/core/widgets/access_levels.dart';
 import 'package:temple_adventures/core/widgets/qr-image.dart';
+import 'package:temple_adventures/core/widgets/ta-image.dart';
 import 'package:temple_adventures/features/bookings/controller/edit-payments-controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:intl/intl.dart' as intl;
 import 'package:temple_adventures/features/bookings/presentation/screens/add-payments-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/edit-payments-screen.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/share_bookingDetails_widget.dart';
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
-import '../../features/home/model/colors_data.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+
+import '../../features/activities/model/colors_data.dart';
 
 // ignore: must_be_immutable
 class BookingsExpansionPanel extends StatelessWidget {
@@ -1254,8 +1256,8 @@ Regards,
 
   makingPhoneCall(String? phoneNumber) async {
     String url = 'tel:$phoneNumber';
-    if (await canLaunch(url)) {
-      await launch(url);
+    if (await canLaunchUrlString(url)) {
+      await launchUrlString(url);
     } else {
       throw 'Could not launch $url';
     }

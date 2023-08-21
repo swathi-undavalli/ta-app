@@ -1,8 +1,9 @@
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:temple_adventures/features/home/model/employee.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 
 class FirebaseApi {
   static Future<DocumentSnapshot<Map<String, dynamic>>>

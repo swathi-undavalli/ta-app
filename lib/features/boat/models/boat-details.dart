@@ -1,5 +1,6 @@
 import 'dart:convert';
-import 'package:temple_adventures/features/home/model/employee.dart';
+
+import 'package:temple_adventures/features/employees/model/employee.dart';
 
 class BoatDetails {
   int? bookingStatus;
