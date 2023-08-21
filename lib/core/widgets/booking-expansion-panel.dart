@@ -472,7 +472,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                             log(double.parse(itemModel.balance)
                                                 .floorToDouble()
                                                 .toString());
-                                            makingPhoneCall(itemModel.phone);
+                                            openPhoneApp(itemModel.phone);
                                           },
                                         ),
                                         EmployeeAccess(
@@ -693,26 +693,63 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                           ],
                                         ),
                                         SizedBox(height: 10),
-                                        ...itemModel.bookingModel!.pax!
-                                            .map((e) {
-                                          if (e['needDoctor'] == true)
-                                            return Container(
+                                        for (int i = 0;
+                                            ((i <
+                                                itemModel.bookingModel!.pax!
+                                                    .length));
+                                            i++)
+                                          if (itemModel.bookingModel!.pax![i]
+                                                  ['needDoctor'] ==
+                                              true)
+                                            Container(
                                               height: 30,
                                               child: Row(
                                                 children: [
-                                                  Container(
-                                                    height: 8,
-                                                    width: 8,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.red,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                                  ).paddingOnly(top: 2),
+                                                  IconButton(
+                                                    splashRadius: 15,
+                                                    padding: EdgeInsets.zero,
+                                                    icon: Icon(
+                                                      Icons.delete,
+                                                      color: AppColors
+                                                          .background.black,
+                                                      size: 15,
+                                                    ),
+                                                    iconSize: 15,
+                                                    onPressed: () async {
+                                                      Booking booking =
+                                                          itemModel
+                                                              .bookingModel!;
+                                                      booking.pax![i]
+                                                              ['needDoctor'] =
+                                                          false;
+                                                      await FirebaseFirestore
+                                                          .instance
+                                                          .collection(
+                                                              'bookings')
+                                                          .doc(itemModel
+                                                              .bookingID)
+                                                          .set(booking.toMap());
+                                                      BookingsCalenderWidgetControllerNew
+                                                          controller =
+                                                          BookingsCalenderWidgetControllerNew();
+                                                      BookingsCalenderWidgetLogicNew
+                                                          calenderLogic =
+                                                          BookingsCalenderWidgetLogicNew();
+                                                      DateTime date = controller
+                                                          .selectedDate;
+                                                      calenderLogic
+                                                          .getBookings(date);
+                                                      log("all done");
+                                                    },
+                                                  ),
                                                   SizedBox(width: 10),
                                                   Text(
-                                                    e['first-name'] +
-                                                        e['last-name'],
+                                                    itemModel.bookingModel!
+                                                                .pax![i]
+                                                            ['first-name'] +
+                                                        itemModel.bookingModel!
+                                                                .pax![i]
+                                                            ['last-name'],
                                                     style: TextStyle(
                                                         fontSize:
                                                             FontSize.small),
@@ -729,15 +766,15 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                                     ),
                                                     iconSize: 15,
                                                     onPressed: () {
-                                                      makingPhoneCall(
-                                                          e['phoneNumber']);
+                                                      openPhoneApp(itemModel
+                                                              .bookingModel!
+                                                              .pax![i]
+                                                          ['phoneNumber']);
                                                     },
                                                   ),
                                                 ],
                                               ).paddingOnly(right: 20),
-                                            );
-                                          return SizedBox();
-                                        }),
+                                            ),
                                         SizedBox(height: 20),
                                       ],
                                     ),
@@ -1254,7 +1291,7 @@ Regards,
         );
   }
 
-  makingPhoneCall(String? phoneNumber) async {
+  openPhoneApp(String? phoneNumber) async {
     String url = 'tel:$phoneNumber';
     if (await canLaunchUrlString(url)) {
       await launchUrlString(url);
