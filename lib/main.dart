@@ -9,11 +9,8 @@ import 'package:get_storage/get_storage.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/add-freelance-screen.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/all-freelancers-screen.dart';
 import 'package:temple_adventures/features/Freelancers/presentation/screens/freelance-details-screen.dart';
-import 'package:temple_adventures/features/admin-portal/presentation/image-view-page.dart';
 import 'package:temple_adventures/core/services/auto-update.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
-import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
@@ -36,7 +33,9 @@ import 'package:temple_adventures/features/messaging/notification_service.dart';
 import 'package:temple_adventures/features/splash/view/splash-screen.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
 import 'package:temple_adventures/features/notifications/notification-screen.dart';
-import 'features/Activities/presentation/screens/all-activities-screen.dart';
+import 'features/activities/presentation/screens/activity-edit-screen.dart';
+import 'features/activities/presentation/screens/add-new-activity-screen.dart';
+import 'features/activities/presentation/screens/all-activities-screen.dart';
 import 'features/conditions/screens/add-conditions-screen.dart';
 import 'features/dashboard/controller/dashboard-controller.dart';
 import 'features/employees/presentation/screens/employee-details-screen.dart';
@@ -82,13 +81,6 @@ void main() async {
   });
 
   await GetStorage.init();
-  // SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-  //   systemNavigationBarColor: Colors.black,
-  //   statusBarColor: Colors.white,
-  //   statusBarBrightness: Brightness.light,
-  //   statusBarIconBrightness: Brightness.dark,
-  //   systemNavigationBarIconBrightness: Brightness.dark,
-  // ));
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   FirebaseMessagingLogic();
   runApp(MyApp());
@@ -128,28 +120,22 @@ class MyApp extends StatelessWidget {
         PaymentDetailsScreen.id: (context) => PaymentDetailsScreen(),
         BookDateTime.id: (context) => BookDateTime(),
         NewBookingScreen.id: (context) => NewBookingScreen(),
-        // AttendancePage.id: (context) => AttendancePage(),
         LoginScreen.id: (context) => LoginScreen(),
         EditBookingNewScreen.id: (context) => EditBookingNewScreen(),
         WelcomeScreen.id: (context) => WelcomeScreen(),
         DashBoardScreen.id: (context) => DashBoardScreen(),
         AddAnUser.id: (context) => AddAnUser(),
-        // GuestsEditScreen.id: (context) => GuestsEditScreen(),
         AddCustomerDetailsScreen.id: (context) => AddCustomerDetailsScreen(),
         AllEmployeesScreen.id: (context) => AllEmployeesScreen(),
         LogScreen.id: (context) => LogScreen(),
         EmployeeProfileScreen.id: (context) => EmployeeProfileScreen(),
         EmployeeDetailsScreen.id: (context) => EmployeeDetailsScreen(),
         AutoUpdateView.id: (context) => AutoUpdateView(),
-        // D2.id: (context) => D2(),
-        // IDProofScreen.id: (context) => IDProofScreen(),
-        // AllIDProofsScreen.id: (context) => AllIDProofsScreen(),
         AllFreelancersScreen.id: (context) => AllFreelancersScreen(),
         AddFreelanceScreen.id: (context) => AddFreelanceScreen(),
         FreelanceDetailsScreen.id: (context) => FreelanceDetailsScreen(),
         AddPaymentsScreen.id: (context) => AddPaymentsScreen(),
         EditPaymentsScreen.id: (context) => EditPaymentsScreen(),
-        ImageViewPage.id: (context) => ImageViewPage(),
         NotificationsScreen.id: (context) => NotificationsScreen(),
         DetailsScreen.id: (context) => DetailsScreen(),
         SplashScreen.id: (context) => SplashScreen(),

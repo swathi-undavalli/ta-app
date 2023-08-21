@@ -5,21 +5,21 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/utils.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
-import 'package:temple_adventures/features/Activities/controller/activity-edit-controller.dart';
-import 'package:temple_adventures/features/Activities/controller/all-activities-controller.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 import 'package:temple_adventures/features/logs/models/log-model.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 
 import '../../../home/model/colors_data.dart';
+import '../../controller/activity-edit-controller.dart';
+import '../../controller/all-activities-controller.dart';
 
 // ignore: must_be_immutable
 class ActivityEditScreen extends StatelessWidget {
   static const String id = "PriceEditScreen";
   final Activity? activityArg = Get.arguments;
-  ActivityEditLogic logic = ActivityEditLogic();
-  AllActivitiesLogic allActivitiesLogic = AllActivitiesLogic();
+  final ActivityEditLogic logic = ActivityEditLogic();
+  final AllActivitiesLogic allActivitiesLogic = AllActivitiesLogic();
 
   ActivityEditScreen() {
     logic.controller.priceTED.text = activityArg!.price.toString();

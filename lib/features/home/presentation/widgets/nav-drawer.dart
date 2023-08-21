@@ -8,8 +8,9 @@ import 'package:temple_adventures/features/board-plan/presentation/views/board-p
 import 'package:temple_adventures/features/boat/presentation/screens/manage-general-info.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/employee-profile-screen.dart';
 import 'package:temple_adventures/features/home/model/employee.dart';
-import 'package:temple_adventures/features/Activities/presentation/screens/all-activities-screen.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
+
+import '../../../activities/presentation/screens/all-activities-screen.dart';
 
 class NavDrawer extends StatelessWidget {
   static const String id = "sideMenuWidget";

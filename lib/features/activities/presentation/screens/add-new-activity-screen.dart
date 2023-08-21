@@ -3,8 +3,9 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
-import 'package:temple_adventures/features/Activities/controller/add-new-activity-controller.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
+
+import '../../controller/add-new-activity-controller.dart';
 
 class AddNewActivityScreen extends StatelessWidget {
   static const String id = "AddNewActivityScreen";

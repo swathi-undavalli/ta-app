@@ -3,15 +3,15 @@ import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/core/widgets/access_levels.dart';
-import 'package:temple_adventures/features/Activities/controller/all-activities-controller.dart';
-import 'package:temple_adventures/features/Activities/presentation/screens/activity-edit-screen.dart';
-import 'package:temple_adventures/features/Activities/presentation/screens/add-new-activity-screen.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 
-// ignore: must_be_immutable
+import '../../controller/all-activities-controller.dart';
+import 'activity-edit-screen.dart';
+import 'add-new-activity-screen.dart';
+
 class AllActivitiesScreen extends StatelessWidget {
   static const String id = "PriceEditingScreen";
-  AllActivitiesLogic logic = AllActivitiesLogic();
+  final AllActivitiesLogic logic = AllActivitiesLogic();
 
   @override
   Widget build(BuildContext context) {
