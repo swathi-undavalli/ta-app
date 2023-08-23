@@ -16,7 +16,6 @@ import 'package:temple_adventures/features/employees/model/employee.dart';
 class EmployeeProfileScreen extends StatelessWidget {
   static const String id = "EmployeeProfileScreen";
   final EmployeeProfileLogic logic = EmployeeProfileLogic();
-  Object redrawObject = Object();
 
   @override
   Widget build(BuildContext context) {
@@ -197,13 +196,8 @@ class EmployeeProfileScreen extends StatelessWidget {
         logic.controller.startDate = logic.controller.dateRange!.start;
         logic.controller.endDate = logic.controller.dateRange!.end;
         logic.controller.update();
-        refreshList();
       }
     });
-  }
-
-  refreshList() {
-    redrawObject = Object();
   }
 
   Widget buildPhoneNumber() {
@@ -313,7 +307,6 @@ class EmployeeProfileScreen extends StatelessWidget {
   }
 
   Widget buildEditButton() {
-    bool enable = true;
     return EmployeeAccess(
       access: AccessRights.personalProfileEdit,
       child: GetBuilder<EmployeeProfileController>(builder: (controller) {
@@ -321,8 +314,7 @@ class EmployeeProfileScreen extends StatelessWidget {
           return TextButton(
             style: ButtonStyle(
               overlayColor: MaterialStateProperty.all(Colors.black.withOpacity(0.2)),
-              backgroundColor:
-                  MaterialStateProperty.all<Color>(enable ? Colors.transparent : Colors.transparent.withOpacity(0.5)),
+              backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
               shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                 RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
@@ -331,9 +323,7 @@ class EmployeeProfileScreen extends StatelessWidget {
               minimumSize: MaterialStateProperty.all<Size>(Size(100, 31)),
             ),
             onPressed: () {
-              if (enable) {
-                controller.isEditMode = !controller.isEditMode;
-              }
+              controller.isEditMode = !controller.isEditMode;
             },
             child: Text(
               "Edit",
