@@ -1,7 +1,9 @@
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
+
+import '../../features/activities/model/colors_data.dart';
+import '../models/item-model.dart';
 
 void disposeKeyboard() {
   FocusManager.instance.primaryFocus?.unfocus();
@@ -36,5 +38,24 @@ int getInt(String number) {
     return int.parse(number);
   } catch (e) {
     return 0;
+  }
+}
+
+Color getBookingColor(ItemModel itemModel) {
+  if (itemModel.bookingModel?.cancelBooking == true) {
+    return Colors.red.shade200;
+  } else {
+    if (colorsData!.blue.contains(itemModel.activity))
+      return Color(0xffA9EBF8).withOpacity(0.3);
+    else if (colorsData!.purple.contains(itemModel.activity))
+      return Color(0xffDDB3FF);
+    else if (colorsData!.red.contains(itemModel.activity))
+      return Color(0xffF8FF96);
+    else if (colorsData!.green.contains(itemModel.activity))
+      return Color(0xff96F1BD);
+    else if (colorsData!.white.contains(itemModel.activity))
+      return Color(0xffE0E0E0);
+    else
+      return Color(0xffE0E0E0);
   }
 }

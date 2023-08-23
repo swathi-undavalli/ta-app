@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/booking-expansion-panel.dart';
-import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/customer-expandable-listTile.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/customer-expansion-panel-controller.dart';
 
-import '../../../activities/model/colors_data.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/models/item-model.dart';
+import '../../../../core/util/utils.dart';
+import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
+import 'customer-expansion-panel-controller.dart';
 
 class CustomersExpansionPanel extends StatefulWidget {
   final List<ItemModel>? items;
@@ -14,9 +14,7 @@ class CustomersExpansionPanel extends StatefulWidget {
   final Function? onSearchTap;
   final DateTime selectedDate;
 
-  CustomersExpansionPanel(
-      {this.items,
-      this.onSearchTap,
+  CustomersExpansionPanel({this.items, this.onSearchTap,
       this.showSearchBar = true,
       required this.selectedDate});
 
@@ -77,39 +75,10 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
 
   Widget _buildCustomerDetails(
       {required ItemModel itemModel, int? i, required BuildContext context}) {
-    Color getColor() {
-      if (itemModel.bookingModel?.cancelBooking == true) {
-        return Colors.red.shade200;
-      } else {
-        String cc = '';
-
-        if (colorsData!.blue.contains(itemModel.activity))
-          cc = "Blue";
-        else if (colorsData!.purple.contains(itemModel.activity))
-          cc = "Purple";
-        else if (colorsData!.red.contains(itemModel.activity))
-          cc = "Red";
-        else if (colorsData!.green.contains(itemModel.activity))
-          cc = "Green";
-        else if (colorsData!.white.contains(itemModel.activity)) cc = "White";
-
-        if (cc == "Blue")
-          return Color(0xffA9EBF8).withOpacity(0.3);
-        else if (cc == "Purple")
-          return Color(0xffDDB3FF);
-        else if (cc == "Red")
-          return Color(0xffF8FF96);
-        else if (cc == "Green")
-          return Color(0xff96F1BD);
-        else if (cc == "White") return Color(0xffE0E0E0);
-      }
-      return Colors.white;
-    }
-
     return CustomerExpandableListTile(
       title:
           "${itemModel.name!.toLowerCase().capitalizeFirst!}  x  ${(itemModel.bookingModel!.noOfPersons.toString())}",
-      color: getColor(),
+      color: getBookingColor(itemModel),
       itemModel: itemModel,
       selectedDate: widget.selectedDate,
     ).paddingSymmetric(vertical: 10);

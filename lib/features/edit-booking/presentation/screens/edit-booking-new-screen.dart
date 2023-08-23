@@ -1,8 +1,9 @@
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
@@ -21,17 +22,15 @@ import 'package:temple_adventures/features/logs/presentation/screens/log-screen.
 
 class EditBookingNewScreen extends StatelessWidget {
   static const String id = "EditBookingNewScreen";
-  EditBookingNewLogic logic = EditBookingNewLogic();
+  final EditBookingNewLogic logic = EditBookingNewLogic();
   final Booking? bookingArg = Get.arguments;
-  final AutoScrollController autoScrollControllerTheory =
-      AutoScrollController();
+  final AutoScrollController autoScrollControllerTheory = AutoScrollController();
   final AutoScrollController autoScrollControllerPool = AutoScrollController();
   final AutoScrollController autoScrollControllerDive = AutoScrollController();
 
   EditBookingNewScreen() {
     logic.controller.bookingModel = bookingArg;
-    logic.controller.activityNAmeTED.text =
-        bookingArg!.activity![0]!.name.toString();
+    logic.controller.activityNAmeTED.text = bookingArg!.activity![0]!.name.toString();
     logic.controller.totalAmountTED.text =
         ((bookingArg!.totalCost).round()).toString();
     logic.controller.priceTED.text = bookingArg!.price.toString();
@@ -313,14 +312,11 @@ class EditBookingNewScreen extends StatelessWidget {
                               textColor: AppColors.text.white,
                               onTap: () {
                                 if (selectedTheoryDate != null &&
-                                    selectedTheoryDate!.hour != null &&
-                                    selectedTheoryDate!.minute != null &&
-                                    selectedTheoryDate!.day != null) {
-                                  int index = controller
-                                      .bookingModel!.theoryDate!
-                                      .indexOf(e);
-                                  controller.bookingModel!.theoryDate![index] =
-                                      selectedTheoryDate;
+                                    selectedTheoryDate?.hour != null &&
+                                    selectedTheoryDate?.minute != null &&
+                                    selectedTheoryDate?.day != null) {
+                                  int index = controller.bookingModel!.theoryDate!.indexOf(e);
+                                  controller.bookingModel!.theoryDate![index] = selectedTheoryDate;
                                   //print(controller.bookingModel.theoryDate);
                                   controller.update();
                                   Get.back();
@@ -400,13 +396,11 @@ class EditBookingNewScreen extends StatelessWidget {
                               textColor: AppColors.text.white,
                               onTap: () {
                                 if (selectedPoolDate != null &&
-                                    selectedPoolDate!.hour != null &&
-                                    selectedPoolDate!.minute != null &&
-                                    selectedPoolDate!.day != null) {
-                                  int index = controller.bookingModel!.poolDate!
-                                      .indexOf(e);
-                                  controller.bookingModel!.poolDate![index] =
-                                      selectedPoolDate;
+                                    selectedPoolDate?.hour != null &&
+                                    selectedPoolDate?.minute != null &&
+                                    selectedPoolDate?.day != null) {
+                                  int index = controller.bookingModel!.poolDate!.indexOf(e);
+                                  controller.bookingModel!.poolDate![index] = selectedPoolDate;
                                   //print(controller.bookingModel.poolDate);
                                   controller.update();
                                   Get.back();
@@ -486,13 +480,11 @@ class EditBookingNewScreen extends StatelessWidget {
                               textColor: AppColors.text.white,
                               onTap: () {
                                 if (selectedDiveDate != null &&
-                                    selectedDiveDate!.hour != null &&
-                                    selectedDiveDate!.minute != null &&
-                                    selectedDiveDate!.day != null) {
-                                  int index = controller.bookingModel!.diveDate!
-                                      .indexOf(e);
-                                  controller.bookingModel!.diveDate![index] =
-                                      selectedDiveDate;
+                                    selectedDiveDate?.hour != null &&
+                                    selectedDiveDate?.minute != null &&
+                                    selectedDiveDate?.day != null) {
+                                  int index = controller.bookingModel!.diveDate!.indexOf(e);
+                                  controller.bookingModel!.diveDate![index] = selectedDiveDate;
                                   //print(controller.bookingModel.diveDate);
                                   controller.update();
                                   Get.back();
@@ -576,18 +568,14 @@ class EditBookingNewScreen extends StatelessWidget {
                               textColor: AppColors.text.white,
                               onTap: () {
                                 if (selectedDate != null &&
-                                    selectedDate!.hour != null &&
-                                    selectedDate!.minute != null &&
-                                    selectedDate!.day != null) {
+                                    selectedDate?.hour != null &&
+                                    selectedDate?.minute != null &&
+                                    selectedDate?.day != null) {
                                   if (type == DateType.Theory)
-                                    controller.bookingModel!.theoryDate!
-                                        .add(selectedDate);
+                                    controller.bookingModel!.theoryDate!.add(selectedDate);
                                   else if (type == DateType.Pool)
-                                    controller.bookingModel!.poolDate!
-                                        .add(selectedDate);
-                                  else if (type == DateType.Dive)
-                                    controller.bookingModel!.diveDate!
-                                        .add(selectedDate);
+                                    controller.bookingModel!.poolDate!.add(selectedDate);
+                                  else if (type == DateType.Dive) controller.bookingModel!.diveDate!.add(selectedDate);
 
                                   controller.bookingModel!.bookingDate!
                                       .add(getStringDate(selectedDate!));

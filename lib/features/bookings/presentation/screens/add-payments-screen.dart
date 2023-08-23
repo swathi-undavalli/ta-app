@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
-import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
 import 'package:temple_adventures/features/bookings/controller/add-payments-controller.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
-import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class AddPaymentsScreen extends StatelessWidget {
