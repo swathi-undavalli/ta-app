@@ -26,28 +26,7 @@ class EmployeeProfileScreen extends StatelessWidget {
         return false;
       },
       child: Scaffold(
-        appBar: AppBar(
-          backgroundColor: AppColors.background.white,
-          elevation: 0,
-          toolbarHeight: 70,
-          leading: Container(
-            alignment: Alignment.centerLeft,
-            child: TextButton(
-              onPressed: () {
-                onBackPressed();
-              },
-              child: Icon(
-                Icons.arrow_back_ios,
-                color: AppColors.text.black,
-                size: 17,
-              ),
-            ),
-          ),
-          title: Container(
-            alignment: Alignment.centerRight,
-            child: buildEditButton(),
-          ),
-        ),
+        appBar: buildAppBar(),
         body: SafeArea(
           child: SingleChildScrollView(
             physics: BouncingScrollPhysics(),
@@ -107,6 +86,31 @@ class EmployeeProfileScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  AppBar buildAppBar() {
+    return AppBar(
+        backgroundColor: AppColors.background.white,
+        elevation: 0,
+        toolbarHeight: 70,
+        leading: Container(
+          alignment: Alignment.centerLeft,
+          child: TextButton(
+            onPressed: () {
+              onBackPressed();
+            },
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: AppColors.text.black,
+              size: 17,
+            ),
+          ),
+        ),
+        title: Container(
+          alignment: Alignment.centerRight,
+          child: buildEditButton(),
+        ),
+      );
   }
 
   ///=====================UI=====================///

@@ -180,7 +180,7 @@ class BookingsExpansionPanel extends StatelessWidget {
 
     final button = PopupMenuButton(
       icon: TAImage(
-        AppImages.icon.whatsapp,
+        AppImages.icons.whatsapp,
         color: Colors.green,
         height: 40,
         width: 40,
