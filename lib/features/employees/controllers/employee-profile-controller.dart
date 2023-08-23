@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 class EmployeeProfileLogic {
@@ -14,6 +15,10 @@ class EmployeeProfileController extends GetxController {
   TextEditingController nameTED = TextEditingController();
 
   bool _isEditMode = false;
+  DateTimeRange? dateRange;
+
+  DateTime? startDate;
+  DateTime? endDate;
 
   String _isoCode = "IN";
 
