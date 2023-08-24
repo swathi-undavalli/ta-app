@@ -7,7 +7,6 @@ import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/alignment_extensions.dart';
 import 'package:temple_adventures/core/util/spacing-widget.dart';
-import 'package:temple_adventures/core/util/utils.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/time-picker.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
@@ -19,6 +18,7 @@ import 'package:temple_adventures/features/boat/presentation/widgets/tank-counte
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 
+import '../../../../core/util/utils.dart';
 import 'boat-status.dart';
 
 class BoatDetailsBottomSheet extends StatefulWidget {
@@ -78,7 +78,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   int photoNitrox = 0;
   late DateTime selectedTime;
   int boatStatus = 0;
-  bool showBoat = true;
+  bool hideBoat = false;
   bool showLoading = false;
 
   @override
@@ -89,8 +89,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     nitrox = widget.boat?.nitrox ?? 0;
     air = widget.boat?.air ?? 0;
     boatStatus = widget.boat?.boatStatus ?? 0;
-    showBoat = ((widget.boat?.showBoat)) ?? showBoat;
-    log("start ${showBoat.toString()}");
+    hideBoat = ((widget.boat?.hideBoat)) ?? hideBoat;
+    log("start ${hideBoat.toString()}");
     if (widget.boat?.time != null)
       selectedTime = TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
     else
@@ -215,7 +215,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               Spacing.h10,
               Row(
                 children: [
-                  Text("Show Boat",
+                  Text("Hide Boat",
                       style: TextStyle(
                           fontSize: 13,
                           color: AppColors.text.black,
@@ -224,12 +224,12 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                           fontWeight: FontWeight.w600)),
                   Spacing.w10,
                   Switch(
-                      value: showBoat,
+                      value: hideBoat,
                       activeColor: AppColors.text.skyBlue,
                       onChanged: (bool value) {
                         setState(() {
-                          showBoat = value;
-                          log(showBoat.toString());
+                          hideBoat = value;
+                          log(hideBoat.toString());
                         });
                       }),
                 ],
@@ -766,7 +766,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
           boatStatus: boatStatus,
           internPhotographer: selectedInternsPhotographers,
           internSurfaceSupport: selectedInternsSurfaceSupport,
-          showBoat: showBoat,
+          hideBoat: hideBoat,
         );
 
         boatsModel?.boats?.removeWhere((b) => b.id == boatId);
@@ -788,7 +788,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
           boatStatus: boatStatus,
           internPhotographer: selectedInternsPhotographers,
           internSurfaceSupport: selectedInternsSurfaceSupport,
-          showBoat: showBoat,
+          hideBoat: hideBoat,
         );
 
         boatsModel?.boats?.add(boat);

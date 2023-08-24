@@ -33,6 +33,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../features/activities/model/colors_data.dart';
+import '../models/item-model.dart';
 
 // ignore: must_be_immutable
 class BookingsExpansionPanel extends StatelessWidget {
@@ -469,10 +470,8 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                                   AppColors.background.black),
                                           iconSize: 15,
                                           onPressed: () {
-                                            log(double.parse(itemModel.balance)
-                                                .floorToDouble()
-                                                .toString());
-                                            makingPhoneCall(itemModel.phone);
+                                            log(double.parse(itemModel.balance).floorToDouble().toString());
+                                            openPhoneApp(itemModel.phone);
                                           },
                                         ),
                                         EmployeeAccess(
@@ -574,8 +573,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                           ),
                                           children: <TextSpan>[
                                             TextSpan(
-                                              text: itemModel.bookingModel
-                                                  ?.cancellationReason,
+                                              text: itemModel.bookingModel?.cancellationReason,
                                               style: TextStyle(
                                                 color: Colors.grey[700],
                                               ),
@@ -584,28 +582,17 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         ),
                                       ).paddingOnly(right: 10, bottom: 15),
                                     ),
-                                  if (itemModel.bookingModel!.parentBookingId !=
-                                          null &&
-                                      itemModel.bookingModel!.parentBookingId !=
-                                          "")
-                                    buildKeyValuePairs("Parent Booking Id",
-                                        itemModel.parentBookingID!),
-                                  buildKeyValuePairs(
-                                      "Booking Id", itemModel.bookingID!),
-                                  buildKeyValuePairs(
-                                      "Activity", itemModel.activity),
+                                  if (itemModel.bookingModel!.parentBookingId != null &&
+                                      itemModel.bookingModel!.parentBookingId != "")
+                                    buildKeyValuePairs("Parent Booking Id", itemModel.bookingModel!.parentBookingId!),
+                                  buildKeyValuePairs("Booking Id", itemModel.bookingID!),
+                                  buildKeyValuePairs("Activity", itemModel.activity),
                                   if (!itemModel.bookingModel!.isQuickBooking)
                                     buildKeyValuePairs(
-                                        "Total Cost",
-                                        double.parse(itemModel.cost)
-                                            .roundToDouble()
-                                            .toString()),
+                                        "Total Cost", double.parse(itemModel.cost).roundToDouble().toString()),
                                   if (!itemModel.bookingModel!.isQuickBooking)
                                     buildKeyValuePairs(
-                                        "Deposit",
-                                        double.parse(itemModel.paid)
-                                            .roundToDouble()
-                                            .toString()),
+                                        "Deposit", double.parse(itemModel.paid).roundToDouble().toString()),
                                   if (!itemModel.bookingModel!.isQuickBooking)
                                     buildKeyValuePairs(
                                       "Balance",
@@ -684,38 +671,49 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                           children: [
                                             Text(
                                               "Doctor Required",
-                                              style: TextStyle(
-                                                  fontSize: 14,
-                                                  fontWeight: FontWeight.w600),
+                                              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                                             ),
                                             SizedBox(width: 15),
                                             Icon(Icons.medication, size: 20),
                                           ],
                                         ),
                                         SizedBox(height: 10),
-                                        ...itemModel.bookingModel!.pax!
-                                            .map((e) {
-                                          if (e['needDoctor'] == true)
-                                            return Container(
+                                        for (int i = 0; ((i < itemModel.bookingModel!.pax!.length)); i++)
+                                          if (itemModel.bookingModel!.pax![i]['needDoctor'] == true)
+                                            Container(
                                               height: 30,
                                               child: Row(
                                                 children: [
-                                                  Container(
-                                                    height: 8,
-                                                    width: 8,
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.red,
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(10)),
-                                                  ).paddingOnly(top: 2),
+                                                  IconButton(
+                                                    splashRadius: 15,
+                                                    padding: EdgeInsets.zero,
+                                                    icon: Icon(
+                                                      Icons.delete,
+                                                      color: AppColors.background.black,
+                                                      size: 15,
+                                                    ),
+                                                    iconSize: 15,
+                                                    onPressed: () async {
+                                                      Booking booking = itemModel.bookingModel!;
+                                                      booking.pax![i]['needDoctor'] = false;
+                                                      await FirebaseFirestore.instance
+                                                          .collection('bookings')
+                                                          .doc(itemModel.bookingID)
+                                                          .set(booking.toMap());
+                                                      BookingsCalenderWidgetControllerNew controller =
+                                                          BookingsCalenderWidgetControllerNew();
+                                                      BookingsCalenderWidgetLogicNew calenderLogic =
+                                                          BookingsCalenderWidgetLogicNew();
+                                                      DateTime date = controller.selectedDate;
+                                                      calenderLogic.getBookings(date);
+                                                      log("all done");
+                                                    },
+                                                  ),
                                                   SizedBox(width: 10),
                                                   Text(
-                                                    e['first-name'] +
-                                                        e['last-name'],
-                                                    style: TextStyle(
-                                                        fontSize:
-                                                            FontSize.small),
+                                                    itemModel.bookingModel!.pax![i]['first-name'] +
+                                                        itemModel.bookingModel!.pax![i]['last-name'],
+                                                    style: TextStyle(fontSize: FontSize.small),
                                                   ),
                                                   Spacer(),
                                                   IconButton(
@@ -723,21 +721,17 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                                     padding: EdgeInsets.zero,
                                                     icon: Icon(
                                                       Icons.call_rounded,
-                                                      color: AppColors
-                                                          .background.black,
+                                                      color: AppColors.background.black,
                                                       size: 15,
                                                     ),
                                                     iconSize: 15,
                                                     onPressed: () {
-                                                      makingPhoneCall(
-                                                          e['phoneNumber']);
+                                                      openPhoneApp(itemModel.bookingModel!.pax![i]['phoneNumber']);
                                                     },
                                                   ),
                                                 ],
                                               ).paddingOnly(right: 20),
-                                            );
-                                          return SizedBox();
-                                        }),
+                                            ),
                                         SizedBox(height: 20),
                                       ],
                                     ),
@@ -1254,7 +1248,7 @@ Regards,
         );
   }
 
-  makingPhoneCall(String? phoneNumber) async {
+  openPhoneApp(String? phoneNumber) async {
     String url = 'tel:$phoneNumber';
     if (await canLaunchUrlString(url)) {
       await launchUrlString(url);
@@ -1655,107 +1649,6 @@ class ExpansionPanelController extends GetxController {
   List<bool> isExpanded = [];
 
   TextEditingController cancelMessage = TextEditingController();
-}
-
-class ItemModel {
-  bool expanded;
-  final String? name;
-  String time;
-  String session;
-  final String? email;
-  final String? bookingID;
-  final String? parentBookingID;
-  final String? phone;
-  final String activity;
-  final String colorCode;
-  final String price;
-  final String date;
-  final String cost;
-  final String paid;
-  final String balance;
-  final String? remarks;
-  final int? pax;
-  final bool registration;
-  final String? receiptNo;
-  final String? employeeName;
-  Booking? bookingModel;
-
-  ItemModel({
-    required this.phone,
-    required this.parentBookingID,
-    required this.activity,
-    required this.bookingID,
-    required this.colorCode,
-    required this.price,
-    required this.time,
-    required this.session,
-    required this.date,
-    required this.cost,
-    required this.paid,
-    required this.receiptNo,
-    required this.balance,
-    required this.remarks,
-    required this.registration,
-    this.expanded = false,
-    required this.name,
-    required this.employeeName,
-    required this.pax,
-    required this.email,
-    this.bookingModel,
-  });
-
-  factory ItemModel.fromBookings(Booking bookingModel) {
-    getSessions() {
-      var d = "";
-      if (bookingModel.theoryDate != null) d = d + "Theory, ";
-      if (bookingModel.poolDate != null) d = d + "Pool, ";
-      if (bookingModel.diveDate != null) d = d + "Dive, ";
-      return d.substring(0, d.length - 2);
-    }
-
-    getTime() {
-      var d = "";
-      if (bookingModel.theoryDate != null &&
-          bookingModel.theoryDate!.isNotEmpty)
-        d = d +
-            intl.DateFormat("hh:mm a").format(bookingModel.theoryDate![0]!) +
-            ", ";
-      if (bookingModel.poolDate != null && bookingModel.poolDate!.isNotEmpty)
-        d = d +
-            intl.DateFormat("hh:mm a").format(bookingModel.poolDate![0]!) +
-            ", ";
-      if (bookingModel.diveDate != null && bookingModel.diveDate!.isNotEmpty)
-        d = d +
-            intl.DateFormat("hh:mm a").format(bookingModel.diveDate![0]!) +
-            ", ";
-      return d.substring(0, d.length - 2);
-    }
-
-    //log(bookingModel.balance.toString());
-    return ItemModel(
-      phone: bookingModel.pax![0]["countryCode"] +
-          bookingModel.pax![0]["phoneNumber"],
-      bookingID: bookingModel.id,
-      activity: bookingModel.activity![0]!.name.toString(),
-      price: bookingModel.activity![0]!.price.toString(),
-      colorCode: bookingModel.activity![0]!.color.toString(),
-      date: bookingModel.bookingDate![0],
-      cost: bookingModel.totalCost.toString(),
-      paid: bookingModel.paid.toString(),
-      balance: bookingModel.balance.toString(),
-      registration: true,
-      receiptNo: bookingModel.receiptNo,
-      name: bookingModel.pax![0]["first-name"],
-      pax: bookingModel.noOfPersons,
-      email: bookingModel.pax![0]["email"],
-      remarks: bookingModel.remarks,
-      time: getTime(),
-      session: getSessions(),
-      employeeName: bookingModel.employeeName,
-      bookingModel: bookingModel,
-      parentBookingID: bookingModel.parentBookingId,
-    );
-  }
 }
 
 class SearchController extends GetxController {

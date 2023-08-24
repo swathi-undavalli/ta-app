@@ -8,6 +8,7 @@ import 'package:temple_adventures/features/dashboard/controller/dashboard-contro
 import 'package:temple_adventures/features/home/presentation/screens/home-page.dart';
 import 'package:temple_adventures/features/home/presentation/widgets/nav-drawer.dart';
 import 'package:temple_adventures/main.dart';
+
 import '../../../conditions/screens/conditions-screen.dart';
 
 late DashBoardScreenLogic dashboardLogic;
@@ -47,7 +48,6 @@ class DashBoardScreen extends StatelessWidget {
             return Future.value(false);
           }
           return Future.value(true);
-          return false;
         } else {
           return true;
         }

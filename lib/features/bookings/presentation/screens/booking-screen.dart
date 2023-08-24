@@ -1,14 +1,13 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/widgets/access_levels.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
-import 'package:temple_adventures/core/widgets/access_levels.dart';
 import 'package:temple_adventures/features/bookings/controller/booking-controller.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
-import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class BookingScreen extends StatelessWidget {
@@ -147,9 +146,8 @@ class BookingScreen extends StatelessWidget {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                primary: AppColors.text.black,
-                textStyle:
-                    TextStyle(fontWeight: FontWeight.w500), // button text color
+                foregroundColor: AppColors.text.black,
+                textStyle: TextStyle(fontWeight: FontWeight.w500), // button text color
               ),
             ),
           ),
@@ -157,6 +155,7 @@ class BookingScreen extends StatelessWidget {
         );
       },
     );
+
     if (selected != null && selected != controller.selectedDate) {
       var dif = controller.startDate!.difference(selected).inDays;
       if (dif < 0) {
