@@ -68,34 +68,28 @@ class HomePage extends StatelessWidget {
                     borderRadius: BorderRadius.circular(12),
                     color: Colors.white,
                   ),
-                  child: Row(
+                  child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "CheckLists",
-                            style: TextStyle(
-                              fontFamily: AppFonts.nunito,
-                              color: AppColors.text.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
-                          Spacing.h10,
-                          ...checkLists.map((checklist) => buildChecklistTiles(
-                              text: checklist.name,
-                              onTap: () {
-                                Get.toNamed(
-                                  DiveChecklistView.id,
-                                  arguments: checklist,
-                                );
-                              }).paddingOnly(bottom: 5)),
-                        ],
+                      Text(
+                        "CheckLists",
+                        style: TextStyle(
+                          fontFamily: AppFonts.nunito,
+                          color: AppColors.text.black,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
+                        ),
                       ),
+                      Spacing.h10,
+                      ...checkLists.map((checklist) => buildChecklistTiles(
+                          text: checklist.name,
+                          onTap: () {
+                            Get.toNamed(
+                              DiveChecklistView.id,
+                              arguments: checklist,
+                            );
+                          }).paddingOnly(bottom: 5)),
                     ],
                   ).paddingSymmetric(horizontal: 15, vertical: 15),
                 ),

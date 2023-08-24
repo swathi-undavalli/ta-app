@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
@@ -37,31 +35,25 @@ class FirebaseApi {
   }
 
   static addNewBooking(Booking booking) async {
-    log("addNewBooking");
 
     DocumentReference counterRef =
         FirebaseFirestore.instance.collection('counter').doc("count");
-    log("addNewBooking1");
 
     var bookingId;
     await FirebaseFirestore.instance.runTransaction((transaction) async {
-      log("addNewBooking2");
       DocumentSnapshot counterSnapshot = await transaction.get(counterRef);
       Map<String, dynamic> data = counterSnapshot.data() as Map<String, dynamic>;
-      log("addNewBooking3");
       int? newBookingID = data["booking"] + 1;
+
       DocumentReference bookingRef = FirebaseFirestore.instance
           .collection('bookings')
           .doc(newBookingID.toString());
-      log("addNewBooking4");
+
       booking.id = newBookingID.toString();
-      log("addNewBooking4adf");
-      log(booking.toMap().toString());
       transaction.set(bookingRef, booking.toMap());
-      log("addNewBooking5");
       transaction.update(counterRef, {'booking': newBookingID});
+
       bookingId = newBookingID;
-      log("addNewBooking6");
       return newBookingID;
     });
     return bookingId.toString();

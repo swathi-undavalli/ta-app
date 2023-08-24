@@ -315,7 +315,7 @@ class Boat {
   final String? notes;
   final int? nitrox;
   final int? air;
-  final bool? showBoat;
+  final bool? hideBoat;
   final String name;
   final String? diveSite;
   int? boatStatus;
@@ -327,7 +327,7 @@ class Boat {
     required this.internPhotographer,
     required this.internSurfaceSupport,
     required this.time,
-    required this.showBoat,
+    required this.hideBoat,
     required this.id,
     required this.nitrox,
     required this.air,
@@ -364,7 +364,7 @@ class Boat {
         time: time ?? this.time,
         air: air ?? this.air,
         nitrox: nitrox ?? this.nitrox,
-        showBoat: hideBoat ?? this.showBoat,
+        hideBoat: hideBoat ?? this.hideBoat,
         surfaceSupport: surfaceSupport ?? this.surfaceSupport,
         notes: notes ?? this.notes,
         name: name ?? this.name,
@@ -377,25 +377,18 @@ class Boat {
   String toRawJson() => json.encode(toJson());
 
   factory Boat.fromJson(Map<String, dynamic> json) => Boat(
-        captains: List<Instructor>.from(
-            (json["captains"] ?? []).map((x) => Instructor.fromJson(x))),
-        dsdInstructors: List<Instructor>.from(
-            (json["dsdInstructors"] ?? []).map((x) => Instructor.fromJson(x))),
-        photographer: List<Instructor>.from(
-            (json["photographer"] ?? []).map((x) => Instructor.fromJson(x))),
-        internPhotographer: List<Intern>.from(
-            (json["internPhotographer"] ?? []).map((x) => Intern.fromJson(x))),
-        internSurfaceSupport: List<Intern>.from(
-            (json["internSurfaceSupport"] ?? [])
-                .map((x) => Intern.fromJson(x))),
+        captains: List<Instructor>.from((json["captains"] ?? []).map((x) => Instructor.fromJson(x))),
+        dsdInstructors: List<Instructor>.from((json["dsdInstructors"] ?? []).map((x) => Instructor.fromJson(x))),
+        photographer: List<Instructor>.from((json["photographer"] ?? []).map((x) => Instructor.fromJson(x))),
+        internPhotographer: List<Intern>.from((json["internPhotographer"] ?? []).map((x) => Intern.fromJson(x))),
+        internSurfaceSupport: List<Intern>.from((json["internSurfaceSupport"] ?? []).map((x) => Intern.fromJson(x))),
         id: json["id"],
         time: json["time"],
         notes: json["notes"],
         nitrox: json["nitrox"],
         air: json["air"],
-        showBoat: json["hideBoat"],
-        surfaceSupport: List<Instructor>.from(
-            (json["surfaceSupport"] ?? []).map((x) => Instructor.fromJson(x))),
+        hideBoat: json["hideBoat"],
+        surfaceSupport: List<Instructor>.from((json["surfaceSupport"] ?? []).map((x) => Instructor.fromJson(x))),
         diveSite: json["diveSite"],
         name: json["name"],
         boatStatus: json["boatStatus"],
@@ -403,21 +396,16 @@ class Boat {
 
   Map<String, dynamic> toJson() => {
         "captains": List<dynamic>.from((captains ?? []).map((x) => x.toJson())),
-        "dsdInstructors":
-            List<dynamic>.from((dsdInstructors ?? []).map((x) => x.toJson())),
-        "photographer":
-            List<dynamic>.from((photographer ?? []).map((x) => x.toJson())),
-        "internPhotographer": List<dynamic>.from(
-            (internPhotographer ?? []).map((x) => x.toJson())),
-        "internSurfaceSupport": List<dynamic>.from(
-            (internSurfaceSupport ?? []).map((x) => x.toJson())),
+        "dsdInstructors": List<dynamic>.from((dsdInstructors ?? []).map((x) => x.toJson())),
+        "photographer": List<dynamic>.from((photographer ?? []).map((x) => x.toJson())),
+        "internPhotographer": List<dynamic>.from((internPhotographer ?? []).map((x) => x.toJson())),
+        "internSurfaceSupport": List<dynamic>.from((internSurfaceSupport ?? []).map((x) => x.toJson())),
         "id": id,
         "time": time,
-        "surfaceSupport":
-            List<dynamic>.from((surfaceSupport ?? []).map((x) => x.toJson())),
+        "surfaceSupport": List<dynamic>.from((surfaceSupport ?? []).map((x) => x.toJson())),
         "notes": notes,
         "air": air,
-        "hideBoat": showBoat,
+        "hideBoat": hideBoat,
         "diveSite": diveSite,
         "nitrox": nitrox,
         "name": name,

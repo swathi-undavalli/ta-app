@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/widgets/booking-expansion-panel.dart';
+
+import '../../../core/models/item-model.dart';
 
 class AllBookingsLogic {
   AllBookingsController controller = Get.put(AllBookingsController());
