@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -14,9 +13,21 @@ import 'package:temple_adventures/features/bookings/presentation/widgets/app-tex
 import 'package:temple_adventures/features/employees/controllers/employee-profile-controller.dart';
 import 'package:temple_adventures/features/employees/model/employee.dart';
 
-class EmployeeProfileScreen extends StatelessWidget {
+class EmployeeProfileScreen extends StatefulWidget {
   static const String id = "EmployeeProfileScreen";
+
+  @override
+  State<EmployeeProfileScreen> createState() => _EmployeeProfileScreenState();
+}
+
+class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
   final EmployeeProfileLogic logic = EmployeeProfileLogic();
+
+  @override
+  void initState() {
+    super.initState();
+    logic.init();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,20 +152,20 @@ class EmployeeProfileScreen extends StatelessWidget {
                 width: 130,
                 child: (logic.controller.startDate == null && logic.controller.endDate == null)
                     ? AppButton.miniFlat(
-                        onTap: () {
-                          showDateRangePickerBottomSheet(context);
-                        },
-                        text: "Apply",
-                      ).center
+                  onTap: () {
+                    showDateRangePickerBottomSheet(context);
+                  },
+                  text: "Apply",
+                ).center
                     : GestureDetector(
-                        onTap: () {
-                          showDateRangePickerBottomSheet(context);
-                        },
-                        child: Text(
-                          "Change",
-                          style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
-                        ),
-                      ),
+                  onTap: () {
+                    showDateRangePickerBottomSheet(context);
+                  },
+                  child: Text(
+                    "Change",
+                    style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
+                  ),
+                ),
               ),
             ],
           ),
@@ -316,12 +327,11 @@ class EmployeeProfileScreen extends StatelessWidget {
     });
   }
 
-  Widget buildTextFields(
-      {String? hintText,
-      TextEditingController? textEditingController,
-      FocusNode? focus,
-      FocusNode? nextFocus,
-      TextInputType? keyBoardType}) {
+  Widget buildTextFields({String? hintText,
+    TextEditingController? textEditingController,
+    FocusNode? focus,
+    FocusNode? nextFocus,
+    TextInputType? keyBoardType}) {
     return GetBuilder<EmployeeProfileController>(builder: (controller) {
       if (controller.isEditMode)
         return Container(

@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -7,13 +6,12 @@ import '../model/employee.dart';
 
 class EmployeeProfileLogic {
   EmployeeProfileController controller = Get.put(EmployeeProfileController());
-  EmployeeProfileLogic() {
-    init();
-  }
 
   void init() {
-    controller.startDate = currentEmployee?.leaves?.first.toDate();
-    controller.endDate = currentEmployee?.leaves?.last.toDate();
+    if (currentEmployee?.leaves?.length == 2) {
+      controller.startDate = currentEmployee?.leaves?.first.toDate();
+      controller.endDate = currentEmployee?.leaves?.last.toDate();
+    }
   }
 }
 
