@@ -31,16 +31,14 @@ class EditBookingNewScreen extends StatelessWidget {
   EditBookingNewScreen() {
     logic.controller.bookingModel = bookingArg;
     logic.controller.activityNAmeTED.text = bookingArg!.activity![0]!.name.toString();
-    logic.controller.totalAmountTED.text =
-        ((bookingArg!.totalCost).round()).toString();
+    logic.controller.totalAmountTED.text = ((bookingArg!.totalCost).round()).toString();
     logic.controller.priceTED.text = bookingArg!.price.toString();
     logic.controller.depositTED.text = bookingArg!.paid.toString();
     logic.controller.balanceTED.text = bookingArg!.balance.toString();
     logic.controller.paxTED.text = bookingArg!.noOfPersons.toString();
     logic.controller.remarksTED.text = bookingArg!.remarks ?? "";
     logic.controller.invoiceTED.text = bookingArg!.receiptNo ?? "";
-    logic.controller.countryCodeTED.text =
-        bookingArg!.pax![0]["countryCode"] ?? "";
+    logic.controller.countryCodeTED.text = bookingArg!.pax![0]["countryCode"] ?? "";
     logic.controller.phoneTED.text = bookingArg!.pax![0]["phoneNumber"] ?? "";
     logic.controller.emailTED.text = bookingArg!.pax![0]["email"] ?? "";
     logic.controller.firstNameTED.text = bookingArg!.pax![0]["first-name"];
@@ -577,8 +575,7 @@ class EditBookingNewScreen extends StatelessWidget {
                                     controller.bookingModel!.poolDate!.add(selectedDate);
                                   else if (type == DateType.Dive) controller.bookingModel!.diveDate!.add(selectedDate);
 
-                                  controller.bookingModel!.bookingDate!
-                                      .add(getStringDate(selectedDate!));
+                                  controller.bookingModel!.bookingDate!.add(getStringDate(selectedDate!));
 
                                   controller.update();
                                   Get.back();

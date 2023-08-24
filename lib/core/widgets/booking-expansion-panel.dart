@@ -573,8 +573,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                           ),
                                           children: <TextSpan>[
                                             TextSpan(
-                                              text: itemModel.bookingModel
-                                                  ?.cancellationReason,
+                                              text: itemModel.bookingModel?.cancellationReason,
                                               style: TextStyle(
                                                 color: Colors.grey[700],
                                               ),
@@ -593,10 +592,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         "Total Cost", double.parse(itemModel.cost).roundToDouble().toString()),
                                   if (!itemModel.bookingModel!.isQuickBooking)
                                     buildKeyValuePairs(
-                                        "Deposit",
-                                        double.parse(itemModel.paid)
-                                            .roundToDouble()
-                                            .toString()),
+                                        "Deposit", double.parse(itemModel.paid).roundToDouble().toString()),
                                   if (!itemModel.bookingModel!.isQuickBooking)
                                     buildKeyValuePairs(
                                       "Balance",
@@ -725,8 +721,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                                     padding: EdgeInsets.zero,
                                                     icon: Icon(
                                                       Icons.call_rounded,
-                                                      color: AppColors
-                                                          .background.black,
+                                                      color: AppColors.background.black,
                                                       size: 15,
                                                     ),
                                                     iconSize: 15,

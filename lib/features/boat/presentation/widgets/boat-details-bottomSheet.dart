@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/util/alignment_extensions.dart';
 import 'package:temple_adventures/core/util/spacing-widget.dart';
-import 'package:temple_adventures/core/util/utils.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/time-picker.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
@@ -18,6 +18,7 @@ import 'package:temple_adventures/features/boat/presentation/widgets/tank-counte
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 
+import '../../../../core/util/utils.dart';
 import 'boat-status.dart';
 
 class BoatDetailsBottomSheet extends StatefulWidget {
@@ -32,10 +33,12 @@ class BoatDetailsBottomSheet extends StatefulWidget {
   final Boat? boat;
   final bool isBoatEdit;
 
-  static Future<BoatsModel?> show(BuildContext context,
-      {required DateTime date,
-      required bool isBoatEdit,
-      Boat? initialBoat}) async {
+  static Future<BoatsModel?> show(
+    BuildContext context, {
+    required DateTime date,
+    required bool isBoatEdit,
+    Boat? initialBoat,
+  }) async {
     var data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -57,8 +60,7 @@ class BoatDetailsBottomSheet extends StatefulWidget {
 }
 
 class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
-  final CollectionReference employeesCollection =
-      FirebaseFirestore.instance.collection('employees');
+  final CollectionReference employeesCollection = FirebaseFirestore.instance.collection('employees');
   List<Instructor> selectedCaptains = [];
   List<Instructor> selectedDsdInstructors = [];
   List<Instructor> selectedPhotographer = [];
@@ -77,6 +79,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   late DateTime selectedTime;
   int boatStatus = 0;
   bool hideBoat = false;
+  bool showLoading = false;
 
   @override
   void initState() {
@@ -107,39 +110,34 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     if (widget.boat?.dsdInstructors != null) {
       log(widget.boat!.dsdInstructors.toString());
 
-      selectedDsdInstructors
-          .addAll(widget.boat!.dsdInstructors as Iterable<Instructor>);
+      selectedDsdInstructors.addAll(widget.boat!.dsdInstructors as Iterable<Instructor>);
       log(selectedDsdInstructors.toString());
     }
 
     if (widget.boat?.photographer != null) {
       log(widget.boat!.photographer.toString());
 
-      selectedPhotographer
-          .addAll(widget.boat!.photographer as Iterable<Instructor>);
+      selectedPhotographer.addAll(widget.boat!.photographer as Iterable<Instructor>);
       log(selectedPhotographer.toString());
     }
     if (widget.boat?.internPhotographer != null) {
       log(widget.boat!.internPhotographer.toString());
 
-      selectedInternsPhotographers
-          .addAll(widget.boat!.internPhotographer as Iterable<Intern>);
+      selectedInternsPhotographers.addAll(widget.boat!.internPhotographer as Iterable<Intern>);
       log(selectedPhotographer.toString());
     }
 
     if (widget.boat?.internSurfaceSupport != null) {
       log(widget.boat!.internSurfaceSupport.toString());
 
-      selectedInternsSurfaceSupport
-          .addAll(widget.boat!.internSurfaceSupport as Iterable<Intern>);
+      selectedInternsSurfaceSupport.addAll(widget.boat!.internSurfaceSupport as Iterable<Intern>);
       log(selectedInternsSurfaceSupport.toString());
     }
 
     if (widget.boat?.surfaceSupport != null) {
       log(widget.boat!.surfaceSupport.toString());
 
-      surfaceSupport
-          .addAll(widget.boat!.surfaceSupport as Iterable<Instructor>);
+      surfaceSupport.addAll(widget.boat!.surfaceSupport as Iterable<Instructor>);
       log(surfaceSupport.toString());
     }
     if (mounted) setState(() {});
@@ -161,11 +159,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-          top: 40,
-          left: 25,
-          right: 20),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, top: 40, left: 25, right: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(
           30,
@@ -201,163 +195,166 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               ],
             ),
             Spacing.h20,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                BoatStatus(
-                  initialStatus: boatStatus,
-                  onChanged: (int status) {
-                    boatStatus = status;
-                  },
-                ),
-                if (widget.isBoatEdit) buildDeleteBoat(),
-              ],
-            ),
-            Spacing.h10,
-            Row(
-              children: [
-                Text("Hide Boat",
-                    style: TextStyle(
-                        fontSize: 13,
-                        color: AppColors.text.black,
-                        fontFamily: AppFonts.nunito,
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.w600)),
-                Spacing.w10,
-                Switch(
-                    value: hideBoat,
-                    activeColor: AppColors.text.skyBlue,
-                    onChanged: (bool value) {
-                      setState(() {
-                        hideBoat = value;
-                        log(hideBoat.toString());
-                      });
-                    }),
-              ],
-            ),
-            Spacing.h20,
-            AppTextField(
-              hintText: "Boat name",
-              controller: boatTED,
-              errorValidator: () {
-                return null;
-              },
-              validator: (_) {
-                return null;
-              },
-            ),
-            AppTextField(
-              hintText: "Dive Site",
-              controller: diveSiteTED,
-              errorValidator: () {
-                return null;
-              },
-              validator: (_) {
-                return null;
-              },
-            ),
-            SizedBox(height: 20),
-            Row(
-              children: [
-                Text(
-                  "Boat time",
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.black,
+            if (showLoading)
+              CircularProgressIndicator(
+                color: Colors.black,
+              ).center.height(300)
+            else ...[
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  BoatStatus(
+                    initialStatus: boatStatus,
+                    onChanged: (int status) {
+                      boatStatus = status;
+                    },
                   ),
-                ),
-                SizedBox(width: 20),
-                GestureDetector(
-                  onTap: () {
-                    log(selectedTime.toString());
-                    selectTime(context);
-                  },
-                  child: Container(
-                    height: 30,
-                    width: 100,
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.black),
-                        borderRadius: BorderRadius.circular(5)),
-                    child: Center(
-                      child: Text(
-                        TimePicker.getFormattedTime(selectedTime) ??
-                            'No time selected',
-                        style: TextStyle(
-                            fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
+                  if (widget.isBoatEdit) buildDeleteBoat(),
+                ],
+              ),
+              Spacing.h10,
+              Row(
+                children: [
+                  Text("Hide Boat",
+                      style: TextStyle(
+                          fontSize: 13,
+                          color: AppColors.text.black,
+                          fontFamily: AppFonts.nunito,
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.w600)),
+                  Spacing.w10,
+                  Switch(
+                      value: hideBoat,
+                      activeColor: AppColors.text.skyBlue,
+                      onChanged: (bool value) {
+                        setState(() {
+                          hideBoat = value;
+                          log(hideBoat.toString());
+                        });
+                      }),
+                ],
+              ),
+              Spacing.h20,
+              AppTextField(
+                hintText: "Boat name",
+                controller: boatTED,
+                errorValidator: () {
+                  return null;
+                },
+                validator: (_) {
+                  return null;
+                },
+              ),
+              AppTextField(
+                hintText: "Dive Site",
+                controller: diveSiteTED,
+                errorValidator: () {
+                  return null;
+                },
+                validator: (_) {
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              Row(
+                children: [
+                  Text(
+                    "Boat time",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black,
                     ),
                   ),
-                )
-              ],
-            ),
-            SizedBox(height: 20),
-            buildEmployeeSelector(
-              employees: selectedCaptains,
-              title: "Captains",
-              employeeLimit: 2,
-            ),
-            SizedBox(height: 20),
-            buildEmployeeSelector(
-              employees: selectedDsdInstructors,
-              title: "DSD Instructors",
-              employeeLimit: -1,
-              showTankCounter: true,
-            ),
-            SizedBox(height: 20),
-            buildEmployeeSelector(
-                employees: selectedPhotographer,
-                title: "Photographer / Videographer",
-                employeeLimit: 2,
-                showTankCounter: true),
-            SizedBox(height: 20),
-            buildInternPhotographers(
-                interns: selectedInternsPhotographers,
-                title: 'Intern Photographer / Videographer (A - N)',
-                isTanksRequired: true),
-            SizedBox(height: 20),
-            buildInternPhotographers(
-              interns: selectedInternsSurfaceSupport,
-              title: 'Surface Support',
-            ),
-            AppTextField(
-              hintText: "Notes",
-              controller: notesTED,
-              errorValidator: () {
-                return null;
-              },
-              validator: (_) {
-                return null;
-              },
-            ),
-            SizedBox(height: 20),
-            Text(
-              "Extra / Spare Tanks : ",
-              style: TextStyle(
-                  fontSize: 14,
-                  color: AppColors.text.black,
-                  fontFamily: AppFonts.nunito,
-                  fontWeight: FontWeight.w600),
-            ),
-            SizedBox(height: 20),
-            buildSpareTankCount(),
-            SizedBox(height: 50),
-            Center(
-              child: AppButton.flat(
-                height: 50,
-                width: 145,
-                text: (widget.isBoatEdit) ? "Update" : "Submit",
-                onTap: () async {
-                  if (boatTED.text != "") {
-                    await addEditBoat(context);
-                  } else {
-                    showToast("please enter the boat name");
-                  }
-                },
-                textColor: Colors.white,
-                color: Colors.black,
+                  SizedBox(width: 20),
+                  GestureDetector(
+                    onTap: () {
+                      log(selectedTime.toString());
+                      selectTime(context);
+                    },
+                    child: Container(
+                      height: 30,
+                      width: 100,
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(5)),
+                      child: Center(
+                        child: Text(
+                          TimePicker.getFormattedTime(selectedTime) ?? 'No time selected',
+                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  )
+                ],
               ),
-            ),
-            SizedBox(height: 30),
+              SizedBox(height: 20),
+              buildEmployeeSelector(
+                employees: selectedCaptains,
+                title: "Captains",
+                employeeLimit: 2,
+              ),
+              SizedBox(height: 20),
+              buildEmployeeSelector(
+                employees: selectedDsdInstructors,
+                title: "DSD Instructors",
+                employeeLimit: -1,
+                showTankCounter: true,
+              ),
+              SizedBox(height: 20),
+              buildEmployeeSelector(
+                  employees: selectedPhotographer,
+                  title: "Photographer / Videographer",
+                  employeeLimit: 2,
+                  showTankCounter: true),
+              SizedBox(height: 20),
+              buildInternPhotographers(
+                  interns: selectedInternsPhotographers,
+                  title: 'Intern Photographer / Videographer (A - N)',
+                  isTanksRequired: true),
+              SizedBox(height: 20),
+              buildInternPhotographers(
+                interns: selectedInternsSurfaceSupport,
+                title: 'Surface Support',
+              ),
+              AppTextField(
+                hintText: "Notes",
+                controller: notesTED,
+                errorValidator: () {
+                  return null;
+                },
+                validator: (_) {
+                  return null;
+                },
+              ),
+              SizedBox(height: 20),
+              Text(
+                "Extra / Spare Tanks : ",
+                style: TextStyle(
+                    fontSize: 14,
+                    color: AppColors.text.black,
+                    fontFamily: AppFonts.nunito,
+                    fontWeight: FontWeight.w600),
+              ),
+              SizedBox(height: 20),
+              buildSpareTankCount(),
+              SizedBox(height: 50),
+              Center(
+                child: AppButton.flat(
+                  height: 50,
+                  width: 145,
+                  text: (widget.isBoatEdit) ? "Update" : "Submit",
+                  onTap: () async {
+                    if (boatTED.text != "") {
+                      await addEditBoat(context);
+                    } else {
+                      showToast("please enter the boat name");
+                    }
+                  },
+                  textColor: Colors.white,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: 30),
+            ],
           ],
         ),
       ),
@@ -435,10 +432,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   // un-assign
                   for (Booking booking in bookings) {
                     booking.setBoatInfo(widget.selectedDate, null);
-                    await FirebaseFirestore.instance
-                        .collection('bookings')
-                        .doc(booking.id)
-                        .set(booking.toMap());
+                    await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
                   }
 
                   //delete boat
@@ -450,8 +444,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   Map<String, dynamic>? data = d.data();
                   BoatsModel? boatsModel = BoatsModel.fromMap(data);
 
-                  (boatsModel.boats ?? [])
-                      .removeWhere((boat) => boat.id == widget.boat?.id);
+                  (boatsModel.boats ?? []).removeWhere((boat) => boat.id == widget.boat?.id);
 
                   await FirebaseFirestore.instance
                       .collection("dailyBoats")
@@ -470,16 +463,13 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   }
 
   Widget buildInternPhotographers(
-      {required List<Intern> interns,
-      required String title,
-      bool isTanksRequired = false}) {
+      {required List<Intern> interns, required String title, bool isTanksRequired = false}) {
     if (interns.isEmpty) {
       return AppButton.miniFlat(
         text: "Add $title",
         onTap: () async {
-          interns = await InternsBottomSheet.show(context,
-              initialInterns: interns,
-              tanksRequired: isTanksRequired) as List<Intern>;
+          interns = await InternsBottomSheet.show(context, initialInterns: interns, tanksRequired: isTanksRequired)
+              as List<Intern>;
           setState(() {});
         },
       );
@@ -526,17 +516,14 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             ),
             GestureDetector(
               onTap: () async {
-                interns = await InternsBottomSheet.show(context,
-                    initialInterns: interns,
-                    tanksRequired: isTanksRequired) as List<Intern>;
+                interns =
+                    await InternsBottomSheet.show(context, initialInterns: interns, tanksRequired: isTanksRequired)
+                        as List<Intern>;
                 setState(() {});
               },
               child: Text(
                 "Change",
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline),
+                style: TextStyle(fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
               ).paddingOnly(left: 10, right: 7),
             ),
             Icon(
@@ -690,19 +677,18 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               children: [
                 GestureDetector(
                   onTap: () async {
-                    employees = (await EmpSelectorBottomSheet.show(context,
-                            initialSelectedEmployees: employees,
-                            instructorLimit: employeeLimit)) ??
+                    employees = (await EmpSelectorBottomSheet.show(
+                          context,
+                          initialSelectedEmployees: employees,
+                          instructorLimit: employeeLimit,
+                        )) ??
                         [];
 
                     setState(() {});
                   },
                   child: Text(
                     "Change",
-                    style: TextStyle(
-                        fontSize: 12,
-                        color: Colors.blue,
-                        decoration: TextDecoration.underline),
+                    style: TextStyle(fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
                   ).paddingOnly(left: 10, right: 7),
                 ),
                 Icon(
@@ -725,8 +711,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 children: [
                   Text(
                     "${e.name}",
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.bold),
+                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
                   ),
                   if (showTankCounter)
                     TankCounter(
@@ -749,62 +734,72 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   }
 
   Future<void> addEditBoat(BuildContext context) async {
+    setState(() {
+      showLoading = true;
+    });
+
     String boatId;
-    var d = await FirebaseFirestore.instance
-        .collection("dailyBoats")
-        .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
-        .get();
-    Map<String, dynamic>? data = d.data();
-    log(data.toString());
-    BoatsModel? boatsModel = BoatsModel.fromMap(data);
+    DocumentReference boatRef =
+        FirebaseFirestore.instance.collection("dailyBoats").doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate));
 
-    if (!widget.isBoatEdit) {
-      if (data != null) {
-        boatId = boatsModel.boats!.length.toString();
+    BoatsModel? boatsModel;
+
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentSnapshot boatSnapshot = await transaction.get(boatRef);
+      Map<String, dynamic>? data = boatSnapshot.data() as Map<String, dynamic>?;
+      boatsModel = BoatsModel.fromMap(data);
+
+      if (widget.isBoatEdit) {
+        boatId = widget.boat!.id;
+        Boat boat = Boat(
+          captains: selectedCaptains,
+          id: boatId,
+          name: boatTED.text,
+          surfaceSupport: surfaceSupport,
+          notes: notesTED.text,
+          nitrox: nitrox,
+          air: air,
+          time: TimePicker.getFormattedTime(selectedTime)!,
+          diveSite: diveSiteTED.text,
+          dsdInstructors: selectedDsdInstructors,
+          photographer: selectedPhotographer,
+          boatStatus: boatStatus,
+          internPhotographer: selectedInternsPhotographers,
+          internSurfaceSupport: selectedInternsSurfaceSupport,
+          hideBoat: hideBoat,
+        );
+
+        boatsModel?.boats?.removeWhere((b) => b.id == boatId);
+        boatsModel?.boats?.add(boat);
       } else {
-        boatId = "0";
-      }
-      Boat boat = Boat(
-        captains: selectedCaptains,
-        id: boatId,
-        name: boatTED.text,
-        surfaceSupport: surfaceSupport,
-        notes: notesTED.text,
-        nitrox: nitrox,
-        air: air,
-        time: TimePicker.getFormattedTime(selectedTime)!,
-        diveSite: diveSiteTED.text,
-        dsdInstructors: selectedDsdInstructors,
-        photographer: selectedPhotographer,
-        boatStatus: boatStatus,
-        internPhotographer: selectedInternsPhotographers,
-        internSurfaceSupport: selectedInternsSurfaceSupport,
-        hideBoat: hideBoat,
-      );
-      boatsModel.boats?.add(boat);
-    } else {
-      boatId = widget.boat!.id;
-      Boat boat = Boat(
-        captains: selectedCaptains,
-        id: boatId,
-        name: boatTED.text,
-        surfaceSupport: surfaceSupport,
-        notes: notesTED.text,
-        nitrox: nitrox,
-        air: air,
-        time: TimePicker.getFormattedTime(selectedTime)!,
-        diveSite: diveSiteTED.text,
-        dsdInstructors: selectedDsdInstructors,
-        photographer: selectedPhotographer,
-        boatStatus: boatStatus,
-        internPhotographer: selectedInternsPhotographers,
-        internSurfaceSupport: selectedInternsSurfaceSupport,
-        hideBoat: hideBoat,
-      );
+        boatId = (boatsModel?.boats?.length ?? 0).toString();
+        Boat boat = Boat(
+          captains: selectedCaptains,
+          id: boatId,
+          name: boatTED.text,
+          surfaceSupport: surfaceSupport,
+          notes: notesTED.text,
+          nitrox: nitrox,
+          air: air,
+          time: TimePicker.getFormattedTime(selectedTime)!,
+          diveSite: diveSiteTED.text,
+          dsdInstructors: selectedDsdInstructors,
+          photographer: selectedPhotographer,
+          boatStatus: boatStatus,
+          internPhotographer: selectedInternsPhotographers,
+          internSurfaceSupport: selectedInternsSurfaceSupport,
+          hideBoat: hideBoat,
+        );
 
-      boatsModel.boats?.removeWhere((b) => b.id == boatId);
-      boatsModel.boats?.add(boat);
-    }
+        boatsModel?.boats?.add(boat);
+
+        transaction.set(boatRef, boatsModel?.toMap());
+      }
+    });
+    setState(() {
+      showLoading = false;
+    });
+
     Navigator.pop(context, boatsModel);
   }
 }

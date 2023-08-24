@@ -10,8 +10,7 @@ import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import '../../models/item-model.dart';
 
 class BookingsCalenderWidgetLogic {
-  BookingsCalenderWidgetController controller =
-      Get.put(BookingsCalenderWidgetController());
+  BookingsCalenderWidgetController controller = Get.put(BookingsCalenderWidgetController());
 
   getBookings(DateTime date) async {
     //log("getBookings");

@@ -327,11 +327,12 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
     });
   }
 
-  Widget buildTextFields({String? hintText,
-    TextEditingController? textEditingController,
-    FocusNode? focus,
-    FocusNode? nextFocus,
-    TextInputType? keyBoardType}) {
+  Widget buildTextFields(
+      {String? hintText,
+      TextEditingController? textEditingController,
+      FocusNode? focus,
+      FocusNode? nextFocus,
+      TextInputType? keyBoardType}) {
     return GetBuilder<EmployeeProfileController>(builder: (controller) {
       if (controller.isEditMode)
         return Container(

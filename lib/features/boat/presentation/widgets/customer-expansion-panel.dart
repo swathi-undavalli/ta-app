@@ -14,9 +14,7 @@ class CustomersExpansionPanel extends StatefulWidget {
   final Function? onSearchTap;
   final DateTime selectedDate;
 
-  CustomersExpansionPanel({this.items, this.onSearchTap,
-      this.showSearchBar = true,
-      required this.selectedDate});
+  CustomersExpansionPanel({this.items, this.onSearchTap, this.showSearchBar = true, required this.selectedDate});
 
   @override
   State<CustomersExpansionPanel> createState() =>
