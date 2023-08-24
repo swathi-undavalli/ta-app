@@ -50,17 +50,14 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     logic.controller.calenderType = calenderType;
     logic.getDates();
     if (showDetails) {
-      EmployeeAccess.run(
-          function: autoCenterDaySelector, access: AccessRights.viewBookings);
+      EmployeeAccess.run(function: autoCenterDaySelector, access: AccessRights.viewBookings);
     } else {
-      EmployeeAccess.run(
-          function: scrollToSelectedDate, access: AccessRights.viewBookings);
+      EmployeeAccess.run(function: scrollToSelectedDate, access: AccessRights.viewBookings);
     }
   }
 
   scrollToIndex(int index) {
-    autoScrollController.scrollToIndex(index,
-        preferPosition: AutoScrollPosition.middle);
+    autoScrollController.scrollToIndex(index, preferPosition: AutoScrollPosition.middle);
   }
 
   final BookingsCalenderWidgetLogicNew logic = BookingsCalenderWidgetLogicNew();
@@ -84,173 +81,156 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     return EmployeeAccess(
       access: AccessRights.viewBookings,
       showMessage: true,
-      child: GetBuilder<BookingsCalenderWidgetControllerNew>(
-          builder: (controller) {
-            return Column(
-              children: [
-                _buildDaySelector(),
-                if (showDetails) SizedBox(height: 20),
-                _buildBookingTypeSelector(),
-                SizedBox(height: 15),
-                if (showDetails && !isBookingScreen)
-                  StreamBuilder(
-                      stream: FirebaseFirestore.instance
-                          .collection('dailyBoats')
-                          .doc(DateFormat("dd-MM-yyyy")
-                          .format(controller.selectedDate))
-                          .snapshots(),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<DocumentSnapshot> snapshot) {
-                        if (snapshot.hasError ||
-                            snapshot.connectionState == ConnectionState.waiting) {
-                          return SizedBox(
-                            height: 15,
-                            width: 15,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.black,
-                            ),
-                          );
-                        }
-                        final data = snapshot.data?.data();
+      child: GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
+        return Column(
+          children: [
+            _buildDaySelector(),
+            if (showDetails) SizedBox(height: 20),
+            _buildBookingTypeSelector(),
+            SizedBox(height: 15),
+            if (showDetails && !isBookingScreen)
+              StreamBuilder(
+                  stream: FirebaseFirestore.instance
+                      .collection('dailyBoats')
+                      .doc(DateFormat("dd-MM-yyyy").format(controller.selectedDate))
+                      .snapshots(),
+                  builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+                      return SizedBox(
+                        height: 15,
+                        width: 15,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.black,
+                        ),
+                      );
+                    }
+                    final data = snapshot.data?.data();
 
-                        if (data == null) {
-                          return Text(
-                            'No boats are added yet',
-                          );
-                        }
+                    if (data == null) {
+                      return Text(
+                        'No boats are added yet',
+                      );
+                    }
 
-                        BoatsModel? boatsModel =
-                        BoatsModel.fromMap(data as Map<String, dynamic>);
+                    BoatsModel? boatsModel = BoatsModel.fromMap(data as Map<String, dynamic>);
 
-                        if ((boatsModel.boats ?? []).isEmpty) {
-                          return Text(
-                            'No boats are added yet',
-                          );
-                        }
+                    if ((boatsModel.boats ?? []).isEmpty) {
+                      return Text(
+                        'No boats are added yet',
+                      );
+                    }
 
-                        boatsModel.boats!.sort((a1, b1) {
-                          DateTime? a = TimePicker.getDateTime(a1.time);
-                          DateTime? b = TimePicker.getDateTime(b1.time);
-                          if (a == null && b == null) {
-                            return 0;
-                          } else if (a == null) {
-                            return 1;
-                          } else if (b == null) {
-                            return -1;
-                          } else {
-                            return a.compareTo(b);
-                          }
-                        });
+                    boatsModel.boats!.sort((a1, b1) {
+                      DateTime? a = TimePicker.getDateTime(a1.time);
+                      DateTime? b = TimePicker.getDateTime(b1.time);
+                      if (a == null && b == null) {
+                        return 0;
+                      } else if (a == null) {
+                        return 1;
+                      } else if (b == null) {
+                        return -1;
+                      } else {
+                        return a.compareTo(b);
+                      }
+                    });
 
-                        return Wrap(
-                            children: (boatsModel.boats ?? [])
-                                .map((Boat boat) => InkWell(
-                              onLongPress: () async {
-                                BoatsModel? boatsModel =
-                                await BoatDetailsBottomSheet.show(
-                                    context,
-                                    initialBoat: boat,
-                                    isBoatEdit: true,
-                                    date: controller.selectedDate);
-                                if (boatsModel != null) {
-                                  await FirebaseFirestore.instance
-                                      .collection("dailyBoats")
-                                      .doc(DateFormat("dd-MM-yyyy")
-                                      .format(controller.selectedDate))
-                                      .set(boatsModel.toMap());
-                                }
-                              },
-                              onTap: () {
-                                controller.selectedBoat = boat;
-                                controller.update();
-                              },
-                              child: Container(
-                                height: 30,
-                                margin: EdgeInsets.all(5),
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: 8, vertical: 3),
-                                decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: (boat.id ==
-                                      controller.selectedBoat?.id)
-                                      ? AppColors.background.skyBlue
-                                      : Colors.white,
-                                ),
-                                child: Text(
-                                  "${boat.name} @ ${boat.time}",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: FontSize.small,
-                                    color: (boat.id ==
-                                        controller
-                                            .selectedBoat?.id &&
-                                        boat.time ==
-                                            controller
-                                                .selectedBoat?.time)
-                                        ? Colors.white
-                                        : Colors.black,
+                    return Wrap(
+                        children: (boatsModel.boats ?? [])
+                            .map((Boat boat) => InkWell(
+                                  onLongPress: () async {
+                                    BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(context,
+                                        initialBoat: boat, isBoatEdit: true, date: controller.selectedDate);
+                                    if (boatsModel != null) {
+                                      await FirebaseFirestore.instance
+                                          .collection("dailyBoats")
+                                          .doc(DateFormat("dd-MM-yyyy").format(controller.selectedDate))
+                                          .set(boatsModel.toMap());
+                                    }
+                                  },
+                                  onTap: () {
+                                    controller.selectedBoat = boat;
+                                    controller.update();
+                                  },
+                                  child: Container(
+                                    height: 30,
+                                    margin: EdgeInsets.all(5),
+                                    padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(20),
+                                      color: (boat.id == controller.selectedBoat?.id)
+                                          ? AppColors.background.skyBlue
+                                          : Colors.white,
+                                    ),
+                                    child: Text(
+                                      "${boat.name} @ ${boat.time}",
+                                      style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: FontSize.small,
+                                        color: (boat.id == controller.selectedBoat?.id &&
+                                                boat.time == controller.selectedBoat?.time)
+                                            ? Colors.white
+                                            : Colors.black,
+                                      ),
+                                    ).paddingOnly(top: 4),
                                   ),
-                                ),
-                              ),
-                            ))
-                                .toList());
-                      }),
-                SizedBox(height: 20),
-                _buildTimeTable(),
-                SizedBox(height: 20),
-                _buildBookingsList(),
-                SizedBox(height: 20),
-              ],
-            );
-          }),
+                                ))
+                            .toList());
+                  }),
+            SizedBox(height: 20),
+            _buildTimeTable(),
+            SizedBox(height: 20),
+            _buildBookingsList(),
+            SizedBox(height: 20),
+          ],
+        );
+      }),
     );
   }
 
   ///==================UI===================///
 
   Widget _buildBookingTypeSelector() {
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(
-        builder: (controller) {
-          if (showDetails)
-            return Column(
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
+      if (showDetails)
+        return Column(
+          children: [
+            Row(
               children: [
-                Row(
-                  children: [
-                    _buildTabButton(
-                      "Theory",
-                          () {
-                        controller.selectedType = FilterType.Theory;
-                      },
-                      count: controller.theoryCountA,
-                      enable: controller.selectedType == FilterType.Theory,
-                      color: Colors.orangeAccent,
-                    ),
-                    _buildTabButton(
-                      "Pool",
-                          () {
-                        controller.selectedType = FilterType.Pool;
-                      },
-                      count: controller.poolCountA,
-                      enable: controller.selectedType == FilterType.Pool,
-                      color: Colors.green,
-                    ),
-                    _buildTabButton(
-                      "Dive",
-                          () {
-                        controller.selectedType = FilterType.Dive;
-                      },
-                      count: controller.diveCountA,
-                      enable: controller.selectedType == FilterType.Dive,
-                      color: Colors.lightBlueAccent,
-                    ),
-                  ],
+                _buildTabButton(
+                  "Theory",
+                  () {
+                    controller.selectedType = FilterType.Theory;
+                  },
+                  count: controller.theoryCountA,
+                  enable: controller.selectedType == FilterType.Theory,
+                  color: Colors.orangeAccent,
+                ),
+                _buildTabButton(
+                  "Pool",
+                  () {
+                    controller.selectedType = FilterType.Pool;
+                  },
+                  count: controller.poolCountA,
+                  enable: controller.selectedType == FilterType.Pool,
+                  color: Colors.green,
+                ),
+                _buildTabButton(
+                  "Dive",
+                  () {
+                    controller.selectedType = FilterType.Dive;
+                  },
+                  count: controller.diveCountA,
+                  enable: controller.selectedType == FilterType.Dive,
+                  color: Colors.lightBlueAccent,
                 ),
               ],
-            );
-          else
-            return SizedBox();
-        });
+            ),
+          ],
+        );
+      else
+        return SizedBox();
+    });
   }
 
   Widget _buildTabButton(String title,
@@ -313,88 +293,79 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
 
   Widget _buildTimeTable() {
     logic.getTime();
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(
-        builder: (controller) {
-          return Container(
-            width: Get.width,
-            decoration: BoxDecoration(
-              color: AppColors.background.white,
-              borderRadius: BorderRadiusDirectional.circular(10),
-            ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
+      return Container(
+        width: Get.width,
+        decoration: BoxDecoration(
+          color: AppColors.background.white,
+          borderRadius: BorderRadiusDirectional.circular(10),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          _buildTitle("Bookings"),
-                          SizedBox(width: 3),
-                          controller.showLoading
-                              ? SizedBox(
-                            width: 10,
-                            height: 10,
-                            child: CircularProgressIndicator(
-                              color: AppColors.background.black,
-                              strokeWidth: 1,
-                            ),
-                          )
-                              : SizedBox(),
-                        ],
-                      ),
+                      _buildTitle("Bookings"),
+                      SizedBox(width: 3),
+                      controller.showLoading
+                          ? SizedBox(
+                              width: 10,
+                              height: 10,
+                              child: CircularProgressIndicator(
+                                color: AppColors.background.black,
+                                strokeWidth: 1,
+                              ),
+                            )
+                          : SizedBox(),
                     ],
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      left: 20, right: 20, top: 10, bottom: 10),
-                  child: Wrap(
-                      spacing: 0,
-                      runSpacing: 5,
-                      children: controller.timeTable
-                          .map((date) => _buildTimings(date))
-                          .toList()),
-                ),
-                if (!controller.showLoading)
-                  Column(
-                    children: [
-                      Center(
-                        child: _buildErrorMessage(controller),
-                      ),
-                      // SizedBox(height: 10),
-                    ],
-                  ),
-              ],
+                ],
+              ),
             ),
-          );
-        });
+            Padding(
+              padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+              child: Wrap(
+                  spacing: 0,
+                  runSpacing: 5,
+                  children: controller.timeTable.map((date) => _buildTimings(date)).toList()),
+            ),
+            if (!controller.showLoading)
+              Column(
+                children: [
+                  Center(
+                    child: _buildErrorMessage(controller),
+                  ),
+                  // SizedBox(height: 10),
+                ],
+              ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _buildErrorMessage(BookingsCalenderWidgetControllerNew controller) {
-    if (controller.selectedType == FilterType.Theory &&
-        controller.theoryCountA == 0)
+    if (controller.selectedType == FilterType.Theory && controller.theoryCountA == 0)
       return Text(
         "No theory sessions found",
         style: TextStyle(fontSize: 15),
       );
-    if (controller.selectedType == FilterType.Pool &&
-        controller.poolCountA == 0)
+    if (controller.selectedType == FilterType.Pool && controller.poolCountA == 0)
       return Text(
         "No pool sessions found",
         style: TextStyle(fontSize: 15),
       );
-    if (controller.selectedType == FilterType.Dive &&
-        controller.diveCountA == 0)
+    if (controller.selectedType == FilterType.Dive && controller.diveCountA == 0)
       return Text(
         "No dive sessions found",
         style: TextStyle(fontSize: 15),
       );
-    if (controller.theoryCountA == 0 &&
-        controller.poolCountA == 0 &&
-        controller.diveCountA == 0)
+    if (controller.theoryCountA == 0 && controller.poolCountA == 0 && controller.diveCountA == 0)
       return Text(
         "No bookings found",
         style: TextStyle(fontSize: 15),
@@ -407,19 +378,17 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   }
 
   Widget _buildBookingsList() {
-    return GetBuilder<BookingsCalenderWidgetControllerNew>(
-        builder: (controller) {
-          if (!showDetails) return SizedBox();
+    return GetBuilder<BookingsCalenderWidgetControllerNew>(builder: (controller) {
+      if (!showDetails) return SizedBox();
 
-          //print(controller.bookings);
-          List<ItemModel> bookingExpansionList = [];
-          if (controller.selectedType == null)
-            bookingExpansionList = controller.expansionItemModels;
-          else if (controller.selectedType == FilterType.Theory) {
-            controller.expansionItemModels.forEach((element) {
-              if (element.session.contains("Theory"))
-                bookingExpansionList.add(element);
-              var count = 0;
+      //print(controller.bookings);
+      List<ItemModel> bookingExpansionList = [];
+      if (controller.selectedType == null)
+        bookingExpansionList = controller.expansionItemModels;
+      else if (controller.selectedType == FilterType.Theory) {
+        controller.expansionItemModels.forEach((element) {
+          if (element.session.contains("Theory")) bookingExpansionList.add(element);
+          var count = 0;
               bookingExpansionList.forEach((element) {
                 count += element.pax!;
               });
@@ -463,10 +432,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
             List<ItemModel> boatDetailsExpansionList = [];
             if (controller.selectedBoat != null) {
               bookingExpansionList.forEach((itemModel) {
-                bool isIdSame = itemModel.bookingModel
-                    ?.getBoatInfo(controller.selectedDate)
-                    ?.id ==
-                    (controller.selectedBoat?.id ?? "-");
+                bool isIdSame = itemModel.bookingModel?.getBoatInfo(controller.selectedDate)?.id ==
+                (controller.selectedBoat?.id ?? "-");
 
                 if (isIdSame) {
                   boatDetailsExpansionList.add(itemModel);
@@ -498,10 +465,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-            fontSize: 16,
-            color: AppColors.text.black,
-            fontWeight: FontWeight.bold,
-            fontFamily: AppFonts.nunito),
+            fontSize: 16, color: AppColors.text.black, fontWeight: FontWeight.bold, fontFamily: AppFonts.nunito),
       ),
     );
   }
@@ -585,28 +549,24 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
 
   Widget _buildDaySelector() {
     getDotColor(int index, BookingsCalenderWidgetControllerNew controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
-        return Colors.green;
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index])) return Colors.green;
       return isSameDates(controller.calenderDates[index], DateTime.now())
           ? AppColors.background.skyBlue
           : AppColors.background.grey;
     }
 
     getDateColor(int index, BookingsCalenderWidgetControllerNew controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
-        return Colors.white;
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index])) return Colors.white;
       return AppColors.background.black;
     }
 
     getDayColor(int index, BookingsCalenderWidgetControllerNew controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
-        return Colors.white;
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index])) return Colors.white;
       return AppColors.background.black;
     }
 
     getBoxColor(int index, BookingsCalenderWidgetControllerNew controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
-        return Colors.black;
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index])) return Colors.black;
       return isSameDates(controller.calenderDates[index], DateTime.now())
           ? AppColors.background.datesBlue
           : AppColors.background.white;
@@ -731,8 +691,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
         height: 12,
         width: 12,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.background.skyBlue)),
+            borderRadius: BorderRadius.circular(10), border: Border.all(color: AppColors.background.skyBlue)),
         child: Center(
           child: Text(
             totalBookings.toString(),
