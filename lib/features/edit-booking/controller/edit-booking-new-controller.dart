@@ -14,7 +14,6 @@ class EditBookingNewLogic {
   EditBookingNewController controller = Get.put(EditBookingNewController());
 
   getDataFromFireBase() async {
-    //print("Strated");
     QuerySnapshot<Map<String, dynamic>> catalogue = await FirebaseFirestore.instance.collection("catalogue").get();
     controller.activities = [];
     for (int i = 0; i < catalogue.docs.length; i++) {
@@ -24,8 +23,6 @@ class EditBookingNewLogic {
       controller.activities.sort((a1, a2) => a2.priority!.compareTo(a1.priority!));
       controller.showLoading = false;
     }
-    //print(controller.activities);
-    //print("ended");
   }
 
   dobDatePicker(context) {
@@ -35,35 +32,17 @@ class EditBookingNewLogic {
       minTime: DateTime.now().subtract(Duration(days: 36500)),
       maxTime: DateTime.now().subtract(Duration(days: 2920)),
       onChanged: (date) {
-        // //print('change $date');
         controller.dob = date;
         controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
         controller.bookingModel!.pax![0]["dob"] = date;
       },
       onConfirm: (date) {
-        // //print('confirm $date');
         controller.dob = date;
         controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
 
         controller.update();
       },
       currentTime: controller.dob,
-      // theme: DatePickerTheme(
-      //   cancelStyle: TextStyle(
-      //     fontFamily: AppFonts.nunito,
-      //     color: Colors.black87,
-      //   ),
-      //   doneStyle: TextStyle(
-      //     fontFamily: AppFonts.nunito,
-      //     fontWeight: FontWeight.bold,
-      //     color: Colors.black,
-      //   ),
-      //   itemStyle: TextStyle(
-      //     fontFamily: AppFonts.nunito,
-      //     fontWeight: FontWeight.bold,
-      //     fontSize: 16,
-      //   ),
-      // ),
     );
   }
 }

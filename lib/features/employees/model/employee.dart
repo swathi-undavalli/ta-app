@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
 
 Employee? currentEmployee;
@@ -14,6 +15,7 @@ class Employee {
     this.firstName,
     this.lastName,
     this.countryIsoCode,
+    this.leaves,
     this.agencyId,
   }) {
     if (accessLevels == null)
@@ -46,6 +48,7 @@ class Employee {
   String? lastName;
   String? countryIsoCode;
   String? agencyId;
+  List<Timestamp>? leaves;
 
   @override
   int get hashCode =>
@@ -59,6 +62,7 @@ class Employee {
       firstName.hashCode ^
       lastName.hashCode ^
       countryIsoCode.hashCode ^
+      leaves.hashCode ^
       agencyId.hashCode;
 
   @override
@@ -74,26 +78,29 @@ class Employee {
     return false;
   }
 
-  factory Employee.fromMap(Map<String, dynamic> json) => Employee(
-        id: json["id"],
-        gender: json["gender"],
-        phoneNumber: json["phoneNumber"],
-        countryCode: json["countryCode"],
-        countryIsoCode: json["countryIsoCode"],
-        role: json["role"],
-        accessLevels: AccessLevels.fromMap(json["accessLevels"]),
-        shiftTiming: DateTime(
-          2021,
-          1,
-          1,
-          int.parse(json["shiftTiming"].split(":")[0]),
-          int.parse(json["shiftTiming"].split(":")[0]),
-          int.parse(json["shiftTiming"].split(":")[0]),
-        ),
-        firstName: json["firstName"],
-        lastName: json["lastName"],
-        agencyId: json["agencyId"],
-      );
+  factory Employee.fromMap(Map<String, dynamic> json) {
+    return Employee(
+      id: json["id"],
+      gender: json["gender"],
+      phoneNumber: json["phoneNumber"],
+      countryCode: json["countryCode"],
+      countryIsoCode: json["countryIsoCode"],
+      role: json["role"],
+      accessLevels: AccessLevels.fromMap(json["accessLevels"]),
+      shiftTiming: DateTime(
+        2021,
+        1,
+        1,
+        int.parse(json["shiftTiming"].split(":")[0]),
+        int.parse(json["shiftTiming"].split(":")[0]),
+        int.parse(json["shiftTiming"].split(":")[0]),
+      ),
+      firstName: json["firstName"],
+      lastName: json["lastName"],
+      agencyId: json["agencyId"],
+      leaves: List<Timestamp>.from((json["leaves"] ?? []).map((x) => (x))),
+    );
+  }
 
   String get name => firstName! + " " + (lastName ?? "");
 
@@ -107,11 +114,11 @@ class Employee {
         "countryIsoCode": countryIsoCode,
         "role": role,
         "accessLevels": accessLevels!.toMap(),
-        "shiftTiming":
-            "${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}",
+        "shiftTiming": "${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}",
         "firstName": firstName,
         "lastName": lastName,
         "agencyId": agencyId,
+        "leaves": List<Timestamp>.from((leaves ?? []).map((x) => (x))),
       };
 }
 
