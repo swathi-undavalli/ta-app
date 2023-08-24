@@ -48,10 +48,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     logic.controller.calenderType = calenderType;
     logic.getDates();
     if (showDetails) {
-      //print("1");
       EmployeeAccess.run(function: autoCenterDaySelector, access: AccessRights.viewBookings);
     } else {
-      //print("2");
       EmployeeAccess.run(function: scrollToSelectedDate, access: AccessRights.viewBookings);
     }
   }
