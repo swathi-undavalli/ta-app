@@ -147,8 +147,7 @@ class BookingScreen extends StatelessWidget {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.text.black,
-                textStyle:
-                    TextStyle(fontWeight: FontWeight.w500), // button text color
+                textStyle: TextStyle(fontWeight: FontWeight.w500), // button text color
               ),
             ),
           ),

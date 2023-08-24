@@ -135,10 +135,8 @@ class Booking {
 
     return Booking(
       pax: List<Map<String, dynamic>>.from(json["PAX"].map((x) => x)),
-      activity: List<Activity>.from(
-          json["activity"].map((x) => Activity.fromMap(x))),
-      payments: List<PaymentModel>.from(
-          (json["payments"] ?? []).map((x) => PaymentModel.fromMap(x))),
+      activity: List<Activity>.from(json["activity"].map((x) => Activity.fromMap(x))),
+      payments: List<PaymentModel>.from((json["payments"] ?? []).map((x) => PaymentModel.fromMap(x))),
       noOfPersons: json["noOfPersons"],
       createdAt: parseDateOrNull(json["createdAt"]),
       discount: json["discount"] * 1.0,
@@ -157,17 +155,16 @@ class Booking {
       paymentTransactionId: json["paymentTransactionId"],
       bookingDate: List<String>.from(json["bookingDate"].map((x) => x)),
       idProofs: List<String>.from(json["idProofs"] ?? [].map((x) => x)),
-      theoryDate: List<DateTime>.from(
-          json["theoryDate"].map((x) => parseDateOrNull(x))),
-      poolDate:
-          List<DateTime>.from(json["poolDate"].map((x) => parseDateOrNull(x))),
-      diveDate:
-          List<DateTime>.from(json["diveDate"].map((x) => parseDateOrNull(x))),
+      theoryDate: List<DateTime>.from(json["theoryDate"].map((x) => parseDateOrNull(x))),
+      poolDate: List<DateTime>.from(json["poolDate"].map((x) => parseDateOrNull(x))),
+      diveDate: List<DateTime>.from(json["diveDate"].map((x) => parseDateOrNull(x))),
       cancelBooking: json["cancelBooking"],
       cancellationReason: json["cancellationReason"],
       boatDetails: BoatDetails.fromJson(json["boatDetails"]),
     );
   }
+
+  bool get isDSD => activity?[0]?.name?.toLowerCase() == 'Discover scuba diving'.toLowerCase();
 
   Map<String, dynamic> toMap() {
     return {
@@ -191,12 +188,9 @@ class Booking {
       "idProofs": List<String>.from((idProofs ?? []).map((x) => x)),
       "location": location,
       "paymentTransactionId": paymentTransactionId,
-      "theoryDate":
-          List<String>.from((theoryDate ?? []).map((x) => toDateOrNull(x))),
-      "poolDate":
-          List<String>.from((poolDate ?? []).map((x) => toDateOrNull(x))),
-      "diveDate":
-          List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
+      "theoryDate": List<String>.from((theoryDate ?? []).map((x) => toDateOrNull(x))),
+      "poolDate": List<String>.from((poolDate ?? []).map((x) => toDateOrNull(x))),
+      "diveDate": List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
       "cancelBooking": cancelBooking,
       "parentBookingId": parentBookingId,
       "cancellationReason": cancellationReason,
@@ -298,12 +292,26 @@ class Booking {
     return InstructorTanks.fromMap(boatDetails?.instructorTanks?[d]);
   }
 
+  int? getStatus(DateTime date) {
+    String d = DateFormat("dd-MM-yyyy").format(date);
+    if (boatDetails?.status?[d] == null) return null;
+    return boatDetails?.status?[d];
+  }
+
   void setInstructorTanks(DateTime date, InstructorTanks instructorTanks) {
     String d = DateFormat("dd-MM-yyyy").format(date);
     if (boatDetails?.instructorTanks == null) {
       boatDetails?.instructorTanks = {};
     }
     boatDetails?.instructorTanks?[d] = instructorTanks.toMap();
+  }
+
+  void setStatus(DateTime date, int status) {
+    String d = DateFormat("dd-MM-yyyy").format(date);
+    if (boatDetails?.status == null) {
+      boatDetails?.status = {};
+    }
+    boatDetails?.status?[d] = status;
   }
 }
 

@@ -9,10 +9,12 @@ class BoatDetails {
   final List<Instructor>? instructors;
   Map<String, dynamic>? boat;
   Map<String, dynamic>? instructorTanks;
+  Map<String, dynamic>? status;
 
   BoatDetails({
     this.bookingStatus,
     this.interns,
+    this.status,
     this.boat,
     this.instructorTanks,
     this.employeeNotes,
@@ -22,6 +24,7 @@ class BoatDetails {
   BoatDetails copyWith({
     Map<String, dynamic>? boatId,
     Map<String, dynamic>? instructorTank,
+    Map<String, dynamic>? status,
     String? employeeNotes,
     List<Intern>? interns,
     int? bookingStatus,
@@ -29,6 +32,7 @@ class BoatDetails {
   }) =>
       BoatDetails(
         boat: boatId ?? this.boat,
+        status: status ?? this.status,
         instructorTanks: instructorTank ?? this.instructorTanks,
         interns: interns ?? this.interns,
         employeeNotes: employeeNotes ?? this.employeeNotes,
@@ -46,22 +50,22 @@ class BoatDetails {
     return BoatDetails(
       boat: json["boat"] ?? {},
       instructorTanks: json["instructorTanks"] ?? {},
+      status: json["status"] ?? {},
       employeeNotes: json["employeeNotes"],
       bookingStatus: json["bookingStatus"],
-      instructors: List<Instructor>.from(
-          (json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
-      interns: List<Intern>.from(
-          (json["interns"] ?? []).map((x) => Intern.fromJson(x))),
+      instructors: List<Instructor>.from((json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
+      interns: List<Intern>.from((json["interns"] ?? []).map((x) => Intern.fromJson(x))),
     );
   }
 
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toMap() =>
+      {
         "boat": boat,
         "instructorTanks": instructorTanks,
         "bookingStatus": bookingStatus,
         "employeeNotes": employeeNotes,
-        "instructors":
-            List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
+        "status": status,
+        "instructors": List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
         "interns": List<dynamic>.from((interns ?? []).map((x) => x.toJson())),
       };
 }

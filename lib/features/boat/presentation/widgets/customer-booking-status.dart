@@ -3,10 +3,14 @@ import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 
 class BookingStatus extends StatefulWidget {
-  const BookingStatus(
-      {Key? key, required this.initialStatus, required this.onChanged})
-      : super(key: key);
+  const BookingStatus({
+    Key? key,
+    required this.initialStatus,
+    required this.onChanged,
+    required this.isDSD,
+  }) : super(key: key);
   final int initialStatus;
+  final bool isDSD;
   final Function(int status) onChanged;
 
   @override
@@ -24,11 +28,13 @@ class _BookingStatusState extends State<BookingStatus> {
 
   @override
   Widget build(BuildContext context) {
+    int checkPoint = (widget.isDSD ? dsdStatus.length : coursesStatus.length) - 1;
+
     return Row(
       children: [
         GestureDetector(
           onTap: () {
-            if (status > 0 && status <= 9) {
+            if (status > 0 && status <= checkPoint) {
               status -= 1;
 
               widget.onChanged(status);
@@ -56,15 +62,14 @@ class _BookingStatusState extends State<BookingStatus> {
             color: getProgressColor(status),
           ),
           child: Text(
-            bookingStatus[status],
-            style: TextStyle(
-                fontSize: FontSize.small, fontWeight: FontWeight.w600),
+            widget.isDSD ? dsdStatus[status] : coursesStatus[status],
+            style: TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.w600),
           ).paddingOnly(left: 15, right: 15, top: 8),
         ),
         SizedBox(width: 2),
         GestureDetector(
           onTap: () {
-            if (status < 9) {
+            if (status < checkPoint) {
               status += 1;
 
               widget.onChanged(status);
@@ -116,16 +121,19 @@ class _BookingStatusState extends State<BookingStatus> {
     }
   }
 
-  List<String> bookingStatus = [
+  List<String> coursesStatus = [
+    "Booked In",
+    "Paperwork done",
+    "Dive center",
+    "Harbour",
+  ];
+
+  List<String> dsdStatus = [
     "Booked In",
     "Paperwork done",
     "Pool ongoing",
     "Pool completed",
     "Dive center",
     "Harbour",
-    "Left for diving",
-    "Boat",
-    "Returning back",
-    "Completed",
   ];
 }

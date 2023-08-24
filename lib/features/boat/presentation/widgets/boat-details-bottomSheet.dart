@@ -89,8 +89,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     hideBoat = ((widget.boat?.hideBoat)) ?? hideBoat;
     log("start ${hideBoat.toString()}");
     if (widget.boat?.time != null)
-      selectedTime =
-          TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
+      selectedTime = TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
     else
       selectedTime = DateTime.now();
     if (widget.isBoatEdit) fetchEmployeeData();

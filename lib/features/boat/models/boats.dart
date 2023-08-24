@@ -383,19 +383,15 @@ class Boat {
             (json["dsdInstructors"] ?? []).map((x) => Instructor.fromJson(x))),
         photographer: List<Instructor>.from(
             (json["photographer"] ?? []).map((x) => Instructor.fromJson(x))),
-        internPhotographer: List<Intern>.from(
-            (json["internPhotographer"] ?? []).map((x) => Intern.fromJson(x))),
-        internSurfaceSupport: List<Intern>.from(
-            (json["internSurfaceSupport"] ?? [])
-                .map((x) => Intern.fromJson(x))),
+        internPhotographer: List<Intern>.from((json["internPhotographer"] ?? []).map((x) => Intern.fromJson(x))),
+        internSurfaceSupport: List<Intern>.from((json["internSurfaceSupport"] ?? []).map((x) => Intern.fromJson(x))),
         id: json["id"],
         time: json["time"],
         notes: json["notes"],
         nitrox: json["nitrox"],
         air: json["air"],
         hideBoat: json["hideBoat"],
-        surfaceSupport: List<Instructor>.from(
-            (json["surfaceSupport"] ?? []).map((x) => Instructor.fromJson(x))),
+        surfaceSupport: List<Instructor>.from((json["surfaceSupport"] ?? []).map((x) => Instructor.fromJson(x))),
         diveSite: json["diveSite"],
         name: json["name"],
         boatStatus: json["boatStatus"],
@@ -407,14 +403,11 @@ class Boat {
             List<dynamic>.from((dsdInstructors ?? []).map((x) => x.toJson())),
         "photographer":
             List<dynamic>.from((photographer ?? []).map((x) => x.toJson())),
-        "internPhotographer": List<dynamic>.from(
-            (internPhotographer ?? []).map((x) => x.toJson())),
-        "internSurfaceSupport": List<dynamic>.from(
-            (internSurfaceSupport ?? []).map((x) => x.toJson())),
+        "internPhotographer": List<dynamic>.from((internPhotographer ?? []).map((x) => x.toJson())),
+        "internSurfaceSupport": List<dynamic>.from((internSurfaceSupport ?? []).map((x) => x.toJson())),
         "id": id,
         "time": time,
-        "surfaceSupport":
-            List<dynamic>.from((surfaceSupport ?? []).map((x) => x.toJson())),
+        "surfaceSupport": List<dynamic>.from((surfaceSupport ?? []).map((x) => x.toJson())),
         "notes": notes,
         "air": air,
         "hideBoat": hideBoat,
