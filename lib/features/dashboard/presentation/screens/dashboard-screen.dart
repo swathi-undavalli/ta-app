@@ -40,14 +40,12 @@ class DashBoardScreen extends StatelessWidget {
           FocusNode().requestFocus();
           //log("back pressed");
           DateTime now = DateTime.now();
-          if (currentBackPressTime == null ||
-              now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+          if (currentBackPressTime == null || now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
             currentBackPressTime = now;
             Fluttertoast.showToast(msg: "Press Double tap to exit");
             return Future.value(false);
           }
           return Future.value(true);
-          return false;
         } else {
           return true;
         }
