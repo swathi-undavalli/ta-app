@@ -1,20 +1,9 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../model/employee.dart';
-
 class EmployeeProfileLogic {
   EmployeeProfileController controller = Get.put(EmployeeProfileController());
-  EmployeeProfileLogic() {
-    init();
-  }
-
-  void init() {
-    controller.startDate = currentEmployee?.leaves?.first.toDate();
-    controller.endDate = currentEmployee?.leaves?.last.toDate();
-  }
 }
 
 class EmployeeProfileController extends GetxController {
@@ -30,22 +19,12 @@ class EmployeeProfileController extends GetxController {
 
   DateTime? startDate;
   DateTime? endDate;
-  List<Timestamp> leaves = [];
-
-  bool _showLoading = false;
 
   String _isoCode = "IN";
 
   bool get isEditMode => _isEditMode;
 
   String get isoCode => _isoCode;
-
-  bool get showLoading => _showLoading;
-
-  set showLoading(bool value) {
-    _showLoading = value;
-    update();
-  }
 
   set isoCode(String value) {
     _isoCode = value;
