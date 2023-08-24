@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        Get.toNamed(LoginScreen.id);
+        Get.offAllNamed(LoginScreen.id);
       } else {
         AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
         await autoUpdateLogic.checkForUpdate();
