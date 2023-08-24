@@ -111,7 +111,7 @@ class ShareBookingWidget extends StatelessWidget {
                   ),
                 ),
                 Spacer(),
-                TAImage(AppImages.icon.AppLogo, height: 60, width: 60),
+                TAImage(AppImages.icons.AppLogo, height: 60, width: 60),
               ],
             ),
           ],

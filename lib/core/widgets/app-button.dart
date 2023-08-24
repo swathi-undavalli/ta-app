@@ -26,12 +26,16 @@ class AppButton extends StatelessWidget {
     this.enable = true,
   });
 
-  factory AppButton.miniText({String? text, Function? onTap}) {
+  factory AppButton.miniText({
+    String? text,
+    Function? onTap,
+    Color? textColor,
+  }) {
     return AppButton(
       text: text,
       onTap: onTap,
       bgColor: Colors.transparent,
-      textColor: AppColors.text.black,
+      textColor: textColor ?? AppColors.text.black,
       splashColor: Colors.black.withOpacity(0.2),
     );
   }
@@ -59,9 +63,8 @@ class AppButton extends StatelessWidget {
     Color? color,
     Color? textColor,
     bool enable = true,
-    double height= 50,
-    double width=  155,
-
+    double height = 50,
+    double width = 155,
   }) {
     return AppButton(
       text: text,
@@ -82,8 +85,7 @@ class AppButton extends StatelessWidget {
     return TextButton(
       style: ButtonStyle(
         overlayColor: MaterialStateProperty.all(splashColor),
-        backgroundColor: MaterialStateProperty.all<Color?>(
-            enable ? bgColor : bgColor!.withOpacity(0.5)),
+        backgroundColor: MaterialStateProperty.all<Color?>(enable ? bgColor : bgColor!.withOpacity(0.5)),
         shape: MaterialStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),

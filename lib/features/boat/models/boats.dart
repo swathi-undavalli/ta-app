@@ -377,7 +377,7 @@ class Boat {
   String toRawJson() => json.encode(toJson());
 
   factory Boat.fromJson(Map<String, dynamic> json) => Boat(
-    captains: List<Instructor>.from((json["captains"] ?? []).map((x) => Instructor.fromJson(x))),
+        captains: List<Instructor>.from((json["captains"] ?? []).map((x) => Instructor.fromJson(x))),
         dsdInstructors: List<Instructor>.from((json["dsdInstructors"] ?? []).map((x) => Instructor.fromJson(x))),
         photographer: List<Instructor>.from((json["photographer"] ?? []).map((x) => Instructor.fromJson(x))),
         internPhotographer: List<Intern>.from((json["internPhotographer"] ?? []).map((x) => Intern.fromJson(x))),
@@ -394,8 +394,7 @@ class Boat {
         boatStatus: json["boatStatus"],
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "captains": List<dynamic>.from((captains ?? []).map((x) => x.toJson())),
         "dsdInstructors": List<dynamic>.from((dsdInstructors ?? []).map((x) => x.toJson())),
         "photographer": List<dynamic>.from((photographer ?? []).map((x) => x.toJson())),

@@ -181,7 +181,7 @@ class BookingsExpansionPanel extends StatelessWidget {
 
     final button = PopupMenuButton(
       icon: TAImage(
-        AppImages.icon.whatsapp,
+        AppImages.icons.whatsapp,
         color: Colors.green,
         height: 40,
         width: 40,
@@ -598,10 +598,8 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                       "Balance",
                                       getBalance(
                                           itemModel.bookingModel!.payments!,
-                                          double.parse(itemModel.paid)
-                                              .roundToDouble(),
-                                          double.parse(itemModel.cost)
-                                              .roundToDouble()),
+                                          double.parse(itemModel.paid).roundToDouble(),
+                                          double.parse(itemModel.cost).roundToDouble()),
                                     ),
                                   buildKeyValuePairs(
                                       "Pax",

@@ -138,7 +138,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                     return Wrap(
                         children: (boatsModel.boats ?? [])
                             .map((Boat boat) => InkWell(
-                          onLongPress: () async {
+                                  onLongPress: () async {
                                     BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(context,
                                         initialBoat: boat, isBoatEdit: true, date: controller.selectedDate);
                                     if (boatsModel != null) {
@@ -148,12 +148,12 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                                           .set(boatsModel.toMap());
                                     }
                                   },
-                          onTap: () {
-                            controller.selectedBoat = boat;
-                            controller.update();
-                          },
-                          child: Container(
-                            height: 30,
+                                  onTap: () {
+                                    controller.selectedBoat = boat;
+                                    controller.update();
+                                  },
+                                  child: Container(
+                                    height: 30,
                                     margin: EdgeInsets.all(5),
                                     padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                                     decoration: BoxDecoration(
@@ -174,7 +174,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                                       ),
                                     ).paddingOnly(top: 4),
                                   ),
-                        ))
+                                ))
                             .toList());
                   }),
             SizedBox(height: 20),
@@ -233,13 +233,12 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     });
   }
 
-  Widget _buildTabButton(
-    String title,
-    Function onTap, {
-    bool enable = false,
-    Color? color,
-    int? count,
-  }) {
+  Widget _buildTabButton(String title,
+      Function onTap, {
+        bool enable = false,
+        Color? color,
+        int? count,
+      }) {
     return Expanded(
       child: GestureDetector(
         onTap: onTap as void Function()?,
@@ -315,13 +314,13 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                       SizedBox(width: 3),
                       controller.showLoading
                           ? SizedBox(
-                        width: 10,
-                        height: 10,
-                        child: CircularProgressIndicator(
-                          color: AppColors.background.black,
-                          strokeWidth: 1,
-                        ),
-                      )
+                              width: 10,
+                              height: 10,
+                              child: CircularProgressIndicator(
+                                color: AppColors.background.black,
+                                strokeWidth: 1,
+                              ),
+                            )
                           : SizedBox(),
                     ],
                   ),
@@ -472,17 +471,17 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   Widget _buildTimings(DateTime date) {
     return GetBuilder<BookingsCalenderWidgetControllerNew>(
         builder: (controller) {
-      getCircleColor(BookingsCalenderWidgetControllerNew controller) {
+          getCircleColor(BookingsCalenderWidgetControllerNew controller) {
         if (controller.selectedDate == date) return AppColors.background.skyBlue;
         if (highlightInvalidTime && DateTime.now().difference(date).inSeconds > 0) return AppColors.background.grey;
       }
 
       Widget? num = _getEventsCount(controller, date);
 
-      if (num == null && showDetails) return SizedBox();
-      return GestureDetector(
-        onTap: () {
-          if (highlightInvalidTime && DateTime.now().difference(date).inSeconds > 0) {
+          if (num == null && showDetails) return SizedBox();
+          return GestureDetector(
+            onTap: () {
+              if (highlightInvalidTime && DateTime.now().difference(date).inSeconds > 0) {
             showToast("Invalid Date");
           } else {
             controller.selectedDate = date;
@@ -491,15 +490,15 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
             onDateTimeSelected(controller.selectedDate);
           }
         },
-        child: Stack(
-          children: [
-            Container(
-              width: 42,
-              height: 42,
-              color: Colors.white,
-              child: Center(
-                child: Container(
-                  width: 35,
+            child: Stack(
+              children: [
+                Container(
+                  width: 42,
+                  height: 42,
+                  color: Colors.white,
+                  child: Center(
+                    child: Container(
+                      width: 35,
                   height: 35,
                   decoration: BoxDecoration(color: getCircleColor(controller), borderRadius: BorderRadius.circular(25)),
                   child: Center(
@@ -515,18 +514,18 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                           ),
                         ],
                       ),
+                        ),
+                      ),
                     ),
                   ),
                 ),
-              ),
+                Positioned(
+                  child: num ?? SizedBox(),
+                ),
+              ],
             ),
-            Positioned(
-              child: num ?? SizedBox(),
-            ),
-          ],
-        ),
-      );
-    });
+          );
+        });
   }
 
   bool isSameDates(DateTime a, DateTime b) {
@@ -625,10 +624,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     });
   }
 
-  Widget? _getEventsCount(
-    BookingsCalenderWidgetControllerNew controller,
-    DateTime date,
-  ) {
+  Widget? _getEventsCount(BookingsCalenderWidgetControllerNew controller,
+      DateTime date,) {
     var show = false;
     int totalBookings = 0;
 

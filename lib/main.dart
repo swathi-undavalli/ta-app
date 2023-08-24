@@ -30,12 +30,12 @@ import 'package:temple_adventures/features/messaging/notification-screen.dart';
 import 'package:temple_adventures/features/messaging/notification_service.dart';
 import 'package:temple_adventures/features/splash/view/splash-screen.dart';
 import 'package:temple_adventures/features/welcome/presentation/screens/welome-page.dart';
-
 import 'features/activities/presentation/screens/activity-edit-screen.dart';
 import 'features/activities/presentation/screens/add-new-activity-screen.dart';
 import 'features/activities/presentation/screens/all-activities-screen.dart';
 import 'features/conditions/screens/add-conditions-screen.dart';
 import 'features/dashboard/controller/dashboard-controller.dart';
+import 'features/dive-checklist/views/screens/dive-checklist-view.dart';
 import 'features/employees/presentation/screens/employee-details-screen.dart';
 import 'features/employees/presentation/screens/employee-profile-screen.dart';
 import 'features/login/presentation/screens/login-page.dart';
@@ -57,8 +57,7 @@ void main() async {
             apiKey: "AIzaSyAJFHDoc1lfQtTRtEpRmCJue2kwfB5jUh8",
             appId: "1:671883511961:ios:99961ae0cf633ff7b05008",
             messagingSenderId: "671883511961",
-            iosClientId:
-                "671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com",
+            iosClientId: "671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com",
             projectId: "seismic-glow-283418"));
   } else {
     await Firebase.initializeApp();
@@ -138,6 +137,7 @@ class MyApp extends StatelessWidget {
         ManageBoatsPage.id: (context) => ManageBoatsPage(),
         ManageGeneralInfo.id: (context) => ManageGeneralInfo(),
         BoardPlanView.id: (context) => BoardPlanView(),
+        DiveChecklistView.id: (context) => DiveChecklistView(),
       },
     );
   }
@@ -150,8 +150,7 @@ class FirebaseNotificationService {
   }
 
   static handleTerminatedNavigation() async {
-    RemoteMessage? message =
-        await FirebaseMessaging.instance.getInitialMessage();
+    RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
 
     if (message != null) {
       Get.toNamed(NotificationsScreen.id, arguments: message);

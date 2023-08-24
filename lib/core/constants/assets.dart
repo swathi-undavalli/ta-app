@@ -1,5 +1,5 @@
 class AppImages {
-  static const _IconImages icon = _IconImages();
+  static const _IconImages icons = _IconImages();
   static const _IllustrationImages illustrations = _IllustrationImages();
   static const _LottieImages lottie = _LottieImages();
 
@@ -33,6 +33,8 @@ class _IconImages {
   String get AppLogo => "images/AppLogoPondy.png";
 
   String get whatsapp => "images/whatsapp.svg";
+  String get checkBox => "images/check_box.svg";
+  String get box => "images/box.svg";
 }
 
 class _LottieImages {

@@ -58,7 +58,8 @@ class BoatDetails {
     );
   }
 
-  Map<String, dynamic> toMap() => {
+  Map<String, dynamic> toMap() =>
+      {
         "boat": boat,
         "instructorTanks": instructorTanks,
         "bookingStatus": bookingStatus,
