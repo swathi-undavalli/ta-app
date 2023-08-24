@@ -152,20 +152,20 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
                 width: 130,
                 child: (logic.controller.startDate == null && logic.controller.endDate == null)
                     ? AppButton.miniFlat(
-                  onTap: () {
-                    showDateRangePickerBottomSheet(context);
-                  },
-                  text: "Apply",
-                ).center
+                        onTap: () {
+                          showDateRangePickerBottomSheet(context);
+                        },
+                        text: "Apply",
+                      ).center
                     : GestureDetector(
-                  onTap: () {
-                    showDateRangePickerBottomSheet(context);
-                  },
-                  child: Text(
-                    "Change",
-                    style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
-                  ),
-                ),
+                        onTap: () {
+                          showDateRangePickerBottomSheet(context);
+                        },
+                        child: Text(
+                          "Change",
+                          style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
+                        ),
+                      ),
               ),
             ],
           ),
@@ -327,11 +327,12 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
     });
   }
 
-  Widget buildTextFields({String? hintText,
-    TextEditingController? textEditingController,
-    FocusNode? focus,
-    FocusNode? nextFocus,
-    TextInputType? keyBoardType}) {
+  Widget buildTextFields(
+      {String? hintText,
+      TextEditingController? textEditingController,
+      FocusNode? focus,
+      FocusNode? nextFocus,
+      TextInputType? keyBoardType}) {
     return GetBuilder<EmployeeProfileController>(builder: (controller) {
       if (controller.isEditMode)
         return Container(

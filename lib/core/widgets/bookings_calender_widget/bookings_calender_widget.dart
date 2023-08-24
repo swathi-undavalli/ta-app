@@ -170,7 +170,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                                             ? Colors.white
                                             : Colors.black,
                                       ),
-                                    ),
+                                    ).paddingOnly(top: 4),
                                   ),
                                 ))
                             .toList());

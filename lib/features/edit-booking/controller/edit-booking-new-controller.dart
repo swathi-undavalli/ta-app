@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:temple_adventures/features/bookings/models/activity-model.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:intl/intl.dart';
 
 class EditBookingNewLogic {
   EditBookingNewLogic() {
