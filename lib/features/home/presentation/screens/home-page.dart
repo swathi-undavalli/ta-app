@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/core/constants/checklists.dart';
+import 'package:temple_adventures/core/util/alignment_extensions.dart';
 import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
+
 import '../../../../core/authentication/firebase-authentication.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
@@ -82,17 +85,15 @@ class HomePage extends StatelessWidget {
                               fontSize: 16,
                             ),
                           ),
-                          buildChecklistTiles(
-                              text: "Recreational Student Dive CheckList",
+                          Spacing.h10,
+                          ...checkLists.map((checklist) => buildChecklistTiles(
+                              text: checklist.name,
                               onTap: () {
-                                Get.toNamed(DiveChecklistView.id, arguments: false);
-                              }),
-                          Spacing.h5,
-                          buildChecklistTiles(
-                              text: "Recreational Dive CheckList",
-                              onTap: () {
-                                Get.toNamed(DiveChecklistView.id, arguments: true);
-                              }),
+                                Get.toNamed(
+                                  DiveChecklistView.id,
+                                  arguments: checklist,
+                                );
+                              }).paddingOnly(bottom: 5)),
                         ],
                       ),
                     ],
@@ -113,26 +114,26 @@ class HomePage extends StatelessWidget {
   Widget buildChecklistTiles({required String text, required Function onTap}) {
     return Row(
       children: [
-        SizedBox(
-          width: 180,
+        Expanded(
           child: Text(
             text,
             style: TextStyle(
               fontFamily: AppFonts.nunito,
               color: AppColors.text.darkgrey,
               fontWeight: FontWeight.w600,
-              fontSize: 12,
+              fontSize: 13,
             ),
           ),
         ),
-        AppButton.miniFlat(
+        AppButton.miniText(
           onTap: () {
             onTap();
           },
           text: 'CHECK',
+          textColor: AppColors.text.skyBlue,
         ),
       ],
-    );
+    ).width(Get.width - 93);
   }
 
   getFirstName(String d) {

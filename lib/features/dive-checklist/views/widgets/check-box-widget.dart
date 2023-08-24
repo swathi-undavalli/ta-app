@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/core/util/alignment_extensions.dart';
+
 import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app-icon-button.dart';
@@ -26,6 +28,11 @@ class _CheckBoxWidgetState extends State<CheckBoxWidget> {
 
   @override
   Widget build(BuildContext context) {
+    if (widget.text.startsWith("=="))
+      return Text(
+        widget.text.replaceFirst("==", ""),
+        style: TextStyle(fontWeight: FontWeight.w700),
+      ).paddingOnly(bottom: 15, top: 5).left;
     return GestureDetector(
       onTap: onTap,
       child: Container(

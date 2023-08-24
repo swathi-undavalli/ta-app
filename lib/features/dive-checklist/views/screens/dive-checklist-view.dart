@@ -4,96 +4,59 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/alignment_extensions.dart';
 import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
-import '../../controllers/dive-checklist-controller.dart';
+
+import '../../../../core/models/checklist_model.dart';
 import '../widgets/check-box-widget.dart';
 
-class DiveChecklistView extends StatelessWidget {
+class DiveChecklistView extends StatefulWidget {
   static const String id = "RecreationalStudentDiveChecklist";
-  final DiveChecklistLogic logic = DiveChecklistLogic();
-  final bool isRecreationalDiveChecklist = Get.arguments;
+
+  @override
+  State<DiveChecklistView> createState() => _DiveChecklistViewState();
+}
+
+class _DiveChecklistViewState extends State<DiveChecklistView> {
+  final Checklist checkList = Get.arguments;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
       body: SafeArea(
-        child: GetBuilder<DiveChecklistController>(builder: (controller) {
-          return Column(
-            key: UniqueKey(),
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              _buildDescription(),
-              Spacing.h20,
-              _buildCheckList(),
-              Spacing.h20,
-              AppButton.flat(
-                text: "Save",
-                onTap: () {
-                  Get.back();
-                },
-                textColor: Colors.white,
-                color: Colors.black,
-              ).center,
-            ],
-          ).paddingSymmetric(horizontal: 20, vertical: 30).scrollable;
-        }),
+        child: Column(
+          key: UniqueKey(),
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildDescription(),
+            Spacing.h20,
+            _buildCheckList(),
+            Spacing.h20,
+            AppButton.flat(
+              text: "Close",
+              onTap: () {
+                Get.back();
+              },
+              textColor: Colors.white,
+              color: Colors.black,
+            ).center,
+          ],
+        ).paddingSymmetric(horizontal: 20, vertical: 30).scrollable,
       ),
     );
   }
 
   Widget _buildCheckList() {
     return Column(children: [
-      if (isRecreationalDiveChecklist)
-        ...logic.controller.recreationalDiveCheckList.map(
-          (e) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (logic.controller.recreationalDiveCheckList.indexOf(e) == 8)
-                  Text(
-                    "Green Box : ",
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ).paddingOnly(bottom: 15, top: 5),
-                if (logic.controller.recreationalDiveCheckList.indexOf(e) == 14)
-                  Text(
-                    "Green Dry Box : ",
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ).paddingOnly(bottom: 15, top: 5),
-                CheckBoxWidget(
-                  onChanged: (_) {},
-                  text: e,
-                  initialValue: false,
-                ).paddingOnly(bottom: 10),
-              ],
-            );
-          },
-        ),
-      if (!isRecreationalDiveChecklist)
-        ...logic.controller.recreationalStudentDiveCheckList.map(
-          (e) {
-            return Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (logic.controller.recreationalDiveCheckList.indexOf(e) == 8)
-                  Text(
-                    "Green Box : ",
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ).paddingOnly(bottom: 15, top: 5),
-                if (logic.controller.recreationalDiveCheckList.indexOf(e) == 14)
-                  Text(
-                    "Green Dry Box : ",
-                    style: TextStyle(fontWeight: FontWeight.w700),
-                  ).paddingOnly(bottom: 15, top: 5),
-                CheckBoxWidget(
-                  onChanged: (_) {},
-                  text: e,
-                  initialValue: false,
-                ).paddingOnly(bottom: 10),
-              ],
-            );
-          },
-        )
+      ...checkList.items.map(
+        (e) {
+          return CheckBoxWidget(
+            onChanged: (_) {},
+            text: e,
+            initialValue: false,
+          ).paddingOnly(bottom: 10);
+        },
+      ),
     ]);
   }
 
@@ -117,10 +80,7 @@ class DiveChecklistView extends StatelessWidget {
         ),
       ),
       title: Text(
-        (isRecreationalDiveChecklist)
-            ? "Recreational Dive\n "
-                "Checklist"
-            : "Recreational Student\n Dive Checklist",
+        checkList.name,
         style: TextStyle(
           color: AppColors.text.black,
           fontSize: 16,
@@ -132,7 +92,7 @@ class DiveChecklistView extends StatelessWidget {
       actions: [
         TextButton(
           onPressed: () {
-            logic.controller.update();
+            setState(() {});
           },
           child: Icon(
             Icons.refresh,
@@ -146,9 +106,7 @@ class DiveChecklistView extends StatelessWidget {
 
   Widget _buildDescription() {
     return Text(
-      (isRecreationalDiveChecklist)
-          ? "Recreational Dive Checklist is a set of essential things that needs to be taken for every dive."
-          : "Recreational Student Dive Checklist is a set of essential things that needs to be taken for every dive.",
+      checkList.description,
       style: TextStyle(
         color: Colors.black,
         fontSize: 13,
