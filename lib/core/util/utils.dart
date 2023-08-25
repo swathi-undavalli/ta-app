@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import '../../features/activities/model/colors_data.dart';
+import '../../features/bookings/models/booking-model.dart';
 import '../models/item-model.dart';
 
 void disposeKeyboard() {
@@ -58,4 +60,18 @@ Color getBookingColor(ItemModel itemModel) {
     else
       return Color(0xffE0E0E0);
   }
+}
+
+Future<void> removeBoat({
+  required Booking bookingModel,
+  required DateTime selectedDate,
+}) async {
+  bookingModel.setBoatInfo(
+    selectedDate,
+    null,
+  );
+
+  await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(
+        bookingModel.toMap(),
+      );
 }

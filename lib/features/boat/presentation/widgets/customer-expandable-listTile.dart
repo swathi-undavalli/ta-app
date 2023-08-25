@@ -8,6 +8,7 @@ import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
 
 import '../../../../core/models/item-model.dart';
+import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/app-button.dart';
 import '../../../activities/model/colors_data.dart';
 import '../../../bookings/models/booking-model.dart';
@@ -674,20 +675,6 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
       employeeNotes: employeeNotes,
       instructors: instructors,
       interns: interns,
-    );
-
-    await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(
-          bookingModel.toMap(),
-        );
-  }
-
-  Future<void> removeBoat({
-    required Booking bookingModel,
-    required DateTime selectedDate,
-  }) async {
-    bookingModel.setBoatInfo(
-      selectedDate,
-      null,
     );
 
     await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(

@@ -23,6 +23,10 @@ class _BookingStatusState extends State<BookingStatus> {
   @override
   void initState() {
     status = widget.initialStatus;
+    if (status > 5) {
+      status = 5;
+    }
+
     super.initState();
   }
 
@@ -46,8 +50,7 @@ class _BookingStatusState extends State<BookingStatus> {
             width: 27,
             decoration: BoxDecoration(
               color: getProgressColor(status),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
             ),
             child: Icon(
               Icons.arrow_left,
@@ -81,9 +84,7 @@ class _BookingStatusState extends State<BookingStatus> {
             width: 27,
             decoration: BoxDecoration(
               color: getProgressColor(status),
-              borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(4),
-                  bottomRight: Radius.circular(4)),
+              borderRadius: BorderRadius.only(topRight: Radius.circular(4), bottomRight: Radius.circular(4)),
             ),
             child: Icon(
               Icons.arrow_right,
