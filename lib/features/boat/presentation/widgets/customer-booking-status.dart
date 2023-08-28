@@ -32,7 +32,8 @@ class _BookingStatusState extends State<BookingStatus> {
 
   @override
   Widget build(BuildContext context) {
-    int checkPoint = (widget.isDSD ? dsdStatus.length : coursesStatus.length) - 1;
+    int checkPoint =
+        (widget.isDSD ? dsdStatus.length : coursesStatus.length) - 1;
 
     return Row(
       children: [
@@ -50,7 +51,8 @@ class _BookingStatusState extends State<BookingStatus> {
             width: 27,
             decoration: BoxDecoration(
               color: getProgressColor(status),
-              borderRadius: BorderRadius.only(topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
+              borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
             ),
             child: Icon(
               Icons.arrow_left,
@@ -66,7 +68,8 @@ class _BookingStatusState extends State<BookingStatus> {
           ),
           child: Text(
             widget.isDSD ? dsdStatus[status] : coursesStatus[status],
-            style: TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.w600),
+            style: TextStyle(
+                fontSize: FontSize.small, fontWeight: FontWeight.w600),
           ).paddingOnly(left: 15, right: 15, top: 8),
         ),
         SizedBox(width: 2),
@@ -84,7 +87,9 @@ class _BookingStatusState extends State<BookingStatus> {
             width: 27,
             decoration: BoxDecoration(
               color: getProgressColor(status),
-              borderRadius: BorderRadius.only(topRight: Radius.circular(4), bottomRight: Radius.circular(4)),
+              borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(4),
+                  bottomRight: Radius.circular(4)),
             ),
             child: Icon(
               Icons.arrow_right,

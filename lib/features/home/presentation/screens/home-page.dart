@@ -107,6 +107,7 @@ class HomePage extends StatelessWidget {
 
   Widget buildChecklistTiles({required String text, required Function onTap}) {
     return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Expanded(
           child: Text(

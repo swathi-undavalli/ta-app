@@ -198,7 +198,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             if (showLoading)
               CircularProgressIndicator(
                 color: Colors.black,
-              ).center.height(300)
+              ).center.height(Get.height)
             else ...[
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -53,19 +53,21 @@ class BoatDetails {
       status: json["status"] ?? {},
       employeeNotes: json["employeeNotes"],
       bookingStatus: json["bookingStatus"],
-      instructors: List<Instructor>.from((json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
-      interns: List<Intern>.from((json["interns"] ?? []).map((x) => Intern.fromJson(x))),
+      instructors: List<Instructor>.from(
+          (json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
+      interns: List<Intern>.from(
+          (json["interns"] ?? []).map((x) => Intern.fromJson(x))),
     );
   }
 
-  Map<String, dynamic> toMap() =>
-      {
+  Map<String, dynamic> toMap() => {
         "boat": boat,
         "instructorTanks": instructorTanks,
         "bookingStatus": bookingStatus,
         "employeeNotes": employeeNotes,
         "status": status,
-        "instructors": List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
+        "instructors":
+            List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
         "interns": List<dynamic>.from((interns ?? []).map((x) => x.toJson())),
       };
 }
