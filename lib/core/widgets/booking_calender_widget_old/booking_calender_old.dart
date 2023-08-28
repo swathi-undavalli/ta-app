@@ -89,8 +89,6 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
     );
   }
 
-  ///==================UI===================///
-
   Widget _buildTimeTable() {
     logic.getTime();
     return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
