@@ -6,9 +6,6 @@ class LocalNotificationService {
       FlutterLocalNotificationsPlugin();
 
   static void initialize() async {
-    // final InitializationSettings initializationSettings =
-    //     InitializationSettings(
-    //         android: AndroidInitializationSettings("@mipmap/ic_launcher"));
     var androidInitilize =
         const AndroidInitializationSettings('@mipmap/ic_launcher');
     //New Added
@@ -18,15 +15,11 @@ class LocalNotificationService {
       requestBadgePermission: true,
       requestAlertPermission: true,
     );
-    // _notificationsPlugin.initialize(initializationSettings);
-    var initilizationsSettings = InitializationSettings(
+    var initializationsSettings = InitializationSettings(
         android: androidInitilize, iOS: initializationSettingsIOS);
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
     await _notificationsPlugin.initialize(
-      initilizationsSettings,
-      // onSelectNotification: (payload) async {
-      //   onTap(payload);
-      // },
+      initializationsSettings,
     );
   }
 
@@ -51,7 +44,6 @@ class LocalNotificationService {
         notificationDetails,
       );
     } catch (e) {
-      //print(e);
     }
   }
 }
