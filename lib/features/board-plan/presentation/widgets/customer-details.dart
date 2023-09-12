@@ -455,7 +455,9 @@ class CustomerListState extends State<CustomerList> {
               Spacing.w5,
               Container(
                 decoration: BoxDecoration(
-                  color: getProgressColor(bookings[index].boatDetails?.bookingStatus ?? 0),
+                  color: getBookingStatusColor(bookings[index].isDSD
+                      ? bookings[index].boatDetails?.bookingStatus ?? 0
+                      : bookings[index].getStatus(selectedDate) ?? 0),
                   borderRadius: BorderRadius.circular(2),
                 ),
                 child: buildText(
@@ -555,7 +557,7 @@ class CustomerListState extends State<CustomerList> {
 
   Widget buildBoatDetails() {
     return Container(
-      color: getStatusColor(widget.boat.boatStatus ?? 0).withOpacity(0.2),
+      color: getBoatDetailsColor(widget.boat.boatStatus ?? 0).withOpacity(0.2),
       child: Column(
         children: [
           Row(
@@ -674,7 +676,7 @@ class CustomerListState extends State<CustomerList> {
     return activity?.name ?? '-';
   }
 
-  Color getProgressColor(int index) {
+  Color getBookingStatusColor(int index) {
     if (index == 0) {
       return Colors.blueAccent.withOpacity(0.6);
     } else if (index == 1) {
@@ -700,7 +702,7 @@ class CustomerListState extends State<CustomerList> {
     }
   }
 
-  Color getStatusColor(int index) {
+  Color getBoatDetailsColor(int index) {
     if (index == 0) {
       return Colors.grey..shade900;
     } else if (index == 1) {
