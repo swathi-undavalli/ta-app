@@ -12,6 +12,22 @@ import '../../../boat/models/boat-details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking-model.dart';
 
+List<String> coursesStatus = [
+  "Booked In",
+  "Paperwork done",
+  "Dive center",
+  "Harbour",
+];
+
+List<String> dsdStatus = [
+  "Booked In",
+  "Paperwork done",
+  "Pool ongoing",
+  "Pool completed",
+  "Dive center",
+  "Harbour",
+];
+
 class CustomerList extends StatefulWidget {
   const CustomerList({Key? key, required this.bookings, required this.boat}) : super(key: key);
 
@@ -23,22 +39,6 @@ class CustomerList extends StatefulWidget {
 }
 
 class CustomerListState extends State<CustomerList> {
-  List<String> coursesStatus = [
-    "Booked In",
-    "Paperwork done",
-    "Dive center",
-    "Harbour",
-  ];
-
-  List<String> dsdStatus = [
-    "Booked In",
-    "Paperwork done",
-    "Pool ongoing",
-    "Pool completed",
-    "Dive center",
-    "Harbour",
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Container(
