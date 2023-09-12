@@ -12,34 +12,31 @@ class HomeLogic {
     controller.bookings = [];
     controller.showLoading = true;
 
-      var data = await FirebaseFirestore.instance
-          .collection("bookings")
-          .where(
-            "bookingDate",
-            arrayContains: DateFormat("dd-MM-yyyy")
-                .format(controller.selectedDate),
-          )
-          .get();
+    var data = await FirebaseFirestore.instance
+        .collection("bookings")
+        .where(
+          "bookingDate",
+          arrayContains:
+              DateFormat("dd-MM-yyyy").format(controller.selectedDate),
+        )
+        .get();
 
-
-      data.docs.forEach((element) {
-        Booking booking = Booking.fromMap(element.data());
-        if (booking.boatDetails != null &&
-            booking.boatDetails?.instructors != null &&
-            booking.boatDetails!.instructors!.isNotEmpty) {
-          if (booking.boatDetails!.instructors!.first.id == "9") {
-            ItemModel itemModel = ItemModel.fromBookings(booking);
+    data.docs.forEach((element) {
+      Booking booking = Booking.fromMap(element.data());
+      if (booking.boatDetails != null &&
+          booking.boatDetails?.instructors != null &&
+          booking.boatDetails!.instructors!.isNotEmpty) {
+        if (booking.boatDetails!.instructors!.first.id == "4") {
+          ItemModel itemModel = ItemModel.fromBookings(booking);
           controller.bookings.add(itemModel);
         }
         log(controller.bookings.toString());
-
-        }
-      });
+      }
+    });
 
     log(controller.bookings.toString());
     controller.showLoading = false;
   }
-
 
   Future<void> onDateChanged(DateTime date) async {
     controller.selectedDate = date;
@@ -47,7 +44,6 @@ class HomeLogic {
     await getBookings();
     controller.showLoading = false;
   }
-
 }
 
 class HomeController extends GetxController {

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -13,7 +11,6 @@ import 'package:temple_adventures/features/home/presentation/widgets/employee-di
 import '../../../../core/authentication/firebase-authentication.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
-import '../../../board-plan/presentation/widgets/customer-details.dart';
 import '../../../dive-checklist/views/screens/dive-checklist-view.dart';
 import '../../../login/presentation/screens/login-page.dart';
 
