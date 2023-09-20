@@ -52,7 +52,7 @@ class BookingsCalenderWidgetLogic {
 
         //log("===================wb1");
         controller.bookings.forEach((booking) {
-          var im = ItemModel.fromBookings(booking);
+          var im = ItemModel.fromBooking(booking);
           im.session = "";
           im.time = "";
 
@@ -129,7 +129,7 @@ class BookingsCalenderWidgetLogic {
     log("1");
 
     controller.bookings.forEach((booking) {
-      ItemModel im = ItemModel.fromBookings(booking);
+      ItemModel im = ItemModel.fromBooking(booking);
       log("1.1");
 
       if (booking.theoryDate != null && booking.theoryDate!.isNotEmpty) {

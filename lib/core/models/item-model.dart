@@ -47,7 +47,7 @@ class ItemModel {
     this.bookingModel,
   });
 
-  factory ItemModel.fromBookings(Booking bookingModel) {
+  factory ItemModel.fromBooking(Booking bookingModel) {
     getSessions() {
       var d = "";
       if (bookingModel.theoryDate != null) d = d + "Theory, ";

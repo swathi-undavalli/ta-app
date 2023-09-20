@@ -158,8 +158,8 @@ class _EmployeeDiveCalenderListTileState
                       "Customer Tanks",
                       "N/${widget.itemModel.bookingModel?.getBoatInfo(controller.selectedDate)?.nitrox ?? 0} - "
                           "A/${widget.itemModel.bookingModel?.getBoatInfo(controller.selectedDate)?.air ?? 0}"),
-                  _buildInterns(
-                      widget.itemModel.bookingModel?.boatDetails?.interns ??
+                  _buildDiveBuddies(
+                      widget.itemModel.bookingModel?.boatDetails?.diveBuddies ??
                           []),
                   _buildKeyValuePairs(
                     "Notes",
@@ -239,8 +239,8 @@ class _EmployeeDiveCalenderListTileState
     ).paddingOnly(bottom: 6);
   }
 
-  Widget _buildInterns(
-    List<Intern> interns, {
+  Widget _buildDiveBuddies(
+    List<Instructor> interns, {
     bool shrinkKey = false,
   }) {
     return Row(
@@ -249,7 +249,7 @@ class _EmployeeDiveCalenderListTileState
       children: [
         if (shrinkKey)
           Text(
-            "Interns (N - A)",
+            "Dive Buddies (N - A)",
             style: TextStyle(
               color: Colors.grey[700],
               fontSize: 13,
@@ -260,7 +260,7 @@ class _EmployeeDiveCalenderListTileState
         else
           Expanded(
             child: Text(
-              "Interns (N - A)",
+              "Dive Buddies (N - A)",
               style: TextStyle(
                 color: Colors.grey[700],
                 fontSize: 13,
@@ -276,7 +276,7 @@ class _EmployeeDiveCalenderListTileState
                 if (interns.length == 0) Text("-"),
                 ...interns.map(
                   (e) => Text(
-                    "${e.name}${"(${e.nitrox} - ${e.air})"}, ",
+                    "${e.name}${"(${e.nitrox ?? 0} - ${e.air ?? 0})"}, ",
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 13,

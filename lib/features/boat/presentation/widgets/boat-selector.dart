@@ -53,11 +53,13 @@ class _BoatSelectorState extends State<BoatSelector> {
     return PopupMenuButton<Boat>(
       child: (selectedBoat == null)
           ? Container(
-        height: 31,
+              height: 31,
               width: 100,
-              decoration: BoxDecoration(color: Colors.black, borderRadius: BorderRadius.circular(20)),
+              decoration: BoxDecoration(
+                  color: Colors.black, borderRadius: BorderRadius.circular(20)),
               child: Center(
-                child: Text("Select Boat", style: TextStyle(fontSize: 12, color: Colors.white)),
+                child: Text("Select Boat",
+                    style: TextStyle(fontSize: 12, color: Colors.white)),
               ),
             )
           : Column(
@@ -73,10 +75,13 @@ class _BoatSelectorState extends State<BoatSelector> {
                         fontWeight: FontWeight.bold,
                         // decoration: TextDecoration.underline
                       ),
-                    ).paddingAll(5),
+                    ).paddingAll(2),
                     Text(
                       "Change",
-                      style: TextStyle(fontSize: 10, color: Colors.blue, decoration: TextDecoration.underline),
+                      style: TextStyle(
+                          fontSize: 10,
+                          color: Colors.blue,
+                          decoration: TextDecoration.underline),
                     ).paddingOnly(left: 5, right: 5),
                     Icon(
                       Icons.edit,
@@ -92,7 +97,7 @@ class _BoatSelectorState extends State<BoatSelector> {
                     color: Colors.black,
                     // fontWeight: FontWeight.bold,
                   ),
-                ).paddingAll(5),
+                ).paddingAll(2),
               ],
             ),
       itemBuilder: (BuildContext context) {
@@ -126,9 +131,8 @@ class _BoatSelectorState extends State<BoatSelector> {
                 dsdInstructors: [],
                 photographer: [],
                 boatStatus: 0,
-                internPhotographer: [],
-                internSurfaceSupport: [],
                 hideBoat: null,
+                internPhotoVideo: [],
               ),
               onTap: () {},
               child: Column(
@@ -150,6 +154,7 @@ class _BoatSelectorState extends State<BoatSelector> {
               captains: [],
               name: '',
               surfaceSupport: [],
+              internPhotoVideo: [],
               notes: '',
               nitrox: 0,
               air: 0,
@@ -158,8 +163,6 @@ class _BoatSelectorState extends State<BoatSelector> {
               dsdInstructors: [],
               photographer: [],
               boatStatus: 0,
-              internPhotographer: [],
-              internSurfaceSupport: [],
               hideBoat: true,
             ),
             onTap: () {},
@@ -180,8 +183,8 @@ class _BoatSelectorState extends State<BoatSelector> {
       },
       onSelected: (Boat value) async {
         if (value.id == "Add new") {
-          BoatsModel? boatsModel =
-              await BoatDetailsBottomSheet.show(context, date: widget.selectedDate, isBoatEdit: false);
+          BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(context,
+              date: widget.selectedDate, isBoatEdit: false);
 
           if (boatsModel != null) {
             await FirebaseFirestore.instance

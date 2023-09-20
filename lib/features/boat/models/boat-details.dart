@@ -4,21 +4,21 @@ import 'package:temple_adventures/features/employees/model/employee.dart';
 
 class BoatDetails {
   int? bookingStatus;
-  List<Intern>? interns;
   final String? employeeNotes;
   final List<Instructor>? instructors;
+  final List<Instructor>? diveBuddies;
   Map<String, dynamic>? boat;
   Map<String, dynamic>? instructorTanks;
   Map<String, dynamic>? status;
 
   BoatDetails({
     this.bookingStatus,
-    this.interns,
     this.status,
     this.boat,
     this.instructorTanks,
     this.employeeNotes,
     this.instructors,
+    this.diveBuddies,
   });
 
   BoatDetails copyWith({
@@ -26,18 +26,18 @@ class BoatDetails {
     Map<String, dynamic>? instructorTank,
     Map<String, dynamic>? status,
     String? employeeNotes,
-    List<Intern>? interns,
     int? bookingStatus,
     List<Instructor>? instructors,
+    List<Instructor>? diveBuddies,
   }) =>
       BoatDetails(
         boat: boatId ?? this.boat,
         status: status ?? this.status,
         instructorTanks: instructorTank ?? this.instructorTanks,
-        interns: interns ?? this.interns,
         employeeNotes: employeeNotes ?? this.employeeNotes,
         bookingStatus: bookingStatus ?? this.bookingStatus,
         instructors: instructors ?? this.instructors,
+        diveBuddies: diveBuddies ?? this.diveBuddies,
       );
 
   factory BoatDetails.fromRawJson(String str) =>
@@ -55,8 +55,8 @@ class BoatDetails {
       bookingStatus: json["bookingStatus"],
       instructors: List<Instructor>.from(
           (json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
-      interns: List<Intern>.from(
-          (json["interns"] ?? []).map((x) => Intern.fromJson(x))),
+      diveBuddies: List<Instructor>.from(
+          (json["diveBuddies"] ?? []).map((x) => Instructor.fromJson(x))),
     );
   }
 
@@ -68,7 +68,8 @@ class BoatDetails {
         "status": status,
         "instructors":
             List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
-        "interns": List<dynamic>.from((interns ?? []).map((x) => x.toJson())),
+        "diveBuddies":
+            List<dynamic>.from((diveBuddies ?? []).map((x) => x.toJson())),
       };
 }
 
@@ -211,45 +212,6 @@ class InstructorTanks {
       );
 
   Map<String, dynamic> toMap() => {
-        "air": air,
-        "nitrox": nitrox,
-      };
-}
-
-class Intern {
-  final String name;
-  final int air;
-  final int nitrox;
-
-  Intern({
-    required this.name,
-    required this.air,
-    required this.nitrox,
-  });
-
-  Intern copyWith({
-    String? name,
-    int? air,
-    int? nitrox,
-  }) =>
-      Intern(
-        name: name ?? this.name,
-        air: air ?? this.air,
-        nitrox: nitrox ?? this.nitrox,
-      );
-
-  factory Intern.fromRawJson(String str) => Intern.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory Intern.fromJson(Map<String, dynamic> json) => Intern(
-        name: json["name"],
-        air: json["air"],
-        nitrox: json["nitrox"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "name": name,
         "air": air,
         "nitrox": nitrox,
       };

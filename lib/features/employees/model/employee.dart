@@ -106,6 +106,7 @@ class Employee {
 
   get authPhone => countryCode! + phoneNumber!;
 
+
   Map<String, dynamic> toMap() => {
         "id": id,
         "gender": gender,
@@ -114,7 +115,8 @@ class Employee {
         "countryIsoCode": countryIsoCode,
         "role": role,
         "accessLevels": accessLevels!.toMap(),
-        "shiftTiming": "${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}",
+        "shiftTiming":
+            "${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}",
         "firstName": firstName,
         "lastName": lastName,
         "agencyId": agencyId,

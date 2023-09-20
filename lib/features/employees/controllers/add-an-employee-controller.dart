@@ -196,6 +196,7 @@ class AddAnEmployeeController extends GetxController {
     'Bookings Team',
     'Social Media',
     'Freelance Team',
+    'Intern',
   ];
 
   ///Switches

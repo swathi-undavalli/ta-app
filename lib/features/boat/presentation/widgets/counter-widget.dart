@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/util/spacing-widget.dart';
 
 class CounterWidget extends StatefulWidget {
   CounterWidget(
@@ -56,7 +57,7 @@ class _CounterWidgetState extends State<CounterWidget> {
               setState(() {});
             },
             icon: Icons.remove),
-        SizedBox(width: 15),
+        Spacing.w15,
         SizedBox(
           width: 35,
           height: 20,
@@ -83,7 +84,7 @@ class _CounterWidgetState extends State<CounterWidget> {
             ),
           ),
         ),
-        SizedBox(width: 15),
+        Spacing.w15,
         buildIncrementDecrement(
             onTap: () {
               if (counter < 99) {

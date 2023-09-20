@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/core/repository/employee_repo.dart';
 import 'package:temple_adventures/core/services/auto-update.dart';
 import 'package:temple_adventures/features/login/presentation/screens/login-page.dart';
 
@@ -30,6 +31,7 @@ class _SplashScreenState extends State<SplashScreen> {
       if (user == null) {
         Get.offAllNamed(LoginScreen.id);
       } else {
+        await EmployeeRepo.synchronise();
         AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
         await autoUpdateLogic.checkForUpdate();
       }

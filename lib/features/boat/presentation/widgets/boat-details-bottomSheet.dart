@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,11 +12,8 @@ import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/boat/models/boats.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/interns-bottomSheet.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/tank-counter.dart';
 import 'package:temple_adventures/features/bookings/models/booking-model.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
-
 import '../../../../core/util/utils.dart';
 import 'boat-status.dart';
 
@@ -60,22 +56,18 @@ class BoatDetailsBottomSheet extends StatefulWidget {
 }
 
 class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
-  final CollectionReference employeesCollection = FirebaseFirestore.instance.collection('employees');
+  final CollectionReference employeesCollection =
+      FirebaseFirestore.instance.collection('employees');
   List<Instructor> selectedCaptains = [];
   List<Instructor> selectedDsdInstructors = [];
   List<Instructor> selectedPhotographer = [];
   List<Instructor> surfaceSupport = [];
-  List<Intern> selectedInternsPhotographers = [];
-  List<Intern> selectedInternsSurfaceSupport = [];
-  List<int> dsdInstructorAir = [];
-  List<int> dsdInstructorNitrox = [];
+  List<Instructor> internsPhotoVideo = [];
   late TextEditingController boatTED;
   late TextEditingController diveSiteTED;
   late TextEditingController notesTED;
   int nitrox = 0;
   int air = 0;
-  int photoAir = 0;
-  int photoNitrox = 0;
   late DateTime selectedTime;
   int boatStatus = 0;
   bool hideBoat = false;
@@ -92,7 +84,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     hideBoat = ((widget.boat?.hideBoat)) ?? hideBoat;
     log("start ${hideBoat.toString()}");
     if (widget.boat?.time != null)
-      selectedTime = TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
+      selectedTime =
+          TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
     else
       selectedTime = DateTime.now();
     if (widget.isBoatEdit) fetchEmployeeData();
@@ -110,35 +103,32 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     if (widget.boat?.dsdInstructors != null) {
       log(widget.boat!.dsdInstructors.toString());
 
-      selectedDsdInstructors.addAll(widget.boat!.dsdInstructors as Iterable<Instructor>);
+      selectedDsdInstructors
+          .addAll(widget.boat!.dsdInstructors as Iterable<Instructor>);
       log(selectedDsdInstructors.toString());
     }
 
     if (widget.boat?.photographer != null) {
       log(widget.boat!.photographer.toString());
 
-      selectedPhotographer.addAll(widget.boat!.photographer as Iterable<Instructor>);
+      selectedPhotographer
+          .addAll(widget.boat!.photographer as Iterable<Instructor>);
       log(selectedPhotographer.toString());
-    }
-    if (widget.boat?.internPhotographer != null) {
-      log(widget.boat!.internPhotographer.toString());
-
-      selectedInternsPhotographers.addAll(widget.boat!.internPhotographer as Iterable<Intern>);
-      log(selectedPhotographer.toString());
-    }
-
-    if (widget.boat?.internSurfaceSupport != null) {
-      log(widget.boat!.internSurfaceSupport.toString());
-
-      selectedInternsSurfaceSupport.addAll(widget.boat!.internSurfaceSupport as Iterable<Intern>);
-      log(selectedInternsSurfaceSupport.toString());
     }
 
     if (widget.boat?.surfaceSupport != null) {
       log(widget.boat!.surfaceSupport.toString());
 
-      surfaceSupport.addAll(widget.boat!.surfaceSupport as Iterable<Instructor>);
+      surfaceSupport
+          .addAll(widget.boat!.surfaceSupport as Iterable<Instructor>);
       log(surfaceSupport.toString());
+    }
+    if (widget.boat?.internPhotoVideo != null) {
+      log(widget.boat!.internPhotoVideo.toString());
+
+      internsPhotoVideo
+          .addAll(widget.boat!.internPhotoVideo as Iterable<Instructor>);
+      log(internsPhotoVideo.toString());
     }
     if (mounted) setState(() {});
   }
@@ -159,7 +149,11 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom, top: 40, left: 25, right: 20),
+      padding: EdgeInsets.only(
+          bottom: MediaQuery.of(context).viewInsets.bottom,
+          top: 40,
+          left: 25,
+          right: 20),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(
           30,
@@ -275,45 +269,57 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                       height: 30,
                       width: 100,
                       decoration: BoxDecoration(
-                          border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(5)),
+                          border: Border.all(color: Colors.black),
+                          borderRadius: BorderRadius.circular(5)),
                       child: Center(
                         child: Text(
-                          TimePicker.getFormattedTime(selectedTime) ?? 'No time selected',
-                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                          TimePicker.getFormattedTime(selectedTime) ??
+                              'No time selected',
+                          style: TextStyle(
+                              fontSize: 12, fontWeight: FontWeight.bold),
                         ),
                       ),
                     ),
                   )
                 ],
               ),
-              SizedBox(height: 20),
+              Spacing.h20,
               buildEmployeeSelector(
                 employees: selectedCaptains,
                 title: "Captains",
                 employeeLimit: 2,
+                isTanksRequired: false,
+                employeeType: EmployeeType.showCaptains,
               ),
-              SizedBox(height: 20),
+              Spacing.h20,
               buildEmployeeSelector(
-                employees: selectedDsdInstructors,
-                title: "DSD Instructors",
-                employeeLimit: -1,
-                showTankCounter: true,
-              ),
-              SizedBox(height: 20),
+                  employees: selectedDsdInstructors,
+                  title: "DSD Instructors",
+                  employeeLimit: -1,
+                  isTanksRequired: true,
+                  employeeType: EmployeeType.ShowFreelancersDivers),
+              Spacing.h20,
               buildEmployeeSelector(
                   employees: selectedPhotographer,
                   title: "Photographer / Videographer",
                   employeeLimit: 2,
-                  showTankCounter: true),
-              SizedBox(height: 20),
-              buildInternPhotographers(
-                  interns: selectedInternsPhotographers,
-                  title: 'Intern Photographer / Videographer (A - N)',
-                  isTanksRequired: true),
-              SizedBox(height: 20),
-              buildInternPhotographers(
-                interns: selectedInternsSurfaceSupport,
+                  isTanksRequired: true,
+                  employeeType: EmployeeType.ShowFreelancersDivers),
+              Spacing.h20,
+              buildEmployeeSelector(
+                employees: internsPhotoVideo,
+                title: 'Intern Photographer / Videographer',
+                employeeLimit: 2,
+                employeeType: EmployeeType.ShowInterns,
+                isTanksRequired: true,
+              ),
+              Spacing.h20,
+              buildEmployeeSelector(
+                employees: surfaceSupport,
                 title: 'Surface Support',
+                employeeLimit: -1,
+                employeeType: EmployeeType.ShowAllEmployees,
+                isTanksRequired: false,
               ),
               AppTextField(
                 hintText: "Notes",
@@ -325,7 +331,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   return null;
                 },
               ),
-              SizedBox(height: 20),
+              Spacing.h20,
               Text(
                 "Extra / Spare Tanks : ",
                 style: TextStyle(
@@ -334,9 +340,9 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                     fontFamily: AppFonts.nunito,
                     fontWeight: FontWeight.w600),
               ),
-              SizedBox(height: 20),
+              Spacing.h20,
               buildSpareTankCount(),
-              SizedBox(height: 50),
+              Spacing.h50,
               Center(
                 child: AppButton.flat(
                   height: 50,
@@ -353,7 +359,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   color: Colors.black,
                 ),
               ),
-              SizedBox(height: 30),
+              Spacing.h30,
             ],
           ],
         ),
@@ -432,7 +438,10 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   // un-assign
                   for (Booking booking in bookings) {
                     booking.setBoatInfo(widget.selectedDate, null);
-                    await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
+                    await FirebaseFirestore.instance
+                        .collection('bookings')
+                        .doc(booking.id)
+                        .set(booking.toMap());
                   }
 
                   //delete boat
@@ -444,7 +453,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   Map<String, dynamic>? data = d.data();
                   BoatsModel? boatsModel = BoatsModel.fromMap(data);
 
-                  (boatsModel.boats ?? []).removeWhere((boat) => boat.id == widget.boat?.id);
+                  (boatsModel.boats ?? [])
+                      .removeWhere((boat) => boat.id == widget.boat?.id);
 
                   await FirebaseFirestore.instance
                       .collection("dailyBoats")
@@ -460,81 +470,6 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             actionsAlignment: MainAxisAlignment.spaceBetween,
           );
         });
-  }
-
-  Widget buildInternPhotographers(
-      {required List<Intern> interns, required String title, bool isTanksRequired = false}) {
-    if (interns.isEmpty) {
-      return AppButton.miniFlat(
-        text: "Add $title",
-        onTap: () async {
-          interns = await InternsBottomSheet.show(context, initialInterns: interns, tanksRequired: isTanksRequired)
-              as List<Intern>;
-          setState(() {});
-        },
-      );
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 10),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ...interns.map(
-                  (e) => Row(
-                    children: [
-                      Text(
-                        "${e.name} ",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        (!isTanksRequired) ? "( ${e.air} - ${e.nitrox} )" : "",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ).paddingOnly(bottom: 4),
-                ),
-              ],
-            ),
-            GestureDetector(
-              onTap: () async {
-                interns =
-                    await InternsBottomSheet.show(context, initialInterns: interns, tanksRequired: isTanksRequired)
-                        as List<Intern>;
-                setState(() {});
-              },
-              child: Text(
-                "Change",
-                style: TextStyle(fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
-              ).paddingOnly(left: 10, right: 7),
-            ),
-            Icon(
-              Icons.edit,
-              size: 12,
-              color: Colors.blue,
-            ),
-          ],
-        ),
-      ],
-    );
   }
 
   Widget buildSpareTankCount() {
@@ -587,64 +522,12 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     );
   }
 
-  Widget buildVideoPhotoTankCount() {
-    if (selectedPhotographer.isNotEmpty)
-      return Container(
-        child: Row(
-          children: [
-            Column(
-              children: [
-                Text(
-                  "Nitrox",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ).paddingOnly(bottom: 15),
-                Container(
-                  child: CounterWidget(
-                    onChanged: (int val) {
-                      photoNitrox = val;
-                      setState(() {});
-                    },
-                    initialValue: photoNitrox,
-                  ),
-                )
-              ],
-            ),
-            SizedBox(width: 20),
-            Column(
-              children: [
-                Text(
-                  "Air",
-                  style: TextStyle(
-                    fontSize: 14,
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ).paddingOnly(bottom: 15),
-                CounterWidget(
-                  onChanged: (int val) {
-                    photoAir = val;
-                    setState(() {});
-                  },
-                  initialValue: photoAir,
-                )
-              ],
-            ),
-          ],
-        ),
-      ).paddingOnly(bottom: 20);
-    return SizedBox();
-  }
-
-  Widget buildEmployeeSelector({
-    required List<Instructor> employees,
-    required String title,
-    required int employeeLimit,
-    bool showTankCounter = false,
-  }) {
+  Widget buildEmployeeSelector(
+      {required List<Instructor> employees,
+      required String title,
+      required int employeeLimit,
+      required EmployeeType employeeType,
+      required bool isTanksRequired}) {
     if (employees.isEmpty) {
       return AppButton.miniFlat(
         text: "Add $title",
@@ -653,6 +536,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 context,
                 initialSelectedEmployees: employees,
                 instructorLimit: employeeLimit,
+                employeeType: employeeType,
+                tanksRequired: isTanksRequired,
               ) ??
               [];
 
@@ -666,41 +551,42 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         Row(
           children: [
             Text(
-              "$title",
+              "$title ${(isTanksRequired) ? "(N - A)" : ""}",
               style: TextStyle(
                 fontSize: 14,
                 color: Colors.black,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            Row(
-              children: [
-                GestureDetector(
-                  onTap: () async {
-                    employees = (await EmpSelectorBottomSheet.show(
-                          context,
-                          initialSelectedEmployees: employees,
-                          instructorLimit: employeeLimit,
-                        )) ??
-                        [];
+            GestureDetector(
+              onTap: () async {
+                employees = (await EmpSelectorBottomSheet.show(
+                      context,
+                      initialSelectedEmployees: employees,
+                      instructorLimit: employeeLimit,
+                      employeeType: employeeType,
+                      tanksRequired: isTanksRequired,
+                    )) ??
+                    [];
 
-                    setState(() {});
-                  },
-                  child: Text(
-                    "Change",
-                    style: TextStyle(fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
-                  ).paddingOnly(left: 10, right: 7),
-                ),
-                Icon(
-                  Icons.edit,
-                  size: 12,
-                  color: Colors.blue,
-                ),
-              ],
+                setState(() {});
+              },
+              child: Text(
+                "Change",
+                style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline),
+              ).paddingOnly(left: 10, right: 7),
+            ),
+            Icon(
+              Icons.edit,
+              size: 12,
+              color: Colors.blue,
             ),
           ],
         ),
-        SizedBox(height: 20),
+        Spacing.h20,
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -709,21 +595,21 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "${e.name}",
-                    style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+                  Row(
+                    children: [
+                      Text(
+                        "${e.name} ",
+                        style: TextStyle(
+                            color: Colors.black, fontWeight: FontWeight.bold),
+                      ),
+                      if (isTanksRequired)
+                        Text(
+                          "(${e.nitrox ?? 0} - ${e.air ?? 0})",
+                          style: TextStyle(
+                              color: Colors.black, fontWeight: FontWeight.bold),
+                        ),
+                    ],
                   ),
-                  if (showTankCounter)
-                    TankCounter(
-                      key: UniqueKey(),
-                      onChanged: (int nitrox, int air) {
-                        e.air = air;
-                        e.nitrox = nitrox;
-                      },
-                      air: e.air ?? 0,
-                      nitrox: e.nitrox ?? 0,
-                      titleColor: Colors.grey.shade700,
-                    ).paddingOnly(top: 10)
                 ],
               ).paddingOnly(bottom: 20),
             ),
@@ -739,8 +625,9 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     });
 
     String boatId;
-    DocumentReference boatRef =
-        FirebaseFirestore.instance.collection("dailyBoats").doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate));
+    DocumentReference boatRef = FirebaseFirestore.instance
+        .collection("dailyBoats")
+        .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate));
 
     BoatsModel? boatsModel;
 
@@ -764,9 +651,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
           dsdInstructors: selectedDsdInstructors,
           photographer: selectedPhotographer,
           boatStatus: boatStatus,
-          internPhotographer: selectedInternsPhotographers,
-          internSurfaceSupport: selectedInternsSurfaceSupport,
           hideBoat: hideBoat,
+          internPhotoVideo: internsPhotoVideo,
         );
 
         boatsModel?.boats?.removeWhere((b) => b.id == boatId);
@@ -786,9 +672,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
           dsdInstructors: selectedDsdInstructors,
           photographer: selectedPhotographer,
           boatStatus: boatStatus,
-          internPhotographer: selectedInternsPhotographers,
-          internSurfaceSupport: selectedInternsSurfaceSupport,
           hideBoat: hideBoat,
+          internPhotoVideo: internsPhotoVideo,
         );
 
         boatsModel?.boats?.add(boat);

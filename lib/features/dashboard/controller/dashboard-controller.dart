@@ -32,7 +32,6 @@ class DashBoardScreenLogic {
   }
 
   reloadAfter1Sec() {
-    //log("reloadAfter1Sec");
     Future.delayed(Duration(seconds: 1))
         .whenComplete(() => controller.update());
   }

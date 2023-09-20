@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
 import 'package:temple_adventures/features/bookings/presentation/screens/booking-screen.dart';
 import 'package:temple_adventures/features/dashboard/controller/dashboard-controller.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 import 'package:temple_adventures/features/home/presentation/screens/home-page.dart';
 import 'package:temple_adventures/features/home/presentation/widgets/nav-drawer.dart';
 import 'package:temple_adventures/main.dart';
@@ -22,6 +24,12 @@ class DashBoardScreen extends StatelessWidget {
     BookingScreen(),
     ConditionsScreen(),
   ];
+
+  final internScreens = [
+    HomePage(),
+    BoardPlanView(),
+  ];
+
   DateTime? currentBackPressTime;
 
   DashBoardScreen() {
@@ -39,7 +47,6 @@ class DashBoardScreen extends StatelessWidget {
           FocusScope.of(context).unfocus();
           new TextEditingController().clear();
           FocusNode().requestFocus();
-          //log("back pressed");
           DateTime now = DateTime.now();
           if (currentBackPressTime == null ||
               now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
@@ -56,7 +63,8 @@ class DashBoardScreen extends StatelessWidget {
         children: [
           Scaffold(
             bottomNavigationBar: buildBottomNavigationBar(),
-            drawer: NavDrawer(),
+            drawer:
+                (currentEmployee?.role != "Intern") ? NavDrawer() : SizedBox(),
             key: dashboardDrawerKey,
             body: SafeArea(
               child: buildSelectedPage(),
@@ -92,7 +100,9 @@ class DashBoardScreen extends StatelessWidget {
 
   Widget buildSelectedPage() {
     return GetBuilder<DashBoardScreenController>(builder: (controller) {
-      return screens[controller.currentIndex];
+      if (currentEmployee?.role != "Intern")
+        return screens[controller.currentIndex];
+      return internScreens[controller.currentIndex];
     });
   }
 
@@ -113,7 +123,6 @@ class DashBoardScreen extends StatelessWidget {
         items: [
           BottomNavigationBarItem(
             icon: ImageIcon(AssetImage('images/taHomeWhite.png')),
-            // icon: Icon(Icons.home_outlined),
             activeIcon: buildActiveIcon('images/taHomeBlack.png'),
             label: 'Home',
           ),
@@ -122,16 +131,18 @@ class DashBoardScreen extends StatelessWidget {
             activeIcon: buildActiveIcon('images/boat_black.png'),
             label: 'boat',
           ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('images/taCalWhite.png')),
-            activeIcon: buildActiveIcon('images/taCalBlack.png'),
-            label: 'bookings',
-          ),
-          BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('images/taCloudWhite.png')),
-            activeIcon: buildActiveIcon('images/taCloudBlack.png'),
-            label: 'weather',
-          ),
+          if (currentEmployee?.role != "Intern")
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('images/taCalWhite.png')),
+              activeIcon: buildActiveIcon('images/taCalBlack.png'),
+              label: 'bookings',
+            ),
+          if (currentEmployee?.role != "Intern")
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('images/taCloudWhite.png')),
+              activeIcon: buildActiveIcon('images/taCloudBlack.png'),
+              label: 'weather',
+            ),
         ],
       );
     });

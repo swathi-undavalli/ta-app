@@ -35,11 +35,11 @@ class ManageGeneralInfoLogic {
           winds: null,
           leaves: [],
           powerNotes: null,
-          dsdPools: [],
-          dsdOceanLead: [],
-          coursesCenter: [],
-          harbourStaff: [],
-          dsdCenterStaff: []);
+          dsdPool: [],
+          dsdOceanHead: [],
+          courseCenter: [],
+          harboursStaff: [],
+          centerStaff: []);
     } else {
       controller.currentDsd = boatsModel.dsd!;
 
@@ -96,10 +96,6 @@ class ManageGeneralInfoController extends GetxController {
   DateTime highTideTime = DateTime.now();
   DateTime lowTideTime = DateTime.now();
   late Dsd currentDsd;
-  List<Intern> dsdPool = [];
-  List<Intern> dsdOceanLead = [];
-  List<Intern> coursesCenter = [];
-  List<Intern> dsdCenterStaff = [];
 
   bool get showLoading => _showLoading;
 

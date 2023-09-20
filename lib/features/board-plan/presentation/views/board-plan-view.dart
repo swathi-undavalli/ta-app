@@ -398,7 +398,6 @@ class _BoardPlanViewState extends State<BoardPlanView> {
       logic.onDateChanged(date);
     }
   }
-
 }
 
 class DSDTable extends StatelessWidget {
@@ -637,7 +636,7 @@ class DSDTable extends StatelessWidget {
                         ),
                         Spacing.h3,
                         Text(
-                          getInternNames(boatsModel.dsd?.dsdPools, true),
+                          getNames(boatsModel.dsd?.dsdPool, true),
                           style: const TextStyle(fontSize: 11),
                         ),
                         Spacing.h3,
@@ -648,7 +647,7 @@ class DSDTable extends StatelessWidget {
                         ),
                         Spacing.h3,
                         Text(
-                          getInternNames(boatsModel.dsd?.dsdOceanLead, true),
+                          getNames(boatsModel.dsd?.dsdOceanHead, true),
                           style: const TextStyle(fontSize: 11),
                         ),
                         Spacing.h3,
@@ -659,7 +658,7 @@ class DSDTable extends StatelessWidget {
                         ),
                         Spacing.h3,
                         Text(
-                          getInternNames(boatsModel.dsd?.dsdCenterStaff, true),
+                          getNames(boatsModel.dsd?.centerStaff, true),
                           style: const TextStyle(fontSize: 11),
                         ),
                         Spacing.h3,
@@ -670,7 +669,7 @@ class DSDTable extends StatelessWidget {
                         ),
                         Spacing.h3,
                         Text(
-                          getInternNames(boatsModel.dsd?.coursesCenter, true),
+                          getNames(boatsModel.dsd?.courseCenter, true),
                           style: const TextStyle(fontSize: 11),
                         ),
                       ],

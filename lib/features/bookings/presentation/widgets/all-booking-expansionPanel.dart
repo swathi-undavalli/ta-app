@@ -35,7 +35,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
 
   @override
   void initState() {
-    item = ItemModel.fromBookings(widget.booking);
+    item = ItemModel.fromBooking(widget.booking);
     super.initState();
   }
 

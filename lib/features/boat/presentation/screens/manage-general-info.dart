@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -11,7 +10,6 @@ import 'package:temple_adventures/features/boat/controller/manage-general-info-c
 import 'package:temple_adventures/features/boat/models/boat-details.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/interns-bottomSheet.dart';
 import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
 
 class ManageGeneralInfo extends StatefulWidget {
@@ -117,7 +115,6 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
                             size: 17,
                           ),
                         ),
-
                       ],
                     ),
                     buildSectionTitle("BCD : "),
@@ -265,43 +262,54 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
                         initialValue: controller.currentDsd.weights?.w7 ?? 0),
                     SizedBox(height: 20),
                     buildSectionTitle("Employees : "),
-                    buildDsdPoolStaff(
-                      interns: logic.controller.currentDsd.dsdPools ?? [],
+                    buildEmployeeSelector(
+                      employees: logic.controller.currentDsd.dsdPool ?? [],
                       title: "DSD Pool",
+                      employeeType: EmployeeType.ShowFreelancersDivers,
+                      employeeLimit: -1,
                     ),
                     Spacing.h10,
-                    buildDsdPoolStaff(
-                      interns: logic.controller.currentDsd.dsdOceanLead ?? [],
+                    buildEmployeeSelector(
+                      employees: logic.controller.currentDsd.dsdOceanHead ?? [],
                       title: "DSD Ocean Leader",
+                      employeeType: EmployeeType.ShowFreelancersDivers,
+                      employeeLimit: -1,
                     ),
                     Spacing.h10,
-                    buildDsdPoolStaff(
-                      interns: logic.controller.currentDsd.dsdCenterStaff ?? [],
+                    buildEmployeeSelector(
+                      employees: logic.controller.currentDsd.centerStaff ?? [],
                       title: "DSD Center Staff",
+                      employeeType: EmployeeType.ShowFreelancersDivers,
+                      employeeLimit: -1,
                     ),
                     Spacing.h10,
-                    buildDsdPoolStaff(
-                      interns: logic.controller.currentDsd.coursesCenter ?? [],
+                    buildEmployeeSelector(
+                      employees: logic.controller.currentDsd.courseCenter ?? [],
                       title: "Courses Center",
+                      employeeType: EmployeeType.ShowFreelancersDivers,
+                      employeeLimit: -1,
                     ),
                     Spacing.h10,
-                    buildDsdPoolStaff(
-                      interns: logic.controller.currentDsd.harbourStaff ?? [],
+                    buildEmployeeSelector(
+                      employees:
+                          logic.controller.currentDsd.harboursStaff ?? [],
                       title: "Harbour Staff",
+                      employeeType: EmployeeType.ShowAllEmployees,
+                      employeeLimit: -1,
                     ),
                     Spacing.h10,
                     buildEmployeeSelector(
                       employees: logic.controller.currentDsd.dayOffs ?? [],
                       title: "Day Offs",
+                      employeeType: EmployeeType.ShowAllEmployees,
                       employeeLimit: -1,
-                      showAllEmployees: true,
                     ),
                     Spacing.h10,
                     buildEmployeeSelector(
                       employees: logic.controller.currentDsd.leaves ?? [],
+                      employeeType: EmployeeType.ShowAllEmployees,
                       title: "Leaves",
                       employeeLimit: -1,
-                      showAllEmployees: true,
                     ),
                     AppTextField(
                       controller: controller.generalNotesTED,
@@ -375,93 +383,11 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
     );
   }
 
-  Widget buildDsdPoolStaff(
-      {required List<Intern> interns,
+  Widget buildEmployeeSelector(
+      {required List<Instructor> employees,
       required String title,
-      bool isTanksRequired = false}) {
-    if (interns.isEmpty) {
-      return AppButton.miniFlat(
-        text: "Add $title",
-        onTap: () async {
-          interns = await InternsBottomSheet.show(context,
-              initialInterns: interns,
-              tanksRequired: isTanksRequired) as List<Intern>;
-          setState(() {});
-        },
-      );
-    }
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: TextStyle(
-            fontSize: 14,
-            color: Colors.black,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(height: 10),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                ...interns.map(
-                  (e) => Row(
-                    children: [
-                      Text(
-                        "${e.name} ",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                        ),
-                      ),
-                      Text(
-                        (isTanksRequired) ? "( ${e.air} - ${e.nitrox} )" : "",
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ],
-                  ).paddingOnly(bottom: 4),
-                ),
-              ],
-            ),
-            GestureDetector(
-              onTap: () async {
-                interns = await InternsBottomSheet.show(context,
-                    initialInterns: interns,
-                    tanksRequired: isTanksRequired) as List<Intern>;
-                setState(() {});
-              },
-              child: Text(
-                "Change",
-                style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.blue,
-                    decoration: TextDecoration.underline),
-              ).paddingOnly(left: 10, right: 7),
-            ),
-            Icon(
-              Icons.edit,
-              size: 12,
-              color: Colors.blue,
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-
-  Widget buildEmployeeSelector({
-    required List<Instructor> employees,
-    required String title,
-    required int employeeLimit,
-    required bool showAllEmployees,
-  }) {
+      required int employeeLimit,
+      required EmployeeType employeeType}) {
     if (employees.isEmpty) {
       return AppButton.miniFlat(
         text: "Add $title",
@@ -470,7 +396,7 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
                 context,
                 initialSelectedEmployees: employees,
                 instructorLimit: employeeLimit,
-                showAll: showAllEmployees,
+                employeeType: employeeType,
               )) ??
               [];
           setState(() {});
@@ -510,8 +436,8 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
               onTap: () async {
                 employees = (await EmpSelectorBottomSheet.show(context,
                         initialSelectedEmployees: employees,
-                        showAll: showAllEmployees,
-                        instructorLimit: employeeLimit)) ??
+                        instructorLimit: employeeLimit,
+                        employeeType: employeeType)) ??
                     [];
                 setState(() {});
               },
