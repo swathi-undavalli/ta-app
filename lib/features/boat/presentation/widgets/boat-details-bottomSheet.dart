@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/alignment_extensions.dart';
+import 'package:temple_adventures/core/util/app_measurements.dart';
 import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/core/widgets/app-button.dart';
 import 'package:temple_adventures/core/widgets/time-picker.dart';
@@ -550,12 +551,15 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       children: [
         Row(
           children: [
-            Text(
-              "$title ${(isTanksRequired) ? "(N - A)" : ""}",
-              style: TextStyle(
-                fontSize: 14,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+            SizedBox(
+              width: MediaQuery.of(context).size.width - 116,
+              child: Text(
+                "$title ${(isTanksRequired) ? "(N - A)" : ""}",
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
             GestureDetector(
