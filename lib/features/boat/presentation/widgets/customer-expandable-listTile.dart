@@ -1,12 +1,10 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/features/boat/presentation/widgets/counter-widget.dart';
-
 import '../../../../core/models/item-model.dart';
 import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/app-button.dart';

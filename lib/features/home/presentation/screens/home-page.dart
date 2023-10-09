@@ -135,8 +135,7 @@ class _HomePageState extends State<HomePage> {
               children: [
                 buildButton(
                     onTap: () {
-                      logic.onDateChanged(controller.selectedDate
-                          .subtract(const Duration(days: 1)));
+                      logic.onDateChanged(controller.selectedDate.subtract(const Duration(days: 1)));
                     },
                     icon: Icons.arrow_back_ios_rounded),
                 Spacing.w20,
@@ -155,8 +154,7 @@ class _HomePageState extends State<HomePage> {
                 Spacing.w20,
                 buildButton(
                     onTap: () {
-                      logic.onDateChanged(
-                          controller.selectedDate.add(const Duration(days: 1)));
+                      logic.onDateChanged(controller.selectedDate.add(const Duration(days: 1)));
                     },
                     icon: Icons.arrow_forward_ios_rounded),
               ],
@@ -182,12 +180,9 @@ class _HomePageState extends State<HomePage> {
             ),
             ...controller.currentList.map(
               (e) => buildListTile(
-                  title: e["role"].toString(),
-                  value:
-                      "${e["boat_details"]?.name}@ ${e["boat_details"]?.time}"),
+                  title: e["role"].toString(), value: "${e["boat_details"]?.name}@ ${e["boat_details"]?.time}"),
             ),
-            ...controller.generalStaffList.map(
-                (e) => buildListTile(title: e, value: "Manage / Organize")),
+            ...controller.generalStaffList.map((e) => buildListTile(title: e, value: "Manage / Organize")),
             Spacing.h15,
           ],
         );

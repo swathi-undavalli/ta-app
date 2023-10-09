@@ -18,6 +18,8 @@ class _IconImages {
 
   String get appLogo => "images/AppLogoPondy.png";
 
+  String get video => "images/video.png";
+
   String get vehicle => "images/vehicle.svg";
 
   String get newBoat => "images/newBoat.svg";

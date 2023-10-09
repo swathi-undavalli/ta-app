@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/services/auto-update.dart';
+import 'package:temple_adventures/features/Marketing/views/marketing-view.dart';
 import 'package:temple_adventures/features/all-bookings/presentation/screens/all-bookings-screen.dart';
 import 'package:temple_adventures/features/board-plan/presentation/views/board-plan-view.dart';
 import 'package:temple_adventures/features/boat/presentation/screens/manage-boats-page.dart';
@@ -138,6 +139,7 @@ class MyApp extends StatelessWidget {
         ManageGeneralInfo.id: (context) => ManageGeneralInfo(),
         BoardPlanView.id: (context) => BoardPlanView(),
         DiveChecklistView.id: (context) => DiveChecklistView(),
+        MarketingView.id: (context) => MarketingView(),
       },
     );
   }
