@@ -69,49 +69,73 @@ class _MarketingViewState extends State<MarketingView> {
                   );
                 }
                 return Column(
-                  children: (marketing.marketingGallery ?? [])
-                      .map(
-                        (element) => Container(
-                          width: Get.width,
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: [
-                              BoxShadow(offset: Offset(1, 3), spreadRadius: 2, color: Colors.grey.shade100),
-                            ],
-                          ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  buildPreviewImage(url: element.url, urlType: element.type),
-                                  Spacing.w20,
-                                  Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Spacing.h10,
+                    ...(marketing.marketingGallery ?? []).map(
+                      (element) => Container(
+                        width: Get.width,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(10),
+                          boxShadow: [
+                            BoxShadow(offset: Offset(1, 3), spreadRadius: 2, color: Colors.grey.shade100),
+                          ],
+                        ),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Column(
+                              children: [
+                                buildPreviewImage(url: element.url, urlType: element.type),
+                                Spacing.h10,
+                                buildDeleteEditIcons(
+                                    index: (marketing.marketingGallery ?? []).indexOf(element),
+                                    marketingElement: element),
+                              ],
+                            ),
+                            Spacing.w20,
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Spacing.h5,
+                                buildContent(
+                                  value: (element.name ?? "Untitled").capitalizeFirst,
+                                  fontSize: 16,
+                                  color: Colors.black,
+                                ),
+                                Spacing.h10,
+                                buildContent(value: element.type),
+                                Spacing.h5,
+                                buildContent(value: element.url),
+                                Spacing.h5,
+                                RichText(
+                                  text: TextSpan(
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: AppFonts.nunito,
+                                        overflow: TextOverflow.ellipsis,
+                                        color: Colors.grey),
                                     children: [
-                                      buildDeleteEditIcons(
-                                          index: (marketing.marketingGallery ?? []).indexOf(element),
-                                          marketingElement: element),
-                                      Spacing.h10,
-                                      buildContent(title: "Name : ", value: element.name ?? "-"),
-                                      buildContent(title: "URL : ", value: element.url),
-                                      buildContent(title: "Type : ", value: element.type),
-                                      if (element.type == "Image")
-                                        buildContent(title: "Delay : ", value: "${element.delay.toString()} sec"),
+                                      TextSpan(text: "Displays for "),
+                                      TextSpan(
+                                        text: " ${element.duration} secs",
+                                        style: const TextStyle(color: Colors.black),
+                                      ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ],
-                          ).paddingAll(10),
-                        ).paddingOnly(bottom: 20),
-                      )
-                      .toList(),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ).paddingAll(10),
+                      ).paddingOnly(top: 20),
+                    ),
+                    Spacing.h30,
+                  ],
                 ).scrollable;
               });
-        }).paddingSymmetric(horizontal: 20, vertical: 30),
+        }).paddingSymmetric(horizontal: 20),
       ),
     );
   }
@@ -121,33 +145,40 @@ class _MarketingViewState extends State<MarketingView> {
       if (urlType == "Image") {
         return TAImage(
           url,
-          fit: BoxFit.contain,
+          fit: BoxFit.cover,
         );
       } else if (urlType == "Video") {
         return TAImage(
           AppImages.icons.video,
-          fit: BoxFit.contain,
+          fit: BoxFit.cover,
         );
       } else {
-        return Lottie.network(url);
+        return Lottie.network(
+          url,
+          fit: BoxFit.cover,
+        );
       }
     }
 
-    return Container(
-      width: 100,
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(5),
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(5),
+      child: Container(
+        width: 100,
+        height: 93,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(5),
+        ),
+        child: getPreviewWidget(),
       ),
-      child: getPreviewWidget().paddingAll(5),
     );
   }
 
   Widget buildDeleteEditIcons({required int index, required MarketingElement marketingElement}) {
     return SizedBox(
-      width: Get.width - 180,
+      width: 100,
       child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           buildIcons(
               icon: Icons.delete,
@@ -204,44 +235,44 @@ class _MarketingViewState extends State<MarketingView> {
   }
 
   Widget buildIcons({required IconData icon, required Color color, required Function onTap}) {
-    return IconButton(
-        onPressed: () {
-          onTap();
-          log("tapped");
-        },
-        icon: Icon(
-          icon,
-          color: color,
-          size: 20,
-        ));
+    return Container(
+      height: 30,
+      width: 30,
+      decoration: BoxDecoration(
+        color: AppColors.text.lightSkyBlue,
+        borderRadius: BorderRadius.circular(50),
+      ),
+      child: IconButton(
+          splashRadius: 20,
+          iconSize: 15,
+          onPressed: () {
+            onTap();
+            log("tapped");
+          },
+          icon: Icon(
+            icon,
+            color: Colors.black,
+          )),
+    );
   }
 
-  Widget buildContent({required String title, required String? value}) {
+  Widget buildContent({required String? value, double fontSize = 12, Color color = Colors.grey}) {
     return Row(
       children: [
         SizedBox(
-          width: 50,
+          width: Get.width - 190,
           child: Text(
-            title,
+            (value != null && value.isNotEmpty) ? "$value" : "Untitled",
             style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-        SizedBox(
-          width: 130,
-          child: Text(
-            (value != null && value.isNotEmpty) ? value : " --",
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.w500,
-              overflow: TextOverflow.ellipsis,
-            ),
+                fontSize: fontSize,
+                fontWeight: FontWeight.w600,
+                fontFamily: AppFonts.nunito,
+                overflow: TextOverflow.ellipsis,
+                color: color),
           ),
         ),
       ],
-    ).paddingOnly(bottom: 10);
+    );
   }
 
   Widget buildFloatingActionButton() {

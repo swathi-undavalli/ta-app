@@ -1,9 +1,7 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/alignment_extensions.dart';
 import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/features/Marketing/models/marketing-model.dart';
@@ -27,7 +25,6 @@ class MarketingContentEntryBottomSheet extends StatefulWidget {
     var data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      isDismissible: false,
       builder: (BuildContext context) {
         return MarketingContentEntryBottomSheet(
           marketingElement: marketingElementModel,
@@ -59,7 +56,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
     super.initState();
     urlTED = TextEditingController(text: widget.marketingElement?.url ?? "");
     delayTED = TextEditingController(
-        text: (widget.marketingElement?.delay != null) ? widget.marketingElement?.delay.toString() : "");
+        text: (widget.marketingElement?.duration != null) ? widget.marketingElement?.duration.toString() : "");
     nameTED = TextEditingController(text: widget.marketingElement?.name);
     if (widget.marketingElement != null) {
       urlType = widget.marketingElement?.type;
@@ -78,7 +75,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
           if (showLoading)
             Container(
               width: Get.width,
-              height: 450,
+              height: 550,
               color: Colors.grey,
               child: CircularProgressIndicator(
                 color: Colors.black,
@@ -99,56 +96,58 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
                 errorText: urlError,
                 textInputType: TextInputType.text,
               ),
+              buildKeyValuePair(
+                title: "Duration",
+                controller: delayTED,
+                errorText: delayError,
+                textInputType: TextInputType.numberWithOptions(),
+              ),
               Spacing.h25,
               buildDropDown(),
-              if (urlType == "Image")
-                buildKeyValuePair(
-                  title: "Delay Time",
-                  controller: delayTED,
-                  errorText: delayError,
-                  textInputType: TextInputType.numberWithOptions(),
-                ),
               Spacing.h50,
-              AppButton.flat(
-                onTap: () async {
-                  if (isValid()) {
-                    showLoading = true;
-                    setState(() {});
-                    DocumentSnapshot document =
-                        await FirebaseFirestore.instance.collection('marketing').doc('marketing').get();
-                    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
-
-                    Marketing marketing = Marketing.fromJson(data);
-
-                    MarketingElement marketingElement = MarketingElement(
-                      url: urlTED.text,
-                      type: urlType ?? "",
-                      delay: int.tryParse(delayTED.text),
-                      name: nameTED.text,
-                    );
-
-                    if (widget.index != null) {
-                      marketing.marketingGallery?[widget.index!] = marketingElement;
-                    } else {
-                      marketing.marketingGallery?.add(marketingElement);
-                    }
-                    await FirebaseFirestore.instance.collection('marketing').doc('marketing').set(marketing.toJson());
-
-                    showLoading = false;
-                    setState(() {});
-
-                    Get.back();
-                  }
-                  setState(() {});
-                },
-                text: "Submit",
-                color: Colors.black,
-                textColor: Colors.white,
-              )
+              buildSubmitButton()
             ],
-          ).paddingSymmetric(horizontal: 20, vertical: 20),
+          ).paddingSymmetric(horizontal: 20, vertical: 20).scrollable,
         ],
       ),
+    );
+  }
+
+  Widget buildSubmitButton() {
+    return AppButton.flat(
+      onTap: () async {
+        if (isValid()) {
+          showLoading = true;
+          setState(() {});
+          DocumentSnapshot document = await FirebaseFirestore.instance.collection('marketing').doc('marketing').get();
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+          Marketing marketing = Marketing.fromJson(data);
+
+          MarketingElement marketingElement = MarketingElement(
+            url: urlTED.text,
+            type: urlType ?? "",
+            duration: int.parse(delayTED.text),
+            name: nameTED.text,
+          );
+
+          if (widget.index != null) {
+            marketing.marketingGallery?[widget.index!] = marketingElement;
+          } else {
+            marketing.marketingGallery?.add(marketingElement);
+          }
+          await FirebaseFirestore.instance.collection('marketing').doc('marketing').set(marketing.toJson());
+
+          showLoading = false;
+          setState(() {});
+
+          Get.back();
+        }
+        setState(() {});
+      },
+      text: "Submit",
+      color: Colors.black,
+      textColor: Colors.white,
     );
   }
 
@@ -166,7 +165,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
       urlTypeError = "Required";
       isValid = false;
     }
-    if (urlType == "Image" && delayTED.text.isEmpty) {
+    if (delayTED.text.isEmpty) {
       delayError = "Required";
       isValid = false;
     }
@@ -194,8 +193,10 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
               child: Text(
                 "Type",
                 style: TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
+                  fontFamily: AppFonts.nunito,
+                  color: AppColors.text.black,
+                  fontWeight: FontWeight.w700,
+                  fontSize: 14,
                 ),
               ),
             ),
@@ -206,16 +207,15 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
                 value: (urlType != null) ? urlType : null,
                 onChanged: (dynamic type) {
                   urlType = type;
-                  if (urlType != "Image") {
-                    delayTED.text = "";
-                  }
                   setState(() {});
                 },
                 items: urlTypesList.map((value) {
                   return DropdownMenuItem(
                     child: Column(
                       children: [
-                        Text(value),
+                        Text(
+                          value,
+                        ),
                       ],
                     ),
                     value: value,
@@ -241,7 +241,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
           "Add Content",
           style: TextStyle(
             fontWeight: FontWeight.w600,
-            fontSize: 20,
+            fontSize: 19,
           ),
         ),
         Spacer(),
@@ -268,38 +268,37 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
           child: Text(
             title,
             style: TextStyle(
-              fontWeight: FontWeight.w600,
-              fontSize: 16,
+              fontFamily: AppFonts.nunito,
+              color: AppColors.text.black,
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
             ),
           ),
         ),
         Expanded(
-          child: SizedBox(
-            height: 40,
-            child: TextField(
-              controller: controller,
-              keyboardType: textInputType,
-              onChanged: (_) {
-                setState(() {});
-              },
-              decoration: InputDecoration(
-                hintText: '',
-                errorText: errorText,
-                suffixText: (title == "Delay Time") ? "sec" : "",
-                suffixIcon: (title == "URL" && urlTED.text.isNotEmpty)
-                    ? GestureDetector(
-                        onTap: () {
-                          urlTED.text = "";
-                          setState(() {});
-                        },
-                        child: Icon(
-                          Icons.clear,
-                          color: Colors.black,
-                        ).paddingAll(5))
-                    : SizedBox(),
-                errorStyle: TextStyle(color: Colors.red.shade700),
-                border: UnderlineInputBorder(),
-              ),
+          child: TextField(
+            controller: controller,
+            keyboardType: textInputType,
+            onChanged: (_) {
+              setState(() {});
+            },
+            decoration: InputDecoration(
+              hintText: '',
+              errorText: errorText,
+              suffixText: (title == "Duration") ? "sec" : "",
+              suffixIcon: (title == "URL" && urlTED.text.isNotEmpty)
+                  ? GestureDetector(
+                      onTap: () {
+                        urlTED.text = "";
+                        setState(() {});
+                      },
+                      child: Icon(
+                        Icons.clear,
+                        color: Colors.black,
+                      ).paddingAll(5))
+                  : SizedBox(),
+              errorStyle: TextStyle(color: Colors.red.shade700),
+              border: UnderlineInputBorder(),
             ),
           ),
         ),

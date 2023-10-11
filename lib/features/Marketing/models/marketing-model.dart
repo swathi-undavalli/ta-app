@@ -26,39 +26,39 @@ class MarketingElement {
   final String? name;
   final String url;
   final String type;
-  final int? delay;
+  final int duration;
 
   MarketingElement({
     required this.name,
     required this.url,
     required this.type,
-    required this.delay,
+    required this.duration,
   });
 
   MarketingElement copyWith({
     String? name,
     String? url,
     String? type,
-    int? delay,
+    int? duration,
   }) =>
       MarketingElement(
         name: name ?? this.name,
         url: url ?? this.url,
         type: type ?? this.type,
-        delay: delay ?? this.delay,
+        duration: duration ?? this.duration,
       );
 
   factory MarketingElement.fromJson(Map<String, dynamic> json) => MarketingElement(
         name: json["name"],
         url: json["url"],
         type: json["type"],
-        delay: json["delay"],
+        duration: json["duration"],
       );
 
   Map<String, dynamic> toJson() => {
         "name": name,
         "url": url,
         "type": type,
-        "delay": delay,
+        "duration": duration,
       };
 }
