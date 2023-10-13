@@ -4,11 +4,11 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/core/models/counter-model.dart';
+import 'package:temple_adventures/core/models/counter_model.dart';
 import 'package:temple_adventures/core/util/utils.dart';
 import 'package:temple_adventures/features/employees/model/employee.dart';
-import 'package:temple_adventures/features/logs/models/log-model.dart';
-import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
+import 'package:temple_adventures/features/logs/models/log_model.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/log_screen.dart';
 
 class AddAnEmployeeLogic {
   final DateFormat formatter = DateFormat('HH:mm');

@@ -4,8 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import '../../features/activities/model/colors_data.dart';
-import '../../features/bookings/models/booking-model.dart';
-import '../models/item-model.dart';
+import '../../features/bookings/models/booking_model.dart';
+import '../models/item_model.dart';
 
 void disposeKeyboard() {
   FocusManager.instance.primaryFocus?.unfocus();

@@ -1,0 +1,155 @@
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:get/get.dart';
+import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/features/board_plan/presentation/views/board_plan_view.dart';
+import 'package:temple_adventures/features/boat/presentation/screens/manage_boats_page.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/booking_screen.dart';
+import 'package:temple_adventures/features/dashboard/controller/dashboard_controller.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
+import 'package:temple_adventures/features/home/presentation/screens/home_page.dart';
+import 'package:temple_adventures/features/home/presentation/widgets/nav_drawer.dart';
+import '../../../../core/services/notification_service.dart';
+import '../../../conditions/screens/conditions_screen.dart';
+
+late DashBoardScreenLogic dashboardLogic;
+
+// ignore: must_be_immutable
+class DashBoardScreen extends StatelessWidget {
+  static const String id = "DashBoardScreen";
+  final screens = [
+    HomePage(),
+    ManageBoatsPage(),
+    BookingScreen(),
+    ConditionsScreen(),
+  ];
+
+  final internScreens = [
+    HomePage(),
+    BoardPlanView(),
+  ];
+
+  DateTime? currentBackPressTime;
+
+  DashBoardScreen() {
+    dashboardLogic = DashBoardScreenLogic();
+
+    ///app is in Terminated
+    FirebaseNotificationService.handleTerminatedNavigation();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return WillPopScope(
+      onWillPop: () async {
+        if (dashboardLogic.controller.currentIndex == 2) {
+          FocusScope.of(context).unfocus();
+          new TextEditingController().clear();
+          FocusNode().requestFocus();
+          DateTime now = DateTime.now();
+          if (currentBackPressTime == null || now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+            currentBackPressTime = now;
+            Fluttertoast.showToast(msg: "Press Double tap to exit");
+            return Future.value(false);
+          }
+          return Future.value(true);
+        } else {
+          return true;
+        }
+      },
+      child: Stack(
+        children: [
+          Scaffold(
+            bottomNavigationBar: buildBottomNavigationBar(),
+            drawer: (currentEmployee?.role != "Intern") ? NavDrawer() : SizedBox(),
+            key: dashboardDrawerKey,
+            body: SafeArea(
+              child: buildSelectedPage(),
+            ),
+          ),
+          buildShowLoading(),
+        ],
+      ),
+    );
+  }
+
+  ///===============UI=================///
+
+  Widget buildShowLoading() {
+    return GetBuilder<DashBoardScreenController>(builder: (controller) {
+      if (controller.showLoading)
+        return Material(
+          color: Colors.transparent,
+          child: Container(
+            color: Colors.black54,
+            height: Get.height,
+            width: Get.width,
+            child: Center(
+                child: CircularProgressIndicator(
+              color: Colors.white,
+            )),
+          ),
+        );
+      else
+        return SizedBox();
+    });
+  }
+
+  Widget buildSelectedPage() {
+    return GetBuilder<DashBoardScreenController>(builder: (controller) {
+      if (currentEmployee?.role != "Intern") return screens[controller.currentIndex];
+      return internScreens[controller.currentIndex];
+    });
+  }
+
+  Widget buildBottomNavigationBar() {
+    return GetBuilder<DashBoardScreenController>(builder: (controller) {
+      return BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        backgroundColor: Colors.black,
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        showUnselectedLabels: false,
+        showSelectedLabels: false,
+        iconSize: 30,
+        currentIndex: controller.currentIndex,
+        onTap: (index) {
+          controller.currentIndex = index;
+        },
+        items: [
+          BottomNavigationBarItem(
+            icon: ImageIcon(AssetImage('images/taHomeWhite.png')),
+            activeIcon: buildActiveIcon('images/taHomeBlack.png'),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: ImageIcon(AssetImage('images/boatWhite.png')),
+            activeIcon: buildActiveIcon('images/boat_black.png'),
+            label: 'boat',
+          ),
+          if (currentEmployee?.role != "Intern")
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('images/taCalWhite.png')),
+              activeIcon: buildActiveIcon('images/taCalBlack.png'),
+              label: 'bookings',
+            ),
+          if (currentEmployee?.role != "Intern")
+            BottomNavigationBarItem(
+              icon: ImageIcon(AssetImage('images/taCloudWhite.png')),
+              activeIcon: buildActiveIcon('images/taCloudBlack.png'),
+              label: 'weather',
+            ),
+        ],
+      );
+    });
+  }
+
+  Widget buildActiveIcon(String image) {
+    return Container(
+      height: 30,
+      width: 30,
+      child: Image.asset(image),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+    );
+  }
+}

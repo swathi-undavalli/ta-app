@@ -5,13 +5,13 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/validator.dart';
-import 'package:temple_adventures/core/widgets/app-button.dart';
+import 'package:temple_adventures/core/widgets/app_button.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
-import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
+import 'package:temple_adventures/features/bookings/controller/new_booking_controller.dart';
+import 'package:temple_adventures/features/bookings/presentation/screens/book_date_time_screen.dart';
+import 'package:temple_adventures/features/bookings/presentation/widgets/app_text_fields.dart';
 
-import '../../models/activity-model.dart';
+import '../../models/activity_model.dart';
 
 class AddCustomerDetailsScreen extends StatelessWidget {
   static const String id = "AddCustomerDetailsScreen";

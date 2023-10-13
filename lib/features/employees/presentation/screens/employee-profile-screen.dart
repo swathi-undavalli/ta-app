@@ -4,12 +4,12 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/alignment_extensions.dart';
-import 'package:temple_adventures/core/util/spacing-widget.dart';
+import 'package:temple_adventures/core/util/spacing_widgets.dart';
 import 'package:temple_adventures/core/util/utils.dart';
 import 'package:temple_adventures/core/widgets/access_levels.dart';
-import 'package:temple_adventures/core/widgets/app-button.dart';
+import 'package:temple_adventures/core/widgets/app_button.dart';
 import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
+import 'package:temple_adventures/features/bookings/presentation/widgets/app_text_fields.dart';
 import 'package:temple_adventures/features/employees/controllers/employee-profile-controller.dart';
 import 'package:temple_adventures/features/employees/model/employee.dart';
 

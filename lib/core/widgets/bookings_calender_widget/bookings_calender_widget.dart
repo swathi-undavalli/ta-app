@@ -7,14 +7,14 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/utils.dart';
 import 'package:temple_adventures/core/widgets/access_levels.dart';
-import 'package:temple_adventures/core/widgets/booking-expansion-panel.dart';
+import 'package:temple_adventures/core/widgets/booking_expansion_panel.dart';
 import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
-import 'package:temple_adventures/core/widgets/time-picker.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/boat-details-bottomSheet.dart';
+import 'package:temple_adventures/core/widgets/time_picker.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/boat_details_bottom_sheet.dart';
 
 import '../../../features/boat/models/boats.dart';
-import '../../../features/boat/presentation/widgets/customer-expansion-panel.dart';
-import '../../models/item-model.dart';
+import '../../../features/boat/presentation/widgets/customer_expansion_panel.dart';
+import '../../models/item_model.dart';
 
 // ignore: must_be_immutable
 class BookingsCalenderWidgetNew extends StatelessWidget {

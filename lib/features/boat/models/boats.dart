@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:temple_adventures/features/boat/models/boat-details.dart';
+import 'package:temple_adventures/features/boat/models/boat_details.dart';
 
 class BoatsModel {
   final List<Boat>? boats;

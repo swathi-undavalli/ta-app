@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
-import 'package:temple_adventures/features/boat/models/boat-details.dart';
-import 'tank-counter.dart';
+import 'package:temple_adventures/features/boat/models/boat_details.dart';
+import 'tank_counter.dart';
 
 class InstructorTanksBottomSheet extends StatefulWidget {
   final List<Instructor> instructors;

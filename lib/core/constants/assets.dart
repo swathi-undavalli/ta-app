@@ -2,8 +2,6 @@ class AppImages {
   static const _IconImages icons = _IconImages();
   static const _IllustrationImages illustrations = _IllustrationImages();
   static const _LottieImages lottie = _LottieImages();
-
-  static String get iphoneFrame => "assets/icons/iphone.svg";
 }
 
 class _IconImages {
@@ -11,7 +9,7 @@ class _IconImages {
 
   String get video => "images/video.png";
 
-  String get AppLogo => "images/AppLogoPondy.png";
+  String get appLogo => "images/AppLogoPondy.png";
 
   String get whatsapp => "images/whatsapp.svg";
 
@@ -28,5 +26,4 @@ class _LottieImages {
 
 class _IllustrationImages {
   const _IllustrationImages();
-// String get login => "assets/illustrations/login.svg";
 }

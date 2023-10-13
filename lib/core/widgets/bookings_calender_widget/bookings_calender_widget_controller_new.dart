@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/enums.dart';
 import 'package:temple_adventures/core/util/utils.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:temple_adventures/features/bookings/models/booking_model.dart';
 
 import '../../../features/boat/models/boats.dart';
-import '../../models/item-model.dart';
+import '../../models/item_model.dart';
 
 class BookingsCalenderWidgetLogicNew {
   BookingsCalenderWidgetControllerNew controller =

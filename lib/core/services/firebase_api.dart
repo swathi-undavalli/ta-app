@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
+import 'package:temple_adventures/features/bookings/models/booking_model.dart';
 import 'package:temple_adventures/features/employees/model/employee.dart';
 
 class FirebaseApi {

@@ -4,13 +4,13 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/widgets/access_levels.dart';
-import 'package:temple_adventures/core/widgets/app-button.dart';
-import 'package:temple_adventures/core/widgets/back-navigation-icon.dart';
+import 'package:temple_adventures/core/widgets/app_button.dart';
+import 'package:temple_adventures/core/widgets/back_navigation_icon.dart';
 import 'package:temple_adventures/features/employees/controllers/add-an-employee-controller.dart';
 import 'package:temple_adventures/features/employees/model/employee.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
-import 'package:temple_adventures/features/logs/models/log-model.dart';
-import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
+import 'package:temple_adventures/features/logs/models/log_model.dart';
+import 'package:temple_adventures/features/logs/presentation/screens/log_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EmployeeDetailsScreen extends StatelessWidget {
