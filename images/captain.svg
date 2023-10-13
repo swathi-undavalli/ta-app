@@ -1,8 +1,0 @@
-<svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <rect x="1" y="14.2441" width="18.73" height="1" transform="rotate(-45 1 14.2441)" fill="black"/>
-    <rect x="1.70709" y="0.878784" width="18.7336" height="1" transform="rotate(45 1.70709 0.878784)" fill="black"/>
-    <rect y="7.5" width="16" height="1" fill="black"/>
-    <rect x="7.5" y="16" width="16" height="1" transform="rotate(-90 7.5 16)" fill="black"/>
-    <circle cx="8" cy="8.00012" r="6.5" stroke="black"/>
-    <circle opacity="0.9" cx="8" cy="8.00012" r="5" fill="white"/>
-</svg>

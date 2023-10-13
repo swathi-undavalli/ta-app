@@ -11,6 +11,7 @@ import 'package:temple_adventures/features/home/presentation/screens/home-page.d
 import 'package:temple_adventures/features/home/presentation/widgets/nav-drawer.dart';
 import 'package:temple_adventures/main.dart';
 
+import '../../../../core/services/notification_service.dart';
 import '../../../conditions/screens/conditions-screen.dart';
 
 late DashBoardScreenLogic dashboardLogic;
@@ -48,8 +49,7 @@ class DashBoardScreen extends StatelessWidget {
           new TextEditingController().clear();
           FocusNode().requestFocus();
           DateTime now = DateTime.now();
-          if (currentBackPressTime == null ||
-              now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+          if (currentBackPressTime == null || now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
             currentBackPressTime = now;
             Fluttertoast.showToast(msg: "Press Double tap to exit");
             return Future.value(false);
@@ -63,8 +63,7 @@ class DashBoardScreen extends StatelessWidget {
         children: [
           Scaffold(
             bottomNavigationBar: buildBottomNavigationBar(),
-            drawer:
-                (currentEmployee?.role != "Intern") ? NavDrawer() : SizedBox(),
+            drawer: (currentEmployee?.role != "Intern") ? NavDrawer() : SizedBox(),
             key: dashboardDrawerKey,
             body: SafeArea(
               child: buildSelectedPage(),
@@ -100,8 +99,7 @@ class DashBoardScreen extends StatelessWidget {
 
   Widget buildSelectedPage() {
     return GetBuilder<DashBoardScreenController>(builder: (controller) {
-      if (currentEmployee?.role != "Intern")
-        return screens[controller.currentIndex];
+      if (currentEmployee?.role != "Intern") return screens[controller.currentIndex];
       return internScreens[controller.currentIndex];
     });
   }
