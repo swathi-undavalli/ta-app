@@ -16,12 +16,9 @@ dependencies:
   get_storage: ^2.0.3
   pdf: ^3.8.4
   intl:
-  flutter_share: ^2.0.0
   flutter_svg: ^1.1.6
-  octo_image: ^1.0.2
   cached_network_image: ^3.2.3
   cupertino_icons: ^1.0.5
-  http: ^0.13.5
   permission_handler: ^10.2.0
   fluttertoast: ^8.1.1
   flutter_datetime_picker: ^1.5.1
