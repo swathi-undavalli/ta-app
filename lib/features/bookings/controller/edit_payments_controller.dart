@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/features/bookings/models/booking_model.dart';
+import '../models/booking_model.dart';
 
 class EditPaymentsLogic {
 

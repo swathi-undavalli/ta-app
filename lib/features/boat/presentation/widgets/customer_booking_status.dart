@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
+import '../../../../core/constants/constants.dart';
 
 class BookingStatus extends StatefulWidget {
   const BookingStatus({
@@ -51,16 +51,16 @@ class _BookingStatusState extends State<BookingStatus> {
             width: 27,
             decoration: BoxDecoration(
               color: getProgressColor(status),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(4), bottomLeft: Radius.circular(4),),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_left,
               size: 16,
             ),
           ),
         ),
-        SizedBox(width: 2),
+        const SizedBox(width: 2),
         Container(
           height: 33,
           decoration: BoxDecoration(
@@ -68,11 +68,11 @@ class _BookingStatusState extends State<BookingStatus> {
           ),
           child: Text(
             widget.isDSD ? dsdStatus[status] : coursesStatus[status],
-            style: TextStyle(
-                fontSize: FontSize.small, fontWeight: FontWeight.w600),
+            style: const TextStyle(
+                fontSize: FontSize.small, fontWeight: FontWeight.w600,),
           ).paddingOnly(left: 15, right: 15, top: 8),
         ),
-        SizedBox(width: 2),
+        const SizedBox(width: 2),
         GestureDetector(
           onTap: () {
             if (status < checkPoint) {
@@ -87,11 +87,11 @@ class _BookingStatusState extends State<BookingStatus> {
             width: 27,
             decoration: BoxDecoration(
               color: getProgressColor(status),
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(4),
-                  bottomRight: Radius.circular(4)),
+                  bottomRight: Radius.circular(4),),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_right,
               size: 16,
             ),
@@ -128,18 +128,18 @@ class _BookingStatusState extends State<BookingStatus> {
   }
 
   List<String> coursesStatus = [
-    "Booked In",
-    "Paperwork done",
-    "Dive center",
-    "Harbour",
+    'Booked In',
+    'Paperwork done',
+    'Dive center',
+    'Harbour',
   ];
 
   List<String> dsdStatus = [
-    "Booked In",
-    "Paperwork done",
-    "Pool ongoing",
-    "Pool completed",
-    "Dive center",
-    "Harbour",
+    'Booked In',
+    'Paperwork done',
+    'Pool ongoing',
+    'Pool completed',
+    'Dive center',
+    'Harbour',
   ];
 }

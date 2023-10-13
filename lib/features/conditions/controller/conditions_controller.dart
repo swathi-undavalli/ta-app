@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
-import 'package:temple_adventures/features/conditions/repositories/conditions_repository.dart';
+import '../repositories/conditions_repository.dart';
 import '../models/conditions_model.dart';
 import '../screens/add_conditions_screen.dart';
 
@@ -38,11 +38,11 @@ class ConditionsLogic {
 
     List<Level> levels = [];
 
-    controller.conditions!.levels.forEach((element) {
+    for (var element in controller.conditions!.levels) {
       if (element.reef == controller.selectedReef) {
         levels.add(element);
       }
-    });
+    }
     levels.sort((a, b) => a.depth.compareTo(b.depth));
 
     return levels;
@@ -62,9 +62,9 @@ class ConditionsController extends GetxController {
   Conditions? conditionsViaReef;
 
   List<String> reefs = [
-    "Shallow site area",
-    "Northern Rocks area",
-    "Wall area"
+    'Shallow site area',
+    'Northern Rocks area',
+    'Wall area'
   ];
 
   bool get showLoading => _showLoading;

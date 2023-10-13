@@ -32,7 +32,7 @@ class EmployeeProfileController extends GetxController {
 
   bool _showLoading = false;
 
-  String _isoCode = "IN";
+  String _isoCode = 'IN';
 
   bool get isEditMode => _isEditMode;
 
@@ -56,7 +56,7 @@ class EmployeeProfileController extends GetxController {
   }
 
   reset() {
-    phoneNumberTED.text = "";
-    nameTED.text = "";
+    phoneNumberTED.text = '';
+    nameTED.text = '';
   }
 }

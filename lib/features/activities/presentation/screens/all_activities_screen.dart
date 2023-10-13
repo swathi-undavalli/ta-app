@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/back_navigation_icon.dart';
-import 'package:temple_adventures/core/widgets/access_levels.dart';
-import 'package:temple_adventures/features/bookings/models/activity_model.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/back_navigation_icon.dart';
+import '../../../../core/widgets/access_levels.dart';
+import '../../../bookings/models/activity_model.dart';
 
 import '../../controller/all_activities_controller.dart';
 import 'activity_edit_screen.dart';
 import 'add_new_activity_screen.dart';
 
 class AllActivitiesScreen extends StatelessWidget {
-  static const String id = "PriceEditingScreen";
+  static const String id = 'PriceEditingScreen';
   final AllActivitiesLogic logic = AllActivitiesLogic();
+
+  AllActivitiesScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +24,21 @@ class AllActivitiesScreen extends StatelessWidget {
           appBar: buildAppBar() as PreferredSizeWidget?,
           body: SafeArea(
             child: SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               child: Center(
                 child:
                     GetBuilder<AllActivitiesController>(builder: (controller) {
                   return Column(
                     children: [
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       for (int i = 0;
                           i < controller.allActivitiesList.length;
                           i++)
                         buildActivities(controller.allActivitiesList[i]),
-                      SizedBox(height: 50),
+                      const SizedBox(height: 50),
                     ],
                   );
-                }),
+                },),
               ),
             ),
           ),
@@ -57,26 +59,27 @@ class AllActivitiesScreen extends StatelessWidget {
           Get.toNamed(AddNewActivityScreen.id);
         },
         backgroundColor: AppColors.background.black,
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
 
   Widget buildShowLoading() {
     return GetBuilder<AllActivitiesController>(builder: (controller) {
-      if (controller.showLoading)
+      if (controller.showLoading) {
         return Container(
           color: Colors.black54,
           height: Get.height,
           width: Get.width,
-          child: Center(
+          child: const Center(
               child: CircularProgressIndicator(
             color: Colors.white,
-          )),
+          ),),
         );
-      else
+      } else {
         return Container();
-    });
+      }
+    },);
   }
 
   Widget buildActivities(Activity activityModel) {
@@ -84,7 +87,7 @@ class AllActivitiesScreen extends StatelessWidget {
       onTap: () {
         Get.toNamed(ActivityEditScreen.id, arguments: activityModel);
       },
-      child: Container(
+      child: SizedBox(
         height: 50,
         width: 320,
         child: Padding(
@@ -93,14 +96,14 @@ class AllActivitiesScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                child: Container(
+                child: SizedBox(
                   width: Get.width,
                   child: Text(
                     activityModel.name!,
                     style: TextStyle(
                         color: AppColors.text.black,
                         fontSize: FontSize.small,
-                        fontWeight: FontWeight.w600),
+                        fontWeight: FontWeight.w600,),
                   ),
                 ),
               ),
@@ -108,11 +111,11 @@ class AllActivitiesScreen extends StatelessWidget {
                 alignment: Alignment.centerRight,
                 width: 100,
                 child: Text(
-                  activityModel.price.toString() + " /-",
+                  '${activityModel.price} /-',
                   style: TextStyle(
                       color: AppColors.text.black,
                       fontSize: FontSize.textSize,
-                      fontWeight: FontWeight.w600),
+                      fontWeight: FontWeight.w600,),
                 ),
               ),
             ],
@@ -127,7 +130,7 @@ class AllActivitiesScreen extends StatelessWidget {
       toolbarHeight: 70,
       centerTitle: true,
       title: buildTitle(),
-      leading: BackNavigationIcon(),
+      leading: const BackNavigationIcon(),
       elevation: 0,
       backgroundColor: AppColors.background.white,
     );

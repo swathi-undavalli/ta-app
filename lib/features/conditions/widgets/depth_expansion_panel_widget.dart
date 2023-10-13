@@ -1,17 +1,17 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
+import '../../../core/constants/constants.dart';
 
 import '../models/conditions_model.dart';
 
 // ignore: must_be_immutable
 class DepthExpansionPanelWidget extends StatefulWidget {
-  DepthExpansionPanelWidget({
+  DepthExpansionPanelWidget({Key? key, 
     required this.level,
     required this.onDeletePressed,
     required this.onChanged,
-  });
+  }) : super(key: key);
 
   Level level;
   Function onDeletePressed;
@@ -50,28 +50,28 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
             Row(
               children: [
                 Text(
-                  "${widget.level.depth} meters",
-                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  '${widget.level.depth} meters',
+                  style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                 ),
-                Spacer(),
+                const Spacer(),
                 IconButton(
-                  padding: EdgeInsets.all(0),
-                  visualDensity: VisualDensity(horizontal: 0, vertical: 0),
+                  padding: const EdgeInsets.all(0),
+                  visualDensity: const VisualDensity(horizontal: 0, vertical: 0),
                   splashRadius: 20,
                   iconSize: 13,
-                  icon: Icon(Icons.delete),
+                  icon: const Icon(Icons.delete),
                   onPressed: () {
                     widget.onDeletePressed();
                   },
                 ),
                 IconButton(
-                  visualDensity: VisualDensity(horizontal: 0, vertical: 0),
-                  padding: EdgeInsets.all(0),
+                  visualDensity: const VisualDensity(horizontal: 0, vertical: 0),
+                  padding: const EdgeInsets.all(0),
                   splashRadius: 20,
                   iconSize: 20,
                   icon: Icon(isExpanded
                       ? Icons.keyboard_arrow_up_rounded
-                      : Icons.keyboard_arrow_down_rounded),
+                      : Icons.keyboard_arrow_down_rounded,),
                   onPressed: () {
                     setState(() {
                       isExpanded = !isExpanded;
@@ -84,7 +84,7 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   buildConditionSlider(
                     SliderType.fishLife,
                   ),
@@ -94,15 +94,15 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
                   buildConditionSlider(
                     SliderType.currents,
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   buildWaterConditions(
-                      title: "Updated By", text: widget.level.updatedBy),
-                  SizedBox(height: 10),
+                      title: 'Updated By', text: widget.level.updatedBy,),
+                  const SizedBox(height: 10),
                   buildWaterConditions(
-                      title: "Updated Time",
-                      text: DateFormat("dd MMM yyyy @ hh:mm a")
-                          .format(widget.level.updatedAt)),
-                  SizedBox(height: 25),
+                      title: 'Updated Time',
+                      text: DateFormat('dd MMM yyyy @ hh:mm a')
+                          .format(widget.level.updatedAt),),
+                  const SizedBox(height: 25),
                 ],
               )
           ],
@@ -119,14 +119,14 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
         SizedBox(
           width: 85,
           child: Text(
-            "${title}",
-            style: TextStyle(
-                fontSize: FontSize.small, fontWeight: FontWeight.bold),
+            title,
+            style: const TextStyle(
+                fontSize: FontSize.small, fontWeight: FontWeight.bold,),
           ),
         ),
         Text(
-          " :   ${text}",
-          style: TextStyle(fontSize: FontSize.small),
+          ' :   $text',
+          style: const TextStyle(fontSize: FontSize.small),
         ),
       ],
     ).paddingSymmetric(horizontal: 20);
@@ -138,13 +138,13 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
       children: [
         Text(
           getSliderTitle(type),
-          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
         ).paddingOnly(left: 20),
         Row(
           children: [
             Expanded(
               child: SliderTheme(
-                data: SliderThemeData(
+                data: const SliderThemeData(
                   trackHeight: 3,
                   thumbShape: RoundSliderThumbShape(
                     enabledThumbRadius: 5,
@@ -178,7 +178,7 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
                 ),
               ),
             ),
-            Container(
+            SizedBox(
               width: 67,
               child: Text(
                 getConditions(type),
@@ -186,7 +186,7 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
                     fontSize: 13,
                     color:
                         getColor(getValue(type), type == SliderType.currents),
-                    fontWeight: FontWeight.w600),
+                    fontWeight: FontWeight.w600,),
               ),
             )
           ],
@@ -221,7 +221,7 @@ class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
         if (visibility == 3) return 'Can see boat';
         return 'Can see everything';
       case SliderType.currents:
-        if (currents == 0) return "No current";
+        if (currents == 0) return 'No current';
         if (currents == 1) return 'Mild current';
         if (currents == 2) return 'Moderate current';
         if (currents == 3) return 'Strong current';
@@ -238,19 +238,19 @@ enum SliderType {
 
 Color getColor(double value, bool isCurrents) {
   if (isCurrents) {
-    if (value == 4) return Color(0xffBE0000);
-    if (value == 3) return Color(0xffBE0000);
-    if (value == 2) return Color(0xffFF7A00);
-    if (value == 1) return Color(0xffFF7A00);
-    if (value == 0) return Color(0xff009429);
-    return Color(0xffBE0000);
+    if (value == 4) return const Color(0xffBE0000);
+    if (value == 3) return const Color(0xffBE0000);
+    if (value == 2) return const Color(0xffFF7A00);
+    if (value == 1) return const Color(0xffFF7A00);
+    if (value == 0) return const Color(0xff009429);
+    return const Color(0xffBE0000);
   }
-  if (value == 0) return Color(0xffBE0000);
-  if (value == 1) return Color(0xffBE0000);
-  if (value == 2) return Color(0xffFF7A00);
-  if (value == 3) return Color(0xffFF7A00);
-  if (value == 4) return Color(0xff009429);
-  return Color(0xff009429);
+  if (value == 0) return const Color(0xffBE0000);
+  if (value == 1) return const Color(0xffBE0000);
+  if (value == 2) return const Color(0xffFF7A00);
+  if (value == 3) return const Color(0xffFF7A00);
+  if (value == 4) return const Color(0xff009429);
+  return const Color(0xff009429);
 }
 
 String getSliderTitle(SliderType type) {

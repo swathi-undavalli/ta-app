@@ -5,30 +5,30 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/constants/enums.dart';
-import 'package:temple_adventures/core/util/utils.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/core/widgets/back_navigation_icon.dart';
-import 'package:temple_adventures/core/widgets/booking_calender_widget_old/booking_calender_old.dart';
-import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
-import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
-import 'package:temple_adventures/features/bookings/models/booking_model.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/book_date_time_screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app_text_fields.dart';
-import 'package:temple_adventures/features/edit_booking/controller/edit_booking_new_controller.dart';
-import 'package:temple_adventures/features/logs/models/log_model.dart';
-import 'package:temple_adventures/features/logs/presentation/screens/log_screen.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/constants/enums.dart';
+import '../../../../core/util/utils.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/back_navigation_icon.dart';
+import '../../../../core/widgets/booking_calender_widget_old/booking_calender_old.dart';
+import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
+import '../../../../core/widgets/phone_number/intl_phone_field.dart';
+import '../../../bookings/models/booking_model.dart';
+import '../../../bookings/presentation/screens/book_date_time_screen.dart';
+import '../../../bookings/presentation/widgets/app_text_fields.dart';
+import '../../controller/edit_booking_new_controller.dart';
+import '../../../logs/models/log_model.dart';
+import '../../../logs/presentation/screens/log_screen.dart';
 
 class EditBookingNewScreen extends StatelessWidget {
-  static const String id = "EditBookingNewScreen";
+  static const String id = 'EditBookingNewScreen';
   final EditBookingNewLogic logic = EditBookingNewLogic();
   final Booking? bookingArg = Get.arguments;
   final AutoScrollController autoScrollControllerTheory = AutoScrollController();
   final AutoScrollController autoScrollControllerPool = AutoScrollController();
   final AutoScrollController autoScrollControllerDive = AutoScrollController();
 
-  EditBookingNewScreen() {
+  EditBookingNewScreen({Key? key}) : super(key: key) {
     logic.controller.bookingModel = bookingArg;
     logic.controller.activityNAmeTED.text = bookingArg!.activity![0]!.name.toString();
     logic.controller.totalAmountTED.text = ((bookingArg!.totalCost).round()).toString();
@@ -36,29 +36,29 @@ class EditBookingNewScreen extends StatelessWidget {
     logic.controller.depositTED.text = bookingArg!.paid.toString();
     logic.controller.balanceTED.text = bookingArg!.balance.toString();
     logic.controller.paxTED.text = bookingArg!.noOfPersons.toString();
-    logic.controller.remarksTED.text = bookingArg!.remarks ?? "";
-    logic.controller.invoiceTED.text = bookingArg!.receiptNo ?? "";
-    logic.controller.countryCodeTED.text = bookingArg!.pax![0]["countryCode"] ?? "";
-    logic.controller.phoneTED.text = bookingArg!.pax![0]["phoneNumber"] ?? "";
-    logic.controller.emailTED.text = bookingArg!.pax![0]["email"] ?? "";
-    logic.controller.firstNameTED.text = bookingArg!.pax![0]["first-name"];
-    logic.controller.lastNameTED.text = bookingArg!.pax![0]["last-name"] ?? "";
-    logic.controller.isoCode = bookingArg!.pax![0]["isoCode"] ?? "";
-    logic.controller.discountTED.text = bookingArg!.discount?.toString() ?? "0";
+    logic.controller.remarksTED.text = bookingArg!.remarks ?? '';
+    logic.controller.invoiceTED.text = bookingArg!.receiptNo ?? '';
+    logic.controller.countryCodeTED.text = bookingArg!.pax![0]['countryCode'] ?? '';
+    logic.controller.phoneTED.text = bookingArg!.pax![0]['phoneNumber'] ?? '';
+    logic.controller.emailTED.text = bookingArg!.pax![0]['email'] ?? '';
+    logic.controller.firstNameTED.text = bookingArg!.pax![0]['first-name'];
+    logic.controller.lastNameTED.text = bookingArg!.pax![0]['last-name'] ?? '';
+    logic.controller.isoCode = bookingArg!.pax![0]['isoCode'] ?? '';
+    logic.controller.discountTED.text = bookingArg!.discount?.toString() ?? '0';
     logic.controller.taxable = bookingArg!.tax != 0;
-    logic.controller.discountSwitch = bookingArg!.discountType == "%";
+    logic.controller.discountSwitch = bookingArg!.discountType == '%';
 
-    if (bookingArg!.pax![0]["dob"] != null) {
+    if (bookingArg!.pax![0]['dob'] != null) {
       try {
         logic.controller.dob =
-            (bookingArg!.pax![0]["dob"] as Timestamp).toDate();
+            (bookingArg!.pax![0]['dob'] as Timestamp).toDate();
       } catch (e) {
         showToast(bookingArg!.id!);
         logic.controller.dob = DateTime.now();
       }
       logic.controller.dobTED.text =
-          DateFormat("dd MMM, yyyy").format(logic.controller.dob);
-      log("Hey Dob");
+          DateFormat('dd MMM, yyyy').format(logic.controller.dob);
+      log('Hey Dob');
       log(logic.controller.dob.toString());
     }
   }
@@ -70,17 +70,17 @@ class EditBookingNewScreen extends StatelessWidget {
         toolbarHeight: 70,
         centerTitle: true,
         title: buildTitle(),
-        leading: BackNavigationIcon(),
+        leading: const BackNavigationIcon(),
         elevation: 0,
         backgroundColor: AppColors.background.white,
       ),
       body: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: WillPopScope(
           onWillPop: () async {
             logic.controller.reset();
             logic.controller.startDate =
-                logic.controller.startDate.subtract(Duration(days: 50));
+                logic.controller.startDate.subtract(const Duration(days: 50));
             return true;
           },
           child: SafeArea(
@@ -94,7 +94,7 @@ class EditBookingNewScreen extends StatelessWidget {
                         return Column(
                           children: [
                             buildBookingID(),
-                            SizedBox(height: 20),
+                            const SizedBox(height: 20),
                             buildActivityDropDown(),
                             buildPriceTF(controller),
                             buildNameFields(controller),
@@ -103,30 +103,30 @@ class EditBookingNewScreen extends StatelessWidget {
                             buildDiscount(),
                             buildTax(),
                             buildDepositTF(controller),
-                            SizedBox(height: 25),
+                            const SizedBox(height: 25),
                             buildTotalAmount(),
-                            SizedBox(height: 25),
+                            const SizedBox(height: 25),
                             buildReceiptNo(controller),
                             buildRemarksTF(controller),
                             buildEmailTF(controller),
-                            SizedBox(height: 10),
+                            const SizedBox(height: 10),
                             buildPhoneNumber(),
-                            SizedBox(height: 50),
+                            const SizedBox(height: 50),
                             buildEditSessions(
                               controller,
-                              type: DateType.Theory,
+                              type: DateType.theory,
                             ),
-                            SizedBox(height: 30),
+                            const SizedBox(height: 30),
                             buildEditSessions(
                               controller,
-                              type: DateType.Pool,
+                              type: DateType.pool,
                             ),
-                            SizedBox(height: 30),
+                            const SizedBox(height: 30),
                             buildEditSessions(
                               controller,
-                              type: DateType.Dive,
+                              type: DateType.dive,
                             ),
-                            SizedBox(height: 100),
+                            const SizedBox(height: 100),
                           ],
                         );
                       },
@@ -134,7 +134,7 @@ class EditBookingNewScreen extends StatelessWidget {
                   ),
                 ),
                 buildButtons(),
-                SizedBox(height: 50)
+                const SizedBox(height: 50)
               ],
             ),
           ),
@@ -153,7 +153,7 @@ class EditBookingNewScreen extends StatelessWidget {
         },
         child: AbsorbPointer(
           child: AppTextField(
-            hintText: "Date of Birth",
+            hintText: 'Date of Birth',
             controller: logic.controller.dobTED,
             focusNode: logic.controller.dobNode,
             nextFocusNode: logic.controller.paxNode,
@@ -173,7 +173,7 @@ class EditBookingNewScreen extends StatelessWidget {
           ),
         ),
       );
-    });
+    },);
   }
 
   Widget buildButtons() {
@@ -185,7 +185,7 @@ class EditBookingNewScreen extends StatelessWidget {
             height: 45,
             width: 140,
             color: AppColors.background.grey,
-            text: "Cancel",
+            text: 'Cancel',
             textColor: AppColors.text.black,
             onTap: () {
               disposeKeyboard();
@@ -197,41 +197,41 @@ class EditBookingNewScreen extends StatelessWidget {
               height: 45,
               width: 140,
               color: AppColors.background.black,
-              text: "Update",
+              text: 'Update',
               textColor: AppColors.text.white,
               onTap: () async {
                 controller.bookingModel!.bookingDate = [];
 
                 if (controller.bookingModel!.poolDate != null &&
                     controller.bookingModel!.poolDate!.isNotEmpty) {
-                  controller.bookingModel!.poolDate!.forEach((date) {
+                  for (var date in controller.bookingModel!.poolDate!) {
                     controller.bookingModel!.bookingDate!
                         .add(getStringDate(date!));
-                  });
+                  }
                 }
                 if (controller.bookingModel!.theoryDate != null &&
                     controller.bookingModel!.theoryDate!.isNotEmpty) {
-                  controller.bookingModel!.theoryDate!.forEach((date) {
+                  for (var date in controller.bookingModel!.theoryDate!) {
                     controller.bookingModel!.bookingDate!
                         .add(getStringDate(date!));
-                  });
+                  }
                 }
                 if (controller.bookingModel!.diveDate != null &&
                     controller.bookingModel!.diveDate!.isNotEmpty) {
-                  controller.bookingModel!.diveDate!.forEach((date) {
+                  for (var date in controller.bookingModel!.diveDate!) {
                     controller.bookingModel!.bookingDate!
                         .add(getStringDate(date!));
-                  });
+                  }
                 }
                 await FirebaseFirestore.instance
-                    .collection("bookings")
+                    .collection('bookings')
                     .doc(controller.bookingModel!.id)
                     .set(controller.bookingModel!.toMap());
                 LogModel logModel = LogModel(
                     type: LogType.bookingEdited,
-                    bookingId: controller.bookingModel!.id);
+                    bookingId: controller.bookingModel!.id,);
                 FirebaseFirestore.instance
-                    .collection("logs")
+                    .collection('logs')
                     .doc()
                     .set(logModel.toMap());
                 Get.back();
@@ -240,23 +240,23 @@ class EditBookingNewScreen extends StatelessWidget {
                 BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
                     BookingsCalenderWidgetLogicNew();
                 bookingCalenderLogicNew.onDateSelected(
-                    bookingCalenderLogicNew.controller.lastDateIndex);
+                    bookingCalenderLogicNew.controller.lastDateIndex,);
                 // bookingCalenderLogic.controller.selectedDate
                 //     .subtract(Duration(days: 10));
-              }),
+              },),
         ],
       );
-    });
+    },);
   }
 
   Widget buildEditSessions(EditBookingNewController controller,
-      {required DateType type}) {
-    String title = "";
+      {required DateType type,}) {
+    String title = '';
     List<Widget> dates = [];
     FilterType? filterType;
     AutoScrollController? scrollController;
-    if (type == DateType.Theory) {
-      title = "Theory";
+    if (type == DateType.theory) {
+      title = 'Theory';
       filterType = FilterType.Theory;
       scrollController = autoScrollControllerTheory;
       dates = controller.bookingModel!.theoryDate!
@@ -266,20 +266,20 @@ class EditBookingNewScreen extends StatelessWidget {
               onEdit: () {
                 DateTime? selectedTheoryDate = e;
                 Get.defaultDialog(
-                  title: "",
-                  titlePadding: EdgeInsets.all(0),
-                  titleStyle: TextStyle(fontSize: 0, height: 0),
-                  content: Container(
+                  title: '',
+                  titlePadding: const EdgeInsets.all(0),
+                  titleStyle: const TextStyle(fontSize: 0, height: 0),
+                  content: SizedBox(
                     height: 480,
                     width: 400,
                     child: Column(
                       children: [
                         Container(
                           alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 20),
-                          child: Text(
-                            "Choose Date",
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20,),
+                          child: const Text(
+                            'Choose Date',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -299,13 +299,13 @@ class EditBookingNewScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             AppButton.miniText(
-                              text: "Cancel",
+                              text: 'Cancel',
                               onTap: () {
                                 Get.back();
                               },
                             ),
                             AppButton.miniFlat(
-                              text: "Okay",
+                              text: 'Okay',
                               bgColor: AppColors.background.black,
                               textColor: AppColors.text.white,
                               onTap: () {
@@ -319,7 +319,7 @@ class EditBookingNewScreen extends StatelessWidget {
                                   controller.update();
                                   Get.back();
                                 } else {
-                                  showToast("Select Time");
+                                  showToast('Select Time');
                                 }
                               },
                             ),
@@ -339,8 +339,8 @@ class EditBookingNewScreen extends StatelessWidget {
           )
           .toList();
     }
-    if (type == DateType.Pool) {
-      title = "Pool";
+    if (type == DateType.pool) {
+      title = 'Pool';
       filterType = FilterType.Pool;
       scrollController = autoScrollControllerPool;
       dates = controller.bookingModel!.poolDate!
@@ -350,20 +350,20 @@ class EditBookingNewScreen extends StatelessWidget {
               onEdit: () {
                 DateTime? selectedPoolDate = e;
                 Get.defaultDialog(
-                  title: "",
-                  titlePadding: EdgeInsets.all(0),
-                  titleStyle: TextStyle(fontSize: 0, height: 0),
-                  content: Container(
+                  title: '',
+                  titlePadding: const EdgeInsets.all(0),
+                  titleStyle: const TextStyle(fontSize: 0, height: 0),
+                  content: SizedBox(
                     height: 480,
                     width: 400,
                     child: Column(
                       children: [
                         Container(
                           alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 20),
-                          child: Text(
-                            "Choose Date",
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20,),
+                          child: const Text(
+                            'Choose Date',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -383,13 +383,13 @@ class EditBookingNewScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             AppButton.miniText(
-                              text: "Cancel",
+                              text: 'Cancel',
                               onTap: () {
                                 Get.back();
                               },
                             ),
                             AppButton.miniFlat(
-                              text: "Okay",
+                              text: 'Okay',
                               bgColor: AppColors.background.black,
                               textColor: AppColors.text.white,
                               onTap: () {
@@ -403,7 +403,7 @@ class EditBookingNewScreen extends StatelessWidget {
                                   controller.update();
                                   Get.back();
                                 } else {
-                                  showToast("Select Time");
+                                  showToast('Select Time');
                                 }
                               },
                             ),
@@ -423,8 +423,8 @@ class EditBookingNewScreen extends StatelessWidget {
           )
           .toList();
     }
-    if (type == DateType.Dive) {
-      title = "Dive";
+    if (type == DateType.dive) {
+      title = 'Dive';
       filterType = FilterType.Dive;
       scrollController = autoScrollControllerDive;
       dates = controller.bookingModel!.diveDate!
@@ -434,20 +434,20 @@ class EditBookingNewScreen extends StatelessWidget {
               onEdit: () {
                 DateTime? selectedDiveDate = e;
                 Get.defaultDialog(
-                  title: "",
-                  titlePadding: EdgeInsets.all(0),
-                  titleStyle: TextStyle(fontSize: 0, height: 0),
-                  content: Container(
+                  title: '',
+                  titlePadding: const EdgeInsets.all(0),
+                  titleStyle: const TextStyle(fontSize: 0, height: 0),
+                  content: SizedBox(
                     height: 480,
                     width: 400,
                     child: Column(
                       children: [
                         Container(
                           alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 20),
-                          child: Text(
-                            "Choose Date",
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20,),
+                          child: const Text(
+                            'Choose Date',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -467,13 +467,13 @@ class EditBookingNewScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             AppButton.miniText(
-                              text: "Cancel",
+                              text: 'Cancel',
                               onTap: () {
                                 Get.back();
                               },
                             ),
                             AppButton.miniFlat(
-                              text: "Okay",
+                              text: 'Okay',
                               bgColor: AppColors.background.black,
                               textColor: AppColors.text.white,
                               onTap: () {
@@ -487,7 +487,7 @@ class EditBookingNewScreen extends StatelessWidget {
                                   controller.update();
                                   Get.back();
                                 } else {
-                                  showToast("Select Time");
+                                  showToast('Select Time');
                                 }
                               },
                             ),
@@ -515,27 +515,27 @@ class EditBookingNewScreen extends StatelessWidget {
           children: [
             Text(
               title,
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             ),
             AppButton.miniFlat(
-              text: "ADD",
+              text: 'ADD',
               onTap: () {
                 DateTime? selectedDate;
                 Get.defaultDialog(
-                  title: "",
-                  titlePadding: EdgeInsets.all(0),
-                  titleStyle: TextStyle(fontSize: 0, height: 0),
-                  content: Container(
+                  title: '',
+                  titlePadding: const EdgeInsets.all(0),
+                  titleStyle: const TextStyle(fontSize: 0, height: 0),
+                  content: SizedBox(
                     height: 500,
                     width: 400,
                     child: Column(
                       children: [
                         Container(
                           alignment: Alignment.centerLeft,
-                          margin: EdgeInsets.symmetric(
-                              horizontal: 20, vertical: 20),
-                          child: Text(
-                            "Choose Date",
+                          margin: const EdgeInsets.symmetric(
+                              horizontal: 20, vertical: 20,),
+                          child: const Text(
+                            'Choose Date',
                             style: TextStyle(
                               fontWeight: FontWeight.bold,
                             ),
@@ -555,13 +555,13 @@ class EditBookingNewScreen extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             AppButton.miniText(
-                              text: "Cancel",
+                              text: 'Cancel',
                               onTap: () {
                                 Get.back();
                               },
                             ),
                             AppButton.miniFlat(
-                              text: "Okay",
+                              text: 'Okay',
                               bgColor: AppColors.background.black,
                               textColor: AppColors.text.white,
                               onTap: () {
@@ -569,18 +569,20 @@ class EditBookingNewScreen extends StatelessWidget {
                                     selectedDate?.hour != null &&
                                     selectedDate?.minute != null &&
                                     selectedDate?.day != null) {
-                                  if (type == DateType.Theory)
+                                  if (type == DateType.theory) {
                                     controller.bookingModel!.theoryDate!.add(selectedDate);
-                                  else if (type == DateType.Pool)
+                                  } else if (type == DateType.pool) {
                                     controller.bookingModel!.poolDate!.add(selectedDate);
-                                  else if (type == DateType.Dive) controller.bookingModel!.diveDate!.add(selectedDate);
+                                  } else if (type == DateType.dive) {
+                                    controller.bookingModel!.diveDate!.add(selectedDate);
+                                  }
 
                                   controller.bookingModel!.bookingDate!.add(getStringDate(selectedDate!));
 
                                   controller.update();
                                   Get.back();
                                 } else {
-                                  showToast("Select Time");
+                                  showToast('Select Time');
                                 }
                               },
                             ),
@@ -604,38 +606,38 @@ class EditBookingNewScreen extends StatelessWidget {
     DateTime? date,
     Function? onEdit,
     Function? onDelete,
-    String text = "Change",
+    String text = 'Change',
   }) {
     return GetBuilder<EditBookingNewController>(builder: (controller) {
       return Row(
         children: [
           Text(getStringFromDate(date)),
-          Spacer(),
+          const Spacer(),
           IconButton(
               splashRadius: 20,
               onPressed: () {
                 onEdit!();
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.edit,
                 size: 15,
-              )),
+              ),),
           IconButton(
               splashRadius: 20,
               onPressed: () {
                 onDelete!();
               },
-              icon: Icon(
+              icon: const Icon(
                 Icons.delete,
                 size: 15,
-              )),
+              ),),
           // AppButton.miniFlat(
           //   text: text,
           //   onTap: onEdit,
           // ),
         ],
       );
-    });
+    },);
   }
 
   getStringFromDate(DateTime? dateT) {
@@ -646,13 +648,14 @@ class EditBookingNewScreen extends StatelessWidget {
       String date;
       time = formatter.format(dateT);
       date = format.format(dateT);
-      return "$date @ $time";
-    } else
-      return "                 --                 ";
+      return '$date @ $time';
+    } else {
+      return '                 --                 ';
+    }
   }
 
   Widget buildActivityDropDown() {
-    return Container(
+    return SizedBox(
       width: Get.width,
       child: Row(
         children: [
@@ -662,14 +665,14 @@ class EditBookingNewScreen extends StatelessWidget {
               child: Container(
                 width: Get.width,
                 alignment: Alignment.centerLeft,
-                child: buildSubTitle(text: "Activities"),
+                child: buildSubTitle(text: 'Activities'),
               ),
             ),
           ),
-          Container(
+          SizedBox(
             width: 215,
             child: GetBuilder<EditBookingNewController>(builder: (controller) {
-              if (!controller.showLoading)
+              if (!controller.showLoading) {
                 return Padding(
                   padding: const EdgeInsets.only(left: 13),
                   child: DropdownButton(
@@ -687,20 +690,21 @@ class EditBookingNewScreen extends StatelessWidget {
                     items:
                         controller.activities.toSet().toList().map((activity) {
                       return DropdownMenuItem(
-                        child: new Text(
+                        value: activity,
+                        child: Text(
                           activity.name!,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontWeight: FontWeight.normal,
                           ),
                         ),
-                        value: activity,
                       );
                     }).toList(),
                   ),
                 );
-              else
-                return SizedBox();
-            }),
+              } else {
+                return const SizedBox();
+              }
+            },),
           ),
         ],
       ),
@@ -715,44 +719,44 @@ class EditBookingNewScreen extends StatelessWidget {
         showCountryFlag: false,
         focusNode: controller.phoneNode,
         initialValue: controller.phoneTED.text,
-        decoration: InputDecoration(
-          labelText: "Phone Number",
+        decoration: const InputDecoration(
+          labelText: 'Phone Number',
           labelStyle: TextStyle(
             fontSize: FontSize.small,
             fontFamily: AppFonts.nunito,
           ),
         ),
-        style: TextStyle(
+        style: const TextStyle(
             fontFamily: AppFonts.nunito,
             fontWeight: FontWeight.normal,
-            fontSize: 14),
-        searchText: "Search",
+            fontSize: 14,),
+        searchText: 'Search',
         onSubmitted: (_) {},
         onChanged: (phone) {
-          controller.bookingModel!.pax![0]["isoCode"] = phone.countryISOCode;
-          controller.bookingModel!.pax![0]["phoneNumber"] = phone.number;
-          controller.bookingModel!.pax![0]["countryCode"] = phone.countryCode;
+          controller.bookingModel!.pax![0]['isoCode'] = phone.countryISOCode;
+          controller.bookingModel!.pax![0]['phoneNumber'] = phone.number;
+          controller.bookingModel!.pax![0]['countryCode'] = phone.countryCode;
         },
       );
-    });
+    },);
   }
 
   Widget buildEmailTF(EditBookingNewController controller) {
     return buildTextFields(
-      text: "Email",
+      text: 'Email',
       textEditingController: controller.emailTED,
       keyBoardType: TextInputType.emailAddress,
       focus: controller.emailNode,
       nextFocus: controller.phoneNode,
       onChangedCallBack: (email) {
-        controller.bookingModel!.pax![0]["email"] = email;
+        controller.bookingModel!.pax![0]['email'] = email;
       },
     );
   }
 
   Widget buildRemarksTF(EditBookingNewController controller) {
     return buildTextFields(
-      text: "Remarks",
+      text: 'Remarks',
       textEditingController: controller.remarksTED,
       focus: controller.remarksNode,
       nextFocus: controller.emailNode,
@@ -764,18 +768,18 @@ class EditBookingNewScreen extends StatelessWidget {
 
   Widget buildReceiptNo(EditBookingNewController controller) {
     return buildTextFields(
-        text: "Invoice No",
+        text: 'Invoice No',
         textEditingController: controller.invoiceTED,
         focus: controller.invoiceNoNode,
         nextFocus: controller.remarksNode,
         onChangedCallBack: (invoice) {
           controller.bookingModel!.receiptNo = invoice;
-        });
+        },);
   }
 
   Widget buildDepositTF(EditBookingNewController controller) {
     return buildTextFields(
-      text: "Deposit",
+      text: 'Deposit',
       textEditingController: controller.depositTED,
       keyBoardType: TextInputType.number,
       onChangedCallBack: (payingNow) {
@@ -789,7 +793,7 @@ class EditBookingNewScreen extends StatelessWidget {
 
   Widget buildBalanceAmount() {
     return GetBuilder<EditBookingNewController>(builder: (controller) {
-      return Container(
+      return SizedBox(
         width: 320,
         child: Row(
           children: [
@@ -797,29 +801,26 @@ class EditBookingNewScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: Text(
-                  "Balance" + "   :",
+                  'Balance' '   :',
                   style: TextStyle(
-                      fontSize: FontSize.small, color: AppColors.text.darkgrey),
+                      fontSize: FontSize.small, color: AppColors.text.darkgrey,),
                 ),
               ),
             ),
-            Container(
-              child: Text(
-                controller.bookingModel!.balance.roundToDouble().toString() +
-                    "/-",
-                style: TextStyle(
-                    fontSize: FontSize.textSize, fontWeight: FontWeight.w600),
-              ),
+            Text(
+              '${controller.bookingModel!.balance.roundToDouble()}/-',
+              style: const TextStyle(
+                  fontSize: FontSize.textSize, fontWeight: FontWeight.w600,),
             ),
           ],
         ),
       );
-    });
+    },);
   }
 
   Widget buildTotalAmount() {
     return GetBuilder<EditBookingNewController>(builder: (controller) {
-      return Container(
+      return SizedBox(
         width: Get.width,
         child: Row(
           children: [
@@ -827,146 +828,142 @@ class EditBookingNewScreen extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.only(right: 12),
                 child: Text(
-                  "TotalCost" + "   :",
+                  'TotalCost' '   :',
                   style: TextStyle(
-                      fontSize: FontSize.small, color: AppColors.text.darkgrey),
+                      fontSize: FontSize.small, color: AppColors.text.darkgrey,),
                 ),
               ),
             ),
-            Container(
-              child: Text(
-                controller.bookingModel!.totalCost.roundToDouble().toString() +
-                    "/-",
-                style: TextStyle(
-                    fontSize: FontSize.textSize, fontWeight: FontWeight.w600),
-              ),
+            Text(
+              '${controller.bookingModel!.totalCost.roundToDouble()}/-',
+              style: const TextStyle(
+                  fontSize: FontSize.textSize, fontWeight: FontWeight.w600,),
             ),
           ],
         ),
       );
-    });
+    },);
   }
 
   Widget buildDiscount() {
-    return Container(
+    return SizedBox(
       width: Get.width,
       child: GetBuilder<EditBookingNewController>(builder: (controller) {
         return Row(
           children: [
             Expanded(
-              child: Container(
-                child: AppTextField(
-                  hintText: "Discount",
-                  controller: logic.controller.discountTED,
-                  focusNode: logic.controller.discountNode,
-                  nextFocusNode: logic.controller.totalAmountNode,
-                  keyboardType: TextInputType.number,
-                  required: false,
-                  errorValidator: () {
-                    return null;
-                  },
-                  onChangedCallBack: (discount) {
-                    try {
-                      controller.bookingModel!.discount =
-                          double.parse(discount);
-                    } catch (e) {
-                      controller.bookingModel!.discount = 0;
-                    }
-                    controller.update();
-                  },
-                  validator: (firstName) {
-                    return null;
-                  },
-                ),
+              child: AppTextField(
+                hintText: 'Discount',
+                controller: logic.controller.discountTED,
+                focusNode: logic.controller.discountNode,
+                nextFocusNode: logic.controller.totalAmountNode,
+                keyboardType: TextInputType.number,
+                required: false,
+                errorValidator: () {
+                  return null;
+                },
+                onChangedCallBack: (discount) {
+                  try {
+                    controller.bookingModel!.discount =
+                        double.parse(discount);
+                  } catch (e) {
+                    controller.bookingModel!.discount = 0;
+                  }
+                  controller.update();
+                },
+                validator: (firstName) {
+                  return null;
+                },
               ),
             ),
-            SizedBox(width: 30),
+            const SizedBox(width: 30),
             Row(
               children: [
                 Text(
-                  "₹",
+                  '₹',
                   style: TextStyle(
                       fontSize: 17,
                       color: !controller.discountSwitch
                           ? AppColors.text.skyBlue
-                          : AppColors.text.grey),
+                          : AppColors.text.grey,),
                 ),
-                Container(
+                SizedBox(
                   width: 70,
                   height: 75,
                   child: buildSwitch(
-                      text: "",
+                      text: '',
                       switchValue: controller.discountSwitch,
                       onChanged: (value) {
-                        if (value)
-                          controller.bookingModel!.discountType = "%";
-                        else
-                          controller.bookingModel!.discountType = "₹";
+                        if (value) {
+                          controller.bookingModel!.discountType = '%';
+                        } else {
+                          controller.bookingModel!.discountType = '₹';
+                        }
                         controller.discountSwitch = value;
-                      }),
+                      },),
                 ),
                 Text(
-                  "%",
+                  '%',
                   style: TextStyle(
                       fontSize: 15,
                       color: controller.discountSwitch
                           ? AppColors.text.skyBlue
-                          : AppColors.text.grey),
+                          : AppColors.text.grey,),
                 ),
               ],
             ),
           ],
         );
-      }),
+      },),
     );
   }
 
   Widget buildBookingID() {
     return GetBuilder<EditBookingNewController>(builder: (controller) {
       return Text(
-        "Booking ID : ${controller.bookingModel!.id}",
-        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+        'Booking ID : ${controller.bookingModel!.id}',
+        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
       );
-    });
+    },);
   }
 
   Widget buildTax() {
-    return Container(
+    return SizedBox(
       width: Get.width,
       child: GetBuilder<EditBookingNewController>(builder: (controller) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Tax",
+              'Tax',
               style: TextStyle(fontSize: 12, color: AppColors.text.darkgrey),
             ),
-            Container(
+            SizedBox(
               width: 70,
               height: 75,
               child: buildSwitch(
-                  text: "",
+                  text: '',
                   switchValue: controller.taxable,
                   onChanged: (value) {
                     controller.bookingModel!.tax = value ? 18 : 0;
                     controller.taxable = value;
-                  }),
+                  },),
             ),
           ],
         );
-      }),
+      },),
     );
   }
 
   Widget buildSwitch(
-      {required String text, Function? onChanged, required bool switchValue}) {
+      {required String text, Function? onChanged, required bool switchValue,}) {
     return Row(
       children: [
         Expanded(
           child: Text(
             text,
             style: TextStyle(
-                fontSize: FontSize.small, color: AppColors.text.darkgrey),
+                fontSize: FontSize.small, color: AppColors.text.darkgrey,),
           ),
         ),
         Switch(
@@ -981,7 +978,7 @@ class EditBookingNewScreen extends StatelessWidget {
 
   Widget buildPAXTF(EditBookingNewController controller) {
     return buildTextFields(
-        text: "No of Persons",
+        text: 'No of Persons',
         textEditingController: controller.paxTED,
         keyBoardType: TextInputType.number,
         focus: controller.paxNode,
@@ -989,20 +986,20 @@ class EditBookingNewScreen extends StatelessWidget {
         onChangedCallBack: (newNumber) {
           controller.bookingModel!.noOfPersons = getInt(newNumber);
           controller.update();
-        });
+        },);
   }
 
   Widget buildNameFields(EditBookingNewController controller) {
     return Row(
       children: [
         Expanded(
-          child: Container(
+          child: SizedBox(
             width: Get.width,
             child: buildFirstName(controller),
           ),
         ),
-        SizedBox(width: 20),
-        Container(
+        const SizedBox(width: 20),
+        SizedBox(
           width: (Get.width / 2.5),
           child: buildLastName(controller),
         ),
@@ -1012,23 +1009,23 @@ class EditBookingNewScreen extends StatelessWidget {
 
   Widget buildFirstName(EditBookingNewController controller) {
     return buildTextFields(
-        text: "First Name",
+        text: 'First Name',
         textEditingController: controller.firstNameTED,
         focus: controller.firstNameNode,
         nextFocus: controller.lastNameNode,
         onChangedCallBack: (newName) {
-          controller.bookingModel!.pax![0]["first-name"] = newName;
-        });
+          controller.bookingModel!.pax![0]['first-name'] = newName;
+        },);
   }
 
   Widget buildLastName(EditBookingNewController controller) {
     return buildTextFields(
-        text: "Last Name",
+        text: 'Last Name',
         textEditingController: controller.lastNameTED,
         focus: controller.lastNameNode,
         onChangedCallBack: (newName) {
-          controller.bookingModel!.pax![0]["last-name"] = newName;
-        });
+          controller.bookingModel!.pax![0]['last-name'] = newName;
+        },);
   }
 
   Widget buildTitle() {
@@ -1059,7 +1056,7 @@ class EditBookingNewScreen extends StatelessWidget {
 
   Widget buildPriceTF(EditBookingNewController controller) {
     return buildTextFields(
-      text: "Price",
+      text: 'Price',
       textEditingController: controller.priceTED,
       keyBoardType: TextInputType.number,
       focus: controller.priceNode,
@@ -1079,24 +1076,22 @@ class EditBookingNewScreen extends StatelessWidget {
     FocusNode? nextFocus,
     Function(String)? onChangedCallBack,
   }) {
-    return Container(
-      child: AppTextField(
-        width: Get.width,
-        hintText: text,
-        controller: textEditingController,
-        keyboardType: keyBoardType,
-        focusNode: focus,
-        nextFocusNode: nextFocus,
-        onChangedCallBack: (_) {
-          onChangedCallBack!(_);
-        },
-        errorValidator: () {
-          return null;
-        },
-        validator: (_) {
-          return null;
-        },
-      ),
+    return AppTextField(
+      width: Get.width,
+      hintText: text,
+      controller: textEditingController,
+      keyboardType: keyBoardType,
+      focusNode: focus,
+      nextFocusNode: nextFocus,
+      onChangedCallBack: (_) {
+        onChangedCallBack!(_);
+      },
+      errorValidator: () {
+        return null;
+      },
+      validator: (_) {
+        return null;
+      },
     );
   }
 }

@@ -4,11 +4,11 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/core/models/counter_model.dart';
-import 'package:temple_adventures/core/util/utils.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
-import 'package:temple_adventures/features/logs/models/log_model.dart';
-import 'package:temple_adventures/features/logs/presentation/screens/log_screen.dart';
+import '../../../core/models/counter_model.dart';
+import '../../../core/util/utils.dart';
+import '../model/employee.dart';
+import '../../logs/models/log_model.dart';
+import '../../logs/presentation/screens/log_screen.dart';
 
 class AddAnEmployeeLogic {
   final DateFormat formatter = DateFormat('HH:mm');
@@ -19,17 +19,17 @@ class AddAnEmployeeLogic {
   createEmployee() async {
     //TODO: Change.
     var data = await FirebaseFirestore.instance
-        .collection("counter")
-        .doc("count")
+        .collection('counter')
+        .doc('count')
         .get();
     CounterModel counterModel = CounterModel.fromMap(data.data()!);
 
-    if (controller.firstNameTED.text != "" &&
-        controller.employeeIdTED.text != "" &&
-        controller.shiftTimeTED.text != "" &&
-        controller.phoneNumberTED.text != "" &&
-        controller.countryCodeTED.text != "" &&
-        controller.roleTED.text != "") {
+    if (controller.firstNameTED.text != '' &&
+        controller.employeeIdTED.text != '' &&
+        controller.shiftTimeTED.text != '' &&
+        controller.phoneNumberTED.text != '' &&
+        controller.countryCodeTED.text != '' &&
+        controller.roleTED.text != '') {
       Employee employee = Employee(
         firstName: controller.firstNameTED.text,
         lastName: controller.lastNameTED.text,
@@ -69,13 +69,13 @@ class AddAnEmployeeLogic {
       }
 
       FirebaseFirestore.instance
-          .collection("counter")
-          .doc("count")
+          .collection('counter')
+          .doc('count')
           .set(counterModel.toMap());
-      Fluttertoast.showToast(msg: "Saved");
+      Fluttertoast.showToast(msg: 'Saved');
       LogModel logModel =
           LogModel(type: LogType.addEmployee, employeeName: employee.name);
-      FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
+      FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
 
       disposeKeyboard();
       Get.back();
@@ -83,14 +83,14 @@ class AddAnEmployeeLogic {
       Get.back();
       controller.reset();
     } else {
-      Fluttertoast.showToast(msg: "Invalid Input");
+      Fluttertoast.showToast(msg: 'Invalid Input');
     }
   }
 
   updateEmployee() async {
-    if (controller.firstNameTED.text != "" &&
-        controller.employeeIdTED.text != "" &&
-        controller.shiftTimeTED.text != "") {
+    if (controller.firstNameTED.text != '' &&
+        controller.employeeIdTED.text != '' &&
+        controller.shiftTimeTED.text != '') {
       Employee employee = Employee(
         firstName: controller.firstNameTED.text,
         lastName: controller.lastNameTED.text,
@@ -125,16 +125,16 @@ class AddAnEmployeeLogic {
           .set(employee.toMap());
       LogModel logModel =
           LogModel(type: LogType.editEmployee, employeeName: employee.name);
-      FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
+      FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
 
-      Fluttertoast.showToast(msg: "Saved");
+      Fluttertoast.showToast(msg: 'Saved');
       disposeKeyboard();
       Get.back();
       Get.back();
       Get.back();
       controller.reset();
     } else {
-      Fluttertoast.showToast(msg: "Invalid Input");
+      Fluttertoast.showToast(msg: 'Invalid Input');
     }
   }
 
@@ -237,7 +237,7 @@ class AddAnEmployeeController extends GetxController {
     update();
   }
 
-  String? _countryISoCOde = "IN";
+  String? _countryISoCOde = 'IN';
 
   List<String> get roles => _roles;
 
@@ -254,16 +254,16 @@ class AddAnEmployeeController extends GetxController {
   }
 
   reset() {
-    employeeIdTED.text = "";
-    firstNameTED.text = "";
-    lastNameTED.text = "";
-    phoneNumberTED.text = "";
-    countryCodeTED.text = "";
-    roleTED.text = "";
-    shiftTimeTED.text = "";
-    genderTED.text = "";
-    employeeIdTED.text = "";
-    agencyIdTED.text = "";
+    employeeIdTED.text = '';
+    firstNameTED.text = '';
+    lastNameTED.text = '';
+    phoneNumberTED.text = '';
+    countryCodeTED.text = '';
+    roleTED.text = '';
+    shiftTimeTED.text = '';
+    genderTED.text = '';
+    employeeIdTED.text = '';
+    agencyIdTED.text = '';
     viewBookings = false;
     createBookings = false;
     editBookings = false;

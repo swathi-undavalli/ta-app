@@ -1,16 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/features/bookings/models/activity_model.dart';
+import '../../bookings/models/activity_model.dart';
 
 class AllActivitiesLogic {
   AllActivitiesController controller = Get.put(AllActivitiesController());
 
   AllActivitiesLogic() {
-    this.getAllActivities();
+    getAllActivities();
   }
 
   getAllActivities() async {
-    var data = await FirebaseFirestore.instance.collection("catalogue").get();
+    var data = await FirebaseFirestore.instance.collection('catalogue').get();
     controller.allActivitiesList = [];
     for (var element in data.docs) {
       if (element.id == 'colors') {
@@ -24,10 +24,11 @@ class AllActivitiesLogic {
   }
 
   Future<List> get activities async {
-    if (controller.allActivitiesList.isNotEmpty)
+    if (controller.allActivitiesList.isNotEmpty) {
       return controller.allActivitiesList;
-    else
+    } else {
       await getAllActivities();
+    }
     return controller.allActivitiesList;
   }
 }

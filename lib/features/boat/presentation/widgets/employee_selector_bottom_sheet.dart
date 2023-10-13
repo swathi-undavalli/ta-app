@@ -2,11 +2,11 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/util/alignment_extensions.dart';
-import 'package:temple_adventures/core/util/spacing_widgets.dart';
-import 'package:temple_adventures/core/util/utils.dart';
-import 'package:temple_adventures/features/boat/models/boat_details.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
+import '../../../../core/util/alignment_extensions.dart';
+import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/util/utils.dart';
+import '../../models/boat_details.dart';
+import '../../../employees/model/employee.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_button.dart';
 import 'counter_widget.dart';
@@ -32,7 +32,7 @@ class EmpSelectorBottomSheet extends StatefulWidget {
     required EmployeeType employeeType,
     bool tanksRequired = false,
   }) async {
-    log("======");
+    log('======');
     log(tanksRequired.toString());
     var data = await showModalBottomSheet(
       context: context,
@@ -85,19 +85,19 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 30,
               ),
-              Text(
-                "Manage Divers",
+              const Text(
+                'Manage Divers',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 20,
                 ),
               ).paddingOnly(top: 8),
-              Spacer(),
+              const Spacer(),
               IconButton(
-                icon: Icon(Icons.close),
+                icon: const Icon(Icons.close),
                 onPressed: () async {
                   Navigator.pop(context, selectedInstructors);
                 },
@@ -117,13 +117,16 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                         .map(
                           (instructor) => InkWell(
                             onTap: () {
-                              if (!widget.isTanksRequired)
+                              if (!widget.isTanksRequired) {
                                 selectedInstructors.remove(instructor);
+                              }
                               setState(() {});
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 3),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                                vertical: 3,
+                              ),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.white,
@@ -136,41 +139,40 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                                   ? Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               instructor.name,
-                                              style: TextStyle(fontSize: 16),
+                                              style: const TextStyle(fontSize: 16),
                                             ),
                                             AppButton.miniFlat(
                                               onTap: () {
-                                                selectedInstructors
-                                                    .remove(instructor);
+                                                selectedInstructors.remove(instructor);
                                                 setState(() {});
                                               },
-                                              text: "Remove",
+                                              text: 'Remove',
                                             ),
                                           ],
                                         ),
                                         Spacing.h10,
-                                        if (selectedInstructors
-                                            .contains(instructor))
-                                          buildTanks(instructor),
+                                        if (selectedInstructors.contains(instructor)) buildTanks(instructor),
                                       ],
                                     ).paddingSymmetric(
-                                      horizontal: 10, vertical: 10)
+                                      horizontal: 10,
+                                      vertical: 10,
+                                    )
                                   : Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(
                                           instructor.name,
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600),
+                                          style: const TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.w600,
+                                          ),
                                         ),
                                         Spacing.w5,
-                                        Icon(
+                                        const Icon(
                                           Icons.close,
                                           size: 16,
                                         )
@@ -192,13 +194,13 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
   }
 
   Widget buildTanks(Instructor instructor) {
-    if (widget.isTanksRequired)
+    if (widget.isTanksRequired) {
       return Row(
         children: [
           Column(
             children: [
-              Text(
-                "Nitrox",
+              const Text(
+                'Nitrox',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.black,
@@ -216,8 +218,8 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
           ),
           Column(
             children: [
-              Text(
-                "Air",
+              const Text(
+                'Air',
                 style: TextStyle(
                   fontSize: 14,
                   color: Colors.black,
@@ -235,7 +237,8 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
           ),
         ],
       );
-    return SizedBox();
+    }
+    return const SizedBox();
   }
 
   Widget buildEmployees() {
@@ -247,18 +250,17 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
         }
 
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
 
         if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-          return Text('No employees found.').paddingOnly(top: 40);
+          return const Text('No employees found.').paddingOnly(top: 40);
         }
 
         return Column(
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             try {
-              Employee employee =
-                  Employee.fromMap(document.data() as Map<String, dynamic>);
+              Employee employee = Employee.fromMap(document.data() as Map<String, dynamic>);
 
               Instructor instructor = Instructor.fromEmployee(employee);
 
@@ -269,11 +271,10 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                   } else {
                     if (widget.instructorLimit == -1) {
                       selectedInstructors.add(instructor);
-                    } else if (selectedInstructors.length <
-                        widget.instructorLimit) {
+                    } else if (selectedInstructors.length < widget.instructorLimit) {
                       selectedInstructors.add(instructor);
                     } else {
-                      showToast("Limit exceeded");
+                      showToast('Limit exceeded');
                     }
                   }
                   setState(() {});
@@ -283,12 +284,12 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                     Container(
                       child: Text(
                         employee.name,
-                        style: TextStyle(fontSize: 16),
+                        style: const TextStyle(fontSize: 16),
                       ).paddingOnly(left: 25, top: 10, bottom: 10),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     if (selectedInstructors.contains(employee))
-                      Icon(
+                      const Icon(
                         Icons.check_circle,
                         color: Colors.green,
                       ),
@@ -297,29 +298,22 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                 ),
               );
 
-              if (widget.employeeType == EmployeeType.ShowAllEmployees) {
+              if (widget.employeeType == EmployeeType.showAllEmployees) {
                 return employeeTile;
-              } else if ((widget.employeeType == EmployeeType.showCaptains) &&
-                  (employee.role == 'Captain Team')) {
+              } else if ((widget.employeeType == EmployeeType.showCaptains) && (employee.role == 'Captain Team')) {
                 return employeeTile;
-              } else if ((widget.employeeType ==
-                      EmployeeType.ShowFreelancersDivers) &&
-                  (employee.role == 'Dive Team' ||
-                      employee.role == 'Freelance Team')) {
+              } else if ((widget.employeeType == EmployeeType.showFreelancersDivers) &&
+                  (employee.role == 'Dive Team' || employee.role == 'Freelance Team')) {
                 return employeeTile;
-              } else if ((widget.employeeType ==
-                      EmployeeType.showAllDiveTeam) &&
-                  (employee.role == 'Dive Team' ||
-                      employee.role == 'Freelance Team' ||
-                      employee.role == 'Intern')) {
+              } else if ((widget.employeeType == EmployeeType.showAllDiveTeam) &&
+                  (employee.role == 'Dive Team' || employee.role == 'Freelance Team' || employee.role == 'Intern')) {
                 return employeeTile;
-              } else if ((widget.employeeType == EmployeeType.ShowInterns) &&
-                  (employee.role == 'Intern')) {
+              } else if ((widget.employeeType == EmployeeType.showInterns) && (employee.role == 'Intern')) {
                 return employeeTile;
               }
-              return SizedBox();
+              return const SizedBox();
             } catch (e) {
-              return SizedBox();
+              return const SizedBox();
             }
           }).toList(),
         );
@@ -332,28 +326,26 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
       width: 328,
       height: 47,
       decoration: BoxDecoration(
-          color: AppColors.background.white,
-          borderRadius: BorderRadius.circular(5)),
+        color: AppColors.background.white,
+        borderRadius: BorderRadius.circular(5),
+      ),
       child: Container(
-        margin: EdgeInsets.only(left: 15, right: 15),
+        margin: const EdgeInsets.only(left: 15, right: 15),
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
             Icon(Icons.search, color: AppColors.text.darkgrey),
             Spacing.w15,
-            Container(
+            SizedBox(
               width: 225,
               child: TextField(
-                decoration: InputDecoration(
-                    enabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    focusedBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    disabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    hintText: 'Search...',
-                    hintStyle:
-                        TextStyle(fontSize: FontSize.textSize, height: 1)),
+                decoration: const InputDecoration(
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                  focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                  disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                  hintText: 'Search...',
+                  hintStyle: TextStyle(fontSize: FontSize.textSize, height: 1),
+                ),
                 controller: searchTED,
                 onChanged: (query) {
                   _stream = _filterStream(query);
@@ -361,17 +353,16 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                 },
               ),
             ),
-            if (searchTED.text != "")
+            if (searchTED.text != '')
               InkWell(
                 onTap: () {
-                  searchTED.text = "";
+                  searchTED.text = '';
                   setState(() {});
                 },
                 highlightColor: Colors.grey,
                 splashColor: Colors.red,
                 radius: 30,
-                child: Icon(Icons.close, color: AppColors.text.darkgrey)
-                    .paddingAll(5),
+                child: Icon(Icons.close, color: AppColors.text.darkgrey).paddingAll(5),
               ),
           ],
         ),
@@ -384,16 +375,14 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
       return employeesCollection.snapshots();
     }
 
-    return employeesCollection
-        .where('firstName', isGreaterThanOrEqualTo: query.capitalizeFirst)
-        .snapshots();
+    return employeesCollection.where('firstName', isGreaterThanOrEqualTo: query.capitalizeFirst).snapshots();
   }
 }
 
 enum EmployeeType {
-  ShowAllEmployees,
-  ShowInterns,
+  showAllEmployees,
+  showInterns,
   showCaptains,
-  ShowFreelancersDivers,
-  showAllDiveTeam
+  showFreelancersDivers,
+  showAllDiveTeam,
 }

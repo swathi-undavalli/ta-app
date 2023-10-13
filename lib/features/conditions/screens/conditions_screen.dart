@@ -1,8 +1,8 @@
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/spacing_widgets.dart';
+import '../../../core/constants/constants.dart';
+import '../../../core/util/spacing_widgets.dart';
 
 import '../controller/conditions_controller.dart';
 import '../models/conditions_model.dart';
@@ -10,6 +10,8 @@ import '../widgets/depth_expansion_panel_widget.dart';
 import '../widgets/surface_conditions_expansion_panel.dart';
 
 class ConditionsScreen extends StatefulWidget {
+  const ConditionsScreen({Key? key}) : super(key: key);
+
   @override
   State<ConditionsScreen> createState() => _ConditionsScreenState();
 }
@@ -34,121 +36,124 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
               logic.onFloatingActionButtonPressed();
             },
             backgroundColor: AppColors.background.black,
-            child: Icon(Icons.add),
+            child: const Icon(Icons.add),
           ),
           body: SafeArea(
-            child: GetBuilder<ConditionsController>(builder: (controller) {
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Column(
-                    children: [
-                      SizedBox(height: 20),
-                      Row(
-                        children: [
-                          buildButton(
+            child: GetBuilder<ConditionsController>(
+              builder: (controller) {
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Column(
+                      children: [
+                        const SizedBox(height: 20),
+                        Row(
+                          children: [
+                            buildButton(
                               onTap: () {
-                                logic.onDateChanged(controller.selectedDate
-                                    .subtract(const Duration(days: 1)));
+                                logic.onDateChanged(controller.selectedDate.subtract(const Duration(days: 1)));
                               },
-                              icon: Icons.arrow_back_ios_rounded),
-                          Spacing.w20,
-                          Container(
-                            width: 103,
-                            child: Text(
-                              DateFormat('dd-MMM-yyyy')
-                                  .format(controller.selectedDate),
-                              style: TextStyle(
-                                  fontSize: 16, fontWeight: FontWeight.w600),
+                              icon: Icons.arrow_back_ios_rounded,
                             ),
-                          ),
-                          Spacing.w20,
-                          buildButton(
+                            Spacing.w20,
+                            SizedBox(
+                              width: 103,
+                              child: Text(
+                                DateFormat('dd-MMM-yyyy').format(controller.selectedDate),
+                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                              ),
+                            ),
+                            Spacing.w20,
+                            buildButton(
                               onTap: () {
-                                logic.onDateChanged(controller.selectedDate
-                                    .add(const Duration(days: 1)));
+                                logic.onDateChanged(controller.selectedDate.add(const Duration(days: 1)));
                               },
-                              icon: Icons.arrow_forward_ios_rounded),
-                          Spacer(),
-                          IconButton(
-                            splashRadius: 20,
-                            onPressed: () {
-                              selectDate(context);
-                            },
-                            icon: Icon(
-                              Icons.calendar_today_outlined,
-                              size: 17,
+                              icon: Icons.arrow_forward_ios_rounded,
                             ),
-                          ),
-                        ],
-                      ).paddingSymmetric(horizontal: 32),
-                      SizedBox(height: 20),
-                      SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: Row(children: [
-                          ...controller.reefs.map(
-                            (e) => buildChip(
-                              onTap: () {
-                                logic.onChipChanged(e);
+                            const Spacer(),
+                            IconButton(
+                              splashRadius: 20,
+                              onPressed: () {
+                                selectDate(context);
                               },
-                              reefName: e,
+                              icon: const Icon(
+                                Icons.calendar_today_outlined,
+                                size: 17,
+                              ),
                             ),
-                          )
-                        ]).paddingSymmetric(horizontal: 27),
-                      ),
-                      SizedBox(height: 25),
-                    ],
-                  ),
-                  SizedBox(
-                    height: Get.height - 240,
-                    child: SingleChildScrollView(
-                      physics: BouncingScrollPhysics(),
-                      child: Column(
-                        children: [
-                          if (controller.conditions != null)
-                            SurfaceConditionsExpansionWidget(
-                              key: UniqueKey(),
-                              disableTouches: true,
-                              surfaceConditions:
-                                  controller.conditions!.surfaceConditions,
-                              selectedReef: controller.selectedReef,
-                              onChanged:
-                                  (List<SurfaceCondition> surfaceConditions) {},
-                            ).paddingSymmetric(horizontal: 27),
-                          SizedBox(height: 25),
-                          Container(
-                            width: Get.width,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(12),
-                              color: Colors.white,
-                            ),
-                            child: buildGraph().paddingSymmetric(vertical: 20),
-                          ).paddingSymmetric(horizontal: 20),
-                          SizedBox(height: 22),
-                        ],
+                          ],
+                        ).paddingSymmetric(horizontal: 32),
+                        const SizedBox(height: 20),
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Row(
+                            children: [
+                              ...controller.reefs.map(
+                                (e) => buildChip(
+                                  onTap: () {
+                                    logic.onChipChanged(e);
+                                  },
+                                  reefName: e,
+                                ),
+                              )
+                            ],
+                          ).paddingSymmetric(horizontal: 27),
+                        ),
+                        const SizedBox(height: 25),
+                      ],
+                    ),
+                    SizedBox(
+                      height: Get.height - 240,
+                      child: SingleChildScrollView(
+                        physics: const BouncingScrollPhysics(),
+                        child: Column(
+                          children: [
+                            if (controller.conditions != null)
+                              SurfaceConditionsExpansionWidget(
+                                key: UniqueKey(),
+                                disableTouches: true,
+                                surfaceConditions: controller.conditions!.surfaceConditions,
+                                selectedReef: controller.selectedReef,
+                                onChanged: (List<SurfaceCondition> surfaceConditions) {},
+                              ).paddingSymmetric(horizontal: 27),
+                            const SizedBox(height: 25),
+                            Container(
+                              width: Get.width,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(12),
+                                color: Colors.white,
+                              ),
+                              child: buildGraph().paddingSymmetric(vertical: 20),
+                            ).paddingSymmetric(horizontal: 20),
+                            const SizedBox(height: 22),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              );
-            }),
+                  ],
+                );
+              },
+            ),
           ),
         ),
-        GetBuilder<ConditionsController>(builder: (controller) {
-          if (controller.showLoading)
-            return Container(
-              height: Get.height,
-              width: Get.width,
-              color: Colors.white70,
-              child: Center(
-                child: CircularProgressIndicator(
-                  color: Colors.black,
+        GetBuilder<ConditionsController>(
+          builder: (controller) {
+            if (controller.showLoading) {
+              return Container(
+                height: Get.height,
+                width: Get.width,
+                color: Colors.white70,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.black,
+                  ),
                 ),
-              ),
-            );
-          return SizedBox();
-        }),
+              );
+            }
+            return const SizedBox();
+          },
+        ),
       ],
     );
   }
@@ -157,19 +162,21 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
 
   Widget buildButton({required Function onTap, required IconData icon}) {
     return SizedBox(
-        height: 20,
-        width: 20,
-        child: IconButton(
-            splashRadius: 30,
-            padding: EdgeInsets.zero,
-            onPressed: () {
-              onTap();
-            },
-            icon: Icon(
-              icon,
-              color: Colors.black,
-              size: 14,
-            )));
+      height: 20,
+      width: 20,
+      child: IconButton(
+        splashRadius: 30,
+        padding: EdgeInsets.zero,
+        onPressed: () {
+          onTap();
+        },
+        icon: Icon(
+          icon,
+          color: Colors.black,
+          size: 14,
+        ),
+      ),
+    );
   }
 
   Widget buildSurfaceConditions({required String title, required String text}) {
@@ -178,14 +185,13 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
         SizedBox(
           width: 120,
           child: Text(
-            "${title}",
-            style: TextStyle(
-                fontSize: FontSize.small, fontWeight: FontWeight.bold),
+            title,
+            style: const TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.bold),
           ),
         ),
         Text(
-          " :   ${text}",
-          style: TextStyle(fontSize: FontSize.small),
+          ' :   $text',
+          style: const TextStyle(fontSize: FontSize.small),
         ),
       ],
     ).paddingSymmetric(horizontal: 27, vertical: 5);
@@ -211,9 +217,7 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                primary: AppColors.text.black,
-                textStyle:
-                    TextStyle(fontWeight: FontWeight.w500), // button text color
+                textStyle: TextStyle(fontWeight: FontWeight.w500, color: AppColors.text.black), // button text color
               ),
             ),
           ),
@@ -229,9 +233,7 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
 
   Widget buildGraph() {
     if (logic.getLevels.isEmpty) {
-      return SizedBox(
-          height: 100,
-          child: Center(child: Text("No entries found in selected reef")));
+      return const SizedBox(height: 100, child: Center(child: Text('No entries found in selected reef')));
     }
 
     return Column(
@@ -249,7 +251,7 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
           width: 40,
           child: Center(
             child: Text(
-              "${level.depth} m",
+              '${level.depth} m',
             ).paddingOnly(right: 5),
           ),
         ),
@@ -300,11 +302,9 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                      style: TextStyle(
-                          color: AppColors.text.darkgrey,
-                          fontWeight: FontWeight.w600),
-                      text:
-                          " (${DateFormat("hh : mm a").format(level.updatedAt)})"),
+                    style: TextStyle(color: AppColors.text.darkgrey, fontWeight: FontWeight.w600),
+                    text: " (${DateFormat("hh : mm a").format(level.updatedAt)})",
+                  ),
                 ],
               ),
             ).paddingOnly(left: 5, top: 5),
@@ -317,10 +317,10 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
   Widget buildSlider(int pos, SliderType type) {
     return Row(
       children: [
-        Container(
+        SizedBox(
           width: Get.width - 197,
           child: SliderTheme(
-            data: SliderThemeData(
+            data: const SliderThemeData(
               trackHeight: 3,
               thumbShape: RoundSliderThumbShape(
                 enabledThumbRadius: 5,
@@ -370,7 +370,7 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
         if (pos == 3) return 'Can see boat';
         return 'Can see everything';
       case SliderType.currents:
-        if (pos == 0) return "No current";
+        if (pos == 0) return 'No current';
         if (pos == 1) return 'Mild current';
         if (pos == 2) return 'Moderate current';
         if (pos == 3) return 'Strong current';
@@ -398,17 +398,14 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
         height: 27,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          color: logic.controller.selectedReef == reefName
-              ? AppColors.text.skyBlue
-              : AppColors.text.white,
+          color: logic.controller.selectedReef == reefName ? AppColors.text.skyBlue : AppColors.text.white,
         ),
         child: Text(
           reefName,
           style: TextStyle(
-              color: logic.controller.selectedReef == reefName
-                  ? AppColors.text.white
-                  : AppColors.text.black,
-              fontSize: FontSize.small),
+            color: logic.controller.selectedReef == reefName ? AppColors.text.white : AppColors.text.black,
+            fontSize: FontSize.small,
+          ),
         ).paddingSymmetric(horizontal: 9, vertical: 5),
       ).paddingOnly(right: 13),
     );

@@ -5,15 +5,15 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard_screen.dart';
+import '../widgets/app_button.dart';
+import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../features/messaging/notification_screen.dart';
 
 class AutoUpdateView extends StatelessWidget {
   AutoUpdateView({Key? key}) : super(key: key);
-  static const String id = "AutoUpdateView";
+  static const String id = 'AutoUpdateView';
 
   final AutoUpdateLogic logic = AutoUpdateLogic();
 
@@ -24,7 +24,7 @@ class AutoUpdateView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
             if (!logic.controller.criticalUpdate!)
@@ -32,38 +32,38 @@ class AutoUpdateView extends StatelessWidget {
                 width: Get.width,
                 alignment: Alignment.topRight,
                 child: AppButton.miniFlat(
-                  text: "Skip",
+                  text: 'Skip',
                   textColor: Colors.white,
                   onTap: () async {
                     Get.offAllNamed(DashBoardScreen.id);
                   },
                 ),
               ).paddingOnly(right: 20),
-            SizedBox(height: 50),
+            const SizedBox(height: 50),
             SizedBox(
               height: 150,
               child: Image.asset(
-                "images/AppLogoPondy.png",
+                'images/AppLogoPondy.png',
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 30,
             ),
-            Text(
-              "Update !!!",
+            const Text(
+              'Update !!!',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 20,
             ),
-            Center(
+            const Center(
               child: SizedBox(
                 width: 300,
                 child: Text(
-                  "An New Update has been available for the app. Please download and install it.",
+                  'An New Update has been available for the app. Please download and install it.',
                   style: TextStyle(
                     fontSize: 16,
                     // fontWeight: FontWeight.bold,
@@ -71,28 +71,28 @@ class AutoUpdateView extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 10,
             ),
             Text(
-              "Current version : ${logic.controller.version}+${logic.controller.buildNumber}",
-              style: TextStyle(
+              'Current version : ${logic.controller.version}+${logic.controller.buildNumber}',
+              style: const TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-              "Latest version : ${logic.controller.latestVersionNumber}",
-              style: TextStyle(
+              'Latest version : ${logic.controller.latestVersionNumber}',
+              style: const TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 100,
             ),
             AppButton.flat(
-              text: "Update",
+              text: 'Update',
               color: Colors.black,
               textColor: Colors.white,
               onTap: () async {
@@ -117,12 +117,12 @@ class AutoUpdateLogic {
       }
     } catch (e) {
       Get.defaultDialog(
-        title: "\nError Occured",
-        titleStyle: TextStyle(
+        title: '\nError Occured',
+        titleStyle: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
-        middleText: "\n\nError occurred while auto-update. Please contact developer.\n\n",
-        middleTextStyle: TextStyle(
+        middleText: '\n\nError occurred while auto-update. Please contact developer.\n\n',
+        middleTextStyle: const TextStyle(
           color: Colors.black54,
           fontSize: 14,
         ),
@@ -144,17 +144,17 @@ class AutoUpdateLogic {
       }
     });
 
-    var data = await FirebaseFirestore.instance.collection("ota_update").doc("version").get();
-    controller.latestVersionNumber = data.data()!["number"];
-    controller.downloadLink = data.data()!["downloadLink"];
-    controller.criticalUpdate = data.data()!["critical_update"];
+    var data = await FirebaseFirestore.instance.collection('ota_update').doc('version').get();
+    controller.latestVersionNumber = data.data()!['number'];
+    controller.downloadLink = data.data()!['downloadLink'];
+    controller.criticalUpdate = data.data()!['critical_update'];
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     controller.version = packageInfo.version;
     controller.buildNumber = packageInfo.buildNumber;
 
-    if (controller.latestVersionNumber != controller.version! + "+" + controller.buildNumber!) {
-      log("Auto update called");
+    if (controller.latestVersionNumber != '${controller.version!}+${controller.buildNumber!}') {
+      log('Auto update called');
       Get.offAllNamed(AutoUpdateView.id);
     } else {
       Get.offAllNamed(DashBoardScreen.id);

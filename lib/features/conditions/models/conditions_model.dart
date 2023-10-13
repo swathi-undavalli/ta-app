@@ -32,17 +32,17 @@ class Conditions {
   String toJson() => json.encode(toMap());
 
   factory Conditions.fromMap(Map<String, dynamic> json) => Conditions(
-        id: json["id"],
+        id: json['id'],
         surfaceConditions: List<SurfaceCondition>.from(
-            json["surfaceConditions"].map((x) => SurfaceCondition.fromMap(x))),
-        levels: List<Level>.from(json["levels"].map((x) => Level.fromMap(x))),
+            json['surfaceConditions'].map((x) => SurfaceCondition.fromMap(x)),),
+        levels: List<Level>.from(json['levels'].map((x) => Level.fromMap(x))),
       );
 
   Map<String, dynamic> toMap() => {
-        "id": id,
-        "surfaceConditions":
+        'id': id,
+        'surfaceConditions':
             List<dynamic>.from(surfaceConditions.map((x) => x.toMap())),
-        "levels": List<dynamic>.from(levels.map((x) => x.toMap())),
+        'levels': List<dynamic>.from(levels.map((x) => x.toMap())),
       };
 }
 
@@ -89,23 +89,23 @@ class Level {
   String toJson() => json.encode(toMap());
 
   factory Level.fromMap(Map<String, dynamic> json) => Level(
-        depth: json["depth"],
-        fish: json["fish"],
-        visibility: json["visibility"],
-        currents: json["currents"],
-        updatedAt: DateTime.parse(json["updatedAt"]),
-        reef: json["reef"],
-        updatedBy: json["updatedBy"],
+        depth: json['depth'],
+        fish: json['fish'],
+        visibility: json['visibility'],
+        currents: json['currents'],
+        updatedAt: DateTime.parse(json['updatedAt']),
+        reef: json['reef'],
+        updatedBy: json['updatedBy'],
       );
 
   Map<String, dynamic> toMap() => {
-        "depth": depth,
-        "fish": fish,
-        "visibility": visibility,
-        "currents": currents,
-        "updatedAt": updatedAt.toIso8601String(),
-        "reef": reef,
-        "updatedBy": updatedBy,
+        'depth': depth,
+        'fish': fish,
+        'visibility': visibility,
+        'currents': currents,
+        'updatedAt': updatedAt.toIso8601String(),
+        'reef': reef,
+        'updatedBy': updatedBy,
       };
 }
 
@@ -154,22 +154,22 @@ class SurfaceCondition {
 
   factory SurfaceCondition.fromMap(Map<String, dynamic> json) =>
       SurfaceCondition(
-        reefName: json["reefName"],
-        updatedBy: json["updatedBy"],
-        temp: json["temp"]?.toDouble(),
-        speed: json["speed"]?.toDouble(),
-        currents: json["currents"]?.toDouble(),
-        swell: json["swell"]?.toDouble(),
-        updatedAt: DateTime.parse(json["updatedAt"]),
+        reefName: json['reefName'],
+        updatedBy: json['updatedBy'],
+        temp: json['temp']?.toDouble(),
+        speed: json['speed']?.toDouble(),
+        currents: json['currents']?.toDouble(),
+        swell: json['swell']?.toDouble(),
+        updatedAt: DateTime.parse(json['updatedAt']),
       );
 
   Map<String, dynamic> toMap() => {
-        "reefName": reefName,
-        "updatedBy": updatedBy,
-        "temp": temp,
-        "speed": speed,
-        "currents": currents,
-        "swell": swell,
-        "updatedAt": updatedAt.toIso8601String(),
+        'reefName': reefName,
+        'updatedBy': updatedBy,
+        'temp': temp,
+        'speed': speed,
+        'currents': currents,
+        'swell': swell,
+        'updatedAt': updatedAt.toIso8601String(),
       };
 }

@@ -1,4 +1,4 @@
-import 'package:temple_adventures/core/constants/constants.dart';
+import '../constants/constants.dart';
 
 class Validator {
   static String? validateName(String name) {

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/features/bookings/models/activity_model.dart';
-import 'package:temple_adventures/features/bookings/models/booking_model.dart';
+import '../../bookings/models/activity_model.dart';
+import '../../bookings/models/booking_model.dart';
 
 class EditBookingNewLogic {
   EditBookingNewLogic() {
@@ -14,7 +14,7 @@ class EditBookingNewLogic {
   EditBookingNewController controller = Get.put(EditBookingNewController());
 
   getDataFromFireBase() async {
-    QuerySnapshot<Map<String, dynamic>> catalogue = await FirebaseFirestore.instance.collection("catalogue").get();
+    QuerySnapshot<Map<String, dynamic>> catalogue = await FirebaseFirestore.instance.collection('catalogue').get();
     controller.activities = [];
     for (int i = 0; i < catalogue.docs.length; i++) {
       if (catalogue.docs[i].id == 'colors') continue;
@@ -29,16 +29,16 @@ class EditBookingNewLogic {
     DatePicker.showDatePicker(
       context,
       showTitleActions: true,
-      minTime: DateTime.now().subtract(Duration(days: 36500)),
-      maxTime: DateTime.now().subtract(Duration(days: 2920)),
+      minTime: DateTime.now().subtract(const Duration(days: 36500)),
+      maxTime: DateTime.now().subtract(const Duration(days: 2920)),
       onChanged: (date) {
         controller.dob = date;
-        controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
-        controller.bookingModel!.pax![0]["dob"] = date;
+        controller.dobTED.text = DateFormat('dd MMM, yyyy').format(date);
+        controller.bookingModel!.pax![0]['dob'] = date;
       },
       onConfirm: (date) {
         controller.dob = date;
-        controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
+        controller.dobTED.text = DateFormat('dd MMM, yyyy').format(date);
 
         controller.update();
       },
@@ -166,19 +166,19 @@ class EditBookingNewController extends GetxController {
   }
 
   reset() {
-    activityNAmeTED.text = "";
-    priceTED.text = "";
-    paxTED.text = "";
-    discountTED.text = "";
+    activityNAmeTED.text = '';
+    priceTED.text = '';
+    paxTED.text = '';
+    discountTED.text = '';
     discountSwitch = true;
     taxable = false;
-    totalAmountTED.text = "";
-    depositTED.text = "";
-    balanceTED.text = "";
-    remarksTED.text = "";
-    emailTED.text = "";
+    totalAmountTED.text = '';
+    depositTED.text = '';
+    balanceTED.text = '';
+    remarksTED.text = '';
+    emailTED.text = '';
     _isoCode = null;
-    phoneTED.text = "";
-    dobTED.text = "";
+    phoneTED.text = '';
+    dobTED.text = '';
   }
 }

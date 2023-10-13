@@ -6,28 +6,28 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/constants/enums.dart';
-import 'package:temple_adventures/core/services/firebase_api.dart';
-import 'package:temple_adventures/core/util/utils.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/core/widgets/booking_calender_widget_old/booking_calender_old.dart';
-import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
-import 'package:temple_adventures/features/bookings/models/activity_model.dart';
-import 'package:temple_adventures/features/bookings/models/booking_model.dart';
-import 'package:temple_adventures/features/bookings/models/customer_model.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/book_date_time_screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/new_booking_screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/payment_details_screen.dart';
-import 'package:temple_adventures/features/dashboard/controller/dashboard_controller.dart';
-import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard_screen.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
-import 'package:temple_adventures/features/logs/models/log_model.dart';
-import 'package:temple_adventures/features/logs/presentation/screens/log_screen.dart';
+import '../../../core/constants/constants.dart';
+import '../../../core/constants/enums.dart';
+import '../../../core/services/firebase_api.dart';
+import '../../../core/util/utils.dart';
+import '../../../core/widgets/app_button.dart';
+import '../../../core/widgets/booking_calender_widget_old/booking_calender_old.dart';
+import '../../../core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
+import '../models/activity_model.dart';
+import '../models/booking_model.dart';
+import '../models/customer_model.dart';
+import '../presentation/screens/book_date_time_screen.dart';
+import '../presentation/screens/new_booking_screen.dart';
+import '../presentation/screens/payment_details_screen.dart';
+import '../../dashboard/controller/dashboard_controller.dart';
+import '../../dashboard/presentation/screens/dashboard_screen.dart';
+import '../../employees/model/employee.dart';
+import '../../logs/models/log_model.dart';
+import '../../logs/presentation/screens/log_screen.dart';
 
 class NewBookingLogic {
   NewBookingLogic() {
-    this.getDataFromFireBase();
+    getDataFromFireBase();
   }
 
   NewBookingController controller = Get.put(NewBookingController());
@@ -57,33 +57,33 @@ class NewBookingLogic {
   onContinuePressedBookingForm() {
     controller.bookingModel.remarks = controller.remarksTED.text.toString();
     controller.bookingModel.employeeName = currentEmployee!.firstName! + currentEmployee!.lastName!;
-    if (controller.payingNowTED.text == "" || int.parse(controller.payingNowTED.text) == 0) {
+    if (controller.payingNowTED.text == '' || int.parse(controller.payingNowTED.text) == 0) {
       createCustomer();
       createBooking();
       Get.defaultDialog(
         barrierDismissible: false,
-        title: "",
-        titlePadding: EdgeInsets.all(0),
-        titleStyle: TextStyle(fontSize: 0),
+        title: '',
+        titlePadding: const EdgeInsets.all(0),
+        titleStyle: const TextStyle(fontSize: 0),
         content: GetBuilder<NewBookingController>(builder: (controller) {
-          if (controller.bookingId != null)
+          if (controller.bookingId != null) {
             return Column(
               children: [
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Icon(
                   Icons.check_circle_outline_rounded,
                   color: AppColors.background.skyBlue,
                   size: 30,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   controller.bookingId!,
-                  style: TextStyle(fontSize: FontSize.title),
+                  style: const TextStyle(fontSize: FontSize.title),
                 ),
-                Text("Booking Created Successfully"),
-                SizedBox(height: 20),
+                const Text('Booking Created Successfully'),
+                const SizedBox(height: 20),
                 AppButton.miniFlat(
-                  text: "Okay",
+                  text: 'Okay',
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
                   onTap: () async {
@@ -97,7 +97,8 @@ class NewBookingLogic {
                 )
               ],
             );
-          return Container(
+          }
+          return const SizedBox(
             height: 150,
             child: Center(
               child: CircularProgressIndicator(
@@ -106,10 +107,11 @@ class NewBookingLogic {
               ),
             ),
           );
-        }),
+        },),
       );
-    } else
+    } else {
       Get.toNamed(PaymentDetailsScreen.id);
+    }
   }
 
   Future<void> createCustomer() async {
@@ -119,14 +121,14 @@ class NewBookingLogic {
         lastName: controller.lNameTED.text,
         email: controller.emailTED.text,
         phoneNumber: controller.phoneNumberTED.text,
-        idProof: "",
-        gender: "",
-        dob: controller.dob.toString());
-    await FirebaseFirestore.instance.collection("customers").doc(controller.emailTED.text).set(customer.toMap());
+        idProof: '',
+        gender: '',
+        dob: controller.dob.toString(),);
+    await FirebaseFirestore.instance.collection('customers').doc(controller.emailTED.text).set(customer.toMap());
   }
 
   onPaymentDetailsFilled() {
-    if (controller.paymentModeTED.text != "") {
+    if (controller.paymentModeTED.text != '') {
       controller.bookingModel.paymentMode = controller.paymentModeTED.text;
       controller.bookingModel.paymentTransactionId = controller.paymentReferenceTED.text;
       controller.bookingModel.receiptNo = controller.receiptNoTED.text;
@@ -134,28 +136,28 @@ class NewBookingLogic {
       createBooking();
       Get.defaultDialog(
         barrierDismissible: false,
-        title: "",
-        titlePadding: EdgeInsets.all(0),
-        titleStyle: TextStyle(fontSize: 0),
+        title: '',
+        titlePadding: const EdgeInsets.all(0),
+        titleStyle: const TextStyle(fontSize: 0),
         content: GetBuilder<NewBookingController>(builder: (controller) {
-          if (controller.bookingId != null)
+          if (controller.bookingId != null) {
             return Column(
               children: [
-                SizedBox(height: 50),
+                const SizedBox(height: 50),
                 Icon(
                   Icons.check_circle_outline_rounded,
                   color: AppColors.background.skyBlue,
                   size: 30,
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   controller.bookingId!,
-                  style: TextStyle(fontSize: FontSize.title),
+                  style: const TextStyle(fontSize: FontSize.title),
                 ),
-                Text("Booking Created Successfully"),
-                SizedBox(height: 20),
+                const Text('Booking Created Successfully'),
+                const SizedBox(height: 20),
                 AppButton.miniFlat(
-                  text: "Okay",
+                  text: 'Okay',
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
                   onTap: () async {
@@ -168,7 +170,8 @@ class NewBookingLogic {
                 )
               ],
             );
-          return Container(
+          }
+          return const SizedBox(
             height: 150,
             child: Center(
               child: CircularProgressIndicator(
@@ -177,10 +180,10 @@ class NewBookingLogic {
               ),
             ),
           );
-        }),
+        },),
       );
     } else {
-      showToast("Invalid Input");
+      showToast('Invalid Input');
     }
   }
 
@@ -188,7 +191,7 @@ class NewBookingLogic {
     DatePicker.showDatePicker(
       context,
       showTitleActions: true,
-      minTime: DateTime.now().subtract(Duration(days: 36500)),
+      minTime: DateTime.now().subtract(const Duration(days: 36500)),
       maxTime: DateTime.now(),
       onChanged: (date) {
         controller.paymentDate = date;
@@ -205,15 +208,15 @@ class NewBookingLogic {
     DatePicker.showDatePicker(
       context,
       showTitleActions: true,
-      minTime: DateTime.now().subtract(Duration(days: 36500)),
-      maxTime: DateTime.now().subtract(Duration(days: 2920)),
+      minTime: DateTime.now().subtract(const Duration(days: 36500)),
+      maxTime: DateTime.now().subtract(const Duration(days: 2920)),
       onChanged: (date) {
         controller.dob = date;
-        controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
+        controller.dobTED.text = DateFormat('dd MMM, yyyy').format(date);
       },
       onConfirm: (date) {
         controller.dob = date;
-        controller.dobTED.text = DateFormat("dd MMM, yyyy").format(date);
+        controller.dobTED.text = DateFormat('dd MMM, yyyy').format(date);
         controller.update();
       },
       currentTime: controller.dob,
@@ -239,19 +242,19 @@ class NewBookingLogic {
   addPoolSessionDateTime() {
     DateTime? selectedPoolDate;
     Get.defaultDialog(
-      title: "",
-      titlePadding: EdgeInsets.all(0),
-      titleStyle: TextStyle(fontSize: 0, height: 0),
-      content: Container(
+      title: '',
+      titlePadding: const EdgeInsets.all(0),
+      titleStyle: const TextStyle(fontSize: 0, height: 0),
+      content: SizedBox(
         height: 480,
         width: 400,
         child: Column(
           children: [
             Container(
               alignment: Alignment.centerLeft,
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Text(
-                "Choose Date",
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: const Text(
+                'Choose Date',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -271,17 +274,17 @@ class NewBookingLogic {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 AppButton.miniText(
-                  text: "Cancel",
+                  text: 'Cancel',
                   onTap: () {
                     Get.back();
                   },
                 ),
                 AppButton.miniFlat(
-                  text: "Okay",
+                  text: 'Okay',
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
                   onTap: () {
-                    if (controller.bookingModel.poolDate == null) controller.bookingModel.poolDate = [];
+                    controller.bookingModel.poolDate ??= [];
                     controller.bookingModel.poolDate!.add(selectedPoolDate);
                     controller.bookingModel.poolDate = controller.bookingModel.poolDate!.toSet().toList();
                     // //print(controller.bookingModel.poolDate);
@@ -301,19 +304,19 @@ class NewBookingLogic {
   addDiveSessionDateTime() {
     DateTime? selectedDiveDate;
     Get.defaultDialog(
-      title: "",
-      titlePadding: EdgeInsets.all(0),
-      titleStyle: TextStyle(fontSize: 0, height: 0),
-      content: Container(
+      title: '',
+      titlePadding: const EdgeInsets.all(0),
+      titleStyle: const TextStyle(fontSize: 0, height: 0),
+      content: SizedBox(
         height: 480,
         width: 400,
         child: Column(
           children: [
             Container(
               alignment: Alignment.centerLeft,
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Text(
-                "Choose Date",
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: const Text(
+                'Choose Date',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -333,17 +336,17 @@ class NewBookingLogic {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 AppButton.miniText(
-                  text: "Cancel",
+                  text: 'Cancel',
                   onTap: () {
                     Get.back();
                   },
                 ),
                 AppButton.miniFlat(
-                  text: "Okay",
+                  text: 'Okay',
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
                   onTap: () {
-                    if (controller.bookingModel.diveDate == null) controller.bookingModel.diveDate = [];
+                    controller.bookingModel.diveDate ??= [];
                     controller.bookingModel.diveDate!.add(selectedDiveDate);
                     controller.bookingModel.diveDate = controller.bookingModel.diveDate!.toSet().toList();
                     controller.update();
@@ -362,19 +365,19 @@ class NewBookingLogic {
   addQuickDiveSessionDateTime() {
     DateTime? selectedDiveDate;
     Get.defaultDialog(
-      title: "",
-      titlePadding: EdgeInsets.all(0),
-      titleStyle: TextStyle(fontSize: 0, height: 0),
-      content: Container(
+      title: '',
+      titlePadding: const EdgeInsets.all(0),
+      titleStyle: const TextStyle(fontSize: 0, height: 0),
+      content: SizedBox(
         height: 480,
         width: 400,
         child: Column(
           children: [
             Container(
               alignment: Alignment.centerLeft,
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Text(
-                "Choose Date",
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: const Text(
+                'Choose Date',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -394,17 +397,17 @@ class NewBookingLogic {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 AppButton.miniText(
-                  text: "Cancel",
+                  text: 'Cancel',
                   onTap: () {
                     Get.back();
                   },
                 ),
                 AppButton.miniFlat(
-                  text: "Okay",
+                  text: 'Okay',
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
                   onTap: () {
-                    if (controller.quickDiveDates == null) controller.quickDiveDates = [];
+                    controller.quickDiveDates ??= [];
                     controller.quickDiveDates!.add(selectedDiveDate);
                     controller.quickDiveDates = controller.quickDiveDates!.toSet().toList();
                     controller.update();
@@ -423,19 +426,19 @@ class NewBookingLogic {
   addTheorySessionDateTime() {
     DateTime? selectedTheoryDate;
     Get.defaultDialog(
-      title: "",
-      titlePadding: EdgeInsets.all(0),
-      titleStyle: TextStyle(fontSize: 0, height: 0),
-      content: Container(
+      title: '',
+      titlePadding: const EdgeInsets.all(0),
+      titleStyle: const TextStyle(fontSize: 0, height: 0),
+      content: SizedBox(
         height: 480,
         width: 400,
         child: Column(
           children: [
             Container(
               alignment: Alignment.centerLeft,
-              margin: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-              child: Text(
-                "Choose Date",
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: const Text(
+                'Choose Date',
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                 ),
@@ -456,17 +459,17 @@ class NewBookingLogic {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 AppButton.miniText(
-                  text: "Cancel",
+                  text: 'Cancel',
                   onTap: () {
                     Get.back();
                   },
                 ),
                 AppButton.miniFlat(
-                  text: "Okay",
+                  text: 'Okay',
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
                   onTap: () {
-                    if (controller.bookingModel.theoryDate == null) controller.bookingModel.theoryDate = [];
+                    controller.bookingModel.theoryDate ??= [];
                     controller.bookingModel.theoryDate!.add(selectedTheoryDate);
                     controller.bookingModel.theoryDate = controller.bookingModel.theoryDate!.toSet().toList();
                     //log(controller.bookingModel.theoryDate.toString());
@@ -487,14 +490,14 @@ class NewBookingLogic {
     if (controller.isQuickBooking) {
       List<String> bookingDates = [];
 
-      if (controller.quickNameTED.text != "" &&
-          controller.quickNoOfPersonsTED.text != "" &&
+      if (controller.quickNameTED.text != '' &&
+          controller.quickNoOfPersonsTED.text != '' &&
           controller.quickSelectedActivity != null) {
         controller.quickShowLoading = true;
         if (controller.quickDiveDates != null && controller.quickDiveDates!.isNotEmpty) {
-          controller.quickDiveDates!.forEach((element) {
+          for (var element in controller.quickDiveDates!) {
             bookingDates.add(getStringDate(element!));
-          });
+          }
         }
 
         Booking bookingModel = Booking(
@@ -503,24 +506,24 @@ class NewBookingLogic {
           id: controller.quickBookingIdTED.text,
           pax: [
             {
-              "first-name": controller.quickNameTED.text,
-              "email": "quickBooking@temple.com",
-              "last-name": "",
-              "countryCode": "+91",
-              "phoneNumber": "9876543210",
-              "isoCode": "IN",
-              "dob": DateTime.now(),
+              'first-name': controller.quickNameTED.text,
+              'email': 'quickBooking@temple.com',
+              'last-name': '',
+              'countryCode': '+91',
+              'phoneNumber': '9876543210',
+              'isoCode': 'IN',
+              'dob': DateTime.now(),
             }
           ],
           diveDate: controller.quickDiveDates,
           bookingDate: bookingDates,
-          employeeName: currentEmployee?.name ?? "quick",
-          paymentMode: "Cash",
-          paymentTransactionId: "quickBooking",
+          employeeName: currentEmployee?.name ?? 'quick',
+          paymentMode: 'Cash',
+          paymentTransactionId: 'quickBooking',
           theoryDate: [],
           poolDate: [],
-          receiptNo: "quick",
-          remarks: "quick",
+          receiptNo: 'quick',
+          remarks: 'quick',
           idProofs: [],
           payments: [],
           createdAt: DateTime.now(),
@@ -530,7 +533,7 @@ class NewBookingLogic {
 
         controller.bookingId = await FirebaseApi.addNewBooking(bookingModel);
         LogModel logModel = LogModel(type: LogType.quickBookingCreated, bookingId: controller.bookingId);
-        FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
+        FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
         controller.quickShowLoading = false;
         controller.reset();
         Get.back();
@@ -538,30 +541,30 @@ class NewBookingLogic {
 
         return;
       } else {
-        showToast("Invalid  input");
+        showToast('Invalid  input');
         return;
       }
     }
 
     controller.bookingModel.bookingDate = [];
     if (controller.bookingModel.theoryDate != null && controller.bookingModel.theoryDate!.isNotEmpty) {
-      controller.bookingModel.theoryDate!.forEach((element) {
+      for (var element in controller.bookingModel.theoryDate!) {
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
-      });
+      }
     }
     if (controller.bookingModel.poolDate != null && controller.bookingModel.poolDate!.isNotEmpty) {
-      controller.bookingModel.poolDate!.forEach((element) {
+      for (var element in controller.bookingModel.poolDate!) {
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
-      });
+      }
     }
     if (controller.bookingModel.diveDate != null && controller.bookingModel.diveDate!.isNotEmpty) {
-      controller.bookingModel.diveDate!.forEach((element) {
+      for (var element in controller.bookingModel.diveDate!) {
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
-      });
+      }
     }
     controller.bookingId = await FirebaseApi.addNewBooking(controller.bookingModel);
     LogModel logModel = LogModel(type: LogType.bookingCreated, bookingId: controller.bookingId);
-    FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
+    FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
     controller.update();
   }
 
@@ -571,52 +574,53 @@ class NewBookingLogic {
           (controller.bookingModel.poolDate != null && controller.bookingModel.poolDate!.isNotEmpty) ||
           (controller.bookingModel.diveDate != null && controller.bookingModel.diveDate!.isNotEmpty)) {
         Get.toNamed(NewBookingScreen.id);
-      } else
-        showToast("Please select at-least one session");
+      } else {
+        showToast('Please select at-least one session');
+      }
     } else {
-      showToast("Please select Activity");
+      showToast('Please select Activity');
     }
   }
 
   void onCheckPressed() {
-    if (controller.emailTED.text != "" &&
-        controller.fNameTED.text != "" &&
-        controller.paxTED.text != "" &&
-        controller.phoneNumberTED.text != "") {
+    if (controller.emailTED.text != '' &&
+        controller.fNameTED.text != '' &&
+        controller.paxTED.text != '' &&
+        controller.phoneNumberTED.text != '') {
       controller.bookingModel.pax = [];
       controller.bookingModel.pax!.add({
-        "email": controller.emailTED.text,
-        "first-name": controller.fNameTED.text,
-        "last-name": controller.lNameTED.text,
-        "countryCode": controller.countryCodeTED.text,
-        "phoneNumber": controller.phoneNumberTED.text,
-        "isoCode": controller.isoCode,
-        "dob": controller.dob,
+        'email': controller.emailTED.text,
+        'first-name': controller.fNameTED.text,
+        'last-name': controller.lNameTED.text,
+        'countryCode': controller.countryCodeTED.text,
+        'phoneNumber': controller.phoneNumberTED.text,
+        'isoCode': controller.isoCode,
+        'dob': controller.dob,
       });
       log(controller.dob.toString());
-      log("country code${controller.countryCodeTED.text}");
+      log('country code${controller.countryCodeTED.text}');
       controller.bookingModel.noOfPersons = getInt(controller.paxTED.text);
       disposeKeyboard();
       Get.toNamed(BookDateTime.id);
     } else {
-      log("not allowed");
-      showToast("Invalid Input");
+      log('not allowed');
+      showToast('Invalid Input');
     }
   }
 
   Future<bool> isCustomerExists() async {
-    var d = await FirebaseFirestore.instance.collection("customers").doc(controller.emailTED.text).get();
+    var d = await FirebaseFirestore.instance.collection('customers').doc(controller.emailTED.text).get();
     Map<String, dynamic>? data = d.data();
     if (data == null) return false;
     controller.customerModel = CustomerModel.fromMap(data);
     log(controller.customerModel.toMap().toString());
-    controller.fNameTED.text = controller.customerModel.firstName ?? "";
-    controller.lNameTED.text = controller.customerModel.lastName ?? "";
-    controller.phoneNumberTED.text = controller.customerModel.phoneNumber ?? "";
+    controller.fNameTED.text = controller.customerModel.firstName ?? '';
+    controller.lNameTED.text = controller.customerModel.lastName ?? '';
+    controller.phoneNumberTED.text = controller.customerModel.phoneNumber ?? '';
     controller.countryCodeTED.text =
         ((controller.customerModel.countryCode != null && controller.customerModel.countryCode!.isNotEmpty)
             ? controller.customerModel.countryCode
-            : "+91")!;
+            : '+91')!;
     return true;
   }
 }
@@ -656,7 +660,7 @@ class NewBookingController extends GetxController {
   AutoScrollController autoScrollController = AutoScrollController();
   CustomerModel customerModel = CustomerModel();
 
-  String _diveLocation = "Pondicherry";
+  String _diveLocation = 'Pondicherry';
 
   bool _discountSwitch = true;
   bool _isQuickBooking = false;
@@ -752,29 +756,29 @@ class NewBookingController extends GetxController {
   List<Activity> activities = [];
 
   reset() {
-    dobTED.text = "";
+    dobTED.text = '';
     _dob = null;
     _bookingId = null;
-    _diveLocation = "Pondicherry";
+    _diveLocation = 'Pondicherry';
     _discountSwitch = true;
     _paymentDate = DateTime.now();
-    locationTED.text = "";
+    locationTED.text = '';
     bookingModel = Booking();
-    emailTED.text = "";
-    fNameTED.text = "";
-    lNameTED.text = "";
-    paxTED.text = "";
-    priceTED.text = "";
-    discountTED.text = "";
-    payingNowTED.text = "";
-    paymentModeTED.text = "";
-    paymentReferenceTED.text = "";
-    phoneNumberTED.text = "";
-    countryCodeTED.text = "";
-    remarksTED.text = "";
-    receiptNoTED.text = "";
+    emailTED.text = '';
+    fNameTED.text = '';
+    lNameTED.text = '';
+    paxTED.text = '';
+    priceTED.text = '';
+    discountTED.text = '';
+    payingNowTED.text = '';
+    paymentModeTED.text = '';
+    paymentReferenceTED.text = '';
+    phoneNumberTED.text = '';
+    countryCodeTED.text = '';
+    remarksTED.text = '';
+    receiptNoTED.text = '';
     selectedActivity = null;
-    _isoCode = "IN";
+    _isoCode = 'IN';
     _cost = 0;
     _taxableAmount = 0;
     _balance = 0;
@@ -786,16 +790,16 @@ class NewBookingController extends GetxController {
     getDetailsPressed = false;
     isQuickBooking = false;
     quickShowLoading = false;
-    quickNoOfPersonsTED.text = "";
+    quickNoOfPersonsTED.text = '';
     quickDiveDates = [];
     quickSelectedActivity = null;
-    quickNameTED.text = "";
-    quickBookingIdTED.text = "";
+    quickNameTED.text = '';
+    quickBookingIdTED.text = '';
   }
 
   bool _showLoading = true;
 
-  String? _isoCode = "IN";
+  String? _isoCode = 'IN';
 
   String? get isoCode {
     return _isoCode;

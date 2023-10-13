@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/spacing_widgets.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/util/spacing_widgets.dart';
 
 class CounterWidget extends StatefulWidget {
-  CounterWidget(
+  const CounterWidget(
       {Key? key,
       required this.onChanged,
       this.label,
-      required this.initialValue})
+      required this.initialValue,})
       : super(key: key);
 
   final Function(int count) onChanged;
@@ -46,9 +46,9 @@ class _CounterWidgetState extends State<CounterWidget> {
             child: Center(
                 child: Text(e,
                     style:
-                        TextStyle(fontSize: 14, fontWeight: FontWeight.w600))),
+                        const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),),),
           ),
-        SizedBox(width: 15),
+        const SizedBox(width: 15),
         buildIncrementDecrement(
             onTap: () {
               if (counter > 0) counter -= 1;
@@ -56,14 +56,14 @@ class _CounterWidgetState extends State<CounterWidget> {
               widget.onChanged(counter);
               setState(() {});
             },
-            icon: Icons.remove),
+            icon: Icons.remove,),
         Spacing.w15,
         SizedBox(
           width: 35,
           height: 20,
           child: TextField(
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 14),
+            style: const TextStyle(fontSize: 14),
             controller: controller,
             keyboardType: TextInputType.number,
             inputFormatters: [
@@ -79,7 +79,7 @@ class _CounterWidgetState extends State<CounterWidget> {
               widget.onChanged(counter);
               setState(() {});
             },
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               labelText: '',
             ),
           ),
@@ -94,13 +94,13 @@ class _CounterWidgetState extends State<CounterWidget> {
                 setState(() {});
               }
             },
-            icon: Icons.add),
+            icon: Icons.add,),
       ],
     ).paddingOnly(bottom: 10);
   }
 
   Widget buildIncrementDecrement(
-      {required Function onTap, required IconData icon}) {
+      {required Function onTap, required IconData icon,}) {
     return InkWell(
         onTap: () {
           onTap();
@@ -108,14 +108,14 @@ class _CounterWidgetState extends State<CounterWidget> {
         child: Container(
           height: 30,
           width: 30,
-          child: Icon(
-            icon,
-            size: 14,
-          ),
           decoration: BoxDecoration(
             color: AppColors.text.skyBlue.withOpacity(0.4),
             borderRadius: BorderRadius.circular(3),
           ),
-        ));
+          child: Icon(
+            icon,
+            size: 14,
+          ),
+        ),);
   }
 }

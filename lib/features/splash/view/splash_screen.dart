@@ -1,15 +1,15 @@
-import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/assets.dart';
-import 'package:temple_adventures/core/repository/employee_repo.dart';
-import 'package:temple_adventures/core/services/auto_update.dart';
-import 'package:temple_adventures/features/login/presentation/screens/login_page.dart';
+import '../../../core/constants/assets.dart';
+import '../../../core/repository/employee_repo.dart';
+import '../../../core/services/auto_update.dart';
+import '../../login/presentation/screens/login_page.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({Key? key}) : super(key: key);
-  static const String id = "SplashScreen";
+  const SplashScreen({Key? key}) : super(key: key);
+  static const String id = 'SplashScreen';
 
   @override
   State<SplashScreen> createState() => _SplashScreenState();
@@ -23,8 +23,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   init() async {
-    log("in splash screen");
-    await Future.delayed(Duration(microseconds: 500));
+    await Future.delayed(const Duration(microseconds: 500));
 
     try {
       User? user = FirebaseAuth.instance.currentUser;
@@ -36,7 +35,9 @@ class _SplashScreenState extends State<SplashScreen> {
         await autoUpdateLogic.checkForUpdate();
       }
     } catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
     }
   }
 

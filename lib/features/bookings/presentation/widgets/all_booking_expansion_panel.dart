@@ -2,14 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/access_levels.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/features/all_bookings/presentation/screens/all_bookings_screen.dart';
-import 'package:temple_adventures/features/bookings/models/booking_model.dart';
-import 'package:temple_adventures/features/edit_booking/presentation/screens/edit_booking_new_screen.dart';
-import 'package:temple_adventures/features/logs/models/log_model.dart';
-import 'package:temple_adventures/features/logs/presentation/screens/log_screen.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/access_levels.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../all_bookings/presentation/screens/all_bookings_screen.dart';
+import '../../models/booking_model.dart';
+import '../../../edit_booking/presentation/screens/edit_booking_new_screen.dart';
+import '../../../logs/models/log_model.dart';
+import '../../../logs/presentation/screens/log_screen.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../../core/models/item_model.dart';
@@ -20,7 +20,7 @@ import '../screens/add_payments_screen.dart';
 class AllBookingsExpansionPanel extends StatefulWidget {
   Booking booking;
 
-  AllBookingsExpansionPanel({required this.booking});
+  AllBookingsExpansionPanel({Key? key, required this.booking}) : super(key: key);
 
   @override
   State<AllBookingsExpansionPanel> createState() =>
@@ -50,36 +50,40 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
   Widget buildExpansion({required ItemModel itemModel, int? i}) {
     getColor() {
       if (itemModel.bookingModel?.cancelBooking == true) {
-        return Color(0xffEE9A9D);
+        return const Color(0xffEE9A9D);
       } else {
         String cc = '';
 
-        if (colorsData!.blue.contains(itemModel.activity))
-          cc = "Blue";
-        else if (colorsData!.purple.contains(itemModel.activity))
-          cc = "Purple";
-        else if (colorsData!.red.contains(itemModel.activity))
-          cc = "Red";
-        else if (colorsData!.green.contains(itemModel.activity))
-          cc = "Green";
-        else if (colorsData!.white.contains(itemModel.activity)) cc = "White";
+        if (colorsData!.blue.contains(itemModel.activity)) {
+          cc = 'Blue';
+        } else if (colorsData!.purple.contains(itemModel.activity)) {
+          cc = 'Purple';
+        } else if (colorsData!.red.contains(itemModel.activity)) {
+          cc = 'Red';
+        } else if (colorsData!.green.contains(itemModel.activity)) {
+          cc = 'Green';
+        } else if (colorsData!.white.contains(itemModel.activity)) {
+          cc = 'White';
+        }
 
-        if (cc == "Blue")
-          return Color(0xffA9EBF8).withOpacity(0.3);
-        else if (cc == "Purple")
-          return Color(0xffDDB3FF);
-        else if (cc == "Red")
-          return Color(0xffF8FF96);
-        else if (cc == "Green")
-          return Color(0xff96F1BD);
-        else if (cc == "White") return Color(0xffE0E0E0);
+        if (cc == 'Blue') {
+          return const Color(0xffA9EBF8).withOpacity(0.3);
+        } else if (cc == 'Purple') {
+          return const Color(0xffDDB3FF);
+        } else if (cc == 'Red') {
+          return const Color(0xffF8FF96);
+        } else if (cc == 'Green') {
+          return const Color(0xff96F1BD);
+        } else if (cc == 'White') {
+          return const Color(0xffE0E0E0);
+        }
       }
     }
 
     return Padding(
       padding: const EdgeInsets.only(bottom: 10),
       child: AnimatedContainer(
-        duration: Duration(milliseconds: 200),
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeInCubic,
         alignment: Alignment.topCenter,
         // height: controller.isExpanded[i] ? 400 : 50,
@@ -117,13 +121,13 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                         double.parse(item!.paid)
                                             .roundToDouble(),
                                         double.parse(item!.cost)
-                                            .roundToDouble()) ==
-                                    "0"
+                                            .roundToDouble(),) ==
+                                    '0'
                                 ? Colors.green
                                 : Colors.red,
-                            borderRadius: BorderRadius.circular(5)),
+                            borderRadius: BorderRadius.circular(5),),
                       ),
-                      SizedBox(width: 5),
+                      const SizedBox(width: 5),
                       Expanded(
                         child: Row(
                           children: [
@@ -137,18 +141,16 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                 style: TextStyle(
                                     color: AppColors.text.black,
                                     fontSize: 14,
-                                    fontWeight: FontWeight.w600),
+                                    fontWeight: FontWeight.w600,),
                               ),
                             ),
                             Text(
-                              " x " +
-                                  (itemModel.bookingModel!.noOfPersons
-                                      .toString()),
+                              ' x ${itemModel.bookingModel!.noOfPersons}',
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                   color: AppColors.text.black,
                                   fontSize: 14,
-                                  fontWeight: FontWeight.w600),
+                                  fontWeight: FontWeight.w600,),
                             ),
                           ],
                         ),
@@ -157,7 +159,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                       IconButton(
                         splashRadius: 20,
                         icon: Icon(Icons.call_rounded,
-                            color: AppColors.background.black),
+                            color: AppColors.background.black,),
                         iconSize: 15,
                         onPressed: () {
                           makingPhoneCall(itemModel.phone);
@@ -168,26 +170,26 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                         child: IconButton(
                           splashRadius: 20,
                           icon: Icon(Icons.delete,
-                              color: AppColors.background.black),
+                              color: AppColors.background.black,),
                           iconSize: 15,
                           onPressed: () {
                             Get.defaultDialog(
-                              contentPadding: EdgeInsets.only(
-                                  left: 30, right: 30, top: 20, bottom: 30),
-                              title: "\nAre You Sure ? ",
+                              contentPadding: const EdgeInsets.only(
+                                  left: 30, right: 30, top: 20, bottom: 30,),
+                              title: '\nAre You Sure ? ',
                               middleText:
-                                  "Booking will Be Deleted Permanently.",
+                                  'Booking will Be Deleted Permanently.',
                               backgroundColor: Colors.white,
                               titleStyle: TextStyle(
                                   color: AppColors.text.black,
                                   fontFamily: AppFonts.nunito,
                                   fontSize: 16,
-                                  fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.bold,),
                               middleTextStyle: TextStyle(
                                   color: AppColors.text.black,
                                   fontFamily: AppFonts.nunito,
                                   fontSize: 15,
-                                  fontWeight: FontWeight.w500),
+                                  fontWeight: FontWeight.w500,),
                               confirm: Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
@@ -202,20 +204,20 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                     text: 'OK',
                                     onTap: () {
                                       FirebaseFirestore.instance
-                                          .collection("bookings")
+                                          .collection('bookings')
                                           .doc(itemModel.bookingModel!.id)
                                           .delete();
                                       LogModel logModel = LogModel(
                                           type: LogType.bookingDeleted,
                                           bookingId:
-                                              itemModel.bookingModel!.id);
+                                              itemModel.bookingModel!.id,);
                                       FirebaseFirestore.instance
-                                          .collection("logs")
+                                          .collection('logs')
                                           .doc()
                                           .set(logModel.toMap());
 
                                       Get.back();
-                                      AllBookingsScreen();
+                                      const AllBookingsScreen();
                                       setState(() {});
                                       // onDeletePressed();
                                       // BookingsCalenderWidgetLogic
@@ -239,12 +241,12 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                         child: IconButton(
                           splashRadius: 20,
                           icon: Icon(Icons.edit,
-                              color: AppColors.background.black),
+                              color: AppColors.background.black,),
                           iconSize: 15,
                           onPressed: () {
                             var model = itemModel.bookingModel;
                             Get.toNamed(EditBookingNewScreen.id,
-                                arguments: model);
+                                arguments: model,);
                           },
                         ),
                       ),
@@ -252,67 +254,67 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                         splashRadius: 20,
                         icon: Icon(isExpanded
                             ? Icons.keyboard_arrow_up_rounded
-                            : Icons.keyboard_arrow_down_rounded),
+                            : Icons.keyboard_arrow_down_rounded,),
                         onPressed: () {
                           setState(() {
                             isExpanded = !isExpanded;
                           });
                         },
                       ),
-                    ]),
+                    ],),
                 isExpanded
                     ? FutureBuilder(
-                        future: Future.delayed(Duration(milliseconds: 200)),
-                        initialData: SizedBox(),
+                        future: Future.delayed(const Duration(milliseconds: 200)),
+                        initialData: const SizedBox(),
                         builder: (context, snapshot) {
-                          if (snapshot.connectionState == ConnectionState.done)
+                          if (snapshot.connectionState == ConnectionState.done) {
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.start,
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
                                 buildKeyValuePairs(
-                                    "Booking Id", item!.bookingID!),
-                                buildKeyValuePairs("Activity", item!.activity),
+                                    'Booking Id', item!.bookingID!,),
+                                buildKeyValuePairs('Activity', item!.activity),
                                 buildKeyValuePairs(
-                                    "Total Cost",
+                                    'Total Cost',
                                     double.parse(item!.cost)
                                         .roundToDouble()
-                                        .toString()),
+                                        .toString(),),
                                 buildKeyValuePairs(
-                                    "Deposit",
+                                    'Deposit',
                                     double.parse(item!.paid)
                                         .roundToDouble()
-                                        .toString()),
+                                        .toString(),),
                                 buildKeyValuePairs(
-                                  "Balance",
+                                  'Balance',
                                   getBalance(
                                       item!.bookingModel!.payments!,
                                       double.parse(item!.paid).roundToDouble(),
-                                      double.parse(item!.cost).roundToDouble()),
+                                      double.parse(item!.cost).roundToDouble(),),
                                 ),
-                                buildKeyValuePairs("Pax",
-                                    item!.bookingModel!.noOfPersons.toString()),
+                                buildKeyValuePairs('Pax',
+                                    item!.bookingModel!.noOfPersons.toString(),),
                                 ((item != null) && (item!.receiptNo != null))
                                     ? buildKeyValuePairs(
-                                        "Invoice no", item!.receiptNo!)
-                                    : buildKeyValuePairs("Invoice no", "-"),
-                                (item!.remarks == "")
-                                    ? buildKeyValuePairs("Remarks", "-")
+                                        'Invoice no', item!.receiptNo!,)
+                                    : buildKeyValuePairs('Invoice no', '-'),
+                                (item!.remarks == '')
+                                    ? buildKeyValuePairs('Remarks', '-')
                                     : buildKeyValuePairs(
-                                        "Remarks", item!.remarks.toString()),
-                                buildKeyValuePairs("Phone", item!.phone!),
-                                buildKeyValuePairs("Email", item!.email!),
-                                buildKeyValuePairs("Time", item!.time),
-                                buildKeyValuePairs("Date", item!.date),
-                                buildKeyValuePairs("Session", item!.session),
+                                        'Remarks', item!.remarks.toString(),),
+                                buildKeyValuePairs('Phone', item!.phone!),
+                                buildKeyValuePairs('Email', item!.email!),
+                                buildKeyValuePairs('Time', item!.time),
+                                buildKeyValuePairs('Date', item!.date),
+                                buildKeyValuePairs('Session', item!.session),
                                 buildKeyValuePairs(
-                                  "Registered",
-                                  "${item!.bookingModel!.pax!.length - 1} / ${item!.bookingModel!.noOfPersons}",
+                                  'Registered',
+                                  '${item!.bookingModel!.pax!.length - 1} / ${item!.bookingModel!.noOfPersons}',
                                   isDanger:
                                       ((item!.bookingModel!.pax!.length - 1) !=
                                           (item!.bookingModel!.noOfPersons)),
                                 ),
-                                SizedBox(height: 30),
+                                const SizedBox(height: 30),
                                 buildPaymentStatus(
                                   totalAmount: item!.bookingModel!.totalCost,
                                   payments: [
@@ -323,7 +325,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                       reciptNo: item!.receiptNo,
                                       referenceNo: item!
                                           .bookingModel!.paymentTransactionId,
-                                      remarks: "",
+                                      remarks: '',
                                       paymentMode:
                                           item!.bookingModel!.paymentMode,
                                       time: item!.bookingModel!.createdAt,
@@ -331,16 +333,16 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                     ...item!.bookingModel!.payments!
                                   ],
                                 ),
-                                SizedBox(height: 10),
+                                const SizedBox(height: 10),
                                 Row(
                                   children: [
-                                    Spacer(),
+                                    const Spacer(),
                                     Container(
                                       child: AppButton.miniFlat(
-                                        text: "Add Payment",
+                                        text: 'Add Payment',
                                         onTap: () {
                                           Get.toNamed(AddPaymentsScreen.id,
-                                              arguments: item!.bookingModel);
+                                              arguments: item!.bookingModel,);
 
                                         },
                                       ).paddingOnly(right: 15),
@@ -348,7 +350,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                     )
                                   ],
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                                 Row(
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
@@ -358,7 +360,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                             alignment: Alignment.centerRight,
                                             child: RichText(
                                               text: TextSpan(
-                                                text: "Created By : ",
+                                                text: 'Created By : ',
                                                 style: TextStyle(
                                                   fontFamily: AppFonts.nunito,
                                                   color:
@@ -368,7 +370,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                                 children: <TextSpan>[
                                                   TextSpan(
                                                     text: item!.employeeName,
-                                                    style: TextStyle(
+                                                    style: const TextStyle(
                                                       color: Color(0xff484646),
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -379,17 +381,18 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                               ),
                                             ),
                                           )
-                                        : SizedBox(),
+                                        : const SizedBox(),
                                     // AppButton.miniFlat(
 
                                   ],
                                 ),
-                                SizedBox(height: 20),
+                                const SizedBox(height: 20),
                               ],
                             );
-                          return SizedBox();
-                        })
-                    : SizedBox(),
+                          }
+                          return const SizedBox();
+                        },)
+                    : const SizedBox(),
               ],
             ),
           ),
@@ -404,9 +407,9 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
   }) {
     double deposits = 0.0;
 
-    payments.forEach((payment) {
+    for (var payment in payments) {
       deposits += payment.amount!;
-    });
+    }
 
     int n = payments.length;
 
@@ -440,7 +443,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                   ),
                 ),
                 (totalAmount == deposits)
-                    ? SizedBox()
+                    ? const SizedBox()
                     : Expanded(
                         flex: 1,
                         child: Row(
@@ -462,7 +465,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                             height: 15,
                             decoration: BoxDecoration(
                                 color: AppColors.text.skyBlue,
-                                shape: BoxShape.circle),
+                                shape: BoxShape.circle,),
                             child: Icon(
                               Icons.circle,
                               size: 10,
@@ -471,7 +474,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                           ),
                         ),
                       ],
-                    )),
+                    ),),
               ],
             ),
             Row(
@@ -485,12 +488,12 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                       return buildNumber(
                           text: payments[i].amount!.round().toString(),
                           fontWeight: FontWeight.normal,
-                          color: Colors.black);
+                          color: Colors.black,);
                     }),
                   ),
                 ),
                 (totalAmount == deposits)
-                    ? SizedBox()
+                    ? const SizedBox()
                     : Expanded(
                         flex: 1,
                         child: Row(
@@ -501,9 +504,9 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                     (totalAmount - deposits).round().toString(),
                                 // text: "16000",
                                 color: Colors.red.shade300,
-                                fontWeight: FontWeight.normal),
+                                fontWeight: FontWeight.normal,),
                           ],
-                        )),
+                        ),),
                 Expanded(
                     flex: 1,
                     child: Row(
@@ -512,14 +515,14 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                         buildNumber(
                             fontWeight: FontWeight.bold,
                             color: Colors.black,
-                            text: totalAmount.round().toString()),
+                            text: totalAmount.round().toString(),),
                       ],
-                    )),
+                    ),),
               ],
             ).paddingOnly(top: 20),
           ],
         ).paddingOnly(right: 20),
-        SizedBox(height: 20),
+        const SizedBox(height: 20),
         ...List.generate(
           payments.length,
           (index) {
@@ -532,9 +535,9 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
 
   String getBalance(List<PaymentModel> payments, double deposit, double total) {
     double t = deposit;
-    payments.forEach((payment) {
+    for (var payment in payments) {
       t += payment.amount!;
-    });
+    }
     return (total - t).toInt().toString();
   }
 
@@ -548,19 +551,19 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
           height: 8,
           width: 8,
           decoration: BoxDecoration(
-              color: Colors.green, borderRadius: BorderRadius.circular(10)),
+              color: Colors.green, borderRadius: BorderRadius.circular(10),),
         ).paddingOnly(top: 2),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Paid ${payment.amount!.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
-              style: TextStyle(
-                  fontSize: 10, fontWeight: FontWeight.w600, wordSpacing: 2),
+              'Paid ${payment.amount!.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}',
+              style: const TextStyle(
+                  fontSize: 10, fontWeight: FontWeight.w600, wordSpacing: 2,),
             ),
-            SizedBox(height: 2),
+            const SizedBox(height: 2),
             if (payment.time != null &&
                 now.day == payment.time!.day &&
                 now.month == payment.time!.month &&
@@ -571,12 +574,12 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
               )
             else if (payment.time != null)
               Text(
-                DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time!),
+                DateFormat('EEE dd MMM yy - hh:mm a').format(payment.time!),
                 style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
               )
             else
               Text(
-                "Initial Deposit",
+                'Initial Deposit',
                 style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
               ),
           ],
@@ -606,11 +609,11 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                 fontSize: 13,
                 letterSpacing: 0.3,
                 fontWeight: FontWeight.w600,
-                height: 1.3),
+                height: 1.3,),
           ),
         ),
         Expanded(
-          child: Container(
+          child: SizedBox(
             height: 16,
             child: Text(
               value,
@@ -620,7 +623,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                   fontSize: 13,
                   fontWeight: FontWeight.w600,
                   letterSpacing: 0.3,
-                  height: 1.3),
+                  height: 1.3,),
             ),
           ),
         ),
@@ -640,7 +643,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
   }
 
   Widget buildNumber(
-      {FontWeight? fontWeight, Color? color, required String text}) {
+      {FontWeight? fontWeight, Color? color, required String text,}) {
     return SizedBox(
       width: 39,
       child: Center(

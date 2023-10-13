@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/utils.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/core/widgets/back_navigation_icon.dart';
-import 'package:temple_adventures/features/bookings/controller/new_booking_controller.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app_text_fields.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/util/utils.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/back_navigation_icon.dart';
+import '../../controller/new_booking_controller.dart';
+import '../widgets/app_text_fields.dart';
 
 class NewBookingScreen extends StatelessWidget {
-  static const String id = "BookingFormScreen";
+  static const String id = 'BookingFormScreen';
   final NewBookingLogic logic = NewBookingLogic();
+
+  NewBookingScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,13 +19,13 @@ class NewBookingScreen extends StatelessWidget {
       appBar: buildAppBar() as PreferredSizeWidget?,
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Column(
             children: [
               buildTextFields(),
               buildBreakdown(),
               buildButtons(),
-              SizedBox(height: 30)
+              const SizedBox(height: 30)
             ],
           ),
         ),
@@ -34,7 +36,7 @@ class NewBookingScreen extends StatelessWidget {
   ///======================UI====================///
 
   Widget buildDiveLocation() {
-    return Container(
+    return SizedBox(
       width: 320,
       child: Row(
         children: [
@@ -44,11 +46,11 @@ class NewBookingScreen extends StatelessWidget {
               child: Container(
                 width: Get.width,
                 alignment: Alignment.centerLeft,
-                child: buildSubTitle(text: "Dive Location"),
+                child: buildSubTitle(text: 'Dive Location'),
               ),
             ),
           ),
-          Container(
+          SizedBox(
             width: 180,
             child: buildLocation(),
           ),
@@ -58,14 +60,14 @@ class NewBookingScreen extends StatelessWidget {
   }
 
   Widget buildSwitch(
-      {required String text, Function? onChanged, required bool switchValue}) {
+      {required String text, Function? onChanged, required bool switchValue,}) {
     return Row(
       children: [
         Expanded(
           child: Text(
             text,
             style: TextStyle(
-                fontSize: FontSize.small, color: AppColors.text.darkgrey),
+                fontSize: FontSize.small, color: AppColors.text.darkgrey,),
           ),
         ),
         Switch(
@@ -87,7 +89,7 @@ class NewBookingScreen extends StatelessWidget {
           style: TextStyle(fontSize: 16, color: AppColors.text.black),
         ),
       );
-    });
+    },);
   }
 
   Widget buildAppBar() {
@@ -95,7 +97,7 @@ class NewBookingScreen extends StatelessWidget {
       toolbarHeight: 70,
       centerTitle: true,
       title: buildTitle(),
-      leading: BackNavigationIcon(),
+      leading: const BackNavigationIcon(),
       elevation: 0,
       backgroundColor: AppColors.background.white,
     );
@@ -108,15 +110,15 @@ class NewBookingScreen extends StatelessWidget {
         return Column(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
             buildDiveLocation(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             buildPriceField(),
             buildDiscount(),
             buildTax(),
             buildPayingNow(),
             AppTextField(
-              hintText: "Remarks",
+              hintText: 'Remarks',
               controller: logic.controller.remarksTED,
               focusNode: logic.controller.remarksNode,
               required: false,
@@ -133,7 +135,7 @@ class NewBookingScreen extends StatelessWidget {
             ),
           ],
         );
-      }),
+      },),
     );
   }
 
@@ -163,7 +165,7 @@ class NewBookingScreen extends StatelessWidget {
   Widget buildBreakdown() {
     return Padding(
       padding: const EdgeInsets.only(top: 100, left: 40, bottom: 100),
-      child: Container(
+      child: SizedBox(
         width: Get.width,
         height: 120,
         child: GetBuilder<NewBookingController>(builder: (controller) {
@@ -172,23 +174,23 @@ class NewBookingScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               buildAmountSummary(
-                  text: "Price",
+                  text: 'Price',
                   amount: getInt(controller.priceTED.text) *
                       controller.bookingModel.noOfPersons! *
-                      1.0),
+                      1.0,),
               buildAmountSummary(
-                text: "Discount",
+                text: 'Discount',
                 amount: getDiscount(controller),
               ),
               buildAmountSummary(
-                  text: "Total Amount",
-                  amount: controller.bookingModel.totalCost.ceilToDouble()),
+                  text: 'Total Amount',
+                  amount: controller.bookingModel.totalCost.ceilToDouble(),),
               buildAmountSummary(
-                  text: "Balance",
-                  amount: controller.bookingModel.balance.ceilToDouble()),
+                  text: 'Balance',
+                  amount: controller.bookingModel.balance.ceilToDouble(),),
             ],
           );
-        }),
+        },),
       ),
     );
   }
@@ -197,13 +199,14 @@ class NewBookingScreen extends StatelessWidget {
     double price = getInt(controller.priceTED.text) *
         controller.bookingModel.noOfPersons! *
         1.0;
-    if (controller.bookingModel.discountType == "%")
+    if (controller.bookingModel.discountType == '%') {
       return price * (controller.bookingModel.discount! / 100);
+    }
     return (controller.bookingModel.discount) ?? 0.0;
   }
 
   Widget buildAmountSummary({required String text, double? amount}) {
-    return Container(
+    return SizedBox(
       width: 320,
       child: Row(
         children: [
@@ -217,11 +220,11 @@ class NewBookingScreen extends StatelessWidget {
               ),
             ),
           ),
-          Container(
+          SizedBox(
             width: 215,
             child: Text(
-              ":      " + amount.toString(),
-              style: TextStyle(fontSize: FontSize.textSize),
+              ':      $amount',
+              style: const TextStyle(fontSize: FontSize.textSize),
             ),
           ),
         ],
@@ -241,162 +244,161 @@ class NewBookingScreen extends StatelessWidget {
 
   Widget buildShowLoading() {
     return GetBuilder<NewBookingController>(builder: (controller) {
-      if (controller.showLoading)
+      if (controller.showLoading) {
         return Container(
           color: Colors.black54,
           height: Get.height,
           width: Get.width,
-          child: Center(
+          child: const Center(
               child: CircularProgressIndicator(
             color: Colors.white,
-          )),
+          ),),
         );
-      else
+      } else {
         return Container();
-    });
+      }
+    },);
   }
 
   Widget buildDiscount() {
-    return Container(
+    return SizedBox(
       width: 320,
       child: GetBuilder<NewBookingController>(builder: (controller) {
         return Row(
           children: [
             Expanded(
-              child: Container(
-                child: AppTextField(
-                  hintText: "Discount",
-                  controller: logic.controller.discountTED,
-                  focusNode: logic.controller.discountNode,
-                  nextFocusNode: logic.controller.payingNowNode,
-                  keyboardType: TextInputType.number,
-                  required: false,
-                  errorValidator: () {
-                    return null;
-                  },
-                  onChangedCallBack: (discount) {
-                    try {
-                      controller.bookingModel.discount = double.parse(discount);
-                    } catch (e) {
-                      controller.bookingModel.discount = 0;
-                    }
-                    controller.update();
-                  },
-                  validator: (firstName) {
-                    return null;
-                    // return Validator.validateName(firstName);
-                  },
-                ),
+              child: AppTextField(
+                hintText: 'Discount',
+                controller: logic.controller.discountTED,
+                focusNode: logic.controller.discountNode,
+                nextFocusNode: logic.controller.payingNowNode,
+                keyboardType: TextInputType.number,
+                required: false,
+                errorValidator: () {
+                  return null;
+                },
+                onChangedCallBack: (discount) {
+                  try {
+                    controller.bookingModel.discount = double.parse(discount);
+                  } catch (e) {
+                    controller.bookingModel.discount = 0;
+                  }
+                  controller.update();
+                },
+                validator: (firstName) {
+                  return null;
+                  // return Validator.validateName(firstName);
+                },
               ),
             ),
-            SizedBox(
+            const SizedBox(
               width: 30,
             ),
             Row(
               children: [
                 Text(
-                  "₹",
+                  '₹',
                   style: TextStyle(
                       fontSize: 17,
                       color: !controller.discountSwitch
                           ? AppColors.text.skyBlue
-                          : AppColors.text.grey),
+                          : AppColors.text.grey,),
                 ),
-                Container(
+                SizedBox(
                   width: 70,
                   height: 75,
                   child: buildSwitch(
-                      text: "",
+                      text: '',
                       switchValue: controller.discountSwitch,
                       onChanged: (value) {
-                        if (value)
-                          controller.bookingModel.discountType = "%";
-                        else
-                          controller.bookingModel.discountType = "₹";
+                        if (value) {
+                          controller.bookingModel.discountType = '%';
+                        } else {
+                          controller.bookingModel.discountType = '₹';
+                        }
                         controller.discountSwitch = value;
-                      }),
+                      },),
                 ),
                 Text(
-                  "%",
+                  '%',
                   style: TextStyle(
                       fontSize: 15,
                       color: controller.discountSwitch
                           ? AppColors.text.skyBlue
-                          : AppColors.text.grey),
+                          : AppColors.text.grey,),
                 ),
               ],
             ),
           ],
         );
-      }),
+      },),
     );
   }
 
   Widget buildTax() {
-    return Container(
+    return SizedBox(
       width: 320,
       child: GetBuilder<NewBookingController>(builder: (controller) {
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              "Tax",
+              'Tax',
               style: TextStyle(fontSize: 12, color: AppColors.text.darkgrey),
             ),
-            Container(
+            SizedBox(
               width: 70,
               height: 75,
               child: buildSwitch(
-                  text: "",
+                  text: '',
                   switchValue: controller.taxable,
                   onChanged: (value) {
-                    if (value)
+                    if (value) {
                       controller.bookingModel.tax = 18;
-                    else
+                    } else {
                       controller.bookingModel.tax = 0;
+                    }
                     controller.taxable = value;
-                  }),
+                  },),
             ),
           ],
         );
-      }),
+      },),
     );
   }
 
   Widget buildPayingNow() {
-    return Container(
+    return SizedBox(
       width: 320,
       child: GetBuilder<NewBookingController>(builder: (controller) {
-        return Container(
-          child: AppTextField(
-            hintText: "Paying Now",
-            controller: logic.controller.payingNowTED,
-            focusNode: logic.controller.payingNowNode,
-            nextFocusNode: logic.controller.remarksNode,
-            isStrictNumber: true,
-            keyboardType: TextInputType.number,
-            required: false,
-            errorValidator: () {
-              if (controller.bookingModel.balance < 0) return "Invalid Amount";
-              return null;
-            },
-            onChangedCallBack: (payingNow) {
-              try {
-                controller.bookingModel.paid =
-                    double.parse(controller.payingNowTED.text);
-              } catch (e) {
-                controller.bookingModel.paid = 0;
-              }
-              controller.update();
-            },
-            validator: (firstName) {
-              //print(firstName);
-              return null;
-              // return Validator.validateName(firstName);
-            },
-          ),
+        return AppTextField(
+          hintText: 'Paying Now',
+          controller: logic.controller.payingNowTED,
+          focusNode: logic.controller.payingNowNode,
+          nextFocusNode: logic.controller.remarksNode,
+          isStrictNumber: true,
+          keyboardType: TextInputType.number,
+          required: false,
+          errorValidator: () {
+            if (controller.bookingModel.balance < 0) return 'Invalid Amount';
+            return null;
+          },
+          onChangedCallBack: (payingNow) {
+            try {
+              controller.bookingModel.paid =
+                  double.parse(controller.payingNowTED.text);
+            } catch (e) {
+              controller.bookingModel.paid = 0;
+            }
+            controller.update();
+          },
+          validator: (firstName) {
+            //print(firstName);
+            return null;
+            // return Validator.validateName(firstName);
+          },
         );
-      }),
+      },),
     );
   }
 
@@ -429,7 +431,7 @@ class NewBookingScreen extends StatelessWidget {
   Widget buildCancelButton() {
     return Center(
       child: AppButton.flat(
-        text: "Cancel",
+        text: 'Cancel',
         textColor: AppColors.text.black,
         color: AppColors.background.grey,
         onTap: () {
@@ -443,14 +445,14 @@ class NewBookingScreen extends StatelessWidget {
     return Center(
       child: GetBuilder<NewBookingController>(builder: (controller) {
         return AppButton.flat(
-          text: "Continue",
+          text: 'Continue',
           textColor: AppColors.text.white,
           color: AppColors.background.black,
           onTap: () {
             logic.onContinuePressedBookingForm();
           },
         );
-      }),
+      },),
     );
   }
 }

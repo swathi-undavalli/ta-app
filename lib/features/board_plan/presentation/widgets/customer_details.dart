@@ -3,29 +3,29 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/string_extensions.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/alignment_extensions.dart';
-import 'package:temple_adventures/core/util/spacing_widgets.dart';
-import 'package:temple_adventures/features/bookings/models/activity_model.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/util/alignment_extensions.dart';
+import '../../../../core/util/spacing_widgets.dart';
+import '../../../bookings/models/activity_model.dart';
 
 import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
 
 List<String> coursesStatus = [
-  "Booked In",
-  "Paperwork done",
-  "Dive center",
-  "Harbour",
+  'Booked In',
+  'Paperwork done',
+  'Dive center',
+  'Harbour',
 ];
 
 List<String> dsdStatus = [
-  "Booked In",
-  "Paperwork done",
-  "Pool ongoing",
-  "Pool completed",
-  "Dive center",
-  "Harbour",
+  'Booked In',
+  'Paperwork done',
+  'Pool ongoing',
+  'Pool completed',
+  'Dive center',
+  'Harbour',
 ];
 
 class CustomerList extends StatefulWidget {
@@ -113,23 +113,23 @@ class CustomerListState extends State<CustomerList> {
                 ).width(10),
                 Text(
                   e.name,
-                  style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.red),
+                  style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.red),
                 ).paddingOnly(top: 3, left: 3).width(73),
                 Row(
                   children: [
-                    Text(e.air?.toString() ?? "0",
-                        style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue)),
-                    Text(" - ",
+                    Text(e.air?.toString() ?? '0',
+                        style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue),),
+                    const Text(' - ',
                         style: TextStyle(
                           fontFamily: AppFonts.nunito,
                           fontSize: 7.0,
-                        )),
-                    Text(e.nitrox?.toString() ?? "0",
-                        style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green)),
+                        ),),
+                    Text(e.nitrox?.toString() ?? '0',
+                        style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),),
                   ],
                 ).width(20),
                 Spacing.w24,
-                Text("DSD Staff", style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue))
+                const Text('DSD Staff', style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue))
                     .paddingOnly(
                   top: 3,
                   left: 13,
@@ -141,29 +141,29 @@ class CustomerListState extends State<CustomerList> {
           ...widget.boat.photographer!.map(
             (e) => Row(
               children: [
-                Text('📷',
+                const Text('📷',
                     style: TextStyle(
                       fontFamily: AppFonts.nunito,
                       fontSize: 7.0,
-                    )).width(10),
+                    ),).width(10),
                 Text(
                   e.name,
-                  style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.red),
+                  style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.red),
                 ).paddingOnly(top: 3, left: 3).width(73),
                 SizedBox(
                   width: 22,
                   child: Row(
                     children: [
-                      Text(e.air?.toString() ?? "0",
-                          style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue)),
-                      Text(" - ", style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0)),
-                      Text(e.nitrox?.toString() ?? "0",
-                          style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green)),
+                      Text(e.air?.toString() ?? '0',
+                          style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue),),
+                      const Text(' - ', style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0)),
+                      Text(e.nitrox?.toString() ?? '0',
+                          style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),),
                     ],
                   ),
                 ),
                 Spacing.w24,
-                Text("Photo / Video", style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue))
+                const Text('Photo / Video', style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue))
                     .paddingOnly(
                   top: 3,
                   left: 13,
@@ -175,12 +175,12 @@ class CustomerListState extends State<CustomerList> {
           ...widget.boat.internPhotoVideo!.map(
             (e) => Row(
               children: [
-                Text('📷',
+                const Text('📷',
                     style: TextStyle(
                       fontFamily: AppFonts.nunito,
                       fontSize: 7.0,
-                    )).width(10),
-                Text(e.name, style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green))
+                    ),).width(10),
+                Text(e.name, style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green))
                     .paddingOnly(top: 3, left: 3)
                     .width(73),
                 SizedBox(
@@ -188,19 +188,19 @@ class CustomerListState extends State<CustomerList> {
                   child: Row(
                     children: [
                       Text((e.air ?? 0).toString(),
-                          style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue)),
-                      Text(" - ",
+                          style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue),),
+                      const Text(' - ',
                           style: TextStyle(
                             fontFamily: AppFonts.nunito,
                             fontSize: 7.0,
-                          )),
+                          ),),
                       Text((e.nitrox ?? 0).toString(),
-                          style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green)),
+                          style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),),
                     ],
                   ),
                 ),
                 Spacing.w24,
-                Text("Photo / Video", style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue))
+                const Text('Photo / Video', style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue))
                     .paddingOnly(
                   top: 3,
                   left: 13,
@@ -221,27 +221,27 @@ class CustomerListState extends State<CustomerList> {
               children: [
                 if ((widget.boat.air ?? 0) != 0)
                   buildHeadingItem(
-                    "Total Air (w Extra / Spare): ",
-                    "${getTotalAirCount(widget.bookings, widget.boat) + widget.boat.air!}",
+                    'Total Air (w Extra / Spare): ',
+                    '${getTotalAirCount(widget.bookings, widget.boat) + widget.boat.air!}',
                   )
                 else
                   buildHeadingItem(
-                    "Total Air : ",
-                    "${getTotalAirCount(widget.bookings, widget.boat)}",
+                    'Total Air : ',
+                    '${getTotalAirCount(widget.bookings, widget.boat)}',
                   ),
                 if ((widget.boat.nitrox ?? 0) != 0)
                   buildHeadingItem(
-                    "Total Nitrox (w Extra / Spare): ",
-                    "${getTotalAirCount(widget.bookings, widget.boat, true) + widget.boat.nitrox!}",
+                    'Total Nitrox (w Extra / Spare): ',
+                    '${getTotalAirCount(widget.bookings, widget.boat, true) + widget.boat.nitrox!}',
                   )
                 else
                   buildHeadingItem(
-                    "Total Nitrox : ",
-                    "${getTotalAirCount(widget.bookings, widget.boat, true)}",
+                    'Total Nitrox : ',
+                    '${getTotalAirCount(widget.bookings, widget.boat, true)}',
                   ),
                 buildHeadingItem(
-                  "Total Tanks: ",
-                  "${getTotalAirCount(widget.bookings, widget.boat, true) + getTotalAirCount(widget.bookings, widget.boat, false) + (widget.boat.nitrox ?? 0) + (widget.boat.air ?? 0)}",
+                  'Total Tanks: ',
+                  '${getTotalAirCount(widget.bookings, widget.boat, true) + getTotalAirCount(widget.bookings, widget.boat, false) + (widget.boat.nitrox ?? 0) + (widget.boat.air ?? 0)}',
                 ),
               ],
             ),
@@ -250,24 +250,24 @@ class CustomerListState extends State<CustomerList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildHeadingItem(
-                  "Pax total : ",
-                  "${getTotalPAXCount(widget.bookings, widget.boat)}",
+                  'Pax total : ',
+                  '${getTotalPAXCount(widget.bookings, widget.boat)}',
                 ),
                 buildHeadingItem(
-                  "DSD Instructors : ",
-                  "${widget.boat.dsdInstructors?.length}",
+                  'DSD Instructors : ',
+                  '${widget.boat.dsdInstructors?.length}',
                 ),
                 buildHeadingItem(
-                  "Total DSD PAX : ",
-                  "${getTotalDSDPAXCount(widget.bookings, widget.boat)}",
+                  'Total DSD PAX : ',
+                  '${getTotalDSDPAXCount(widget.bookings, widget.boat)}',
                 ),
                 buildHeadingItem(
-                  "Total Instructors : ",
-                  "${getTotalInstructorCount(widget.bookings, widget.boat)}",
+                  'Total Instructors : ',
+                  '${getTotalInstructorCount(widget.bookings, widget.boat)}',
                 ),
                 buildHeadingItem(
-                  "Total Courses : ",
-                  "${getTotalCourseCount(widget.bookings, widget.boat)}",
+                  'Total Courses : ',
+                  '${getTotalCourseCount(widget.bookings, widget.boat)}',
                 ),
               ],
             ),
@@ -300,7 +300,7 @@ class CustomerListState extends State<CustomerList> {
       List<Booking> otherBookings = [];
 
       for (var booking in bookings) {
-        if (booking.activity![0]!.id == "11") {
+        if (booking.activity![0]!.id == '11') {
           dsds.add(booking);
         } else {
           otherBookings.add(booking);
@@ -332,15 +332,15 @@ class CustomerListState extends State<CustomerList> {
               SizedBox(
                 width: 10,
                 child: Text(slNo.toString(),
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: AppFonts.nunito,
                       fontSize: 7.0,
-                    )),
+                    ),),
               ).paddingOnly(
                 top: 3,
               ),
               Text(bookings[0].instructor?.name ?? '-',
-                      style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.red))
+                      style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.red),)
                   .paddingOnly(
                     top: 3,
                   )
@@ -350,14 +350,14 @@ class CustomerListState extends State<CustomerList> {
                 width: 20,
                 child: Row(
                   children: [
-                    Text("$airTotal", style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue)),
-                    Text(" - ",
+                    Text('$airTotal', style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue)),
+                    const Text(' - ',
                         style: TextStyle(
                           fontFamily: AppFonts.nunito,
                           fontSize: 7.0,
-                        )),
-                    Text("$nitroxTotal",
-                        style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green)),
+                        ),),
+                    Text('$nitroxTotal',
+                        style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),),
                   ],
                 ),
               ).paddingOnly(top: 3),
@@ -365,7 +365,7 @@ class CustomerListState extends State<CustomerList> {
           ),
           ...List.generate(
             bookings.length,
-            (index) => buildCustomerListItem(index, bookings, " "),
+            (index) => buildCustomerListItem(index, bookings, ' '),
           ),
         ],
       ),
@@ -388,10 +388,10 @@ class CustomerListState extends State<CustomerList> {
               SizedBox(
                 width: 10,
                 child: Text(slNo,
-                    style: TextStyle(
+                    style: const TextStyle(
                       fontFamily: AppFonts.nunito,
                       fontSize: 7.0,
-                    )),
+                    ),),
               ),
               SizedBox(
                 width: 70,
@@ -401,16 +401,16 @@ class CustomerListState extends State<CustomerList> {
                   children: [
                     Text(
                       "${bookings[index].pax?[0]['first-name']} x ${bookings[index].noOfPersons}",
-                      style: TextStyle(
+                      style: const TextStyle(
                         fontFamily: AppFonts.nunito,
                         fontSize: 7.0,
                       ),
                     ),
                     if (bookings[index].boatDetails?.employeeNotes != null &&
-                        bookings[index].boatDetails?.employeeNotes != "")
+                        bookings[index].boatDetails?.employeeNotes != '')
                       Text(
-                        "Notes: ${bookings[index].boatDetails?.employeeNotes}",
-                        style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.grey),
+                        'Notes: ${bookings[index].boatDetails?.employeeNotes}',
+                        style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.grey),
                       ),
                   ],
                 ),
@@ -420,17 +420,17 @@ class CustomerListState extends State<CustomerList> {
                 child: Row(
                   children: [
                     Text(
-                        (bookings[index].activity![0]!.id == "11")
-                            ? "${bookings[index].noOfPersons}"
-                            : "${bookings[index].getBoatInfo(selectedDate)?.air ?? 0}",
-                        style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue)),
-                    Text(" - ",
+                        (bookings[index].activity![0]!.id == '11')
+                            ? '${bookings[index].noOfPersons}'
+                            : '${bookings[index].getBoatInfo(selectedDate)?.air ?? 0}',
+                        style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue),),
+                    const Text(' - ',
                         style: TextStyle(
                           fontFamily: AppFonts.nunito,
                           fontSize: 7.0,
-                        )),
-                    Text("${bookings[index].getBoatInfo(selectedDate)?.nitrox ?? 0}",
-                        style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green)),
+                        ),),
+                    Text('${bookings[index].getBoatInfo(selectedDate)?.nitrox ?? 0}',
+                        style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),),
                   ],
                 ),
               ),
@@ -444,11 +444,11 @@ class CustomerListState extends State<CustomerList> {
                         child: CircularProgressIndicator(
                           strokeWidth: 0.5,
                           color: Colors.black,
-                        )); // Show a loading indicator
+                        ),); // Show a loading indicator
                   } else if (snapshot.hasError) {
                     return Text('Error: ${snapshot.error}');
                   } else {
-                    return buildText(" ${snapshot.data}", 30);
+                    return buildText(' ${snapshot.data}', 30);
                   }
                 },
               ),
@@ -457,7 +457,7 @@ class CustomerListState extends State<CustomerList> {
                 decoration: BoxDecoration(
                   color: getBookingStatusColor(bookings[index].isDSD
                       ? bookings[index].boatDetails?.bookingStatus ?? 0
-                      : bookings[index].getStatus(selectedDate) ?? 0),
+                      : bookings[index].getStatus(selectedDate) ?? 0,),
                   borderRadius: BorderRadius.circular(2),
                 ),
                 child: buildText(
@@ -466,7 +466,7 @@ class CustomerListState extends State<CustomerList> {
                             : coursesStatus[bookings[index].getStatus(selectedDate) ?? 0],
                         40,
                         Colors.white,
-                        true)
+                        true,)
                     .paddingOnly(top: 2, left: 1, right: 1),
               )
             ],
@@ -494,8 +494,8 @@ class CustomerListState extends State<CustomerList> {
                 ...(bookings[index].boatDetails?.diveBuddies ?? [])
                     .map(
                       (diveBuddy) => Text(
-                        diveBuddy.name.capitalizeFirst ?? "-",
-                        style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),
+                        diveBuddy.name.capitalizeFirst ?? '-',
+                        style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),
                       ),
                     )
                     .toList(),
@@ -512,15 +512,15 @@ class CustomerListState extends State<CustomerList> {
                       (diveBuddy) => Row(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text("${diveBuddy.air ?? 0}",
-                              style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue)),
-                          Text(" - ",
+                          Text('${diveBuddy.air ?? 0}',
+                              style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue),),
+                          const Text(' - ',
                               style: TextStyle(
                                 fontFamily: AppFonts.nunito,
                                 fontSize: 7.0,
-                              )),
-                          Text("${diveBuddy.nitrox ?? 0}",
-                              style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green)),
+                              ),),
+                          Text('${diveBuddy.nitrox ?? 0}',
+                              style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),),
                         ],
                       ),
                     )
@@ -536,23 +536,23 @@ class CustomerListState extends State<CustomerList> {
     return Row(
       children: [
         Spacing.w3,
-        buildText("#   Name", 80),
-        buildText("A - N", 20),
-        buildText("Course", 30, null, true),
+        buildText('#   Name', 80),
+        buildText('A - N', 20),
+        buildText('Course', 30, null, true),
         Spacing.w5,
-        buildText("Status", 35, null, true),
+        buildText('Status', 35, null, true),
       ],
     ).paddingOnly(top: 2);
   }
 
   List<String> boatStatus = [
-    "Boat Ready",
-    "Waiting for Captains",
-    "Left Harbour",
-    "Reached Dive site",
-    "Diving",
-    "Dives done",
-    "Docked at Harbour",
+    'Boat Ready',
+    'Waiting for Captains',
+    'Left Harbour',
+    'Reached Dive site',
+    'Diving',
+    'Dives done',
+    'Docked at Harbour',
   ];
 
   Widget buildBoatDetails() {
@@ -570,14 +570,14 @@ class CustomerListState extends State<CustomerList> {
                   SizedBox(
                       width: 90,
                       child: Text(widget.boat.name,
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontFamily: AppFonts.nunito,
                             fontSize: 14.0,
-                          ))),
-                  buildHeadingItem("Time: ", widget.boat.time),
-                  buildHeadingItem("Date: ", "${DateFormat("dd-MM-yyyy").format(selectedDate)}"),
+                          ),),),
+                  buildHeadingItem('Time: ', widget.boat.time),
+                  buildHeadingItem('Date: ', DateFormat('dd-MM-yyyy').format(selectedDate)),
                   buildHeadingItem(
-                    "Status: ",
+                    'Status: ',
                     boatStatus[widget.boat.boatStatus ?? 0],
                   ),
                 ],
@@ -593,28 +593,28 @@ class CustomerListState extends State<CustomerList> {
                 children: [
                   Spacing.h2,
                   if (widget.boat.captains?.isNotEmpty ?? false)
-                    buildHeadingItem("Captain 1:", " ${widget.boat.captains?[0].name ?? '-'}"),
+                    buildHeadingItem('Captain 1:', " ${widget.boat.captains?[0].name ?? '-'}"),
                   if ((widget.boat.captains?.length ?? 0) == 2)
-                    buildHeadingItem("Captain 2:", " ${widget.boat.captains?[1].name ?? '-'}"),
-                  buildHeadingItem("Dive Site:", " ${widget.boat.diveSite ?? '-'}"),
+                    buildHeadingItem('Captain 2:', " ${widget.boat.captains?[1].name ?? '-'}"),
+                  buildHeadingItem('Dive Site:', " ${widget.boat.diveSite ?? '-'}"),
                   Wrap(
                     children: [
-                      Text("Surface Support:",
+                      const Text('Surface Support:',
                           style: TextStyle(
                             fontFamily: AppFonts.nunito,
                             fontSize: 7.0,
-                          )).paddingSymmetric(vertical: 1),
+                          ),).paddingSymmetric(vertical: 1),
                       ...(widget.boat.surfaceSupport ?? []).map((e) => Text(
-                            "${e.name} ,",
+                            '${e.name} ,',
                             style: TextStyle(
                                 fontFamily: AppFonts.nunito,
                                 fontSize: 7.0,
                                 fontWeight: FontWeight.normal,
-                                color: Colors.grey.shade700),
-                          )),
+                                color: Colors.grey.shade700,),
+                          ),),
                     ],
                   ).width(64),
-                  buildHeadingItem("Boat Notes: ", widget.boat.notes ?? '-'),
+                  buildHeadingItem('Boat Notes: ', widget.boat.notes ?? '-'),
                   Spacing.h2,
                 ],
               ),
@@ -629,7 +629,7 @@ class CustomerListState extends State<CustomerList> {
     return RichText(
       text: TextSpan(
         text: '$title ',
-        style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.black),
+        style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.black),
         children: <TextSpan>[
           TextSpan(
             text: val,
@@ -637,7 +637,7 @@ class CustomerListState extends State<CustomerList> {
                 fontFamily: AppFonts.nunito,
                 fontSize: 7.0,
                 fontWeight: FontWeight.normal,
-                color: valueColor ?? Colors.grey.shade700),
+                color: valueColor ?? Colors.grey.shade700,),
           ),
         ],
       ),
@@ -665,12 +665,12 @@ class CustomerListState extends State<CustomerList> {
     if (activity?.shortName != null) {
       return activity!.shortName!;
     } else {
-      var data = await FirebaseFirestore.instance.collection("catalogue").doc(activity?.id).get();
+      var data = await FirebaseFirestore.instance.collection('catalogue').doc(activity?.id).get();
       Map<String, dynamic>? doc = data.data();
 
       if (doc != null) {
         Activity newActivity = Activity.fromMap(doc);
-        return newActivity.shortName ?? newActivity.name ?? "-";
+        return newActivity.shortName ?? newActivity.name ?? '-';
       }
     }
     return activity?.name ?? '-';
@@ -732,9 +732,9 @@ String getNames(List<Instructor>? surfaceSupport, [bool useNextLine = false]) {
   String names = '';
   for (var ins in surfaceSupport) {
     if (useNextLine) {
-      names += "${ins.name.capitalize}, \n";
+      names += '${ins.name.capitalize}, \n';
     } else {
-      names += "${ins.name.capitalize}, ";
+      names += '${ins.name.capitalize}, ';
     }
   }
   if (useNextLine) {

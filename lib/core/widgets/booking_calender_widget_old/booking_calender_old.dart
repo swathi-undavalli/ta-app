@@ -1,15 +1,14 @@
 import 'dart:developer';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/constants/enums.dart';
-import 'package:temple_adventures/core/util/alignment_extensions.dart';
-import 'package:temple_adventures/core/util/utils.dart';
-import 'package:temple_adventures/core/widgets/access_levels.dart';
-import 'package:temple_adventures/core/widgets/booking_calender_widget_old/bookings_calender_widget_controller_old.dart';
+import '../../constants/constants.dart';
+import '../../constants/enums.dart';
+import '../../util/alignment_extensions.dart';
+import '../../util/utils.dart';
+import '../access_levels.dart';
+import 'bookings_calender_widget_controller_old.dart';
 
 // ignore: must_be_immutable
 class BookingsCalenderWidgetOld extends StatelessWidget {
@@ -22,7 +21,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   final FilterType? calenderType;
   final AutoScrollController? autoScrollController;
 
-  BookingsCalenderWidgetOld({
+  BookingsCalenderWidgetOld({Key? key, 
     required this.onDateTimeSelected,
     this.onSearchTap,
     this.isDiveSession = false,
@@ -31,8 +30,8 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
     this.highlightInvalidTime = false,
     this.calenderType,
     required this.autoScrollController,
-  }) {
-    startDate = startDate.subtract(Duration(days: 1));
+  }) : super(key: key) {
+    startDate = startDate.subtract(const Duration(days: 1));
     logic.controller.startDate = startDate;
     logic.controller.showDetails = showDetails;
     logic.controller.isDiveSession = isDiveSession;
@@ -41,11 +40,11 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
     if (showDetails) {
       //print("1");
       EmployeeAccess.run(
-          function: autoCenterDaySelector, access: AccessRights.viewBookings);
+          function: autoCenterDaySelector, access: AccessRights.viewBookings,);
     } else {
       //print("2");
       EmployeeAccess.run(
-          function: scrollToSelectedDate, access: AccessRights.viewBookings);
+          function: scrollToSelectedDate, access: AccessRights.viewBookings,);
     }
   }
 
@@ -57,13 +56,13 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   final BookingsCalenderWidgetLogic logic = BookingsCalenderWidgetLogic();
 
   Future<void> autoCenterDaySelector() async {
-    await Future.delayed(Duration(microseconds: 500));
+    await Future.delayed(const Duration(microseconds: 500));
     scrollToIndex(50);
     logic.onDateSelected(50);
   }
 
   Future<void> scrollToSelectedDate() async {
-    await Future.delayed(Duration(microseconds: 500));
+    await Future.delayed(const Duration(microseconds: 500));
     int index = startDate.difference(logic.controller.selectedDate).inDays;
     // int index = startDate;
     //log("index === ${index.abs()}");
@@ -80,12 +79,12 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
         return Column(
           children: [
             _buildDaySelector(),
-            if (showDetails) SizedBox(height: 20),
+            if (showDetails) const SizedBox(height: 20),
             _buildTimeTable(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
           ],
         );
-      }),
+      },),
     );
   }
 
@@ -103,8 +102,8 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
           children: [
             Row(
               children: [
-                _buildTitle("Bookings"),
-                SizedBox(width: 3),
+                _buildTitle('Bookings'),
+                const SizedBox(width: 3),
                 controller.showLoading
                     ? SizedBox(
                         width: 10,
@@ -114,17 +113,17 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
                           strokeWidth: 1,
                         ),
                       )
-                    : SizedBox(),
+                    : const SizedBox(),
               ],
             ).paddingOnly(top: 15, left: 20, right: 20),
-            Container(
+            SizedBox(
               height: 210,
               child: Wrap(
                       spacing: 0,
                       runSpacing: 5,
                       children: controller.timeTable
                           .map((date) => _buildTimings(date))
-                          .toList())
+                          .toList(),)
                   .paddingSymmetric(horizontal: 20, vertical: 7)
                   .scrollable,
             ),
@@ -137,11 +136,11 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
                               controller.theoryCount == 0 &&
                               controller.diveCount == 0 &&
                               showDetails)
-                          ? Text(
-                              "No Bookings Found",
+                          ? const Text(
+                              'No Bookings Found',
                               style: TextStyle(fontSize: 15),
                             )
-                          : SizedBox(),
+                          : const SizedBox(),
                     ),
                   ),
                 ],
@@ -149,7 +148,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
           ],
         ),
       );
-    });
+    },);
   }
 
   Widget _buildTitle(String text) {
@@ -162,7 +161,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
             fontSize: 16,
             color: AppColors.text.black,
             fontWeight: FontWeight.bold,
-            fontFamily: AppFonts.nunito),
+            fontFamily: AppFonts.nunito,),
       ),
     );
   }
@@ -170,27 +169,29 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   Widget _buildTimings(DateTime date) {
     return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
       getCircleColor(BookingsCalenderWidgetController controller) {
-        if (controller.selectedDate == date)
+        if (controller.selectedDate == date) {
           return AppColors.background.skyBlue;
+        }
         if (highlightInvalidTime &&
-            DateTime.now().difference(date).inSeconds > 0)
+            DateTime.now().difference(date).inSeconds > 0) {
           return AppColors.background.grey;
+        }
       }
 
       Widget? num = _getEventsCount(controller, date);
-      if (num == null && showDetails) return SizedBox();
+      if (num == null && showDetails) return const SizedBox();
       return GestureDetector(
         onTap: () {
-          log("1");
+          log('1');
           if (highlightInvalidTime &&
               DateTime.now().difference(date).inSeconds > 0) {
-            showToast("Invalid Date");
+            showToast('Invalid Date');
           } else {
-            log("2");
+            log('2');
             controller.selectedDate = date;
-            log("3");
+            log('3');
             // logic.filterBookingsList();
-            log("4");
+            log('4');
             onDateTimeSelected(controller.selectedDate);
           }
         },
@@ -206,24 +207,24 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
                   height: 35,
                   decoration: BoxDecoration(
                       color: getCircleColor(controller),
-                      borderRadius: BorderRadius.circular(25)),
+                      borderRadius: BorderRadius.circular(25),),
                   child: Center(
                     child: RichText(
                       textAlign: TextAlign.center,
                       text: TextSpan(
                         text: (date.minute == 0)
-                            ? DateFormat("hh").format(date)
-                            : DateFormat("hh:mm").format(date),
+                            ? DateFormat('hh').format(date)
+                            : DateFormat('hh:mm').format(date),
                         style: TextStyle(
                             color: AppColors.text.black,
                             fontFamily: AppFonts.nunito,
-                            fontSize: 10),
+                            fontSize: 10,),
                         children: <TextSpan>[
                           TextSpan(
                             text: (date.minute == 0)
-                                ? DateFormat(" a").format(date)
-                                : DateFormat("\na").format(date),
-                            style: TextStyle(fontSize: 6),
+                                ? DateFormat(' a').format(date)
+                                : DateFormat('\na').format(date),
+                            style: const TextStyle(fontSize: 6),
                           ),
                         ],
                       ),
@@ -233,12 +234,12 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
               ),
             ),
             Positioned(
-              child: num ?? SizedBox(),
+              child: num ?? const SizedBox(),
             ),
           ],
         ),
       );
-    });
+    },);
   }
 
   bool _isSameDates(DateTime a, DateTime b) {
@@ -248,8 +249,9 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   Widget _buildDaySelector() {
     getDotColor(int index, BookingsCalenderWidgetController controller) {
       if (_isSameDates(
-          controller.selectedDate, controller.calenderDates[index]))
+          controller.selectedDate, controller.calenderDates[index],)) {
         return Colors.green;
+      }
       return _isSameDates(controller.calenderDates[index], DateTime.now())
           ? AppColors.background.skyBlue
           : AppColors.background.grey;
@@ -257,36 +259,39 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
 
     getDateColor(int index, BookingsCalenderWidgetController controller) {
       if (_isSameDates(
-          controller.selectedDate, controller.calenderDates[index]))
+          controller.selectedDate, controller.calenderDates[index],)) {
         return Colors.white;
+      }
       return AppColors.background.black;
     }
 
     getDayColor(int index, BookingsCalenderWidgetController controller) {
       if (_isSameDates(
-          controller.selectedDate, controller.calenderDates[index]))
+          controller.selectedDate, controller.calenderDates[index],)) {
         return Colors.white;
+      }
       return AppColors.background.black;
     }
 
     getBoxColor(int index, BookingsCalenderWidgetController controller) {
       if (_isSameDates(
-          controller.selectedDate, controller.calenderDates[index]))
+          controller.selectedDate, controller.calenderDates[index],)) {
         return Colors.black;
+      }
       return _isSameDates(controller.calenderDates[index], DateTime.now())
           ? AppColors.background.datesBlue
           : AppColors.background.white;
     }
 
     return GetBuilder<BookingsCalenderWidgetController>(builder: (controller) {
-      return Container(
+      return SizedBox(
         height: 100,
         width: Get.width,
         child: ListView.builder(
             itemCount: 400,
             controller: autoScrollController,
             scrollDirection: Axis.horizontal,
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
               return AutoScrollTag(
                 controller: autoScrollController!,
@@ -318,14 +323,14 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
                               style: TextStyle(
                                   color: getDotColor(index, controller),
                                   fontSize: FontSize.small,
-                                  fontWeight: FontWeight.normal),
+                                  fontWeight: FontWeight.normal,),
                             ),
                             Text(
                               controller.calenderDates[index].day.toString(),
                               style: TextStyle(
                                   color: getDateColor(index, controller),
                                   fontSize: FontSize.textSize,
-                                  fontWeight: FontWeight.bold),
+                                  fontWeight: FontWeight.bold,),
                             ),
                             Text(
                               DateFormat('EE')
@@ -333,7 +338,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
                               style: TextStyle(
                                   color: getDayColor(index, controller),
                                   fontSize: FontSize.small,
-                                  fontWeight: FontWeight.normal),
+                                  fontWeight: FontWeight.normal,),
                             ),
                           ],
                         ),
@@ -342,44 +347,45 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
                   ),
                 ),
               );
-            }),
+            },),
       );
-    });
+    },);
   }
 
   Widget? _getEventsCount(
-      BookingsCalenderWidgetController controller, DateTime date) {
+      BookingsCalenderWidgetController controller, DateTime date,) {
     var show = false;
     int totalBookings = 0;
 
-    controller.bookings.forEach((booking) {
+    for (var booking in controller.bookings) {
       var allBookingsList = [];
       allBookingsList.addAll(booking.diveDate!);
       allBookingsList.addAll(booking.poolDate!);
       allBookingsList.addAll(booking.theoryDate!);
-      allBookingsList.forEach((bookingDate) {
+      for (var bookingDate in allBookingsList) {
         if (isSameMinute(date, bookingDate)) {
           totalBookings += booking.noOfPersons!;
           show = true;
         }
-      });
-    });
+      }
+    }
 
-    if (show)
+    if (show) {
       return Container(
         height: 12,
         width: 12,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
-            border: Border.all(color: AppColors.background.skyBlue)),
+            border: Border.all(color: AppColors.background.skyBlue),),
         child: Center(
           child: Text(
             totalBookings.toString(),
-            style: TextStyle(fontSize: 8),
+            style: const TextStyle(fontSize: 8),
           ),
         ),
       );
-    else
+    } else {
       return null;
+    }
   }
 }

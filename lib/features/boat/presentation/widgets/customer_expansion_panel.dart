@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/customer_expandable_list_tile.dart';
+import 'customer_expandable_list_tile.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
@@ -14,7 +14,7 @@ class CustomersExpansionPanel extends StatefulWidget {
   final Function? onSearchTap;
   final DateTime selectedDate;
 
-  CustomersExpansionPanel({this.items, this.onSearchTap, this.showSearchBar = true, required this.selectedDate});
+  const CustomersExpansionPanel({Key? key, this.items, this.onSearchTap, this.showSearchBar = true, required this.selectedDate}) : super(key: key);
 
   @override
   State<CustomersExpansionPanel> createState() =>
@@ -43,39 +43,41 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
           if (controller.showSearchField)
             ...generateList(
                 widget.items!.where((ItemModel item) {
-                  if (item.bookingID!.contains(searchTED.text.trim()))
+                  if (item.bookingID!.contains(searchTED.text.trim())) {
                     return true;
+                  }
                   if (item.name!
                       .toLowerCase()
-                      .contains(searchTED.text.trim().toLowerCase()))
+                      .contains(searchTED.text.trim().toLowerCase())) {
                     return true;
+                  }
                   return false;
                 }).toList(),
-                context)
+                context,)
           else
             ...generateList(widget.items!, context)
         ],
       );
-    });
+    },);
   }
 
   List<Widget> generateList(List<ItemModel> itemsList, BuildContext context) {
-    if (itemsList.isEmpty) return [Text("No Results Found")];
+    if (itemsList.isEmpty) return [const Text('No Results Found')];
     logic.controller.isExpanded = [];
     expansions = [];
     for (int i = 0; i < itemsList.length; i++) {
       logic.controller.isExpanded.add(false);
       expansions.add(_buildCustomerDetails(
-          itemModel: itemsList[i], i: i, context: context));
+          itemModel: itemsList[i], i: i, context: context,),);
     }
     return expansions;
   }
 
   Widget _buildCustomerDetails(
-      {required ItemModel itemModel, int? i, required BuildContext context}) {
+      {required ItemModel itemModel, int? i, required BuildContext context,}) {
     return CustomerExpandableListTile(
       title:
-          "${itemModel.name!.toLowerCase().capitalizeFirst!}  x  ${(itemModel.bookingModel!.noOfPersons.toString())}",
+          '${itemModel.name!.toLowerCase().capitalizeFirst!}  x  ${(itemModel.bookingModel!.noOfPersons.toString())}',
       color: getBookingColor(itemModel),
       itemModel: itemModel,
       selectedDate: widget.selectedDate,
@@ -94,20 +96,20 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                 decoration: BoxDecoration(
                     color: AppColors.background.white,
                     // border: Border.all(color: Colors.black, width: 0.50),
-                    borderRadius: BorderRadius.circular(10)),
+                    borderRadius: BorderRadius.circular(10),),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(Icons.search,
-                        size: 20, color: AppColors.text.darkgrey),
-                    SizedBox(width: 15),
-                    Container(
+                        size: 20, color: AppColors.text.darkgrey,),
+                    const SizedBox(width: 15),
+                    SizedBox(
                       width: controller.showSearchField ? 240 : 0,
                       child: TextField(
                         onTap: () {
                           widget.onSearchTap!();
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                             enabledBorder:
                                 OutlineInputBorder(borderSide: BorderSide.none),
                             focusedBorder:
@@ -115,29 +117,29 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                             disabledBorder:
                                 OutlineInputBorder(borderSide: BorderSide.none),
                             hintText: 'Search...',
-                            hintStyle: TextStyle(fontSize: 14, height: 1)),
+                            hintStyle: TextStyle(fontSize: 14, height: 1),),
                         controller: searchTED,
                         onChanged: (text) {
                           searchController.update();
                         },
                       ),
                     ),
-                    (searchTED.text != "")
+                    (searchTED.text != '')
                         ? GestureDetector(
                             onTap: () {
-                              searchTED.text = "";
+                              searchTED.text = '';
                               searchController.update();
                             },
                             child: Icon(Icons.close_outlined,
-                                size: 20, color: AppColors.text.darkgrey),
+                                size: 20, color: AppColors.text.darkgrey,),
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                   ],
                 ),
               ),
             )
-          : SizedBox();
-    });
+          : const SizedBox();
+    },);
   }
 }
 

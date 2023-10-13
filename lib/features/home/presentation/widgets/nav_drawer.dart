@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/services/auto_update.dart';
-import 'package:temple_adventures/core/widgets/access_levels.dart';
-import 'package:temple_adventures/features/Marketing/views/marketing_view.dart';
-import 'package:temple_adventures/features/all_bookings/presentation/screens/all_bookings_screen.dart';
-import 'package:temple_adventures/features/board_plan/presentation/views/board_plan_view.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/manage_general_info.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
-import 'package:temple_adventures/features/employees/presentation/screens/employee-profile-screen.dart';
-import 'package:temple_adventures/features/logs/presentation/screens/log_screen.dart';
-
+import '../../../../core/constants/constants.dart';
+import '../../../../core/services/auto_update.dart';
+import '../../../../core/widgets/access_levels.dart';
+import '../../../Marketing/views/marketing_view.dart';
+import '../../../all_bookings/presentation/screens/all_bookings_screen.dart';
+import '../../../board_plan/presentation/views/board_plan_view.dart';
+import '../../../boat/presentation/screens/manage_general_info.dart';
+import '../../../employees/model/employee.dart';
+import '../../../employees/presentation/screens/employee_profile_screen.dart';
+import '../../../logs/presentation/screens/log_screen.dart';
 import '../../../activities/presentation/screens/all_activities_screen.dart';
 
 class NavDrawer extends StatelessWidget {
-  static const String id = "sideMenuWidget";
+  static const String id = 'sideMenuWidget';
   final AutoUpdateLogic logic = AutoUpdateLogic();
+
+  NavDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,11 +24,11 @@ class NavDrawer extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            SizedBox(height: 100),
+            const SizedBox(height: 100),
             buildUserProfile(),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             buildName(),
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             buildLine(),
             buildMenuItem(
               icon: Icons.account_circle,
@@ -87,10 +88,10 @@ class NavDrawer extends StatelessWidget {
             buildLine(),
             (logic.controller.version != null && logic.controller.buildNumber != null)
                 ? buildMiniMenuItem(
-                    text: "Version : ${logic.controller.version! + "+" + logic.controller.buildNumber!}")
-                : buildMiniMenuItem(text: "Loading version number..."),
+                    text: "Version : ${"${logic.controller.version!}+${logic.controller.buildNumber!}"}",)
+                : buildMiniMenuItem(text: 'Loading version number...'),
             buildMiniMenuItem(text: 'templeadventures.com'),
-            SizedBox(height: 20)
+            const SizedBox(height: 20)
           ],
         ),
       ),
@@ -100,7 +101,7 @@ class NavDrawer extends StatelessWidget {
   ///================Business logic==================///
 
   Widget buildUserProfile() {
-    return SizedBox(
+    return const SizedBox(
       height: 80,
       width: 80,
       child: CircleAvatar(
@@ -116,22 +117,22 @@ class NavDrawer extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(
           text,
-          style: TextStyle(color: Colors.black45, fontSize: FontSize.small),
+          style: const TextStyle(color: Colors.black45, fontSize: FontSize.small),
         ),
       ),
     );
   }
 
   Widget buildMenuItem(
-      {required IconData icon, required String text, Color color = Colors.black87, required Function onTap}) {
+      {required IconData icon, required String text, Color color = Colors.black87, required Function onTap,}) {
     return Container(
       width: Get.width,
       alignment: Alignment.centerLeft,
       child: ListTile(
-        contentPadding: EdgeInsets.only(left: 30),
+        contentPadding: const EdgeInsets.only(left: 30),
         title: Text(
           text,
-          style: TextStyle(fontSize: 16, color: Color(0xff605B5B), fontWeight: FontWeight.w500),
+          style: const TextStyle(fontSize: 16, color: Color(0xff605B5B), fontWeight: FontWeight.w500),
         ),
         leading: Icon(
           icon,
@@ -146,7 +147,7 @@ class NavDrawer extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        Text(
+        const Text(
           'hello,',
           style: TextStyle(
             color: Colors.black45,
@@ -156,8 +157,8 @@ class NavDrawer extends StatelessWidget {
           ),
         ),
         Text(
-          currentEmployee?.firstName ?? "" + " !",
-          style: TextStyle(
+          currentEmployee?.firstName ?? '' ' !',
+          style: const TextStyle(
             color: Colors.black54,
             fontSize: 25,
             fontWeight: FontWeight.w600,

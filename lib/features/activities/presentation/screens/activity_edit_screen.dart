@@ -1,14 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/utils.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/core/widgets/back_navigation_icon.dart';
-import 'package:temple_adventures/features/bookings/models/activity_model.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app_text_fields.dart';
-import 'package:temple_adventures/features/logs/models/log_model.dart';
-import 'package:temple_adventures/features/logs/presentation/screens/log_screen.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/util/utils.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/back_navigation_icon.dart';
+import '../../../bookings/models/activity_model.dart';
+import '../../../bookings/presentation/widgets/app_text_fields.dart';
+import '../../../logs/models/log_model.dart';
+import '../../../logs/presentation/screens/log_screen.dart';
 
 import '../../controller/activity_edit_controller.dart';
 import '../../controller/all_activities_controller.dart';
@@ -16,15 +16,15 @@ import '../../model/colors_data.dart';
 
 // ignore: must_be_immutable
 class ActivityEditScreen extends StatelessWidget {
-  static const String id = "PriceEditScreen";
+  static const String id = 'PriceEditScreen';
   final Activity? activityArg = Get.arguments;
   final ActivityEditLogic logic = ActivityEditLogic();
   final AllActivitiesLogic allActivitiesLogic = AllActivitiesLogic();
 
-  ActivityEditScreen() {
+  ActivityEditScreen({Key? key}) : super(key: key) {
     logic.controller.priceTED.text = activityArg!.price.toString();
     logic.controller.nameTED.text = activityArg!.name!;
-    logic.controller.shortNameTED.text = activityArg?.shortName ?? "";
+    logic.controller.shortNameTED.text = activityArg?.shortName ?? '';
     logic.controller.colorTED.text = activityArg!.color!;
   }
 
@@ -35,7 +35,7 @@ class ActivityEditScreen extends StatelessWidget {
       body: SafeArea(
         child: GetBuilder<ActivityEditController>(builder: (controller) {
           return SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
+            physics: const BouncingScrollPhysics(),
             child: Padding(
               padding: const EdgeInsets.all(20.0),
               child: GetBuilder<ActivityEditController>(builder: (controller) {
@@ -44,40 +44,40 @@ class ActivityEditScreen extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     // Text(activityArg.id),
-                    SizedBox(height: 50),
+                    const SizedBox(height: 50),
                     buildTextFields(
-                        name: "Activity Name",
+                        name: 'Activity Name',
                         textEditingController: controller.nameTED,
-                        keyBoardType: TextInputType.name),
+                        keyBoardType: TextInputType.name,),
                     buildTextFields(
-                        name: "Short Name",
+                        name: 'Short Name',
                         textEditingController: controller.shortNameTED,
-                        keyBoardType: TextInputType.text),
+                        keyBoardType: TextInputType.text,),
                     buildTextFields(
-                        name: "Price",
+                        name: 'Price',
                         textEditingController: controller.priceTED,
-                        keyBoardType: TextInputType.number),
-                    SizedBox(height: 20),
-                    buildSubtitle("Color"),
+                        keyBoardType: TextInputType.number,),
+                    const SizedBox(height: 20),
+                    buildSubtitle('Color'),
                     buildColorCode(),
-                    SizedBox(height: 100),
+                    const SizedBox(height: 100),
                     buildButtons()
                   ],
                 );
-              }),
+              },),
             ),
           );
-        }),
+        },),
       ),
     );
   }
 
   Widget buildSubtitle(String name) {
-    return Container(
+    return SizedBox(
       width: Get.size.width,
       child: Text(
         name,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.black54,
           fontFamily: AppFonts.nunito,
           fontSize: 10,
@@ -101,12 +101,12 @@ class ActivityEditScreen extends StatelessWidget {
         },
         items: controller.colorCode.map((color) {
           return DropdownMenuItem(
-            child: new Text(color),
             value: color,
+            child: Text(color),
           );
         }).toList(),
       );
-    });
+    },);
   }
 
   Widget buildButtons() {
@@ -118,7 +118,7 @@ class ActivityEditScreen extends StatelessWidget {
             height: 45,
             width: 140,
             color: AppColors.background.grey,
-            text: "Cancel",
+            text: 'Cancel',
             textColor: AppColors.text.black,
             onTap: () {
               Get.back();
@@ -129,7 +129,7 @@ class ActivityEditScreen extends StatelessWidget {
               height: 45,
               width: 140,
               color: AppColors.background.black,
-              text: "Update",
+              text: 'Update',
               textColor: AppColors.text.white,
               onTap: () async {
                 activityArg!.name = controller.nameTED.text;
@@ -137,7 +137,7 @@ class ActivityEditScreen extends StatelessWidget {
                 activityArg!.price = int.parse(controller.priceTED.text);
                 activityArg!.color = controller.colorTED.text;
                 await FirebaseFirestore.instance
-                    .collection("catalogue")
+                    .collection('catalogue')
                     .doc(activityArg!.id)
                     .set(activityArg!.toMap());
 
@@ -145,9 +145,9 @@ class ActivityEditScreen extends StatelessWidget {
 
                 LogModel logModel = LogModel(
                     type: LogType.editActivity,
-                    activityName: activityArg!.name);
+                    activityName: activityArg!.name,);
                 FirebaseFirestore.instance
-                    .collection("logs")
+                    .collection('logs')
                     .doc()
                     .set(logModel.toMap());
 
@@ -156,10 +156,10 @@ class ActivityEditScreen extends StatelessWidget {
                 allActivitiesLogic.controller.allActivitiesList = [];
                 allActivitiesLogic.controller.update();
                 allActivitiesLogic.getAllActivities();
-              }),
+              },),
         ],
       );
-    });
+    },);
   }
 
   Widget buildAppBar() {
@@ -167,7 +167,7 @@ class ActivityEditScreen extends StatelessWidget {
       toolbarHeight: 70,
       centerTitle: true,
       title: buildTitle(),
-      leading: BackNavigationIcon(),
+      leading: const BackNavigationIcon(),
       elevation: 0,
       backgroundColor: AppColors.background.white,
     );
@@ -177,7 +177,7 @@ class ActivityEditScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        Spacer(),
+        const Spacer(),
         Text(
           'Edit Activity',
           style: TextStyle(
@@ -188,25 +188,25 @@ class ActivityEditScreen extends StatelessWidget {
             letterSpacing: 1.2,
           ),
         ),
-        Spacer(),
+        const Spacer(),
         GestureDetector(
           onTap: () {
             Get.defaultDialog(
               contentPadding:
-                  EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 30),
-              title: "\nAre You Sure ? ",
-              middleText: "Activity will Be Deleted Permanently.",
+                  const EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 30),
+              title: '\nAre You Sure ? ',
+              middleText: 'Activity will Be Deleted Permanently.',
               backgroundColor: Colors.white,
               titleStyle: TextStyle(
                   color: AppColors.text.black,
                   fontFamily: AppFonts.nunito,
                   fontSize: 16,
-                  fontWeight: FontWeight.bold),
+                  fontWeight: FontWeight.bold,),
               middleTextStyle: TextStyle(
                   color: AppColors.text.black,
                   fontFamily: AppFonts.nunito,
                   fontSize: 15,
-                  fontWeight: FontWeight.w500),
+                  fontWeight: FontWeight.w500,),
               confirm: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -220,7 +220,7 @@ class ActivityEditScreen extends StatelessWidget {
                     text: 'OK',
                     onTap: () {
                       FirebaseFirestore.instance
-                          .collection("catalogue")
+                          .collection('catalogue')
                           .doc(activityArg!.id)
                           .delete();
                       Get.back();
@@ -235,13 +235,13 @@ class ActivityEditScreen extends StatelessWidget {
               radius: 10,
             );
           },
-          child: Icon(
+          child: const Icon(
             Icons.delete,
             size: 20,
             color: Colors.black,
           ),
         ),
-        SizedBox(width: 20)
+        const SizedBox(width: 20)
       ],
     );
   }
@@ -249,8 +249,8 @@ class ActivityEditScreen extends StatelessWidget {
   Widget buildTextFields(
       {String? name,
       TextEditingController? textEditingController,
-      TextInputType? keyBoardType}) {
-    return Container(
+      TextInputType? keyBoardType,}) {
+    return SizedBox(
       width: 320,
       child: AppTextField(
         hintText: name,
@@ -267,25 +267,25 @@ class ActivityEditScreen extends StatelessWidget {
   }
 
   Future<void> updateColorsDocument() async {
-    var data = await FirebaseFirestore.instance.collection("catalogue").get();
+    var data = await FirebaseFirestore.instance.collection('catalogue').get();
     var map = {
-      "Blue": [],
-      "Purple": [],
-      "White": [],
-      "Red": [],
-      "Green": [],
+      'Blue': [],
+      'Purple': [],
+      'White': [],
+      'Red': [],
+      'Green': [],
     };
 
     for (var d in data.docs) {
-      if (d.id == "colors") continue;
-      var color = d.data()["color"];
-      var name = d.data()["name"];
+      if (d.id == 'colors') continue;
+      var color = d.data()['color'];
+      var name = d.data()['name'];
       map[color]!.add(name);
     }
 
     await FirebaseFirestore.instance
-        .collection("catalogue")
-        .doc("colors")
+        .collection('catalogue')
+        .doc('colors')
         .set(map);
 
     colorsData = ColorsDataModel.fromMap(map);

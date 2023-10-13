@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/assets.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/ta_image.dart';
-import 'package:temple_adventures/features/bookings/models/booking_model.dart';
+import '../../../../core/constants/assets.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/ta_image.dart';
+import '../../models/booking_model.dart';
 import 'package:intl/intl.dart';
 
 // ignore: must_be_immutable
 class ShareBookingWidget extends StatelessWidget {
   Booking booking;
 
-  ShareBookingWidget(this.booking);
+  ShareBookingWidget(this.booking, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -22,77 +22,76 @@ class ShareBookingWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Text(
               "${booking.pax![0]["first-name"] + " " + booking.pax![0]["last-name"]} 's"
                   .capitalizeFirst!,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 16,
                   color: Colors.black,
-                  fontFamily: AppFonts.nunito),
+                  fontFamily: AppFonts.nunito,),
             ),
-            SizedBox(height: 5),
-            Container(
+            const SizedBox(height: 5),
+            SizedBox(
               width: Get.width,
               child: FittedBox(
                 child: Text(
                   booking.activity![0]!.name!,
-                  style: TextStyle(
+                  style: const TextStyle(
                       fontSize: 14,
                       color: Color(0xff575757),
-                      fontFamily: AppFonts.nunito),
+                      fontFamily: AppFonts.nunito,),
                 ),
               ),
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildSectionTitle(title: "Booking Details"),
-                SizedBox(height: 10),
-                buildBookingDetails(title: "Booking ID", text: booking.id),
+                buildSectionTitle(title: 'Booking Details'),
+                const SizedBox(height: 10),
+                buildBookingDetails(title: 'Booking ID', text: booking.id),
                 buildBookingDetails(
-                    title: "Name",
-                    text: booking.pax![0]["first-name"] +
-                        " " +
-                        booking.pax![0]["last-name"]),
+                    title: 'Name',
+                    text: booking.pax![0]['first-name'] +
+                        ' ' +
+                        booking.pax![0]['last-name'],),
                 buildBookingDetails(
-                    title: "Pax", text: booking.noOfPersons.toString()),
+                    title: 'Pax', text: booking.noOfPersons.toString(),),
                 buildBookingDetails(
-                    title: "Email ID", text: booking.pax![0]["email"]),
+                    title: 'Email ID', text: booking.pax![0]['email'],),
                 buildBookingDetails(
-                    title: "Activity", text: booking.activity![0]!.name),
-                buildDates(title: "Dive Dates", dates: booking.diveDate!),
-                buildDates(title: "Theory Dates", dates: booking.theoryDate!),
-                buildDates(title: "Pool Dates", dates: booking.poolDate!),
+                    title: 'Activity', text: booking.activity![0]!.name,),
+                buildDates(title: 'Dive Dates', dates: booking.diveDate!),
+                buildDates(title: 'Theory Dates', dates: booking.theoryDate!),
+                buildDates(title: 'Pool Dates', dates: booking.poolDate!),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                buildSectionTitle(title: "Payment Details"),
-                SizedBox(height: 10),
+                buildSectionTitle(title: 'Payment Details'),
+                const SizedBox(height: 10),
                 buildBookingDetails(
-                    title: "Total Amount",
-                    text: (booking.totalCost.toStringAsFixed(0)) + " /-"),
+                    title: 'Total Amount',
+                    text: '${booking.totalCost.toStringAsFixed(0)} /-',),
                 buildBookingDetails(
-                    title: "Deposit",
-                    text: booking.paid!.toStringAsFixed(0) + " /-"),
+                    title: 'Deposit',
+                    text: '${booking.paid!.toStringAsFixed(0)} /-',),
                 buildBookingDetails(
-                    title: "Balance",
+                    title: 'Balance',
                     text:
-                        (booking.totalCost - booking.paid!).toStringAsFixed(0) +
-                            " /-"),
+                        '${(booking.totalCost - booking.paid!).toStringAsFixed(0)} /-',),
                 buildBookingDetails(
-                    title: "Receipt No", text: booking.receiptNo ?? "-"),
+                    title: 'Receipt No', text: booking.receiptNo ?? '-',),
                 buildBookingDetails(
-                    title: "Payment Mode", text: booking.paymentMode ?? "-"),
+                    title: 'Payment Mode', text: booking.paymentMode ?? '-',),
                 buildBookingDetails(
-                    title: "Transaction ID",
-                    text: (booking.paymentTransactionId != "")
+                    title: 'Transaction ID',
+                    text: (booking.paymentTransactionId != '')
                         ? booking.paymentTransactionId
-                        : "-"),
+                        : '-',),
                 buildAllTransactions(),
               ],
             ),
@@ -100,17 +99,17 @@ class ShareBookingWidget extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
-                Container(
+                SizedBox(
                   width: 130,
                   child: Text(
-                    "For any queries,\nContact : ${booking.employeeName}",
-                    style: TextStyle(
+                    'For any queries,\nContact : ${booking.employeeName}',
+                    style: const TextStyle(
                         fontSize: 10,
                         color: Color(0xff595959),
-                        fontFamily: AppFonts.nunito),
+                        fontFamily: AppFonts.nunito,),
                   ),
                 ),
-                Spacer(),
+                const Spacer(),
                 TAImage(AppImages.icons.appLogo, height: 60, width: 60),
               ],
             ),
@@ -125,11 +124,11 @@ class ShareBookingWidget extends StatelessWidget {
   Widget buildSectionTitle({required String title}) {
     return Text(
       title,
-      style: TextStyle(
+      style: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 14,
           color: Colors.black,
-          fontFamily: AppFonts.nunito),
+          fontFamily: AppFonts.nunito,),
     );
   }
 
@@ -138,12 +137,12 @@ class ShareBookingWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "All Transactions",
+          'All Transactions',
           style: TextStyle(
               fontSize: 10,
               fontFamily: AppFonts.nunito,
               color: AppColors.text.black,
-              fontWeight: FontWeight.w500),
+              fontWeight: FontWeight.w500,),
         ).paddingOnly(top: 5),
         buildListOfPayments(
           payments: [
@@ -152,7 +151,7 @@ class ShareBookingWidget extends StatelessWidget {
               collectedBy: booking.employeeName,
               reciptNo: booking.receiptNo,
               referenceNo: booking.paymentTransactionId,
-              remarks: "",
+              remarks: '',
               paymentMode: booking.paymentMode,
               time: booking.createdAt,
             ),
@@ -194,14 +193,14 @@ class ShareBookingWidget extends StatelessWidget {
       children: [
         Text(
           "Payment ${payment.amount!.round()} by ${payment.paymentMode ?? "-"} collected by ${payment.collectedBy}",
-          style: TextStyle(
+          style: const TextStyle(
               fontSize: 10,
               fontWeight: FontWeight.w600,
               wordSpacing: 2,
               fontFamily: AppFonts.nunito,
-              color: Colors.black),
+              color: Colors.black,),
         ),
-        SizedBox(height: 2),
+        const SizedBox(height: 2),
         if (payment.time != null &&
             now.day == payment.time!.day &&
             now.month == payment.time!.month &&
@@ -216,7 +215,7 @@ class ShareBookingWidget extends StatelessWidget {
           )
         else if (payment.time != null)
           Text(
-            DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time!),
+            DateFormat('EEE dd MMM yy - hh:mm a').format(payment.time!),
             style: TextStyle(
               fontSize: 10,
               color: AppColors.text.darkgrey,
@@ -225,7 +224,7 @@ class ShareBookingWidget extends StatelessWidget {
           )
         else
           Text(
-            "Initial Deposit",
+            'Initial Deposit',
             style: TextStyle(
               fontSize: 10,
               color: AppColors.text.darkgrey,
@@ -248,14 +247,14 @@ class ShareBookingWidget extends StatelessWidget {
                   fontSize: 10,
                   fontFamily: AppFonts.nunito,
                   color: AppColors.text.black,
-                  fontWeight: FontWeight.w500),
+                  fontWeight: FontWeight.w500,),
             ),
           ),
-          Container(
+          SizedBox(
             width: 150,
             child: Text(
-              "$text",
-              style: TextStyle(
+              '$text',
+              style: const TextStyle(
                 fontSize: 10,
                 fontFamily: AppFonts.nunito,
                 color: Color(0xff575757),
@@ -280,7 +279,7 @@ class ShareBookingWidget extends StatelessWidget {
                   fontSize: 10,
                   fontFamily: AppFonts.nunito,
                   color: AppColors.text.black,
-                  fontWeight: FontWeight.w500),
+                  fontWeight: FontWeight.w500,),
             ),
           ),
           Column(
@@ -288,17 +287,17 @@ class ShareBookingWidget extends StatelessWidget {
               ...dates.map(
                 (e) {
                   String date = DateFormat('dd-MM-yyyy @ hh:mm a').format(e!);
-                  return Container(
+                  return SizedBox(
                       width: 150,
                       child: Text(
-                        "$date",
-                        style: TextStyle(
+                        date,
+                        style: const TextStyle(
                             fontSize: 10,
                             fontFamily: AppFonts.nunito,
                             color: Color(0xff575757),
                             fontWeight: FontWeight.w500,
-                            overflow: TextOverflow.ellipsis),
-                      ));
+                            overflow: TextOverflow.ellipsis,),
+                      ),);
                 },
               )
             ],

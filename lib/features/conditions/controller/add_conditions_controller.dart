@@ -2,30 +2,26 @@ import 'dart:developer';
 
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/features/conditions/controller/conditions_controller.dart';
-import 'package:temple_adventures/features/conditions/models/conditions_model.dart';
-import 'package:temple_adventures/features/conditions/repositories/conditions_repository.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
+import 'conditions_controller.dart';
+import '../models/conditions_model.dart';
+import '../repositories/conditions_repository.dart';
+import '../../employees/model/employee.dart';
 
 class AddConditionsLogic {
   AddConditionsController controller = Get.put(AddConditionsController());
   ConditionsRepository conditionsRepo = ConditionsRepository();
 
   Future<void> init() async {
-    log("calling init");
-    log("==============================");
     controller.showLoading = true;
     await getExistingData();
     controller.showLoading = false;
   }
 
   getExistingData() async {
-    log("calling existing data");
 
     controller.conditions = await conditionsRepo.getConditions(DateTime.now());
 
-    if (controller.conditions == null) {
-      controller.conditions = Conditions(
+    controller.conditions ??= Conditions(
         id: getID(DateTime.now()),
         levels: [],
         surfaceConditions: List.generate(
@@ -37,14 +33,13 @@ class AddConditionsLogic {
                   currents: 0,
                   swell: 0,
                   updatedAt: DateTime.now(),
-                  updatedBy: currentEmployee?.name ?? "-",
-                )).toList(),
+                  updatedBy: currentEmployee?.name ?? '-',
+                ),).toList(),
       );
-    }
   }
 
   List<Level> get getLevels {
-    log("calling get levels");
+    log('calling get levels');
 
     if (controller.conditions == null ||
         controller.conditions!.levels.isEmpty) {
@@ -53,11 +48,11 @@ class AddConditionsLogic {
 
     List<Level> levels = [];
 
-    controller.conditions!.levels.forEach((element) {
+    for (var element in controller.conditions!.levels) {
       if (element.reef == controller.selectedReef) {
         levels.add(element);
       }
-    });
+    }
 
     return levels;
   }
@@ -66,7 +61,7 @@ class AddConditionsLogic {
     required String depth,
     required String reefName,
   }) {
-    log("calling add level");
+    log('calling add level');
 
     if (controller.conditions != null &&
         controller.conditions!.levels.isNotEmpty) {
@@ -88,16 +83,16 @@ class AddConditionsLogic {
           currents: 0,
           updatedAt: DateTime.now(),
           reef: reefName,
-          updatedBy: (currentEmployee != null) ? currentEmployee!.name : "-"),
+          updatedBy: (currentEmployee != null) ? currentEmployee!.name : '-',),
     );
-    log("=======================================");
+    log('=======================================');
     log(controller.conditions!.levels.toString());
     controller.update();
     return true;
   }
 
   Future<void> onSavePressed() async {
-    log("on save pressed");
+    log('on save pressed');
 
     controller.showLoading = true;
 
@@ -109,10 +104,10 @@ class AddConditionsLogic {
     conditionsLogic.init();
   }
 
-  String getID(DateTime date) => DateFormat("dd-M-yyyy").format(date);
+  String getID(DateTime date) => DateFormat('dd-M-yyyy').format(date);
 
   void onChipChanged(String e) {
-    log("on chip changed");
+    log('on chip changed');
 
     controller.selectedReef = e;
     controller.update();
@@ -136,9 +131,9 @@ class AddConditionsController extends GetxController {
   // List<Level> levels = [];
 
   List<String> reefs = [
-    "Shallow site area",
-    "Northern Rocks area",
-    "Wall area"
+    'Shallow site area',
+    'Northern Rocks area',
+    'Wall area'
   ];
 
   bool get showLoading => _showLoading;

@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/features/boat/models/boat_details.dart';
-import 'package:temple_adventures/features/bookings/models/activity_model.dart';
+import '../../boat/models/boat_details.dart';
+import 'activity_model.dart';
 
 Booking bookingModelFromMap(String str) => Booking.fromMap(json.decode(str));
 
@@ -13,7 +13,7 @@ class Booking {
     this.activity,
     this.pax,
     this.noOfPersons = 1,
-    this.location = "Pondicherry",
+    this.location = 'Pondicherry',
     this.discount = 0,
     this.price = 0,
     this.tax = 18,
@@ -26,7 +26,7 @@ class Booking {
     this.theoryDate,
     this.bookingDate,
     this.receiptNo,
-    this.discountType = "%",
+    this.discountType = '%',
     this.remarks,
     this.employeeName,
     this.idProofs,
@@ -134,33 +134,33 @@ class Booking {
     }
 
     return Booking(
-      pax: List<Map<String, dynamic>>.from(json["PAX"].map((x) => x)),
-      activity: List<Activity>.from(json["activity"].map((x) => Activity.fromMap(x))),
-      payments: List<PaymentModel>.from((json["payments"] ?? []).map((x) => PaymentModel.fromMap(x))),
-      noOfPersons: json["noOfPersons"],
-      createdAt: parseDateOrNull(json["createdAt"]),
-      discount: json["discount"] * 1.0,
-      discountType: json["discountSwitch"],
-      price: json["price"] * 1.0,
-      tax: json["tax"] * 1.0,
-      paid: json["paid"] * 1.0,
-      paymentMode: json["paymentMode"],
-      receiptNo: json["receiptNo"],
-      remarks: json["remarks"],
-      isQuickBooking: json["isQuickBooking"] ?? false,
-      employeeName: json["employeeName"],
-      id: json["id"],
-      location: json["location"],
-      parentBookingId: json["parentBookingId"],
-      paymentTransactionId: json["paymentTransactionId"],
-      bookingDate: List<String>.from(json["bookingDate"].map((x) => x)),
-      idProofs: List<String>.from(json["idProofs"] ?? [].map((x) => x)),
-      theoryDate: List<DateTime>.from(json["theoryDate"].map((x) => parseDateOrNull(x))),
-      poolDate: List<DateTime>.from(json["poolDate"].map((x) => parseDateOrNull(x))),
-      diveDate: List<DateTime>.from(json["diveDate"].map((x) => parseDateOrNull(x))),
-      cancelBooking: json["cancelBooking"],
-      cancellationReason: json["cancellationReason"],
-      boatDetails: BoatDetails.fromJson(json["boatDetails"]),
+      pax: List<Map<String, dynamic>>.from(json['PAX'].map((x) => x)),
+      activity: List<Activity>.from(json['activity'].map((x) => Activity.fromMap(x))),
+      payments: List<PaymentModel>.from((json['payments'] ?? []).map((x) => PaymentModel.fromMap(x))),
+      noOfPersons: json['noOfPersons'],
+      createdAt: parseDateOrNull(json['createdAt']),
+      discount: json['discount'] * 1.0,
+      discountType: json['discountSwitch'],
+      price: json['price'] * 1.0,
+      tax: json['tax'] * 1.0,
+      paid: json['paid'] * 1.0,
+      paymentMode: json['paymentMode'],
+      receiptNo: json['receiptNo'],
+      remarks: json['remarks'],
+      isQuickBooking: json['isQuickBooking'] ?? false,
+      employeeName: json['employeeName'],
+      id: json['id'],
+      location: json['location'],
+      parentBookingId: json['parentBookingId'],
+      paymentTransactionId: json['paymentTransactionId'],
+      bookingDate: List<String>.from(json['bookingDate'].map((x) => x)),
+      idProofs: List<String>.from(json['idProofs'] ?? [].map((x) => x)),
+      theoryDate: List<DateTime>.from(json['theoryDate'].map((x) => parseDateOrNull(x))),
+      poolDate: List<DateTime>.from(json['poolDate'].map((x) => parseDateOrNull(x))),
+      diveDate: List<DateTime>.from(json['diveDate'].map((x) => parseDateOrNull(x))),
+      cancelBooking: json['cancelBooking'],
+      cancellationReason: json['cancellationReason'],
+      boatDetails: BoatDetails.fromJson(json['boatDetails']),
     );
   }
 
@@ -168,33 +168,33 @@ class Booking {
 
   Map<String, dynamic> toMap() {
     return {
-      "activity": List<dynamic>.from((activity ?? []).map((x) => x!.toMap())),
-      "PAX": List<dynamic>.from((pax ?? []).map((x) => x)),
-      "noOfPersons": noOfPersons,
-      "createdAt": toDateOrNull(createdAt),
-      "discount": discount,
-      "price": price,
-      "id": id,
-      "payments": List<dynamic>.from((payments ?? []).map((x) => x.toMap())),
-      "remarks": remarks,
-      "isQuickBooking": isQuickBooking,
-      "employeeName": employeeName,
-      "discountSwitch": discountType,
-      "tax": tax,
-      "paid": paid,
-      "paymentMode": paymentMode,
-      "receiptNo": receiptNo,
-      "bookingDate": List<String>.from((bookingDate ?? []).map((x) => x)),
-      "idProofs": List<String>.from((idProofs ?? []).map((x) => x)),
-      "location": location,
-      "paymentTransactionId": paymentTransactionId,
-      "theoryDate": List<String>.from((theoryDate ?? []).map((x) => toDateOrNull(x))),
-      "poolDate": List<String>.from((poolDate ?? []).map((x) => toDateOrNull(x))),
-      "diveDate": List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
-      "cancelBooking": cancelBooking,
-      "parentBookingId": parentBookingId,
-      "cancellationReason": cancellationReason,
-      "boatDetails": boatDetails?.toMap(),
+      'activity': List<dynamic>.from((activity ?? []).map((x) => x!.toMap())),
+      'PAX': List<dynamic>.from((pax ?? []).map((x) => x)),
+      'noOfPersons': noOfPersons,
+      'createdAt': toDateOrNull(createdAt),
+      'discount': discount,
+      'price': price,
+      'id': id,
+      'payments': List<dynamic>.from((payments ?? []).map((x) => x.toMap())),
+      'remarks': remarks,
+      'isQuickBooking': isQuickBooking,
+      'employeeName': employeeName,
+      'discountSwitch': discountType,
+      'tax': tax,
+      'paid': paid,
+      'paymentMode': paymentMode,
+      'receiptNo': receiptNo,
+      'bookingDate': List<String>.from((bookingDate ?? []).map((x) => x)),
+      'idProofs': List<String>.from((idProofs ?? []).map((x) => x)),
+      'location': location,
+      'paymentTransactionId': paymentTransactionId,
+      'theoryDate': List<String>.from((theoryDate ?? []).map((x) => toDateOrNull(x))),
+      'poolDate': List<String>.from((poolDate ?? []).map((x) => toDateOrNull(x))),
+      'diveDate': List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
+      'cancelBooking': cancelBooking,
+      'parentBookingId': parentBookingId,
+      'cancellationReason': cancellationReason,
+      'boatDetails': boatDetails?.toMap(),
     };
   }
 
@@ -210,10 +210,11 @@ class Booking {
 
     /// Deduct Discount
     if (discountType != null) {
-      if (discountType == "%")
+      if (discountType == '%') {
         balance -= balance * (discount! / 100);
-      else
+      } else {
         balance = balance - discount!;
+      }
     }
 
     /// Deduct paying now
@@ -234,10 +235,11 @@ class Booking {
 
     /// Deduct Discount
     if (discountType != null) {
-      if (discountType == "%")
+      if (discountType == '%') {
         total -= total * (discount! / 100);
-      else
+      } else {
         total = total - discount!;
+      }
       //print("total $total");
     }
     return total.floorToDouble();
@@ -273,44 +275,38 @@ class Booking {
   }
 
   BoatInfo? getBoatInfo(DateTime date) {
-    String d = DateFormat("dd-MM-yyyy").format(date);
+    String d = DateFormat('dd-MM-yyyy').format(date);
     if (boatDetails?.boat?[d] == null) return null;
     return BoatInfo.fromMap(boatDetails?.boat?[d]);
   }
 
   void setBoatInfo(DateTime date, BoatInfo? boatInfo) {
-    String d = DateFormat("dd-MM-yyyy").format(date);
-    if (boatDetails?.boat == null) {
-      boatDetails?.boat = {};
-    }
+    String d = DateFormat('dd-MM-yyyy').format(date);
+    boatDetails?.boat ??= {};
     boatDetails?.boat?[d] = boatInfo?.toMap();
   }
 
   InstructorTanks? getInstructorTanks(DateTime date) {
-    String d = DateFormat("dd-MM-yyyy").format(date);
+    String d = DateFormat('dd-MM-yyyy').format(date);
     if (boatDetails?.instructorTanks?[d] == null) return null;
     return InstructorTanks.fromMap(boatDetails?.instructorTanks?[d]);
   }
 
   int? getStatus(DateTime date) {
-    String d = DateFormat("dd-MM-yyyy").format(date);
+    String d = DateFormat('dd-MM-yyyy').format(date);
     if (boatDetails?.status?[d] == null) return null;
     return boatDetails?.status?[d];
   }
 
   void setInstructorTanks(DateTime date, InstructorTanks instructorTanks) {
-    String d = DateFormat("dd-MM-yyyy").format(date);
-    if (boatDetails?.instructorTanks == null) {
-      boatDetails?.instructorTanks = {};
-    }
+    String d = DateFormat('dd-MM-yyyy').format(date);
+    boatDetails?.instructorTanks ??= {};
     boatDetails?.instructorTanks?[d] = instructorTanks.toMap();
   }
 
   void setStatus(DateTime date, int status) {
-    String d = DateFormat("dd-MM-yyyy").format(date);
-    if (boatDetails?.status == null) {
-      boatDetails?.status = {};
-    }
+    String d = DateFormat('dd-MM-yyyy').format(date);
+    boatDetails?.status ??= {};
     boatDetails?.status?[d] = status;
   }
 }
@@ -346,23 +342,23 @@ class PaymentModel {
     }
 
     return PaymentModel(
-      amount: (json["amount"] ?? 0.0) * 1.0,
-      collectedBy: json["collectedBy"],
-      reciptNo: json["reciptNo"],
-      remarks: json["remarks"],
-      referenceNo: json["referenceNo"],
-      paymentMode: json["paymentMode"],
-      time: parseDateOrNull(json["time"]),
+      amount: (json['amount'] ?? 0.0) * 1.0,
+      collectedBy: json['collectedBy'],
+      reciptNo: json['reciptNo'],
+      remarks: json['remarks'],
+      referenceNo: json['referenceNo'],
+      paymentMode: json['paymentMode'],
+      time: parseDateOrNull(json['time']),
     );
   }
 
   Map<String, dynamic> toMap() => {
-        "amount": amount,
-        "collectedBy": collectedBy,
-        "time": toDateOrNull(time),
-        "reciptNo": reciptNo,
-        "referenceNo": referenceNo,
-        "remarks": remarks,
-        "paymentMode": paymentMode,
+        'amount': amount,
+        'collectedBy': collectedBy,
+        'time': toDateOrNull(time),
+        'reciptNo': reciptNo,
+        'referenceNo': referenceNo,
+        'remarks': remarks,
+        'paymentMode': paymentMode,
       };
 }

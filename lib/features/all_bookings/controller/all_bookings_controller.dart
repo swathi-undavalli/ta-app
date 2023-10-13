@@ -22,7 +22,7 @@ class AllBookingsController extends GetxController {
 
   List<String> pages = [];
 
-  String _selectedPage = "1";
+  String _selectedPage = '1';
 
   int? _bookingCount;
 

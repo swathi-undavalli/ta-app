@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/widgets/time_picker.dart';
-import 'package:temple_adventures/features/boat/models/boats.dart';
+import '../../../core/widgets/time_picker.dart';
+import '../models/boats.dart';
 import 'package:intl/intl.dart';
 
 class ManageGeneralInfoLogic {
@@ -12,8 +12,8 @@ class ManageGeneralInfoLogic {
   Future<void> init() async {
     controller.showLoading = true;
     var d = await FirebaseFirestore.instance
-        .collection("dailyBoats")
-        .doc(DateFormat("dd-MM-yyyy").format(controller.selectedDate))
+        .collection('dailyBoats')
+        .doc(DateFormat('dd-MM-yyyy').format(controller.selectedDate))
         .get();
 
     Map<String, dynamic>? data = d.data();
@@ -38,7 +38,7 @@ class ManageGeneralInfoLogic {
           dsdOceanHead: [],
           courseCenter: [],
           harboursStaff: [],
-          centerStaff: []);
+          centerStaff: [],);
     } else {
       controller.currentDsd = boatsModel.dsd!;
 
@@ -49,10 +49,10 @@ class ManageGeneralInfoLogic {
           TimePicker.getDateTime(controller.currentDsd.lowTides) ??
               DateTime.now();
       controller.generalNotesTED.text =
-          controller.currentDsd.generalNotes ?? "";
-      controller.windsTED.text = controller.currentDsd.winds ?? "";
-      controller.wavesTED.text = controller.currentDsd.waves ?? "";
-      controller.powerNotesTED.text = controller.currentDsd.powerNotes ?? "";
+          controller.currentDsd.generalNotes ?? '';
+      controller.windsTED.text = controller.currentDsd.winds ?? '';
+      controller.wavesTED.text = controller.currentDsd.waves ?? '';
+      controller.powerNotesTED.text = controller.currentDsd.powerNotes ?? '';
     }
     controller.showLoading = false;
   }
@@ -76,8 +76,8 @@ class ManageGeneralInfoLogic {
     controller.currentDsd.powerNotes = controller.powerNotesTED.text;
 
     await FirebaseFirestore.instance
-        .collection("dailyBoats")
-        .doc(DateFormat("dd-MM-yyyy").format(controller.selectedDate))
+        .collection('dailyBoats')
+        .doc(DateFormat('dd-MM-yyyy').format(controller.selectedDate))
         .set({'dsd': controller.currentDsd.toJson()}, SetOptions(merge: true));
     Get.back();
   }
@@ -104,10 +104,10 @@ class ManageGeneralInfoController extends GetxController {
   }
 
   reset() {
-    generalNotesTED.text = "";
-    wavesTED.text = "";
-    windsTED.text = "";
-    powerNotesTED.text = "";
+    generalNotesTED.text = '';
+    wavesTED.text = '';
+    windsTED.text = '';
+    powerNotesTED.text = '';
     highTideTime = DateTime.now();
     lowTideTime = DateTime.now();
     selectedDate = DateTime.now();

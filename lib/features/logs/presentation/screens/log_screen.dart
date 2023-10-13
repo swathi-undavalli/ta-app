@@ -1,18 +1,20 @@
-import 'dart:developer' as dev;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/back_navigation_icon.dart';
-import 'package:temple_adventures/features/logs/models/log_model.dart';
-import 'package:temple_adventures/features/logs/presentation/screens/details_screen.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/back_navigation_icon.dart';
+import '../../models/log_model.dart';
+import 'details_screen.dart';
 
 
 class LogScreen extends StatelessWidget {
-  static const String id = "LogScreen";
+  static const String id = 'LogScreen';
+
+  const LogScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +23,7 @@ class LogScreen extends StatelessWidget {
         toolbarHeight: 70,
         centerTitle: true,
         title: buildTitle(),
-        leading: BackNavigationIcon(),
+        leading: const BackNavigationIcon(),
         elevation: 0,
         backgroundColor: AppColors.background.white,
       ),
@@ -34,9 +36,9 @@ class LogScreen extends StatelessWidget {
                   .orderBy('timeStamp', descending: true)
                   .snapshots(),
               builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                  AsyncSnapshot<QuerySnapshot> snapshot,) {
                 if (!snapshot.hasData) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(color: Colors.black),
                   );
                 }
@@ -52,17 +54,16 @@ class LogScreen extends StatelessWidget {
                         );
                       }
                     }
-                    return SizedBox();
+                    return const SizedBox();
                   },
                 );
-              }),
+              },),
         ),
       ),
     );
   }
 
   Widget buildLog({required LogModel log}) {
-    dev.log("building .......");
     getIcon() {
       switch (log.type) {
         case LogType.bookingCreated:
@@ -92,14 +93,14 @@ class LogScreen extends StatelessWidget {
           );
         case LogType.addActivity:
           return Image.asset(
-            "images/outline_scuba_diving_black_24dp.png",
+            'images/outline_scuba_diving_black_24dp.png',
             color: AppColors.background.white,
             height: 23,
             width: 23,
           );
         case LogType.editActivity:
           return Image.asset(
-            "images/outline_scuba_diving_black_24dp.png",
+            'images/outline_scuba_diving_black_24dp.png',
             color: AppColors.background.white,
             height: 23,
             width: 23,
@@ -162,45 +163,47 @@ class LogScreen extends StatelessWidget {
     getTitle() {
       switch (log.type) {
         case LogType.bookingCreated:
-          return "Booking Created";
+          return 'Booking Created';
         case LogType.bookingEdited:
-          return "Booking Edited";
+          return 'Booking Edited';
         case LogType.bookingDeleted:
-          return "Booking Deleted";
+          return 'Booking Deleted';
         case LogType.signedIn:
-          return "Signed In";
+          return 'Signed In';
         case LogType.signedOut:
-          return "Signed Out";
+          return 'Signed Out';
         case LogType.addActivity:
-          return "Added ${log.activityName} ";
+          return 'Added ${log.activityName} ';
         case LogType.editActivity:
-          return "Edited ${log.activityName} ";
+          return 'Edited ${log.activityName} ';
         case LogType.addEmployee:
-          return "Added ${log.employeeName}";
+          return 'Added ${log.employeeName}';
         case LogType.editEmployee:
-          return "Edited ${log.employeeName}";
+          return 'Edited ${log.employeeName}';
         case LogType.deleteEmployee:
-          return "Deleted ${log.employeeName}";
+          return 'Deleted ${log.employeeName}';
         case LogType.bookingPaxDeleted:
-          return "PAX Deleted";
+          return 'PAX Deleted';
         case LogType.quickBookingCreated:
-          return "Quick Booking Created";
+          return 'Quick Booking Created';
       }
     }
 
     return GestureDetector(
       onTap: () async {
-        if (getTitle() == "Booking Created") {
+        if (getTitle() == 'Booking Created') {
           var data = await FirebaseFirestore.instance
-              .collection("bookings")
+              .collection('bookings')
               .doc(log.bookingId!.trim())
               .get();
           if (data.data() != null) {
-            print(log.bookingId);
+            if (kDebugMode) {
+              print(log.bookingId);
+            }
             Get.toNamed(DetailsScreen.id, arguments: data.data());
           } else {
             Fluttertoast.showToast(
-                msg: "${log.bookingId} Booking Doesn't Exit");
+                msg: "${log.bookingId} Booking Doesn't Exit",);
           }
         } else {
           return;
@@ -219,11 +222,11 @@ class LogScreen extends StatelessWidget {
                   child: getIcon(),
                 ),
               ),
-              SizedBox(width: 20),
+              const SizedBox(width: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Container(
+                  SizedBox(
                     width: 150,
                     child: Text(
                       getTitle(),
@@ -235,9 +238,9 @@ class LogScreen extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height: 2),
+                  const SizedBox(height: 2),
                   Text(
-                    "${log.createdBy}",
+                    '${log.createdBy}',
                     style: TextStyle(
                       color: AppColors.text.darkgrey,
                       fontSize: 12,
@@ -251,13 +254,13 @@ class LogScreen extends StatelessWidget {
               Expanded(
                   child: Container(
                 color: Colors.transparent,
-              )),
+              ),),
 
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    DateFormat("dd MMM, yyyy").format(log.timeStamp!.toDate()),
+                    DateFormat('dd MMM, yyyy').format(log.timeStamp!.toDate()),
                     style: TextStyle(
                       color: AppColors.text.black,
                       fontSize: 12,
@@ -265,9 +268,9 @@ class LogScreen extends StatelessWidget {
                       fontFamily: AppFonts.nunito,
                     ),
                   ),
-                  SizedBox(height: 5),
+                  const SizedBox(height: 5),
                   Text(
-                    DateFormat("hh:mm a").format(log.timeStamp!.toDate()),
+                    DateFormat('hh:mm a').format(log.timeStamp!.toDate()),
                     style: TextStyle(
                       color: AppColors.text.skyBlue,
                       fontSize: 16,
@@ -281,7 +284,7 @@ class LogScreen extends StatelessWidget {
           ),
           Padding(
             padding: const EdgeInsets.only(
-                left: 1.0, right: 1.0, top: 17, bottom: 17),
+                left: 1.0, right: 1.0, top: 17, bottom: 17,),
             child: Container(
               height: 1,
               width: Get.width,

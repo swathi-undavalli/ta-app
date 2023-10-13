@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/util/alignment_extensions.dart';
-
+import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_icon_button.dart';
 
 class CheckBoxWidget extends StatefulWidget {
-  CheckBoxWidget({Key? key, required this.onChanged, required this.text, required this.initialValue}) : super(key: key);
+  const CheckBoxWidget({Key? key, required this.onChanged, required this.text, required this.initialValue}) : super(key: key);
 
   final Function(bool) onChanged;
   final String text;
@@ -28,11 +27,12 @@ class _CheckBoxWidgetState extends State<CheckBoxWidget> {
 
   @override
   Widget build(BuildContext context) {
-    if (widget.text.startsWith("=="))
+    if (widget.text.startsWith('==')) {
       return Text(
-        widget.text.replaceFirst("==", ""),
-        style: TextStyle(fontWeight: FontWeight.w700),
+        widget.text.replaceFirst('==', ''),
+        style: const TextStyle(fontWeight: FontWeight.w700),
       ).paddingOnly(bottom: 15, top: 5).left;
+    }
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -49,7 +49,7 @@ class _CheckBoxWidgetState extends State<CheckBoxWidget> {
             Expanded(
               child: Text(
                 widget.text,
-                style: TextStyle(fontSize: 13.0, height: 1.36, color: Colors.black),
+                style: const TextStyle(fontSize: 13.0, height: 1.36, color: Colors.black),
               ).paddingSymmetric(horizontal: 15, vertical: 5),
             ),
             AppIconButton(

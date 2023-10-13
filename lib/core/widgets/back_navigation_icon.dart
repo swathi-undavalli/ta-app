@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
+import '../constants/constants.dart';
 
 class BackNavigationIcon extends StatelessWidget {
+  const BackNavigationIcon({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(

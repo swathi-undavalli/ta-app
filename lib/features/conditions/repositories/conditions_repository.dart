@@ -18,14 +18,15 @@ class ConditionsRepository {
   Future<Conditions?> getConditions(DateTime date) async {
     try {
       var data = await conditionsCollection.doc(getID(date)).get();
-      if (data.data() != null)
+      if (data.data() != null) {
         return Conditions.fromMap(data.data()!);
-      else
+      } else {
         return null;
+      }
     } catch (e) {
       rethrow;
     }
   }
 
-  String getID(DateTime date) => DateFormat("dd-M-yyyy").format(date);
+  String getID(DateTime date) => DateFormat('dd-M-yyyy').format(date);
 }

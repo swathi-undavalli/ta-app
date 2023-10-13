@@ -1,18 +1,20 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/spacing_widgets.dart';
-import 'package:temple_adventures/core/widgets/access_levels.dart';
-import 'package:temple_adventures/core/widgets/back_navigation_icon.dart';
-import 'package:temple_adventures/features/employees/controllers/all-employees-controller.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
-import 'package:temple_adventures/features/employees/presentation/screens/employee-details-screen.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/widgets/access_levels.dart';
+import '../../../../core/widgets/back_navigation_icon.dart';
+import '../../controllers/all_employees_controller.dart';
+import '../../model/employee.dart';
+import 'employee_details_screen.dart';
 
-import 'add-an-employee-screen.dart';
+import 'add_an_employee_screen.dart';
 
 class AllEmployeesScreen extends StatefulWidget {
-  static const String id = "AllEmployeesScreen";
+  static const String id = 'AllEmployeesScreen';
+
+  const AllEmployeesScreen({Key? key}) : super(key: key);
 
   @override
   State<AllEmployeesScreen> createState() => _AllEmployeesScreenState();
@@ -27,7 +29,7 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
   @override
   void initState() {
     super.initState();
-    logic.controller.searchTED.text = "";
+    logic.controller.searchTED.text = '';
     _stream = employeesCollection.snapshots(); // Initialize the stream
   }
 
@@ -35,8 +37,8 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (logic.controller.searchTED.text != "") {
-          logic.controller.searchTED.text = "";
+        if (logic.controller.searchTED.text != '') {
+          logic.controller.searchTED.text = '';
           _stream = employeesCollection.snapshots();
           setState(() {});
           return false;
@@ -50,7 +52,7 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
           toolbarHeight: 70,
           centerTitle: true,
           title: buildTitle(),
-          leading: BackNavigationIcon(),
+          leading: const BackNavigationIcon(),
           elevation: 0,
           backgroundColor: AppColors.background.white,
         ),
@@ -64,7 +66,7 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
               children: [
                 Column(
                   children: [
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     buildSearchBar(),
                     buildAllEmployees(),
                   ],
@@ -88,11 +90,11 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
           }
 
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           }
 
           if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-            return Text('No employees found.').paddingOnly(top: 100);
+            return const Text('No employees found.').paddingOnly(top: 100);
           }
 
           return ListView(
@@ -107,7 +109,7 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
                   ],
                 ).paddingSymmetric(horizontal: 20);
               } catch (e) {
-                return SizedBox();
+                return const SizedBox();
               }
             }).toList(),
           ).paddingOnly(top: 20);
@@ -134,8 +136,8 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
           Get.toNamed(AddAnEmployeeScreen.id);
         },
         backgroundColor: AppColors.background.black,
-        child: Icon(Icons.add),
         elevation: 0,
+        child: const Icon(Icons.add),
       ),
     );
   }
@@ -143,28 +145,28 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
   Widget buildEmployeeNames(Employee e) {
     return GestureDetector(
       onTap: () {
-        logic.controller.searchTED.text = "";
+        logic.controller.searchTED.text = '';
         Get.toNamed(EmployeeDetailsScreen.id, arguments: e);
       },
-      child: Container(
+      child: SizedBox(
         height: 47,
         width: Get.width,
         child: Row(
           children: [
-            Icon(
+            const Icon(
               Icons.account_circle,
               color: Colors.black38,
               size: 25,
             ),
-            SizedBox(width: 20),
+            const SizedBox(width: 20),
             Text(
-              "   ${e.name}",
+              '   ${e.name}',
               style: TextStyle(color: AppColors.text.black, fontSize: 14),
             ),
             Expanded(
                 child: Container(
               color: Colors.transparent,
-            )),
+            ),),
             // buildOptions()
           ],
         ),
@@ -178,18 +180,18 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
       height: 47,
       decoration: BoxDecoration(
           color: AppColors.background.white,
-          borderRadius: BorderRadius.circular(5)),
+          borderRadius: BorderRadius.circular(5),),
       child: Container(
-        margin: EdgeInsets.only(left: 15, right: 15),
+        margin: const EdgeInsets.only(left: 15, right: 15),
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
             Icon(Icons.search, color: AppColors.text.darkgrey),
             Spacing.w15,
-            Container(
+            SizedBox(
               width: 225,
               child: TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     enabledBorder:
                         OutlineInputBorder(borderSide: BorderSide.none),
                     focusedBorder:
@@ -198,7 +200,7 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
                         OutlineInputBorder(borderSide: BorderSide.none),
                     hintText: 'Search...',
                     hintStyle:
-                        TextStyle(fontSize: FontSize.textSize, height: 1)),
+                        TextStyle(fontSize: FontSize.textSize, height: 1),),
                 controller: logic.controller.searchTED,
                 onChanged: (query) {
                   _stream = _filterStream(query);
@@ -206,10 +208,10 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
                 },
               ),
             ),
-            if (logic.controller.searchTED.text != "")
+            if (logic.controller.searchTED.text != '')
               InkWell(
                 onTap: () {
-                  logic.controller.searchTED.text = "";
+                  logic.controller.searchTED.text = '';
                   setState(() {});
                 },
                 highlightColor: Colors.grey,

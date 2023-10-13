@@ -3,7 +3,7 @@ import 'package:intl/intl.dart';
 
 class TimePicker {
   static Future<DateTime?> show(BuildContext context,
-      {required DateTime initialTime}) async {
+      {required DateTime initialTime,}) async {
     final TimeOfDay? pickedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.fromDateTime(initialTime),

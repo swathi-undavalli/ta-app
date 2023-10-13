@@ -18,20 +18,20 @@ class CounterModel {
   int? files;
 
   factory CounterModel.fromMap(Map<String, dynamic> json) => CounterModel(
-    activity: json["activity"],
-    booking: json["booking"],
-    employee: json["employee"],
-    boat: json["boat"],
-    freelance: json["freelance"],
-    files: json["files"],
+    activity: json['activity'],
+    booking: json['booking'],
+    employee: json['employee'],
+    boat: json['boat'],
+    freelance: json['freelance'],
+    files: json['files'],
   );
 
   Map<String, dynamic> toMap() => {
-    "activity": activity,
-    "booking": booking,
-    "employee": employee,
-    "boat": boat,
-    "freelance": freelance,
-    "files": files,
+    'activity': activity,
+    'booking': booking,
+    'employee': employee,
+    'boat': boat,
+    'freelance': freelance,
+    'files': files,
   };
 }

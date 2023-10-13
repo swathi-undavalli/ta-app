@@ -1,8 +1,8 @@
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
-import 'package:temple_adventures/features/logs/presentation/screens/log_screen.dart';
+import '../../employees/model/employee.dart';
+import '../presentation/screens/log_screen.dart';
 
 LogModel logModelFromMap(String str) => LogModel.fromMap(json.decode(str));
 
@@ -17,8 +17,8 @@ class LogModel {
     this.activityName,
     this.employeeName,
   }) {
-    if (timeStamp == null) timeStamp = Timestamp.fromDate(DateTime.now());
-    if (createdBy == null) createdBy = currentEmployee!.name;
+    timeStamp ??= Timestamp.fromDate(DateTime.now());
+    createdBy ??= currentEmployee!.name;
   }
 
   LogType type;
@@ -29,49 +29,49 @@ class LogModel {
   String? employeeName;
 
   factory LogModel.fromMap(Map<String, dynamic> json) => LogModel(
-        type: convertToEnum(json["type"]),
-        createdBy: json["createdBy"],
-        timeStamp: json["timeStamp"],
-        bookingId: json["bookingId"],
-        activityName: json["activityName"],
-        employeeName: json["employeeName"],
+        type: convertToEnum(json['type']),
+        createdBy: json['createdBy'],
+        timeStamp: json['timeStamp'],
+        bookingId: json['bookingId'],
+        activityName: json['activityName'],
+        employeeName: json['employeeName'],
       );
 
   Map<String, dynamic> toMap() => {
-        "type": convertToString(type),
-        "createdBy": createdBy,
-        "timeStamp": timeStamp,
-        "bookingId": bookingId,
-        "activityName": activityName,
-        "employeeName": employeeName,
+        'type': convertToString(type),
+        'createdBy': createdBy,
+        'timeStamp': timeStamp,
+        'bookingId': bookingId,
+        'activityName': activityName,
+        'employeeName': employeeName,
       };
 }
 
 convertToEnum(String? e) {
   switch (e) {
-    case "bookingCreated":
+    case 'bookingCreated':
       return LogType.bookingCreated;
-    case "bookingEdited":
+    case 'bookingEdited':
       return LogType.bookingEdited;
-    case "bookingDeleted":
+    case 'bookingDeleted':
       return LogType.bookingDeleted;
-    case "signedIn":
+    case 'signedIn':
       return LogType.signedIn;
-    case "signedOut":
+    case 'signedOut':
       return LogType.signedOut;
-    case "addActivity":
+    case 'addActivity':
       return LogType.addActivity;
-    case "editActivity":
+    case 'editActivity':
       return LogType.editActivity;
-    case "addEmployee":
+    case 'addEmployee':
       return LogType.addEmployee;
-    case "editEmployee":
+    case 'editEmployee':
       return LogType.editEmployee;
-    case "deleteEmployee":
+    case 'deleteEmployee':
       return LogType.deleteEmployee;
-    case "bookingPaxDeleted":
+    case 'bookingPaxDeleted':
       return LogType.bookingPaxDeleted;
-    case "quickBookingCreated":
+    case 'quickBookingCreated':
       return LogType.quickBookingCreated;
   }
 }
@@ -79,28 +79,28 @@ convertToEnum(String? e) {
 convertToString(LogType e) {
   switch (e) {
     case LogType.bookingCreated:
-      return "bookingCreated";
+      return 'bookingCreated';
     case LogType.bookingEdited:
-      return "bookingEdited";
+      return 'bookingEdited';
     case LogType.bookingDeleted:
-      return "bookingDeleted";
+      return 'bookingDeleted';
     case LogType.signedIn:
-      return "signedIn";
+      return 'signedIn';
     case LogType.signedOut:
-      return "signedOut";
+      return 'signedOut';
     case LogType.addActivity:
-      return "addActivity";
+      return 'addActivity';
     case LogType.editActivity:
-      return "editActivity";
+      return 'editActivity';
     case LogType.addEmployee:
-      return "addEmployee";
+      return 'addEmployee';
     case LogType.editEmployee:
-      return "editEmployee";
+      return 'editEmployee';
     case LogType.deleteEmployee:
-      return "deleteEmployee";
+      return 'deleteEmployee';
     case LogType.bookingPaxDeleted:
-      return "bookingPaxDeleted";
+      return 'bookingPaxDeleted';
     case LogType.quickBookingCreated:
-      return "quickBookingCreated";
+      return 'quickBookingCreated';
   }
 }

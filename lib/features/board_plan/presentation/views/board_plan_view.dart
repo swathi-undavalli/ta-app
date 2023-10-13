@@ -7,20 +7,19 @@ import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/alignment_extensions.dart';
-import 'package:temple_adventures/core/util/spacing_widgets.dart';
-import 'package:temple_adventures/features/board_plan/controllers/board_plan_controller.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/util/alignment_extensions.dart';
+import '../../../../core/util/spacing_widgets.dart';
+import '../../controllers/board_plan_controller.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/features/board_plan/presentation/widgets/customer_details.dart';
+import '../widgets/customer_details.dart';
 import 'dart:ui' as ui;
-
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
 
 class BoardPlanView extends StatefulWidget {
-  BoardPlanView({Key? key}) : super(key: key);
-  static const String id = "boardPlanView";
+  const BoardPlanView({Key? key}) : super(key: key);
+  static const String id = 'boardPlanView';
 
   @override
   State<BoardPlanView> createState() => _BoardPlanViewState();
@@ -48,16 +47,17 @@ class _BoardPlanViewState extends State<BoardPlanView> {
         child: GetBuilder<BoardPlanController>(
           assignId: true,
           builder: (controller) {
-            if (controller.showLoading)
+            if (controller.showLoading) {
               return Container(
                 color: Colors.transparent,
                 width: Get.width,
                 height: Get.height,
-                child: Center(
+                child: const Center(
                     child: CircularProgressIndicator(
                   color: Colors.black,
-                )),
+                ),),
               );
+            }
             return SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -70,28 +70,28 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                           buildButton(
                               onTap: () {
                                 logic.onDateChanged(selectedDate
-                                    .subtract(const Duration(days: 1)));
+                                    .subtract(const Duration(days: 1)),);
                               },
-                              icon: Icons.arrow_back_ios_rounded),
+                              icon: Icons.arrow_back_ios_rounded,),
                           Spacing.w15,
                           buildTitle(
-                              DateFormat('dd-MM-yyyy').format(selectedDate)),
+                              DateFormat('dd-MM-yyyy').format(selectedDate),),
                           Spacing.w15,
                           Text(
-                            "${DateFormat('EEEE').format(selectedDate)}",
+                            DateFormat('EEEE').format(selectedDate),
                             style: TextStyle(
                                 fontSize: 13,
                                 color: AppColors.text.black,
                                 fontFamily: AppFonts.nunito,
-                                fontWeight: FontWeight.w600),
+                                fontWeight: FontWeight.w600,),
                           ),
                           Spacing.w15,
                           buildButton(
                               onTap: () {
                                 logic.onDateChanged(
-                                    selectedDate.add(const Duration(days: 1)));
+                                    selectedDate.add(const Duration(days: 1)),);
                               },
-                              icon: Icons.arrow_forward_ios_rounded),
+                              icon: Icons.arrow_forward_ios_rounded,),
                         ],
                       ),
                       buildCalendarIcon(context),
@@ -111,7 +111,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                         color: (controller.isGeneralInfoSelected)
                             ? AppColors.text.lightSkyBlue
                             : Colors.white,
-                        title: "General Info",
+                        title: 'General Info',
                       ),
                       ...controller.boats.map(
                         (boat) => buildChip(
@@ -133,11 +133,11 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                       !controller.isGeneralInfoSelected)
                     StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
                         stream: FirebaseFirestore.instance
-                            .collection("bookings")
+                            .collection('bookings')
                             .where(
-                              "bookingDate",
+                              'bookingDate',
                               arrayContains:
-                                  DateFormat("dd-MM-yyyy").format(selectedDate),
+                                  DateFormat('dd-MM-yyyy').format(selectedDate),
                             )
                             .snapshots(),
                         builder: (context, snapshot) {
@@ -170,14 +170,14 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                               ),
                             ).paddingOnly(bottom: 1000),
                           );
-                        }),
+                        },),
                   if (controller.isGeneralInfoSelected)
                     Transform.scale(
                       scale: 1,
                       alignment: Alignment.topLeft,
                       child: RepaintBoundary(
                         key: widgetKey,
-                        child: DSDTable(),
+                        child: const DSDTable(),
                       ),
                     )
                 ],
@@ -203,11 +203,11 @@ class _BoardPlanViewState extends State<BoardPlanView> {
               icon,
               color: Colors.black,
               size: 14,
-            )));
+            ),),);
   }
 
   Widget buildChip(
-      {required Function onTap, required Color color, required String title}) {
+      {required Function onTap, required Color color, required String title,}) {
     return GestureDetector(
       onTap: () {
         onTap();
@@ -215,10 +215,10 @@ class _BoardPlanViewState extends State<BoardPlanView> {
       child: Container(
         height: 35,
         decoration: BoxDecoration(
-            color: color, borderRadius: BorderRadius.circular(20)),
+            color: color, borderRadius: BorderRadius.circular(20),),
         child: Text(
           title,
-          style: TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.black),
           textAlign: TextAlign.center,
         ).paddingSymmetric(horizontal: 10, vertical: 7),
       ),
@@ -229,22 +229,22 @@ class _BoardPlanViewState extends State<BoardPlanView> {
     try {
       RenderRepaintBoundary boundary =
           widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      log("1..");
+      log('1..');
       ui.Image image = await boundary.toImage(pixelRatio: 10);
       ByteData? byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
-      log("2..");
+      log('2..');
       final tempDir = await getTemporaryDirectory();
       final tempPath = '${tempDir.path}/screenshot.png';
       File(tempPath).writeAsBytesSync(pngBytes);
-      log("3..");
-      log("started sharingg..");
+      log('3..');
+      log('started sharingg..');
       shareImages([tempPath]);
-      log("4..");
-      log("ended sharing..");
+      log('4..');
+      log('ended sharing..');
     } catch (e) {
-      print('Error while capturing and sharing the screenshot: $e');
+      log('Error while capturing and sharing the screenshot: $e');
     }
   }
 
@@ -252,7 +252,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
     try {
       Share.shareFiles(images);
     } catch (e) {
-      log("Error while sharing images $e");
+      log('Error while sharing images $e');
     }
   }
 
@@ -260,21 +260,21 @@ class _BoardPlanViewState extends State<BoardPlanView> {
     try {
       RenderRepaintBoundary boundary =
           widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      log("1..");
+      log('1..');
       ui.Image image = await boundary.toImage(pixelRatio: 10);
       ByteData? byteData =
           await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
-      log("2..");
+      log('2..');
       final tempDir = await getTemporaryDirectory();
       final tempPath =
           '${tempDir.path}/screenshot${DateTime.now().toIso8601String()}.png';
       File(tempPath).writeAsBytesSync(pngBytes);
-      log("3..");
-      log("started sharing..");
+      log('3..');
+      log('started sharing..');
       return tempPath;
     } catch (e) {
-      print('Error while capturing the screenshot: $e');
+      log('Error while capturing the screenshot: $e');
     }
     return null;
   }
@@ -283,19 +283,19 @@ class _BoardPlanViewState extends State<BoardPlanView> {
     return GetBuilder<BoardPlanController>(
       assignId: true,
       builder: (controller) {
-        if (controller.boats.isNotEmpty)
+        if (controller.boats.isNotEmpty) {
           return Column(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               FloatingActionButton(
                 elevation: 0,
                 onPressed: () async {
-                  log("chinni");
+                  log('chinni');
                   await _captureAndShare();
-                  log("swathi");
+                  log('swathi');
                 },
                 backgroundColor: AppColors.background.black,
-                child: Icon(Icons.share),
+                child: const Icon(Icons.share),
               ),
               Spacing.h20,
               FloatingActionButton(
@@ -305,7 +305,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
 
                   controller.selectedBoat = null;
                   controller.isGeneralInfoSelected = true;
-                  await Future.delayed(Duration(seconds: 1));
+                  await Future.delayed(const Duration(seconds: 1));
                   controller.isGeneralInfoSelected = false;
 
                   //General Info
@@ -317,7 +317,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                   for (Boat boat in controller.boats) {
                     controller.selectedBoat = boat;
                     controller.update();
-                    await Future.delayed(Duration(seconds: 1));
+                    await Future.delayed(const Duration(seconds: 1));
 
                     //Boats
                     String? boatImage = await captureImage();
@@ -331,11 +331,12 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                   await shareImages(images);
                 },
                 backgroundColor: AppColors.background.black,
-                child: Icon(Icons.directions_boat_filled_rounded),
+                child: const Icon(Icons.directions_boat_filled_rounded),
               ),
             ],
           );
-        return SizedBox();
+        }
+        return const SizedBox();
       },
     );
   }
@@ -346,7 +347,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
       onPressed: () {
         showDateSelector(context);
       },
-      icon: Icon(
+      icon: const Icon(
         Icons.calendar_today_outlined,
         size: 17,
       ),
@@ -362,7 +363,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
             fontSize: 16,
             color: AppColors.text.black,
             fontWeight: FontWeight.bold,
-            fontFamily: AppFonts.nunito),
+            fontFamily: AppFonts.nunito,),
       ),
     );
   }
@@ -383,9 +384,10 @@ class _BoardPlanViewState extends State<BoardPlanView> {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                primary: AppColors.text.black,
-                textStyle:
-                    TextStyle(fontWeight: FontWeight.w500), // button text color
+                textStyle: TextStyle(
+                  fontWeight: FontWeight.w500,
+                  color: AppColors.text.black,
+                ), // button text color
               ),
             ),
           ),
@@ -408,7 +410,7 @@ class DSDTable extends StatelessWidget {
     return StreamBuilder(
         stream: FirebaseFirestore.instance
             .collection('dailyBoats')
-            .doc(DateFormat("dd-MM-yyyy").format(selectedDate))
+            .doc(DateFormat('dd-MM-yyyy').format(selectedDate))
             .snapshots(),
         builder:
             (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
@@ -426,13 +428,13 @@ class DSDTable extends StatelessWidget {
           Map<String, dynamic>? data =
               snapshot.data?.data() as Map<String, dynamic>?;
           if (data == null) {
-            return const Text("No data added");
+            return const Text('No data added');
           }
           BoatsModel boatsModel = BoatsModel.fromMap(data);
 
           return Container(
             decoration: BoxDecoration(
-                color: Colors.white, border: Border.all(color: Colors.black)),
+                color: Colors.white, border: Border.all(color: Colors.black),),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -442,17 +444,17 @@ class DSDTable extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    buildSectionTitle("General Info :"),
+                    buildSectionTitle('General Info :'),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          DateFormat("dd-MM-yyyy").format(selectedDate),
+                          DateFormat('dd-MM-yyyy').format(selectedDate),
                           style: TextStyle(
                               fontSize: 13,
                               color: AppColors.text.black,
                               fontFamily: AppFonts.nunito,
-                              fontWeight: FontWeight.w600),
+                              fontWeight: FontWeight.w600,),
                         ).paddingSymmetric(vertical: 5),
                         Text(
                           DateFormat('EEEE').format(selectedDate),
@@ -460,7 +462,7 @@ class DSDTable extends StatelessWidget {
                               fontSize: 13,
                               color: AppColors.text.black,
                               fontFamily: AppFonts.nunito,
-                              fontWeight: FontWeight.w600),
+                              fontWeight: FontWeight.w600,),
                         ),
                       ],
                     ),
@@ -468,7 +470,7 @@ class DSDTable extends StatelessWidget {
                 ),
                 Spacing.h3,
                 const Text(
-                  "BCD",
+                  'BCD',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 11,
@@ -482,23 +484,23 @@ class DSDTable extends StatelessWidget {
                     children: <TextSpan>[
                       TextSpan(
                           text: '${boatsModel.dsd?.bcd?.xs ?? 0}, ',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                          style: const TextStyle(fontWeight: FontWeight.bold),),
                       const TextSpan(
                           text: 'S - ',
                           style: TextStyle(
                             fontSize: 11,
-                          )),
+                          ),),
                       TextSpan(
                           text: '${boatsModel.dsd?.bcd?.s ?? 0}, ',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                          style: const TextStyle(fontWeight: FontWeight.bold),),
                       const TextSpan(
                           text: 'M - ',
                           style: TextStyle(
                             fontSize: 11,
-                          )),
+                          ),),
                       TextSpan(
                           text: '${boatsModel.dsd?.bcd?.m ?? 0}, ',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                          style: const TextStyle(fontWeight: FontWeight.bold),),
                       TextSpan(
                         text: 'L - ',
                         style:
@@ -507,25 +509,25 @@ class DSDTable extends StatelessWidget {
                           TextSpan(
                               text: '${boatsModel.dsd?.bcd?.l ?? 0}, ',
                               style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
+                                  const TextStyle(fontWeight: FontWeight.bold),),
                           const TextSpan(
                               text: 'XL - ',
                               style: TextStyle(
                                 fontSize: 11,
-                              )),
+                              ),),
                           TextSpan(
                               text: '${boatsModel.dsd?.bcd?.xl ?? 0}, ',
                               style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
+                                  const TextStyle(fontWeight: FontWeight.bold),),
                           const TextSpan(
                               text: 'XXL - ',
                               style: TextStyle(
                                 fontSize: 11,
-                              )),
+                              ),),
                           TextSpan(
                               text: '${boatsModel.dsd?.bcd?.xxl ?? 0}',
                               style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
+                                  const TextStyle(fontWeight: FontWeight.bold),),
                         ],
                       ),
                     ],
@@ -533,7 +535,7 @@ class DSDTable extends StatelessWidget {
                 ),
                 Spacing.h6,
                 const Text(
-                  "Weights",
+                  'Weights',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: 11,
@@ -547,15 +549,15 @@ class DSDTable extends StatelessWidget {
                     children: <TextSpan>[
                       TextSpan(
                           text: '${boatsModel.dsd?.weights?.w3 ?? 0}, ',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                          style: const TextStyle(fontWeight: FontWeight.bold),),
                       const TextSpan(
                           text: '4KG - ',
                           style: TextStyle(
                             fontSize: 11,
-                          )),
+                          ),),
                       TextSpan(
                           text: '${boatsModel.dsd?.weights?.w4 ?? 0}, ',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
+                          style: const TextStyle(fontWeight: FontWeight.bold),),
                       TextSpan(
                         text: '5KG - ',
                         style:
@@ -564,36 +566,36 @@ class DSDTable extends StatelessWidget {
                           TextSpan(
                               text: '${boatsModel.dsd?.weights?.w5 ?? 0}, ',
                               style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
+                                  const TextStyle(fontWeight: FontWeight.bold),),
                           const TextSpan(
                               text: '6KG - ',
                               style: TextStyle(
                                 fontSize: 11,
-                              )),
+                              ),),
                           TextSpan(
                               text: '${boatsModel.dsd?.weights?.w6 ?? 0}, ',
                               style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
+                                  const TextStyle(fontWeight: FontWeight.bold),),
                           const TextSpan(
                               text: '7KG - ',
                               style: TextStyle(
                                 fontSize: 11,
-                              )),
+                              ),),
                           TextSpan(
                               text: '${boatsModel.dsd?.weights?.w7 ?? 0}',
                               style:
-                                  const TextStyle(fontWeight: FontWeight.bold)),
+                                  const TextStyle(fontWeight: FontWeight.bold),),
                         ],
                       ),
                     ],
                   ),
                 ),
                 Spacing.h6,
-                buildDSDItem('Fins', "${boatsModel.dsd?.fins ?? 0}"),
-                buildDSDItem('Mask', "${boatsModel.dsd?.mask ?? 0}"),
-                buildDSDItem('Regulator', "${boatsModel.dsd?.regulator ?? 0}"),
+                buildDSDItem('Fins', '${boatsModel.dsd?.fins ?? 0}'),
+                buildDSDItem('Mask', '${boatsModel.dsd?.mask ?? 0}'),
+                buildDSDItem('Regulator', '${boatsModel.dsd?.regulator ?? 0}'),
                 buildDSDItem('Power Mask',
-                    "${boatsModel.dsd?.powerMask ?? 0} (${boatsModel.dsd?.powerNotes ?? '-'})"),
+                    "${boatsModel.dsd?.powerMask ?? 0} (${boatsModel.dsd?.powerNotes ?? '-'})",),
                 Spacing.h3,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -603,23 +605,23 @@ class DSDTable extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.start,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        buildSectionTitle("Weather :"),
+                        buildSectionTitle('Weather :'),
                         Spacing.h3,
                         buildDSDItem(
-                            'Waves', "${boatsModel.dsd?.waves ?? '-'} m/s"),
+                            'Waves', "${boatsModel.dsd?.waves ?? '-'} m/s",),
                         buildDSDItem(
-                            'Winds', "${boatsModel.dsd?.winds ?? '-'} km/h"),
+                            'Winds', "${boatsModel.dsd?.winds ?? '-'} km/h",),
                         buildDSDItem(
-                            'Low Tides', boatsModel.dsd?.lowTides ?? '-'),
+                            'Low Tides', boatsModel.dsd?.lowTides ?? '-',),
                         buildDSDItem(
-                            'High Tides', boatsModel.dsd?.highTides ?? '-'),
+                            'High Tides', boatsModel.dsd?.highTides ?? '-',),
                       ],
                     ),
                     buildTanksCount(boatsModel),
                   ],
                 ),
                 Spacing.h3,
-                buildSectionTitle("Employees : "),
+                buildSectionTitle('Employees : '),
                 Spacing.h3,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -630,9 +632,9 @@ class DSDTable extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          "DSD Pool",
+                          'DSD Pool',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 11),
+                              fontWeight: FontWeight.bold, fontSize: 11,),
                         ),
                         Spacing.h3,
                         Text(
@@ -641,9 +643,9 @@ class DSDTable extends StatelessWidget {
                         ),
                         Spacing.h3,
                         const Text(
-                          "DSD Ocean Leader",
+                          'DSD Ocean Leader',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 11),
+                              fontWeight: FontWeight.bold, fontSize: 11,),
                         ),
                         Spacing.h3,
                         Text(
@@ -652,9 +654,9 @@ class DSDTable extends StatelessWidget {
                         ),
                         Spacing.h3,
                         const Text(
-                          "DSD Center Staff",
+                          'DSD Center Staff',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 11),
+                              fontWeight: FontWeight.bold, fontSize: 11,),
                         ),
                         Spacing.h3,
                         Text(
@@ -663,9 +665,9 @@ class DSDTable extends StatelessWidget {
                         ),
                         Spacing.h3,
                         const Text(
-                          "Courses Center",
+                          'Courses Center',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 11),
+                              fontWeight: FontWeight.bold, fontSize: 11,),
                         ),
                         Spacing.h3,
                         Text(
@@ -679,9 +681,9 @@ class DSDTable extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const Text(
-                          "Day offs",
+                          'Day offs',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 11),
+                              fontWeight: FontWeight.bold, fontSize: 11,),
                         ),
                         Spacing.h3,
                         Text(
@@ -690,9 +692,9 @@ class DSDTable extends StatelessWidget {
                         ),
                         Spacing.h3,
                         const Text(
-                          "Leaves",
+                          'Leaves',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 11),
+                              fontWeight: FontWeight.bold, fontSize: 11,),
                         ),
                         Spacing.h3,
                         Text(
@@ -700,16 +702,16 @@ class DSDTable extends StatelessWidget {
                           style: const TextStyle(fontSize: 11),
                         ),
                         const Text(
-                          "General Notes",
+                          'General Notes',
                           style: TextStyle(
-                              fontWeight: FontWeight.bold, fontSize: 11),
+                              fontWeight: FontWeight.bold, fontSize: 11,),
                         ).left,
                         Spacing.h3,
                         SizedBox(
                           width: 90,
                           child: Text(
                             (boatsModel.dsd?.generalNotes != null &&
-                                    boatsModel.dsd?.generalNotes != "")
+                                    boatsModel.dsd?.generalNotes != '')
                                 ? boatsModel.dsd!.generalNotes!
                                 : '-',
                             style: const TextStyle(fontSize: 11),
@@ -723,16 +725,16 @@ class DSDTable extends StatelessWidget {
               ],
             ).paddingOnly(left: 15, right: 15),
           );
-        });
+        },);
   }
 
   Widget buildTanksCount(BoatsModel boatsModel) {
     return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
         stream: FirebaseFirestore.instance
-            .collection("bookings")
+            .collection('bookings')
             .where(
-              "bookingDate",
-              arrayContains: DateFormat("dd-MM-yyyy").format(selectedDate),
+              'bookingDate',
+              arrayContains: DateFormat('dd-MM-yyyy').format(selectedDate),
             )
             .snapshots(),
         builder: (context, snapshot) {
@@ -769,25 +771,25 @@ class DSDTable extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Spacing.h6,
-              buildSectionTitle("Tanks Count : "),
+              buildSectionTitle('Tanks Count : '),
               Spacing.h3,
               buildDSDItem('Total Air', totalAir.toString()),
               buildDSDItem('Total Nitrox', totalNitrox.toString()),
               buildDSDItem('Total Tanks', (totalAir + totalNitrox).toString()),
             ],
           );
-        });
+        },);
   }
 
   Widget buildSectionTitle(String text) {
     return Text(
-      "$text",
+      text,
       style: TextStyle(
           fontSize: 13,
           color: AppColors.text.black,
           fontFamily: AppFonts.nunito,
           decoration: TextDecoration.underline,
-          fontWeight: FontWeight.w600),
+          fontWeight: FontWeight.w600,),
     ).paddingSymmetric(vertical: 5);
   }
 
@@ -802,7 +804,7 @@ class DSDTable extends StatelessWidget {
             child: Text(
               key,
               style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 11),
-            )),
+            ),),
         Text(
           value,
           style: const TextStyle(fontSize: 11),

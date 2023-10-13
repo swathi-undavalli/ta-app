@@ -49,27 +49,30 @@ class ItemModel {
 
   factory ItemModel.fromBooking(Booking bookingModel) {
     getSessions() {
-      var d = "";
-      if (bookingModel.theoryDate != null) d = d + "Theory, ";
-      if (bookingModel.poolDate != null) d = d + "Pool, ";
-      if (bookingModel.diveDate != null) d = d + "Dive, ";
+      var d = '';
+      if (bookingModel.theoryDate != null) d = '${d}Theory, ';
+      if (bookingModel.poolDate != null) d = '${d}Pool, ';
+      if (bookingModel.diveDate != null) d = '${d}Dive, ';
       return d.substring(0, d.length - 2);
     }
 
     getTime() {
-      var d = "";
-      if (bookingModel.theoryDate != null && bookingModel.theoryDate!.isNotEmpty)
-        d = d + DateFormat("hh:mm").format(bookingModel.theoryDate![0]!) + ", ";
-      if (bookingModel.poolDate != null && bookingModel.poolDate!.isNotEmpty)
-        d = d + DateFormat("hh:mm").format(bookingModel.poolDate![0]!) + ", ";
-      if (bookingModel.diveDate != null && bookingModel.diveDate!.isNotEmpty)
-        d = d + DateFormat("hh:mm").format(bookingModel.diveDate![0]!) + ", ";
+      var d = '';
+      if (bookingModel.theoryDate != null && bookingModel.theoryDate!.isNotEmpty) {
+        d = "$d${DateFormat("hh:mm").format(bookingModel.theoryDate![0]!)}, ";
+      }
+      if (bookingModel.poolDate != null && bookingModel.poolDate!.isNotEmpty) {
+        d = "$d${DateFormat("hh:mm").format(bookingModel.poolDate![0]!)}, ";
+      }
+      if (bookingModel.diveDate != null && bookingModel.diveDate!.isNotEmpty) {
+        d = "$d${DateFormat("hh:mm").format(bookingModel.diveDate![0]!)}, ";
+      }
       return d.substring(0, d.length - 2);
     }
 
     //log(bookingModel.balance.toString());
     return ItemModel(
-      phone: bookingModel.pax![0]["countryCode"] + bookingModel.pax![0]["phoneNumber"],
+      phone: bookingModel.pax![0]['countryCode'] + bookingModel.pax![0]['phoneNumber'],
       bookingID: bookingModel.id,
       activity: bookingModel.activity![0]!.name.toString(),
       price: bookingModel.activity![0]!.price.toString(),
@@ -80,9 +83,9 @@ class ItemModel {
       balance: bookingModel.balance.toString(),
       registration: true,
       receiptNo: bookingModel.receiptNo,
-      name: bookingModel.pax![0]["first-name"],
+      name: bookingModel.pax![0]['first-name'],
       pax: bookingModel.noOfPersons,
-      email: bookingModel.pax![0]["email"],
+      email: bookingModel.pax![0]['email'],
       remarks: bookingModel.remarks,
       time: getTime(),
       session: getSessions(),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
+import '../../../../core/constants/constants.dart';
 
 class BoatStatus extends StatefulWidget {
   const BoatStatus(
-      {Key? key, required this.initialStatus, required this.onChanged})
+      {Key? key, required this.initialStatus, required this.onChanged,})
       : super(key: key);
   final int initialStatus;
   final Function(int status) onChanged;
@@ -40,16 +40,16 @@ class _BoatStatusState extends State<BoatStatus> {
             width: 27,
             decoration: BoxDecoration(
               color: getProgressColor(status),
-              borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(4), bottomLeft: Radius.circular(4)),
+              borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(4), bottomLeft: Radius.circular(4),),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_left,
               size: 16,
             ),
           ),
         ),
-        SizedBox(width: 2),
+        const SizedBox(width: 2),
         Container(
           height: 33,
           decoration: BoxDecoration(
@@ -57,11 +57,11 @@ class _BoatStatusState extends State<BoatStatus> {
           ),
           child: Text(
             boatStatus[status],
-            style: TextStyle(
-                fontSize: FontSize.small, fontWeight: FontWeight.w600),
+            style: const TextStyle(
+                fontSize: FontSize.small, fontWeight: FontWeight.w600,),
           ).paddingOnly(left: 15, right: 15, top: 8),
         ),
-        SizedBox(width: 2),
+        const SizedBox(width: 2),
         GestureDetector(
           onTap: () {
             if (status < 6) {
@@ -76,11 +76,11 @@ class _BoatStatusState extends State<BoatStatus> {
             width: 27,
             decoration: BoxDecoration(
               color: getProgressColor(status),
-              borderRadius: BorderRadius.only(
+              borderRadius: const BorderRadius.only(
                   topRight: Radius.circular(4),
-                  bottomRight: Radius.circular(4)),
+                  bottomRight: Radius.circular(4),),
             ),
-            child: Icon(
+            child: const Icon(
               Icons.arrow_right,
               size: 16,
             ),
@@ -111,12 +111,12 @@ class _BoatStatusState extends State<BoatStatus> {
   }
 
   List<String> boatStatus = [
-    "Boat Ready",
-    "Waiting for Captains",
-    "Left Harbour",
-    "Reached Dive site",
-    "Diving",
-    "Dives done",
-    "Docked at Harbour",
+    'Boat Ready',
+    'Waiting for Captains',
+    'Left Harbour',
+    'Reached Dive site',
+    'Diving',
+    'Dives done',
+    'Docked at Harbour',
   ];
 }

@@ -1,14 +1,14 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:temple_adventures/core/services/firebase_api.dart';
-import 'package:temple_adventures/core/util/utils.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
+import '../services/firebase_api.dart';
+import '../util/utils.dart';
+import '../../features/employees/model/employee.dart';
 
 class EmployeeRepo {
   static String? employeeID;
-  static GetStorage _getStorage = GetStorage();
-  static String _employeeKey = "employeeID";
+  static final GetStorage _getStorage = GetStorage();
+  static const String _employeeKey = 'employeeID';
 
   static initiateRepo(String? employeeId) {
     employeeID = employeeId;
@@ -56,8 +56,8 @@ class EmployeeRepo {
       }
       if (currentEmployee!.accessLevels!.notifications == true) {
         FirebaseMessaging.instance
-            .subscribeToTopic("newBooking")
-            .whenComplete(() => showToast("Subscribed"));
+            .subscribeToTopic('newBooking')
+            .whenComplete(() => showToast('Subscribed'));
       }
     }
   }

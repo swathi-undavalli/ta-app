@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/core/widgets/back_navigation_icon.dart';
-import 'package:temple_adventures/features/bookings/controller/new_booking_controller.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/back_navigation_icon.dart';
+import '../../controller/new_booking_controller.dart';
 import 'package:intl/intl.dart';
 import '../../models/activity_model.dart';
 
 class BookDateTime extends StatelessWidget {
-  static const String id = "BookDate&Time";
+  static const String id = 'BookDate&Time';
   final NewBookingLogic logic = NewBookingLogic();
+
+  BookDateTime({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +22,13 @@ class BookDateTime extends StatelessWidget {
           padding: const EdgeInsets.only(left: 30, right: 30),
           child: Column(
             children: [
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildActivityDropDown(),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  "Add Dates",
+                  'Add Dates',
                   style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontSize: FontSize.message,
@@ -34,15 +36,15 @@ class BookDateTime extends StatelessWidget {
                   ),
                 ),
               ),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               buildTheorySession(),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               buildPoolSession(),
-              SizedBox(height: 30),
+              const SizedBox(height: 30),
               buildDiveSession(),
-              Spacer(),
+              const Spacer(),
               buildContinueButton(),
-              Spacer(),
+              const Spacer(),
             ],
           ),
         ),
@@ -53,7 +55,7 @@ class BookDateTime extends StatelessWidget {
   ///==================UI=================///
 
   Widget buildActivityDropDown() {
-    return Container(
+    return SizedBox(
       width: 320,
       child: Row(
         children: [
@@ -63,11 +65,11 @@ class BookDateTime extends StatelessWidget {
               child: Container(
                 width: Get.width,
                 alignment: Alignment.centerLeft,
-                child: buildSubTitle("Activities"),
+                child: buildSubTitle('Activities'),
               ),
             ),
           ),
-          Container(
+          SizedBox(
             width: 215,
             child: GetBuilder<NewBookingController>(builder: (controller) {
               return Padding(
@@ -88,16 +90,16 @@ class BookDateTime extends StatelessWidget {
                   },
                   items: controller.activities.toSet().toList().map((activity) {
                     return DropdownMenuItem(
-                      child: Text(
-                        activity.name ?? "error",
-                        style: TextStyle(fontWeight: FontWeight.normal),
-                      ),
                       value: activity,
+                      child: Text(
+                        activity.name ?? 'error',
+                        style: const TextStyle(fontWeight: FontWeight.normal),
+                      ),
                     );
                   }).toList(),
                 ),
               );
-            }),
+            },),
           ),
         ],
       ),
@@ -113,13 +115,13 @@ class BookDateTime extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Pool Session",
+              const Text(
+                'Pool Session',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: FontSize.textSize),
+                    fontWeight: FontWeight.bold, fontSize: FontSize.textSize,),
               ),
               AppButton.miniFlat(
-                text: "ADD",
+                text: 'ADD',
                 onTap: () {
                   logic.addPoolSessionDateTime();
                 },
@@ -130,12 +132,12 @@ class BookDateTime extends StatelessWidget {
           ),
           Wrap(
             children: (controller.bookingModel.poolDate ?? [])
-                .map((e) => buildTime(e, DateType.Pool))
+                .map((e) => buildTime(e, DateType.pool))
                 .toList(),
           ),
         ],
       );
-    });
+    },);
   }
 
   Widget buildDiveSession() {
@@ -147,13 +149,13 @@ class BookDateTime extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Dive Session",
+              const Text(
+                'Dive Session',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: FontSize.textSize),
+                    fontWeight: FontWeight.bold, fontSize: FontSize.textSize,),
               ),
               AppButton.miniFlat(
-                text: "ADD",
+                text: 'ADD',
                 onTap: () {
                   logic.addDiveSessionDateTime();
                 },
@@ -164,12 +166,12 @@ class BookDateTime extends StatelessWidget {
           ),
           Wrap(
             children: (controller.bookingModel.diveDate ?? [])
-                .map((e) => buildTime(e, DateType.Dive))
+                .map((e) => buildTime(e, DateType.dive))
                 .toList(),
           ),
         ],
       );
-    });
+    },);
   }
 
   Widget buildTheorySession() {
@@ -181,13 +183,13 @@ class BookDateTime extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(
-                "Theory Session",
+              const Text(
+                'Theory Session',
                 style: TextStyle(
-                    fontWeight: FontWeight.bold, fontSize: FontSize.textSize),
+                    fontWeight: FontWeight.bold, fontSize: FontSize.textSize,),
               ),
               AppButton.miniFlat(
-                text: "ADD",
+                text: 'ADD',
                 onTap: () {
                   logic.addTheorySessionDateTime();
                 },
@@ -198,41 +200,44 @@ class BookDateTime extends StatelessWidget {
           ),
           Wrap(
             children: (controller.bookingModel.theoryDate ?? [])
-                .map((e) => buildTime(e, DateType.Theory))
+                .map((e) => buildTime(e, DateType.theory))
                 .toList(),
           ),
         ],
       );
-    });
+    },);
   }
 
   Widget buildTime(DateTime? date, DateType type) {
-    if (date != null)
+    if (date != null) {
       return GestureDetector(
         onTap: () {
-          if (type == DateType.Theory)
+          if (type == DateType.theory) {
             logic.controller.bookingModel.theoryDate!.remove(date);
-          if (type == DateType.Dive)
+          }
+          if (type == DateType.dive) {
             logic.controller.bookingModel.diveDate!.remove(date);
-          if (type == DateType.Pool)
+          }
+          if (type == DateType.pool) {
             logic.controller.bookingModel.poolDate!.remove(date);
+          }
           logic.controller.update();
         },
         child: Container(
           width: 170,
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          margin: EdgeInsets.only(right: 10, bottom: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          margin: const EdgeInsets.only(right: 10, bottom: 10),
           decoration: BoxDecoration(
             color: AppColors.background.lightSkyBlue,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat("MMM  dd @ hh:mm a").format(date)),
-              Icon(
+              Text(DateFormat('MMM  dd @ hh:mm a').format(date)),
+              const Icon(
                 Icons.close,
                 size: 16,
               ),
@@ -240,13 +245,14 @@ class BookDateTime extends StatelessWidget {
           ),
         ),
       );
-    return SizedBox();
+    }
+    return const SizedBox();
   }
 
   Widget buildContinueButton() {
     return Center(
       child: AppButton.flat(
-        text: "Continue",
+        text: 'Continue',
         textColor: AppColors.text.white,
         color: AppColors.background.black,
         onTap: logic.onContinueChooseDatesPressed,
@@ -284,8 +290,8 @@ class BookDateTime extends StatelessWidget {
     return AppBar(
       toolbarHeight: 70,
       centerTitle: true,
-      title: buildTitle("Choose Date and Time"),
-      leading: BackNavigationIcon(),
+      title: buildTitle('Choose Date and Time'),
+      leading: const BackNavigationIcon(),
       elevation: 0,
       backgroundColor: AppColors.background.white,
     );
@@ -293,7 +299,7 @@ class BookDateTime extends StatelessWidget {
 }
 
 enum DateType {
-  Theory,
-  Pool,
-  Dive,
+  theory,
+  pool,
+  dive,
 }

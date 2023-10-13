@@ -20,7 +20,7 @@ class API {
       response = await http.post(Uri.parse(url), headers: header, body: body,);
     }
 
-    if (response.body != "") {
+    if (response.body != '') {
       return response.body;
     } else {
       return null;

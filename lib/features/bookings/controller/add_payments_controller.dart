@@ -3,16 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
-import 'package:temple_adventures/features/bookings/models/booking_model.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
+import '../../../core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
+import '../models/booking_model.dart';
+import '../../employees/model/employee.dart';
 
 class AddPaymentsLogic {
   AddPaymentsController controller = Get.put(AddPaymentsController());
 
   onPaymentDetailsFilled(String balance) {
-    if (controller.paymentModeTED.text != "") {
-      if (controller.depositTED.text != "" &&
+    if (controller.paymentModeTED.text != '') {
+      if (controller.depositTED.text != '' &&
           double.parse(controller.depositTED.text) > 0 &&
           double.parse(controller.depositTED.text) <= double.parse(balance)) {
         controller.bookingModel!.payments!.add(
@@ -26,7 +26,7 @@ class AddPaymentsLogic {
           ),
         );
         FirebaseFirestore.instance
-            .collection("bookings")
+            .collection('bookings')
             .doc(controller.bookingModel!.id)
             .set(controller.bookingModel!.toMap());
         Get.back();
@@ -37,17 +37,17 @@ class AddPaymentsLogic {
           bookingCalenderLogicNew.controller.lastDateIndex,
         );
       } else {
-        Fluttertoast.showToast(msg: "Invalid Deposit");
+        Fluttertoast.showToast(msg: 'Invalid Deposit');
       }
     } else {
-      Fluttertoast.showToast(msg: "Invalid PaymentMode");
+      Fluttertoast.showToast(msg: 'Invalid PaymentMode');
     }
   }
 
   datePicker(context) {
     DatePicker.showDatePicker(context,
         showTitleActions: true,
-        minTime: DateTime.now().subtract(Duration(days: 36500)),
+        minTime: DateTime.now().subtract(const Duration(days: 36500)),
         maxTime: DateTime.now(), onChanged: (date) {
       // //print('change $date');
       controller.paymentDate = date;
@@ -91,10 +91,10 @@ class AddPaymentsController extends GetxController {
   Booking? bookingModel;
 
   reset() {
-    depositTED.text = "";
-    paymentModeTED.text = "";
-    paymentReferenceTED.text = "";
-    receiptNoTED.text = "";
+    depositTED.text = '';
+    paymentModeTED.text = '';
+    paymentReferenceTED.text = '';
+    receiptNoTED.text = '';
   }
 
   List<String> paymentOptions = [

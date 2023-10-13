@@ -3,18 +3,18 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/back_navigation_icon.dart';
-import 'package:temple_adventures/features/bookings/models/booking_model.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/back_navigation_icon.dart';
+import '../../../bookings/models/booking_model.dart';
 
 class DetailsScreen extends StatelessWidget {
-  static const String id = "DetailsScreen";
+  static const String id = 'DetailsScreen';
 
   final DetailsLogic logic = DetailsLogic();
 
   final booking = Get.arguments;
 
-  DetailsScreen() {
+  DetailsScreen({Key? key}) : super(key: key) {
     checkFireBase();
   }
 
@@ -31,7 +31,7 @@ class DetailsScreen extends StatelessWidget {
         toolbarHeight: 70,
         centerTitle: true,
         // title: buildTitle(),
-        leading: BackNavigationIcon(),
+        leading: const BackNavigationIcon(),
         elevation: 0,
         backgroundColor: Colors.transparent,
       ),
@@ -40,85 +40,82 @@ class DetailsScreen extends StatelessWidget {
           return SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.only(
-                  top: 0, left: 30, right: 30, bottom: 30),
-              child: Container(
+                  top: 0, left: 30, right: 30, bottom: 30,),
+              child: SizedBox(
                 width: Get.width,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Hurrah !!",
+                      'Hurrah !!',
                       style: TextStyle(
                           fontSize: 30,
                           fontWeight: FontWeight.w600,
-                          color: AppColors.text.skyBlue),
+                          color: AppColors.text.skyBlue,),
                     ),
-                    SizedBox(height: 30),
+                    const SizedBox(height: 30),
                     buildHeading(
-                        title: "New Booking Created by",
-                        text: controller.bookingModel.employeeName),
-                    SizedBox(height: 50),
+                        title: 'New Booking Created by',
+                        text: controller.bookingModel.employeeName,),
+                    const SizedBox(height: 50),
                     buildBookingDetails(
-                        title: "Booking ID", text: controller.bookingModel.id),
+                        title: 'Booking ID', text: controller.bookingModel.id,),
                     buildBookingDetails(
-                        title: "Name",
-                        text: controller.bookingModel.pax![0]["first-name"] +
-                            " " +
-                            controller.bookingModel.pax![0]["last-name"]),
+                        title: 'Name',
+                        text: controller.bookingModel.pax![0]['first-name'] +
+                            ' ' +
+                            controller.bookingModel.pax![0]['last-name'],),
                     buildBookingDetails(
-                        title: "Pax",
-                        text: controller.bookingModel.noOfPersons.toString()),
+                        title: 'Pax',
+                        text: controller.bookingModel.noOfPersons.toString(),),
                     buildBookingDetails(
-                        title: "Email ID",
-                        text: controller.bookingModel.pax![0]["email"]),
+                        title: 'Email ID',
+                        text: controller.bookingModel.pax![0]['email'],),
                     buildBookingDetails(
-                        title: "Total Amount",
-                        text: (controller.bookingModel.totalCost
-                                .toStringAsFixed(0)) +
-                            " /-"),
+                        title: 'Total Amount',
+                        text: '${controller.bookingModel.totalCost
+                                .toStringAsFixed(0)} /-',),
                     buildBookingDetails(
-                        title: "Deposit",
-                        text: controller.bookingModel.paid!.toStringAsFixed(0) +
-                            " /-"),
+                        title: 'Deposit',
+                        text: '${controller.bookingModel.paid!.toStringAsFixed(0)} /-',),
                     buildBookingDetails(
-                        title: "Balance",
-                        text: (controller.bookingModel.totalCost -
+                        title: 'Balance',
+                        text: '${(controller.bookingModel.totalCost -
                                     controller.bookingModel.paid!)
-                                .toStringAsFixed(0) +
-                            " /-"),
+                                .toStringAsFixed(0)} /-',),
                     buildBookingDetails(
-                        title: "Receipt No",
-                        text: controller.bookingModel.receiptNo ?? "-"),
+                        title: 'Receipt No',
+                        text: controller.bookingModel.receiptNo ?? '-',),
                     buildBookingDetails(
-                        title: "Payment Mode",
-                        text: controller.bookingModel.paymentMode ?? "-"),
+                        title: 'Payment Mode',
+                        text: controller.bookingModel.paymentMode ?? '-',),
                     buildBookingDetails(
-                        title: "Transaction ID",
+                        title: 'Transaction ID',
                         text: controller.bookingModel.paymentTransactionId ??
-                            "-"),
+                            '-',),
                     buildBookingDetails(
-                        title: "Activity",
-                        text: controller.bookingModel.activity![0]!.name),
+                        title: 'Activity',
+                        text: controller.bookingModel.activity![0]!.name,),
                     buildDates(
-                        title: "Dive Dates",
-                        dates: controller.bookingModel.diveDate!),
+                        title: 'Dive Dates',
+                        dates: controller.bookingModel.diveDate!,),
                     buildDates(
-                        title: "Theory Dates",
-                        dates: controller.bookingModel.theoryDate!),
+                        title: 'Theory Dates',
+                        dates: controller.bookingModel.theoryDate!,),
                     buildDates(
-                        title: "Pool Dates",
-                        dates: controller.bookingModel.poolDate!),
+                        title: 'Pool Dates',
+                        dates: controller.bookingModel.poolDate!,),
                     buildBookingDetails(
-                        title: "Remarks",
-                        text: (controller.bookingModel.remarks != "")
+                        title: 'Remarks',
+                        text: (controller.bookingModel.remarks != '')
                             ? controller.bookingModel.remarks
-                            : "-"),
+                            : '-',),
                   ],
                 ),
               ),
             ),
           );
-        }),
+        },),
       ),
     );
   }
@@ -135,19 +132,19 @@ class DetailsScreen extends StatelessWidget {
                   fontSize: 12,
                   fontFamily: AppFonts.nunito,
                   color: AppColors.text.black,
-                  fontWeight: FontWeight.w500),
+                  fontWeight: FontWeight.w500,),
             ),
           ),
-          Container(
+          SizedBox(
             width: 150,
             child: Text(
-              "$text",
+              '$text',
               style: TextStyle(
                   fontSize: 12,
                   fontFamily: AppFonts.nunito,
                   color: AppColors.text.black,
                   fontWeight: FontWeight.w500,
-                  overflow: TextOverflow.ellipsis),
+                  overflow: TextOverflow.ellipsis,),
             ),
           ),
         ],
@@ -156,7 +153,7 @@ class DetailsScreen extends StatelessWidget {
   }
 
   Widget buildHeading({String? title, String? text}) {
-    return Container(
+    return SizedBox(
       width: Get.width,
       child: FittedBox(
         child: Text.rich(
@@ -168,15 +165,15 @@ class DetailsScreen extends StatelessWidget {
                     fontSize: 16,
                     fontFamily: AppFonts.nunito,
                     color: AppColors.text.black,
-                    fontWeight: FontWeight.w600),
+                    fontWeight: FontWeight.w600,),
               ),
               TextSpan(
-                text: "  $text ",
+                text: '  $text ',
                 style: TextStyle(
                     fontSize: 16,
                     fontFamily: AppFonts.nunito,
                     color: AppColors.text.skyBlue,
-                    fontWeight: FontWeight.bold),
+                    fontWeight: FontWeight.bold,),
               ),
             ],
           ),
@@ -197,7 +194,7 @@ class DetailsScreen extends StatelessWidget {
                   fontSize: 12,
                   fontFamily: AppFonts.nunito,
                   color: AppColors.text.black,
-                  fontWeight: FontWeight.w500),
+                  fontWeight: FontWeight.w500,),
             ),
           ),
           Column(
@@ -205,17 +202,17 @@ class DetailsScreen extends StatelessWidget {
               ...dates.map(
                 (e) {
                   String date = DateFormat('dd-MM-yyyy @ hh-mm a').format(e!);
-                  return Container(
+                  return SizedBox(
                       width: 150,
                       child: Text(
-                        "$date",
+                        date,
                         style: TextStyle(
                             fontSize: 12,
                             fontFamily: AppFonts.nunito,
                             color: AppColors.text.black,
                             fontWeight: FontWeight.w500,
-                            overflow: TextOverflow.ellipsis),
-                      ));
+                            overflow: TextOverflow.ellipsis,),
+                      ),);
                 },
               )
             ],

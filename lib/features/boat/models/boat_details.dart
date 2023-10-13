@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:temple_adventures/features/employees/model/employee.dart';
+import '../../employees/model/employee.dart';
 
 class BoatDetails {
   int? bookingStatus;
@@ -31,9 +31,9 @@ class BoatDetails {
     List<Instructor>? diveBuddies,
   }) =>
       BoatDetails(
-        boat: boatId ?? this.boat,
+        boat: boatId ?? boat,
         status: status ?? this.status,
-        instructorTanks: instructorTank ?? this.instructorTanks,
+        instructorTanks: instructorTank ?? instructorTanks,
         employeeNotes: employeeNotes ?? this.employeeNotes,
         bookingStatus: bookingStatus ?? this.bookingStatus,
         instructors: instructors ?? this.instructors,
@@ -48,27 +48,27 @@ class BoatDetails {
   factory BoatDetails.fromJson(Map<String, dynamic>? json) {
     if (json == null) return BoatDetails();
     return BoatDetails(
-      boat: json["boat"] ?? {},
-      instructorTanks: json["instructorTanks"] ?? {},
-      status: json["status"] ?? {},
-      employeeNotes: json["employeeNotes"],
-      bookingStatus: json["bookingStatus"],
+      boat: json['boat'] ?? {},
+      instructorTanks: json['instructorTanks'] ?? {},
+      status: json['status'] ?? {},
+      employeeNotes: json['employeeNotes'],
+      bookingStatus: json['bookingStatus'],
       instructors: List<Instructor>.from(
-          (json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
+          (json['instructors'] ?? []).map((x) => Instructor.fromJson(x)),),
       diveBuddies: List<Instructor>.from(
-          (json["diveBuddies"] ?? []).map((x) => Instructor.fromJson(x))),
+          (json['diveBuddies'] ?? []).map((x) => Instructor.fromJson(x)),),
     );
   }
 
   Map<String, dynamic> toMap() => {
-        "boat": boat,
-        "instructorTanks": instructorTanks,
-        "bookingStatus": bookingStatus,
-        "employeeNotes": employeeNotes,
-        "status": status,
-        "instructors":
+        'boat': boat,
+        'instructorTanks': instructorTanks,
+        'bookingStatus': bookingStatus,
+        'employeeNotes': employeeNotes,
+        'status': status,
+        'instructors':
             List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
-        "diveBuddies":
+        'diveBuddies':
             List<dynamic>.from((diveBuddies ?? []).map((x) => x.toJson())),
       };
 }
@@ -105,17 +105,17 @@ class Instructor {
   String toRawJson() => json.encode(toJson());
 
   factory Instructor.fromJson(Map<String, dynamic> json) => Instructor(
-        id: json["id"],
-        name: json["name"],
-        air: json["air"],
-        nitrox: json["nitrox"],
+        id: json['id'],
+        name: json['name'],
+        air: json['air'],
+        nitrox: json['nitrox'],
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
-        "name": name,
-        "nitrox": nitrox,
-        "air": air,
+        'id': id,
+        'name': name,
+        'nitrox': nitrox,
+        'air': air,
       };
 
   factory Instructor.fromEmployee(Employee employee) {
@@ -171,15 +171,15 @@ class BoatInfo {
   String toJson() => json.encode(toMap());
 
   factory BoatInfo.fromMap(Map<String, dynamic> json) => BoatInfo(
-        id: json["id"],
-        air: json["air"],
-        nitrox: json["nitrox"],
+        id: json['id'],
+        air: json['air'],
+        nitrox: json['nitrox'],
       );
 
   Map<String, dynamic> toMap() => {
-        "id": id,
-        "air": air,
-        "nitrox": nitrox,
+        'id': id,
+        'air': air,
+        'nitrox': nitrox,
       };
 }
 
@@ -207,12 +207,12 @@ class InstructorTanks {
   String toJson() => json.encode(toMap());
 
   factory InstructorTanks.fromMap(Map<String, dynamic> json) => InstructorTanks(
-        air: json["air"],
-        nitrox: json["nitrox"],
+        air: json['air'],
+        nitrox: json['nitrox'],
       );
 
   Map<String, dynamic> toMap() => {
-        "air": air,
-        "nitrox": nitrox,
+        'air': air,
+        'nitrox': nitrox,
       };
 }

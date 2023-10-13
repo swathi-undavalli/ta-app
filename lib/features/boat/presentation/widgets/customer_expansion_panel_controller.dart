@@ -8,7 +8,6 @@ class CustomerExpansionPanelLogic {
   void onBookingStatusRightArrowPressed() {
     if (controller.customerStatus < 4) {
       controller.customerStatus += 1;
-      print(controller.customerStatus);
     }
   }
 

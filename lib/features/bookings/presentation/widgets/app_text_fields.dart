@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
+import '../../../../core/constants/constants.dart';
 
 // ignore: must_be_immutable
 class AppTextField extends StatefulWidget {
@@ -26,7 +26,7 @@ class AppTextField extends StatefulWidget {
   String? labelText;
   bool isStrictNumber;
 
-  AppTextField({
+  AppTextField({Key? key,
     this.maxLimit,
     this.isStrictNumber = false,
     this.labelText,
@@ -48,7 +48,7 @@ class AppTextField extends StatefulWidget {
     this.required = false,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.go,
-  });
+  }) : super(key: key);
 
   @override
   _AppTextFieldsState createState() => _AppTextFieldsState();
@@ -57,13 +57,13 @@ class AppTextField extends StatefulWidget {
 class _AppTextFieldsState extends State<AppTextField> {
   @override
   Widget build(BuildContext context) {
-    if (widget.nextFocusNode == null) widget.nextFocusNode = FocusNode();
-    return Container(
+    widget.nextFocusNode ??= FocusNode();
+    return SizedBox(
       width: widget.width,
       child: Padding(
         padding: const EdgeInsets.only(top: 10, bottom: 10),
         child: TextFormField(
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: AppFonts.nunito,
             fontWeight: FontWeight.normal,
           ),
@@ -83,7 +83,7 @@ class _AppTextFieldsState extends State<AppTextField> {
           enableSuggestions: widget.enableSuggestions,
           decoration: InputDecoration(
             labelText: "${widget.hintText}  ${(widget.required) ? "*" : ""}",
-            prefixStyle: TextStyle(
+            prefixStyle: const TextStyle(
               color: Colors.redAccent,
               fontWeight: FontWeight.bold,
             ),
@@ -91,7 +91,7 @@ class _AppTextFieldsState extends State<AppTextField> {
             suffixIcon: widget.suffixIcon,
             icon: widget.icon,
             errorText: widget.errorValidator!(),
-            labelStyle: TextStyle(
+            labelStyle: const TextStyle(
               fontSize: FontSize.small,
               fontFamily: AppFonts.nunito,
             ),
@@ -101,17 +101,20 @@ class _AppTextFieldsState extends State<AppTextField> {
             return widget.validator!(value);
           },
           onChanged: (value) {
-            if (widget.onChangedCallBack != null)
+            if (widget.onChangedCallBack != null) {
               widget.onChangedCallBack!(value);
-            if (widget.maxLimit != null && value.length == widget.maxLimit)
+            }
+            if (widget.maxLimit != null && value.length == widget.maxLimit) {
               widget.nextFocusNode!.requestFocus();
+            }
             setState(() {});
           },
           onFieldSubmitted: (value) {
-            if (widget.finalSubmit == null)
+            if (widget.finalSubmit == null) {
               widget.nextFocusNode!.requestFocus();
-            else
+            } else {
               widget.finalSubmit!();
+            }
           },
         ),
       ),

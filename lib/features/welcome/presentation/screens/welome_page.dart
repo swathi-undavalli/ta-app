@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/features/dashboard/presentation/screens/dashboard_screen.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../dashboard/presentation/screens/dashboard_screen.dart';
+import '../../../employees/model/employee.dart';
 
 class WelcomeScreen extends StatelessWidget {
-  static const String id = "WelcomeScreen";
+  static const String id = 'WelcomeScreen';
+
+  const WelcomeScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +18,7 @@ class WelcomeScreen extends StatelessWidget {
         },
         elevation: 0,
         backgroundColor: AppColors.IconColor.black,
-        child: Icon(Icons.arrow_forward_ios_outlined),
+        child: const Icon(Icons.arrow_forward_ios_outlined),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SafeArea(
@@ -26,9 +28,9 @@ class WelcomeScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               buildHii(),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               buildPersonName(),
-              SizedBox(height: 5),
+              const SizedBox(height: 5),
               buildPersonRole(),
             ],
           ),
@@ -64,7 +66,7 @@ class WelcomeScreen extends StatelessWidget {
   }
 
  Widget buildHii() {
-    return Container(
+    return SizedBox(
       width: Get.size.width,
       child: Text(
         'Hi,',

@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/features/boat/models/boats.dart';
-import 'package:temple_adventures/features/boat/presentation/widgets/boat_details_bottom_sheet.dart';
+import '../../models/boats.dart';
+import 'boat_details_bottom_sheet.dart';
 
 class BoatSelector extends StatefulWidget {
   const BoatSelector({
@@ -34,17 +34,17 @@ class _BoatSelectorState extends State<BoatSelector> {
 
   Future<void> init() async {
     var d = await FirebaseFirestore.instance
-        .collection("dailyBoats")
-        .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
+        .collection('dailyBoats')
+        .doc(DateFormat('dd-MM-yyyy').format(widget.selectedDate))
         .get();
     Map<String, dynamic>? data = d.data();
     BoatsModel? boatsModel = BoatsModel.fromMap(data);
     allBoats = boatsModel.boats ?? [];
-    allBoats.forEach((boat) {
+    for (var boat in allBoats) {
       if (boat.id == widget.selectedBoatId) {
         selectedBoat = boat;
       }
-    });
+    }
     setState(() {});
   }
 
@@ -56,10 +56,10 @@ class _BoatSelectorState extends State<BoatSelector> {
               height: 31,
               width: 100,
               decoration: BoxDecoration(
-                  color: Colors.black, borderRadius: BorderRadius.circular(20)),
-              child: Center(
-                child: Text("Select Boat",
-                    style: TextStyle(fontSize: 12, color: Colors.white)),
+                  color: Colors.black, borderRadius: BorderRadius.circular(20),),
+              child: const Center(
+                child: Text('Select Boat',
+                    style: TextStyle(fontSize: 12, color: Colors.white),),
               ),
             )
           : Column(
@@ -67,8 +67,8 @@ class _BoatSelectorState extends State<BoatSelector> {
               children: [
                 Row(
                   children: [
-                    Text(
-                      "Selected Boat :",
+                    const Text(
+                      'Selected Boat :',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.black,
@@ -76,14 +76,14 @@ class _BoatSelectorState extends State<BoatSelector> {
                         // decoration: TextDecoration.underline
                       ),
                     ).paddingAll(2),
-                    Text(
-                      "Change",
+                    const Text(
+                      'Change',
                       style: TextStyle(
                           fontSize: 10,
                           color: Colors.blue,
-                          decoration: TextDecoration.underline),
+                          decoration: TextDecoration.underline,),
                     ).paddingOnly(left: 5, right: 5),
-                    Icon(
+                    const Icon(
                       Icons.edit,
                       size: 10,
                       color: Colors.blue,
@@ -91,8 +91,8 @@ class _BoatSelectorState extends State<BoatSelector> {
                   ],
                 ),
                 Text(
-                  "${selectedBoat?.name} @ ${selectedBoat?.time}",
-                  style: TextStyle(
+                  '${selectedBoat?.name} @ ${selectedBoat?.time}',
+                  style: const TextStyle(
                     fontSize: 12,
                     color: Colors.black,
                     // fontWeight: FontWeight.bold,
@@ -111,15 +111,15 @@ class _BoatSelectorState extends State<BoatSelector> {
                 });
               },
               child: Text(
-                "${boat.name} @ ${boat.time}",
-                style: TextStyle(fontSize: 12),
+                '${boat.name} @ ${boat.time}',
+                style: const TextStyle(fontSize: 12),
               ),
             ),
           ),
           if (selectedBoat != null)
             PopupMenuItem<Boat>(
               value: Boat(
-                id: "Un-assign",
+                id: 'Un-assign',
                 captains: [],
                 name: '',
                 surfaceSupport: [],
@@ -137,12 +137,12 @@ class _BoatSelectorState extends State<BoatSelector> {
               onTap: () {},
               child: Column(
                 children: [
-                  Divider(
+                  const Divider(
                     color: Colors.black26,
                   ),
-                  SizedBox(height: 5),
-                  Text(
-                    "Un-Assign Boat",
+                  const SizedBox(height: 5),
+                  const Text(
+                    'Un-Assign Boat',
                     style: TextStyle(fontSize: 12),
                   ).paddingOnly(bottom: 2),
                 ],
@@ -150,7 +150,7 @@ class _BoatSelectorState extends State<BoatSelector> {
             ),
           PopupMenuItem<Boat>(
             value: Boat(
-              id: "Add new",
+              id: 'Add new',
               captains: [],
               name: '',
               surfaceSupport: [],
@@ -168,12 +168,12 @@ class _BoatSelectorState extends State<BoatSelector> {
             onTap: () {},
             child: Column(
               children: [
-                Divider(
+                const Divider(
                   color: Colors.black26,
                 ),
-                SizedBox(height: 5),
-                Text(
-                  "Add custom",
+                const SizedBox(height: 5),
+                const Text(
+                  'Add custom',
                   style: TextStyle(fontSize: 12),
                 ).paddingOnly(bottom: 2),
               ],
@@ -182,18 +182,18 @@ class _BoatSelectorState extends State<BoatSelector> {
         ];
       },
       onSelected: (Boat value) async {
-        if (value.id == "Add new") {
+        if (value.id == 'Add new') {
           BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(context,
-              date: widget.selectedDate, isBoatEdit: false);
+              date: widget.selectedDate, isBoatEdit: false,);
 
           if (boatsModel != null) {
             await FirebaseFirestore.instance
-                .collection("dailyBoats")
-                .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
+                .collection('dailyBoats')
+                .doc(DateFormat('dd-MM-yyyy').format(widget.selectedDate))
                 .set(boatsModel.toMap());
             init();
           }
-        } else if (value.id == "Un-assign") {
+        } else if (value.id == 'Un-assign') {
           setState(() {
             widget.onChanged(null);
           });

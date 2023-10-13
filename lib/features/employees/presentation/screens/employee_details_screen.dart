@@ -2,21 +2,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/access_levels.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/core/widgets/back_navigation_icon.dart';
-import 'package:temple_adventures/features/employees/controllers/add-an-employee-controller.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
-import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
-import 'package:temple_adventures/features/logs/models/log_model.dart';
-import 'package:temple_adventures/features/logs/presentation/screens/log_screen.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/access_levels.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/back_navigation_icon.dart';
+import '../../controllers/add_an_employee_controller.dart';
+import '../../model/employee.dart';
+import 'add_an_employee_screen.dart';
+import '../../../logs/models/log_model.dart';
+import '../../../logs/presentation/screens/log_screen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class EmployeeDetailsScreen extends StatelessWidget {
-  static const String id = "EmployeeDetailsScreen";
+  static const String id = 'EmployeeDetailsScreen';
   final Employee? employeeArgument = Get.arguments as Employee?;
   final AddAnEmployeeLogic logic = AddAnEmployeeLogic();
+
+  EmployeeDetailsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -27,12 +29,12 @@ class EmployeeDetailsScreen extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: AppColors.background.lightBlue,
         elevation: 0,
-        leading: BackNavigationIcon(),
+        leading: const BackNavigationIcon(),
       ),
       backgroundColor: AppColors.background.lightBlue,
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
+          physics: const BouncingScrollPhysics(),
           child: Padding(
             padding: const EdgeInsets.all(20.0),
             child: Column(
@@ -40,15 +42,15 @@ class EmployeeDetailsScreen extends StatelessWidget {
                 Center(
                   child: buildUserProfile(),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   employeeArgument!.name,
                   style: TextStyle(
                       color: AppColors.text.black,
                       fontWeight: FontWeight.w700,
-                      fontSize: FontSize.textSize),
+                      fontSize: FontSize.textSize,),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
@@ -56,14 +58,14 @@ class EmployeeDetailsScreen extends StatelessWidget {
                       Icons.call_rounded,
                       () {
                         makingPhoneCall(employeeArgument!.phoneNumber!,
-                            employeeArgument!.countryCode!);
+                            employeeArgument!.countryCode!,);
                       },
                     ),
                     EmployeeAccess(
                       access: AccessRights.editEmployees,
                       child: buildIcons(Icons.edit, () async {
                         if (await checkFirebase()) {
-                          await Future.delayed(Duration(milliseconds: 300));
+                          await Future.delayed(const Duration(milliseconds: 300));
                           Get.toNamed(AddAnEmployeeScreen.id, arguments: true);
                         }
                       }),
@@ -74,21 +76,21 @@ class EmployeeDetailsScreen extends StatelessWidget {
                         Icons.delete,
                         () {
                           Get.defaultDialog(
-                            contentPadding: EdgeInsets.only(
-                                left: 30, right: 30, top: 20, bottom: 30),
-                            title: "\nAre You Sure ? ",
-                            middleText: "Account will Be Deleted Permanently.",
+                            contentPadding: const EdgeInsets.only(
+                                left: 30, right: 30, top: 20, bottom: 30,),
+                            title: '\nAre You Sure ? ',
+                            middleText: 'Account will Be Deleted Permanently.',
                             backgroundColor: Colors.white,
                             titleStyle: TextStyle(
                                 color: AppColors.text.black,
                                 fontFamily: AppFonts.nunito,
                                 fontSize: 16,
-                                fontWeight: FontWeight.bold),
+                                fontWeight: FontWeight.bold,),
                             middleTextStyle: TextStyle(
                                 color: AppColors.text.black,
                                 fontFamily: AppFonts.nunito,
                                 fontSize: 15,
-                                fontWeight: FontWeight.w500),
+                                fontWeight: FontWeight.w500,),
                             confirm: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -102,7 +104,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                                   text: 'OK',
                                   onTap: () {
                                     FirebaseFirestore.instance
-                                        .collection("employees")
+                                        .collection('employees')
                                         .doc(employeeArgument!.id)
                                         // .collection("employeeFullInformation")
                                         // .doc("employeeData")
@@ -117,7 +119,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                                       employeeName: employeeArgument!.name,
                                     );
                                     FirebaseFirestore.instance
-                                        .collection("logs")
+                                        .collection('logs')
                                         .doc()
                                         .set(logModel.toMap());
                                     Get.back();
@@ -134,47 +136,47 @@ class EmployeeDetailsScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                SizedBox(height: 20),
-                Divider(),
-                SizedBox(height: 20),
-                buildTitle("Employee Details"),
+                const SizedBox(height: 20),
+                const Divider(),
+                const SizedBox(height: 20),
+                buildTitle('Employee Details'),
                 Padding(
                   padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       buildEmployeeInfo(
-                          subHeading: "Name", text: employeeArgument!.name),
+                          subHeading: 'Name', text: employeeArgument!.name,),
                       buildEmployeeInfo(
-                          subHeading: "Employee ID",
-                          text: employeeArgument!.id),
+                          subHeading: 'Employee ID',
+                          text: employeeArgument!.id,),
                       buildEmployeeInfo(
-                          subHeading: "Padi No",
-                          text: employeeArgument!.agencyId),
+                          subHeading: 'Padi No',
+                          text: employeeArgument!.agencyId,),
                       buildEmployeeInfo(
-                          subHeading: "Phone Number",
+                          subHeading: 'Phone Number',
                           text: employeeArgument!.countryCode! +
-                              employeeArgument!.phoneNumber!),
+                              employeeArgument!.phoneNumber!,),
                       buildEmployeeInfo(
-                          subHeading: "ShiftTiming", text: shiftTiming),
+                          subHeading: 'ShiftTiming', text: shiftTiming,),
                       buildEmployeeInfo(
-                          subHeading: "Role", text: employeeArgument!.role!),
+                          subHeading: 'Role', text: employeeArgument!.role!,),
                     ],
                   ),
                 ),
-                SizedBox(height: 20),
-                buildTitle("Login Details"),
+                const SizedBox(height: 20),
+                buildTitle('Login Details'),
                 Padding(
                   padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
                   child: Column(
                     children: [
                       buildEmployeeInfo(
-                          subHeading: "Login Time",
-                          text: DateFormat("hh:mm a")
-                              .format(employeeArgument!.shiftTiming!)),
+                          subHeading: 'Login Time',
+                          text: DateFormat('hh:mm a')
+                              .format(employeeArgument!.shiftTiming!),),
                       buildEmployeeInfo(
-                          subHeading: "Login Location", text: "Pondicherry"),
-                      SizedBox(height: 10),
+                          subHeading: 'Login Location', text: 'Pondicherry',),
+                      const SizedBox(height: 10),
                       // Container(
                       //   alignment: Alignment.centerRight,
                       //   child: AppButton.miniFlat(
@@ -210,42 +212,42 @@ class EmployeeDetailsScreen extends StatelessWidget {
             fontSize: 16,
             color: AppColors.text.skyBlue,
             fontWeight: FontWeight.w700,
-            fontFamily: AppFonts.nunito),
+            fontFamily: AppFonts.nunito,),
       ),
     );
   }
 
   Widget buildEmployeeInfo(
-      {required String subHeading, required String? text}) {
+      {required String subHeading, required String? text,}) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
-      child: Container(
+      child: SizedBox(
         width: 320,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
-              child: Container(
+              child: SizedBox(
                 width: Get.width,
                 child: Text(
                   subHeading,
                   style: TextStyle(
                       color: AppColors.text.black,
                       fontSize: 14,
-                      fontWeight: FontWeight.w600),
+                      fontWeight: FontWeight.w600,),
                 ),
               ),
             ),
-            Container(
+            SizedBox(
               width: 150,
               child: Text(
                 (text != null && text.isNotEmpty)
-                    ? ":      " + text
-                    : ":      " + "-",
+                    ? ':      $text'
+                    : ':      ' '-',
                 style: TextStyle(
                     color: AppColors.text.black,
                     fontSize: 12,
-                    fontWeight: FontWeight.w500),
+                    fontWeight: FontWeight.w500,),
               ),
             ),
           ],
@@ -272,7 +274,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
         height: 35,
         width: 35,
         decoration: BoxDecoration(
-            shape: BoxShape.circle, color: AppColors.background.lightSkyBlue),
+            shape: BoxShape.circle, color: AppColors.background.lightSkyBlue,),
         child: Center(
           child: Icon(
             icon,
@@ -285,19 +287,19 @@ class EmployeeDetailsScreen extends StatelessWidget {
   }
 
   Widget buildUserProfile() {
-    return SizedBox(
+    return const SizedBox(
       height: 100,
       width: 100,
       child: CircleAvatar(
         backgroundImage: NetworkImage(
-            "https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/profile_user.jpg"),
+            'https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/profile_user.jpg',),
       ),
     );
   }
 
   checkFirebase() async {
     var info = await FirebaseFirestore.instance
-        .collection("employees")
+        .collection('employees')
         .doc(employeeArgument!.id)
         .get();
     if (info.data() != null) {
@@ -307,15 +309,15 @@ class EmployeeDetailsScreen extends StatelessWidget {
       final String shiftTiming = formatter.format(date);
       logic.controller.pickedTime = employee.shiftTiming;
       logic.controller.employeeIdTED.text = employee.id;
-      logic.controller.firstNameTED.text = employee.firstName ?? "";
-      logic.controller.lastNameTED.text = employee.lastName ?? "";
+      logic.controller.firstNameTED.text = employee.firstName ?? '';
+      logic.controller.lastNameTED.text = employee.lastName ?? '';
       logic.controller.shiftTimeTED.text = shiftTiming;
-      logic.controller.phoneNumberTED.text = employee.phoneNumber ?? "";
-      logic.controller.countryCodeTED.text = employee.countryCode ?? "";
+      logic.controller.phoneNumberTED.text = employee.phoneNumber ?? '';
+      logic.controller.countryCodeTED.text = employee.countryCode ?? '';
       logic.controller.countryISoCOde = employee.countryIsoCode;
-      logic.controller.genderTED.text = employee.gender ?? "";
-      logic.controller.roleTED.text = employee.role ?? "";
-      logic.controller.agencyIdTED.text = employee.agencyId ?? "";
+      logic.controller.genderTED.text = employee.gender ?? '';
+      logic.controller.roleTED.text = employee.role ?? '';
+      logic.controller.agencyIdTED.text = employee.agencyId ?? '';
       logic.controller.viewBookings =
           employee.accessLevels?.viewBookings ?? false;
       logic.controller.createBookings =

@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/core/constants/checklists.dart';
-import 'package:temple_adventures/core/util/alignment_extensions.dart';
-import 'package:temple_adventures/core/util/spacing_widgets.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
-import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
-import 'package:temple_adventures/features/home/controllers/home_controller.dart';
-import 'package:temple_adventures/features/home/presentation/widgets/employee_dive_calender_list_tile.dart';
+import '../../../../core/constants/checklists.dart';
+import '../../../../core/util/alignment_extensions.dart';
+import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../employees/model/employee.dart';
+import '../../../employees/presentation/screens/all_employees_screen.dart';
+import '../../controllers/home_controller.dart';
+import '../widgets/employee_dive_calender_list_tile.dart';
 import '../../../../core/authentication/firebase_authentication.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
@@ -16,6 +16,8 @@ import '../../../dive_checklist/views/screens/dive_checklist_view.dart';
 import '../../../login/presentation/screens/login_page.dart';
 
 class HomePage extends StatefulWidget {
+  const HomePage({Key? key}) : super(key: key);
+
   @override
   State<HomePage> createState() => _HomePageState();
 }
@@ -39,18 +41,18 @@ class _HomePageState extends State<HomePage> {
               ? Column(
                   children: [
                     buildMenuAndLogOut().paddingOnly(bottom: 20),
-                    if (currentEmployee?.role != "Intern")
+                    if (currentEmployee?.role != 'Intern')
                       AddEmployeeWidget(
-                        text: "Add Employees",
-                        subText: "Only admins can modify",
+                        text: 'Add Employees',
+                        subText: 'Only admins can modify',
                         onTap: () {
                           Get.toNamed(AllEmployeesScreen.id);
                         },
                       ).paddingOnly(bottom: 10),
                     buildCheckLists().paddingOnly(bottom: 10),
-                    if (currentEmployee?.role == "Intern")
+                    if (currentEmployee?.role == 'Intern')
                       Text(
-                        "My Dives",
+                        'My Dives',
                         style: TextStyle(
                           fontFamily: AppFonts.nunito,
                           color: AppColors.text.black,
@@ -62,15 +64,15 @@ class _HomePageState extends State<HomePage> {
                     Spacing.h50,
                   ],
                 ).paddingSymmetric(horizontal: 20).scrollable
-              : Container(
+              : SizedBox(
                   height: Get.height,
                   width: Get.width,
-                  child: CircularProgressIndicator(
+                  child: const CircularProgressIndicator(
                     color: Colors.black,
                   ).center,
                 ),
         );
-      }),
+      },),
     );
   }
 
@@ -88,30 +90,30 @@ class _HomePageState extends State<HomePage> {
               icon,
               color: Colors.black,
               size: 14,
-            )));
+            ),),);
   }
 
   Widget buildMenuAndLogOut() {
     return Container(
-      margin: EdgeInsets.only(top: 10),
+      margin: const EdgeInsets.only(top: 10),
       width: Get.width,
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
-          if (currentEmployee?.role != "Intern")
+          if (currentEmployee?.role != 'Intern')
             IconButton(
               onPressed: () {
                 dashboardDrawerKey.currentState!.openDrawer();
               },
-              icon: Icon(Icons.menu_rounded),
+              icon: const Icon(Icons.menu_rounded),
             ),
-          Spacer(),
+          const Spacer(),
           IconButton(
             onPressed: () {
               FirebaseAuthentication.logout();
               Get.offAndToNamed(LoginScreen.id);
             },
-            icon: Icon(Icons.logout),
+            icon: const Icon(Icons.logout),
           ),
         ],
       ),
@@ -137,9 +139,9 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       logic.onDateChanged(controller.selectedDate.subtract(const Duration(days: 1)));
                     },
-                    icon: Icons.arrow_back_ios_rounded),
+                    icon: Icons.arrow_back_ios_rounded,),
                 Spacing.w20,
-                Container(
+                SizedBox(
                   width: 103,
                   child: Text(
                     DateFormat('dd-MMM-yyyy').format(controller.selectedDate),
@@ -156,16 +158,16 @@ class _HomePageState extends State<HomePage> {
                     onTap: () {
                       logic.onDateChanged(controller.selectedDate.add(const Duration(days: 1)));
                     },
-                    icon: Icons.arrow_forward_ios_rounded),
+                    icon: Icons.arrow_forward_ios_rounded,),
               ],
             ).paddingSymmetric(horizontal: 10),
             Spacing.h5,
-            Divider(thickness: 2, color: Colors.black),
+            const Divider(thickness: 2, color: Colors.black),
             Spacing.h10,
-            if (controller.bookings.length == 0 &&
-                controller.diveBuddies.length == 0 &&
-                controller.generalStaffList.length == 0)
-              Text("No tasks assigned").center,
+            if (controller.bookings.isEmpty &&
+                controller.diveBuddies.isEmpty &&
+                controller.generalStaffList.isEmpty)
+              const Text('No tasks assigned').center,
             ...controller.bookings.map(
               (booking) => EmployeeDiveCalenderListTile(
                 itemModel: booking,
@@ -174,19 +176,19 @@ class _HomePageState extends State<HomePage> {
             ),
             ...controller.diveBuddies.map(
               (e) => buildListTile(
-                title: "Dive Buddy",
-                value: "${e.name} x ${e.pax} (${e.bookingID})",
+                title: 'Dive Buddy',
+                value: '${e.name} x ${e.pax} (${e.bookingID})',
               ),
             ),
             ...controller.currentList.map(
               (e) => buildListTile(
-                  title: e["role"].toString(), value: "${e["boat_details"]?.name}@ ${e["boat_details"]?.time}"),
+                  title: e['role'].toString(), value: "${e["boat_details"]?.name}@ ${e["boat_details"]?.time}",),
             ),
-            ...controller.generalStaffList.map((e) => buildListTile(title: e, value: "Manage / Organize")),
+            ...controller.generalStaffList.map((e) => buildListTile(title: e, value: 'Manage / Organize')),
             Spacing.h15,
           ],
         );
-      }),
+      },),
     );
   }
 
@@ -202,14 +204,14 @@ class _HomePageState extends State<HomePage> {
         children: [
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.w600,
               color: Colors.black,
             ),
           ),
           Text(
-            value ?? "",
+            value ?? '',
             style: TextStyle(
               fontFamily: AppFonts.nunito,
               color: AppColors.text.darkgrey,
@@ -223,7 +225,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Widget buildCheckLists() {
-    if (currentEmployee?.role != "Intern")
+    if (currentEmployee?.role != 'Intern') {
       return Container(
         width: Get.width,
         decoration: BoxDecoration(
@@ -235,7 +237,7 @@ class _HomePageState extends State<HomePage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "CheckLists",
+              'CheckLists',
               style: TextStyle(
                 fontFamily: AppFonts.nunito,
                 color: AppColors.text.black,
@@ -251,11 +253,12 @@ class _HomePageState extends State<HomePage> {
                     DiveChecklistView.id,
                     arguments: checklist,
                   );
-                }).paddingOnly(bottom: 5)),
+                },).paddingOnly(bottom: 5),),
           ],
         ).paddingSymmetric(horizontal: 15, vertical: 15),
       );
-    return SizedBox();
+    }
+    return const SizedBox();
   }
 
   Widget buildChecklistTiles({required String text, required Function onTap}) {
@@ -286,12 +289,12 @@ class _HomePageState extends State<HomePage> {
 
   getFirstName(String d) {
     d = d.trim();
-    return d.split(" ").first.trim();
+    return d.split(' ').first.trim();
   }
 
   getLastName(String d) {
     d = d.trim();
 
-    return d.replaceAll(getFirstName(d), "").trim();
+    return d.replaceAll(getFirstName(d), '').trim();
   }
 }

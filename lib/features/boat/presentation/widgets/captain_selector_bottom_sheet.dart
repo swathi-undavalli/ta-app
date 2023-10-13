@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
+import '../../../employees/model/employee.dart';
 
 class CaptainSelectorBottomSheet extends StatefulWidget {
   final Employee? initialCaptain;
@@ -12,7 +12,7 @@ class CaptainSelectorBottomSheet extends StatefulWidget {
   }) : super(key: key);
 
   static Future<Employee?> show(BuildContext context,
-      {required Employee? initialSelectedCaptain}) async {
+      {required Employee? initialSelectedCaptain,}) async {
     var data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -54,30 +54,30 @@ class _CaptainSelectorBottomSheetState
       ),
       child: Column(
         children: [
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
-              SizedBox(
+              const SizedBox(
                 width: 30,
               ),
-              Text(
-                "Add Captain",
+              const Text(
+                'Add Captain',
                 style: TextStyle(
                   fontWeight: FontWeight.w600,
                   fontSize: 20,
                 ),
               ).paddingOnly(top: 8),
-              Spacer(),
+              const Spacer(),
               IconButton(
-                icon: Icon(Icons.close),
+                icon: const Icon(Icons.close),
                 onPressed: () async {
                   Navigator.pop(context, selectedCaptain);
                 },
               ),
-              SizedBox(
+              const SizedBox(
                 width: 30,
               ),
             ],
@@ -90,7 +90,7 @@ class _CaptainSelectorBottomSheetState
               },
               child: Container(
                 height: 30,
-                padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color: Colors.white,
@@ -102,11 +102,11 @@ class _CaptainSelectorBottomSheetState
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    Text(selectedCaptain?.name ?? ""),
-                    SizedBox(
+                    Text(selectedCaptain?.name ?? ''),
+                    const SizedBox(
                       width: 5,
                     ),
-                    Icon(
+                    const Icon(
                       Icons.close,
                       size: 16,
                       color: Colors.grey,
@@ -119,17 +119,17 @@ class _CaptainSelectorBottomSheetState
             child: StreamBuilder<QuerySnapshot>(
               stream: employeesCollection.snapshots(),
               builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                  AsyncSnapshot<QuerySnapshot> snapshot,) {
                 if (snapshot.hasError) {
                   return Text('Error: ${snapshot.error}');
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 }
 
                 if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
-                  return Text('No employees found.');
+                  return const Text('No employees found.');
                 }
 
                 return ListView(
@@ -137,7 +137,7 @@ class _CaptainSelectorBottomSheetState
                       snapshot.data!.docs.map((DocumentSnapshot document) {
                     try {
                       Employee employee = Employee.fromMap(
-                          document.data() as Map<String, dynamic>);
+                          document.data() as Map<String, dynamic>,);
 
                       return InkWell(
                         onTap: () {
@@ -149,7 +149,7 @@ class _CaptainSelectorBottomSheetState
                             Container(
                               child: Text(
                                 employee.name,
-                                style: TextStyle(
+                                style: const TextStyle(
                                   fontSize: 16,
                                 ),
                               ).paddingOnly(
@@ -158,19 +158,19 @@ class _CaptainSelectorBottomSheetState
                                 bottom: 10,
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             // Icon(
                             //   Icons.check_circle,
                             //   color: Colors.green,
                             // ),
-                            SizedBox(
+                            const SizedBox(
                               width: 30,
                             ),
                           ],
                         ),
                       );
                     } catch (e) {
-                      return SizedBox();
+                      return const SizedBox();
                     }
                   }).toList(),
                 ).paddingOnly(top: 20);

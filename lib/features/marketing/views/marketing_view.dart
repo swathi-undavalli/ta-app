@@ -3,19 +3,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
-import 'package:temple_adventures/core/constants/assets.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/alignment_extensions.dart';
-import 'package:temple_adventures/core/util/spacing_widgets.dart';
-import 'package:temple_adventures/core/widgets/ta_image.dart';
-import 'package:temple_adventures/features/Marketing/controllers/marketing_controller.dart';
-import 'package:temple_adventures/features/Marketing/models/marketing_model.dart';
-import 'package:temple_adventures/features/Marketing/widgets/marketing_content_entry_bottom_sheet.dart';
+import '../../../core/constants/assets.dart';
+import '../../../core/constants/constants.dart';
+import '../../../core/util/alignment_extensions.dart';
+import '../../../core/util/spacing_widgets.dart';
+import '../../../core/widgets/ta_image.dart';
+import '../../Marketing/controllers/marketing_controller.dart';
+import '../../Marketing/models/marketing_model.dart';
+import '../../Marketing/widgets/marketing_content_entry_bottom_sheet.dart';
 import '../../../core/widgets/app_button.dart';
 
 class MarketingView extends StatefulWidget {
   const MarketingView({Key? key}) : super(key: key);
-  static const String id = "MarketingView";
+  static const String id = 'MarketingView';
 
   @override
   State<MarketingView> createState() => _MarketingViewState();
@@ -32,10 +32,10 @@ class _MarketingViewState extends State<MarketingView> {
       body: SafeArea(
         child: GetBuilder<MarketingController>(builder: (controller) {
           return StreamBuilder(
-              stream: FirebaseFirestore.instance.collection("marketing").doc("marketing").snapshots(),
+              stream: FirebaseFirestore.instance.collection('marketing').doc('marketing').snapshots(),
               builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
                 if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
-                  return SizedBox(
+                  return const SizedBox(
                     height: 15,
                     width: 15,
                     child: CircularProgressIndicator(
@@ -47,9 +47,9 @@ class _MarketingViewState extends State<MarketingView> {
                 final data = snapshot.data?.data();
 
                 if (data == null) {
-                  return Container(
+                  return SizedBox(
                     height: Get.height,
-                    child: Text(
+                    child: const Text(
                       'Marketing Gallery is empty',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ).center,
@@ -59,9 +59,9 @@ class _MarketingViewState extends State<MarketingView> {
                 Marketing? marketing = Marketing.fromJson(data as Map<String, dynamic>);
 
                 if ((marketing.marketingGallery ?? []).isEmpty) {
-                  return Container(
+                  return SizedBox(
                     height: Get.height,
-                    child: Text(
+                    child: const Text(
                       'Marketing Gallery is empty',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ).center,
@@ -77,7 +77,7 @@ class _MarketingViewState extends State<MarketingView> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(10),
                           boxShadow: [
-                            BoxShadow(offset: Offset(1, 3), spreadRadius: 2, color: Colors.grey.shade100),
+                            BoxShadow(offset: const Offset(1, 3), spreadRadius: 2, color: Colors.grey.shade100),
                           ],
                         ),
                         child: Row(
@@ -89,7 +89,7 @@ class _MarketingViewState extends State<MarketingView> {
                                 Spacing.h10,
                                 buildDeleteEditIcons(
                                     index: (marketing.marketingGallery ?? []).indexOf(element),
-                                    marketingElement: element),
+                                    marketingElement: element,),
                               ],
                             ),
                             Spacing.w20,
@@ -98,7 +98,7 @@ class _MarketingViewState extends State<MarketingView> {
                               children: [
                                 Spacing.h5,
                                 buildContent(
-                                  value: (element.name ?? "Untitled").capitalizeFirst,
+                                  value: (element.name ?? 'Untitled').capitalizeFirst,
                                   fontSize: 16,
                                   color: Colors.black,
                                 ),
@@ -109,16 +109,16 @@ class _MarketingViewState extends State<MarketingView> {
                                 Spacing.h5,
                                 RichText(
                                   text: TextSpan(
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
                                         fontFamily: AppFonts.nunito,
                                         overflow: TextOverflow.ellipsis,
-                                        color: Colors.grey),
+                                        color: Colors.grey,),
                                     children: [
-                                      TextSpan(text: "Displays for "),
+                                      const TextSpan(text: 'Displays for '),
                                       TextSpan(
-                                        text: " ${element.duration} secs",
+                                        text: ' ${element.duration} secs',
                                         style: const TextStyle(color: Colors.black),
                                       ),
                                     ],
@@ -133,20 +133,20 @@ class _MarketingViewState extends State<MarketingView> {
                     Spacing.h30,
                   ],
                 ).scrollable;
-              });
-        }).paddingSymmetric(horizontal: 20),
+              },);
+        },).paddingSymmetric(horizontal: 20),
       ),
     );
   }
 
   Widget buildPreviewImage({required String url, required String urlType}) {
     getPreviewWidget() {
-      if (urlType == "Image") {
+      if (urlType == 'Image') {
         return TAImage(
           url,
           fit: BoxFit.cover,
         );
-      } else if (urlType == "Video") {
+      } else if (urlType == 'Video') {
         return TAImage(
           AppImages.icons.video,
           fit: BoxFit.cover,
@@ -184,7 +184,7 @@ class _MarketingViewState extends State<MarketingView> {
               color: Colors.red.shade500,
               onTap: () {
                 deleteDialog(context, index: index, marketingElement: marketingElement);
-              }),
+              },),
           buildIcons(
               icon: Icons.edit,
               color: Colors.black,
@@ -194,35 +194,35 @@ class _MarketingViewState extends State<MarketingView> {
                   elementIndex: index,
                   marketingElementModel: marketingElement,
                 );
-              }),
+              },),
         ],
       ),
     );
   }
 
   Future<void> deleteDialog(BuildContext context,
-      {required int index, required MarketingElement marketingElement}) async {
+      {required int index, required MarketingElement marketingElement,}) async {
     return showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text(
+            title: const Text(
               'Are you sure?',
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
             ),
             content: Text(
-              "${marketingElement.type} will be completely deleted",
-              style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+              '${marketingElement.type} will be completely deleted',
+              style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
             ),
             actions: <Widget>[
               AppButton.miniText(
-                text: "Cancel",
+                text: 'Cancel',
                 onTap: () {
                   Get.back();
                 },
               ),
               AppButton.miniFlat(
-                text: "Okay",
+                text: 'Okay',
                 onTap: () {
                   logic.onDeletePressed(index);
                   Get.back();
@@ -230,7 +230,7 @@ class _MarketingViewState extends State<MarketingView> {
               ),
             ],
           );
-        });
+        },);
   }
 
   Widget buildIcons({required IconData icon, required Color color, required Function onTap}) {
@@ -246,12 +246,12 @@ class _MarketingViewState extends State<MarketingView> {
           iconSize: 15,
           onPressed: () {
             onTap();
-            log("tapped");
+            log('tapped');
           },
           icon: Icon(
             icon,
             color: Colors.black,
-          )),
+          ),),
     );
   }
 
@@ -261,13 +261,13 @@ class _MarketingViewState extends State<MarketingView> {
         SizedBox(
           width: Get.width - 190,
           child: Text(
-            (value != null && value.isNotEmpty) ? "$value" : "Untitled",
+            (value != null && value.isNotEmpty) ? value : 'Untitled',
             style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.w600,
                 fontFamily: AppFonts.nunito,
                 overflow: TextOverflow.ellipsis,
-                color: color),
+                color: color,),
           ),
         ),
       ],
@@ -281,7 +281,7 @@ class _MarketingViewState extends State<MarketingView> {
         MarketingContentEntryBottomSheet.show(context);
       },
       backgroundColor: AppColors.background.black,
-      child: Icon(Icons.add),
+      child: const Icon(Icons.add),
     );
   }
 

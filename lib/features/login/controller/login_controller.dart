@@ -1,14 +1,13 @@
-import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/repository/employee_repo.dart';
-import 'package:temple_adventures/core/util/utils.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
-import 'package:temple_adventures/features/welcome/presentation/screens/welome_page.dart';
+import '../../../core/constants/constants.dart';
+import '../../../core/repository/employee_repo.dart';
+import '../../../core/util/utils.dart';
+import '../../../core/widgets/app_button.dart';
+import '../../employees/model/employee.dart';
+import '../../welcome/presentation/screens/welome_page.dart';
 
 LoginScreenLogic logic = LoginScreenLogic();
 
@@ -41,19 +40,17 @@ class LoginScreenLogic {
 
   getFilledOTP() async {
     while (true) {
-      await Future.delayed(Duration(milliseconds: 100));
+      await Future.delayed(const Duration(milliseconds: 100));
       if (getOTP().length == 6) return getOTP();
     }
   }
 
   verifyEmployeeID() async {
-    log("verifyEmployeeID");
     try {
       currentEmployee = await EmployeeRepo.getEmployee(getEmployeeId());
       controller.phoneNumberTED.text = currentEmployee!.authPhone;
       getPhoneNumber();
       EmployeeRepo.employeeID = getEmployeeId();
-      print("Done");
       return true;
     } catch (e) {
       showToast(e.toString());
@@ -68,7 +65,7 @@ class LoginScreenLogic {
       controller.showPhoneNumber = false;
       if (await verifyEmployeeID()) {
         await FirebaseAuth.instance.verifyPhoneNumber(
-          timeout: Duration(seconds: 60),
+          timeout: const Duration(seconds: 60),
           phoneNumber: getPhoneNumber(),
           verificationCompleted: (PhoneAuthCredential credential) async {
             await FirebaseAuth.instance.signInWithCredential(credential);
@@ -83,11 +80,11 @@ class LoginScreenLogic {
             //log(e.toString());
           },
           codeSent: (String verificationId, int? resendToken) async {
-            controller.otpStatus = "OTP has been sent to ${getPhoneNumber()}";
+            controller.otpStatus = 'OTP has been sent to ${getPhoneNumber()}';
             startTimer();
             String smsCode = await getFilledOTP();
             PhoneAuthCredential credential = PhoneAuthProvider.credential(
-                verificationId: verificationId, smsCode: smsCode);
+                verificationId: verificationId, smsCode: smsCode,);
             await FirebaseAuth.instance.signInWithCredential(credential);
             if (FirebaseAuth.instance.currentUser != null) {
               EmployeeRepo.initiateRepo(currentEmployee!.id);
@@ -102,28 +99,28 @@ class LoginScreenLogic {
       } else {
         Get.defaultDialog(
           contentPadding:
-              EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 40),
-          title: "\n Oops!",
-          middleText: "you are not Authorized to use this app.",
+              const EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 40),
+          title: '\n Oops!',
+          middleText: 'you are not Authorized to use this app.',
           backgroundColor: Colors.white,
           titleStyle: TextStyle(
               color: AppColors.text.black,
               fontFamily: AppFonts.nunito,
               fontSize: 16,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.bold,),
           middleTextStyle: TextStyle(
               color: AppColors.text.black,
               fontFamily: AppFonts.nunito,
               fontSize: 16,
-              fontWeight: FontWeight.bold),
+              fontWeight: FontWeight.bold,),
           cancel: AppButton.miniFlat(
             text: 'OK',
             onTap: () {
               Get.back();
               controller.showPhoneNumber = true;
               controller.showLoading = false;
-              controller.countryCodeTED.text = "";
-              controller.phoneNumberTED.text = "";
+              controller.countryCodeTED.text = '';
+              controller.phoneNumberTED.text = '';
             },
           ),
           barrierDismissible: false,
@@ -131,12 +128,12 @@ class LoginScreenLogic {
         );
       }
     } else {
-      Fluttertoast.showToast(msg: "Invalid Employee");
+      Fluttertoast.showToast(msg: 'Invalid Employee');
     }
   }
 
   resendOTP() async {
-    controller.otpStatus = "";
+    controller.otpStatus = '';
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: getPhoneNumber(),
       verificationCompleted: (PhoneAuthCredential credential) async {
@@ -151,10 +148,10 @@ class LoginScreenLogic {
         //log(e.toString());
       },
       codeSent: (String verificationId, int? resendToken) async {
-        controller.otpStatus = "OTP has been Resent";
+        controller.otpStatus = 'OTP has been Resent';
         String smsCode = await getFilledOTP();
         PhoneAuthCredential credential = PhoneAuthProvider.credential(
-            verificationId: verificationId, smsCode: smsCode);
+            verificationId: verificationId, smsCode: smsCode,);
         await FirebaseAuth.instance.signInWithCredential(credential);
         if (FirebaseAuth.instance.currentUser != null) {
           Get.offAndToNamed(WelcomeScreen.id);
@@ -169,7 +166,7 @@ class LoginScreenLogic {
   void startTimer() {
     controller.showResend = true;
     controller.showFab = false;
-    Future.delayed(Duration(seconds: 60)).whenComplete(() {});
+    Future.delayed(const Duration(seconds: 60)).whenComplete(() {});
   }
 }
 
@@ -178,7 +175,7 @@ class LoginScreenController extends GetxController {
   TextEditingController countryCodeTED = TextEditingController();
   TextEditingController employeeIdTED = TextEditingController();
 
-  String _otpStatus = "";
+  String _otpStatus = '';
   bool _showFab = true;
   bool _showPhoneNumber = true;
   bool _showLoading = false;
@@ -186,7 +183,7 @@ class LoginScreenController extends GetxController {
 
   bool _otpSent = false;
 
-  String otp = "";
+  String otp = '';
 
   bool get showResend => _showResend;
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
+import '../../../../core/constants/constants.dart';
 
 class TankCounter extends StatefulWidget {
   const TankCounter({
@@ -34,14 +34,14 @@ class _TankCounterState extends State<TankCounter> {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        buildAirNitrox(title: "Nitrox", isNitrox: true),
-        buildAirNitrox(title: "Air", isNitrox: false),
+        buildAirNitrox(title: 'Nitrox', isNitrox: true),
+        buildAirNitrox(title: 'Air', isNitrox: false),
       ],
     );
   }
 
   Widget buildIncrementDecrement(
-      {required Function onTap, required IconData icon}) {
+      {required Function onTap, required IconData icon,}) {
     return InkWell(
         onTap: () {
           onTap();
@@ -49,16 +49,16 @@ class _TankCounterState extends State<TankCounter> {
         child: Container(
           height: 35,
           width: 35,
+          decoration: BoxDecoration(
+            color: AppColors.text.skyBlue.withOpacity(0.4),
+            borderRadius: BorderRadius.circular(3),
+          ),
           child: Icon(
             icon,
             size: 14,
             // color: Colors.white,
           ),
-          decoration: BoxDecoration(
-            color: AppColors.text.skyBlue.withOpacity(0.4),
-            borderRadius: BorderRadius.circular(3),
-          ),
-        ));
+        ),);
   }
 
   Widget buildAirNitrox({required String title, required bool isNitrox}) {
@@ -72,7 +72,7 @@ class _TankCounterState extends State<TankCounter> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 15),
+        const SizedBox(height: 15),
         Row(
           children: [
             buildIncrementDecrement(
@@ -85,10 +85,10 @@ class _TankCounterState extends State<TankCounter> {
                   widget.onChanged(nitrox, air);
                   setState(() {});
                 },
-                icon: Icons.remove),
-            SizedBox(width: 15),
+                icon: Icons.remove,),
+            const SizedBox(width: 15),
             Text((isNitrox) ? nitrox.toString() : air.toString()),
-            SizedBox(width: 15),
+            const SizedBox(width: 15),
             buildIncrementDecrement(
                 onTap: () {
                   if (isNitrox) {
@@ -99,7 +99,7 @@ class _TankCounterState extends State<TankCounter> {
                   widget.onChanged(nitrox, air);
                   setState(() {});
                 },
-                icon: Icons.add),
+                icon: Icons.add,),
           ],
         ),
       ],

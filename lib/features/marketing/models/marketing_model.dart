@@ -9,16 +9,16 @@ class Marketing {
     List<MarketingElement>? marketing,
   }) =>
       Marketing(
-        marketingGallery: marketing ?? this.marketingGallery,
+        marketingGallery: marketing ?? marketingGallery,
       );
 
   factory Marketing.fromJson(Map<String, dynamic> json) => Marketing(
         marketingGallery:
-            List<MarketingElement>.from((json["marketing"] ?? ([])).map((x) => MarketingElement.fromJson(x))),
+            List<MarketingElement>.from((json['marketing'] ?? ([])).map((x) => MarketingElement.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "marketing": List<dynamic>.from((marketingGallery ?? []).map((x) => x.toJson())),
+        'marketing': List<dynamic>.from((marketingGallery ?? []).map((x) => x.toJson())),
       };
 }
 
@@ -49,16 +49,16 @@ class MarketingElement {
       );
 
   factory MarketingElement.fromJson(Map<String, dynamic> json) => MarketingElement(
-        name: json["name"],
-        url: json["url"],
-        type: json["type"],
-        duration: json["duration"],
+        name: json['name'],
+        url: json['url'],
+        type: json['type'],
+        duration: json['duration'],
       );
 
   Map<String, dynamic> toJson() => {
-        "name": name,
-        "url": url,
-        "type": type,
-        "duration": duration,
+        'name': name,
+        'url': url,
+        'type': type,
+        'duration': duration,
       };
 }

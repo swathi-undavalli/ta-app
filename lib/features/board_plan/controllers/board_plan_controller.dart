@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/features/board_plan/presentation/widgets/customer_details.dart';
-import 'package:temple_adventures/features/boat/models/boats.dart';
-import 'package:temple_adventures/features/bookings/models/booking_model.dart';
+import '../presentation/widgets/customer_details.dart';
+import '../../boat/models/boats.dart';
+import '../../bookings/models/booking_model.dart';
 
 class BoardPlanLogic {
   BoardPlanController controller = Get.put(BoardPlanController());
@@ -21,15 +21,16 @@ class BoardPlanLogic {
 
     var data = await FirebaseFirestore.instance
         .collection('dailyBoats')
-        .doc(DateFormat("dd-MM-yyyy").format(date))
+        .doc(DateFormat('dd-MM-yyyy').format(date))
         .get();
 
     BoatsModel boatsModel = BoatsModel.fromMap(data.data());
     controller.boats.addAll(boatsModel.boats as Iterable<Boat>);
-    if (controller.boats.isNotEmpty)
+    if (controller.boats.isNotEmpty) {
       controller.selectedBoat = controller.boats[0];
-    else
+    } else {
       controller.isGeneralInfoSelected = true;
+    }
   }
 
   Future<void> onDateChanged(DateTime date) async {

@@ -4,17 +4,19 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/features/bookings/controller/edit_payments_controller.dart';
-import 'package:temple_adventures/features/bookings/models/booking_model.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app_text_fields.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../controller/edit_payments_controller.dart';
+import '../../models/booking_model.dart';
+import '../widgets/app_text_fields.dart';
+import '../../../employees/model/employee.dart';
 
 // ignore: must_be_immutable
 class EditPaymentsScreen extends StatelessWidget {
-  static const String id = "EditPaymentsScreen";
+  static const String id = 'EditPaymentsScreen';
   EditPaymentsLogic logic = EditPaymentsLogic();
+
+  EditPaymentsScreen({Key? key}) : super(key: key);
 
   // BookingModel bookingArg = Get.arguments;
 
@@ -41,25 +43,23 @@ class EditPaymentsScreen extends StatelessWidget {
         backgroundColor: AppColors.background.white,
       ),
       body: SafeArea(
-        child: Container(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-            child: GetBuilder<EditPaymentsController>(builder: (controller) {
-              return Column(
-                children: [
-                  SizedBox(height: 20),
-                  ...List.generate(
-                    controller.bookingModel!.payments!.length,
-                    (index) {
-                      return buildTransactions(
-                          index: index,
-                          payment: controller.bookingModel!.payments![index]);
-                    },
-                  ),
-                ],
-              );
-            }),
-          ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          child: GetBuilder<EditPaymentsController>(builder: (controller) {
+            return Column(
+              children: [
+                const SizedBox(height: 20),
+                ...List.generate(
+                  controller.bookingModel!.payments!.length,
+                  (index) {
+                    return buildTransactions(
+                        index: index,
+                        payment: controller.bookingModel!.payments![index],);
+                  },
+                ),
+              ],
+            );
+          },),
         ),
       ),
     );
@@ -77,25 +77,25 @@ class EditPaymentsScreen extends StatelessWidget {
               height: 8,
               width: 8,
               decoration: BoxDecoration(
-                  color: Colors.green, borderRadius: BorderRadius.circular(10)),
+                  color: Colors.green, borderRadius: BorderRadius.circular(10),),
             ).paddingOnly(top: 2, left: 5),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
+                SizedBox(
                   width: Get.width - 100,
                   child: Text(
-                    "Payment ${payment.amount!.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}",
+                    'Payment ${payment.amount!.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}',
                     overflow: TextOverflow.ellipsis,
-                    style: TextStyle(
+                    style: const TextStyle(
                         fontSize: 10,
                         fontWeight: FontWeight.w600,
-                        wordSpacing: 2),
+                        wordSpacing: 2,),
                   ),
                 ),
-                SizedBox(height: 2),
+                const SizedBox(height: 2),
                 if (payment.time != null &&
                     now.day == payment.time!.day &&
                     now.month == payment.time!.month &&
@@ -107,13 +107,13 @@ class EditPaymentsScreen extends StatelessWidget {
                   )
                 else if (payment.time != null)
                   Text(
-                    DateFormat("EEE dd MMM yy - hh:mm a").format(payment.time!),
+                    DateFormat('EEE dd MMM yy - hh:mm a').format(payment.time!),
                     style:
                         TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
                   )
                 else
                   Text(
-                    "Initial Deposit",
+                    'Initial Deposit',
                     style:
                         TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
                   ),
@@ -136,20 +136,20 @@ class EditPaymentsScreen extends StatelessWidget {
                   logic.controller.referenceNoTED.text =
                       payment.referenceNo.toString();
                   Get.defaultDialog(
-                    contentPadding: EdgeInsets.only(
-                        left: 30, right: 30, top: 10, bottom: 10),
-                    title: "\nEdit Payment",
+                    contentPadding: const EdgeInsets.only(
+                        left: 30, right: 30, top: 10, bottom: 10,),
+                    title: '\nEdit Payment',
                     backgroundColor: Colors.white,
                     titleStyle: TextStyle(
                         color: AppColors.text.black,
                         fontFamily: AppFonts.nunito,
                         fontSize: 16,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,),
                     middleTextStyle: TextStyle(
                         color: AppColors.text.black,
                         fontFamily: AppFonts.nunito,
                         fontSize: 15,
-                        fontWeight: FontWeight.w500),
+                        fontWeight: FontWeight.w500,),
                     content: Column(
                       children: [
                         AppTextField(
@@ -165,7 +165,7 @@ class EditPaymentsScreen extends StatelessWidget {
                             return null;
                           },
                         ),
-                        SizedBox(height: 10),
+                        const SizedBox(height: 10),
                         buildPaymentMode(),
                         AppTextField(
                           width: 320,
@@ -210,7 +210,7 @@ class EditPaymentsScreen extends StatelessWidget {
                               logic.controller.bookingModel!.payments![index!]
                                       .amount =
                                   double.parse(
-                                      logic.controller.paymentTED.text);
+                                      logic.controller.paymentTED.text,);
                               logic.controller.bookingModel!.payments![index]
                                       .paymentMode =
                                   logic.controller.paymentModeTED.text;
@@ -225,7 +225,7 @@ class EditPaymentsScreen extends StatelessWidget {
                               logic.controller.bookingModel!.payments![index]
                                   .time = DateTime.now();
                               await FirebaseFirestore.instance
-                                  .collection("bookings")
+                                  .collection('bookings')
                                   .doc(logic.controller.bookingModel!.id)
                                   .set(logic.controller.bookingModel!.toMap());
                               Get.back();
@@ -235,17 +235,17 @@ class EditPaymentsScreen extends StatelessWidget {
                           ),
                         ],
                       );
-                    }),
+                    },),
                     barrierDismissible: false,
                     radius: 10,
                   );
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6.0),
                   child: Icon(Icons.edit, size: 12),
                 ),
               ),
-              SizedBox(width: 13),
+              const SizedBox(width: 13),
               GestureDetector(
                 onTap: () async {
                   log(logic.controller.bookingModel!.toMap().toString());
@@ -253,13 +253,13 @@ class EditPaymentsScreen extends StatelessWidget {
                   log(logic.controller.bookingModel!.toMap().toString());
                   logic.controller.update();
                   await FirebaseFirestore.instance
-                      .collection("bookings")
+                      .collection('bookings')
                       .doc(logic.controller.bookingModel!.id)
                       .set(logic.controller.bookingModel!.toMap());
                   logic.controller.update();
                 },
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 6.0),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 6.0),
                   child: Icon(Icons.delete, size: 12),
                 ),
               ),
@@ -274,12 +274,10 @@ class EditPaymentsScreen extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          child: Text(
-            "Select PaymentMode",
-            style: TextStyle(
-                fontSize: FontSize.small, color: AppColors.text.black),
-          ),
+        Text(
+          'Select PaymentMode',
+          style: TextStyle(
+              fontSize: FontSize.small, color: AppColors.text.black,),
         ),
         Container(
           height: 20,
@@ -288,12 +286,12 @@ class EditPaymentsScreen extends StatelessWidget {
               border: Border.all(
                 color: Colors.black,
               ),
-              borderRadius: BorderRadius.circular(5)),
+              borderRadius: BorderRadius.circular(5),),
           child: GetBuilder<EditPaymentsController>(builder: (controller) {
             return Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: DropdownButton(
-                underline: SizedBox(),
+                underline: const SizedBox(),
                 isExpanded: true,
                 value: controller.paymentModeTED.text.isNotEmpty
                     ? controller.paymentModeTED.text
@@ -304,16 +302,16 @@ class EditPaymentsScreen extends StatelessWidget {
                 },
                 items: controller.paymentOptions.map((newMode) {
                   return DropdownMenuItem(
-                    child: new Text(
-                      newMode,
-                      style: TextStyle(fontSize: 10),
-                    ),
                     value: newMode,
+                    child: Text(
+                      newMode,
+                      style: const TextStyle(fontSize: 10),
+                    ),
                   );
                 }).toList(),
               ),
             );
-          }),
+          },),
         )
       ],
     );

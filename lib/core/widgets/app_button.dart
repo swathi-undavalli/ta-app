@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
+import '../constants/constants.dart';
 
 class AppButton extends StatelessWidget {
   final String? text;
@@ -13,7 +13,7 @@ class AppButton extends StatelessWidget {
   final double fontSize;
   final bool enable;
 
-  AppButton({
+  const AppButton({Key? key, 
     required this.text,
     required this.onTap,
     required this.bgColor,
@@ -24,7 +24,7 @@ class AppButton extends StatelessWidget {
     this.borderRadius = 20,
     this.fontSize = 12,
     this.enable = true,
-  });
+  }) : super(key: key);
 
   factory AppButton.miniText({
     String? text,

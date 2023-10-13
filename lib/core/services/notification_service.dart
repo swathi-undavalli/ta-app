@@ -1,6 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/features/messaging/notification_screen.dart';
+import '../../features/messaging/notification_screen.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class FirebaseNotificationService {
@@ -30,13 +30,13 @@ class LocalNotificationService {
     const AndroidInitializationSettings('@mipmap/ic_launcher');
     //New Added
     DarwinInitializationSettings initializationSettingsIOS =
-    DarwinInitializationSettings(
+    const DarwinInitializationSettings(
       requestSoundPermission: true,
       requestBadgePermission: true,
       requestAlertPermission: true,
     );
     var initializationsSettings = InitializationSettings(
-        android: androidInitilize, iOS: initializationSettingsIOS);
+        android: androidInitilize, iOS: initializationSettingsIOS,);
     _notificationsPlugin = FlutterLocalNotificationsPlugin();
     await _notificationsPlugin.initialize(
       initializationsSettings,
@@ -47,20 +47,20 @@ class LocalNotificationService {
     try {
       final id = DateTime.now().millisecondsSinceEpoch ~/ 1000;
 
-      final NotificationDetails notificationDetails = NotificationDetails(
+      const NotificationDetails notificationDetails = NotificationDetails(
           android: AndroidNotificationDetails(
-            "easyapproach",
-            "easyapproach channel",
-            channelDescription: "this is our channel",
+            'easyapproach',
+            'easyapproach channel',
+            channelDescription: 'this is our channel',
             importance: Importance.max,
             priority: Priority.high,
             styleInformation: BigTextStyleInformation(''),
-          ));
+          ),);
 
       await _notificationsPlugin.show(
         id,
-        message.notification?.title ?? "",
-        message.notification?.body ?? "",
+        message.notification?.title ?? '',
+        message.notification?.body ?? '',
         notificationDetails,
       );
     } catch (e) {

@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/alignment_extensions.dart';
-import 'package:temple_adventures/core/util/spacing_widgets.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/util/alignment_extensions.dart';
+import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/widgets/app_button.dart';
 
 import '../../../../core/models/checklist_model.dart';
 import '../widgets/check_box_widget.dart';
 
 class DiveChecklistView extends StatefulWidget {
-  static const String id = "RecreationalStudentDiveChecklist";
+  static const String id = 'RecreationalStudentDiveChecklist';
+
+  const DiveChecklistView({Key? key}) : super(key: key);
 
   @override
   State<DiveChecklistView> createState() => _DiveChecklistViewState();
@@ -33,7 +35,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
             _buildCheckList(),
             Spacing.h20,
             AppButton.flat(
-              text: "Close",
+              text: 'Close',
               onTap: () {
                 Get.back();
               },
@@ -57,7 +59,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
           ).paddingOnly(bottom: 10);
         },
       ),
-    ]);
+    ],);
   }
 
   AppBar buildAppBar() {
@@ -107,7 +109,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
   Widget _buildDescription() {
     return Text(
       checkList.description,
-      style: TextStyle(
+      style: const TextStyle(
         color: Colors.black,
         fontSize: 13,
         fontFamily: AppFonts.nunito,

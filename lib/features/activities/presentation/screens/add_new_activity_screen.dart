@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/core/widgets/back_navigation_icon.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app_text_fields.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/back_navigation_icon.dart';
+import '../../../bookings/presentation/widgets/app_text_fields.dart';
 
 import '../../controller/add_new_activity_controller.dart';
 
 class AddNewActivityScreen extends StatelessWidget {
-  static const String id = "AddNewActivityScreen";
+  static const String id = 'AddNewActivityScreen';
   final AddNewActivityLogic logic = AddNewActivityLogic();
+
+  AddNewActivityScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,26 +25,26 @@ class AddNewActivityScreen extends StatelessWidget {
         child: SafeArea(
           child: GetBuilder<AddNewActivityController>(builder: (controller) {
             return SingleChildScrollView(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               child: Center(
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Column(
                     children: [
                       buildTextFields(
-                        name: "Name",
+                        name: 'Name',
                         textEditingController: controller.nameTED,
                         focusNode: controller.nameNode,
                         nextFocusNode: controller.shortNameNode,
                       ),
                       buildTextFields(
-                        name: "Short name",
+                        name: 'Short name',
                         textEditingController: controller.shortNameTED,
                         focusNode: controller.shortNameNode,
                         nextFocusNode: controller.priceNode,
                       ),
                       buildTextFields(
-                        name: "Price",
+                        name: 'Price',
                         textEditingController: controller.priceTED,
                         focusNode: controller.priceNode,
                         nextFocusNode: controller.priorityNode,
@@ -52,14 +54,14 @@ class AddNewActivityScreen extends StatelessWidget {
                         padding: const EdgeInsets.all(4.0),
                         child: Column(
                           children: [
-                            buildSubtitle("Priority"),
+                            buildSubtitle('Priority'),
                             buildPriority(),
-                            buildSubtitle("Color Code"),
+                            buildSubtitle('Color Code'),
                             buildColorCode(),
                           ],
                         ),
                       ),
-                      SizedBox(height: 100),
+                      const SizedBox(height: 100),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
@@ -72,7 +74,7 @@ class AddNewActivityScreen extends StatelessWidget {
                 ),
               ),
             );
-          }),
+          },),
         ),
       ),
     );
@@ -83,11 +85,11 @@ class AddNewActivityScreen extends StatelessWidget {
   Widget buildSubtitle(String name) {
     return Padding(
       padding: const EdgeInsets.only(left: 10, top: 30),
-      child: Container(
+      child: SizedBox(
         width: Get.size.width,
         child: Text(
           name,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black54,
             fontFamily: AppFonts.nunito,
             fontSize: 12,
@@ -115,13 +117,13 @@ class AddNewActivityScreen extends StatelessWidget {
           },
           items: controller.priority.map((priority) {
             return DropdownMenuItem(
-              child: new Text(priority),
               value: priority,
+              child: Text(priority),
             );
           }).toList(),
         ),
       );
-    });
+    },);
   }
 
   Widget buildColorCode() {
@@ -141,13 +143,13 @@ class AddNewActivityScreen extends StatelessWidget {
           },
           items: controller.colorCode.map((color) {
             return DropdownMenuItem(
-              child: new Text(color),
               value: color,
+              child: Text(color),
             );
           }).toList(),
         ),
       );
-    });
+    },);
   }
 
   Widget buildAppBar() {
@@ -155,7 +157,7 @@ class AddNewActivityScreen extends StatelessWidget {
       toolbarHeight: 70,
       centerTitle: true,
       title: buildTitle(),
-      leading: BackNavigationIcon(),
+      leading: const BackNavigationIcon(),
       elevation: 0,
       backgroundColor: AppColors.background.white,
     );
@@ -176,7 +178,7 @@ class AddNewActivityScreen extends StatelessWidget {
   Widget buildCancelButton() {
     return Center(
       child: AppButton.flat(
-        text: "Cancel",
+        text: 'Cancel',
         textColor: AppColors.text.black,
         color: AppColors.background.grey,
         onTap: () {
@@ -190,7 +192,7 @@ class AddNewActivityScreen extends StatelessWidget {
   Widget buildSubmitButton() {
     return Center(
       child: AppButton.flat(
-        text: "Submit",
+        text: 'Submit',
         textColor: AppColors.text.white,
         color: AppColors.background.black,
         onTap: () {
@@ -205,7 +207,7 @@ class AddNewActivityScreen extends StatelessWidget {
       TextEditingController? textEditingController,
       FocusNode? focusNode,
       FocusNode? nextFocusNode,
-      TextInputType? keyBoardType}) {
+      TextInputType? keyBoardType,}) {
     return GetBuilder<AddNewActivityController>(builder: (controller) {
       return AppTextField(
         hintText: name,
@@ -222,6 +224,6 @@ class AddNewActivityScreen extends StatelessWidget {
           return null;
         },
       );
-    });
+    },);
   }
 }

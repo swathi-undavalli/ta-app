@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/alignment_extensions.dart';
-import 'package:temple_adventures/core/util/spacing_widgets.dart';
-import 'package:temple_adventures/features/Marketing/models/marketing_model.dart';
+import '../../../core/constants/constants.dart';
+import '../../../core/util/alignment_extensions.dart';
+import '../../../core/util/spacing_widgets.dart';
+import '../../Marketing/models/marketing_model.dart';
 import '../../../core/widgets/app_button.dart';
 
 class MarketingContentEntryBottomSheet extends StatefulWidget {
@@ -45,7 +45,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
   late TextEditingController nameTED;
   late TextEditingController delayTED;
   String? urlType;
-  List<String> urlTypesList = ["Image", "Video", "Lottie"];
+  List<String> urlTypesList = ['Image', 'Video', 'Lottie'];
   String? urlError;
   String? urlTypeError;
   String? delayError;
@@ -54,9 +54,10 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
   @override
   void initState() {
     super.initState();
-    urlTED = TextEditingController(text: widget.marketingElement?.url ?? "");
+    urlTED = TextEditingController(text: widget.marketingElement?.url ?? '');
     delayTED = TextEditingController(
-        text: (widget.marketingElement?.duration != null) ? widget.marketingElement?.duration.toString() : "");
+      text: (widget.marketingElement?.duration != null) ? widget.marketingElement?.duration.toString() : '',
+    );
     nameTED = TextEditingController(text: widget.marketingElement?.name);
     if (widget.marketingElement != null) {
       urlType = widget.marketingElement?.type;
@@ -77,7 +78,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
               width: Get.width,
               height: 550,
               color: Colors.grey,
-              child: CircularProgressIndicator(
+              child: const CircularProgressIndicator(
                 color: Colors.black,
               ).center,
             ),
@@ -86,21 +87,21 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
             children: [
               buildTitle(),
               buildKeyValuePair(
-                title: "Name",
+                title: 'Name',
                 controller: nameTED,
                 textInputType: TextInputType.text,
               ),
               buildKeyValuePair(
-                title: "URL",
+                title: 'URL',
                 controller: urlTED,
                 errorText: urlError,
                 textInputType: TextInputType.text,
               ),
               buildKeyValuePair(
-                title: "Duration",
+                title: 'Duration',
                 controller: delayTED,
                 errorText: delayError,
-                textInputType: TextInputType.numberWithOptions(),
+                textInputType: const TextInputType.numberWithOptions(),
               ),
               Spacing.h25,
               buildDropDown(),
@@ -126,7 +127,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
 
           MarketingElement marketingElement = MarketingElement(
             url: urlTED.text,
-            type: urlType ?? "",
+            type: urlType ?? '',
             duration: int.parse(delayTED.text),
             name: nameTED.text,
           );
@@ -145,7 +146,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
         }
         setState(() {});
       },
-      text: "Submit",
+      text: 'Submit',
       color: Colors.black,
       textColor: Colors.white,
     );
@@ -158,15 +159,15 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
     delayError = null;
 
     if (urlTED.text.isEmpty) {
-      urlError = "Required";
+      urlError = 'Required';
       isValid = false;
     }
     if (urlType == null || urlType!.isEmpty) {
-      urlTypeError = "Required";
+      urlTypeError = 'Required';
       isValid = false;
     }
     if (delayTED.text.isEmpty) {
-      delayError = "Required";
+      delayError = 'Required';
       isValid = false;
     }
 
@@ -174,12 +175,12 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
   }
 
   clear() {
-    urlTED.text = "";
+    urlTED.text = '';
     urlType = null;
     urlError = null;
     urlTypeError = null;
     delayError = null;
-    delayTED.text = "";
+    delayTED.text = '';
   }
 
   Widget buildDropDown() {
@@ -191,7 +192,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
             SizedBox(
               width: 110,
               child: Text(
-                "Type",
+                'Type',
                 style: TextStyle(
                   fontFamily: AppFonts.nunito,
                   color: AppColors.text.black,
@@ -211,6 +212,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
                 },
                 items: urlTypesList.map((value) {
                   return DropdownMenuItem(
+                    value: value,
                     child: Column(
                       children: [
                         Text(
@@ -218,7 +220,6 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
                         ),
                       ],
                     ),
-                    value: value,
                   );
                 }).toList(),
               ),
@@ -226,7 +227,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
           ],
         ),
         Text(
-          urlTypeError ?? "",
+          urlTypeError ?? '',
           style: TextStyle(color: Colors.red.shade700, fontSize: 12),
         ).paddingOnly(left: 110),
       ],
@@ -237,16 +238,16 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Text(
-          "Add Content",
+        const Text(
+          'Add Content',
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 19,
           ),
         ),
-        Spacer(),
+        const Spacer(),
         IconButton(
-          icon: Icon(Icons.close),
+          icon: const Icon(Icons.close),
           onPressed: () {
             Navigator.of(context).pop();
           },
@@ -255,11 +256,12 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
     );
   }
 
-  Widget buildKeyValuePair(
-      {required String title,
-      required TextEditingController controller,
-      required TextInputType textInputType,
-      String? errorText}) {
+  Widget buildKeyValuePair({
+    required String title,
+    required TextEditingController controller,
+    required TextInputType textInputType,
+    String? errorText,
+  }) {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.end,
       children: [
@@ -285,20 +287,21 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
             decoration: InputDecoration(
               hintText: '',
               errorText: errorText,
-              suffixText: (title == "Duration") ? "sec" : "",
-              suffixIcon: (title == "URL" && urlTED.text.isNotEmpty)
+              suffixText: (title == 'Duration') ? 'sec' : '',
+              suffixIcon: (title == 'URL' && urlTED.text.isNotEmpty)
                   ? GestureDetector(
                       onTap: () {
-                        urlTED.text = "";
+                        urlTED.text = '';
                         setState(() {});
                       },
-                      child: Icon(
+                      child: const Icon(
                         Icons.clear,
                         color: Colors.black,
-                      ).paddingAll(5))
-                  : SizedBox(),
+                      ).paddingAll(5),
+                    )
+                  : const SizedBox(),
               errorStyle: TextStyle(color: Colors.red.shade700),
-              border: UnderlineInputBorder(),
+              border: const UnderlineInputBorder(),
             ),
           ),
         ),

@@ -3,19 +3,21 @@ import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/validator.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
-import 'package:temple_adventures/features/bookings/controller/new_booking_controller.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/book_date_time_screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app_text_fields.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/util/validator.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/phone_number/intl_phone_field.dart';
+import '../../controller/new_booking_controller.dart';
+import 'book_date_time_screen.dart';
+import '../widgets/app_text_fields.dart';
 
 import '../../models/activity_model.dart';
 
 class AddCustomerDetailsScreen extends StatelessWidget {
-  static const String id = "AddCustomerDetailsScreen";
+  static const String id = 'AddCustomerDetailsScreen';
   final NewBookingLogic logic = NewBookingLogic();
+
+  AddCustomerDetailsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,8 +41,8 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        buildSubTitle("Quick Booking"),
-                        Spacer(),
+                        buildSubTitle('Quick Booking'),
+                        const Spacer(),
                         Switch(
                           value: controller.isQuickBooking,
                           onChanged: (value) {
@@ -58,7 +60,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                               Column(
                                 children: [
                                   AppTextField(
-                                    hintText: "Parent Booking Id",
+                                    hintText: 'Parent Booking Id',
                                     controller:
                                         logic.controller.quickBookingIdTED,
                                     keyboardType: TextInputType.number,
@@ -71,7 +73,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                                     },
                                   ),
                                   AppTextField(
-                                    hintText: "Name",
+                                    hintText: 'Name',
                                     controller: logic.controller.quickNameTED,
                                     required: true,
                                     errorValidator: () {
@@ -82,7 +84,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                                     },
                                   ),
                                   AppTextField(
-                                    hintText: "No of Persons",
+                                    hintText: 'No of Persons',
                                     controller:
                                         logic.controller.quickNoOfPersonsTED,
                                     keyboardType: TextInputType.number,
@@ -95,15 +97,15 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                                     },
                                   ),
                                   buildActivityDropDown(),
-                                  SizedBox(height: 20),
+                                  const SizedBox(height: 20),
                                   buildQuickDiveSession(),
-                                  SizedBox(height: 100),
+                                  const SizedBox(height: 100),
                                   AppButton.flat(
-                                    text: "Create Booking",
+                                    text: 'Create Booking',
                                     onTap: () {
-                                      log("started creating");
+                                      log('started creating');
                                       logic.createBooking();
-                                      log("done");
+                                      log('done');
                                     },
                                     color: Colors.black,
                                     textColor: Colors.white,
@@ -115,11 +117,11 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                                   height: Get.height,
                                   width: Get.width,
                                   color: Colors.grey.shade50,
-                                  child: SizedBox(
+                                  child: const SizedBox(
                                       height: 30,
                                       width: 30,
                                       child: Center(
-                                          child: CircularProgressIndicator())),
+                                          child: CircularProgressIndicator(),),),
                                 )
                             ],
                           )
@@ -132,7 +134,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     AppButton.miniFlat(
-                                      text: "Get Details",
+                                      text: 'Get Details',
                                       onTap: () {
                                         logic.getDetailsPressed();
                                       },
@@ -146,27 +148,27 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                                 buildDOB(context),
                                 buildNoOfPersons(),
                                 buildPhoneNumber(),
-                                SizedBox(height: 40),
+                                const SizedBox(height: 40),
                               ],
                               if (controller.showLoading)
-                                SizedBox(
+                                const SizedBox(
+                                  height: 200,
                                   child: Center(
                                     child: SizedBox(
+                                      height: 20,
+                                      width: 20,
                                       child: CircularProgressIndicator(
                                         color: Colors.black,
                                         strokeWidth: 2,
                                       ),
-                                      height: 20,
-                                      width: 20,
                                     ),
                                   ),
-                                  height: 200,
                                 ),
                             ],
                           ),
                   ],
                 );
-              }),
+              },),
             ),
           ),
         ),
@@ -187,7 +189,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
             children: [
               buildSubTitle('Dive Session'),
               AppButton.miniFlat(
-                text: "ADD",
+                text: 'ADD',
                 onTap: () {
                   logic.addQuickDiveSessionDateTime();
                 },
@@ -198,38 +200,39 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           ),
           Wrap(
             children: (controller.quickDiveDates ?? [])
-                .map((e) => buildTime(e, DateType.Dive))
+                .map((e) => buildTime(e, DateType.dive))
                 .toList(),
           ),
         ],
       );
-    });
+    },);
   }
 
   Widget buildTime(DateTime? date, DateType type) {
-    if (date != null)
+    if (date != null) {
       return GestureDetector(
         onTap: () {
-          if (type == DateType.Dive)
+          if (type == DateType.dive) {
             logic.controller.quickDiveDates!.remove(date);
+          }
 
           logic.controller.update();
         },
         child: Container(
           width: 170,
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          margin: EdgeInsets.only(right: 10, bottom: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          margin: const EdgeInsets.only(right: 10, bottom: 10),
           decoration: BoxDecoration(
             color: AppColors.background.lightSkyBlue,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat("MMM  dd @ hh:mm a").format(date)),
-              Icon(
+              Text(DateFormat('MMM  dd @ hh:mm a').format(date)),
+              const Icon(
                 Icons.close,
                 size: 16,
               ),
@@ -237,11 +240,12 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           ),
         ),
       );
-    return SizedBox();
+    }
+    return const SizedBox();
   }
 
   Widget buildActivityDropDown() {
-    return Container(
+    return SizedBox(
       width: 320,
       child: Row(
         children: [
@@ -251,11 +255,11 @@ class AddCustomerDetailsScreen extends StatelessWidget {
               child: Container(
                 width: Get.width,
                 alignment: Alignment.centerLeft,
-                child: buildSubTitle("Activity"),
+                child: buildSubTitle('Activity'),
               ),
             ),
           ),
-          Container(
+          SizedBox(
             width: 210,
             child: GetBuilder<NewBookingController>(builder: (controller) {
               return Padding(
@@ -272,16 +276,16 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                   },
                   items: controller.activities.toSet().toList().map((activity) {
                     return DropdownMenuItem(
-                      child: Text(
-                        activity.name ?? "error",
-                        style: TextStyle(fontWeight: FontWeight.normal),
-                      ),
                       value: activity,
+                      child: Text(
+                        activity.name ?? 'error',
+                        style: const TextStyle(fontWeight: FontWeight.normal),
+                      ),
                     );
                   }).toList(),
                 ),
               );
-            }),
+            },),
           ),
         ],
       ),
@@ -303,7 +307,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
 
   Widget buildNoOfPersons() {
     return AppTextField(
-      hintText: "No of Persons",
+      hintText: 'No of Persons',
       controller: logic.controller.paxTED,
       focusNode: logic.controller.noOfPersonsNode,
       nextFocusNode: logic.controller.phoneNumberNode,
@@ -331,7 +335,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
         },
         child: AbsorbPointer(
           child: AppTextField(
-            hintText: "Date of Birth",
+            hintText: 'Date of Birth',
             controller: logic.controller.dobTED,
             focusNode: logic.controller.dobNode,
             nextFocusNode: logic.controller.noOfPersonsNode,
@@ -350,7 +354,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           ),
         ),
       );
-    });
+    },);
   }
 
   Widget buildNameFields() {
@@ -358,7 +362,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
       children: [
         AppTextField(
           width: (Get.width / 2) - 45,
-          hintText: "First Name",
+          hintText: 'First Name',
           controller: logic.controller.fNameTED,
           focusNode: logic.controller.fNameNode,
           nextFocusNode: logic.controller.lNameNode,
@@ -374,12 +378,12 @@ class AddCustomerDetailsScreen extends StatelessWidget {
             // return Validator.validateName(email);
           },
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         AppTextField(
           width: (Get.width / 2) - 45,
-          hintText: "Last Name",
+          hintText: 'Last Name',
           controller: logic.controller.lNameTED,
           focusNode: logic.controller.lNameNode,
           nextFocusNode: logic.controller.emailNode,
@@ -401,7 +405,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
 
   Widget buildEmailID() {
     return AppTextField(
-      hintText: "Enter Customer Email ID",
+      hintText: 'Enter Customer Email ID',
       controller: logic.controller.emailTED,
       focusNode: logic.controller.emailNode,
       // nextFocusNode: logic.controller.noOfPersonsNode,
@@ -435,7 +439,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           ),
         ),
         elevation: 0,
-        backgroundColor: Colors.white);
+        backgroundColor: Colors.white,);
   }
 
   Widget buildTitle() {
@@ -460,18 +464,18 @@ class AddCustomerDetailsScreen extends StatelessWidget {
         showCountryFlag: false,
         initialValue: controller.phoneNumberTED.text,
         inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        decoration: InputDecoration(
-          labelText: "Phone Number  *",
+        decoration: const InputDecoration(
+          labelText: 'Phone Number  *',
           labelStyle: TextStyle(
             fontSize: FontSize.small,
             fontFamily: AppFonts.nunito,
           ),
         ),
-        style: TextStyle(
+        style: const TextStyle(
             fontFamily: AppFonts.nunito,
             fontWeight: FontWeight.normal,
-            fontSize: 14),
-        searchText: "Search",
+            fontSize: 14,),
+        searchText: 'Search',
         onSubmitted: (_) {},
         onChanged: (phone) {
           controller.countryCodeTED.text = phone.countryCode;
@@ -482,11 +486,11 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           //print(phone.countryISOCode);
         },
       );
-    });
+    },);
   }
 
   Widget buildHii() {
-    return Container(
+    return SizedBox(
       width: Get.size.width,
       child: Text(
         'Hi,',
@@ -502,18 +506,19 @@ class AddCustomerDetailsScreen extends StatelessWidget {
 
   Widget buildFloatingActionButton() {
     return GetBuilder<NewBookingController>(builder: (controller) {
-      if (controller.getDetailsPressed && !controller.isQuickBooking)
+      if (controller.getDetailsPressed && !controller.isQuickBooking) {
         return FloatingActionButton(
           onPressed: () {
             logic.onCheckPressed();
           },
           elevation: 0,
           backgroundColor: AppColors.IconColor.black,
-          child: Icon(Icons.check),
+          child: const Icon(Icons.check),
         );
-      else
-        return SizedBox();
-    });
+      } else {
+        return const SizedBox();
+      }
+    },);
     // else
     //   return Container();
   }

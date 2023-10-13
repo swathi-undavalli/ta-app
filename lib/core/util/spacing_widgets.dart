@@ -69,9 +69,9 @@ class Spacing {
 
   static SizedBox get h35 => const SizedBox(height: 35);
 
-  static SizedBox get h36 => SizedBox(height: 36);
+  static SizedBox get h36 => const SizedBox(height: 36);
 
-  static SizedBox get h37 => SizedBox(height: 37);
+  static SizedBox get h37 => const SizedBox(height: 37);
 
   static SizedBox get h38 => const SizedBox(height: 38);
 

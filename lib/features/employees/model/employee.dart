@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:temple_adventures/features/boat/models/boat_details.dart';
+import '../../boat/models/boat_details.dart';
 
 Employee? currentEmployee;
 
@@ -18,8 +18,7 @@ class Employee {
     this.leaves,
     this.agencyId,
   }) {
-    if (accessLevels == null)
-      accessLevels = AccessLevels(
+    accessLevels ??= AccessLevels(
         viewBookings: false,
         createBookings: false,
         editBookings: false,
@@ -80,47 +79,47 @@ class Employee {
 
   factory Employee.fromMap(Map<String, dynamic> json) {
     return Employee(
-      id: json["id"],
-      gender: json["gender"],
-      phoneNumber: json["phoneNumber"],
-      countryCode: json["countryCode"],
-      countryIsoCode: json["countryIsoCode"],
-      role: json["role"],
-      accessLevels: AccessLevels.fromMap(json["accessLevels"]),
+      id: json['id'],
+      gender: json['gender'],
+      phoneNumber: json['phoneNumber'],
+      countryCode: json['countryCode'],
+      countryIsoCode: json['countryIsoCode'],
+      role: json['role'],
+      accessLevels: AccessLevels.fromMap(json['accessLevels']),
       shiftTiming: DateTime(
         2021,
         1,
         1,
-        int.parse(json["shiftTiming"].split(":")[0]),
-        int.parse(json["shiftTiming"].split(":")[0]),
-        int.parse(json["shiftTiming"].split(":")[0]),
+        int.parse(json['shiftTiming'].split(':')[0]),
+        int.parse(json['shiftTiming'].split(':')[0]),
+        int.parse(json['shiftTiming'].split(':')[0]),
       ),
-      firstName: json["firstName"],
-      lastName: json["lastName"],
-      agencyId: json["agencyId"],
-      leaves: List<Timestamp>.from((json["leaves"] ?? []).map((x) => (x))),
+      firstName: json['firstName'],
+      lastName: json['lastName'],
+      agencyId: json['agencyId'],
+      leaves: List<Timestamp>.from((json['leaves'] ?? []).map((x) => (x))),
     );
   }
 
-  String get name => firstName! + " " + (lastName ?? "");
+  String get name => '${firstName!} ${lastName ?? ''}';
 
   get authPhone => countryCode! + phoneNumber!;
 
 
   Map<String, dynamic> toMap() => {
-        "id": id,
-        "gender": gender,
-        "phoneNumber": phoneNumber,
-        "countryCode": countryCode,
-        "countryIsoCode": countryIsoCode,
-        "role": role,
-        "accessLevels": accessLevels!.toMap(),
-        "shiftTiming":
-            "${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}",
-        "firstName": firstName,
-        "lastName": lastName,
-        "agencyId": agencyId,
-        "leaves": List<Timestamp>.from((leaves ?? []).map((x) => (x))),
+        'id': id,
+        'gender': gender,
+        'phoneNumber': phoneNumber,
+        'countryCode': countryCode,
+        'countryIsoCode': countryIsoCode,
+        'role': role,
+        'accessLevels': accessLevels!.toMap(),
+        'shiftTiming':
+            '${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}',
+        'firstName': firstName,
+        'lastName': lastName,
+        'agencyId': agencyId,
+        'leaves': List<Timestamp>.from((leaves ?? []).map((x) => (x))),
       };
 }
 
@@ -158,36 +157,36 @@ class AccessLevels {
   bool? boatPlan;
 
   factory AccessLevels.fromMap(Map<String, dynamic> json) => AccessLevels(
-        viewBookings: json["viewBookings"],
-        boatPlan: json["boatPlan"],
-        createBookings: json["createBookings"],
-        editBookings: json["editBookings"],
-        viewEmployees: json["viewEmployees"],
-        createEmployees: json["createEmployees"],
-        editEmployees: json["editEmployees"],
-        personalProfileEdit: json["personalProfileEdit"],
-        personalAttendanceReport: json["personalAttendanceReport"],
-        attendanceReport: json["attendanceReport"],
-        weatherReport: json["weatherReport"],
-        editActivityPrices: json["editActivityPrices"],
-        addActivity: json["addActivity"],
-        notifications: json["notifications"],
+        viewBookings: json['viewBookings'],
+        boatPlan: json['boatPlan'],
+        createBookings: json['createBookings'],
+        editBookings: json['editBookings'],
+        viewEmployees: json['viewEmployees'],
+        createEmployees: json['createEmployees'],
+        editEmployees: json['editEmployees'],
+        personalProfileEdit: json['personalProfileEdit'],
+        personalAttendanceReport: json['personalAttendanceReport'],
+        attendanceReport: json['attendanceReport'],
+        weatherReport: json['weatherReport'],
+        editActivityPrices: json['editActivityPrices'],
+        addActivity: json['addActivity'],
+        notifications: json['notifications'],
       );
 
   Map<String, dynamic> toMap() => {
-        "viewBookings": viewBookings,
-        "boatPlan": boatPlan,
-        "createBookings": createBookings,
-        "editBookings": editBookings,
-        "viewEmployees": viewEmployees,
-        "createEmployees": createEmployees,
-        "editEmployees": editEmployees,
-        "personalProfileEdit": personalProfileEdit,
-        "personalAttendanceReport": personalAttendanceReport,
-        "attendanceReport": attendanceReport,
-        "weatherReport": weatherReport,
-        "editActivityPrices": editActivityPrices,
-        "addActivity": addActivity,
-        "notifications": notifications,
+        'viewBookings': viewBookings,
+        'boatPlan': boatPlan,
+        'createBookings': createBookings,
+        'editBookings': editBookings,
+        'viewEmployees': viewEmployees,
+        'createEmployees': createEmployees,
+        'editEmployees': editEmployees,
+        'personalProfileEdit': personalProfileEdit,
+        'personalAttendanceReport': personalAttendanceReport,
+        'attendanceReport': attendanceReport,
+        'weatherReport': weatherReport,
+        'editActivityPrices': editActivityPrices,
+        'addActivity': addActivity,
+        'notifications': notifications,
       };
 }

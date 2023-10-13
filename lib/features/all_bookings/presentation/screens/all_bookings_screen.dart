@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/features/bookings/models/booking_model.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/all_booking_expansion_panel.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../bookings/models/booking_model.dart';
+import '../../../bookings/presentation/widgets/all_booking_expansion_panel.dart';
 
 class AllBookingsScreen extends StatefulWidget {
-  static const String id = "AllBookingsScreen";
+  static const String id = 'AllBookingsScreen';
+  const AllBookingsScreen({Key? key}) : super(key: key);
 
   @override
   _AllBookingsScreenState createState() => _AllBookingsScreenState();
@@ -14,8 +15,8 @@ class AllBookingsScreen extends StatefulWidget {
 
 class _AllBookingsScreenState extends State<AllBookingsScreen> {
   late Stream<QuerySnapshot> _bookingsStream;
-  TextEditingController _searchController = TextEditingController();
-  String _searchText = "";
+  final TextEditingController _searchController = TextEditingController();
+  String _searchText = '';
 
   @override
   void initState() {
@@ -40,9 +41,9 @@ class _AllBookingsScreenState extends State<AllBookingsScreen> {
       appBar: buildAppBar(),
       body: Column(
         children: [
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
           buildSearchBar(),
-          SizedBox(height: 10),
+          const SizedBox(height: 10),
           Expanded(
             child: StreamBuilder<QuerySnapshot>(
               stream: _bookingsStream,
@@ -52,7 +53,7 @@ class _AllBookingsScreenState extends State<AllBookingsScreen> {
                 }
 
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(
+                  return const Center(
                     child: CircularProgressIndicator(
                       color: Colors.black,
                       strokeWidth: 3,
@@ -71,7 +72,7 @@ class _AllBookingsScreenState extends State<AllBookingsScreen> {
                 });
 
                 if (documents.isEmpty) {
-                  return Center(child: Text('No bookings found.'));
+                  return const Center(child: Text('No bookings found.'));
                 }
 
                 return ListView.builder(
@@ -86,9 +87,9 @@ class _AllBookingsScreenState extends State<AllBookingsScreen> {
                         return AllBookingsExpansionPanel(booking: booking);
                       }
                     } catch (e) {
-                      return Text("error loading this booking");
+                      return const Text('error loading this booking');
                     }
-                    return SizedBox();
+                    return const SizedBox();
                   },
                 );
               },
@@ -105,21 +106,21 @@ class _AllBookingsScreenState extends State<AllBookingsScreen> {
       height: 47,
       decoration: BoxDecoration(color: AppColors.background.white, borderRadius: BorderRadius.circular(5)),
       child: Container(
-        margin: EdgeInsets.only(left: 15, right: 15),
+        margin: const EdgeInsets.only(left: 15, right: 15),
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
             Icon(Icons.search, color: AppColors.text.darkgrey),
-            SizedBox(width: 15),
-            Container(
+            const SizedBox(width: 15),
+            SizedBox(
               width: 240,
               child: TextField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                     enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
                     focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
                     disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
                     hintText: 'Search...',
-                    hintStyle: TextStyle(fontSize: FontSize.textSize, height: 1)),
+                    hintStyle: TextStyle(fontSize: FontSize.textSize, height: 1),),
                 controller: _searchController,
               ),
             ),

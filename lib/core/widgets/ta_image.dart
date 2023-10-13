@@ -31,7 +31,7 @@ class TAImage extends StatelessWidget {
   }
 
   _getImage() {
-    if (image.startsWith("http") && image.endsWith(".svg")) {
+    if (image.startsWith('http') && image.endsWith('.svg')) {
       return SvgPicture.network(
         image,
         height: height,
@@ -40,7 +40,7 @@ class TAImage extends StatelessWidget {
         fit: fit,
         semanticsLabel: semanticsLabel,
       );
-    } else if (image.endsWith(".svg")) {
+    } else if (image.endsWith('.svg')) {
       return SvgPicture.asset(
         image,
         height: height,
@@ -49,7 +49,7 @@ class TAImage extends StatelessWidget {
         fit: fit,
         semanticsLabel: semanticsLabel,
       );
-    } else if (image.startsWith("http")) {
+    } else if (image.startsWith('http')) {
       return OctoImage(
         image: CachedNetworkImageProvider(image),
         errorBuilder:

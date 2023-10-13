@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
-import 'package:temple_adventures/features/login/controller/login_controller.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/phone_number/intl_phone_field.dart';
+import '../../controller/login_controller.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 
 class LoginScreen extends StatefulWidget {
-  static const String id = "LoginScreen";
+  static const String id = 'LoginScreen';
+
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
@@ -34,13 +36,13 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
           child: SingleChildScrollView(
-            physics: BouncingScrollPhysics(),
-            child: Container(
+            physics: const BouncingScrollPhysics(),
+            child: SizedBox(
               height: Get.size.height - 80,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   buildHowdy(),
                   buildAppLogo(),
                   buildWelcomeMessage(),
@@ -48,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   // buildPhoneNumberTextField(),
                   buildPhoneNumber(),
                   buildEmployeeID(),
-                  SizedBox(height: 60),
+                  const SizedBox(height: 60),
                   buildResendButton()
                 ],
               ),
@@ -63,12 +65,12 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget buildEmployeeID() {
     return GetBuilder<LoginScreenController>(builder: (controller) {
-      if (controller.showPhoneNumber)
+      if (controller.showPhoneNumber) {
         return SizedBox(
           width: 150,
           child: TextField(
             controller: controller.employeeIdTED,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 50,
             ),
             textAlign: TextAlign.center,
@@ -76,44 +78,45 @@ class _LoginScreenState extends State<LoginScreen> {
             keyboardType: TextInputType.number,
             inputFormatters: [FilteringTextInputFormatter.digitsOnly],
             decoration: InputDecoration(
-              labelText: "Employee ID",
-              labelStyle: TextStyle(
+              labelText: 'Employee ID',
+              labelStyle: const TextStyle(
                 fontSize: 20,
                 color: Colors.black,
               ),
-              border: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black, width: 3)),
-              enabledBorder: UnderlineInputBorder(
+              border: const UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black, width: 3),),
+              enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(
-                      color: Colors.black, width: 3, style: BorderStyle.solid)),
+                      color: Colors.black, width: 3, style: BorderStyle.solid,),),
               focusedBorder: UnderlineInputBorder(
                   borderSide: BorderSide(
                       color: AppColors.background.skyBlue,
                       width: 3,
-                      style: BorderStyle.solid)),
+                      style: BorderStyle.solid,),),
             ),
           ),
         );
-      return SizedBox();
-    });
+      }
+      return const SizedBox();
+    },);
   }
 
   Widget buildPhoneNumberTextField() {
     return IntlPhoneField(
       initialCountryCode: 'IN',
       showCountryFlag: false,
-      decoration: InputDecoration(
-        labelText: "Phone Number",
+      decoration: const InputDecoration(
+        labelText: 'Phone Number',
         labelStyle: TextStyle(
           fontSize: FontSize.small,
           fontFamily: AppFonts.nunito,
         ),
       ),
-      style: TextStyle(
+      style: const TextStyle(
           fontFamily: AppFonts.nunito,
           fontWeight: FontWeight.bold,
-          fontSize: 14),
-      searchText: "Search",
+          fontSize: 14,),
+      searchText: 'Search',
       onSubmitted: (_) {
         logic.signInWithPhoneNumber();
       },
@@ -126,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget buildResendButton() {
     return GetBuilder<LoginScreenController>(builder: (controller) {
-      if (controller.showResend == true && controller.showFab == false)
+      if (controller.showResend == true && controller.showFab == false) {
         return AppButton.flat(
           text: 'Resend',
           onTap: () {
@@ -135,15 +138,16 @@ class _LoginScreenState extends State<LoginScreen> {
           color: AppColors.background.black,
           textColor: AppColors.text.white,
         );
-      return SizedBox();
-    });
+      }
+      return const SizedBox();
+    },);
   }
 
   Widget buildPhoneNumber() {
-    return Container(
+    return SizedBox(
       width: 300,
       child: GetBuilder<LoginScreenController>(builder: (controller) {
-        if (!controller.showPhoneNumber)
+        if (!controller.showPhoneNumber) {
           // return buildPhoneNumberTextField();
           // else
           return PinCodeTextField(
@@ -157,12 +161,12 @@ class _LoginScreenState extends State<LoginScreen> {
               fieldWidth: 43.33,
               activeFillColor: Colors.white,
               activeColor: AppColors.background.lightBlue,
-              inactiveColor: Color(0x33000000),
+              inactiveColor: const Color(0x33000000),
               inactiveFillColor: Theme.of(context).cardColor,
               selectedFillColor:
                   AppColors.background.lightBlue.withOpacity(0.3),
             ),
-            animationDuration: Duration(milliseconds: 300),
+            animationDuration: const Duration(milliseconds: 300),
             backgroundColor: Theme.of(context).scaffoldBackgroundColor,
             enableActiveFill: true,
             autoFocus: true,
@@ -182,15 +186,16 @@ class _LoginScreenState extends State<LoginScreen> {
             },
             appContext: context,
           );
-        return SizedBox();
-      }),
+        }
+        return const SizedBox();
+      },),
     );
   }
 
   Widget buildOTPStatus() {
     return GetBuilder<LoginScreenController>(builder: (controller) {
-      if (controller.otpStatus.length != 0)
-        return Container(
+      if (controller.otpStatus.isNotEmpty) {
+        return SizedBox(
           width: 347,
           child: Text(
             controller.otpStatus,
@@ -198,17 +203,18 @@ class _LoginScreenState extends State<LoginScreen> {
             style: TextStyle(
                 fontSize: FontSize.message,
                 fontFamily: AppFonts.nunito,
-                color: AppColors.text.skyBlue),
+                color: AppColors.text.skyBlue,),
           ),
         );
-      return SizedBox();
-    });
+      }
+      return const SizedBox();
+    },);
   }
 
   Widget buildWelcomeMessage() {
     return GetBuilder<LoginScreenController>(builder: (controller) {
-      if (controller.otpSent == false)
-        return Container(
+      if (controller.otpSent == false) {
+        return SizedBox(
           width: 347,
           child: Text.rich(
             TextSpan(
@@ -218,26 +224,27 @@ class _LoginScreenState extends State<LoginScreen> {
                   style: TextStyle(
                       fontSize: FontSize.message,
                       fontFamily: AppFonts.nunito,
-                      color: AppColors.text.black),
+                      color: AppColors.text.black,),
                 ),
                 TextSpan(
                   text: ' aboard.',
                   style: TextStyle(
                       fontSize: FontSize.message,
                       fontFamily: AppFonts.nunito,
-                      color: AppColors.text.skyBlue),
+                      color: AppColors.text.skyBlue,),
                 ),
               ],
             ),
             textAlign: TextAlign.center,
           ),
         );
-      return SizedBox();
-    });
+      }
+      return const SizedBox();
+    },);
   }
 
   Widget buildAppLogo() {
-    return Container(
+    return SizedBox(
       width: 150,
       height: 150,
       child: Image.asset(
@@ -247,7 +254,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget buildHowdy() {
-    return Container(
+    return SizedBox(
       width: Get.size.width,
       child: Text(
         'Howdy,',
@@ -263,7 +270,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget buildFloatingActionButton() {
     return GetBuilder<LoginScreenController>(builder: (controller) {
-      if (controller.showFab && controller.showResend == false)
+      if (controller.showFab && controller.showResend == false) {
         return FloatingActionButton(
           onPressed: () {
             logic.signInWithPhoneNumber();
@@ -271,7 +278,7 @@ class _LoginScreenState extends State<LoginScreen> {
           elevation: 0,
           backgroundColor: AppColors.IconColor.black,
           child: (controller.showLoading)
-              ? SizedBox(
+              ? const SizedBox(
                   height: 20,
                   width: 20,
                   child: CircularProgressIndicator(
@@ -279,11 +286,12 @@ class _LoginScreenState extends State<LoginScreen> {
                     strokeWidth: 2,
                   ),
                 )
-              : Icon(Icons.check),
+              : const Icon(Icons.check),
         );
-      else
+      } else {
         return Container();
-    });
+      }
+    },);
     // else
     //   return Container();
   }

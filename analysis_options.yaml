@@ -1,0 +1,13 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    - lib/core
+
+linter:
+  rules:
+    prefer_relative_imports: true
+    prefer_single_quotes: true
+    avoid_print: true
+    use_key_in_widget_constructors: true
+    require_trailing_commas: true

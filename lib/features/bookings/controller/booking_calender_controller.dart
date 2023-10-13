@@ -4,9 +4,9 @@ class BookingCalenderLogic {
   BookingCalenderController controller = Get.put(BookingCalenderController());
 
   getDates() {
-    var temp = DateTime.now().subtract(Duration(days: 10));
+    var temp = DateTime.now().subtract(const Duration(days: 10));
     for (int i = 0; i < 20; i++) {
-      temp = temp.add(Duration(days: 1));
+      temp = temp.add(const Duration(days: 1));
       controller.calenderDates.add(temp);
     }
   }
@@ -20,7 +20,7 @@ class BookingCalenderLogic {
       4,
     );
     for (int i = 0; i < 18; i++) {
-      temp = temp.add(Duration(hours: 1));
+      temp = temp.add(const Duration(hours: 1));
       controller.timeTable.add(temp);
     }
   }

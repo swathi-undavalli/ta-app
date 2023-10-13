@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/features/bookings/controller/add_payments_controller.dart';
-import 'package:temple_adventures/features/bookings/models/booking_model.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app_text_fields.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../controller/add_payments_controller.dart';
+import '../../models/booking_model.dart';
+import '../widgets/app_text_fields.dart';
 
 // ignore: must_be_immutable
 class AddPaymentsScreen extends StatelessWidget {
-  static const String id = "AddPaymentsScreen";
+  static const String id = 'AddPaymentsScreen';
   AddPaymentsLogic logic = AddPaymentsLogic();
 
   Booking? bookingArg = Get.arguments;
+
+  AddPaymentsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,15 +35,15 @@ class AddPaymentsScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   buildBalanceAmount(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   buildPaymentMode(),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   buildPaymentDate(context),
-                  SizedBox(height: 20),
+                  const SizedBox(height: 20),
                   buildDepositTF(),
                   buildPaymentReferenceTextField(),
                   buildReceiptNo(),
-                  SizedBox(height: 70),
+                  const SizedBox(height: 70),
                   buildProceed(),
                 ],
               ),
@@ -69,7 +71,7 @@ class AddPaymentsScreen extends StatelessWidget {
           return null;
         },
       );
-    });
+    },);
   }
 
   Widget buildAppBar() {
@@ -96,15 +98,13 @@ class AddPaymentsScreen extends StatelessWidget {
   Widget buildPaymentDate(BuildContext context) {
     return GetBuilder<AddPaymentsController>(builder: (controller) {
       DateTime date = controller.paymentDate;
-      String paymentDate = DateFormat("d MMM yyyy").format(date);
+      String paymentDate = DateFormat('d MMM yyyy').format(date);
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            child: Text(
-              "Payment Date",
-              style: TextStyle(fontSize: FontSize.textSize),
-            ),
+          const Text(
+            'Payment Date',
+            style: TextStyle(fontSize: FontSize.textSize),
           ),
           GestureDetector(
             onTap: () {
@@ -117,13 +117,13 @@ class AddPaymentsScreen extends StatelessWidget {
                   border: Border.all(
                     color: Colors.black,
                   ),
-                  borderRadius: BorderRadius.circular(5)),
+                  borderRadius: BorderRadius.circular(5),),
               child: Center(child: Text(paymentDate)),
             ),
           ),
         ],
       );
-    });
+    },);
   }
 
   Widget buildPaymentReferenceTextField() {
@@ -142,7 +142,7 @@ class AddPaymentsScreen extends StatelessWidget {
           return null;
         },
       );
-    });
+    },);
   }
 
   Widget buildReceiptNo() {
@@ -160,19 +160,17 @@ class AddPaymentsScreen extends StatelessWidget {
           return null;
         },
       );
-    });
+    },);
   }
 
   Widget buildPaymentMode() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          child: Text(
-            "Select PaymentMode",
-            style: TextStyle(
-                fontSize: FontSize.textSize, color: AppColors.text.black),
-          ),
+        Text(
+          'Select PaymentMode',
+          style: TextStyle(
+              fontSize: FontSize.textSize, color: AppColors.text.black,),
         ),
         Container(
           height: 30,
@@ -181,12 +179,12 @@ class AddPaymentsScreen extends StatelessWidget {
               border: Border.all(
                 color: Colors.black,
               ),
-              borderRadius: BorderRadius.circular(5)),
+              borderRadius: BorderRadius.circular(5),),
           child: GetBuilder<AddPaymentsController>(builder: (controller) {
             return Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: DropdownButton(
-                underline: SizedBox(),
+                underline: const SizedBox(),
                 isExpanded: true,
                 value: controller.paymentModeTED.text.isNotEmpty
                     ? controller.paymentModeTED.text
@@ -197,13 +195,13 @@ class AddPaymentsScreen extends StatelessWidget {
                 },
                 items: controller.paymentOptions.map((newMode) {
                   return DropdownMenuItem(
-                    child: new Text(newMode),
                     value: newMode,
+                    child: Text(newMode),
                   );
                 }).toList(),
               ),
             );
-          }),
+          },),
         )
       ],
     );
@@ -214,30 +212,27 @@ class AddPaymentsScreen extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            child: Text(
-              "Balance",
-              style: TextStyle(
-                  fontSize: FontSize.textSize, color: AppColors.text.black),
-            ),
+          Text(
+            'Balance',
+            style: TextStyle(
+                fontSize: FontSize.textSize, color: AppColors.text.black,),
           ),
-          Container(
+          SizedBox(
             height: 30,
             width: 120,
             child: Text(
-                " ${getBalance(bookingArg!.payments!, double.parse(bookingArg!.paid.toString()).roundToDouble(), double.parse(bookingArg!.totalCost.toString()).roundToDouble())} /-"),
+                ' ${getBalance(bookingArg!.payments!, double.parse(bookingArg!.paid.toString()).roundToDouble(), double.parse(bookingArg!.totalCost.toString()).roundToDouble())} /-',),
           )
         ],
       );
-    });
+    },);
   }
 
   String getBalance(List<PaymentModel> payments, double deposit, double total) {
     double t = deposit;
-    payments.forEach((payment) {
-      print(payment);
+    for (var payment in payments) {
       t += payment.amount!;
-    });
+    }
     return (total - t).toInt().toString();
   }
 
@@ -257,14 +252,14 @@ class AddPaymentsScreen extends StatelessWidget {
   Widget buildProceed() {
     return Center(
       child: AppButton.flat(
-        text: "Proceed",
+        text: 'Proceed',
         textColor: AppColors.text.white,
         color: AppColors.background.black,
         onTap: () {
           logic.onPaymentDetailsFilled(getBalance(
               bookingArg!.payments!,
               double.parse(bookingArg!.paid.toString()).roundToDouble(),
-              double.parse(bookingArg!.totalCost.toString()).roundToDouble()));
+              double.parse(bookingArg!.totalCost.toString()).roundToDouble(),),);
         },
       ),
     );

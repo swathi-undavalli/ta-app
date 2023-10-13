@@ -3,10 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/models/item_model.dart';
-import 'package:temple_adventures/core/util/spacing_widgets.dart';
-import 'package:temple_adventures/features/boat/models/boat_details.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/models/item_model.dart';
+import '../../../../core/util/spacing_widgets.dart';
+import '../../../boat/models/boat_details.dart';
 import '../../../board_plan/presentation/widgets/customer_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
@@ -21,12 +21,11 @@ class EmployeeDiveCalenderListTile extends StatefulWidget {
 
   final ItemModel itemModel;
   final DateTime selectedDate;
-  late final _EmployeeDiveCalenderListTileState
-      employeeDiveCalenderListTileState;
+  final EmployeeDiveCalenderListTileState employeeDiveCalenderListTileState = EmployeeDiveCalenderListTileState();
 
   @override
   State<EmployeeDiveCalenderListTile> createState() {
-    employeeDiveCalenderListTileState = _EmployeeDiveCalenderListTileState();
+    // ignore: no_logic_in_create_state
     return employeeDiveCalenderListTileState;
   }
 
@@ -35,8 +34,7 @@ class EmployeeDiveCalenderListTile extends StatefulWidget {
   }
 }
 
-class _EmployeeDiveCalenderListTileState
-    extends State<EmployeeDiveCalenderListTile> {
+class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTile> {
   bool isExpanded = false;
   HomeController controller = Get.put(HomeController());
 
@@ -46,24 +44,24 @@ class _EmployeeDiveCalenderListTileState
   @override
   void initState() {
     getSelectedBoat(
-        widget.itemModel.bookingModel?.getBoatInfo(widget.selectedDate)?.id ??
-            "");
+      widget.itemModel.bookingModel?.getBoatInfo(widget.selectedDate)?.id ?? '',
+    );
     super.initState();
   }
 
   Future<void> getSelectedBoat(String boatId) async {
     var d = await FirebaseFirestore.instance
-        .collection("dailyBoats")
-        .doc(DateFormat("dd-MM-yyyy").format(widget.selectedDate))
+        .collection('dailyBoats')
+        .doc(DateFormat('dd-MM-yyyy').format(widget.selectedDate))
         .get();
     Map<String, dynamic>? data = d.data();
     BoatsModel? boatsModel = BoatsModel.fromMap(data);
     allBoats = boatsModel.boats ?? [];
-    allBoats.forEach((boat) {
+    for (var boat in allBoats) {
       if (boat.id == boatId) {
         selectedBoat = boat;
       }
-    });
+    }
     setState(() {});
   }
 
@@ -91,15 +89,14 @@ class _EmployeeDiveCalenderListTileState
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${widget.itemModel.activity} ",
-                      style:
-                          TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                      '${widget.itemModel.activity} ',
+                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                     Text(
-                      "${widget.itemModel.name?.capitalizeFirst} "
-                      "x"
-                      " ${(widget.itemModel.bookingModel!.noOfPersons.toString())}"
-                      " (${widget.itemModel.bookingID})",
+                      '${widget.itemModel.name?.capitalizeFirst} '
+                      'x'
+                      ' ${(widget.itemModel.bookingModel!.noOfPersons.toString())}'
+                      ' (${widget.itemModel.bookingID})',
                       style: TextStyle(
                         fontFamily: AppFonts.nunito,
                         color: AppColors.text.darkgrey,
@@ -109,15 +106,13 @@ class _EmployeeDiveCalenderListTileState
                     ),
                   ],
                 ),
-                Spacer(),
+                const Spacer(),
                 IconButton(
-                  visualDensity: VisualDensity(horizontal: 0, vertical: 0),
-                  padding: EdgeInsets.all(0),
+                  visualDensity: const VisualDensity(horizontal: 0, vertical: 0),
+                  padding: const EdgeInsets.all(0),
                   splashRadius: 20,
                   iconSize: 20,
-                  icon: Icon(isExpanded
-                      ? Icons.keyboard_arrow_up_rounded
-                      : Icons.keyboard_arrow_down_rounded),
+                  icon: Icon(isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded),
                   onPressed: () {
                     setState(() {
                       isExpanded = !isExpanded;
@@ -131,49 +126,38 @@ class _EmployeeDiveCalenderListTileState
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Spacing.h10,
-                  _buildKeyValuePairs(
-                      "Booking Id", widget.itemModel.bookingID ?? "-"),
+                  _buildKeyValuePairs('Booking Id', widget.itemModel.bookingID ?? '-'),
                   if (!widget.itemModel.bookingModel!.isQuickBooking)
                     _buildKeyValuePairs(
-                      "Balance",
-                      "${getBalance(widget.itemModel.bookingModel?.payments ?? [], double.parse(widget.itemModel.paid).roundToDouble(), double.parse(widget.itemModel.cost).roundToDouble())} / -",
+                      'Balance',
+                      '${getBalance(widget.itemModel.bookingModel?.payments ?? [], double.parse(widget.itemModel.paid).roundToDouble(), double.parse(widget.itemModel.cost).roundToDouble())} / -',
                     ),
                   if (!widget.itemModel.bookingModel!.isQuickBooking)
                     _buildKeyValuePairs(
-                      "Registered",
-                      "${widget.itemModel.bookingModel!.pax!.length - 1} / ${widget.itemModel.bookingModel!.noOfPersons}",
-                      isDanger:
-                          ((widget.itemModel.bookingModel!.pax!.length - 1) !=
-                              (widget.itemModel.bookingModel!.noOfPersons)),
+                      'Registered',
+                      '${widget.itemModel.bookingModel!.pax!.length - 1} / ${widget.itemModel.bookingModel!.noOfPersons}',
+                      isDanger: ((widget.itemModel.bookingModel!.pax!.length - 1) !=
+                          (widget.itemModel.bookingModel!.noOfPersons)),
                     ),
-                  (widget.itemModel.remarks == "")
-                      ? _buildKeyValuePairs("Remarks", "-")
-                      : _buildKeyValuePairs(
-                          "Remarks", widget.itemModel.remarks.toString()),
+                  (widget.itemModel.remarks == '')
+                      ? _buildKeyValuePairs('Remarks', '-')
+                      : _buildKeyValuePairs('Remarks', widget.itemModel.remarks.toString()),
+                  _buildKeyValuePairs('Status', getStatus(widget.itemModel.bookingModel!)),
+                  _buildKeyValuePairs('Boat', selectedBoat?.name ?? '-'),
                   _buildKeyValuePairs(
-                      "Status", getStatus(widget.itemModel.bookingModel!)),
-                  _buildKeyValuePairs("Boat", selectedBoat?.name ?? "-"),
+                      'Customer Tanks',
+                      'N/${widget.itemModel.bookingModel?.getBoatInfo(controller.selectedDate)?.nitrox ?? 0} - '
+                          'A/${widget.itemModel.bookingModel?.getBoatInfo(controller.selectedDate)?.air ?? 0}'),
+                  _buildDiveBuddies(widget.itemModel.bookingModel?.boatDetails?.diveBuddies ?? []),
                   _buildKeyValuePairs(
-                      "Customer Tanks",
-                      "N/${widget.itemModel.bookingModel?.getBoatInfo(controller.selectedDate)?.nitrox ?? 0} - "
-                          "A/${widget.itemModel.bookingModel?.getBoatInfo(controller.selectedDate)?.air ?? 0}"),
-                  _buildDiveBuddies(
-                      widget.itemModel.bookingModel?.boatDetails?.diveBuddies ??
-                          []),
-                  _buildKeyValuePairs(
-                    "Notes",
-                    (widget.itemModel.bookingModel!.boatDetails!
-                                    .employeeNotes !=
-                                null &&
-                            widget.itemModel.bookingModel!.boatDetails!
-                                .employeeNotes!.isNotEmpty)
-                        ? widget
-                            .itemModel.bookingModel!.boatDetails!.employeeNotes!
-                        : "-",
+                    'Notes',
+                    (widget.itemModel.bookingModel!.boatDetails!.employeeNotes != null &&
+                            widget.itemModel.bookingModel!.boatDetails!.employeeNotes!.isNotEmpty)
+                        ? widget.itemModel.bookingModel!.boatDetails!.employeeNotes!
+                        : '-',
                   ),
                   Spacing.h10,
-                  Divider(thickness: 1, color: Colors.black)
-                      .paddingOnly(right: 20),
+                  const Divider(thickness: 1, color: Colors.black).paddingOnly(right: 20),
                 ],
               ).paddingOnly(left: 20)
           ],
@@ -184,9 +168,9 @@ class _EmployeeDiveCalenderListTileState
 
   String getBalance(List<PaymentModel> payments, double deposit, double total) {
     double t = deposit;
-    payments.forEach((payment) {
+    for (var payment in payments) {
       t += payment.amount!;
-    });
+    }
     return (total - t).toInt().toString();
   }
 
@@ -222,7 +206,7 @@ class _EmployeeDiveCalenderListTileState
               ),
             ),
           ),
-        Container(
+        SizedBox(
           width: 170,
           child: Text(
             value,
@@ -248,7 +232,7 @@ class _EmployeeDiveCalenderListTileState
       children: [
         if (shrinkKey)
           Text(
-            "Dive Buddies (N - A)",
+            'Dive Buddies (N - A)',
             style: TextStyle(
               color: Colors.grey[700],
               fontSize: 13,
@@ -259,7 +243,7 @@ class _EmployeeDiveCalenderListTileState
         else
           Expanded(
             child: Text(
-              "Dive Buddies (N - A)",
+              'Dive Buddies (N - A)',
               style: TextStyle(
                 color: Colors.grey[700],
                 fontSize: 13,
@@ -268,24 +252,25 @@ class _EmployeeDiveCalenderListTileState
               ),
             ),
           ),
-        Container(
-            width: 170,
-            child: Wrap(
-              children: [
-                if (interns.length == 0) Text("-"),
-                ...interns.map(
-                  (e) => Text(
-                    "${e.name}${"(${e.nitrox ?? 0} - ${e.air ?? 0})"}, ",
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 13,
-                      fontWeight: FontWeight.w600,
-                      letterSpacing: 0.3,
-                    ),
+        SizedBox(
+          width: 170,
+          child: Wrap(
+            children: [
+              if (interns.isEmpty) const Text('-'),
+              ...interns.map(
+                (e) => Text(
+                  "${e.name}${"(${e.nitrox ?? 0} - ${e.air ?? 0})"}, ",
+                  style: const TextStyle(
+                    color: Colors.black,
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 0.3,
                   ),
-                )
-              ],
-            )),
+                ),
+              )
+            ],
+          ),
+        ),
       ],
     ).paddingOnly(bottom: 6);
   }
@@ -293,7 +278,7 @@ class _EmployeeDiveCalenderListTileState
   void closeExpansion() {
     setState(() {
       isExpanded = false;
-      log("==========depth expansion closed");
+      log('==========depth expansion closed');
       log(isExpanded.toString());
     });
   }

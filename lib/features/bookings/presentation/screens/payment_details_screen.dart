@@ -1,16 +1,17 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/app_button.dart';
-import 'package:temple_adventures/core/widgets/back_navigation_icon.dart';
-import 'package:temple_adventures/features/bookings/controller/new_booking_controller.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app_text_fields.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/back_navigation_icon.dart';
+import '../../controller/new_booking_controller.dart';
+import '../widgets/app_text_fields.dart';
 import 'package:intl/intl.dart';
 
 class PaymentDetailsScreen extends StatelessWidget {
-  static const String id = "PaymentDetailsScreen";
+  static const String id = 'PaymentDetailsScreen';
   final NewBookingLogic logic = NewBookingLogic();
+
+  PaymentDetailsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +21,7 @@ class PaymentDetailsScreen extends StatelessWidget {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(30),
-            child: Container(
+            child: SizedBox(
               height: 500,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -31,7 +32,7 @@ class PaymentDetailsScreen extends StatelessWidget {
                   buildPaymentDate(context),
                   buildPaymentReferenceTextField(),
                   buildReceiptNo(),
-                  SizedBox(height: 40),
+                  const SizedBox(height: 40),
                   buildProceed(),
                 ],
               ),
@@ -49,7 +50,7 @@ class PaymentDetailsScreen extends StatelessWidget {
       toolbarHeight: 70,
       centerTitle: true,
       title: buildTitle(),
-      leading: BackNavigationIcon(),
+      leading: const BackNavigationIcon(),
       elevation: 0,
       backgroundColor: AppColors.background.white,
     );
@@ -62,11 +63,9 @@ class PaymentDetailsScreen extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            child: Text(
-              "Payment Date",
-              style: TextStyle(fontSize: FontSize.textSize),
-            ),
+          const Text(
+            'Payment Date',
+            style: TextStyle(fontSize: FontSize.textSize),
           ),
           GestureDetector(
             onTap: () {
@@ -79,15 +78,15 @@ class PaymentDetailsScreen extends StatelessWidget {
                   border: Border.all(
                     color: Colors.black,
                   ),
-                  borderRadius: BorderRadius.circular(5)),
+                  borderRadius: BorderRadius.circular(5),),
               child: Center(
                   child: Text(
-                      DateFormat("d MMM yyyy").format(controller.paymentDate))),
+                      DateFormat('d MMM yyyy').format(controller.paymentDate),),),
             ),
           ),
         ],
       );
-    });
+    },);
   }
 
   Widget buildPaymentReferenceTextField() {
@@ -106,7 +105,7 @@ class PaymentDetailsScreen extends StatelessWidget {
           return null;
         },
       );
-    });
+    },);
   }
 
   Widget buildReceiptNo() {
@@ -124,19 +123,17 @@ class PaymentDetailsScreen extends StatelessWidget {
           return null;
         },
       );
-    });
+    },);
   }
 
   Widget buildPaymentMode() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
-        Container(
-          child: Text(
-            "Select PaymentMode",
-            style: TextStyle(
-                fontSize: FontSize.textSize, color: AppColors.text.black),
-          ),
+        Text(
+          'Select PaymentMode',
+          style: TextStyle(
+              fontSize: FontSize.textSize, color: AppColors.text.black,),
         ),
         Container(
           height: 30,
@@ -145,12 +142,12 @@ class PaymentDetailsScreen extends StatelessWidget {
               border: Border.all(
                 color: Colors.black,
               ),
-              borderRadius: BorderRadius.circular(5)),
+              borderRadius: BorderRadius.circular(5),),
           child: GetBuilder<NewBookingController>(builder: (controller) {
             return Padding(
               padding: const EdgeInsets.only(left: 10, right: 10),
               child: DropdownButton(
-                underline: SizedBox(),
+                underline: const SizedBox(),
                 isExpanded: true,
                 value: controller.paymentModeTED.text.isNotEmpty
                     ? controller.paymentModeTED.text
@@ -161,13 +158,13 @@ class PaymentDetailsScreen extends StatelessWidget {
                 },
                 items: controller.paymentOptions.map((newMode) {
                   return DropdownMenuItem(
-                    child: new Text(newMode),
                     value: newMode,
+                    child: Text(newMode),
                   );
                 }).toList(),
               ),
             );
-          }),
+          },),
         )
       ],
     );
@@ -178,25 +175,23 @@ class PaymentDetailsScreen extends StatelessWidget {
       return Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            child: Text(
-              "Payable Amount",
-              style: TextStyle(
-                  fontSize: FontSize.textSize, color: AppColors.text.black),
-            ),
+          Text(
+            'Payable Amount',
+            style: TextStyle(
+                fontSize: FontSize.textSize, color: AppColors.text.black,),
           ),
-          Container(
+          SizedBox(
             height: 30,
             width: 120,
             child: Text(
-              controller.payingNowTED.text + " /-",
+              '${controller.payingNowTED.text} /-',
               style:
-                  TextStyle(fontSize: FontSize.textSize, color: Colors.black),
+                  const TextStyle(fontSize: FontSize.textSize, color: Colors.black),
             ),
           )
         ],
       );
-    });
+    },);
   }
 
   Widget buildTitle() {
@@ -215,7 +210,7 @@ class PaymentDetailsScreen extends StatelessWidget {
   Widget buildProceed() {
     return Center(
       child: AppButton.flat(
-        text: "Proceed",
+        text: 'Proceed',
         textColor: AppColors.text.white,
         color: AppColors.background.black,
         onTap: () {

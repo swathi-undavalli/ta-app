@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/features/board_plan/presentation/views/board_plan_view.dart';
-import 'package:temple_adventures/features/boat/presentation/screens/manage_boats_page.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/booking_screen.dart';
-import 'package:temple_adventures/features/dashboard/controller/dashboard_controller.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
-import 'package:temple_adventures/features/home/presentation/screens/home_page.dart';
-import 'package:temple_adventures/features/home/presentation/widgets/nav_drawer.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../board_plan/presentation/views/board_plan_view.dart';
+import '../../../boat/presentation/screens/manage_boats_page.dart';
+import '../../../bookings/presentation/screens/booking_screen.dart';
+import '../../controller/dashboard_controller.dart';
+import '../../../employees/model/employee.dart';
+import '../../../home/presentation/screens/home_page.dart';
+import '../../../home/presentation/widgets/nav_drawer.dart';
 import '../../../../core/services/notification_service.dart';
 import '../../../conditions/screens/conditions_screen.dart';
 
@@ -16,22 +16,22 @@ late DashBoardScreenLogic dashboardLogic;
 
 // ignore: must_be_immutable
 class DashBoardScreen extends StatelessWidget {
-  static const String id = "DashBoardScreen";
+  static const String id = 'DashBoardScreen';
   final screens = [
-    HomePage(),
+    const HomePage(),
     ManageBoatsPage(),
     BookingScreen(),
-    ConditionsScreen(),
+    const ConditionsScreen(),
   ];
 
   final internScreens = [
-    HomePage(),
-    BoardPlanView(),
+    const HomePage(),
+    const BoardPlanView(),
   ];
 
   DateTime? currentBackPressTime;
 
-  DashBoardScreen() {
+  DashBoardScreen({Key? key}) : super(key: key) {
     dashboardLogic = DashBoardScreenLogic();
 
     ///app is in Terminated
@@ -44,12 +44,12 @@ class DashBoardScreen extends StatelessWidget {
       onWillPop: () async {
         if (dashboardLogic.controller.currentIndex == 2) {
           FocusScope.of(context).unfocus();
-          new TextEditingController().clear();
+          TextEditingController().clear();
           FocusNode().requestFocus();
           DateTime now = DateTime.now();
-          if (currentBackPressTime == null || now.difference(currentBackPressTime!) > Duration(seconds: 2)) {
+          if (currentBackPressTime == null || now.difference(currentBackPressTime!) > const Duration(seconds: 2)) {
             currentBackPressTime = now;
-            Fluttertoast.showToast(msg: "Press Double tap to exit");
+            Fluttertoast.showToast(msg: 'Press Double tap to exit');
             return Future.value(false);
           }
           return Future.value(true);
@@ -61,7 +61,7 @@ class DashBoardScreen extends StatelessWidget {
         children: [
           Scaffold(
             bottomNavigationBar: buildBottomNavigationBar(),
-            drawer: (currentEmployee?.role != "Intern") ? NavDrawer() : SizedBox(),
+            drawer: (currentEmployee?.role != 'Intern') ? NavDrawer() : const SizedBox(),
             key: dashboardDrawerKey,
             body: SafeArea(
               child: buildSelectedPage(),
@@ -77,29 +77,30 @@ class DashBoardScreen extends StatelessWidget {
 
   Widget buildShowLoading() {
     return GetBuilder<DashBoardScreenController>(builder: (controller) {
-      if (controller.showLoading)
+      if (controller.showLoading) {
         return Material(
           color: Colors.transparent,
           child: Container(
             color: Colors.black54,
             height: Get.height,
             width: Get.width,
-            child: Center(
+            child: const Center(
                 child: CircularProgressIndicator(
               color: Colors.white,
-            )),
+            ),),
           ),
         );
-      else
-        return SizedBox();
-    });
+      } else {
+        return const SizedBox();
+      }
+    },);
   }
 
   Widget buildSelectedPage() {
     return GetBuilder<DashBoardScreenController>(builder: (controller) {
-      if (currentEmployee?.role != "Intern") return screens[controller.currentIndex];
+      if (currentEmployee?.role != 'Intern') return screens[controller.currentIndex];
       return internScreens[controller.currentIndex];
-    });
+    },);
   }
 
   Widget buildBottomNavigationBar() {
@@ -118,38 +119,38 @@ class DashBoardScreen extends StatelessWidget {
         },
         items: [
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('images/taHomeWhite.png')),
+            icon: const ImageIcon(AssetImage('images/taHomeWhite.png')),
             activeIcon: buildActiveIcon('images/taHomeBlack.png'),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: ImageIcon(AssetImage('images/boatWhite.png')),
+            icon: const ImageIcon(AssetImage('images/boatWhite.png')),
             activeIcon: buildActiveIcon('images/boat_black.png'),
             label: 'boat',
           ),
-          if (currentEmployee?.role != "Intern")
+          if (currentEmployee?.role != 'Intern')
             BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('images/taCalWhite.png')),
+              icon: const ImageIcon(AssetImage('images/taCalWhite.png')),
               activeIcon: buildActiveIcon('images/taCalBlack.png'),
               label: 'bookings',
             ),
-          if (currentEmployee?.role != "Intern")
+          if (currentEmployee?.role != 'Intern')
             BottomNavigationBarItem(
-              icon: ImageIcon(AssetImage('images/taCloudWhite.png')),
+              icon: const ImageIcon(AssetImage('images/taCloudWhite.png')),
               activeIcon: buildActiveIcon('images/taCloudBlack.png'),
               label: 'weather',
             ),
         ],
       );
-    });
+    },);
   }
 
   Widget buildActiveIcon(String image) {
     return Container(
       height: 30,
       width: 30,
+      decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
       child: Image.asset(image),
-      decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.white),
     );
   }
 }

@@ -14,9 +14,9 @@ class ActivityEditController extends GetxController {
   List<String> colorCode = ['Blue', 'Green', 'Purple', 'Red', 'White'];
 
   reset() {
-    priceTED.text = "";
-    colorTED.text = "";
-    nameTED.text = "";
-    shortNameTED.text = "";
+    priceTED.text = '';
+    colorTED.text = '';
+    nameTED.text = '';
+    shortNameTED.text = '';
   }
 }

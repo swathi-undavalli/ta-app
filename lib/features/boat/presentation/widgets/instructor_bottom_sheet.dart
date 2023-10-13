@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
-import 'package:temple_adventures/features/boat/models/boat_details.dart';
+import '../../models/boat_details.dart';
 import 'tank_counter.dart';
 
 class InstructorTanksBottomSheet extends StatefulWidget {
@@ -80,41 +80,41 @@ class _InstructorTanksBottomSheetState
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 10),
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Text(
-                  "Manage Divers",
+                const Text(
+                  'Manage Divers',
                   style: TextStyle(
                     fontWeight: FontWeight.w600,
                     fontSize: 20,
                   ),
                 ).paddingOnly(top: 8),
-                Spacer(),
+                const Spacer(),
                 IconButton(
-                  icon: Icon(Icons.close),
+                  icon: const Icon(Icons.close),
                   onPressed: onClose,
                 ),
               ],
             ),
-            SizedBox(height: 20),
+            const SizedBox(height: 20),
             ...widget.instructors.map(
               (instructor) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "${instructor.name} : ",
-                    style: TextStyle(fontWeight: FontWeight.w700),
+                    '${instructor.name} : ',
+                    style: const TextStyle(fontWeight: FontWeight.w700),
                   ),
-                  SizedBox(height: 15),
+                  const SizedBox(height: 15),
                   TankCounter(
                       onChanged: (n, a) {
                         instructorTanks[instructor]![0] = n;
                         instructorTanks[instructor]![1] = a;
                       },
                       nitrox: instructorTanks[instructor]![0],
-                      air: instructorTanks[instructor]![1])
+                      air: instructorTanks[instructor]![1],)
                 ],
               ).paddingOnly(bottom: 30),
             )

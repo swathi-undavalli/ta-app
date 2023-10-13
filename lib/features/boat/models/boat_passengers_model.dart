@@ -22,17 +22,17 @@ class BoatPassengersModel {
   factory BoatPassengersModel.fromMap(Map<String, dynamic> json) =>
       BoatPassengersModel(
         passenger: List<Passenger>.from(
-            json["passenger"].map((x) => Passenger.fromMap(x))),
+            json['passenger'].map((x) => Passenger.fromMap(x)),),
         employees: List<Employees>.from(
-            json["employees"].map((x) => Employees.fromMap(x))),
+            json['employees'].map((x) => Employees.fromMap(x)),),
         freelancer: List<Freelancer>.from(
-            json["freelancer"].map((x) => Freelancer.fromMap(x))),
+            json['freelancer'].map((x) => Freelancer.fromMap(x)),),
       );
 
   Map<String, dynamic> toMap() => {
-        "passenger": List<dynamic>.from(passenger!.map((x) => x.toMap())),
-        "employees": List<dynamic>.from(employees!.map((x) => x.toMap())),
-        "freelancer": List<dynamic>.from(freelancer!.map((x) => x.toMap())),
+        'passenger': List<dynamic>.from(passenger!.map((x) => x.toMap())),
+        'employees': List<dynamic>.from(employees!.map((x) => x.toMap())),
+        'freelancer': List<dynamic>.from(freelancer!.map((x) => x.toMap())),
       };
 }
 
@@ -52,19 +52,19 @@ class Employees {
   String? phone;
 
   factory Employees.fromMap(Map<String, dynamic> json) => Employees(
-        name: json["name"],
-        id: json["id"],
-        gender: json["gender"],
-        phone: json["phone"],
-        boatID: json["boatID"],
+        name: json['name'],
+        id: json['id'],
+        gender: json['gender'],
+        phone: json['phone'],
+        boatID: json['boatID'],
       );
 
   Map<String, dynamic> toMap() => {
-        "name": name,
-        "id": id,
-        "gender": gender,
-        "phone": phone,
-        "boatID": boatID,
+        'name': name,
+        'id': id,
+        'gender': gender,
+        'phone': phone,
+        'boatID': boatID,
       };
 
   @override
@@ -96,19 +96,19 @@ class Freelancer {
   String? id;
 
   factory Freelancer.fromMap(Map<String, dynamic> json) => Freelancer(
-        name: json["name"],
-        gender: json["gender"],
-        phone: json["phone"],
-        boatID: json["boatID"],
-        id: json["id"],
+        name: json['name'],
+        gender: json['gender'],
+        phone: json['phone'],
+        boatID: json['boatID'],
+        id: json['id'],
       );
 
   Map<String, dynamic> toMap() => {
-        "name": name,
-        "gender": gender,
-        "phone": phone,
-        "boatID": boatID,
-        "id": id,
+        'name': name,
+        'gender': gender,
+        'phone': phone,
+        'boatID': boatID,
+        'id': id,
       };
 
   @override
@@ -144,20 +144,20 @@ class Passenger {
   String? bookingID;
 
   factory Passenger.fromMap(Map<String, dynamic> json) => Passenger(
-        name: json["name"],
-        gender: json["gender"],
-        phone: json["phone"],
-        email: json["email"],
-        boatID: json["boatID"],
-    bookingID: json["bookingID"],
+        name: json['name'],
+        gender: json['gender'],
+        phone: json['phone'],
+        email: json['email'],
+        boatID: json['boatID'],
+    bookingID: json['bookingID'],
       );
 
   Map<String, dynamic> toMap() => {
-        "name": name,
-        "gender": gender,
-        "bookingID": bookingID,
-        "phone": phone,
-        "email": email,
-        "boatID": boatID,
+        'name': name,
+        'gender': gender,
+        'bookingID': bookingID,
+        'phone': phone,
+        'email': email,
+        'boatID': boatID,
       };
 }

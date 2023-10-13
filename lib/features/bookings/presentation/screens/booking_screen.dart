@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/access_levels.dart';
-import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
-import 'package:temple_adventures/core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
-import 'package:temple_adventures/features/bookings/controller/booking_controller.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/add_customer_details_screen.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/access_levels.dart';
+import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
+import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
+import '../../controller/booking_controller.dart';
+import 'add_customer_details_screen.dart';
 
 // ignore: must_be_immutable
 class BookingScreen extends StatelessWidget {
-  static const String id = "BookingPage";
+  static const String id = 'BookingPage';
   final BookingScreenLogic logic = BookingScreenLogic();
   final AutoScrollController autoScrollController = AutoScrollController();
   var bookings = [DateTime.now()];
@@ -19,6 +19,8 @@ class BookingScreen extends StatelessWidget {
       BookingsCalenderWidgetLogicNew();
   ScrollController scrollController = ScrollController();
   late BookingsCalenderWidgetNew bookingsCalenderWidget;
+
+  BookingScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +32,7 @@ class BookingScreen extends StatelessWidget {
         },
         autoScrollController: autoScrollController,
         showDetails: true,
-        startDate: DateTime.now().subtract(Duration(days: 50)),
+        startDate: DateTime.now().subtract(const Duration(days: 50)),
         isDiveSession: true,
         isBookingScreen: true,
       );
@@ -43,8 +45,7 @@ class BookingScreen extends StatelessWidget {
         body: RefreshIndicator(
           color: AppColors.IconColor.black,
           onRefresh: () async {
-            if (calenderLogic.controller.lastSelectedIndex == null)
-              calenderLogic.controller.lastSelectedIndex = 50;
+            calenderLogic.controller.lastSelectedIndex ??= 50;
             bookingsCalenderWidget
                 .scrollToIndex(calenderLogic.controller.lastSelectedIndex!);
             await calenderLogic
@@ -53,10 +54,10 @@ class BookingScreen extends StatelessWidget {
           child: SafeArea(
             child: SingleChildScrollView(
               controller: scrollController,
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               child: Padding(
                 padding: const EdgeInsets.only(
-                    left: 20, right: 20, top: 40, bottom: 50),
+                    left: 20, right: 20, top: 40, bottom: 50,),
                 child: Column(
                   children: [
                     GetBuilder<BookingsCalenderWidgetControllerNew>(
@@ -66,15 +67,15 @@ class BookingScreen extends StatelessWidget {
                           DateFormat('dd-MMM-yyyy').format(date);
                       return Row(
                         children: [
-                          buildTitle("Calendar"),
-                          Spacer(),
+                          buildTitle('Calendar'),
+                          const Spacer(),
                           Text(formattedDate),
                           buildCalendarIcon(context, controller),
                         ],
                       );
-                    }),
+                    },),
                     bookingsCalenderWidget,
-                    SizedBox(
+                    const SizedBox(
                       height: 200,
                     ),
                   ],
@@ -84,7 +85,7 @@ class BookingScreen extends StatelessWidget {
           ),
         ),
       );
-    });
+    },);
   }
 
   ///===============UI==============///
@@ -96,18 +97,18 @@ class BookingScreen extends StatelessWidget {
         Get.toNamed(AddCustomerDetailsScreen.id);
       },
       backgroundColor: AppColors.background.black,
-      child: Icon(Icons.add),
+      child: const Icon(Icons.add),
     );
   }
 
   Widget buildCalendarIcon(
-      BuildContext context, BookingsCalenderWidgetControllerNew controller) {
+      BuildContext context, BookingsCalenderWidgetControllerNew controller,) {
     return IconButton(
       splashRadius: 20,
       onPressed: () {
         selectDate(context, controller);
       },
-      icon: Icon(
+      icon: const Icon(
         Icons.calendar_today_outlined,
         size: 17,
       ),
@@ -124,13 +125,13 @@ class BookingScreen extends StatelessWidget {
             fontSize: 16,
             color: AppColors.text.black,
             fontWeight: FontWeight.bold,
-            fontFamily: AppFonts.nunito),
+            fontFamily: AppFonts.nunito,),
       ),
     );
   }
 
   selectDate(BuildContext context,
-      BookingsCalenderWidgetControllerNew controller) async {
+      BookingsCalenderWidgetControllerNew controller,) async {
     final DateTime? selected = await showDatePicker(
       context: context,
       initialDate: controller.selectedDate,
@@ -147,7 +148,7 @@ class BookingScreen extends StatelessWidget {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.text.black,
-                textStyle: TextStyle(fontWeight: FontWeight.w500), // button text color
+                textStyle: const TextStyle(fontWeight: FontWeight.w500), // button text color
               ),
             ),
           ),
@@ -161,8 +162,9 @@ class BookingScreen extends StatelessWidget {
       if (dif < 0) {
         dif = dif * -1;
         bookingsCalenderWidget.scrollToIndex(dif);
-      } else
+      } else {
         bookingsCalenderWidget.scrollToIndex(dif);
+      }
       calenderLogic.onDateSelected(dif);
 
       controller.selectedDate = selected;
