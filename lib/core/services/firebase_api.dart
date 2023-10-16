@@ -1,11 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_adventures/features/bookings/models/booking-model.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
+
+import '../../features/bookings/models/booking_model.dart';
+import '../../features/employees/model/employee.dart';
 
 class FirebaseApi {
-  static Future<DocumentSnapshot<Map<String, dynamic>>>
-      getEmployeeFullInformation(String? employeeID) async {
+  static Future<DocumentSnapshot<Map<String, dynamic>>> getEmployeeFullInformation(String? employeeID) async {
     return await FirebaseFirestore.instance
         .collection('employees')
         .doc(employeeID)
@@ -24,8 +24,9 @@ class FirebaseApi {
   }
 
   static Future<DocumentSnapshot<Map<String, dynamic>>> getAttendance(
-      DateTime dateTime) async {
-    var date = DateFormat("dd-M-yyyy").format(dateTime);
+    DateTime dateTime,
+  ) async {
+    var date = DateFormat('dd-M-yyyy').format(dateTime);
     return await FirebaseFirestore.instance
         .collection('employees')
         .doc(currentEmployee!.id)
@@ -35,19 +36,15 @@ class FirebaseApi {
   }
 
   static addNewBooking(Booking booking) async {
+    DocumentReference counterRef = FirebaseFirestore.instance.collection('counter').doc('count');
 
-    DocumentReference counterRef =
-        FirebaseFirestore.instance.collection('counter').doc("count");
-
-    var bookingId;
+    int? bookingId;
     await FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot counterSnapshot = await transaction.get(counterRef);
       Map<String, dynamic> data = counterSnapshot.data() as Map<String, dynamic>;
-      int? newBookingID = data["booking"] + 1;
+      int? newBookingID = data['booking'] + 1;
 
-      DocumentReference bookingRef = FirebaseFirestore.instance
-          .collection('bookings')
-          .doc(newBookingID.toString());
+      DocumentReference bookingRef = FirebaseFirestore.instance.collection('bookings').doc(newBookingID.toString());
 
       booking.id = newBookingID.toString();
       transaction.set(bookingRef, booking.toMap());

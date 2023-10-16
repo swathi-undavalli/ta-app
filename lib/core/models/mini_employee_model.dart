@@ -19,24 +19,23 @@ class EmployeeMiniModel {
   String? id;
   String? punctual;
 
-  factory EmployeeMiniModel.fromMap(Map<String, dynamic> json) =>
-      EmployeeMiniModel(
-        shiftTime: json["shiftTime"],
-        phone: json["phone"],
-        name: json["name"],
-        logTime: json["LogTime"],
-        id: json["id"],
-        difference: json["difference"],
-        punctual: json["punctual"],
+  factory EmployeeMiniModel.fromMap(Map<String, dynamic> json) => EmployeeMiniModel(
+        shiftTime: json['shiftTime'],
+        phone: json['phone'],
+        name: json['name'],
+        logTime: json['LogTime'],
+        id: json['id'],
+        difference: json['difference'],
+        punctual: json['punctual'],
       );
 
   Map<String, dynamic> toMap() => {
-        "shiftTime": shiftTime,
-        "phone": phone,
-        "name": name,
-        "LogTime": logTime,
-        "id": id,
-        "difference": difference,
-        "punctual": punctual,
+        'shiftTime': shiftTime,
+        'phone': phone,
+        'name': name,
+        'LogTime': logTime,
+        'id': id,
+        'difference': difference,
+        'punctual': punctual,
       };
 }

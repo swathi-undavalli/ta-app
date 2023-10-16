@@ -12,31 +12,31 @@ dependencies:
   flutter:
     sdk: flutter
 
-  get: ^4.6.5
-  get_storage: ^2.0.3
-  pdf: ^3.8.4
-  intl:
-  flutter_share: ^2.0.0
-  flutter_svg: ^1.1.6
-  octo_image: ^1.0.2
-  cached_network_image: ^3.2.3
-  cupertino_icons: ^1.0.5
-  http: ^0.13.5
-  permission_handler: ^10.2.0
-  fluttertoast: ^8.1.1
-  flutter_datetime_picker: ^1.5.1
-  share: ^2.0.4
-  url_launcher: ^6.1.8
-  scroll_to_index: ^3.0.1
-  barcode_widget: ^2.0.3
-  firebase_auth: ^4.2.2
-  firebase_core: ^2.7.0
-  cloud_firestore: ^4.8.1
+  # DO NOT UPDATE WITHOUT PROPER TESTING.
   firebase_messaging: ^14.2.5
   flutter_local_notifications: ^13.0.0
+  get: ^4.6.5
+
+  get_storage: ^2.1.1
+  pdf: ^3.10.4
+  intl:
+  flutter_svg: ^2.0.7
+  cached_network_image: ^3.3.0
+  cupertino_icons: ^1.0.6
+  permission_handler: ^11.0.1
+  fluttertoast: ^8.2.2
+  flutter_datetime_picker: ^1.5.1
+  share: ^2.0.4
+  url_launcher: ^6.1.14
+  scroll_to_index: ^3.0.1
+  barcode_widget: ^2.0.4
+  firebase_auth: ^4.10.1
+  firebase_core: ^2.17.0
+  cloud_firestore: ^4.9.3
   package_info_plus:
-  pin_code_fields: ^7.4.0
+  pin_code_fields: ^8.0.1
   lottie: ^2.6.0
+  flutter_lints:
 
 
 dev_dependencies:

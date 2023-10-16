@@ -4,8 +4,8 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
 import '../../features/activities/model/colors_data.dart';
-import '../../features/bookings/models/booking-model.dart';
-import '../models/item-model.dart';
+import '../../features/bookings/models/booking_model.dart';
+import '../models/item_model.dart';
 
 void disposeKeyboard() {
   FocusManager.instance.primaryFocus?.unfocus();
@@ -47,18 +47,19 @@ Color getBookingColor(ItemModel itemModel) {
   if (itemModel.bookingModel?.cancelBooking == true) {
     return Colors.red.shade200;
   } else {
-    if (colorsData!.blue.contains(itemModel.activity))
-      return Color(0xffA9EBF8).withOpacity(0.3);
-    else if (colorsData!.purple.contains(itemModel.activity))
-      return Color(0xffDDB3FF);
-    else if (colorsData!.red.contains(itemModel.activity))
-      return Color(0xffF8FF96);
-    else if (colorsData!.green.contains(itemModel.activity))
-      return Color(0xff96F1BD);
-    else if (colorsData!.white.contains(itemModel.activity))
-      return Color(0xffE0E0E0);
-    else
-      return Color(0xffE0E0E0);
+    if (colorsData!.blue.contains(itemModel.activity)) {
+      return const Color(0xffA9EBF8).withOpacity(0.3);
+    } else if (colorsData!.purple.contains(itemModel.activity)) {
+      return const Color(0xffDDB3FF);
+    } else if (colorsData!.red.contains(itemModel.activity)) {
+      return const Color(0xffF8FF96);
+    } else if (colorsData!.green.contains(itemModel.activity)) {
+      return const Color(0xff96F1BD);
+    } else if (colorsData!.white.contains(itemModel.activity)) {
+      return const Color(0xffE0E0E0);
+    } else {
+      return const Color(0xffE0E0E0);
+    }
   }
 }
 

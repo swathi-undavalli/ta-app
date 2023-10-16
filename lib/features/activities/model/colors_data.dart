@@ -37,18 +37,18 @@ class ColorsDataModel {
   String toJson() => json.encode(toMap());
 
   factory ColorsDataModel.fromMap(Map<String, dynamic> json) => ColorsDataModel(
-    blue: List<String>.from(json["Blue"].map((x) => x)),
-    green: List<String>.from(json["Green"].map((x) => x)),
-    red: List<String>.from(json["Red"].map((x) => x)),
-    white: List<String>.from(json["White"].map((x) => x)),
-    purple: List<String>.from(json["Purple"].map((x) => x)),
-  );
+        blue: List<String>.from(json['Blue'].map((x) => x)),
+        green: List<String>.from(json['Green'].map((x) => x)),
+        red: List<String>.from(json['Red'].map((x) => x)),
+        white: List<String>.from(json['White'].map((x) => x)),
+        purple: List<String>.from(json['Purple'].map((x) => x)),
+      );
 
   Map<String, dynamic> toMap() => {
-    "Blue": List<dynamic>.from(blue.map((x) => x)),
-    "Green": List<dynamic>.from(green.map((x) => x)),
-    "Red": List<dynamic>.from(red.map((x) => x)),
-    "White": List<dynamic>.from(white.map((x) => x)),
-    "Purple": List<dynamic>.from(purple.map((x) => x)),
-  };
+        'Blue': List<dynamic>.from(blue.map((x) => x)),
+        'Green': List<dynamic>.from(green.map((x) => x)),
+        'Red': List<dynamic>.from(red.map((x) => x)),
+        'White': List<dynamic>.from(white.map((x) => x)),
+        'Purple': List<dynamic>.from(purple.map((x) => x)),
+      };
 }

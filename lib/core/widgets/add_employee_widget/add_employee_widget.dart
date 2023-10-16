@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/widgets/access_levels.dart';
-import '../app-button.dart';
+
+import '../../constants/constants.dart';
+import '../access_levels.dart';
+import '../app_button.dart';
 
 // ignore: must_be_immutable
 class AddEmployeeWidget extends StatelessWidget {
@@ -10,7 +11,7 @@ class AddEmployeeWidget extends StatelessWidget {
   String subText;
   Function onTap;
 
-  AddEmployeeWidget({required this.text, required this.subText, required this.onTap});
+  AddEmployeeWidget({Key? key, required this.text, required this.subText, required this.onTap}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +54,7 @@ class AddEmployeeWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              Spacer(),
+              const Spacer(),
               Padding(
                 padding: const EdgeInsets.only(bottom: 20),
                 child: AppButton.miniFlat(

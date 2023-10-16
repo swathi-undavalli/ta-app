@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/features/employees/model/employee.dart';
+
+import '../../features/employees/model/employee.dart';
 
 class EmployeeAccess extends StatelessWidget {
   final Widget child;
   final bool access;
   final bool? showMessage;
 
-  EmployeeAccess({required this.child, required this.access, this.showMessage});
+  const EmployeeAccess({Key? key, required this.child, required this.access, this.showMessage}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    if ((!access) && showMessage != null && showMessage!)
+    if ((!access) && showMessage != null && showMessage!) {
       return SizedBox(
         height: Get.height,
-        child: Center(
+        child: const Center(
           child: Text("You Don't have Access to this page"),
         ),
       );
+    }
     if (access) return child;
-    return SizedBox();
+    return const SizedBox();
   }
 
   static run({
@@ -32,9 +34,7 @@ class EmployeeAccess extends StatelessWidget {
 
 class AccessRights {
   static AccessLevels? get accessLevel {
-    if (currentEmployee == null) {
-      currentEmployee = Employee(id: "");
-    }
+    currentEmployee ??= Employee(id: '');
     return currentEmployee!.accessLevels;
   }
 

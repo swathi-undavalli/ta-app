@@ -56,14 +56,18 @@ class FontSize {
 
 class RegularExpressions {
   static RegExp emailRegularExpression = RegExp(
-      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+    r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
+  );
   static RegExp passwordRegularExpression = RegExp(
-      r"^(?=.\d)(?=.[A-Z])(?=.[a-z])(?=.[a-zA-Z!#₹$@^%&? ])[a-zA-Z0-9!#₹$@^%&?]{8,}$");
+    r'^(?=.\d)(?=.[A-Z])(?=.[a-z])(?=.[a-zA-Z!#₹$@^%&? ])[a-zA-Z0-9!#₹$@^%&?]{8,}$',
+  );
   static RegExp findingDateRegularExpression = RegExp(
-      r"^(?:\d{1,2}(?:(?:-|/)|(?:th|st|nd|rd)?\s))?(?:(?:(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(?:(?:-|/)|(?:,|\.)?\s)?)?(?:\d{1,2}(?:(?:-|/)|(?:th|st|nd|rd)?\s))?)(?:\d{2,4})$");
+    r'^(?:\d{1,2}(?:(?:-|/)|(?:th|st|nd|rd)?\s))?(?:(?:(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)(?:(?:-|/)|(?:,|\.)?\s)?)?(?:\d{1,2}(?:(?:-|/)|(?:th|st|nd|rd)?\s))?)(?:\d{2,4})$',
+  );
   static RegExp findingCertificatesRegularExpression = RegExp(
-      r"^[A-Z]([a-z]+|\.)(?:\s+[A-Z]([a-z]+|\.))*(?:\s+[a-z][a-z\-]+){0,2}\s+[A-Z]([a-z]+|\.)$");
+    r'^[A-Z]([a-z]+|\.)(?:\s+[A-Z]([a-z]+|\.))*(?:\s+[a-z][a-z\-]+){0,2}\s+[A-Z]([a-z]+|\.)$',
+  );
   static RegExp findingDate1RegularExpression =
-      RegExp(r"^(19|20)\d\d([- /.])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01])$");
-  static RegExp findingLongNumbersRegularExpression = RegExp(r"^(\d\d\d\d)$");
+      RegExp(r'^(19|20)\d\d([- /.])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01])$');
+  static RegExp findingLongNumbersRegularExpression = RegExp(r'^(\d\d\d\d)$');
 }

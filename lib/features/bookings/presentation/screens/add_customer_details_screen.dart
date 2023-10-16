@@ -1,21 +1,24 @@
 import 'dart:developer';
-import 'package:intl/intl.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/constants/constants.dart';
-import 'package:temple_adventures/core/util/validator.dart';
-import 'package:temple_adventures/core/widgets/app-button.dart';
-import 'package:temple_adventures/core/widgets/phone_number/intl_phone_field.dart';
-import 'package:temple_adventures/features/bookings/controller/new-booking-controller.dart';
-import 'package:temple_adventures/features/bookings/presentation/screens/book-date-time-screen.dart';
-import 'package:temple_adventures/features/bookings/presentation/widgets/app-text-fields.dart';
+import 'package:intl/intl.dart';
 
-import '../../models/activity-model.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/util/validator.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/phone_number/intl_phone_field.dart';
+import '../../controller/new_booking_controller.dart';
+import '../../models/activity_model.dart';
+import '../widgets/app_text_fields.dart';
+import 'book_date_time_screen.dart';
 
 class AddCustomerDetailsScreen extends StatelessWidget {
-  static const String id = "AddCustomerDetailsScreen";
+  static const String id = 'AddCustomerDetailsScreen';
   final NewBookingLogic logic = NewBookingLogic();
+
+  AddCustomerDetailsScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,89 +42,89 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        buildSubTitle("Quick Booking"),
-                        Spacer(),
-                        Switch(
-                          value: controller.isQuickBooking,
-                          onChanged: (value) {
-                            controller.isQuickBooking = value;
-                            log(controller.isQuickBooking.toString());
-                          },
-                          activeColor: AppColors.text.skyBlue,
-                          inactiveThumbColor: AppColors.text.grey,
-                        )
-                      ],
-                    ),
+                          buildSubTitle('Quick Booking'),
+                          const Spacer(),
+                          Switch(
+                            value: controller.isQuickBooking,
+                            onChanged: (value) {
+                              controller.isQuickBooking = value;
+                              log(controller.isQuickBooking.toString());
+                            },
+                            activeColor: AppColors.text.skyBlue,
+                            inactiveThumbColor: AppColors.text.grey,
+                          )
+                        ],
+                      ),
                     (controller.isQuickBooking)
                         ? Stack(
                             children: [
                               Column(
                                 children: [
-                                  AppTextField(
-                                    hintText: "Parent Booking Id",
-                                    controller:
-                                        logic.controller.quickBookingIdTED,
-                                    keyboardType: TextInputType.number,
-                                    required: true,
-                                    errorValidator: () {
-                                      return null;
-                                    },
-                                    validator: (_) {
-                                      return null;
-                                    },
-                                  ),
-                                  AppTextField(
-                                    hintText: "Name",
-                                    controller: logic.controller.quickNameTED,
-                                    required: true,
-                                    errorValidator: () {
-                                      return null;
-                                    },
-                                    validator: (_) {
-                                      return null;
-                                    },
-                                  ),
-                                  AppTextField(
-                                    hintText: "No of Persons",
-                                    controller:
-                                        logic.controller.quickNoOfPersonsTED,
-                                    keyboardType: TextInputType.number,
-                                    required: true,
-                                    errorValidator: () {
-                                      return null;
-                                    },
-                                    validator: (_) {
-                                      return null;
-                                    },
-                                  ),
-                                  buildActivityDropDown(),
-                                  SizedBox(height: 20),
-                                  buildQuickDiveSession(),
-                                  SizedBox(height: 100),
-                                  AppButton.flat(
-                                    text: "Create Booking",
-                                    onTap: () {
-                                      log("started creating");
-                                      logic.createBooking();
-                                      log("done");
-                                    },
-                                    color: Colors.black,
-                                    textColor: Colors.white,
-                                  )
-                                ],
-                              ),
+                                    AppTextField(
+                                      hintText: 'Parent Booking Id',
+                                      controller: logic.controller.quickBookingIdTED,
+                                      keyboardType: TextInputType.number,
+                                      required: true,
+                                      errorValidator: () {
+                                        return null;
+                                      },
+                                      validator: (_) {
+                                        return null;
+                                      },
+                                    ),
+                                    AppTextField(
+                                      hintText: 'Name',
+                                      controller: logic.controller.quickNameTED,
+                                      required: true,
+                                      errorValidator: () {
+                                        return null;
+                                      },
+                                      validator: (_) {
+                                        return null;
+                                      },
+                                    ),
+                                    AppTextField(
+                                      hintText: 'No of Persons',
+                                      controller: logic.controller.quickNoOfPersonsTED,
+                                      keyboardType: TextInputType.number,
+                                      required: true,
+                                      errorValidator: () {
+                                        return null;
+                                      },
+                                      validator: (_) {
+                                        return null;
+                                      },
+                                    ),
+                                    buildActivityDropDown(),
+                                    const SizedBox(height: 20),
+                                    buildQuickDiveSession(),
+                                    const SizedBox(height: 100),
+                                    AppButton.flat(
+                                      text: 'Create Booking',
+                                      onTap: () {
+                                        log('started creating');
+                                        logic.createBooking();
+                                        log('done');
+                                      },
+                                      color: Colors.black,
+                                      textColor: Colors.white,
+                                    )
+                                  ],
+                                ),
                               if (controller.quickShowLoading)
                                 Container(
-                                  height: Get.height,
-                                  width: Get.width,
-                                  color: Colors.grey.shade50,
-                                  child: SizedBox(
+                                    height: Get.height,
+                                    width: Get.width,
+                                    color: Colors.grey.shade50,
+                                    child: const SizedBox(
                                       height: 30,
                                       width: 30,
                                       child: Center(
-                                          child: CircularProgressIndicator())),
-                                )
-                            ],
+                                        child: CircularProgressIndicator(),
+                                      ),
+                                    ),
+                                  )
+                              ],
                           )
                         : Column(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -131,42 +134,43 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    AppButton.miniFlat(
-                                      text: "Get Details",
-                                      onTap: () {
-                                        logic.getDetailsPressed();
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ],
-                              if (controller.getDetailsPressed) ...[
-                                buildNameFields(),
-                                buildEmailID(),
-                                buildDOB(context),
-                                buildNoOfPersons(),
-                                buildPhoneNumber(),
-                                SizedBox(height: 40),
-                              ],
-                              if (controller.showLoading)
-                                SizedBox(
-                                  child: Center(
-                                    child: SizedBox(
-                                      child: CircularProgressIndicator(
-                                        color: Colors.black,
-                                        strokeWidth: 2,
+                                      AppButton.miniFlat(
+                                        text: 'Get Details',
+                                        onTap: () {
+                                          logic.getDetailsPressed();
+                                        },
                                       ),
-                                      height: 20,
-                                      width: 20,
+                                    ],
+                                  ),
+                                ],
+                                if (controller.getDetailsPressed) ...[
+                                  buildNameFields(),
+                                  buildEmailID(),
+                                  buildDOB(context),
+                                  buildNoOfPersons(),
+                                  buildPhoneNumber(),
+                                  const SizedBox(height: 40),
+                                ],
+                                if (controller.showLoading)
+                                  const SizedBox(
+                                    height: 200,
+                                    child: Center(
+                                      child: SizedBox(
+                                        height: 20,
+                                        width: 20,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.black,
+                                          strokeWidth: 2,
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                  height: 200,
-                                ),
-                            ],
-                          ),
-                  ],
-                );
-              }),
+                              ],
+                            ),
+                    ],
+                  );
+                },
+              ),
             ),
           ),
         ),
@@ -187,49 +191,49 @@ class AddCustomerDetailsScreen extends StatelessWidget {
             children: [
               buildSubTitle('Dive Session'),
               AppButton.miniFlat(
-                text: "ADD",
-                onTap: () {
-                  logic.addQuickDiveSessionDateTime();
-                },
-                bgColor: AppColors.background.black,
-                textColor: AppColors.text.white,
-              )
-            ],
-          ),
-          Wrap(
-            children: (controller.quickDiveDates ?? [])
-                .map((e) => buildTime(e, DateType.Dive))
-                .toList(),
-          ),
-        ],
-      );
-    });
+                  text: 'ADD',
+                  onTap: () {
+                    logic.addQuickDiveSessionDateTime();
+                  },
+                  bgColor: AppColors.background.black,
+                  textColor: AppColors.text.white,
+                )
+              ],
+            ),
+            Wrap(
+              children: (controller.quickDiveDates ?? []).map((e) => buildTime(e, DateType.dive)).toList(),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Widget buildTime(DateTime? date, DateType type) {
-    if (date != null)
+    if (date != null) {
       return GestureDetector(
         onTap: () {
-          if (type == DateType.Dive)
+          if (type == DateType.dive) {
             logic.controller.quickDiveDates!.remove(date);
+          }
 
           logic.controller.update();
         },
         child: Container(
           width: 170,
-          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-          margin: EdgeInsets.only(right: 10, bottom: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          margin: const EdgeInsets.only(right: 10, bottom: 10),
           decoration: BoxDecoration(
             color: AppColors.background.lightSkyBlue,
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(20),
             ),
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(DateFormat("MMM  dd @ hh:mm a").format(date)),
-              Icon(
+              Text(DateFormat('MMM  dd @ hh:mm a').format(date)),
+              const Icon(
                 Icons.close,
                 size: 16,
               ),
@@ -237,11 +241,12 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           ),
         ),
       );
-    return SizedBox();
+    }
+    return const SizedBox();
   }
 
   Widget buildActivityDropDown() {
-    return Container(
+    return SizedBox(
       width: 320,
       child: Row(
         children: [
@@ -251,37 +256,39 @@ class AddCustomerDetailsScreen extends StatelessWidget {
               child: Container(
                 width: Get.width,
                 alignment: Alignment.centerLeft,
-                child: buildSubTitle("Activity"),
+                child: buildSubTitle('Activity'),
               ),
             ),
           ),
-          Container(
+          SizedBox(
             width: 210,
-            child: GetBuilder<NewBookingController>(builder: (controller) {
-              return Padding(
-                padding: const EdgeInsets.only(left: 10),
-                child: DropdownButton(
-                  underline: Container(height: 1, color: Colors.black45),
-                  isExpanded: true,
-                  value: controller.quickSelectedActivity,
-                  onChanged: (Activity? activity) {
-                    if (activity != null) {
-                      controller.quickSelectedActivity = activity;
-                      logic.controller.update();
-                    }
-                  },
-                  items: controller.activities.toSet().toList().map((activity) {
-                    return DropdownMenuItem(
-                      child: Text(
-                        activity.name ?? "error",
-                        style: TextStyle(fontWeight: FontWeight.normal),
-                      ),
-                      value: activity,
-                    );
-                  }).toList(),
-                ),
-              );
-            }),
+            child: GetBuilder<NewBookingController>(
+              builder: (controller) {
+                return Padding(
+                  padding: const EdgeInsets.only(left: 10),
+                  child: DropdownButton(
+                    underline: Container(height: 1, color: Colors.black45),
+                    isExpanded: true,
+                    value: controller.quickSelectedActivity,
+                    onChanged: (Activity? activity) {
+                      if (activity != null) {
+                        controller.quickSelectedActivity = activity;
+                        logic.controller.update();
+                      }
+                    },
+                    items: controller.activities.toSet().toList().map((activity) {
+                      return DropdownMenuItem(
+                        value: activity,
+                        child: Text(
+                          activity.name ?? 'error',
+                          style: const TextStyle(fontWeight: FontWeight.normal),
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                );
+              },
+            ),
           ),
         ],
       ),
@@ -303,7 +310,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
 
   Widget buildNoOfPersons() {
     return AppTextField(
-      hintText: "No of Persons",
+      hintText: 'No of Persons',
       controller: logic.controller.paxTED,
       focusNode: logic.controller.noOfPersonsNode,
       nextFocusNode: logic.controller.phoneNumberNode,
@@ -324,33 +331,35 @@ class AddCustomerDetailsScreen extends StatelessWidget {
   }
 
   Widget buildDOB(BuildContext context) {
-    return GetBuilder<NewBookingController>(builder: (controller) {
-      return GestureDetector(
-        onTap: () {
-          logic.dobDatePicker(context);
-        },
-        child: AbsorbPointer(
-          child: AppTextField(
-            hintText: "Date of Birth",
-            controller: logic.controller.dobTED,
-            focusNode: logic.controller.dobNode,
-            nextFocusNode: logic.controller.noOfPersonsNode,
-            keyboardType: TextInputType.number,
-            required: false,
-            onChangedCallBack: (_) {},
-            errorValidator: () {
-              return null;
-              // return Validator.validateEmail(
-              //     logic.controller.emailTED.text);
-            },
-            validator: (email) {
-              return null;
-              // return Validator.validateEmail(email);
-            },
+    return GetBuilder<NewBookingController>(
+      builder: (controller) {
+        return GestureDetector(
+          onTap: () {
+            logic.dobDatePicker(context);
+          },
+          child: AbsorbPointer(
+            child: AppTextField(
+              hintText: 'Date of Birth',
+              controller: logic.controller.dobTED,
+              focusNode: logic.controller.dobNode,
+              nextFocusNode: logic.controller.noOfPersonsNode,
+              keyboardType: TextInputType.number,
+              required: false,
+              onChangedCallBack: (_) {},
+              errorValidator: () {
+                return null;
+                // return Validator.validateEmail(
+                //     logic.controller.emailTED.text);
+              },
+              validator: (email) {
+                return null;
+                // return Validator.validateEmail(email);
+              },
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 
   Widget buildNameFields() {
@@ -358,7 +367,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
       children: [
         AppTextField(
           width: (Get.width / 2) - 45,
-          hintText: "First Name",
+          hintText: 'First Name',
           controller: logic.controller.fNameTED,
           focusNode: logic.controller.fNameNode,
           nextFocusNode: logic.controller.lNameNode,
@@ -374,12 +383,12 @@ class AddCustomerDetailsScreen extends StatelessWidget {
             // return Validator.validateName(email);
           },
         ),
-        SizedBox(
+        const SizedBox(
           width: 10,
         ),
         AppTextField(
           width: (Get.width / 2) - 45,
-          hintText: "Last Name",
+          hintText: 'Last Name',
           controller: logic.controller.lNameTED,
           focusNode: logic.controller.lNameNode,
           nextFocusNode: logic.controller.emailNode,
@@ -401,7 +410,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
 
   Widget buildEmailID() {
     return AppTextField(
-      hintText: "Enter Customer Email ID",
+      hintText: 'Enter Customer Email ID',
       controller: logic.controller.emailTED,
       focusNode: logic.controller.emailNode,
       // nextFocusNode: logic.controller.noOfPersonsNode,
@@ -420,22 +429,23 @@ class AddCustomerDetailsScreen extends StatelessWidget {
 
   Widget buildAppBar() {
     return AppBar(
-        toolbarHeight: 70,
-        centerTitle: true,
-        title: buildTitle(),
-        leading: TextButton(
-          onPressed: () {
-            logic.controller.reset();
-            Get.back();
-          },
-          child: Icon(
-            Icons.arrow_back_ios,
-            color: AppColors.text.black,
-            size: 17,
-          ),
+      toolbarHeight: 70,
+      centerTitle: true,
+      title: buildTitle(),
+      leading: TextButton(
+        onPressed: () {
+          logic.controller.reset();
+          Get.back();
+        },
+        child: Icon(
+          Icons.arrow_back_ios,
+          color: AppColors.text.black,
+          size: 17,
         ),
-        elevation: 0,
-        backgroundColor: Colors.white);
+      ),
+      elevation: 0,
+      backgroundColor: Colors.white,
+    );
   }
 
   Widget buildTitle() {
@@ -455,38 +465,40 @@ class AddCustomerDetailsScreen extends StatelessWidget {
     return GetBuilder<NewBookingController>(builder: (controller) {
       return IntlPhoneField(
         autoValidate: true,
-        focusNode: controller.phoneNumberNode,
-        initialCountryCode: controller.isoCode,
-        showCountryFlag: false,
-        initialValue: controller.phoneNumberTED.text,
-        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-        decoration: InputDecoration(
-          labelText: "Phone Number  *",
-          labelStyle: TextStyle(
-            fontSize: FontSize.small,
-            fontFamily: AppFonts.nunito,
+          focusNode: controller.phoneNumberNode,
+          initialCountryCode: controller.isoCode,
+          showCountryFlag: false,
+          initialValue: controller.phoneNumberTED.text,
+          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+          decoration: const InputDecoration(
+            labelText: 'Phone Number  *',
+            labelStyle: TextStyle(
+              fontSize: FontSize.small,
+              fontFamily: AppFonts.nunito,
+            ),
           ),
-        ),
-        style: TextStyle(
+          style: const TextStyle(
             fontFamily: AppFonts.nunito,
             fontWeight: FontWeight.normal,
-            fontSize: 14),
-        searchText: "Search",
-        onSubmitted: (_) {},
-        onChanged: (phone) {
-          controller.countryCodeTED.text = phone.countryCode;
-          controller.phoneNumberTED.text = phone.number!;
-          controller.isoCode = phone.countryISOCode;
-          //print(phone.number);
-          //print(phone.countryCode);
-          //print(phone.countryISOCode);
-        },
-      );
-    });
+            fontSize: 14,
+          ),
+          searchText: 'Search',
+          onSubmitted: (_) {},
+          onChanged: (phone) {
+            controller.countryCodeTED.text = phone.countryCode;
+            controller.phoneNumberTED.text = phone.number!;
+            controller.isoCode = phone.countryISOCode;
+            //print(phone.number);
+            //print(phone.countryCode);
+            //print(phone.countryISOCode);
+          },
+        );
+      },
+    );
   }
 
   Widget buildHii() {
-    return Container(
+    return SizedBox(
       width: Get.size.width,
       child: Text(
         'Hi,',
@@ -501,19 +513,22 @@ class AddCustomerDetailsScreen extends StatelessWidget {
   }
 
   Widget buildFloatingActionButton() {
-    return GetBuilder<NewBookingController>(builder: (controller) {
-      if (controller.getDetailsPressed && !controller.isQuickBooking)
-        return FloatingActionButton(
-          onPressed: () {
-            logic.onCheckPressed();
-          },
-          elevation: 0,
-          backgroundColor: AppColors.IconColor.black,
-          child: Icon(Icons.check),
-        );
-      else
-        return SizedBox();
-    });
+    return GetBuilder<NewBookingController>(
+      builder: (controller) {
+        if (controller.getDetailsPressed && !controller.isQuickBooking) {
+          return FloatingActionButton(
+            onPressed: () {
+              logic.onCheckPressed();
+            },
+            elevation: 0,
+            backgroundColor: AppColors.IconColor.black,
+            child: const Icon(Icons.check),
+          );
+        } else {
+          return const SizedBox();
+        }
+      },
+    );
     // else
     //   return Container();
   }
