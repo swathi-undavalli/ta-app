@@ -1,24 +1,24 @@
 class Marketing {
-  final List<MarketingElement>? marketingGallery;
+  final List<MarketingElement>? marketingElement;
 
   Marketing({
-    required this.marketingGallery,
+    required this.marketingElement,
   });
 
   Marketing copyWith({
     List<MarketingElement>? marketing,
   }) =>
       Marketing(
-        marketingGallery: marketing ?? this.marketingGallery,
+        marketingElement: marketing ?? this.marketingElement,
       );
 
   factory Marketing.fromJson(Map<String, dynamic> json) => Marketing(
-        marketingGallery:
+        marketingElement:
             List<MarketingElement>.from((json["marketing"] ?? ([])).map((x) => MarketingElement.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
-        "marketing": List<dynamic>.from((marketingGallery ?? []).map((x) => x.toJson())),
+        "marketing": List<dynamic>.from((marketingElement ?? []).map((x) => x.toJson())),
       };
 }
 
@@ -27,24 +27,28 @@ class MarketingElement {
   final String url;
   final String type;
   final int duration;
+  final String? createdBy;
 
   MarketingElement({
     required this.name,
     required this.url,
     required this.type,
     required this.duration,
+    required this.createdBy,
   });
 
   MarketingElement copyWith({
     String? name,
     String? url,
     String? type,
+    String? createdBy,
     int? duration,
   }) =>
       MarketingElement(
         name: name ?? this.name,
         url: url ?? this.url,
         type: type ?? this.type,
+        createdBy: createdBy ?? this.createdBy,
         duration: duration ?? this.duration,
       );
 
@@ -52,6 +56,7 @@ class MarketingElement {
         name: json["name"],
         url: json["url"],
         type: json["type"],
+        createdBy: json["createdBy"],
         duration: json["duration"],
       );
 
@@ -59,6 +64,7 @@ class MarketingElement {
         "name": name,
         "url": url,
         "type": type,
+        "createdBy": createdBy,
         "duration": duration,
       };
 }

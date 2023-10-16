@@ -50,20 +50,19 @@ class AccessRights {
 
   static bool get editEmployees => accessLevel?.editEmployees ?? false;
 
-  static bool get personalProfileEdit =>
-      accessLevel?.personalProfileEdit ?? false;
+  static bool get personalProfileEdit => accessLevel?.personalProfileEdit ?? false;
 
-  static bool get personalAttendanceReport =>
-      accessLevel?.personalAttendanceReport ?? false;
+  static bool get personalAttendanceReport => accessLevel?.personalAttendanceReport ?? false;
 
   static bool get attendanceReport => accessLevel?.attendanceReport ?? false;
 
   static bool get weatherReport => accessLevel?.weatherReport ?? false;
 
-  static bool get editActivityPrices =>
-      accessLevel?.editActivityPrices ?? false;
+  static bool get editActivityPrices => accessLevel?.editActivityPrices ?? false;
 
   static bool get addActivity => accessLevel?.addActivity ?? false;
 
   static bool get boatPlan => accessLevel?.boatPlan ?? false;
+
+  static bool get marketingGallery => accessLevel?.marketingGallery ?? false;
 }

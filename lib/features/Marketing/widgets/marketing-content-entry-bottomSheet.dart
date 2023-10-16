@@ -5,6 +5,7 @@ import 'package:temple_adventures/core/constants/constants.dart';
 import 'package:temple_adventures/core/util/alignment_extensions.dart';
 import 'package:temple_adventures/core/util/spacing-widget.dart';
 import 'package:temple_adventures/features/Marketing/models/marketing-model.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
 import '../../../core/widgets/app-button.dart';
 
 class MarketingContentEntryBottomSheet extends StatefulWidget {
@@ -129,12 +130,13 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
             type: urlType ?? "",
             duration: int.parse(delayTED.text),
             name: nameTED.text,
+            createdBy: currentEmployee?.firstName,
           );
 
           if (widget.index != null) {
-            marketing.marketingGallery?[widget.index!] = marketingElement;
+            marketing.marketingElement?[widget.index!] = marketingElement;
           } else {
-            marketing.marketingGallery?.add(marketingElement);
+            marketing.marketingElement?.add(marketingElement);
           }
           await FirebaseFirestore.instance.collection('marketing').doc('marketing').set(marketing.toJson());
 

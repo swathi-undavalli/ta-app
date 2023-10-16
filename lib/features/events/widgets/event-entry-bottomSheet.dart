@@ -1,0 +1,424 @@
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
+import 'package:temple_adventures/core/constants/constants.dart';
+import 'package:temple_adventures/core/util/alignment_extensions.dart';
+import 'package:temple_adventures/core/util/spacing-widget.dart';
+import 'package:temple_adventures/core/util/utils.dart';
+import 'package:temple_adventures/features/boat/presentation/widgets/employee-selector-bottomSheet.dart';
+import 'package:temple_adventures/features/employees/model/employee.dart';
+import 'package:temple_adventures/features/events/models/event-model.dart';
+import '../../../core/widgets/app-button.dart';
+import '../../../core/widgets/time-picker.dart';
+import '../../boat/models/boat-details.dart';
+
+class EventEntryBottomSheet extends StatefulWidget {
+  final EventElement? eventElement;
+  final int? index;
+
+  const EventEntryBottomSheet({
+    Key? key,
+    this.eventElement,
+    this.index,
+  }) : super(key: key);
+
+  static Future show(
+    BuildContext context, {
+    EventElement? eventElementModel,
+    int? elementIndex,
+  }) async {
+    var data = await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (BuildContext context) {
+        return EventEntryBottomSheet(
+          eventElement: eventElementModel,
+          index: elementIndex,
+        );
+      },
+    );
+
+    return data;
+  }
+
+  @override
+  State<EventEntryBottomSheet> createState() => _EventEntryBottomSheetState();
+}
+
+class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
+  late TextEditingController locationTED;
+  late TextEditingController sessionNameTED;
+  String? locationError;
+  String? sessionError;
+  List<Instructor> employees = [];
+  String phone = "";
+  DateTime sessionTime = DateTime.now();
+  DateTime sessionDate = DateTime.now();
+  bool showLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+    locationTED = TextEditingController(text: widget.eventElement?.location ?? "");
+    sessionNameTED = TextEditingController(text: widget.eventElement?.session ?? "");
+    sessionTime = TimePicker.getDateTime(widget.eventElement?.time) ?? DateTime.now();
+    if (widget.eventElement != null) sessionDate = DateTime.parse(widget.eventElement!.date);
+    employees = widget.eventElement?.employees ?? [];
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+      ),
+      child: Stack(
+        children: [
+          if (showLoading)
+            Container(
+              width: Get.width,
+              height: 550,
+              color: Colors.grey,
+              child: CircularProgressIndicator(
+                color: Colors.black,
+              ).center,
+            ),
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              buildTitle(),
+              buildKeyValuePair(
+                title: "Session Name",
+                controller: sessionNameTED,
+                errorText: sessionError,
+                textInputType: TextInputType.text,
+                maxLines: 3,
+              ),
+              buildKeyValuePair(
+                title: "Location",
+                controller: locationTED,
+                errorText: locationError,
+                textInputType: TextInputType.text,
+                maxLines: 2,
+              ),
+              Spacing.h35,
+              buildDateAndTime(
+                onTap: () {
+                  selectTime(context);
+                },
+                title: "Time",
+                value: TimePicker.getFormattedTime(sessionTime) ?? 'No time selected',
+              ),
+              Spacing.h35,
+              buildDateAndTime(
+                  value: DateFormat('yyyy-MM-dd').format(sessionDate),
+                  onTap: () {
+                    selectDate(context);
+                  },
+                  title: 'Date'),
+              Spacing.h35,
+              buildEmployeeSelector(
+                employees: employees,
+                title: "Select Employee",
+                employeeType: EmployeeType.ShowAllEmployees,
+                employeeLimit: 1,
+              ),
+              Spacing.h50,
+              buildSubmitButton().center
+            ],
+          ).paddingSymmetric(horizontal: 20, vertical: 20).scrollable,
+        ],
+      ),
+    );
+  }
+
+  Widget buildEmployeeSelector(
+      {required List<Instructor> employees,
+      required String title,
+      required int employeeLimit,
+      required EmployeeType employeeType}) {
+    if (employees.isEmpty) {
+      return AppButton.miniFlat(
+        text: "$title",
+        onTap: () async {
+          employees = (await EmpSelectorBottomSheet.getSelectedInstructors(
+                context,
+                initialSelectedInstructors: employees,
+                instructorLimit: employeeLimit,
+                employeeType: employeeType,
+              )) ??
+              [];
+          log(employees[0].phone.toString());
+          setState(() {});
+        },
+      );
+    }
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "$title",
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 10),
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                ...employees.map(
+                  (e) => Text(
+                    "${e.name}",
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.black,
+                    ),
+                  ).paddingOnly(bottom: 4),
+                ),
+              ],
+            ),
+            GestureDetector(
+              onTap: () async {
+                employees = (await EmpSelectorBottomSheet.getSelectedInstructors(context,
+                        initialSelectedInstructors: employees,
+                        instructorLimit: employeeLimit,
+                        employeeType: employeeType)) ??
+                    [];
+                setState(() {});
+              },
+              child: Text(
+                "Change",
+                style: TextStyle(fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
+              ).paddingOnly(left: 10, right: 7),
+            ),
+            Icon(
+              Icons.edit,
+              size: 12,
+              color: Colors.blue,
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget buildDateAndTime({required String title, required String value, required Function onTap}) {
+    return Row(
+      children: [
+        SizedBox(
+          width: 110,
+          child: Text(
+            title,
+            style: TextStyle(
+              fontFamily: AppFonts.nunito,
+              color: AppColors.text.black,
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+            ),
+          ),
+        ),
+        GestureDetector(
+          onTap: () {
+            onTap();
+          },
+          child: Container(
+            height: 30,
+            width: 100,
+            decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(5)),
+            child: Center(
+              child: Text(
+                value,
+                style: TextStyle(
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: AppFonts.nunito,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Future<void> selectTime(BuildContext context) async {
+    final DateTime? pickedTime = await TimePicker.show(
+      context,
+      initialTime: sessionTime,
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        sessionTime = pickedTime;
+      });
+    }
+  }
+
+  Future<void> selectDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: sessionDate,
+      firstDate: DateTime(2000),
+      lastDate: DateTime(2101),
+    );
+    if (picked != null && picked != sessionDate)
+      setState(() {
+        sessionDate = picked;
+      });
+  }
+
+  Widget buildSubmitButton() {
+    return AppButton.flat(
+      onTap: () async {
+        if (isValid()) {
+          showLoading = true;
+          setState(() {});
+          DocumentSnapshot document = await FirebaseFirestore.instance.collection('events').doc('events').get();
+          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+          Event event = Event.fromJson(data);
+
+          EventElement eventElement = EventElement(
+            session: sessionNameTED.text,
+            location: locationTED.text,
+            time: TimePicker.getFormattedTime(sessionTime) ?? "",
+            employees: employees,
+            phone: employees[0].phone ?? "",
+            date: DateFormat('yyyy-MM-dd').format(sessionDate),
+            createdBy: currentEmployee?.firstName,
+          );
+
+          if (widget.index != null) {
+            event.eventElement?[widget.index!] = eventElement;
+          } else {
+            event.eventElement?.add(eventElement);
+          }
+          await FirebaseFirestore.instance.collection('events').doc('events').set(event.toJson());
+
+          showLoading = false;
+          setState(() {});
+
+          Get.back();
+        }
+        setState(() {});
+      },
+      text: "Submit",
+      color: Colors.black,
+      textColor: Colors.white,
+    );
+  }
+
+  bool isValid() {
+    bool isValid = true;
+    locationError = null;
+    sessionError = null;
+
+    if (sessionNameTED.text.isEmpty) {
+      sessionError = "Required";
+      isValid = false;
+    }
+
+    if (locationTED.text.isEmpty) {
+      locationError = "Required";
+      isValid = false;
+    }
+    if (employees.isEmpty) {
+      showToast("Employee is not selected");
+      isValid = false;
+    }
+
+    return isValid;
+  }
+
+  clear() {
+    locationTED.text = "";
+    locationError = null;
+    sessionError = null;
+    sessionNameTED.text = "";
+  }
+
+  Widget buildTitle() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Text(
+          "Add Event",
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 19,
+          ),
+        ),
+        Spacer(),
+        IconButton(
+          icon: Icon(Icons.close),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget buildKeyValuePair(
+      {required String title,
+      required TextEditingController controller,
+      required TextInputType textInputType,
+      String? errorText,
+      int? maxLines = 1}) {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
+      children: [
+        SizedBox(
+          width: 110,
+          child: Text(
+            title,
+            style: TextStyle(
+              fontFamily: AppFonts.nunito,
+              color: AppColors.text.black,
+              fontWeight: FontWeight.w700,
+              fontSize: 14,
+            ),
+          ),
+        ),
+        Expanded(
+          child: TextField(
+            controller: controller,
+            maxLines: maxLines,
+            keyboardType: textInputType,
+            onChanged: (_) {
+              setState(() {});
+            },
+            decoration: InputDecoration(
+              hintText: '',
+              errorText: errorText,
+              suffixText: (title == "Duration") ? "sec" : "",
+              suffixIcon: (title == "URL" && locationTED.text.isNotEmpty)
+                  ? GestureDetector(
+                      onTap: () {
+                        locationTED.text = "";
+                        setState(() {});
+                      },
+                      child: Icon(
+                        Icons.clear,
+                        color: Colors.black,
+                      ).paddingAll(5))
+                  : SizedBox(),
+              errorStyle: TextStyle(color: Colors.red.shade700),
+              border: UnderlineInputBorder(),
+            ),
+          ),
+        ),
+      ],
+    ).paddingOnly(top: 15);
+  }
+}

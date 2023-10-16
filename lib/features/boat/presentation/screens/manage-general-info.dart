@@ -392,9 +392,9 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
       return AppButton.miniFlat(
         text: "Add $title",
         onTap: () async {
-          employees = (await EmpSelectorBottomSheet.show(
+          employees = (await EmpSelectorBottomSheet.getSelectedInstructors(
                 context,
-                initialSelectedEmployees: employees,
+                initialSelectedInstructors: employees,
                 instructorLimit: employeeLimit,
                 employeeType: employeeType,
               )) ??
@@ -434,8 +434,8 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
             ),
             GestureDetector(
               onTap: () async {
-                employees = (await EmpSelectorBottomSheet.show(context,
-                        initialSelectedEmployees: employees,
+                employees = (await EmpSelectorBottomSheet.getSelectedInstructors(context,
+                        initialSelectedInstructors: employees,
                         instructorLimit: employeeLimit,
                         employeeType: employeeType)) ??
                     [];

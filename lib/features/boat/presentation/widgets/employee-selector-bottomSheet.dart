@@ -25,22 +25,20 @@ class EmpSelectorBottomSheet extends StatefulWidget {
     required this.isTanksRequired,
   }) : super(key: key);
 
-  static Future<List<Instructor>?> show(
+  static Future<List<Instructor>?> getSelectedInstructors(
     BuildContext context, {
-    required List<Instructor> initialSelectedEmployees,
+    required List<Instructor> initialSelectedInstructors,
     required int instructorLimit,
     required EmployeeType employeeType,
     bool tanksRequired = false,
   }) async {
-    log("======");
-    log(tanksRequired.toString());
     var data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       isDismissible: false,
       builder: (BuildContext context) {
         return EmpSelectorBottomSheet(
-          initialSelectedInstructors: initialSelectedEmployees,
+          initialSelectedInstructors: initialSelectedInstructors,
           instructorLimit: instructorLimit,
           employeeType: employeeType,
           isTanksRequired: tanksRequired,
@@ -117,13 +115,11 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                         .map(
                           (instructor) => InkWell(
                             onTap: () {
-                              if (!widget.isTanksRequired)
-                                selectedInstructors.remove(instructor);
+                              if (!widget.isTanksRequired) selectedInstructors.remove(instructor);
                               setState(() {});
                             },
                             child: Container(
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: 8, vertical: 3),
+                              padding: EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(20),
                                 color: Colors.white,
@@ -136,8 +132,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                                   ? Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               instructor.name,
@@ -145,8 +140,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                                             ),
                                             AppButton.miniFlat(
                                               onTap: () {
-                                                selectedInstructors
-                                                    .remove(instructor);
+                                                selectedInstructors.remove(instructor);
                                                 setState(() {});
                                               },
                                               text: "Remove",
@@ -154,20 +148,15 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                                           ],
                                         ),
                                         Spacing.h10,
-                                        if (selectedInstructors
-                                            .contains(instructor))
-                                          buildTanks(instructor),
+                                        if (selectedInstructors.contains(instructor)) buildTanks(instructor),
                                       ],
-                                    ).paddingSymmetric(
-                                      horizontal: 10, vertical: 10)
+                                    ).paddingSymmetric(horizontal: 10, vertical: 10)
                                   : Row(
                                       mainAxisSize: MainAxisSize.min,
                                       children: [
                                         Text(
                                           instructor.name,
-                                          style: TextStyle(
-                                              fontSize: 12,
-                                              fontWeight: FontWeight.w600),
+                                          style: TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
                                         ),
                                         Spacing.w5,
                                         Icon(
@@ -257,8 +246,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
         return Column(
           children: snapshot.data!.docs.map((DocumentSnapshot document) {
             try {
-              Employee employee =
-                  Employee.fromMap(document.data() as Map<String, dynamic>);
+              Employee employee = Employee.fromMap(document.data() as Map<String, dynamic>);
 
               Instructor instructor = Instructor.fromEmployee(employee);
 
@@ -269,8 +257,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                   } else {
                     if (widget.instructorLimit == -1) {
                       selectedInstructors.add(instructor);
-                    } else if (selectedInstructors.length <
-                        widget.instructorLimit) {
+                    } else if (selectedInstructors.length < widget.instructorLimit) {
                       selectedInstructors.add(instructor);
                     } else {
                       showToast("Limit exceeded");
@@ -299,22 +286,15 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
 
               if (widget.employeeType == EmployeeType.ShowAllEmployees) {
                 return employeeTile;
-              } else if ((widget.employeeType == EmployeeType.showCaptains) &&
-                  (employee.role == 'Captain Team')) {
+              } else if ((widget.employeeType == EmployeeType.showCaptains) && (employee.role == 'Captain Team')) {
                 return employeeTile;
-              } else if ((widget.employeeType ==
-                      EmployeeType.ShowFreelancersDivers) &&
-                  (employee.role == 'Dive Team' ||
-                      employee.role == 'Freelance Team')) {
+              } else if ((widget.employeeType == EmployeeType.ShowFreelancersDivers) &&
+                  (employee.role == 'Dive Team' || employee.role == 'Freelance Team')) {
                 return employeeTile;
-              } else if ((widget.employeeType ==
-                      EmployeeType.showAllDiveTeam) &&
-                  (employee.role == 'Dive Team' ||
-                      employee.role == 'Freelance Team' ||
-                      employee.role == 'Intern')) {
+              } else if ((widget.employeeType == EmployeeType.showAllDiveTeam) &&
+                  (employee.role == 'Dive Team' || employee.role == 'Freelance Team' || employee.role == 'Intern')) {
                 return employeeTile;
-              } else if ((widget.employeeType == EmployeeType.ShowInterns) &&
-                  (employee.role == 'Intern')) {
+              } else if ((widget.employeeType == EmployeeType.ShowInterns) && (employee.role == 'Intern')) {
                 return employeeTile;
               }
               return SizedBox();
@@ -331,9 +311,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
     return Container(
       width: 328,
       height: 47,
-      decoration: BoxDecoration(
-          color: AppColors.background.white,
-          borderRadius: BorderRadius.circular(5)),
+      decoration: BoxDecoration(color: AppColors.background.white, borderRadius: BorderRadius.circular(5)),
       child: Container(
         margin: EdgeInsets.only(left: 15, right: 15),
         alignment: Alignment.centerLeft,
@@ -345,15 +323,11 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
               width: 225,
               child: TextField(
                 decoration: InputDecoration(
-                    enabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    focusedBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
-                    disabledBorder:
-                        OutlineInputBorder(borderSide: BorderSide.none),
+                    enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                    focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                    disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
                     hintText: 'Search...',
-                    hintStyle:
-                        TextStyle(fontSize: FontSize.textSize, height: 1)),
+                    hintStyle: TextStyle(fontSize: FontSize.textSize, height: 1)),
                 controller: searchTED,
                 onChanged: (query) {
                   _stream = _filterStream(query);
@@ -370,8 +344,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                 highlightColor: Colors.grey,
                 splashColor: Colors.red,
                 radius: 30,
-                child: Icon(Icons.close, color: AppColors.text.darkgrey)
-                    .paddingAll(5),
+                child: Icon(Icons.close, color: AppColors.text.darkgrey).paddingAll(5),
               ),
           ],
         ),
@@ -384,16 +357,8 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
       return employeesCollection.snapshots();
     }
 
-    return employeesCollection
-        .where('firstName', isGreaterThanOrEqualTo: query.capitalizeFirst)
-        .snapshots();
+    return employeesCollection.where('firstName', isGreaterThanOrEqualTo: query.capitalizeFirst).snapshots();
   }
 }
 
-enum EmployeeType {
-  ShowAllEmployees,
-  ShowInterns,
-  showCaptains,
-  ShowFreelancersDivers,
-  showAllDiveTeam
-}
+enum EmployeeType { ShowAllEmployees, ShowInterns, showCaptains, ShowFreelancersDivers, showAllDiveTeam }

@@ -532,9 +532,9 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       return AppButton.miniFlat(
         text: "Add $title",
         onTap: () async {
-          employees = await EmpSelectorBottomSheet.show(
+          employees = await EmpSelectorBottomSheet.getSelectedInstructors(
                 context,
-                initialSelectedEmployees: employees,
+                initialSelectedInstructors: employees,
                 instructorLimit: employeeLimit,
                 employeeType: employeeType,
                 tanksRequired: isTanksRequired,
@@ -563,9 +563,9 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             ),
             GestureDetector(
               onTap: () async {
-                employees = (await EmpSelectorBottomSheet.show(
+                employees = (await EmpSelectorBottomSheet.getSelectedInstructors(
                       context,
-                      initialSelectedEmployees: employees,
+                      initialSelectedInstructors: employees,
                       instructorLimit: employeeLimit,
                       employeeType: employeeType,
                       tanksRequired: isTanksRequired,

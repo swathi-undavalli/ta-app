@@ -18,10 +18,7 @@ class AddAnEmployeeLogic {
 
   createEmployee() async {
     //TODO: Change.
-    var data = await FirebaseFirestore.instance
-        .collection("counter")
-        .doc("count")
-        .get();
+    var data = await FirebaseFirestore.instance.collection("counter").doc("count").get();
     CounterModel counterModel = CounterModel.fromMap(data.data()!);
 
     if (controller.firstNameTED.text != "" &&
@@ -56,25 +53,18 @@ class AddAnEmployeeLogic {
           addActivity: controller.addActivity,
           notifications: controller.notifications,
           boatPlan: controller.boatPlan,
+          marketingGallery: controller.marketingGallery,
         ),
       );
-      FirebaseFirestore.instance
-          .collection('employees')
-          .doc(employee.id)
-          .set(employee.toMap());
+      FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
 
-      if (counterModel.employee != null &&
-          int.parse(controller.employeeIdTED.text) < 900) {
+      if (counterModel.employee != null && int.parse(controller.employeeIdTED.text) < 900) {
         counterModel.employee = counterModel.employee! + 1;
       }
 
-      FirebaseFirestore.instance
-          .collection("counter")
-          .doc("count")
-          .set(counterModel.toMap());
+      FirebaseFirestore.instance.collection("counter").doc("count").set(counterModel.toMap());
       Fluttertoast.showToast(msg: "Saved");
-      LogModel logModel =
-          LogModel(type: LogType.addEmployee, employeeName: employee.name);
+      LogModel logModel = LogModel(type: LogType.addEmployee, employeeName: employee.name);
       FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
 
       disposeKeyboard();
@@ -117,14 +107,11 @@ class AddAnEmployeeLogic {
           addActivity: controller.addActivity,
           notifications: controller.notifications,
           boatPlan: controller.boatPlan,
+          marketingGallery: controller.marketingGallery,
         ),
       );
-      FirebaseFirestore.instance
-          .collection('employees')
-          .doc(employee.id)
-          .set(employee.toMap());
-      LogModel logModel =
-          LogModel(type: LogType.editEmployee, employeeName: employee.name);
+      FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
+      LogModel logModel = LogModel(type: LogType.editEmployee, employeeName: employee.name);
       FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
 
       Fluttertoast.showToast(msg: "Saved");
@@ -215,11 +202,19 @@ class AddAnEmployeeController extends GetxController {
   bool? _viewEmployees = false;
   bool? _notifications = false;
   bool? _boatPlan = false;
+  bool? _marketingGallery = false;
 
   bool? get notifications => _notifications;
 
   set notifications(bool? value) {
     _notifications = value;
+    update();
+  }
+
+  bool? get marketingGallery => _marketingGallery;
+
+  set marketingGallery(bool? value) {
+    _marketingGallery = value;
     update();
   }
 
@@ -277,6 +272,7 @@ class AddAnEmployeeController extends GetxController {
     editActivityPrices = false;
     addActivity = false;
     notifications = false;
+    marketingGallery = false;
   }
 
   bool? get createBookings => _createBookings;

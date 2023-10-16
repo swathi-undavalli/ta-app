@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +23,7 @@ import 'package:temple_adventures/features/dashboard/presentation/screens/dashbo
 import 'package:temple_adventures/features/edit-booking/presentation/screens/edit-booking-new-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/add-an-employee-screen.dart';
 import 'package:temple_adventures/features/employees/presentation/screens/all-employees-screen.dart';
+import 'package:temple_adventures/features/events/views/events-view.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/details-screen.dart';
 import 'package:temple_adventures/features/logs/presentation/screens/log-screen.dart';
 import 'package:temple_adventures/features/messaging/firebase_messaging_controller.dart';
@@ -140,6 +140,7 @@ class MyApp extends StatelessWidget {
         BoardPlanView.id: (context) => BoardPlanView(),
         DiveChecklistView.id: (context) => DiveChecklistView(),
         MarketingView.id: (context) => MarketingView(),
+        EventsView.id: (context) => EventsView(),
       },
     );
   }

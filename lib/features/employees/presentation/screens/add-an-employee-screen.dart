@@ -47,8 +47,7 @@ class AddAnEmployeeScreen extends StatelessWidget {
                         SizedBox(height: 10),
                         Text(
                           "Last Employee ID : ${counterModel!.employee.toString()}",
-                          style: TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.w600),
+                          style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
                         ),
                         buildEmployeeID(),
                         Row(
@@ -71,9 +70,7 @@ class AddAnEmployeeScreen extends StatelessWidget {
                           initialCountryCode: logic.controller.countryISoCOde,
                           showCountryFlag: false,
                           controller: logic.controller.phoneNumberTED,
-                          inputFormatters: [
-                            FilteringTextInputFormatter.digitsOnly
-                          ],
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                           decoration: InputDecoration(
                             labelText: "Phone Number",
                             labelStyle: TextStyle(
@@ -91,10 +88,8 @@ class AddAnEmployeeScreen extends StatelessWidget {
                             logic.controller.roleNode.requestFocus();
                           },
                           onChanged: (phone) {
-                            logic.controller.countryCodeTED.text =
-                                phone.countryCode;
-                            logic.controller.countryISoCOde =
-                                phone.countryISOCode;
+                            logic.controller.countryCodeTED.text = phone.countryCode;
+                            logic.controller.countryISoCOde = phone.countryISOCode;
                           },
                         ),
                         buildSubtitle("Role *"),
@@ -102,8 +97,7 @@ class AddAnEmployeeScreen extends StatelessWidget {
                         buildSubtitle("Gender *"),
                         buildGender(),
                         Padding(
-                          padding: const EdgeInsets.only(
-                              left: 10, top: 30, bottom: 20),
+                          padding: const EdgeInsets.only(left: 10, top: 30, bottom: 20),
                           child: Container(
                             width: Get.size.width,
                             child: Text(
@@ -236,6 +230,13 @@ class AddAnEmployeeScreen extends StatelessWidget {
             },
           ),
           buildSwitch(
+            text: "Marketing Gallery",
+            switchValue: controller.marketingGallery!,
+            onChanged: (value) {
+              controller.marketingGallery = value;
+            },
+          ),
+          buildSwitch(
             text: "Subscribe Notifications",
             switchValue: controller.notifications!,
             onChanged: (value) {
@@ -247,8 +248,7 @@ class AddAnEmployeeScreen extends StatelessWidget {
     });
   }
 
-  Widget buildSwitch(
-      {required String text, Function? onChanged, required bool switchValue}) {
+  Widget buildSwitch({required String text, Function? onChanged, required bool switchValue}) {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: Row(
@@ -256,8 +256,7 @@ class AddAnEmployeeScreen extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: TextStyle(
-                  fontSize: FontSize.small, color: AppColors.text.darkgrey),
+              style: TextStyle(fontSize: FontSize.small, color: AppColors.text.darkgrey),
             ),
           ),
           Switch(
@@ -285,10 +284,7 @@ class AddAnEmployeeScreen extends StatelessWidget {
           fontFamily: AppFonts.nunito,
         ),
       ),
-      style: TextStyle(
-          fontFamily: AppFonts.nunito,
-          fontWeight: FontWeight.normal,
-          fontSize: 14),
+      style: TextStyle(fontFamily: AppFonts.nunito, fontWeight: FontWeight.normal, fontSize: 14),
       searchText: "Search",
       onSubmitted: (_) {
         logic.controller.roleNode.requestFocus();
@@ -449,9 +445,7 @@ class AddAnEmployeeScreen extends StatelessWidget {
           focusNode: controller.roleNode,
           underline: Container(height: 1, color: Colors.grey),
           isExpanded: true,
-          value: controller.roleTED.text.isNotEmpty
-              ? controller.roleTED.text
-              : null,
+          value: controller.roleTED.text.isNotEmpty ? controller.roleTED.text : null,
           onChanged: (dynamic newRole) {
             controller.roleTED.text = newRole;
             controller.update();
@@ -475,9 +469,7 @@ class AddAnEmployeeScreen extends StatelessWidget {
           focusNode: controller.genderNode,
           underline: Container(height: 1, color: Colors.grey),
           isExpanded: true,
-          value: controller.genderTED.text.isNotEmpty
-              ? controller.genderTED.text
-              : null,
+          value: controller.genderTED.text.isNotEmpty ? controller.genderTED.text : null,
           onChanged: (dynamic newGender) {
             controller.genderTED.text = newGender;
             controller.update();

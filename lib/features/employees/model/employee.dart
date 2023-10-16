@@ -34,6 +34,7 @@ class Employee {
         addActivity: false,
         notifications: false,
         boatPlan: false,
+        marketingGallery: false,
       );
   }
 
@@ -106,7 +107,6 @@ class Employee {
 
   get authPhone => countryCode! + phoneNumber!;
 
-
   Map<String, dynamic> toMap() => {
         "id": id,
         "gender": gender,
@@ -115,8 +115,7 @@ class Employee {
         "countryIsoCode": countryIsoCode,
         "role": role,
         "accessLevels": accessLevels!.toMap(),
-        "shiftTiming":
-            "${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}",
+        "shiftTiming": "${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}",
         "firstName": firstName,
         "lastName": lastName,
         "agencyId": agencyId,
@@ -140,6 +139,7 @@ class AccessLevels {
     required this.addActivity,
     required this.notifications,
     required this.boatPlan,
+    required this.marketingGallery,
   });
 
   bool? viewBookings;
@@ -156,6 +156,7 @@ class AccessLevels {
   bool? addActivity;
   bool? notifications;
   bool? boatPlan;
+  bool? marketingGallery;
 
   factory AccessLevels.fromMap(Map<String, dynamic> json) => AccessLevels(
         viewBookings: json["viewBookings"],
@@ -172,6 +173,7 @@ class AccessLevels {
         editActivityPrices: json["editActivityPrices"],
         addActivity: json["addActivity"],
         notifications: json["notifications"],
+        marketingGallery: json["marketingGallery"],
       );
 
   Map<String, dynamic> toMap() => {
@@ -189,5 +191,6 @@ class AccessLevels {
         "editActivityPrices": editActivityPrices,
         "addActivity": addActivity,
         "notifications": notifications,
+        "marketingGallery": marketingGallery,
       };
 }

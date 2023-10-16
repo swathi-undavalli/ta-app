@@ -411,9 +411,9 @@ class _CustomerExpandableListTileState
               InkWell(
                 onTap: () async {
                   List<Instructor>? instructors =
-                      await EmpSelectorBottomSheet.show(
+                      await EmpSelectorBottomSheet.getSelectedInstructors(
                     context,
-                    initialSelectedEmployees: bookingItemModel
+                    initialSelectedInstructors: bookingItemModel
                             .bookingModel?.boatDetails?.instructors ??
                         [],
                     instructorLimit: 1,
@@ -551,9 +551,9 @@ class _CustomerExpandableListTileState
             InkWell(
               onTap: () async {
                 List<Instructor> diveBuddies =
-                    (await EmpSelectorBottomSheet.show(
+                    (await EmpSelectorBottomSheet.getSelectedInstructors(
                           context,
-                          initialSelectedEmployees: bookingItemModel
+                          initialSelectedInstructors: bookingItemModel
                                   .bookingModel?.boatDetails?.diveBuddies ??
                               [],
                           instructorLimit: -1,

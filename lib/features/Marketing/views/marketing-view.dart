@@ -59,7 +59,7 @@ class _MarketingViewState extends State<MarketingView> {
 
                 Marketing? marketing = Marketing.fromJson(data as Map<String, dynamic>);
 
-                if ((marketing.marketingGallery ?? []).isEmpty) {
+                if ((marketing.marketingElement ?? []).isEmpty) {
                   return Container(
                     height: Get.height,
                     child: Text(
@@ -71,64 +71,10 @@ class _MarketingViewState extends State<MarketingView> {
                 return Column(
                   children: [
                     Spacing.h10,
-                    ...(marketing.marketingGallery ?? []).map(
-                      (element) => Container(
-                        width: Get.width,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(10),
-                          boxShadow: [
-                            BoxShadow(offset: Offset(1, 3), spreadRadius: 2, color: Colors.grey.shade100),
-                          ],
-                        ),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Column(
-                              children: [
-                                buildPreviewImage(url: element.url, urlType: element.type),
-                                Spacing.h10,
-                                buildDeleteEditIcons(
-                                    index: (marketing.marketingGallery ?? []).indexOf(element),
-                                    marketingElement: element),
-                              ],
-                            ),
-                            Spacing.w20,
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Spacing.h5,
-                                buildContent(
-                                  value: (element.name ?? "Untitled").capitalizeFirst,
-                                  fontSize: 16,
-                                  color: Colors.black,
-                                ),
-                                Spacing.h10,
-                                buildContent(value: element.type),
-                                Spacing.h5,
-                                buildContent(value: element.url),
-                                Spacing.h5,
-                                RichText(
-                                  text: TextSpan(
-                                    style: TextStyle(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: AppFonts.nunito,
-                                        overflow: TextOverflow.ellipsis,
-                                        color: Colors.grey),
-                                    children: [
-                                      TextSpan(text: "Displays for "),
-                                      TextSpan(
-                                        text: " ${element.duration} secs",
-                                        style: const TextStyle(color: Colors.black),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ).paddingAll(10),
+                    ...(marketing.marketingElement ?? []).map(
+                      (element) => buildMarketingCard(
+                        element: element,
+                        index: (marketing.marketingElement ?? []).indexOf(element),
                       ).paddingOnly(top: 20),
                     ),
                     Spacing.h30,
@@ -137,6 +83,80 @@ class _MarketingViewState extends State<MarketingView> {
               });
         }).paddingSymmetric(horizontal: 20),
       ),
+    );
+  }
+
+  Widget buildMarketingCard({required MarketingElement element, required int index}) {
+    return Container(
+      width: Get.width,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(10),
+        boxShadow: [
+          BoxShadow(offset: Offset(1, 3), spreadRadius: 2, color: Colors.grey.shade100),
+        ],
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Column(
+            children: [
+              buildPreviewImage(url: element.url, urlType: element.type),
+              Spacing.h10,
+              buildDeleteEditIcons(index: index, marketingElement: element),
+            ],
+          ),
+          Spacing.w20,
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Spacing.h5,
+              buildContent(
+                value: (element.name ?? "Untitled").capitalizeFirst,
+                fontSize: 16,
+                color: Colors.black,
+              ),
+              Spacing.h10,
+              buildContent(value: element.type),
+              Spacing.h5,
+              buildContent(value: element.url),
+              Spacing.h5,
+              RichText(
+                text: TextSpan(
+                  style: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: AppFonts.nunito,
+                      overflow: TextOverflow.ellipsis,
+                      color: Colors.grey),
+                  children: [
+                    TextSpan(text: "Displays for "),
+                    TextSpan(
+                      text: " ${element.duration} secs",
+                      style: const TextStyle(color: Colors.black),
+                    ),
+                  ],
+                ),
+              ),
+              Spacing.h5,
+              RichText(
+                text: TextSpan(
+                  text: "Created By : ",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w600,
+                    fontFamily: AppFonts.nunito,
+                    color: Colors.grey,
+                  ),
+                  children: <TextSpan>[
+                    TextSpan(style: TextStyle(color: AppColors.text.black), text: element.createdBy ?? "-"),
+                  ],
+                ),
+              ).left,
+            ],
+          ),
+        ],
+      ).paddingAll(10),
     );
   }
 
@@ -182,13 +202,11 @@ class _MarketingViewState extends State<MarketingView> {
         children: [
           buildIcons(
               icon: Icons.delete,
-              color: Colors.red.shade500,
               onTap: () {
                 deleteDialog(context, index: index, marketingElement: marketingElement);
               }),
           buildIcons(
               icon: Icons.edit,
-              color: Colors.black,
               onTap: () {
                 MarketingContentEntryBottomSheet.show(
                   context,
@@ -234,7 +252,7 @@ class _MarketingViewState extends State<MarketingView> {
         });
   }
 
-  Widget buildIcons({required IconData icon, required Color color, required Function onTap}) {
+  Widget buildIcons({required IconData icon, required Function onTap}) {
     return Container(
       height: 30,
       width: 30,
@@ -257,21 +275,17 @@ class _MarketingViewState extends State<MarketingView> {
   }
 
   Widget buildContent({required String? value, double fontSize = 12, Color color = Colors.grey}) {
-    return Row(
-      children: [
-        SizedBox(
-          width: Get.width - 190,
-          child: Text(
-            (value != null && value.isNotEmpty) ? "$value" : "Untitled",
-            style: TextStyle(
-                fontSize: fontSize,
-                fontWeight: FontWeight.w600,
-                fontFamily: AppFonts.nunito,
-                overflow: TextOverflow.ellipsis,
-                color: color),
-          ),
-        ),
-      ],
+    return SizedBox(
+      width: Get.width - 190,
+      child: Text(
+        (value != null && value.isNotEmpty) ? "$value" : "Untitled",
+        style: TextStyle(
+            fontSize: fontSize,
+            fontWeight: FontWeight.w600,
+            fontFamily: AppFonts.nunito,
+            overflow: TextOverflow.ellipsis,
+            color: color),
+      ),
     );
   }
 

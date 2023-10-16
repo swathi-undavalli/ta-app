@@ -40,8 +40,7 @@ class BoatDetails {
         diveBuddies: diveBuddies ?? this.diveBuddies,
       );
 
-  factory BoatDetails.fromRawJson(String str) =>
-      BoatDetails.fromJson(json.decode(str));
+  factory BoatDetails.fromRawJson(String str) => BoatDetails.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toMap());
 
@@ -53,10 +52,8 @@ class BoatDetails {
       status: json["status"] ?? {},
       employeeNotes: json["employeeNotes"],
       bookingStatus: json["bookingStatus"],
-      instructors: List<Instructor>.from(
-          (json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
-      diveBuddies: List<Instructor>.from(
-          (json["diveBuddies"] ?? []).map((x) => Instructor.fromJson(x))),
+      instructors: List<Instructor>.from((json["instructors"] ?? []).map((x) => Instructor.fromJson(x))),
+      diveBuddies: List<Instructor>.from((json["diveBuddies"] ?? []).map((x) => Instructor.fromJson(x))),
     );
   }
 
@@ -66,10 +63,8 @@ class BoatDetails {
         "bookingStatus": bookingStatus,
         "employeeNotes": employeeNotes,
         "status": status,
-        "instructors":
-            List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
-        "diveBuddies":
-            List<dynamic>.from((diveBuddies ?? []).map((x) => x.toJson())),
+        "instructors": List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
+        "diveBuddies": List<dynamic>.from((diveBuddies ?? []).map((x) => x.toJson())),
       };
 }
 
@@ -78,12 +73,14 @@ class Instructor {
   final String name;
   int? air;
   int? nitrox;
+  String? phone;
 
   Instructor({
     required this.id,
     required this.name,
     required this.air,
     required this.nitrox,
+    required this.phone,
   });
 
   Instructor copyWith({
@@ -91,16 +88,17 @@ class Instructor {
     String? name,
     int? air,
     int? nitrox,
+    String? phone,
   }) =>
       Instructor(
         id: id ?? this.id,
         name: name ?? this.name,
         air: this.air,
         nitrox: this.nitrox,
+        phone: this.phone,
       );
 
-  factory Instructor.fromRawJson(String str) =>
-      Instructor.fromJson(json.decode(str));
+  factory Instructor.fromRawJson(String str) => Instructor.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
@@ -109,6 +107,7 @@ class Instructor {
         name: json["name"],
         air: json["air"],
         nitrox: json["nitrox"],
+        phone: json["phone"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -124,6 +123,7 @@ class Instructor {
       name: employee.name,
       air: null,
       nitrox: null,
+      phone: employee.phoneNumber,
     );
   }
 
@@ -201,8 +201,7 @@ class InstructorTanks {
         nitrox: nitrox ?? this.nitrox,
       );
 
-  factory InstructorTanks.fromJson(String str) =>
-      InstructorTanks.fromMap(json.decode(str));
+  factory InstructorTanks.fromJson(String str) => InstructorTanks.fromMap(json.decode(str));
 
   String toJson() => json.encode(toMap());
 

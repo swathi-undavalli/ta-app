@@ -180,7 +180,7 @@ class _HomePageState extends State<HomePage> {
             ),
             ...controller.currentList.map(
               (e) => buildListTile(
-                  title: e["role"].toString(), value: "${e["boat_details"]?.name}@ ${e["boat_details"]?.time}"),
+                  title: e["role"].toString(), value: "${e["boat_details"]?.name}@ ${e["boat_details"]?.sessionTime}"),
             ),
             ...controller.generalStaffList.map((e) => buildListTile(title: e, value: "Manage / Organize")),
             Spacing.h15,

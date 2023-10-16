@@ -11,7 +11,7 @@ class MarketingLogic {
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
     Marketing marketing = Marketing.fromJson(data);
-    marketing.marketingGallery?.removeAt(index);
+    marketing.marketingElement?.removeAt(index);
     await FirebaseFirestore.instance.collection('marketing').doc('marketing').set(marketing.toJson());
   }
 }

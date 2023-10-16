@@ -43,10 +43,8 @@ class EmployeeDetailsScreen extends StatelessWidget {
                 SizedBox(height: 20),
                 Text(
                   employeeArgument!.name,
-                  style: TextStyle(
-                      color: AppColors.text.black,
-                      fontWeight: FontWeight.w700,
-                      fontSize: FontSize.textSize),
+                  style:
+                      TextStyle(color: AppColors.text.black, fontWeight: FontWeight.w700, fontSize: FontSize.textSize),
                 ),
                 SizedBox(height: 20),
                 Row(
@@ -55,8 +53,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                     buildIcons(
                       Icons.call_rounded,
                       () {
-                        makingPhoneCall(employeeArgument!.phoneNumber!,
-                            employeeArgument!.countryCode!);
+                        makingPhoneCall(employeeArgument!.phoneNumber!, employeeArgument!.countryCode!);
                       },
                     ),
                     EmployeeAccess(
@@ -74,8 +71,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                         Icons.delete,
                         () {
                           Get.defaultDialog(
-                            contentPadding: EdgeInsets.only(
-                                left: 30, right: 30, top: 20, bottom: 30),
+                            contentPadding: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 30),
                             title: "\nAre You Sure ? ",
                             middleText: "Account will Be Deleted Permanently.",
                             backgroundColor: Colors.white,
@@ -104,22 +100,12 @@ class EmployeeDetailsScreen extends StatelessWidget {
                                     FirebaseFirestore.instance
                                         .collection("employees")
                                         .doc(employeeArgument!.id)
-                                        // .collection("employeeFullInformation")
-                                        // .doc("employeeData")
                                         .delete();
-                                    // counterModel.employee--;
-                                    // FirebaseFirestore.instance
-                                    //     .collection("counter")
-                                    //     .doc("count")
-                                    //     .set(counterModel.toMap());
                                     LogModel logModel = LogModel(
                                       type: LogType.deleteEmployee,
                                       employeeName: employeeArgument!.name,
                                     );
-                                    FirebaseFirestore.instance
-                                        .collection("logs")
-                                        .doc()
-                                        .set(logModel.toMap());
+                                    FirebaseFirestore.instance.collection("logs").doc().set(logModel.toMap());
                                     Get.back();
                                     Get.back();
                                   },
@@ -143,22 +129,14 @@ class EmployeeDetailsScreen extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      buildEmployeeInfo(
-                          subHeading: "Name", text: employeeArgument!.name),
-                      buildEmployeeInfo(
-                          subHeading: "Employee ID",
-                          text: employeeArgument!.id),
-                      buildEmployeeInfo(
-                          subHeading: "Padi No",
-                          text: employeeArgument!.agencyId),
+                      buildEmployeeInfo(subHeading: "Name", text: employeeArgument!.name),
+                      buildEmployeeInfo(subHeading: "Employee ID", text: employeeArgument!.id),
+                      buildEmployeeInfo(subHeading: "Padi No", text: employeeArgument!.agencyId),
                       buildEmployeeInfo(
                           subHeading: "Phone Number",
-                          text: employeeArgument!.countryCode! +
-                              employeeArgument!.phoneNumber!),
-                      buildEmployeeInfo(
-                          subHeading: "ShiftTiming", text: shiftTiming),
-                      buildEmployeeInfo(
-                          subHeading: "Role", text: employeeArgument!.role!),
+                          text: employeeArgument!.countryCode! + employeeArgument!.phoneNumber!),
+                      buildEmployeeInfo(subHeading: "ShiftTiming", text: shiftTiming),
+                      buildEmployeeInfo(subHeading: "Role", text: employeeArgument!.role!),
                     ],
                   ),
                 ),
@@ -169,24 +147,9 @@ class EmployeeDetailsScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       buildEmployeeInfo(
-                          subHeading: "Login Time",
-                          text: DateFormat("hh:mm a")
-                              .format(employeeArgument!.shiftTiming!)),
-                      buildEmployeeInfo(
-                          subHeading: "Login Location", text: "Pondicherry"),
+                          subHeading: "Login Time", text: DateFormat("hh:mm a").format(employeeArgument!.shiftTiming!)),
+                      buildEmployeeInfo(subHeading: "Login Location", text: "Pondicherry"),
                       SizedBox(height: 10),
-                      // Container(
-                      //   alignment: Alignment.centerRight,
-                      //   child: AppButton.miniFlat(
-                      //     onTap: () {
-                      //       Get.toNamed(AttendancePage.id,
-                      //           arguments: employeeArgument);
-                      //     },
-                      //     text: "View all ",
-                      //     bgColor: AppColors.background.lightSkyBlue,
-                      //     textColor: Colors.black,
-                      //   ),
-                      // )
                     ],
                   ),
                 ),
@@ -207,16 +170,12 @@ class EmployeeDetailsScreen extends StatelessWidget {
       child: Text(
         text,
         style: TextStyle(
-            fontSize: 16,
-            color: AppColors.text.skyBlue,
-            fontWeight: FontWeight.w700,
-            fontFamily: AppFonts.nunito),
+            fontSize: 16, color: AppColors.text.skyBlue, fontWeight: FontWeight.w700, fontFamily: AppFonts.nunito),
       ),
     );
   }
 
-  Widget buildEmployeeInfo(
-      {required String subHeading, required String? text}) {
+  Widget buildEmployeeInfo({required String subHeading, required String? text}) {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: Container(
@@ -229,23 +188,15 @@ class EmployeeDetailsScreen extends StatelessWidget {
                 width: Get.width,
                 child: Text(
                   subHeading,
-                  style: TextStyle(
-                      color: AppColors.text.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600),
+                  style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
             Container(
               width: 150,
               child: Text(
-                (text != null && text.isNotEmpty)
-                    ? ":      " + text
-                    : ":      " + "-",
-                style: TextStyle(
-                    color: AppColors.text.black,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500),
+                (text != null && text.isNotEmpty) ? ":      " + text : ":      " + "-",
+                style: TextStyle(color: AppColors.text.black, fontSize: 12, fontWeight: FontWeight.w500),
               ),
             ),
           ],
@@ -271,8 +222,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
       child: Container(
         height: 35,
         width: 35,
-        decoration: BoxDecoration(
-            shape: BoxShape.circle, color: AppColors.background.lightSkyBlue),
+        decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.background.lightSkyBlue),
         child: Center(
           child: Icon(
             icon,
@@ -296,10 +246,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
   }
 
   checkFirebase() async {
-    var info = await FirebaseFirestore.instance
-        .collection("employees")
-        .doc(employeeArgument!.id)
-        .get();
+    var info = await FirebaseFirestore.instance.collection("employees").doc(employeeArgument!.id).get();
     if (info.data() != null) {
       Employee employee = Employee.fromMap(info.data()!);
       final DateTime date = employee.shiftTiming!;
@@ -316,33 +263,21 @@ class EmployeeDetailsScreen extends StatelessWidget {
       logic.controller.genderTED.text = employee.gender ?? "";
       logic.controller.roleTED.text = employee.role ?? "";
       logic.controller.agencyIdTED.text = employee.agencyId ?? "";
-      logic.controller.viewBookings =
-          employee.accessLevels?.viewBookings ?? false;
-      logic.controller.createBookings =
-          employee.accessLevels?.createBookings ?? false;
-      logic.controller.editBookings =
-          employee.accessLevels?.editBookings ?? false;
-      logic.controller.viewEmployees =
-          employee.accessLevels?.viewEmployees ?? false;
-      logic.controller.createEmployees =
-          employee.accessLevels?.createEmployees ?? false;
-      logic.controller.editEmployees =
-          employee.accessLevels?.editEmployees ?? false;
-      logic.controller.notifications =
-          employee.accessLevels?.notifications ?? false;
+      logic.controller.viewBookings = employee.accessLevels?.viewBookings ?? false;
+      logic.controller.createBookings = employee.accessLevels?.createBookings ?? false;
+      logic.controller.editBookings = employee.accessLevels?.editBookings ?? false;
+      logic.controller.viewEmployees = employee.accessLevels?.viewEmployees ?? false;
+      logic.controller.createEmployees = employee.accessLevels?.createEmployees ?? false;
+      logic.controller.editEmployees = employee.accessLevels?.editEmployees ?? false;
+      logic.controller.notifications = employee.accessLevels?.notifications ?? false;
       logic.controller.boatPlan = employee.accessLevels?.boatPlan ?? false;
-      logic.controller.personalProfileEdit =
-          employee.accessLevels?.personalProfileEdit ?? false;
-      logic.controller.personalAttendanceReport =
-          employee.accessLevels?.personalAttendanceReport ?? false;
-      logic.controller.attendanceReport =
-          employee.accessLevels?.attendanceReport ?? false;
-      logic.controller.weatherReport =
-          employee.accessLevels?.weatherReport ?? false;
-      logic.controller.editActivityPrices =
-          employee.accessLevels?.editActivityPrices ?? false;
-      logic.controller.addActivity =
-          employee.accessLevels?.addActivity ?? false;
+      logic.controller.personalProfileEdit = employee.accessLevels?.personalProfileEdit ?? false;
+      logic.controller.personalAttendanceReport = employee.accessLevels?.personalAttendanceReport ?? false;
+      logic.controller.attendanceReport = employee.accessLevels?.attendanceReport ?? false;
+      logic.controller.weatherReport = employee.accessLevels?.weatherReport ?? false;
+      logic.controller.editActivityPrices = employee.accessLevels?.editActivityPrices ?? false;
+      logic.controller.addActivity = employee.accessLevels?.addActivity ?? false;
+      logic.controller.marketingGallery = employee.accessLevels?.marketingGallery ?? false;
 
       return true;
     }
