@@ -34,7 +34,7 @@ void main() async {
     await Firebase.initializeApp();
   }
 
-  FirebaseMessaging.onBackgroundMessage((_) async {});
+  // FirebaseMessaging.onBackgroundMessage((_) async {});
 
   ///app is open
   FirebaseMessaging.onMessage.listen((message) {

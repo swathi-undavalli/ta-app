@@ -4,7 +4,6 @@ import 'package:get/get.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/services/auto_update.dart';
 import '../../../../core/widgets/access_levels.dart';
-import '../../../Marketing/views/marketing_view.dart';
 import '../../../activities/presentation/screens/all_activities_screen.dart';
 import '../../../all_bookings/presentation/screens/all_bookings_screen.dart';
 import '../../../board_plan/presentation/views/board_plan_view.dart';
@@ -13,6 +12,7 @@ import '../../../employees/model/employee.dart';
 import '../../../employees/presentation/screens/employee_profile_screen.dart';
 import '../../../events/views/events_view.dart';
 import '../../../logs/presentation/screens/log_screen.dart';
+import '../../../screen_saver/views/marketing_view.dart';
 
 class NavDrawer extends StatelessWidget {
   static const String id = 'sideMenuWidget';

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../features/Marketing/views/marketing_view.dart';
 import '../../features/activities/presentation/screens/activity_edit_screen.dart';
 import '../../features/activities/presentation/screens/add_new_activity_screen.dart';
 import '../../features/activities/presentation/screens/all_activities_screen.dart';
@@ -30,6 +29,7 @@ import '../../features/login/presentation/screens/login_page.dart';
 import '../../features/logs/presentation/screens/details_screen.dart';
 import '../../features/logs/presentation/screens/log_screen.dart';
 import '../../features/messaging/notification_screen.dart';
+import '../../features/screen_saver/views/marketing_view.dart';
 import '../../features/splash/view/splash_screen.dart';
 import '../../features/welcome/presentation/screens/welome_page.dart';
 import '../constants/constants.dart';

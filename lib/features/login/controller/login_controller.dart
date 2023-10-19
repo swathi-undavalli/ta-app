@@ -72,6 +72,8 @@ class LoginScreenLogic {
             await FirebaseAuth.instance.signInWithCredential(credential);
             if (FirebaseAuth.instance.currentUser != null) {
               EmployeeRepo.initiateRepo(currentEmployee!.id);
+              controller.reset();
+              controller.update();
               Get.offAndToNamed(WelcomeScreen.id);
             } else {
               //log('Failed');
@@ -91,6 +93,8 @@ class LoginScreenLogic {
             await FirebaseAuth.instance.signInWithCredential(credential);
             if (FirebaseAuth.instance.currentUser != null) {
               EmployeeRepo.initiateRepo(currentEmployee!.id);
+              controller.reset();
+              controller.update();
               Get.offAndToNamed(WelcomeScreen.id);
             } else {
               //log('Failed');
@@ -143,6 +147,8 @@ class LoginScreenLogic {
       verificationCompleted: (PhoneAuthCredential credential) async {
         await FirebaseAuth.instance.signInWithCredential(credential);
         if (FirebaseAuth.instance.currentUser != null) {
+          controller.reset();
+          controller.update();
           Get.offAndToNamed(WelcomeScreen.id);
         } else {
           //log('Failed');
@@ -160,6 +166,8 @@ class LoginScreenLogic {
         );
         await FirebaseAuth.instance.signInWithCredential(credential);
         if (FirebaseAuth.instance.currentUser != null) {
+          controller.reset();
+          controller.update();
           Get.offAndToNamed(WelcomeScreen.id);
         } else {
           //log('Failed');
@@ -188,6 +196,16 @@ class LoginScreenController extends GetxController {
   bool _showResend = false;
 
   bool _otpSent = false;
+
+  reset() {
+    showFab = true;
+    showResend = false;
+    showLoading = false;
+    otpStatus = '';
+    showPhoneNumber = true;
+    employeeIdTED.text = '';
+    otp = '';
+  }
 
   String otp = '';
 

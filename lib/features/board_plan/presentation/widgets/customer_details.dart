@@ -135,9 +135,10 @@ class CustomerListState extends State<CustomerList> {
                   ],
                 ).width(20),
                 Spacing.w24,
-                const Text('DSD Staff',
-                        style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue))
-                    .paddingOnly(
+                const Text(
+                  'DSD Staff',
+                  style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue),
+                ).paddingOnly(
                   top: 3,
                   left: 13,
                 ),
@@ -176,9 +177,10 @@ class CustomerListState extends State<CustomerList> {
                   ),
                 ),
                 Spacing.w24,
-                const Text('Photo / Video',
-                        style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue))
-                    .paddingOnly(
+                const Text(
+                  'Photo / Video',
+                  style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue),
+                ).paddingOnly(
                   top: 3,
                   left: 13,
                 ),
@@ -222,9 +224,10 @@ class CustomerListState extends State<CustomerList> {
                   ),
                 ),
                 Spacing.w24,
-                const Text('Photo / Video',
-                        style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue))
-                    .paddingOnly(
+                const Text(
+                  'Photo / Video',
+                  style: TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue),
+                ).paddingOnly(
                   top: 3,
                   left: 13,
                 ),
@@ -377,8 +380,10 @@ class CustomerListState extends State<CustomerList> {
                 width: 20,
                 child: Row(
                   children: [
-                    Text('$airTotal',
-                        style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue)),
+                    Text(
+                      '$airTotal',
+                      style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue),
+                    ),
                     const Text(
                       ' - ',
                       style: TextStyle(

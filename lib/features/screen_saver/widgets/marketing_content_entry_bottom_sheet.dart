@@ -7,7 +7,7 @@ import '../../../core/util/alignment_extensions.dart';
 import '../../../core/util/spacing_widgets.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../employees/model/employee.dart';
-import '../models/marketing_model.dart';
+import '../models/marketing.dart';
 
 class MarketingContentEntryBottomSheet extends StatefulWidget {
   final MarketingElement? marketingElement;

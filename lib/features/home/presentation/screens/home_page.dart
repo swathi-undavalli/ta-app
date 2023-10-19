@@ -36,11 +36,12 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      body: GetBuilder<HomeController>(builder: (controller) {
-        return SafeArea(
-          child: (!controller.showLoading)
-              ? Column(
-                  children: [
+      body: GetBuilder<HomeController>(
+        builder: (controller) {
+          return SafeArea(
+            child: (!controller.showLoading)
+                ? Column(
+                    children: [
                       buildMenuAndLogOut().paddingOnly(bottom: 20),
                       if (currentEmployee?.role != 'Intern')
                         AddEmployeeWidget(
@@ -49,8 +50,8 @@ class _HomePageState extends State<HomePage> {
                           onTap: () {
                             Get.toNamed(AllEmployeesScreen.id);
                           },
-                        ).paddingOnly(bottom: 10),
-                      buildCheckLists().paddingOnly(bottom: 10),
+                        ).paddingOnly(bottom: 20),
+                      // buildCheckLists().paddingOnly(bottom: 10),
                       if (currentEmployee?.role == 'Intern')
                         Text(
                           'My Dives',
@@ -114,13 +115,45 @@ class _HomePageState extends State<HomePage> {
           const Spacer(),
           IconButton(
             onPressed: () {
-              FirebaseAuthentication.logout();
-              Get.offAndToNamed(LoginScreen.id);
+              logoutDialog(context);
             },
             icon: const Icon(Icons.logout),
           ),
         ],
       ),
+    );
+  }
+
+  Future<void> logoutDialog(BuildContext context) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text(
+            'Are you sure?',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          content: const Text(
+            'Do you want to log out.',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+          actions: <Widget>[
+            AppButton.miniText(
+              text: 'Cancel',
+              onTap: () {
+                Get.back();
+              },
+            ),
+            AppButton.miniFlat(
+              text: 'Okay',
+              onTap: () {
+                FirebaseAuthentication.logout();
+                Get.offAndToNamed(LoginScreen.id);
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -131,14 +164,15 @@ class _HomePageState extends State<HomePage> {
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
       ),
-      child: GetBuilder<HomeController>(builder: (controller) {
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Spacing.h15,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
+      child: GetBuilder<HomeController>(
+        builder: (controller) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Spacing.h15,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
                   buildButton(
                     onTap: () {
                       logic.onDateChanged(controller.selectedDate.subtract(const Duration(days: 1)));

@@ -48,7 +48,6 @@ class _LoginScreenState extends State<LoginScreen> {
                   buildAppLogo(),
                   buildWelcomeMessage(),
                   buildOTPStatus(),
-                  // buildPhoneNumberTextField(),
                   buildPhoneNumber(),
                   buildEmployeeID(),
                   const SizedBox(height: 60),
@@ -65,7 +64,8 @@ class _LoginScreenState extends State<LoginScreen> {
   ///================UI==================///
 
   Widget buildEmployeeID() {
-    return GetBuilder<LoginScreenController>(builder: (controller) {
+    return GetBuilder<LoginScreenController>(
+      builder: (controller) {
         if (controller.showPhoneNumber) {
           return SizedBox(
             width: 150,
@@ -161,8 +161,6 @@ class _LoginScreenState extends State<LoginScreen> {
       child: GetBuilder<LoginScreenController>(
         builder: (controller) {
           if (!controller.showPhoneNumber) {
-            // return buildPhoneNumberTextField();
-            // else
             return PinCodeTextField(
               length: 6,
               animationType: AnimationType.fade,
@@ -228,7 +226,8 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   Widget buildWelcomeMessage() {
-    return GetBuilder<LoginScreenController>(builder: (controller) {
+    return GetBuilder<LoginScreenController>(
+      builder: (controller) {
         if (controller.otpSent == false) {
           return SizedBox(
             width: 347,
@@ -313,7 +312,5 @@ class _LoginScreenState extends State<LoginScreen> {
         }
       },
     );
-    // else
-    //   return Container();
   }
 }

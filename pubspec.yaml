@@ -3,7 +3,7 @@ description: Temple Adventures Mobile Admin App
 
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 
-version: 1.1.1+80
+version: 1.1.1+81
 
 environment:
   sdk: '>=2.12.0 <3.0.0'
@@ -16,7 +16,6 @@ dependencies:
   firebase_messaging: ^14.2.5
   flutter_local_notifications: ^13.0.0
   get: ^4.6.5
-
   get_storage: ^2.1.1
   pdf: ^3.10.4
   intl:

@@ -14,9 +14,13 @@ class CustomersExpansionPanel extends StatefulWidget {
   final Function? onSearchTap;
   final DateTime selectedDate;
 
-  const CustomersExpansionPanel(
-      {Key? key, this.items, this.onSearchTap, this.showSearchBar = true, required this.selectedDate})
-      : super(key: key);
+  const CustomersExpansionPanel({
+    Key? key,
+    this.items,
+    this.onSearchTap,
+    this.showSearchBar = true,
+    required this.selectedDate,
+  }) : super(key: key);
 
   @override
   State<CustomersExpansionPanel> createState() => _CustomersExpansionPanelState();
@@ -25,23 +29,22 @@ class CustomersExpansionPanel extends StatefulWidget {
 class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
   final CustomerExpansionPanelLogic logic = CustomerExpansionPanelLogic();
 
-  final CustomerSearchController searchController =
-      Get.put(CustomerSearchController());
+  final CustomerSearchController searchController = Get.put(CustomerSearchController());
 
   List<Widget> expansions = [];
 
   TextEditingController searchTED = TextEditingController();
 
-  BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
-      BookingsCalenderWidgetLogicNew();
+  BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<CustomerSearchController>(builder: (controller) {
-      return Column(
-        children: [
-          if (widget.showSearchBar == true) _buildSearchBar(),
-          if (controller.showSearchField)
+    return GetBuilder<CustomerSearchController>(
+      builder: (controller) {
+        return Column(
+          children: [
+            if (widget.showSearchBar == true) _buildSearchBar(),
+            if (controller.showSearchField)
               ...generateList(
                 widget.items!.where((ItemModel item) {
                   if (item.bookingID!.contains(searchTED.text.trim())) {
@@ -94,12 +97,13 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
   }
 
   Widget _buildSearchBar() {
-    return GetBuilder<CustomerSearchController>(builder: (controller) {
-      return (controller.showSearchField && widget.items!.length > 5)
-          ? Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
-              child: AnimatedContainer(
-                width: controller.showSearchField ? 380 : 0,
+    return GetBuilder<CustomerSearchController>(
+      builder: (controller) {
+        return (controller.showSearchField && widget.items!.length > 5)
+            ? Padding(
+                padding: const EdgeInsets.only(bottom: 20.0),
+                child: AnimatedContainer(
+                  width: controller.showSearchField ? 380 : 0,
                   duration: const Duration(milliseconds: 500),
                   height: 47,
                   decoration: BoxDecoration(

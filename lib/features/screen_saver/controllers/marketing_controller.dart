@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
-import '../models/marketing_model.dart';
+import '../models/marketing.dart';
 
 class MarketingLogic {
   MarketingController controller = Get.put(MarketingController());

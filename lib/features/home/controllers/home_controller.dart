@@ -51,7 +51,10 @@ class HomeLogic {
         .collection('dailyBoats')
         .doc(DateFormat('dd-MM-yyyy').format(controller.selectedDate))
         .get();
-    Map<String, dynamic> docs = data.data() as Map<String, dynamic>;
+    Map<String, dynamic>? docs = data.data();
+    if (docs == null) {
+      return;
+    }
     BoatsModel boatsModel = BoatsModel.fromMap(docs);
     for (Boat boat in (boatsModel.boats ?? [])) {
       if ((boat.captains ?? []).map((e) => e.id).toList().contains(currentEmployee?.id)) {

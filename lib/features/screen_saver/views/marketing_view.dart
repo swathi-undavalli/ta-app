@@ -11,9 +11,9 @@ import '../../../core/util/alignment_extensions.dart';
 import '../../../core/util/spacing_widgets.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/ta_image.dart';
-import '../../marketing/widgets/marketing_content_entry_bottom_sheet.dart';
 import '../controllers/marketing_controller.dart';
-import '../models/marketing_model.dart';
+import '../models/marketing.dart';
+import '../widgets/marketing_content_entry_bottom_sheet.dart';
 
 class MarketingView extends StatefulWidget {
   const MarketingView({Key? key}) : super(key: key);
