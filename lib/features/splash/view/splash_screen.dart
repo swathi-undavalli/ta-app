@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/repository/employee_repo.dart';
 import '../../../core/services/auto_update.dart';
+import '../../../core/util/app_measurements.dart';
 import '../../login/presentation/screens/login_page.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -44,6 +45,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
+    AppMeasures.init(context);
     return Scaffold(
       body: Container(
         width: Get.width,

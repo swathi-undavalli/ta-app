@@ -10,6 +10,7 @@ import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../dive_checklist/views/screens/dive_checklist_view.dart';
+import '../../../dive_checklist/views/screens/new_checklist_view.dart';
 import '../../../employees/model/employee.dart';
 import '../../../employees/presentation/screens/all_employees_screen.dart';
 import '../../../login/presentation/screens/login_page.dart';
@@ -51,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                             Get.toNamed(AllEmployeesScreen.id);
                           },
                         ).paddingOnly(bottom: 20),
-                      // buildCheckLists().paddingOnly(bottom: 10),
+                      buildCheckLists().paddingOnly(bottom: 10),
                       if (currentEmployee?.role == 'Intern')
                         Text(
                           'My Dives',
@@ -298,6 +299,13 @@ class _HomePageState extends State<HomePage> {
                 },
               ).paddingOnly(bottom: 5),
             ),
+            buildChecklistTiles(
+              text: 'Custom checklist',
+              isAddButton: true,
+              onTap: () {
+                Get.toNamed(NewChecklistView.id);
+              },
+            ).paddingOnly(bottom: 5),
           ],
         ).paddingSymmetric(horizontal: 15, vertical: 15),
       );
@@ -305,7 +313,11 @@ class _HomePageState extends State<HomePage> {
     return const SizedBox();
   }
 
-  Widget buildChecklistTiles({required String text, required Function onTap}) {
+  Widget buildChecklistTiles({
+    required String text,
+    bool isAddButton = false,
+    required Function onTap,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -324,9 +336,9 @@ class _HomePageState extends State<HomePage> {
           onTap: () {
             onTap();
           },
-          text: 'CHECK',
-          textColor: AppColors.text.skyBlue,
-        ),
+          text: isAddButton ? 'ADD' : 'CHECK',
+          textColor: isAddButton ? Colors.black : AppColors.text.skyBlue,
+        )
       ],
     ).width(Get.width - 80);
   }

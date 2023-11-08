@@ -19,6 +19,7 @@ import '../../features/conditions/screens/add_conditions_screen.dart';
 import '../../features/dashboard/controller/dashboard_controller.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/dive_checklist/views/screens/dive_checklist_view.dart';
+import '../../features/dive_checklist/views/screens/new_checklist_view.dart';
 import '../../features/edit_booking/presentation/screens/edit_booking_new_screen.dart';
 import '../../features/employees/presentation/screens/add_an_employee_screen.dart';
 import '../../features/employees/presentation/screens/all_employees_screen.dart';
@@ -92,6 +93,7 @@ class MyApp extends StatelessWidget {
         ManageGeneralInfo.id: (context) => const ManageGeneralInfo(),
         BoardPlanView.id: (context) => const BoardPlanView(),
         DiveChecklistView.id: (context) => const DiveChecklistView(),
+        NewChecklistView.id: (context) => const NewChecklistView(),
         MarketingView.id: (context) => const MarketingView(),
         EventsView.id: (context) => const EventsView(),
       },
