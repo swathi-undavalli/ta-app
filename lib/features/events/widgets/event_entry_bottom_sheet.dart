@@ -55,7 +55,6 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
   String? locationError;
   String? sessionError;
   List<Instructor> employees = [];
-  String phone = '';
   DateTime sessionTime = DateTime.now();
   DateTime sessionDate = DateTime.now();
   bool showLoading = false;
@@ -63,17 +62,25 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
   @override
   void initState() {
     super.initState();
-    locationTED = TextEditingController(text: widget.eventElement?.location ?? '');
-    sessionNameTED = TextEditingController(text: widget.eventElement?.session ?? '');
-    sessionTime = TimePicker.getDateTime(widget.eventElement?.time) ?? DateTime.now();
-    if (widget.eventElement != null) sessionDate = DateTime.parse(widget.eventElement!.date);
+    locationTED =
+        TextEditingController(text: widget.eventElement?.location ?? '');
+    sessionNameTED =
+        TextEditingController(text: widget.eventElement?.session ?? '');
+    sessionTime =
+        TimePicker.getDateTime(widget.eventElement?.time) ?? DateTime.now();
+    if (widget.eventElement != null) {
+      sessionDate = DateTime.parse(widget.eventElement!.date);
+    }
     employees = widget.eventElement?.employees ?? [];
+    employees[0].phone = widget.eventElement?.phone ?? '';
+    log('called');
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
       ),
@@ -114,7 +121,8 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
                   selectTime(context);
                 },
                 title: 'Time',
-                value: TimePicker.getFormattedTime(sessionTime) ?? 'No time selected',
+                value: TimePicker.getFormattedTime(sessionTime) ??
+                    'No time selected',
               ),
               Spacing.h35,
               buildDateAndTime(
@@ -132,7 +140,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
                 employeeLimit: 1,
               ),
               Spacing.h50,
-              buildSubmitButton().center
+              buildSubmitButton().center,
             ],
           ).paddingSymmetric(horizontal: 20, vertical: 20).scrollable,
         ],
@@ -193,18 +201,23 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
             ),
             GestureDetector(
               onTap: () async {
-                employees = (await EmpSelectorBottomSheet.getSelectedInstructors(
-                      context,
-                      initialSelectedInstructors: employees,
-                      instructorLimit: employeeLimit,
-                      employeeType: employeeType,
-                    )) ??
-                    [];
+                employees =
+                    (await EmpSelectorBottomSheet.getSelectedInstructors(
+                          context,
+                          initialSelectedInstructors: employees,
+                          instructorLimit: employeeLimit,
+                          employeeType: employeeType,
+                        )) ??
+                        [];
                 setState(() {});
               },
               child: const Text(
                 'Change',
-                style: TextStyle(fontSize: 12, color: Colors.blue, decoration: TextDecoration.underline),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Colors.blue,
+                  decoration: TextDecoration.underline,
+                ),
               ).paddingOnly(left: 10, right: 7),
             ),
             const Icon(
@@ -218,7 +231,11 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
     );
   }
 
-  Widget buildDateAndTime({required String title, required String value, required Function onTap}) {
+  Widget buildDateAndTime({
+    required String title,
+    required String value,
+    required Function onTap,
+  }) {
     return Row(
       children: [
         SizedBox(
@@ -240,7 +257,10 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
           child: Container(
             height: 30,
             width: 100,
-            decoration: BoxDecoration(border: Border.all(color: Colors.black), borderRadius: BorderRadius.circular(5)),
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(5),
+            ),
             child: Center(
               child: Text(
                 value,
@@ -290,10 +310,15 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
         if (isValid()) {
           showLoading = true;
           setState(() {});
-          DocumentSnapshot document = await FirebaseFirestore.instance.collection('events').doc('events').get();
+          DocumentSnapshot document = await FirebaseFirestore.instance
+              .collection('events')
+              .doc('events')
+              .get();
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
           Event event = Event.fromJson(data);
+
+          log(employees[0].phone.toString());
 
           EventElement eventElement = EventElement(
             session: sessionNameTED.text,
@@ -310,14 +335,16 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
           } else {
             event.eventElement?.add(eventElement);
           }
-          await FirebaseFirestore.instance.collection('events').doc('events').set(event.toJson());
+          await FirebaseFirestore.instance
+              .collection('events')
+              .doc('events')
+              .set(event.toJson());
 
           showLoading = false;
           setState(() {});
-
+          clear();
           Get.back();
         }
-        setState(() {});
       },
       text: 'Submit',
       color: Colors.black,
@@ -352,6 +379,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
     locationError = null;
     sessionError = null;
     sessionNameTED.text = '';
+    employees = [];
   }
 
   Widget buildTitle() {
@@ -369,6 +397,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
         IconButton(
           icon: const Icon(Icons.close),
           onPressed: () {
+            clear();
             Navigator.of(context).pop();
           },
         ),

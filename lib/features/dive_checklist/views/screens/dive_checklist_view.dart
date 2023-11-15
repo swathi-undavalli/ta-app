@@ -1,12 +1,14 @@
+import 'dart:developer';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../widgets/check_box_widget.dart';
+import 'new_checklist_view.dart';
 
 class DiveChecklistView extends StatefulWidget {
   static const String id = 'RecreationalStudentDiveChecklist';
@@ -18,32 +20,66 @@ class DiveChecklistView extends StatefulWidget {
 }
 
 class _DiveChecklistViewState extends State<DiveChecklistView> {
-  final Checklist checkList = Get.arguments;
+  var args = Get.arguments;
+
+  late ChecklistElement checkListElement;
+
+  late Checklist checklist;
+
+  bool showLoading = false;
+
+  final GlobalKey _menuKey = GlobalKey();
+
+  @override
+  void initState() {
+    checkListElement = args[0];
+    checklist = args[1];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
       body: SafeArea(
-        child: Column(
-          key: UniqueKey(),
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildDescription(),
-            Spacing.h20,
-            _buildCheckList(),
-            Spacing.h20,
-            AppButton.flat(
-              text: 'Close',
-              onTap: () {
-                Get.back();
-              },
-              textColor: Colors.white,
-              color: Colors.black,
-            ).center,
-          ],
-        ).paddingSymmetric(horizontal: 20, vertical: 30).scrollable,
+        child: SizedBox(
+          height: Get.height,
+          child: Stack(
+            children: [
+              if (showLoading)
+                Container(
+                  height: Get.height,
+                  color: Colors.grey.shade100,
+                  child: const CircularProgressIndicator(
+                    color: Colors.black,
+                    backgroundColor: Colors.grey,
+                  ).center,
+                ),
+              Column(
+                key: UniqueKey(),
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  _buildDescription().paddingSymmetric(vertical: 20),
+                  _buildCheckList(),
+                  Spacing.h60,
+                ],
+              ).paddingSymmetric(horizontal: 20).scrollable,
+              Positioned(
+                bottom: 20,
+                width: Get.width,
+                child: AppButton.flat(
+                  text: 'Close',
+                  onTap: () {
+                    Get.back();
+                  },
+                  textColor: Colors.white,
+                  color: Colors.black,
+                ).center,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -51,7 +87,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
   Widget _buildCheckList() {
     return Column(
       children: [
-        ...checkList.items.map(
+        ...checkListElement.items.map(
           (e) {
             return CheckBoxWidget(
               onChanged: (_) {},
@@ -65,6 +101,52 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
   }
 
   AppBar buildAppBar() {
+    final button = PopupMenuButton(
+      icon: const Icon(
+        Icons.more_vert_rounded,
+        color: Colors.black,
+      ),
+      key: _menuKey,
+      itemBuilder: (_) => <PopupMenuItem<String>>[
+        PopupMenuItem<String>(
+          child: const Text(
+            'Edit',
+            style: TextStyle(fontSize: 12),
+          ),
+          onTap: () async {
+            Get.toNamed(
+              NewChecklistView.id,
+              arguments: checkListElement,
+            );
+          },
+        ),
+        PopupMenuItem<String>(
+          child: const Text(
+            'Delete',
+            style: TextStyle(fontSize: 12),
+          ),
+          onTap: () async {
+            showLoading = true;
+            setState(() {});
+
+            log('started');
+
+            checklist.checklistElement?.remove(checkListElement);
+
+            await FirebaseFirestore.instance
+                .collection('employeeChecklists')
+                .doc(checkListElement.employeeId)
+                .set(checklist.toMap());
+
+            showLoading = false;
+            setState(() {});
+            log('ended');
+            Get.back();
+          },
+        ),
+      ],
+    );
+
     return AppBar(
       backgroundColor: AppColors.background.white,
       elevation: 0,
@@ -84,7 +166,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
         ),
       ),
       title: Text(
-        checkList.name,
+        checkListElement.name,
         style: TextStyle(
           color: AppColors.text.black,
           fontSize: 16,
@@ -94,6 +176,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
         ),
       ).center,
       actions: [
+        button,
         TextButton(
           onPressed: () {
             setState(() {});
@@ -110,7 +193,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
 
   Widget _buildDescription() {
     return Text(
-      checkList.description,
+      checkListElement.description,
       style: const TextStyle(
         color: Colors.black,
         fontSize: 13,

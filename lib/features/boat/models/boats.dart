@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'boat_details.dart';
 
 class BoatsModel {
@@ -174,11 +173,15 @@ class Dsd {
         'weights': weights?.toJson(),
         'dayOffs': List<dynamic>.from((dayOffs ?? []).map((x) => x.toJson())),
         'leaves': List<dynamic>.from((leaves ?? []).map((x) => x.toJson())),
-        'dsdOceanHead': List<dynamic>.from((dsdOceanHead ?? []).map((x) => x.toJson())),
-        'courseCenter': List<dynamic>.from((courseCenter ?? []).map((x) => x.toJson())),
-        'centerStaff': List<dynamic>.from((centerStaff ?? []).map((x) => x.toJson())),
+        'dsdOceanHead':
+            List<dynamic>.from((dsdOceanHead ?? []).map((x) => x.toJson())),
+        'courseCenter':
+            List<dynamic>.from((courseCenter ?? []).map((x) => x.toJson())),
+        'centerStaff':
+            List<dynamic>.from((centerStaff ?? []).map((x) => x.toJson())),
         'dsdPool': List<dynamic>.from((dsdPool ?? []).map((x) => x.toJson())),
-        'harboursStaff': List<dynamic>.from((harboursStaff ?? []).map((x) => x.toJson())),
+        'harboursStaff':
+            List<dynamic>.from((harboursStaff ?? []).map((x) => x.toJson())),
         'generalNotes': generalNotes,
         'highTides': highTides,
         'lowTides': lowTides,
@@ -406,12 +409,16 @@ class Boat {
 
   Map<String, dynamic> toJson() => {
         'captains': List<dynamic>.from((captains ?? []).map((x) => x.toJson())),
-        'dsdInstructors': List<dynamic>.from((dsdInstructors ?? []).map((x) => x.toJson())),
-        'photographer': List<dynamic>.from((photographer ?? []).map((x) => x.toJson())),
+        'dsdInstructors':
+            List<dynamic>.from((dsdInstructors ?? []).map((x) => x.toJson())),
+        'photographer':
+            List<dynamic>.from((photographer ?? []).map((x) => x.toJson())),
         'id': id,
         'time': time,
-        'surfaceSupport': List<dynamic>.from((surfaceSupport ?? []).map((x) => x.toJson())),
-        'internPhotoVideo': List<dynamic>.from((internPhotoVideo ?? []).map((x) => x.toJson())),
+        'surfaceSupport':
+            List<dynamic>.from((surfaceSupport ?? []).map((x) => x.toJson())),
+        'internPhotoVideo':
+            List<dynamic>.from((internPhotoVideo ?? []).map((x) => x.toJson())),
         'notes': notes,
         'air': air,
         'hideBoat': hideBoat,

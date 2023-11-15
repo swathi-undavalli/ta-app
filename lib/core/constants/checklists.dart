@@ -1,7 +1,7 @@
 import '../models/checklist_model.dart';
 
-List<Checklist> checkLists = [
-  Checklist(
+List<ChecklistElement> checkListElements = [
+  ChecklistElement(
     items: [
       'BCD',
       'Regulator',
@@ -28,9 +28,12 @@ List<Checklist> checkLists = [
       'Student Weights',
     ],
     name: 'Recreational Student Dive Checklist',
-    description: 'This checklist should be performed on every Recreational Student Dive.',
+    description:
+        'This checklist should be performed on every Recreational Student Dive.',
+    employeeId: null,
+    id: '',
   ),
-  Checklist(
+  ChecklistElement(
     items: [
       'BCD',
       'Regulator',
@@ -49,9 +52,12 @@ List<Checklist> checkLists = [
       'Torch',
       '== Green Dry Bag',
       'Medical Kit',
-      'Tool kit'
+      'Tool kit',
     ],
     name: 'Recreational Dive Checklist',
-    description: 'This checklist should be performed on every Recreational Dive.',
+    description:
+        'This checklist should be performed on every Recreational Dive.',
+    employeeId: null,
+    id: '',
   ),
 ];

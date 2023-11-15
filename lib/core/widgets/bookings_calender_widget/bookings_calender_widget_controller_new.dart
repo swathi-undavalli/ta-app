@@ -11,7 +11,8 @@ import '../../models/item_model.dart';
 import '../../util/utils.dart';
 
 class BookingsCalenderWidgetLogicNew {
-  BookingsCalenderWidgetControllerNew controller = Get.put(BookingsCalenderWidgetControllerNew());
+  BookingsCalenderWidgetControllerNew controller =
+      Get.put(BookingsCalenderWidgetControllerNew());
 
   Future<void> getBookings(DateTime date) async {
     log("BookingsCalenderWidgetLogicNew : getBookings ${DateFormat("dd-MM-yyyy").format(date)}");
@@ -95,15 +96,15 @@ class BookingsCalenderWidgetLogicNew {
         }
         controller.expansionItemModels = newItemsList;
       }
-    } catch (e) {}
+    } catch (e) {
+      log('');
+    }
 
     controller.showLoading = false;
     controller.update();
   }
 
   filterBookingsList() {
-    for (var element in controller.bookings) {}
-
     List<ItemModel> newItemsList = [];
 
     controller.poolCount = 0;
@@ -142,8 +143,6 @@ class BookingsCalenderWidgetLogicNew {
         }
       }
     }
-
-    for (var element in newItemsList) {}
 
     if (controller.selectedType == null) {
       if (controller.theoryCount != 0) {

@@ -1,10 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../core/authentication/firebase_authentication.dart';
 import '../../../../core/constants/checklists.dart';
 import '../../../../core/constants/constants.dart';
+import '../../../../core/models/checklist_model.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
@@ -176,7 +177,10 @@ class _HomePageState extends State<HomePage> {
                 children: [
                   buildButton(
                     onTap: () {
-                      logic.onDateChanged(controller.selectedDate.subtract(const Duration(days: 1)));
+                      logic.onDateChanged(
+                        controller.selectedDate
+                            .subtract(const Duration(days: 1)),
+                      );
                     },
                     icon: Icons.arrow_back_ios_rounded,
                   ),
@@ -196,7 +200,9 @@ class _HomePageState extends State<HomePage> {
                   Spacing.w20,
                   buildButton(
                     onTap: () {
-                      logic.onDateChanged(controller.selectedDate.add(const Duration(days: 1)));
+                      logic.onDateChanged(
+                        controller.selectedDate.add(const Duration(days: 1)),
+                      );
                     },
                     icon: Icons.arrow_forward_ios_rounded,
                   ),
@@ -205,7 +211,9 @@ class _HomePageState extends State<HomePage> {
               Spacing.h5,
               const Divider(thickness: 2, color: Colors.black),
               Spacing.h10,
-              if (controller.bookings.isEmpty && controller.diveBuddies.isEmpty && controller.generalStaffList.isEmpty)
+              if (controller.bookings.isEmpty &&
+                  controller.diveBuddies.isEmpty &&
+                  controller.generalStaffList.isEmpty)
                 const Text('No tasks assigned').center,
               ...controller.bookings.map(
                 (booking) => EmployeeDiveCalenderListTile(
@@ -222,10 +230,13 @@ class _HomePageState extends State<HomePage> {
               ...controller.currentList.map(
                 (e) => buildListTile(
                   title: e['role'].toString(),
-                  value: "${e["boat_details"]?.name}@ ${e["boat_details"]?.time}",
+                  value:
+                      "${e["boat_details"]?.name}@ ${e["boat_details"]?.time}",
                 ),
               ),
-              ...controller.generalStaffList.map((e) => buildListTile(title: e, value: 'Manage / Organize')),
+              ...controller.generalStaffList.map(
+                (e) => buildListTile(title: e, value: 'Manage / Organize'),
+              ),
               Spacing.h15,
             ],
           );
@@ -288,16 +299,65 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Spacing.h10,
-            ...checkLists.map(
+            ...checkListElements.map(
               (checklist) => buildChecklistTiles(
                 text: checklist.name,
                 onTap: () {
                   Get.toNamed(
                     DiveChecklistView.id,
-                    arguments: checklist,
+                    arguments: [checklist, Checklist(checklistElement: [])],
                   );
                 },
               ).paddingOnly(bottom: 5),
+            ),
+            StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('employeeChecklists')
+                  .doc(currentEmployee!.id)
+                  .snapshots(),
+              builder: (
+                BuildContext context,
+                AsyncSnapshot<DocumentSnapshot> snapshot,
+              ) {
+                if (snapshot.hasError ||
+                    snapshot.connectionState == ConnectionState.waiting) {
+                  return const SizedBox(
+                    height: 15,
+                    width: 15,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.black,
+                    ),
+                  );
+                }
+                final data = snapshot.data?.data();
+
+                if (data == null) {
+                  return const SizedBox();
+                }
+
+                Checklist? checklist =
+                    Checklist.fromMap(data as Map<String, dynamic>);
+
+                if ((checklist.checklistElement ?? []).isEmpty) {
+                  return const SizedBox();
+                }
+                return Column(
+                  children: [
+                    ...(checklist.checklistElement ?? []).map(
+                      (checklistElement) => buildChecklistTiles(
+                        text: checklistElement.name,
+                        onTap: () {
+                          Get.toNamed(
+                            DiveChecklistView.id,
+                            arguments: [checklistElement, checklist],
+                          );
+                        },
+                      ).paddingOnly(bottom: 5),
+                    ),
+                  ],
+                );
+              },
             ),
             buildChecklistTiles(
               text: 'Custom checklist',
@@ -338,7 +398,7 @@ class _HomePageState extends State<HomePage> {
           },
           text: isAddButton ? 'ADD' : 'CHECK',
           textColor: isAddButton ? Colors.black : AppColors.text.skyBlue,
-        )
+        ),
       ],
     ).width(Get.width - 80);
   }

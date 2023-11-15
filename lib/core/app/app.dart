@@ -93,7 +93,7 @@ class MyApp extends StatelessWidget {
         ManageGeneralInfo.id: (context) => const ManageGeneralInfo(),
         BoardPlanView.id: (context) => const BoardPlanView(),
         DiveChecklistView.id: (context) => const DiveChecklistView(),
-        NewChecklistView.id: (context) => const NewChecklistView(),
+        NewChecklistView.id: (context) =>  NewChecklistView(),
         MarketingView.id: (context) => const MarketingView(),
         EventsView.id: (context) => const EventsView(),
       },

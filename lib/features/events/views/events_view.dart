@@ -27,11 +27,17 @@ class _EventsViewState extends State<EventsView> {
       appBar: buildAppBar(),
       floatingActionButton: buildFloatingActionButton(context),
       body: SafeArea(
-        child: GetBuilder<EventController>(builder: (controller) {
-          return StreamBuilder(
-            stream: FirebaseFirestore.instance.collection('events').doc('events').snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+        child: GetBuilder<EventController>(
+          builder: (controller) {
+            return StreamBuilder(
+              stream: FirebaseFirestore.instance
+                  .collection('events')
+                  .doc('events')
+                  .snapshots(),
+              builder: (BuildContext context,
+                  AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (snapshot.hasError ||
+                    snapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox(
                     height: 15,
                     width: 15,
@@ -48,7 +54,8 @@ class _EventsViewState extends State<EventsView> {
                     height: Get.height,
                     child: const Text(
                       'No events are added',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ).center,
                   );
                 }
@@ -60,22 +67,25 @@ class _EventsViewState extends State<EventsView> {
                     height: Get.height,
                     child: const Text(
                       'No events are added',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ).center,
                   );
                 }
-                return Column(
-                  children: [
-                    Spacing.h10,
-                    ...(event.eventElement ?? []).map(
-                      (element) => buildEventCard(
-                        element: element,
-                        index: (event.eventElement ?? []).indexOf(element),
-                      ).paddingOnly(top: 20),
-                    ),
-                    Spacing.h30,
-                  ],
-                ).scrollable;
+                return SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      Spacing.h10,
+                      ...(event.eventElement ?? []).map(
+                        (element) => buildEventCard(
+                          element: element,
+                          index: (event.eventElement ?? []).indexOf(element),
+                        ).paddingOnly(top: 20),
+                      ),
+                      Spacing.h30,
+                    ],
+                  ),
+                );
               },
             );
           },
@@ -91,15 +101,21 @@ class _EventsViewState extends State<EventsView> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
-          BoxShadow(offset: const Offset(1, 3), spreadRadius: 2, color: Colors.grey.shade100),
+          BoxShadow(
+              offset: const Offset(1, 3),
+              spreadRadius: 2,
+              color: Colors.grey.shade100),
         ],
       ),
       child: Column(
         children: [
           buildContent(title: 'Session Name', value: element.session),
           buildContent(title: 'Location', value: element.location),
-          buildContent(title: 'Date & Time', value: '${element.date} @ ${element.time}'),
-          buildContent(title: 'Contact Person', value: '${element.employees[0].name} ( ${element.phone} )'),
+          buildContent(
+              title: 'Date & Time', value: '${element.date} @ ${element.time}'),
+          buildContent(
+              title: 'Contact Person',
+              value: '${element.employees[0].name} ( ${element.phone} )'),
           Spacing.h15,
           buildDeleteEdit(index: index, eventElement: element),
           Spacing.h15,
@@ -113,7 +129,9 @@ class _EventsViewState extends State<EventsView> {
                 color: Colors.grey,
               ),
               children: <TextSpan>[
-                TextSpan(style: TextStyle(color: AppColors.text.black), text: element.createdBy ?? '-'),
+                TextSpan(
+                    style: TextStyle(color: AppColors.text.black),
+                    text: element.createdBy ?? '-'),
               ],
             ),
           ).left,
@@ -153,7 +171,8 @@ class _EventsViewState extends State<EventsView> {
     ).paddingOnly(top: 5);
   }
 
-  Widget buildDeleteEdit({required int index, required EventElement eventElement}) {
+  Widget buildDeleteEdit(
+      {required int index, required EventElement eventElement}) {
     return SizedBox(
       width: Get.width,
       child: Row(
@@ -203,11 +222,12 @@ class _EventsViewState extends State<EventsView> {
     );
   }
 
-  Future<void> deleteDialog(BuildContext context, {required int index, required EventElement eventElement}) async {
+  Future<void> deleteDialog(BuildContext context,
+      {required int index, required EventElement eventElement}) async {
     return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
           title: const Text(
             'Are you sure?',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),

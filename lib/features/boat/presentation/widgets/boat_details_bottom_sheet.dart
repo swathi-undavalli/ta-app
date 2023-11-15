@@ -86,7 +86,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     hideBoat = ((widget.boat?.hideBoat)) ?? hideBoat;
     log('start ${hideBoat.toString()}');
     if (widget.boat?.time != null) {
-      selectedTime = TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
+      selectedTime =
+          TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
     } else {
       selectedTime = DateTime.now();
     }
@@ -281,7 +282,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                       ),
                       child: Center(
                         child: Text(
-                          TimePicker.getFormattedTime(selectedTime) ?? 'No time selected',
+                          TimePicker.getFormattedTime(selectedTime) ??
+                              'No time selected',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -289,7 +291,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                         ),
                       ),
                     ),
-                  )
+                  ),
                 ],
               ),
               Spacing.h20,
@@ -401,7 +403,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             Icons.delete,
             color: Colors.black,
             size: 15,
-          )
+          ),
         ],
       ),
     );
@@ -409,9 +411,9 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
 
   Future<void> _deleteBoat() async {
     return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
           title: const Text(
             'Are you Sure! You want to delete?',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -451,7 +453,10 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 // un-assign
                 for (Booking booking in bookings) {
                   booking.setBoatInfo(widget.selectedDate, null);
-                  await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
+                  await FirebaseFirestore.instance
+                      .collection('bookings')
+                      .doc(booking.id)
+                      .set(booking.toMap());
                 }
 
                 //delete boat
@@ -463,7 +468,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 Map<String, dynamic>? data = d.data();
                 BoatsModel? boatsModel = BoatsModel.fromMap(data);
 
-                (boatsModel.boats ?? []).removeWhere((boat) => boat.id == widget.boat?.id);
+                (boatsModel.boats ?? [])
+                    .removeWhere((boat) => boat.id == widget.boat?.id);
 
                 await FirebaseFirestore.instance
                     .collection('dailyBoats')
@@ -501,7 +507,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 setState(() {});
               },
               initialValue: nitrox,
-            )
+            ),
           ],
         ),
         const SizedBox(width: 20),
@@ -521,7 +527,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 setState(() {});
               },
               initialValue: air,
-            )
+            ),
           ],
         ),
       ],
@@ -570,14 +576,15 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             ),
             GestureDetector(
               onTap: () async {
-                employees = (await EmpSelectorBottomSheet.getSelectedInstructors(
-                      context,
-                      initialSelectedInstructors: employees,
-                      instructorLimit: employeeLimit,
-                      employeeType: employeeType,
-                      tanksRequired: isTanksRequired,
-                    )) ??
-                    [];
+                employees =
+                    (await EmpSelectorBottomSheet.getSelectedInstructors(
+                          context,
+                          initialSelectedInstructors: employees,
+                          instructorLimit: employeeLimit,
+                          employeeType: employeeType,
+                          tanksRequired: isTanksRequired,
+                        )) ??
+                        [];
 
                 setState(() {});
               },
@@ -640,8 +647,9 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     });
 
     String boatId;
-    DocumentReference boatRef =
-        FirebaseFirestore.instance.collection('dailyBoats').doc(DateFormat('dd-MM-yyyy').format(widget.selectedDate));
+    DocumentReference boatRef = FirebaseFirestore.instance
+        .collection('dailyBoats')
+        .doc(DateFormat('dd-MM-yyyy').format(widget.selectedDate));
 
     BoatsModel? boatsModel;
 
