@@ -28,7 +28,7 @@ class NewChecklistLogic {
 
   void onAddPressed() {
     controller.inputTED.text = '';
-    controller.checkListItems.add('');
+    controller.checkListItems.add(TextEditingController());
     controller.selectedIndex = controller.checkListItems.length - 1;
     controller.focusNode.requestFocus();
     controller.update();
@@ -92,7 +92,7 @@ class NewChecklistLogic {
 }
 
 class NewChecklistController extends GetxController {
-  List<String> checkListItems = [];
+  List<TextEditingController> checkListItems = [];
   TextEditingController inputTED = TextEditingController();
   TextEditingController titleTED = TextEditingController();
   TextEditingController descriptionTED = TextEditingController();
