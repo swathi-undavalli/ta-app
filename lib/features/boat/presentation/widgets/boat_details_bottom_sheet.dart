@@ -58,8 +58,6 @@ class BoatDetailsBottomSheet extends StatefulWidget {
 }
 
 class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
-  final CollectionReference employeesCollection =
-      FirebaseFirestore.instance.collection('employees');
   List<Instructor> selectedCaptains = [];
   List<Instructor> selectedDsdInstructors = [];
   List<Instructor> selectedPhotographer = [];

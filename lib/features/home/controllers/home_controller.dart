@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../../core/models/item_model.dart';
 import '../../boat/models/boats.dart';
 import '../../bookings/models/booking_model.dart';
@@ -40,7 +39,8 @@ class HomeLogic {
 
       /// Get bookings where i'm dive buddy
       if (booking.boatDetails?.diveBuddies?.firstWhereOrNull(
-              (element) => (element.id == currentEmployee?.id)) !=
+            (element) => (element.id == currentEmployee?.id),
+          ) !=
           null) {
         controller.diveBuddies.add(item);
       }

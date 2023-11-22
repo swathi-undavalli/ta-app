@@ -22,13 +22,19 @@ class NewChecklistView extends StatefulWidget {
 class _NewChecklistViewState extends State<NewChecklistView> {
   final NewChecklistLogic logic = NewChecklistLogic();
 
-  final ChecklistElement? checkListElement = Get.arguments;
+  final args = Get.arguments;
+
+  final ChecklistElement? checkListElement = Get.arguments[0];
 
   @override
   void initState() {
-    logic.controller.checkListItems = (checkListElement?.items ?? []);
-    logic.controller.id = checkListElement?.id;
-    logic.controller.titleTED.text = (checkListElement?.name ?? '');
+    logic.controller.checkListItems = (checkListElement?.items ?? [])
+        .map((e) => TextEditingController(text: e.name))
+        .toList();
+    logic.controller.focusNodes =
+        (checkListElement?.items ?? []).map((e) => FocusNode()).toList();
+    logic.controller.id = (args[1]) ? checkListElement?.id : null;
+    logic.controller.titleTED.text = (checkListElement?.title ?? '');
     logic.controller.descriptionTED.text =
         (checkListElement?.description ?? '');
 
@@ -48,9 +54,6 @@ class _NewChecklistViewState extends State<NewChecklistView> {
             },
             child: const Icon(Icons.add),
           ),
-          bottomNavigationBar: (logic.controller.checkListItems.isNotEmpty)
-              ? _buildSelectedTF(context)
-              : const SizedBox(),
           body: WillPopScope(
             onWillPop: () async {
               logic.controller.clear();
@@ -65,6 +68,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
                     _buildDescription(),
                     Spacing.h20,
                     _buildCheckList(),
+                    Spacing.h40,
                   ],
                 ).paddingSymmetric(horizontal: 20, vertical: 30).scrollable,
               ),
@@ -72,54 +76,6 @@ class _NewChecklistViewState extends State<NewChecklistView> {
           ),
         );
       },
-    );
-  }
-
-  Widget _buildSelectedTF(BuildContext context) {
-    return AbsorbPointer(
-      absorbing: (logic.controller.selectedIndex != null) ? false : true,
-      child: Container(
-        height: 60,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-              offset: const Offset(3, 3),
-              color: Colors.grey.shade300,
-              blurRadius: 10,
-            ),
-          ],
-        ),
-        child: TextField(
-          controller: logic.controller.inputTED,
-          focusNode: logic.controller.focusNode,
-          decoration: InputDecoration(
-            contentPadding: const EdgeInsets.all(10.0),
-            hintText: 'Enter text',
-            hintStyle: const TextStyle(fontSize: 14),
-            border: InputBorder.none,
-            suffixIcon: IconButton(
-              icon: const Icon(
-                Icons.check_circle,
-                color: Colors.green,
-              ),
-              onPressed: () {
-                if (logic.controller.selectedIndex != null) {
-                  logic.controller
-                          .checkListItems[logic.controller.selectedIndex!] =
-                      logic.controller.inputTED.text;
-                }
-                logic.controller.focusNode.unfocus();
-                logic.controller.selectedIndex = null;
-                logic.controller.inputTED.text = '';
-                logic.controller.update();
-              },
-            ),
-          ),
-        ).left,
-      ).paddingOnly(
-        bottom: MediaQuery.of(context).viewInsets.bottom,
-      ),
     );
   }
 
@@ -140,42 +96,43 @@ class _NewChecklistViewState extends State<NewChecklistView> {
             ).center,
           ),
         ...List.generate(logic.controller.checkListItems.length, (index) {
-          return GestureDetector(
-            onTap: () {
-              logic.controller.selectedIndex = index;
-              logic.onChecklistPressed;
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                color: AppColors.background.skyBlue.withOpacity(0.2),
-                border: Border.all(
-                  color: (logic.controller.selectedIndex == index)
-                      ? Colors.black
-                      : Colors.transparent,
+          return Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              color: AppColors.background.skyBlue.withOpacity(0.2),
+              border: Border.all(
+                color: (logic.controller.selectedIndex == index)
+                    ? Colors.black
+                    : Colors.transparent,
+              ),
+            ),
+            width: AppMeasures.screenWidth,
+            child: TextField(
+              onTap: () {
+                logic.controller.selectedIndex = index;
+                logic.controller.update();
+              },
+              focusNode: logic.controller.focusNodes[index],
+              controller: logic.controller.checkListItems[index],
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.all(10.0),
+                hintText: 'Enter text',
+                hintStyle: const TextStyle(fontSize: 14),
+                border: InputBorder.none,
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    logic.onDeletePressed(index);
+                  },
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.black,
+                    size: 20,
+                    // color: Colors.white,
+                  ),
                 ),
               ),
-              width: AppMeasures.screenWidth,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(logic.controller.checkListItems[index])
-                      .paddingSymmetric(vertical: 10, horizontal: 10)
-                      .left,
-                  IconButton(
-                    onPressed: () {
-                      logic.onDeletePressed(index);
-                    },
-                    icon: const Icon(
-                      Icons.delete,
-                      size: 20,
-                      // color: Colors.white,
-                    ),
-                  ),
-                ],
-              ),
-            ).paddingOnly(bottom: 10),
-          );
+            ).left,
+          ).paddingOnly(bottom: 10);
         }),
       ],
     );
@@ -197,7 +154,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
                 showToast('Please add items');
               }
             },
-            child: Text(
+            child: const Text(
               'Save',
               style: TextStyle(
                 color: Colors.black,
@@ -302,6 +259,9 @@ class _NewChecklistViewState extends State<NewChecklistView> {
                     if (!controller.showLoading) {
                       log('started');
                       await logic.onSavePressed(context);
+                      if (args[1] == false) {
+                        Get.back();
+                      }
                       log('ended');
                     }
                   },

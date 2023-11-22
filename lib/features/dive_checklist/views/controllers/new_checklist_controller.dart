@@ -7,30 +7,20 @@ import '../../../employees/model/employee.dart';
 class NewChecklistLogic {
   NewChecklistController controller = Get.put(NewChecklistController());
 
-  get onChecklistPressed {
-    if (controller.selectedIndex != null) {
-      controller.inputTED.text =
-          controller.checkListItems[controller.selectedIndex!];
-      controller.focusNode.requestFocus();
-      controller.update();
-    }
-  }
-
   void onDeletePressed(int index) {
     if (controller.selectedIndex == index) {
-      controller.inputTED.text = '';
       controller.selectedIndex = null;
-      controller.focusNode.unfocus();
+      controller.focusNodes[index].unfocus();
     }
     controller.checkListItems.remove(controller.checkListItems[index]);
     controller.update();
   }
 
   void onAddPressed() {
-    controller.inputTED.text = '';
-    controller.checkListItems.add(TextEditingController());
+    controller.checkListItems.add(TextEditingController(text: ' '));
     controller.selectedIndex = controller.checkListItems.length - 1;
-    controller.focusNode.requestFocus();
+    controller.focusNodes.add(FocusNode());
+    controller.focusNodes[controller.selectedIndex!].requestFocus();
     controller.update();
   }
 
@@ -55,9 +45,11 @@ class NewChecklistLogic {
 
         if (controller.id != null) {
           ChecklistElement newChecklistElement = ChecklistElement(
-            items: controller.checkListItems,
+            items: controller.checkListItems
+                .map((e) => Item(name: e.text, isChecked: false))
+                .toList(),
             employeeId: currentEmployee!.id,
-            name: controller.titleTED.text,
+            title: controller.titleTED.text,
             description: controller.descriptionTED.text,
             id: controller.id!,
           );
@@ -67,9 +59,11 @@ class NewChecklistLogic {
           checklist?.checklistElement?.add(newChecklistElement);
         } else {
           ChecklistElement newChecklistElement = ChecklistElement(
-            items: controller.checkListItems,
+            items: controller.checkListItems
+                .map((e) => Item(name: e.text, isChecked: false))
+                .toList(),
             employeeId: currentEmployee!.id,
-            name: controller.titleTED.text,
+            title: controller.titleTED.text,
             description: controller.descriptionTED.text,
             id: (checklist!.checklistElement?.length ?? 0).toString(),
           );
@@ -93,11 +87,10 @@ class NewChecklistLogic {
 
 class NewChecklistController extends GetxController {
   List<TextEditingController> checkListItems = [];
-  TextEditingController inputTED = TextEditingController();
   TextEditingController titleTED = TextEditingController();
   TextEditingController descriptionTED = TextEditingController();
   int? selectedIndex;
-  FocusNode focusNode = FocusNode();
+  List<FocusNode> focusNodes = [];
   bool showLoading = false;
   String? titleError;
   String? id;
@@ -117,11 +110,11 @@ class NewChecklistController extends GetxController {
 
   void clear() {
     titleError = null;
-    inputTED.text = '';
     selectedIndex = null;
     showLoading = false;
     titleTED.text = '';
     checkListItems = [];
+    focusNodes = [];
     id = null;
   }
 }

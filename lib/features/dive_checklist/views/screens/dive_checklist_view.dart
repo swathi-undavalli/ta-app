@@ -60,17 +60,28 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDescription().paddingSymmetric(vertical: 20),
+                  _buildDescription(),
                   _buildCheckList(),
-                  Spacing.h60,
+                  Spacing.h70,
                 ],
               ).paddingSymmetric(horizontal: 20).scrollable,
               Positioned(
                 bottom: 20,
                 width: Get.width,
                 child: AppButton.flat(
-                  text: 'Close',
-                  onTap: () {
+                  text: 'Save',
+                  onTap: () async {
+                    showLoading = true;
+                    setState(() {});
+
+                    await FirebaseFirestore.instance
+                        .collection('employeeChecklists')
+                        .doc(checkListElement.employeeId)
+                        .set(checklist.toMap());
+
+                    showLoading = false;
+                    setState(() {});
+
                     Get.back();
                   },
                   textColor: Colors.white,
@@ -90,9 +101,19 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
         ...checkListElement.items.map(
           (e) {
             return CheckBoxWidget(
-              onChanged: (_) {},
-              text: e,
-              initialValue: false,
+              onChanged: (bool value) {
+                checkListElement
+                    .items[checkListElement.items.indexOf(e)].isChecked = value;
+                setState(() {});
+                log(
+                  checkListElement.items
+                      .map((e) => e.isChecked)
+                      .toList()
+                      .toString(),
+                );
+              },
+              text: e.name,
+              initialValue: e.isChecked,
             ).paddingOnly(bottom: 10);
           },
         ),
@@ -116,7 +137,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
           onTap: () async {
             Get.toNamed(
               NewChecklistView.id,
-              arguments: checkListElement,
+              arguments: [checkListElement, true],
             );
           },
         ),
@@ -166,7 +187,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
         ),
       ),
       title: Text(
-        checkListElement.name,
+        checkListElement.title,
         style: TextStyle(
           color: AppColors.text.black,
           fontSize: 16,
@@ -179,6 +200,11 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
         button,
         TextButton(
           onPressed: () {
+            checkListElement.items
+                .map(
+                  (e) => e.isChecked = false,
+                )
+                .toList();
             setState(() {});
           },
           child: Icon(
@@ -200,6 +226,8 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
         fontFamily: AppFonts.nunito,
         height: 1.5,
       ),
+    ).paddingSymmetric(
+      vertical: (checkListElement.description.isEmpty) ? 0 : 20,
     );
   }
 }

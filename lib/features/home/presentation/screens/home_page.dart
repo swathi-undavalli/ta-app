@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/authentication/firebase_authentication.dart';
-import '../../../../core/constants/checklists.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -11,12 +10,12 @@ import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../dive_checklist/views/screens/dive_checklist_view.dart';
-import '../../../dive_checklist/views/screens/new_checklist_view.dart';
 import '../../../employees/model/employee.dart';
 import '../../../employees/presentation/screens/all_employees_screen.dart';
 import '../../../login/presentation/screens/login_page.dart';
 import '../../controllers/home_controller.dart';
 import '../widgets/employee_dive_calender_list_tile.dart';
+import '../widgets/template_bottomsheet.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -299,17 +298,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             Spacing.h10,
-            ...checkListElements.map(
-              (checklist) => buildChecklistTiles(
-                text: checklist.name,
-                onTap: () {
-                  Get.toNamed(
-                    DiveChecklistView.id,
-                    arguments: [checklist, Checklist(checklistElement: [])],
-                  );
-                },
-              ).paddingOnly(bottom: 5),
-            ),
             StreamBuilder(
               stream: FirebaseFirestore.instance
                   .collection('employeeChecklists')
@@ -346,7 +334,7 @@ class _HomePageState extends State<HomePage> {
                   children: [
                     ...(checklist.checklistElement ?? []).map(
                       (checklistElement) => buildChecklistTiles(
-                        text: checklistElement.name,
+                        text: checklistElement.title,
                         onTap: () {
                           Get.toNamed(
                             DiveChecklistView.id,
@@ -360,10 +348,11 @@ class _HomePageState extends State<HomePage> {
               },
             ),
             buildChecklistTiles(
-              text: 'Custom checklist',
+              text: 'Select Template',
               isAddButton: true,
               onTap: () {
-                Get.toNamed(NewChecklistView.id);
+                TemplateBottomSheet.show(context);
+                // Get.toNamed(NewChecklistView.id);
               },
             ).paddingOnly(bottom: 5),
           ],
@@ -392,12 +381,17 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
         ),
-        AppButton.miniText(
-          onTap: () {
+        IconButton(
+          onPressed: () {
             onTap();
           },
-          text: isAddButton ? 'ADD' : 'CHECK',
-          textColor: isAddButton ? Colors.black : AppColors.text.skyBlue,
+          icon: Icon(
+            (isAddButton)
+                ? Icons.add_circle_outline
+                : Icons.arrow_forward_rounded,
+            color: (isAddButton) ? Colors.black : AppColors.text.skyBlue,
+            size: 20,
+          ),
         ),
       ],
     ).width(Get.width - 80);

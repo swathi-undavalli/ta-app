@@ -32,32 +32,32 @@ class Checklist {
 }
 
 class ChecklistElement {
-  final List<String> items;
+  final List<Item> items;
   final String? employeeId;
   final String id;
-  final String name;
+  final String title;
   final String description;
 
   ChecklistElement({
     required this.items,
     required this.employeeId,
     required this.id,
-    required this.name,
+    required this.title,
     required this.description,
   });
 
   ChecklistElement copyWith({
-    List<String>? items,
+    List<Item>? items,
     String? employeeId,
     String? id,
-    String? name,
+    String? title,
     String? description,
   }) =>
       ChecklistElement(
         items: items ?? this.items,
         employeeId: employeeId ?? this.employeeId,
         id: id ?? this.id,
-        name: name ?? this.name,
+        title: title ?? this.title,
         description: description ?? this.description,
       );
 
@@ -68,18 +68,51 @@ class ChecklistElement {
 
   factory ChecklistElement.fromMap(Map<String, dynamic> json) =>
       ChecklistElement(
-        items: List<String>.from(json['items'].map((x) => x)),
+        items: List<Item>.from(json['items'].map((x) => Item.fromJson(x))),
         employeeId: json['employeeId'],
         id: json['id'],
-        name: json['name'],
+        title: json['title'],
         description: json['description'],
       );
 
   Map<String, dynamic> toMap() => {
-        'items': List<dynamic>.from(items.map((x) => x)),
+        'items': List<dynamic>.from(items.map((x) => x.toJson())),
         'employeeId': employeeId,
         'id': id,
-        'name': name,
+        'title': title,
         'description': description,
+      };
+}
+
+class Item {
+  final String name;
+  bool isChecked;
+
+  Item({
+    required this.name,
+    required this.isChecked,
+  });
+
+  Item copyWith({
+    String? name,
+    bool? isChecked,
+  }) =>
+      Item(
+        name: name ?? this.name,
+        isChecked: isChecked ?? this.isChecked,
+      );
+
+  factory Item.fromRawJson(String str) => Item.fromJson(json.decode(str));
+
+  String toRawJson() => json.encode(toJson());
+
+  factory Item.fromJson(Map<String, dynamic> json) => Item(
+        name: json['name'],
+        isChecked: json['isChecked'],
+      );
+
+  Map<String, dynamic> toJson() => {
+        'name': name,
+        'isChecked': isChecked,
       };
 }
