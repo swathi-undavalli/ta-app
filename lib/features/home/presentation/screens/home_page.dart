@@ -177,8 +177,7 @@ class _HomePageState extends State<HomePage> {
                   buildButton(
                     onTap: () {
                       logic.onDateChanged(
-                        controller.selectedDate
-                            .subtract(const Duration(days: 1)),
+                        controller.selectedDate.subtract(const Duration(days: 1)),
                       );
                     },
                     icon: Icons.arrow_back_ios_rounded,
@@ -210,9 +209,7 @@ class _HomePageState extends State<HomePage> {
               Spacing.h5,
               const Divider(thickness: 2, color: Colors.black),
               Spacing.h10,
-              if (controller.bookings.isEmpty &&
-                  controller.diveBuddies.isEmpty &&
-                  controller.generalStaffList.isEmpty)
+              if (controller.bookings.isEmpty && controller.diveBuddies.isEmpty && controller.generalStaffList.isEmpty)
                 const Text('No tasks assigned').center,
               ...controller.bookings.map(
                 (booking) => EmployeeDiveCalenderListTile(
@@ -229,8 +226,7 @@ class _HomePageState extends State<HomePage> {
               ...controller.currentList.map(
                 (e) => buildListTile(
                   title: e['role'].toString(),
-                  value:
-                      "${e["boat_details"]?.name}@ ${e["boat_details"]?.time}",
+                  value: "${e["boat_details"]?.name}@ ${e["boat_details"]?.time}",
                 ),
               ),
               ...controller.generalStaffList.map(
@@ -299,16 +295,12 @@ class _HomePageState extends State<HomePage> {
             ),
             Spacing.h10,
             StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('employeeChecklists')
-                  .doc(currentEmployee!.id)
-                  .snapshots(),
+              stream: FirebaseFirestore.instance.collection('employeeChecklists').doc(currentEmployee!.id).snapshots(),
               builder: (
                 BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot,
               ) {
-                if (snapshot.hasError ||
-                    snapshot.connectionState == ConnectionState.waiting) {
+                if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox(
                     height: 15,
                     width: 15,
@@ -324,8 +316,7 @@ class _HomePageState extends State<HomePage> {
                   return const SizedBox();
                 }
 
-                Checklist? checklist =
-                    Checklist.fromMap(data as Map<String, dynamic>);
+                Checklist? checklist = Checklist.fromMap(data as Map<String, dynamic>);
 
                 if ((checklist.checklistElement ?? []).isEmpty) {
                   return const SizedBox();
@@ -386,9 +377,7 @@ class _HomePageState extends State<HomePage> {
             onTap();
           },
           icon: Icon(
-            (isAddButton)
-                ? Icons.add_circle_outline
-                : Icons.arrow_forward_rounded,
+            (isAddButton) ? Icons.add_circle_outline : Icons.arrow_forward_rounded,
             color: (isAddButton) ? Colors.black : AppColors.text.skyBlue,
             size: 20,
           ),
