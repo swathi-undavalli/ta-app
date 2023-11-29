@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:intl/intl.dart';
 
@@ -128,7 +129,7 @@ class Booking {
       );
 
   factory Booking.fromMap(Map<String, dynamic> json) {
-    //log("fromMap");
+    log("fromMap");
     parseDateOrNull(date) {
       if (date == null) return null;
       return DateTime.parse(date);

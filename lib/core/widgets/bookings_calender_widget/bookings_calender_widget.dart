@@ -64,7 +64,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   Future<void> autoCenterDaySelector() async {
     await Future.delayed(const Duration(microseconds: 500));
     scrollToIndex(50);
-    logic.onDateSelected(50);
+    logic.onDateSelected(DateTime.now());
   }
 
   Future<void> scrollToSelectedDate() async {
@@ -136,9 +136,10 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                     });
 
                     return Wrap(
-                        children: (boatsModel.boats ?? [])
-                            .map((Boat boat) => InkWell(
-                          onLongPress: () async {
+                      children: (boatsModel.boats ?? [])
+                          .map(
+                            (Boat boat) => InkWell(
+                              onLongPress: () async {
                                 BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(
                                   context,
                                   initialBoat: boat,
@@ -594,6 +595,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
             scrollDirection: Axis.horizontal,
             physics: const BouncingScrollPhysics(),
             itemBuilder: (BuildContext context, int index) {
+              DateTime currentDate = controller.calenderDates[index];
               return AutoScrollTag(
                 controller: autoScrollController,
                 key: ValueKey(index),
@@ -603,8 +605,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {
                       //print("======Started");
-                      logic.controller.lastSelectedIndex = index;
-                      logic.onDateSelected(index);
+                      // logic.controller.lastSelectedIndex = index;
+                      logic.onDateSelected(currentDate);
                       scrollToIndex(index);
                     },
                     child: Container(
@@ -619,7 +621,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
                             Text(
-                              DateFormat('MMM').format(controller.calenderDates[index]),
+                              DateFormat('MMM').format(currentDate),
                               style: TextStyle(
                                 color: getDotColor(index, controller),
                                 fontSize: FontSize.small,
@@ -627,7 +629,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              controller.calenderDates[index].day.toString(),
+                              currentDate.day.toString(),
                               style: TextStyle(
                                 color: getDateColor(index, controller),
                                 fontSize: FontSize.textSize,
@@ -635,7 +637,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              DateFormat('EE').format(controller.calenderDates[index]),
+                              DateFormat('EE').format(currentDate),
                               style: TextStyle(
                                 color: getDayColor(index, controller),
                                 fontSize: FontSize.small,

@@ -32,11 +32,8 @@ class AddPaymentsLogic {
             .set(controller.bookingModel!.toMap());
         Get.back();
         controller.reset();
-        BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
-            BookingsCalenderWidgetLogicNew();
-        bookingCalenderLogicNew.onDateSelected(
-          bookingCalenderLogicNew.controller.lastDateIndex,
-        );
+        BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
+        bookingCalenderLogicNew.onDateSelected(bookingCalenderLogicNew.controller.selectedDate);
       } else {
         Fluttertoast.showToast(msg: 'Invalid Deposit');
       }
@@ -73,10 +70,10 @@ class AddPaymentsLogic {
       //   ),
       //   itemStyle: TextStyle(
       //     fontFamily: AppFonts.nunito,
-        //     fontWeight: FontWeight.bold,
-        //     fontSize: 16,
-        //   ),
-        // ),
+      //     fontWeight: FontWeight.bold,
+      //     fontSize: 16,
+      //   ),
+      // ),
     );
   }
 }

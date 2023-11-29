@@ -46,9 +46,9 @@ class BookingScreen extends StatelessWidget {
           body: RefreshIndicator(
             color: AppColors.IconColor.black,
             onRefresh: () async {
-              calenderLogic.controller.lastSelectedIndex ??= 50;
-              bookingsCalenderWidget.scrollToIndex(calenderLogic.controller.lastSelectedIndex!);
-              await calenderLogic.onDateSelected(calenderLogic.controller.lastSelectedIndex!);
+              // calenderLogic.controller.lastSelectedIndex ??= 50;
+              bookingsCalenderWidget.scrollToIndex(50);
+              await calenderLogic.onDateSelected(DateTime.now());
             },
             child: SafeArea(
               child: SingleChildScrollView(
@@ -145,7 +145,7 @@ class BookingScreen extends StatelessWidget {
       context: context,
       initialDate: controller.selectedDate,
       firstDate: DateTime(2010),
-      lastDate: DateTime(2090),
+      lastDate: DateTime(2030),
       builder: (context, child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -174,8 +174,7 @@ class BookingScreen extends StatelessWidget {
       } else {
         bookingsCalenderWidget.scrollToIndex(dif);
       }
-      calenderLogic.onDateSelected(dif);
-
+      calenderLogic.onDateSelected(selected);
       controller.selectedDate = selected;
     }
     controller.update();

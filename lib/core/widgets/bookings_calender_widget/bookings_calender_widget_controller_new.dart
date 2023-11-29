@@ -11,94 +11,94 @@ import '../../models/item_model.dart';
 import '../../util/utils.dart';
 
 class BookingsCalenderWidgetLogicNew {
-  BookingsCalenderWidgetControllerNew controller =
-      Get.put(BookingsCalenderWidgetControllerNew());
+  BookingsCalenderWidgetControllerNew controller = Get.put(BookingsCalenderWidgetControllerNew());
 
   Future<void> getBookings(DateTime date) async {
     log("BookingsCalenderWidgetLogicNew : getBookings ${DateFormat("dd-MM-yyyy").format(date)}");
     controller.bookingTimings = [];
     controller.bookings = [];
     controller.showLoading = true;
-    try {
-      var data = await FirebaseFirestore.instance
-          .collection('bookings')
-          .where(
-            'bookingDate',
-            arrayContains: DateFormat('dd-MM-yyyy').format(date),
-          )
-          .get();
+    // try {
+    var data = await FirebaseFirestore.instance
+        .collection('bookings')
+        .where(
+          'bookingDate',
+          arrayContains: DateFormat('dd-MM-yyyy').format(date),
+        )
+        .get();
 
-      for (var element in data.docs) {
-        Booking booking = Booking.fromMap(element.data());
+    log(data.docs.toString());
+    for (var element in data.docs) {
+      Booking booking = Booking.fromMap(element.data());
 
-        if (booking.diveDate != null) {
-          controller.bookingTimings.addAll(booking.diveDate!);
-        }
-        if (booking.poolDate != null) {
-          controller.bookingTimings.addAll(booking.poolDate!);
-        }
-        if (booking.theoryDate != null) {
-          controller.bookingTimings.addAll(booking.theoryDate!);
-        }
-
-        controller.bookings.add(booking);
-
-        List<ItemModel> newItemsList = [];
-        controller.theoryCount = 0;
-        controller.poolCount = 0;
-        controller.diveCount = 0;
-        controller.theoryCountN = 0;
-        controller.poolCountN = 0;
-        controller.diveCountN = 0;
-        controller.theoryCountA = 0;
-        controller.poolCountA = 0;
-        controller.diveCountA = 0;
-
-        //log("===================wb1");
-        for (var booking in controller.bookings) {
-          var im = ItemModel.fromBooking(booking);
-          im.session = '';
-          im.time = '';
-
-          for (var date in booking.theoryDate!) {
-            if (checkDate(date, controller.selectedDate)) {
-              controller.theoryCountN += booking.noOfPersons!;
-              controller.theoryCountA += booking.noOfPersons!;
-              controller.theoryCount++;
-              im.session = '${im.session}Theory, ';
-              im.time = "${im.time}${DateFormat("hh:mm ").format(date!)}, ";
-            }
-          }
-
-          for (var date in booking.poolDate!) {
-            if (checkDate(date, controller.selectedDate)) {
-              controller.poolCountN += booking.noOfPersons!;
-              controller.poolCountA += booking.noOfPersons!;
-              controller.poolCount++;
-              im.session = '${im.session}Pool, ';
-              im.time = "${im.time}${DateFormat("hh:mm ").format(date!)}, ";
-            }
-          }
-
-          for (var date in booking.diveDate!) {
-            if (checkDate(date, controller.selectedDate)) {
-              controller.diveCount++;
-              controller.diveCountN += booking.noOfPersons!;
-              controller.diveCountA += booking.noOfPersons!;
-              im.session = '${im.session}Dive, ';
-              im.time = "${im.time}${DateFormat("hh:mm ").format(date!)}, ";
-            }
-          }
-
-          im.session = im.session.substring(0, im.session.length - 2);
-          im.time = im.time.substring(0, im.time.length - 2);
-          newItemsList.add(im);
-        }
-        controller.expansionItemModels = newItemsList;
+      if (booking.diveDate != null) {
+        controller.bookingTimings.addAll(booking.diveDate ?? []);
       }
-    } catch (e) {
-      log('');
+      if (booking.poolDate != null) {
+        controller.bookingTimings.addAll(booking.poolDate ?? []);
+      }
+      if (booking.theoryDate != null) {
+        controller.bookingTimings.addAll(booking.theoryDate ?? []);
+      }
+
+      controller.bookings.add(booking);
+
+      List<ItemModel> newItemsList = [];
+      controller.theoryCount = 0;
+      controller.poolCount = 0;
+      controller.diveCount = 0;
+      controller.theoryCountN = 0;
+      controller.poolCountN = 0;
+      controller.diveCountN = 0;
+      controller.theoryCountA = 0;
+      controller.poolCountA = 0;
+      controller.diveCountA = 0;
+
+      //log("===================wb1");
+      for (var booking in controller.bookings) {
+        var im = ItemModel.fromBooking(booking);
+        im.session = '';
+        im.time = '';
+
+        for (var date in (booking.theoryDate ?? [])) {
+          if (checkDate(date, controller.selectedDate)) {
+            controller.theoryCountN += booking.noOfPersons!;
+            controller.theoryCountA += booking.noOfPersons!;
+            controller.theoryCount++;
+            im.session = '${im.session}Theory, ';
+            im.time = "${im.time}${DateFormat("hh:mm ").format(date!)}, ";
+          }
+        }
+
+        for (var date in (booking.poolDate ?? [])) {
+          if (checkDate(date, controller.selectedDate)) {
+            controller.poolCountN += booking.noOfPersons!;
+            controller.poolCountA += booking.noOfPersons!;
+            controller.poolCount++;
+            im.session = '${im.session}Pool, ';
+            im.time = "${im.time}${DateFormat("hh:mm ").format(date!)}, ";
+          }
+        }
+
+        for (var date in (booking.diveDate ?? [])) {
+          if (checkDate(date, controller.selectedDate)) {
+            controller.diveCount++;
+            controller.diveCountN += booking.noOfPersons!;
+            controller.diveCountA += booking.noOfPersons!;
+            im.session = '${im.session}Dive, ';
+            im.time = "${im.time}${DateFormat("hh:mm ").format(date!)}, ";
+          }
+        }
+
+        im.session = im.session.substring(0, im.session.length - 2);
+        im.time = im.time.substring(0, im.time.length - 2);
+        newItemsList.add(im);
+      }
+      controller.expansionItemModels = newItemsList;
     }
+    // } catch (e) {
+    //   log('error parsing bookings in parent $e');
+    // }
 
     controller.showLoading = false;
     controller.update();
@@ -223,9 +223,18 @@ class BookingsCalenderWidgetLogicNew {
     }
   }
 
-  onDateSelected(int index) {
-    controller.lastDateIndex = index;
+  onDateSelected(DateTime date) {
+    // controller.lastDateIndex = index;
     controller.expansionItemModels = [];
+    resetCounts();
+    controller.selectedDate = date;
+    controller.selectedType = null;
+    controller.selectedBoat = null;
+    getBookings(date);
+    getTime();
+  }
+
+  void resetCounts() {
     controller.poolCount = 0;
     controller.theoryCount = 0;
     controller.diveCount = 0;
@@ -235,18 +244,13 @@ class BookingsCalenderWidgetLogicNew {
     controller.poolCountA = 0;
     controller.theoryCountA = 0;
     controller.diveCountA = 0;
-    controller.selectedDate = controller.calenderDates[index];
-    controller.selectedType = null;
-    controller.selectedBoat = null;
-    getBookings(controller.calenderDates[index]);
-    getTime();
   }
 }
 
 class BookingsCalenderWidgetControllerNew extends GetxController {
   List<DateTime?> bookingTimings = [];
   List<Booking> bookings = [];
-  List<ItemModel> _expansionBookings = [];
+  List<ItemModel> expansionItemModels = [];
 
   DateTime? _startDate;
   Boat? selectedBoat;
@@ -277,14 +281,13 @@ class BookingsCalenderWidgetControllerNew extends GetxController {
 
   int theoryCount = 0, poolCount = 0, diveCount = 0;
   int theoryCountN = 0, poolCountN = 0, diveCountN = 0;
-
   int theoryCountA = 0, poolCountA = 0, diveCountA = 0;
 
   bool? showDetails;
 
-  late int lastDateIndex;
+  // late int lastDateIndex;
 
-  int? lastSelectedIndex;
+  // int? lastSelectedIndex;
 
   late bool isDiveSession;
 
@@ -298,17 +301,10 @@ class BookingsCalenderWidgetControllerNew extends GetxController {
 
   DateTime? get selectedTime => _selectedTime;
 
-  List<ItemModel> get expansionItemModels => _expansionBookings;
-
   FilterType? get selectedType => _selectedType;
 
   set selectedType(FilterType? value) {
     _selectedType = value;
-    update();
-  }
-
-  set expansionItemModels(List<ItemModel> value) {
-    _expansionBookings = value;
     update();
   }
 

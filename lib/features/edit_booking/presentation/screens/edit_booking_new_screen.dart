@@ -177,10 +177,11 @@ class EditBookingNewScreen extends StatelessWidget {
   }
 
   Widget buildButtons() {
-    return GetBuilder<EditBookingNewController>(builder: (controller) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
+    return GetBuilder<EditBookingNewController>(
+      builder: (controller) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
             AppButton.flat(
               height: 45,
               width: 140,
@@ -230,9 +231,7 @@ class EditBookingNewScreen extends StatelessWidget {
                 controller.reset();
 
                 BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
-                bookingCalenderLogicNew.onDateSelected(
-                  bookingCalenderLogicNew.controller.lastDateIndex,
-                );
+                bookingCalenderLogicNew.onDateSelected(bookingCalenderLogicNew.controller.selectedDate);
                 // bookingCalenderLogic.controller.selectedDate
                 //     .subtract(Duration(days: 10));
               },
@@ -612,9 +611,10 @@ class EditBookingNewScreen extends StatelessWidget {
     Function? onDelete,
     String text = 'Change',
   }) {
-    return GetBuilder<EditBookingNewController>(builder: (controller) {
-      return Row(
-        children: [
+    return GetBuilder<EditBookingNewController>(
+      builder: (controller) {
+        return Row(
+          children: [
             Text(getStringFromDate(date)),
             const Spacer(),
             IconButton(
@@ -720,9 +720,10 @@ class EditBookingNewScreen extends StatelessWidget {
   }
 
   Widget buildPhoneNumber() {
-    return GetBuilder<EditBookingNewController>(builder: (controller) {
-      return IntlPhoneField(
-        autoValidate: true,
+    return GetBuilder<EditBookingNewController>(
+      builder: (controller) {
+        return IntlPhoneField(
+          autoValidate: true,
           initialCountryCode: controller.isoCode,
           showCountryFlag: false,
           focusNode: controller.phoneNode,

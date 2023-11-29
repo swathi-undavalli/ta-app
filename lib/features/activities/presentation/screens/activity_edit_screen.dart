@@ -117,10 +117,11 @@ class ActivityEditScreen extends StatelessWidget {
   }
 
   Widget buildButtons() {
-    return GetBuilder<ActivityEditController>(builder: (controller) {
-      return Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
+    return GetBuilder<ActivityEditController>(
+      builder: (controller) {
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
             AppButton.flat(
               height: 45,
               width: 140,
@@ -243,7 +244,7 @@ class ActivityEditScreen extends StatelessWidget {
             color: Colors.black,
           ),
         ),
-        const SizedBox(width: 20)
+        const SizedBox(width: 20),
       ],
     );
   }

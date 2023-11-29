@@ -44,9 +44,9 @@ class ManageBoatsPage extends StatelessWidget {
             child: RefreshIndicator(
               color: Colors.black,
               onRefresh: () async {
-                calenderLogic.controller.lastSelectedIndex ??= 50;
-                bookingsCalenderWidget.scrollToIndex(calenderLogic.controller.lastSelectedIndex!);
-                await calenderLogic.onDateSelected(calenderLogic.controller.lastSelectedIndex!);
+                // calenderLogic.controller.lastSelectedIndex ??= 50;
+                bookingsCalenderWidget.scrollToIndex(50);
+                await calenderLogic.onDateSelected(DateTime.now());
               },
               child: SafeArea(
                 child: SingleChildScrollView(
@@ -154,9 +154,7 @@ class ManageBoatsPage extends StatelessWidget {
         // calenderLogic.scrollToIndex(dif);
         bookingsCalenderWidget.scrollToIndex(dif);
       }
-      calenderLogic.onDateSelected(dif);
-
-      //log("=============$dif");
+      calenderLogic.onDateSelected(selected);
       controller.selectedDate = selected;
     }
     controller.update();
