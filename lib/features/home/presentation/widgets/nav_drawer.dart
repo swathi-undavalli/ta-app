@@ -116,11 +116,11 @@ class NavDrawer extends StatelessWidget {
   Widget buildUserProfile() {
     return SizedBox(
       height: 50,
-      // child: CircleAvatar(
-      //   backgroundImage: AssetImage('images/emperor.png'),
-      //   // backgroundImage: AssetImage('images/AppLogoPondy.png'),
-      // ),
-      child: Image.asset('images/emperor.png'),
+      child: CircleAvatar(
+          //   backgroundImage: AssetImage('images/emperor.png'),
+          backgroundImage: AssetImage('images/AppLogoPondy.png'),
+          ),
+      // child: Image.asset('images/emperor.png'),w
     );
   }
 

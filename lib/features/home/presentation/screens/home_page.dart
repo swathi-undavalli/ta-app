@@ -37,45 +37,55 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      body: GetBuilder<HomeController>(
-        builder: (controller) {
-          return SafeArea(
-            child: (!controller.showLoading)
-                ? Column(
-                    children: [
-                      buildMenuAndLogOut().paddingOnly(bottom: 20),
-                      if (currentEmployee?.role != 'Intern')
-                        AddEmployeeWidget(
-                          text: 'Add Employees',
-                          subText: 'Only admins can modify',
-                          onTap: () {
-                            Get.toNamed(AllEmployeesScreen.id);
-                          },
-                        ).paddingOnly(bottom: 20),
-                      buildCheckLists().paddingOnly(bottom: 10),
-                      if (currentEmployee?.role == 'Intern')
-                        Text(
-                          'My Dives',
-                          style: TextStyle(
-                            fontFamily: AppFonts.nunito,
-                            color: AppColors.text.black,
-                            fontWeight: FontWeight.w600,
-                            fontSize: 20,
-                          ),
-                        ).paddingOnly(bottom: 20),
-                      buildEmployeeDiveCalender(),
-                      Spacing.h50,
-                    ],
-                  ).paddingSymmetric(horizontal: 20).scrollable
-                : SizedBox(
-                    height: Get.height,
-                    width: Get.width,
-                    child: const CircularProgressIndicator(
-                      color: Colors.black,
-                    ).center,
-                  ),
-          );
-        },
+      body: SafeArea(
+        child: Column(
+          children: [
+            buildMenuAndLogOut().paddingSymmetric(horizontal: 20),
+            Spacing.h20,
+            GetBuilder<HomeController>(
+              builder: (controller) {
+                return Stack(
+                  children: [
+                    Column(
+                      children: [
+                        if (currentEmployee?.role != 'Intern')
+                          AddEmployeeWidget(
+                            text: 'Add Employees',
+                            subText: 'Only admins can modify',
+                            onTap: () {
+                              Get.toNamed(AllEmployeesScreen.id);
+                            },
+                          ).paddingOnly(bottom: 20),
+                        buildCheckLists().paddingOnly(bottom: 10),
+                        if (currentEmployee?.role == 'Intern')
+                          Text(
+                            'My Dives',
+                            style: TextStyle(
+                              fontFamily: AppFonts.nunito,
+                              color: AppColors.text.black,
+                              fontWeight: FontWeight.w600,
+                              fontSize: 20,
+                            ),
+                          ).paddingOnly(bottom: 20),
+                        buildEmployeeDiveCalender(),
+                        Spacing.h50,
+                      ],
+                    ).paddingSymmetric(horizontal: 20),
+                    if (controller.showLoading)
+                      Container(
+                        height: Get.height,
+                        width: Get.width,
+                        color: Colors.white,
+                        child: const CircularProgressIndicator(
+                          color: Colors.black,
+                        ).center,
+                      ),
+                  ],
+                );
+              },
+            )
+          ],
+        ).scrollable,
       ),
     );
   }

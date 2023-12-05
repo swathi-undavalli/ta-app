@@ -276,7 +276,7 @@ class CustomerListState extends State<CustomerList> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 buildHeadingItem(
-                  'Pax total : ',
+                  'Total Pax : ',
                   '${getTotalPAXCount(widget.bookings, widget.boat)}',
                 ),
                 buildHeadingItem(
@@ -954,13 +954,12 @@ int getTotalCourseCount(
   List<Booking> bookings,
   Boat boat,
 ) {
-  List<String> activityIDS = [];
+  int total = 0;
   for (var booking in bookings) {
     BoatInfo? boatInfo = booking.getBoatInfo(selectedDate);
     if (boatInfo?.id == boat.id) {
-      activityIDS.add(booking.activity![0]!.id!);
+      total += booking.noOfPersons ?? 0;
     }
   }
-  activityIDS = activityIDS.toSet().toList();
-  return activityIDS.length;
+  return total;
 }

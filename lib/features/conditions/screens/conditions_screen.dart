@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../core/constants/constants.dart';
+import '../../../core/util/alignment_extensions.dart';
 import '../../../core/util/spacing_widgets.dart';
 import '../controller/conditions_controller.dart';
 import '../models/conditions_model.dart';
@@ -132,7 +133,7 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
                       ),
                     ),
                   ],
-                );
+                ).scrollable;
               },
             ),
           ),
