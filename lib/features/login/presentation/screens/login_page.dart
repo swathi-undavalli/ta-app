@@ -29,7 +29,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: buildFloatingActionButton(),
-      floatingActionButtonLocation: (Get.mediaQuery.viewInsets.bottom == 0)
+      floatingActionButtonLocation: (MediaQuery.of(context).viewInsets.bottom == 0)
           ? (FloatingActionButtonLocation.centerFloat)
           : (FloatingActionButtonLocation.endFloat),
       backgroundColor: AppColors.background.white,
