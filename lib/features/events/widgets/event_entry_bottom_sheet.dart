@@ -66,7 +66,12 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
     sessionNameTED = TextEditingController(text: widget.eventElement?.session ?? '');
     sessionTime = TimePicker.getDateTime(widget.eventElement?.time) ?? DateTime.now();
     if (widget.eventElement != null) {
-      sessionDate = DateTime.parse(widget.eventElement!.date);
+      try {
+        sessionDate = DateTime.parse(widget.eventElement!.date);
+      } catch (e) {
+        List date = widget.eventElement!.date.split('-');
+        sessionDate = DateTime.parse('${date.last}-${date[1]}-${date.first}');
+      }
     }
     employees = widget.eventElement?.employees ?? [];
     if (widget.eventElement != null) {
