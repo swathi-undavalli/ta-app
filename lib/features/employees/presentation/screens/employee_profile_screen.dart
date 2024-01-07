@@ -68,33 +68,21 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
                               const SizedBox(height: 20),
                               const Divider(),
                               const SizedBox(height: 20),
-                              (controller.isEditMode)
-                                  ? buildTitle('Edit Details')
-                                  : buildTitle('Employee Details'),
+                              (controller.isEditMode) ? buildTitle('Edit Details') : buildTitle('Employee Details'),
                               Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 15, right: 15, top: 15),
+                                padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
                                 child: Column(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    buildEmployeeInfo(
-                                        subHeading: 'Name',
-                                        text: currentEmployee!.name),
+                                    buildEmployeeInfo(subHeading: 'Name', text: currentEmployee!.name),
                                     buildEmployeeInfo(
                                       subHeading: 'Phone Number',
-                                      text: currentEmployee!.countryCode! +
-                                          currentEmployee!.phoneNumber!,
+                                      text: currentEmployee!.countryCode! + currentEmployee!.phoneNumber!,
                                     ),
-                                    buildEmployeeInfo(
-                                        subHeading: 'ShiftTiming',
-                                        text: shiftTiming),
-                                    buildEmployeeInfo(
-                                        subHeading: 'Role',
-                                        text: currentEmployee!.role),
-                                    if (!controller.isEditMode)
-                                      buildApplyLeaves(context)
-                                          .paddingOnly(top: 20),
+                                    buildEmployeeInfo(subHeading: 'ShiftTiming', text: shiftTiming),
+                                    buildEmployeeInfo(subHeading: 'Role', text: currentEmployee!.role),
+                                    if (!controller.isEditMode) buildApplyLeaves(context).paddingOnly(top: 20),
                                   ],
                                 ),
                               ),
@@ -164,17 +152,13 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
                   width: Get.width,
                   child: Text(
                     'Apply Leaves',
-                    style: TextStyle(
-                        color: AppColors.text.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600),
+                    style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
                   ),
                 ),
               ),
               SizedBox(
                 width: 130,
-                child: (logic.controller.startDate == null &&
-                        logic.controller.endDate == null)
+                child: (logic.controller.startDate == null && logic.controller.endDate == null)
                     ? AppButton.miniFlat(
                         onTap: () {
                           showDateRangePickerBottomSheet(context);
@@ -187,17 +171,14 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
                         },
                         child: const Text(
                           'Change',
-                          style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.blue),
+                          style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
                         ),
                       ),
               ),
             ],
           ),
           Spacing.h10,
-          if (logic.controller.startDate != null &&
-              logic.controller.endDate != null)
+          if (logic.controller.startDate != null && logic.controller.endDate != null)
             Text(
               "${DateFormat("dd-MM-yyyy").format(logic.controller.startDate!)} - ${DateFormat("dd-MM-yyyy").format(logic.controller.endDate!)}",
               style: const TextStyle(
@@ -254,18 +235,14 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
       logic.controller.showLoading = true;
 
       if (logic.controller.startDate != null) {
-        Timestamp startTimestamp =
-            Timestamp.fromDate(logic.controller.startDate!);
+        Timestamp startTimestamp = Timestamp.fromDate(logic.controller.startDate!);
         logic.controller.leaves.add(startTimestamp);
       }
       if (logic.controller.endDate != null) {
         Timestamp endTimestamp = Timestamp.fromDate(logic.controller.endDate!);
         logic.controller.leaves.add(endTimestamp);
         currentEmployee?.leaves = logic.controller.leaves;
-        await FirebaseFirestore.instance
-            .collection('employees')
-            .doc(currentEmployee!.id)
-            .set(currentEmployee!.toMap());
+        await FirebaseFirestore.instance.collection('employees').doc(currentEmployee!.id).set(currentEmployee!.toMap());
         await FirebaseFirestore.instance
             .collection('employees')
             .doc(currentEmployee!.id)
@@ -294,10 +271,7 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
                 fontFamily: AppFonts.nunito,
               ),
             ),
-            style: const TextStyle(
-                fontFamily: AppFonts.nunito,
-                fontWeight: FontWeight.normal,
-                fontSize: 14),
+            style: const TextStyle(fontFamily: AppFonts.nunito, fontWeight: FontWeight.normal, fontSize: 14),
             searchText: 'Search',
             onSubmitted: (_) {},
             onChanged: (phone) {
@@ -337,14 +311,11 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
                 text: 'Update',
                 textColor: AppColors.text.white,
                 onTap: () async {
-                  if (controller.nameTED.text != '')
-                    currentEmployee!.firstName = controller.nameTED.text;
+                  if (controller.nameTED.text != '') currentEmployee!.firstName = controller.nameTED.text;
                   if (controller.phoneNumberTED.text != '') {
                     currentEmployee!.countryIsoCode = controller.isoCode;
-                    currentEmployee!.countryCode =
-                        controller.countryCodeTED.text;
-                    currentEmployee!.phoneNumber =
-                        controller.phoneNumberTED.text;
+                    currentEmployee!.countryCode = controller.countryCodeTED.text;
+                    currentEmployee!.phoneNumber = controller.phoneNumberTED.text;
                   }
                   controller.showLoading = true;
                   await FirebaseFirestore.instance
@@ -412,25 +383,20 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
           if (!controller.isEditMode) {
             return TextButton(
               style: ButtonStyle(
-                overlayColor:
-                    MaterialStateProperty.all(Colors.black.withOpacity(0.2)),
-                backgroundColor:
-                    MaterialStateProperty.all<Color>(Colors.transparent),
+                overlayColor: MaterialStateProperty.all(Colors.black.withOpacity(0.2)),
+                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
                 shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                minimumSize:
-                    MaterialStateProperty.all<Size>(const Size(100, 31)),
+                minimumSize: MaterialStateProperty.all<Size>(const Size(100, 31)),
               ),
               onPressed: () {
                 controller.reset();
                 controller.isEditMode = !controller.isEditMode;
-                controller.phoneNumberTED.text =
-                    currentEmployee?.phoneNumber ?? '';
-                controller.countryCodeTED.text =
-                    currentEmployee?.countryCode ?? '';
+                controller.phoneNumberTED.text = currentEmployee?.phoneNumber ?? '';
+                controller.countryCodeTED.text = currentEmployee?.countryCode ?? '';
                 controller.nameTED.text = currentEmployee?.firstName ?? '';
               },
               child: Text(
@@ -468,10 +434,7 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
                       width: Get.width,
                       child: Text(
                         subHeading!,
-                        style: TextStyle(
-                            color: AppColors.text.black,
-                            fontSize: 14,
-                            fontWeight: FontWeight.w600),
+                        style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
                       ),
                     ),
                   ),
@@ -479,10 +442,7 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
                     width: 150,
                     child: Text(
                       ':      ${text!}',
-                      style: TextStyle(
-                          color: AppColors.text.black,
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500),
+                      style: TextStyle(color: AppColors.text.black, fontSize: 12, fontWeight: FontWeight.w500),
                     ),
                   ),
                 ],

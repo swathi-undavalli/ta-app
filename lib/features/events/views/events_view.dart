@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,14 +32,9 @@ class _EventsViewState extends State<EventsView> {
         child: GetBuilder<EventController>(
           builder: (controller) {
             return StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('events')
-                  .doc('events')
-                  .snapshots(),
-              builder: (BuildContext context,
-                  AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (snapshot.hasError ||
-                    snapshot.connectionState == ConnectionState.waiting) {
+              stream: FirebaseFirestore.instance.collection('events').doc('events').snapshots(),
+              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+                if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox(
                     height: 15,
                     width: 15,
@@ -54,8 +51,7 @@ class _EventsViewState extends State<EventsView> {
                     height: Get.height,
                     child: const Text(
                       'No events are added',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ).center,
                   );
                 }
@@ -67,8 +63,7 @@ class _EventsViewState extends State<EventsView> {
                     height: Get.height,
                     child: const Text(
                       'No events are added',
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
                     ).center,
                   );
                 }
@@ -95,27 +90,23 @@ class _EventsViewState extends State<EventsView> {
   }
 
   Widget buildEventCard({required EventElement element, required int index}) {
+    log("DateTime");
+    log(element.date.toString());
     return Container(
       width: Get.width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
-          BoxShadow(
-              offset: const Offset(1, 3),
-              spreadRadius: 2,
-              color: Colors.grey.shade100),
+          BoxShadow(offset: const Offset(1, 3), spreadRadius: 2, color: Colors.grey.shade100),
         ],
       ),
       child: Column(
         children: [
           buildContent(title: 'Session Name', value: element.session),
           buildContent(title: 'Location', value: element.location),
-          buildContent(
-              title: 'Date & Time', value: '${element.date} @ ${element.time}'),
-          buildContent(
-              title: 'Contact Person',
-              value: '${element.employees[0].name} ( ${element.phone} )'),
+          buildContent(title: 'Date & Time', value: '${element.date} @ ${element.time}'),
+          buildContent(title: 'Contact Person', value: '${element.employees[0].name} ( ${element.phone} )'),
           Spacing.h15,
           buildDeleteEdit(index: index, eventElement: element),
           Spacing.h15,
@@ -129,9 +120,7 @@ class _EventsViewState extends State<EventsView> {
                 color: Colors.grey,
               ),
               children: <TextSpan>[
-                TextSpan(
-                    style: TextStyle(color: AppColors.text.black),
-                    text: element.createdBy ?? '-'),
+                TextSpan(style: TextStyle(color: AppColors.text.black), text: element.createdBy ?? '-'),
               ],
             ),
           ).left,
@@ -171,8 +160,7 @@ class _EventsViewState extends State<EventsView> {
     ).paddingOnly(top: 5);
   }
 
-  Widget buildDeleteEdit(
-      {required int index, required EventElement eventElement}) {
+  Widget buildDeleteEdit({required int index, required EventElement eventElement}) {
     return SizedBox(
       width: Get.width,
       child: Row(
@@ -222,8 +210,7 @@ class _EventsViewState extends State<EventsView> {
     );
   }
 
-  Future<void> deleteDialog(BuildContext context,
-      {required int index, required EventElement eventElement}) async {
+  Future<void> deleteDialog(BuildContext context, {required int index, required EventElement eventElement}) async {
     return showDialog(
       context: context,
       builder: (context) {

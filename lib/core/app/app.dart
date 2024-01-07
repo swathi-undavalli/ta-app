@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_adventures/features/offers/presentation/views/add_offers_view.dart';
 
 import '../../features/activities/presentation/screens/activity_edit_screen.dart';
 import '../../features/activities/presentation/screens/add_new_activity_screen.dart';
@@ -30,6 +31,7 @@ import '../../features/login/presentation/screens/login_page.dart';
 import '../../features/logs/presentation/screens/details_screen.dart';
 import '../../features/logs/presentation/screens/log_screen.dart';
 import '../../features/messaging/notification_screen.dart';
+import '../../features/offers/presentation/views/offers_view.dart';
 import '../../features/screen_saver/views/marketing_view.dart';
 import '../../features/splash/view/splash_screen.dart';
 import '../../features/welcome/presentation/screens/welome_page.dart';
@@ -96,6 +98,8 @@ class MyApp extends StatelessWidget {
         NewChecklistView.id: (context) =>  NewChecklistView(),
         MarketingView.id: (context) => const MarketingView(),
         EventsView.id: (context) => const EventsView(),
+        AddOffersView.id: (context) => const AddOffersView(),
+        OffersView.id: (context) => const OffersView(),
       },
     );
   }

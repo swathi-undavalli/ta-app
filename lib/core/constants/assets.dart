@@ -15,6 +15,14 @@ class _IconImages {
 
   String get checkBox => 'images/check_box.svg';
 
+  String get gallery => 'images/gallery.svg';
+
+  String get camera => 'images/camera.svg';
+
+  String get add => 'images/add.svg';
+
+  String get cancel => 'images/cancel.svg';
+
   String get box => 'images/box.svg';
 }
 

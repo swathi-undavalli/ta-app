@@ -12,6 +12,7 @@ import '../../../employees/model/employee.dart';
 import '../../../employees/presentation/screens/employee_profile_screen.dart';
 import '../../../events/views/events_view.dart';
 import '../../../logs/presentation/screens/log_screen.dart';
+import '../../../offers/presentation/views/offers_view.dart';
 import '../../../screen_saver/views/marketing_view.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -83,6 +84,16 @@ class NavDrawer extends StatelessWidget {
             EmployeeAccess(
               access: AccessRights.editActivityPrices,
               child: buildMenuItem(
+                icon: Icons.percent,
+                text: 'Offers',
+                onTap: () {
+                  Get.offAndToNamed(OffersView.id);
+                },
+              ),
+            ),
+            EmployeeAccess(
+              access: AccessRights.editActivityPrices,
+              child: buildMenuItem(
                 icon: Icons.edit,
                 text: 'Programs List',
                 onTap: () {
@@ -114,12 +125,12 @@ class NavDrawer extends StatelessWidget {
   ///================Business logic==================///
 
   Widget buildUserProfile() {
-    return SizedBox(
+    return const SizedBox(
       height: 50,
       child: CircleAvatar(
-          //   backgroundImage: AssetImage('images/emperor.png'),
-          backgroundImage: AssetImage('images/AppLogoPondy.png'),
-          ),
+        //   backgroundImage: AssetImage('images/emperor.png'),
+        backgroundImage: AssetImage('images/AppLogoPondy.png'),
+      ),
       // child: Image.asset('images/emperor.png'),w
     );
   }

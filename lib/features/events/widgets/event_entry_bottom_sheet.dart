@@ -62,25 +62,23 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
   @override
   void initState() {
     super.initState();
-    locationTED =
-        TextEditingController(text: widget.eventElement?.location ?? '');
-    sessionNameTED =
-        TextEditingController(text: widget.eventElement?.session ?? '');
-    sessionTime =
-        TimePicker.getDateTime(widget.eventElement?.time) ?? DateTime.now();
+    locationTED = TextEditingController(text: widget.eventElement?.location ?? '');
+    sessionNameTED = TextEditingController(text: widget.eventElement?.session ?? '');
+    sessionTime = TimePicker.getDateTime(widget.eventElement?.time) ?? DateTime.now();
     if (widget.eventElement != null) {
       sessionDate = DateTime.parse(widget.eventElement!.date);
     }
     employees = widget.eventElement?.employees ?? [];
-    employees[0].phone = widget.eventElement?.phone ?? '';
+    if (widget.eventElement != null) {
+      employees[0].phone = widget.eventElement?.phone ?? '';
+    }
     log('called');
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
       ),
@@ -89,7 +87,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
           if (showLoading)
             Container(
               width: Get.width,
-              height: 550,
+              height: 650,
               color: Colors.grey,
               child: const CircularProgressIndicator(
                 color: Colors.black,
@@ -121,12 +119,11 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
                   selectTime(context);
                 },
                 title: 'Time',
-                value: TimePicker.getFormattedTime(sessionTime) ??
-                    'No time selected',
+                value: TimePicker.getFormattedTime(sessionTime) ?? 'No time selected',
               ),
               Spacing.h35,
               buildDateAndTime(
-                value: DateFormat('yyyy-MM-dd').format(sessionDate),
+                value: DateFormat('dd-MM-yyyy').format(sessionDate),
                 onTap: () {
                   selectDate(context);
                 },
@@ -201,14 +198,13 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
             ),
             GestureDetector(
               onTap: () async {
-                employees =
-                    (await EmpSelectorBottomSheet.getSelectedInstructors(
-                          context,
-                          initialSelectedInstructors: employees,
-                          instructorLimit: employeeLimit,
-                          employeeType: employeeType,
-                        )) ??
-                        [];
+                employees = (await EmpSelectorBottomSheet.getSelectedInstructors(
+                      context,
+                      initialSelectedInstructors: employees,
+                      instructorLimit: employeeLimit,
+                      employeeType: employeeType,
+                    )) ??
+                    [];
                 setState(() {});
               },
               child: const Text(
@@ -310,15 +306,10 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
         if (isValid()) {
           showLoading = true;
           setState(() {});
-          DocumentSnapshot document = await FirebaseFirestore.instance
-              .collection('events')
-              .doc('events')
-              .get();
+          DocumentSnapshot document = await FirebaseFirestore.instance.collection('events').doc('events').get();
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
           Event event = Event.fromJson(data);
-
-          log(employees[0].phone.toString());
 
           EventElement eventElement = EventElement(
             session: sessionNameTED.text,
@@ -326,7 +317,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
             time: TimePicker.getFormattedTime(sessionTime) ?? '',
             employees: employees,
             phone: employees[0].phone ?? '',
-            date: DateFormat('yyyy-MM-dd').format(sessionDate),
+            date: DateFormat('dd-MM-yyyy').format(sessionDate),
             createdBy: currentEmployee?.firstName,
           );
 
@@ -335,10 +326,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
           } else {
             event.eventElement?.add(eventElement);
           }
-          await FirebaseFirestore.instance
-              .collection('events')
-              .doc('events')
-              .set(event.toJson());
+          await FirebaseFirestore.instance.collection('events').doc('events').set(event.toJson());
 
           showLoading = false;
           setState(() {});
