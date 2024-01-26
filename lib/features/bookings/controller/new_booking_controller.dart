@@ -226,22 +226,6 @@ class NewBookingLogic {
         controller.update();
       },
       currentTime: controller.dob,
-      // theme: DatePickerTheme(
-      //   cancelStyle: TextStyle(
-      //     fontFamily: AppFonts.nunito,
-      //     color: Colors.black87,
-      //   ),
-      //   doneStyle: TextStyle(
-      //     fontFamily: AppFonts.nunito,
-      //     fontWeight: FontWeight.bold,
-      //     color: Colors.black,
-      //   ),
-      //   itemStyle: TextStyle(
-      //     fontFamily: AppFonts.nunito,
-      //     fontWeight: FontWeight.bold,
-      //     fontSize: 16,
-      //   ),
-      // ),
     );
   }
 
@@ -250,6 +234,7 @@ class NewBookingLogic {
     Get.defaultDialog(
       title: '',
       titlePadding: const EdgeInsets.all(0),
+      backgroundColor: Colors.white,
       titleStyle: const TextStyle(fontSize: 0, height: 0),
       content: SizedBox(
         height: 480,
@@ -312,6 +297,7 @@ class NewBookingLogic {
     Get.defaultDialog(
       title: '',
       titlePadding: const EdgeInsets.all(0),
+      backgroundColor: AppColors.background.lightBlue,
       titleStyle: const TextStyle(fontSize: 0, height: 0),
       content: SizedBox(
         height: 480,
@@ -373,6 +359,7 @@ class NewBookingLogic {
     Get.defaultDialog(
       title: '',
       titlePadding: const EdgeInsets.all(0),
+      backgroundColor: AppColors.background.lightBlue,
       titleStyle: const TextStyle(fontSize: 0, height: 0),
       content: SizedBox(
         height: 480,
@@ -434,6 +421,7 @@ class NewBookingLogic {
     Get.defaultDialog(
       title: '',
       titlePadding: const EdgeInsets.all(0),
+      backgroundColor: AppColors.background.lightBlue,
       titleStyle: const TextStyle(fontSize: 0, height: 0),
       content: SizedBox(
         height: 480,
@@ -555,6 +543,7 @@ class NewBookingLogic {
     controller.bookingModel.bookingDate = [];
     if (controller.bookingModel.theoryDate != null && controller.bookingModel.theoryDate!.isNotEmpty) {
       for (var element in controller.bookingModel.theoryDate!) {
+        log(element.toString());
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       }
     }

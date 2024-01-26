@@ -29,39 +29,32 @@ class NewChecklistLogic {
       controller.showLoading = true;
       controller.update();
 
-      DocumentReference checklistRef = FirebaseFirestore.instance
-          .collection('employeeChecklists')
-          .doc(currentEmployee!.id);
+      DocumentReference checklistRef =
+          FirebaseFirestore.instance.collection('employeeChecklists').doc(currentEmployee!.id);
+      // DocumentReference checklistRef = FirebaseFirestore.instance.collection('templates').doc('template');
 
       Checklist? checklist;
 
       await FirebaseFirestore.instance.runTransaction((transaction) async {
-        DocumentSnapshot checklistSnapshot =
-            await transaction.get(checklistRef);
-        Map<String, dynamic>? data =
-            checklistSnapshot.data() as Map<String, dynamic>?;
+        DocumentSnapshot checklistSnapshot = await transaction.get(checklistRef);
+        Map<String, dynamic>? data = checklistSnapshot.data() as Map<String, dynamic>?;
 
         checklist = Checklist.fromMap(data);
 
         if (controller.id != null) {
           ChecklistElement newChecklistElement = ChecklistElement(
-            items: controller.checkListItems
-                .map((e) => Item(name: e.text, isChecked: false))
-                .toList(),
+            items: controller.checkListItems.map((e) => Item(name: e.text, isChecked: false)).toList(),
             employeeId: currentEmployee!.id,
             title: controller.titleTED.text,
             description: controller.descriptionTED.text,
             id: controller.id!,
           );
-          checklist?.checklistElement
-              ?.removeWhere((c) => c.id == controller.id);
+          checklist?.checklistElement?.removeWhere((c) => c.id == controller.id);
 
           checklist?.checklistElement?.add(newChecklistElement);
         } else {
           ChecklistElement newChecklistElement = ChecklistElement(
-            items: controller.checkListItems
-                .map((e) => Item(name: e.text, isChecked: false))
-                .toList(),
+            items: controller.checkListItems.map((e) => Item(name: e.text, isChecked: false)).toList(),
             employeeId: currentEmployee!.id,
             title: controller.titleTED.text,
             description: controller.descriptionTED.text,

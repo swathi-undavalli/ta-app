@@ -305,7 +305,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       strokeWidth: 2,
                     ),
                   )
-                : const Icon(Icons.check),
+                : const Icon(
+                    Icons.check,
+                    color: Colors.white,
+                  ),
           );
         } else {
           return Container();

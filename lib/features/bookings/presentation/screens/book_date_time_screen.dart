@@ -17,6 +17,8 @@ class BookDateTime extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
+
       appBar: buildAppBar(),
       body: SafeArea(
         child: Padding(

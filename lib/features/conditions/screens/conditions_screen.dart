@@ -31,13 +31,17 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
     return Stack(
       children: [
         Scaffold(
+          backgroundColor: AppColors.background.lightBlue,
           floatingActionButton: FloatingActionButton(
             elevation: 0,
             onPressed: () {
               logic.onFloatingActionButtonPressed();
             },
             backgroundColor: AppColors.background.black,
-            child: const Icon(Icons.add),
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
           ),
           body: SafeArea(
             child: GetBuilder<ConditionsController>(

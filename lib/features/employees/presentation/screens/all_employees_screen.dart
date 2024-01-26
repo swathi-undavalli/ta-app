@@ -100,8 +100,7 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
           return ListView(
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               try {
-                Employee employee =
-                    Employee.fromMap(document.data() as Map<String, dynamic>);
+                Employee employee = Employee.fromMap(document.data() as Map<String, dynamic>);
 
                 return Column(
                   children: [
@@ -123,9 +122,7 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
       return employeesCollection.snapshots();
     }
 
-    return employeesCollection
-        .where('firstName', isGreaterThanOrEqualTo: query.capitalizeFirst)
-        .snapshots();
+    return employeesCollection.where('firstName', isGreaterThanOrEqualTo: query.capitalizeFirst).snapshots();
   }
 
   Widget buildFloatingActionButton() {
@@ -137,7 +134,10 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
         },
         backgroundColor: AppColors.background.black,
         elevation: 0,
-        child: const Icon(Icons.add),
+        child: const Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
       ),
     );
   }

@@ -309,7 +309,10 @@ class _MarketingViewState extends State<MarketingView> {
         MarketingContentEntryBottomSheet.show(context);
       },
       backgroundColor: AppColors.background.black,
-      child: const Icon(Icons.add),
+      child: const Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
     );
   }
 

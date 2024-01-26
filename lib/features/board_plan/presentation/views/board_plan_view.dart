@@ -301,7 +301,10 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                   log('swathi');
                 },
                 backgroundColor: AppColors.background.black,
-                child: const Icon(Icons.share),
+                child: const Icon(
+                  Icons.share,
+                  color: Colors.white,
+                ),
               ),
               Spacing.h20,
               FloatingActionButton(
@@ -337,7 +340,10 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                   await shareImages(images);
                 },
                 backgroundColor: AppColors.background.black,
-                child: const Icon(Icons.directions_boat_filled_rounded),
+                child: const Icon(
+                  Icons.directions_boat_filled_rounded,
+                  color: Colors.white,
+                ),
               ),
             ],
           );

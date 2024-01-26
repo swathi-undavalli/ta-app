@@ -429,7 +429,10 @@ class _OffersViewState extends State<OffersView> {
         Get.toNamed(AddOffersView.id, arguments: null);
       },
       backgroundColor: AppColors.background.black,
-      child: const Icon(Icons.add),
+      child: const Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
     );
   }
 }

@@ -36,12 +36,13 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           child: SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 40),
-              child: GetBuilder<NewBookingController>(builder: (controller) {
-                return Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
+              child: GetBuilder<NewBookingController>(
+                builder: (controller) {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
                           buildSubTitle('Quick Booking'),
                           const Spacer(),
                           Switch(
@@ -55,11 +56,11 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                           )
                         ],
                       ),
-                    (controller.isQuickBooking)
-                        ? Stack(
-                            children: [
-                              Column(
-                                children: [
+                      (controller.isQuickBooking)
+                          ? Stack(
+                              children: [
+                                Column(
+                                  children: [
                                     AppTextField(
                                       hintText: 'Parent Booking Id',
                                       controller: logic.controller.quickBookingIdTED,
@@ -111,8 +112,8 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                                     )
                                   ],
                                 ),
-                              if (controller.quickShowLoading)
-                                Container(
+                                if (controller.quickShowLoading)
+                                  Container(
                                     height: Get.height,
                                     width: Get.width,
                                     color: Colors.grey.shade50,
@@ -125,15 +126,15 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                                     ),
                                   )
                               ],
-                          )
-                        : Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              if (!controller.getDetailsPressed) ...[
-                                buildEmailID(),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.end,
-                                  children: [
+                            )
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                if (!controller.getDetailsPressed) ...[
+                                  buildEmailID(),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.end,
+                                    children: [
                                       AppButton.miniFlat(
                                         text: 'Get Details',
                                         onTap: () {
@@ -181,16 +182,17 @@ class AddCustomerDetailsScreen extends StatelessWidget {
   ///======================UI==============///
 
   Widget buildQuickDiveSession() {
-    return GetBuilder<NewBookingController>(builder: (controller) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              buildSubTitle('Dive Session'),
-              AppButton.miniFlat(
+    return GetBuilder<NewBookingController>(
+      builder: (controller) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                buildSubTitle('Dive Session'),
+                AppButton.miniFlat(
                   text: 'ADD',
                   onTap: () {
                     logic.addQuickDiveSessionDateTime();
@@ -462,9 +464,10 @@ class AddCustomerDetailsScreen extends StatelessWidget {
   }
 
   Widget buildPhoneNumber() {
-    return GetBuilder<NewBookingController>(builder: (controller) {
-      return IntlPhoneField(
-        autoValidate: true,
+    return GetBuilder<NewBookingController>(
+      builder: (controller) {
+        return IntlPhoneField(
+          autoValidate: true,
           focusNode: controller.phoneNumberNode,
           initialCountryCode: controller.isoCode,
           showCountryFlag: false,
@@ -522,14 +525,15 @@ class AddCustomerDetailsScreen extends StatelessWidget {
             },
             elevation: 0,
             backgroundColor: AppColors.IconColor.black,
-            child: const Icon(Icons.check),
+            child: const Icon(
+              Icons.check,
+              color: Colors.white,
+            ),
           );
         } else {
           return const SizedBox();
         }
       },
     );
-    // else
-    //   return Container();
   }
 }

@@ -17,6 +17,7 @@ class NewBookingScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar() as PreferredSizeWidget?,
       body: SafeArea(
         child: SingleChildScrollView(
@@ -204,9 +205,7 @@ class NewBookingScreen extends StatelessWidget {
   }
 
   getDiscount(NewBookingController controller) {
-    double price = getInt(controller.priceTED.text) *
-        controller.bookingModel.noOfPersons! *
-        1.0;
+    double price = getInt(controller.priceTED.text) * controller.bookingModel.noOfPersons! * 1.0;
     if (controller.bookingModel.discountType == '%') {
       return price * (controller.bookingModel.discount! / 100);
     }

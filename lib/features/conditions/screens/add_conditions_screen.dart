@@ -33,11 +33,12 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return GetBuilder<AddConditionsController>(builder: (controller) {
-      return Stack(
-        children: [
-          WillPopScope(
-            onWillPop: () async {
+    return GetBuilder<AddConditionsController>(
+      builder: (controller) {
+        return Stack(
+          children: [
+            WillPopScope(
+              onWillPop: () async {
                 if (logic.controller.conditions != null && logic.controller.conditions!.levels.isNotEmpty) {
                   _showAlert(
                     context: context,
@@ -55,15 +56,15 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
                 }
                 return true;
               },
-            child: Scaffold(
-              appBar: buildAppBar(context) as PreferredSizeWidget?,
-              floatingActionButton: buildFloatingActionButton(),
-              body: SafeArea(
-                child: SingleChildScrollView(
-                  child: Column(
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+              child: Scaffold(
+                appBar: buildAppBar(context) as PreferredSizeWidget?,
+                floatingActionButton: buildFloatingActionButton(),
+                body: SafeArea(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             const SizedBox(height: 30),
                             SizedBox(
@@ -170,7 +171,7 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
                                 const SizedBox(height: 50)
                               ],
                             ),
-                        ),
+                          ),
                         ),
                       ],
                     ),
@@ -232,9 +233,7 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
         height: 27,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          color: logic.controller.selectedReef == reefName
-              ? AppColors.text.skyBlue
-              : AppColors.text.white,
+          color: logic.controller.selectedReef == reefName ? AppColors.text.skyBlue : AppColors.text.white,
         ),
         child: Text(
           reefName,
@@ -338,11 +337,15 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
   }
 
   Widget buildFloatingActionButton() {
-    return GetBuilder<AddConditionsController>(builder: (controller) {
-      return FloatingActionButton(
-        elevation: 0,
+    return GetBuilder<AddConditionsController>(
+      builder: (controller) {
+        return FloatingActionButton(
+          elevation: 0,
           backgroundColor: AppColors.background.black,
-          child: const Icon(Icons.add),
+          child: const Icon(
+            Icons.add,
+            color: Colors.white,
+          ),
           onPressed: () {
             Get.bottomSheet(
               Container(

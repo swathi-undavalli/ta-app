@@ -33,8 +33,7 @@ class _BookingStatusState extends State<BookingStatus> {
 
   @override
   Widget build(BuildContext context) {
-    int checkPoint =
-        (widget.isDSD ? dsdStatus.length : coursesStatus.length) - 1;
+    int checkPoint = (widget.isDSD ? dsdStatus.length : coursesStatus.length) - 1;
 
     return Row(
       children: [
@@ -51,7 +50,7 @@ class _BookingStatusState extends State<BookingStatus> {
             height: 33,
             width: 27,
             decoration: BoxDecoration(
-              color: getProgressColor(status),
+              color: widget.isDSD ? getDSDProgressColor(status) : getCourseProgressColor(status),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(4),
                 bottomLeft: Radius.circular(4),
@@ -67,7 +66,7 @@ class _BookingStatusState extends State<BookingStatus> {
         Container(
           height: 33,
           decoration: BoxDecoration(
-            color: getProgressColor(status),
+            color: widget.isDSD ? getDSDProgressColor(status) : getCourseProgressColor(status),
           ),
           child: Text(
             widget.isDSD ? dsdStatus[status] : coursesStatus[status],
@@ -82,7 +81,6 @@ class _BookingStatusState extends State<BookingStatus> {
           onTap: () {
             if (status < checkPoint) {
               status += 1;
-
               widget.onChanged(status);
               setState(() {});
             }
@@ -91,7 +89,7 @@ class _BookingStatusState extends State<BookingStatus> {
             height: 33,
             width: 27,
             decoration: BoxDecoration(
-              color: getProgressColor(status),
+              color: widget.isDSD ? getDSDProgressColor(status) : getCourseProgressColor(status),
               borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(4),
                 bottomRight: Radius.circular(4),
@@ -107,21 +105,21 @@ class _BookingStatusState extends State<BookingStatus> {
     );
   }
 
-  Color getProgressColor(int index) {
+  Color getDSDProgressColor(int index) {
     if (index == 0) {
       return Colors.blueAccent.withOpacity(0.6);
     } else if (index == 1) {
-      return Colors.blue;
-    } else if (index == 2) {
-      return Colors.greenAccent;
-    } else if (index == 3) {
-      return Colors.green;
-    } else if (index == 4) {
-      return Colors.grey;
-    } else if (index == 5) {
-      return Colors.black.withOpacity(0.5);
-    } else if (index == 6) {
       return Colors.yellow;
+    } else if (index == 2) {
+      return Colors.blue;
+    } else if (index == 3) {
+      return Colors.greenAccent;
+    } else if (index == 4) {
+      return Colors.green;
+    } else if (index == 5) {
+      return Colors.grey;
+    } else if (index == 6) {
+      return Colors.black.withOpacity(0.5);
     } else if (index == 7) {
       return Colors.pink;
     } else if (index == 8) {
@@ -133,8 +131,33 @@ class _BookingStatusState extends State<BookingStatus> {
     }
   }
 
+  Color getCourseProgressColor(int index) {
+    if (index == 0) {
+      return Colors.blueAccent.withOpacity(0.6);
+    } else if (index == 1) {
+      return Colors.yellow;
+    } else if (index == 2) {
+      return Colors.blue;
+    } else if (index == 3) {
+      return Colors.grey;
+    } else if (index == 4) {
+      return Colors.black.withOpacity(0.5);
+    }
+    // else if (index == 5) {
+    //   return Colors.pink;
+    // } else if (index == 6) {
+    //   return Colors.orange;
+    // } else if (index == 7) {
+    //   return Colors.red;
+    // }
+    else {
+      return Colors.grey;
+    }
+  }
+
   List<String> coursesStatus = [
     'Booked In',
+    'Paperwork ongoing',
     'Paperwork done',
     'Dive center',
     'Harbour',
@@ -142,6 +165,7 @@ class _BookingStatusState extends State<BookingStatus> {
 
   List<String> dsdStatus = [
     'Booked In',
+    'Paperwork ongoing',
     'Paperwork done',
     'Pool ongoing',
     'Pool completed',

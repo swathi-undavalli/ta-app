@@ -28,15 +28,12 @@ class _NewChecklistViewState extends State<NewChecklistView> {
 
   @override
   void initState() {
-    logic.controller.checkListItems = (checkListElement?.items ?? [])
-        .map((e) => TextEditingController(text: e.name))
-        .toList();
-    logic.controller.focusNodes =
-        (checkListElement?.items ?? []).map((e) => FocusNode()).toList();
+    logic.controller.checkListItems =
+        (checkListElement?.items ?? []).map((e) => TextEditingController(text: e.name)).toList();
+    logic.controller.focusNodes = (checkListElement?.items ?? []).map((e) => FocusNode()).toList();
     logic.controller.id = (args[1]) ? checkListElement?.id : null;
     logic.controller.titleTED.text = (checkListElement?.title ?? '');
-    logic.controller.descriptionTED.text =
-        (checkListElement?.description ?? '');
+    logic.controller.descriptionTED.text = (checkListElement?.description ?? '');
 
     super.initState();
   }
@@ -52,7 +49,10 @@ class _NewChecklistViewState extends State<NewChecklistView> {
             onPressed: () {
               logic.onAddPressed();
             },
-            child: const Icon(Icons.add),
+            child: const Icon(
+              Icons.add,
+              color: Colors.white,
+            ),
           ),
           body: WillPopScope(
             onWillPop: () async {
@@ -101,9 +101,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
               borderRadius: BorderRadius.circular(8),
               color: AppColors.background.skyBlue.withOpacity(0.2),
               border: Border.all(
-                color: (logic.controller.selectedIndex == index)
-                    ? Colors.black
-                    : Colors.transparent,
+                color: (logic.controller.selectedIndex == index) ? Colors.black : Colors.transparent,
               ),
             ),
             width: AppMeasures.screenWidth,
@@ -178,9 +176,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
         ),
       ),
       title: Text(
-        (logic.controller.id != null)
-            ? logic.controller.titleTED.text
-            : 'Custom checklist',
+        (logic.controller.id != null) ? logic.controller.titleTED.text : 'Custom checklist',
         style: TextStyle(
           color: AppColors.text.black,
           fontSize: 18,
@@ -224,8 +220,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
                         TextField(
                           controller: controller.descriptionTED,
                           decoration: const InputDecoration(
-                            hintStyle:
-                                TextStyle(color: Colors.black, fontSize: 12),
+                            hintStyle: TextStyle(color: Colors.black, fontSize: 12),
                             hintText: 'Description',
                             border: UnderlineInputBorder(),
                           ),
