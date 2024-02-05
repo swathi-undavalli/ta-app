@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/models/checklist_model.dart';
 import '../../../employees/model/employee.dart';
+import '../screens/new_checklist_view.dart';
 
 class NewChecklistLogic {
   NewChecklistController controller = Get.put(NewChecklistController());
@@ -24,55 +25,64 @@ class NewChecklistLogic {
     controller.update();
   }
 
-  Future<void> onSavePressed(BuildContext context) async {
+  Future<void> onSavePressed(BuildContext context, TemplateType templateType) async {
     if (controller.isValid()) {
       controller.showLoading = true;
       controller.update();
 
-      DocumentReference checklistRef =
+      DocumentReference employeeChecklistRef =
           FirebaseFirestore.instance.collection('employeeChecklists').doc(currentEmployee!.id);
-      // DocumentReference checklistRef = FirebaseFirestore.instance.collection('templates').doc('template');
+      DocumentReference templateChecklistRef = FirebaseFirestore.instance.collection('templates').doc('template');
 
       Checklist? checklist;
 
       await FirebaseFirestore.instance.runTransaction((transaction) async {
-        DocumentSnapshot checklistSnapshot = await transaction.get(checklistRef);
+        DocumentSnapshot checklistSnapshot;
+        if (templateType == TemplateType.newTemplate) {
+          checklistSnapshot = await transaction.get(templateChecklistRef);
+        } else {
+          checklistSnapshot = await transaction.get(employeeChecklistRef);
+        }
         Map<String, dynamic>? data = checklistSnapshot.data() as Map<String, dynamic>?;
 
         checklist = Checklist.fromMap(data);
 
-        if (controller.id != null) {
-          ChecklistElement newChecklistElement = ChecklistElement(
-            items: controller.checkListItems.map((e) => Item(name: e.text, isChecked: false)).toList(),
-            employeeId: currentEmployee!.id,
-            title: controller.titleTED.text,
-            description: controller.descriptionTED.text,
-            id: controller.id!,
-          );
-          checklist?.checklistElement?.removeWhere((c) => c.id == controller.id);
-
-          checklist?.checklistElement?.add(newChecklistElement);
-        } else {
-          ChecklistElement newChecklistElement = ChecklistElement(
-            items: controller.checkListItems.map((e) => Item(name: e.text, isChecked: false)).toList(),
-            employeeId: currentEmployee!.id,
-            title: controller.titleTED.text,
-            description: controller.descriptionTED.text,
-            id: (checklist!.checklistElement?.length ?? 0).toString(),
-          );
-
-          checklist?.checklistElement?.add(newChecklistElement);
+        String? id = '';
+        switch (templateType) {
+          case TemplateType.existingChecklist:
+            id = controller.id;
+            break;
+          case TemplateType.customChecklist:
+          case TemplateType.newTemplate:
+            id = (checklist!.checklistElement?.length ?? 0).toString();
+            break;
         }
-        transaction.set(checklistRef, checklist?.toMap());
+
+        ChecklistElement newChecklistElement = ChecklistElement(
+          items: controller.checkListItems.map((e) => Item(name: e.text, isChecked: false)).toList(),
+          employeeId: currentEmployee!.id,
+          title: controller.titleTED.text,
+          description: controller.descriptionTED.text,
+          id: id ?? '',
+        );
+
+        if (templateType == TemplateType.existingChecklist) {
+          checklist?.checklistElement?.removeWhere((c) => c.id == controller.id);
+        }
+
+        checklist?.checklistElement?.add(newChecklistElement);
+        if (templateType == TemplateType.newTemplate) {
+          transaction.set(templateChecklistRef, checklist?.toMap());
+        } else {
+          transaction.set(employeeChecklistRef, checklist?.toMap());
+        }
       });
 
       controller.showLoading = false;
       controller.update();
       Get.back();
       Get.back();
-      if (controller.id != null) {
-        Get.back();
-      }
+      Get.back();
       controller.clear();
     }
   }

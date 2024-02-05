@@ -10,6 +10,7 @@ import '../../features/board_plan/presentation/views/board_plan_view.dart';
 import '../../features/boat/presentation/screens/manage_boats_page.dart';
 import '../../features/boat/presentation/screens/manage_general_info.dart';
 import '../../features/bookings/presentation/screens/add_customer_details_screen.dart';
+import '../../features/bookings/presentation/screens/add_log_view.dart';
 import '../../features/bookings/presentation/screens/add_payments_screen.dart';
 import '../../features/bookings/presentation/screens/book_date_time_screen.dart';
 import '../../features/bookings/presentation/screens/booking_screen.dart';
@@ -95,11 +96,12 @@ class MyApp extends StatelessWidget {
         ManageGeneralInfo.id: (context) => const ManageGeneralInfo(),
         BoardPlanView.id: (context) => const BoardPlanView(),
         DiveChecklistView.id: (context) => const DiveChecklistView(),
-        NewChecklistView.id: (context) =>  NewChecklistView(),
+        NewChecklistView.id: (context) => const NewChecklistView(),
         MarketingView.id: (context) => const MarketingView(),
         EventsView.id: (context) => const EventsView(),
         AddOffersView.id: (context) => const AddOffersView(),
         OffersView.id: (context) => const OffersView(),
+        AddLogView.id: (context) => AddLogView(),
       },
     );
   }

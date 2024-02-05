@@ -142,15 +142,7 @@ class _BookingStatusState extends State<BookingStatus> {
       return Colors.grey;
     } else if (index == 4) {
       return Colors.black.withOpacity(0.5);
-    }
-    // else if (index == 5) {
-    //   return Colors.pink;
-    // } else if (index == 6) {
-    //   return Colors.orange;
-    // } else if (index == 7) {
-    //   return Colors.red;
-    // }
-    else {
+    } else {
       return Colors.grey;
     }
   }

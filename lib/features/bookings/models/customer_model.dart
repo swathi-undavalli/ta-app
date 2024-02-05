@@ -74,4 +74,6 @@ class CustomerModel {
         'pinCode': pinCode,
         'state': state,
       };
+
+  DateTime? get dateOfBirth => DateTime.tryParse(dob ?? '');
 }

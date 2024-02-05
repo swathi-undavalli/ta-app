@@ -353,7 +353,6 @@ class _HomePageState extends State<HomePage> {
               isAddButton: true,
               onTap: () {
                 TemplateBottomSheet.show(context);
-                // Get.toNamed(NewChecklistView.id);
               },
             ).paddingOnly(bottom: 5),
           ],

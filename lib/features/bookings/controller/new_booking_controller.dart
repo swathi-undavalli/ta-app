@@ -616,6 +616,11 @@ class NewBookingLogic {
         ((controller.customerModel.countryCode != null && controller.customerModel.countryCode!.isNotEmpty)
             ? controller.customerModel.countryCode
             : '+91')!;
+    if (controller.customerModel.dateOfBirth != null) {
+      controller.dob = controller.customerModel.dateOfBirth;
+      controller.dobTED.text = DateFormat('dd MMM, yyyy').format(controller.customerModel.dateOfBirth!);
+    }
+
     return true;
   }
 }

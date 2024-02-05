@@ -34,8 +34,6 @@ void main() async {
     await Firebase.initializeApp();
   }
 
-  // FirebaseMessaging.onBackgroundMessage((_) async {});
-
   ///app is open
   FirebaseMessaging.onMessage.listen((message) {
     FirebaseNotificationService.handleNavigation(message);

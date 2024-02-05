@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
+import '../../../../core/util/spacing_widgets.dart';
 import '../../../dive_checklist/views/screens/new_checklist_view.dart';
 
 class TemplateBottomSheet extends StatefulWidget {
@@ -55,16 +56,12 @@ class _TemplateBottomSheetState extends State<TemplateBottomSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('templates')
-                  .doc('template')
-                  .snapshots(),
+              stream: FirebaseFirestore.instance.collection('templates').doc('template').snapshots(),
               builder: (
                 BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot,
               ) {
-                if (snapshot.hasError ||
-                    snapshot.connectionState == ConnectionState.waiting) {
+                if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox(
                     height: 15,
                     width: 15,
@@ -80,8 +77,7 @@ class _TemplateBottomSheetState extends State<TemplateBottomSheet> {
                   return const SizedBox();
                 }
 
-                Checklist? checklist =
-                    Checklist.fromMap(data as Map<String, dynamic>);
+                Checklist? checklist = Checklist.fromMap(data as Map<String, dynamic>);
 
                 if ((checklist.checklistElement ?? []).isEmpty) {
                   return const SizedBox();
@@ -107,16 +103,17 @@ class _TemplateBottomSheetState extends State<TemplateBottomSheet> {
                         ),
                       ],
                     ),
+                    Spacing.h10,
                     ...(checklist.checklistElement ?? []).map(
                       (checklistElement) => buildChecklistTiles(
                         text: checklistElement.title,
                         onTap: () {
                           Get.toNamed(
                             NewChecklistView.id,
-                            arguments: [checklistElement, false],
+                            arguments: [checklistElement, TemplateType.existingChecklist],
                           );
                         },
-                      ).paddingOnly(bottom: 5),
+                      ),
                     ),
                     buildChecklistTiles(
                       text: 'Create custom checklist',
@@ -131,11 +128,30 @@ class _TemplateBottomSheetState extends State<TemplateBottomSheet> {
                               title: '',
                               description: '',
                             ),
-                            false,
+                            TemplateType.customChecklist,
                           ],
                         );
                       },
-                    ).paddingOnly(bottom: 5),
+                    ),
+                    buildChecklistTiles(
+                      text: 'Create Template',
+                      onTap: () {
+                        Get.toNamed(
+                          NewChecklistView.id,
+                          arguments: [
+                            ChecklistElement(
+                              items: [],
+                              employeeId: null,
+                              id: '',
+                              title: '',
+                              description: '',
+                            ),
+                            TemplateType.newTemplate,
+                          ],
+                        );
+                      },
+                    ),
+                    Spacing.h10,
                   ],
                 );
               },
@@ -150,31 +166,35 @@ class _TemplateBottomSheetState extends State<TemplateBottomSheet> {
     required String text,
     required Function onTap,
   }) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Expanded(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontFamily: AppFonts.nunito,
-              color: AppColors.text.darkgrey,
-              fontWeight: FontWeight.w600,
-              fontSize: 13,
+    return InkWell(
+      onTap: () {
+        onTap();
+      },
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Text(
+              text,
+              style: TextStyle(
+                fontFamily: AppFonts.nunito,
+                color: AppColors.text.darkgrey,
+                fontWeight: FontWeight.w600,
+                fontSize: 13,
+              ),
             ),
           ),
-        ),
-        IconButton(
-          onPressed: () {
-            onTap();
-          },
-          icon: Icon(
-            Icons.arrow_forward_rounded,
-            color: AppColors.text.skyBlue,
-            size: 20,
+          SizedBox(
+            width: 50,
+            height: 50,
+            child: Icon(
+              Icons.arrow_forward_rounded,
+              color: AppColors.text.skyBlue,
+              size: 20,
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

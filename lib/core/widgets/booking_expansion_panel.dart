@@ -9,6 +9,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart' as intl;
 import 'package:share/share.dart';
+import 'package:temple_adventures/core/util/spacing_widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../features/activities/model/colors_data.dart';
@@ -17,6 +18,7 @@ import '../../features/bookings/models/booking_model.dart';
 import '../../features/bookings/presentation/screens/add_payments_screen.dart';
 import '../../features/bookings/presentation/screens/edit_payments_screen.dart';
 import '../../features/bookings/presentation/widgets/app_text_fields.dart';
+import '../../features/bookings/presentation/widgets/dive_log_bootomsheet.dart';
 import '../../features/bookings/presentation/widgets/share_booking_details_widget.dart';
 import '../../features/edit_booking/presentation/screens/edit_booking_new_screen.dart';
 import '../../features/employees/model/employee.dart';
@@ -579,7 +581,25 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
                                             (itemModel.bookingModel!.noOfPersons)),
                                       ),
-                                    const SizedBox(height: 30),
+                                    if (!itemModel.bookingModel!.isQuickBooking && itemModel.colorCode != 'Blue')
+                                      buildKeyValuePairs(
+                                        'Dive Logs',
+                                        '${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}',
+                                        isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
+                                            (itemModel.bookingModel!.noOfPersons)),
+                                      ),
+                                    Spacing.h10,
+                                    if (!itemModel.bookingModel!.isQuickBooking && itemModel.colorCode != 'Blue')
+                                      AppButton.miniFlat(
+                                        text: 'Add Log',
+                                        onTap: () {
+                                          DiveLogBottomSheet.show(
+                                            context,
+                                            bookingModel: itemModel.bookingModel!,
+                                          );
+                                        },
+                                      ),
+                                    Spacing.h20,
                                     if (!itemModel.bookingModel!.isQuickBooking)
                                       buildPaymentStatus(
                                         itemModel: itemModel,
@@ -1362,55 +1382,6 @@ Regards,
     }
     return (total - t).toInt().toString();
   }
-
-  // Future<Uint8List> _createImageFromWidget(
-  //   Widget widget, {
-  //   Duration wait = const Duration(milliseconds: 450),
-  // }) async {
-  //   final RenderRepaintBoundary repaintBoundary = RenderRepaintBoundary();
-  //   Size logicalSize = ui.window.physicalSize / ui.window.devicePixelRatio;
-  //   double pixelRatio = ui.window.devicePixelRatio;
-  //   final RenderView renderView = RenderView(
-  //     window: ui.window,
-  //     child: RenderPositionedBox(
-  //         alignment: Alignment.center,
-  //         // heightFactor: Get.height,
-  //         child: repaintBoundary),
-  //     configuration: ViewConfiguration(
-  //       size: logicalSize,
-  //       devicePixelRatio: pixelRatio,
-  //     ),
-  //   );
-  //
-  //   final PipelineOwner pipelineOwner = PipelineOwner();
-  //   final BuildOwner buildOwner = BuildOwner(focusManager: FocusManager());
-  //   pipelineOwner.rootNode = renderView;
-  //   renderView.prepareInitialFrame();
-  //   final RenderObjectToWidgetElement<RenderBox> rootElement =
-  //       RenderObjectToWidgetAdapter<RenderBox>(
-  //     container: repaintBoundary,
-  //     child: Directionality(
-  //       textDirection: TextDirection.ltr,
-  //       child: widget,
-  //     ),
-  //   ).attachToRenderTree(buildOwner);
-  //   buildOwner.buildScope(rootElement);
-  //
-  //   await Future.delayed(wait);
-  //
-  //   buildOwner.buildScope(rootElement);
-  //   buildOwner.finalizeTree();
-  //   pipelineOwner.flushLayout();
-  //   pipelineOwner.flushCompositingBits();
-  //   pipelineOwner.flushPaint();
-  //
-  //   final ui.Image image =
-  //       await repaintBoundary.toImage(pixelRatio: pixelRatio);
-  //   //final ui.Image image = await repaintBoundary.toImage(pixelRatio: 1);
-  //   final ByteData byteData =
-  //       (await image.toByteData(format: ui.ImageByteFormat.png))!;
-  //   return byteData.buffer.asUint8List();
-  // }
 
   Future<void> onDeletePaxPressed(Booking bookingModel, int index) async {
     Get.defaultDialog(

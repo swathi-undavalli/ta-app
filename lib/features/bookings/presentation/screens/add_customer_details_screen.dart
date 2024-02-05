@@ -322,12 +322,9 @@ class AddCustomerDetailsScreen extends StatelessWidget {
       isStrictNumber: true,
       errorValidator: () {
         return null;
-        // return Validator.validateEmail(
-        //     logic.controller.emailTED.text);
       },
       validator: (email) {
         return null;
-        // return Validator.validateEmail(email);
       },
     );
   }
@@ -350,12 +347,9 @@ class AddCustomerDetailsScreen extends StatelessWidget {
               onChangedCallBack: (_) {},
               errorValidator: () {
                 return null;
-                // return Validator.validateEmail(
-                //     logic.controller.emailTED.text);
               },
               validator: (email) {
                 return null;
-                // return Validator.validateEmail(email);
               },
             ),
           ),

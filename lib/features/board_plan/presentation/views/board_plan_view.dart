@@ -181,7 +181,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                       alignment: Alignment.topLeft,
                       child: RepaintBoundary(
                         key: widgetKey,
-                        child: const DSDTable(),
+                        child: const GeneralInfo(),
                       ),
                     )
                 ],
@@ -239,19 +239,13 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   Future<void> _captureAndShare() async {
     try {
       RenderRepaintBoundary boundary = widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      log('1..');
       ui.Image image = await boundary.toImage(pixelRatio: 10);
       ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
-      log('2..');
       final tempDir = await getTemporaryDirectory();
       final tempPath = '${tempDir.path}/screenshot.png';
       File(tempPath).writeAsBytesSync(pngBytes);
-      log('3..');
-      log('started sharingg..');
       shareImages([tempPath]);
-      log('4..');
-      log('ended sharing..');
     } catch (e) {
       log('Error while capturing and sharing the screenshot: $e');
     }
@@ -268,16 +262,12 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   Future<String?> captureImage() async {
     try {
       RenderRepaintBoundary boundary = widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      log('1..');
       ui.Image image = await boundary.toImage(pixelRatio: 10);
       ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
-      log('2..');
       final tempDir = await getTemporaryDirectory();
       final tempPath = '${tempDir.path}/screenshot${DateTime.now().toIso8601String()}.png';
       File(tempPath).writeAsBytesSync(pngBytes);
-      log('3..');
-      log('started sharing..');
       return tempPath;
     } catch (e) {
       log('Error while capturing the screenshot: $e');
@@ -296,9 +286,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
               FloatingActionButton(
                 elevation: 0,
                 onPressed: () async {
-                  log('chinni');
                   await _captureAndShare();
-                  log('swathi');
                 },
                 backgroundColor: AppColors.background.black,
                 child: const Icon(
@@ -415,8 +403,8 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   }
 }
 
-class DSDTable extends StatelessWidget {
-  const DSDTable({Key? key}) : super(key: key);
+class GeneralInfo extends StatelessWidget {
+  const GeneralInfo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

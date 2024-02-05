@@ -23,8 +23,9 @@ class AddNewActivityScreen extends StatelessWidget {
           return true;
         },
         child: SafeArea(
-          child: GetBuilder<AddNewActivityController>(builder: (controller) {
-            return SingleChildScrollView(
+          child: GetBuilder<AddNewActivityController>(
+            builder: (controller) {
+              return SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Center(
                   child: Padding(
@@ -102,8 +103,9 @@ class AddNewActivityScreen extends StatelessWidget {
   }
 
   Widget buildPriority() {
-    return GetBuilder<AddNewActivityController>(builder: (controller) {
-      return Padding(
+    return GetBuilder<AddNewActivityController>(
+      builder: (controller) {
+        return Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
           child: DropdownButton(
             focusNode: controller.priorityNode,
@@ -127,8 +129,9 @@ class AddNewActivityScreen extends StatelessWidget {
   }
 
   Widget buildColorCode() {
-    return GetBuilder<AddNewActivityController>(builder: (controller) {
-      return Padding(
+    return GetBuilder<AddNewActivityController>(
+      builder: (controller) {
+        return Padding(
           padding: const EdgeInsets.only(left: 10, right: 10),
           child: DropdownButton(
             focusNode: controller.colorNode,
@@ -155,22 +158,18 @@ class AddNewActivityScreen extends StatelessWidget {
     return AppBar(
       toolbarHeight: 70,
       centerTitle: true,
-      title: buildTitle(),
+      title: Text(
+        'Add Activity',
+        style: TextStyle(
+          color: AppColors.text.black,
+          fontSize: 20,
+          fontWeight: FontWeight.normal,
+          letterSpacing: 1.2,
+        ),
+      ),
       leading: const BackNavigationIcon(),
       elevation: 0,
       backgroundColor: AppColors.background.white,
-    );
-  }
-
-  Widget buildTitle() {
-    return Text(
-      'Add Activity',
-      style: TextStyle(
-        color: AppColors.text.black,
-        fontSize: 20,
-        fontWeight: FontWeight.normal,
-        letterSpacing: 1.2,
-      ),
     );
   }
 

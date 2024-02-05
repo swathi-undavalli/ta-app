@@ -31,7 +31,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
     logic.controller.checkListItems =
         (checkListElement?.items ?? []).map((e) => TextEditingController(text: e.name)).toList();
     logic.controller.focusNodes = (checkListElement?.items ?? []).map((e) => FocusNode()).toList();
-    logic.controller.id = (args[1]) ? checkListElement?.id : null;
+    logic.controller.id = (args[1] == TemplateType.existingChecklist) ? checkListElement?.id : null;
     logic.controller.titleTED.text = (checkListElement?.title ?? '');
     logic.controller.descriptionTED.text = (checkListElement?.description ?? '');
 
@@ -176,7 +176,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
         ),
       ),
       title: Text(
-        (logic.controller.id != null) ? logic.controller.titleTED.text : 'Custom checklist',
+        heading,
         style: TextStyle(
           color: AppColors.text.black,
           fontSize: 18,
@@ -186,6 +186,16 @@ class _NewChecklistViewState extends State<NewChecklistView> {
         ),
       ).center,
     );
+  }
+
+  String get heading {
+    if (args[1] == TemplateType.newTemplate) {
+      return 'New Template';
+    } else if (args[1] == TemplateType.customChecklist) {
+      return 'Custom Checklist';
+    } else {
+      return logic.controller.titleTED.text;
+    }
   }
 
   Future<void> saveChecklistDialog(BuildContext context) async {
@@ -229,7 +239,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
                     )
                   : Container(
                       height: Get.height / 2,
-                      color: Colors.grey.shade100,
+                      color: Colors.white,
                       child: const CircularProgressIndicator(
                         color: Colors.black,
                         backgroundColor: Colors.grey,
@@ -252,12 +262,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
                   text: 'Okay',
                   onTap: () async {
                     if (!controller.showLoading) {
-                      log('started');
-                      await logic.onSavePressed(context);
-                      if (args[1] == false) {
-                        Get.back();
-                      }
-                      log('ended');
+                      await logic.onSavePressed(context, args[1]);
                     }
                   },
                 ),
@@ -280,4 +285,10 @@ class _NewChecklistViewState extends State<NewChecklistView> {
       ),
     );
   }
+}
+
+enum TemplateType {
+  existingChecklist,
+  customChecklist,
+  newTemplate,
 }
