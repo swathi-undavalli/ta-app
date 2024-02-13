@@ -41,6 +41,7 @@ class _AllBookingsScreenState extends State<AllBookingsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar(),
       body: Column(
         children: [

@@ -20,6 +20,7 @@ class AllActivitiesScreen extends StatelessWidget {
     return Stack(
       children: [
         Scaffold(
+          backgroundColor: AppColors.background.lightBlue,
           floatingActionButton: buildFloatingActionButton(),
           appBar: buildAppBar() as PreferredSizeWidget?,
           body: SafeArea(

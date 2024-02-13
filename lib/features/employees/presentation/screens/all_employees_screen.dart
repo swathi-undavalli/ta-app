@@ -46,6 +46,8 @@ class _AllEmployeesScreenState extends State<AllEmployeesScreen> {
         return true;
       },
       child: Scaffold(
+        backgroundColor: AppColors.background.lightBlue,
+
         floatingActionButton: buildFloatingActionButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         appBar: AppBar(

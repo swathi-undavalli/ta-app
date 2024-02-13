@@ -26,6 +26,7 @@ class _EventsViewState extends State<EventsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar(),
       floatingActionButton: buildFloatingActionButton(context),
       body: SafeArea(

@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -6,95 +7,111 @@ import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../boat/presentation/widgets/employee_selector_bottom_sheet.dart';
-import '../../controller/add_log_controller.dart';
+import '../../controller/dive_log_controller.dart';
 import '../widgets/app_text_fields.dart';
 
-class AddLogView extends StatelessWidget {
-  AddLogView({Key? key}) : super(key: key);
+class DiveLogView extends StatefulWidget {
+  const DiveLogView({Key? key}) : super(key: key);
 
   static const String id = 'AddLogView';
 
-  final AddLogLogic logic = AddLogLogic();
+  @override
+  State<DiveLogView> createState() => _DiveLogViewState();
+}
+
+class _DiveLogViewState extends State<DiveLogView> {
+  final DiveLogLogic logic = DiveLogLogic();
+
+  var args = Get.arguments;
+
+  @override
+  void initState() {
+    super.initState();
+    logic.controller.booking = args[0];
+    logic.controller.email = args[1];
+    logic.clear();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar(),
       body: SafeArea(
-        child: GetBuilder<AddLogController>(builder: (controller) {
-          return Column(
-            children: [
-              buildDate(controller, context),
-              Spacing.h20,
-              buildTime(controller, context),
-              Spacing.h20,
-              buildEmployeeSelector(context),
-              AppTextField(
-                hintText: 'Course / FD',
-                controller: controller.courseTED,
-                errorValidator: () {
-                  return null;
-                },
-                validator: (_) {
-                  return null;
-                },
-              ),
-              AppTextField(
-                hintText: 'Dive Site',
-                controller: controller.diveSiteTED,
-                errorValidator: () {
-                  return null;
-                },
-                validator: (_) {
-                  return null;
-                },
-              ),
-              AppTextField(
-                hintText: 'Tank No',
-                controller: controller.tankNoTED,
-                keyboardType: TextInputType.number,
-                errorValidator: () {
-                  return null;
-                },
-                validator: (_) {
-                  return null;
-                },
-              ),
-              AppTextField(
-                hintText: 'Bottom Time',
-                controller: controller.bottomTimeTED,
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                suffixText: 'mins',
-                errorValidator: () {
-                  return null;
-                },
-                validator: (_) {
-                  return null;
-                },
-              ),
-              AppTextField(
-                hintText: 'Max Depth',
-                controller: controller.maxDepthTED,
-                suffixText: 'm',
-                keyboardType: TextInputType.numberWithOptions(decimal: true),
-                errorValidator: () {
-                  return null;
-                },
-                validator: (_) {
-                  return null;
-                },
-              ),
-              Spacing.h30,
-              Spacing.h30,
-              AppButton.flat(
-                text: 'Submit',
-                color: Colors.black,
-                textColor: Colors.white,
-              ),
-              Spacing.h30,
-            ],
-          );
-        }).paddingSymmetric(horizontal: 20, vertical: 30).scrollable,
+        child: GetBuilder<DiveLogController>(
+          builder: (controller) {
+            return Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                buildDate(controller, context),
+                Spacing.h20,
+                buildTime(controller, context),
+                Spacing.h20,
+                buildEmployeeSelector(context),
+                Text(
+                  (controller.instructorError != null) ? 'Instructor ${controller.instructorError}' : '',
+                  style: TextStyle(fontSize: 12, color: Colors.red.shade900),
+                ),
+                AppTextField(
+                  hintText: 'Dive Site',
+                  controller: controller.diveSiteTED,
+                  errorValidator: () {
+                    return controller.diveSiteError;
+                  },
+                  validator: (diveSite) {
+                    return diveSite;
+                  },
+                ),
+                AppTextField(
+                  hintText: 'Tank No',
+                  controller: controller.tankNoTED,
+                  keyboardType: TextInputType.number,
+                  errorValidator: () {
+                    return controller.tankNoError;
+                  },
+                  validator: (tankNo) {
+                    return tankNo;
+                  },
+                ),
+                AppTextField(
+                  hintText: 'Bottom Time',
+                  controller: controller.bottomTimeTED,
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  suffixText: 'mins',
+                  errorValidator: () {
+                    return controller.bottomTimeError;
+                  },
+                  validator: (bottomTimeError) {
+                    return bottomTimeError;
+                  },
+                ),
+                AppTextField(
+                  hintText: 'Max Depth',
+                  controller: controller.maxDepthTED,
+                  suffixText: 'm',
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  errorValidator: () {
+                    return controller.maxDepthError;
+                  },
+                  validator: (maxDepthError) {
+                    return maxDepthError;
+                  },
+                ),
+                Spacing.h30,
+                Spacing.h30,
+                AppButton.flat(
+                  onTap: () {
+                    logic.onSubmitPressed();
+                  },
+                  text: 'Submit',
+                  color: Colors.black,
+                  textColor: Colors.white,
+                ).center,
+                Spacing.h30,
+              ],
+            );
+          },
+        ).paddingSymmetric(horizontal: 20, vertical: 30).scrollable,
       ),
     );
   }
@@ -107,7 +124,7 @@ class AddLogView extends StatelessWidget {
             'Select Instructor',
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
           ),
-          Spacer(),
+          const Spacer(),
           AppButton.miniFlat(
             text: 'Select',
             onTap: () async {
@@ -131,7 +148,7 @@ class AddLogView extends StatelessWidget {
           'Instructor',
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
         ),
-        Spacer(),
+        const Spacer(),
         Text(
           '${logic.controller.instructor[0].name} ',
           style: const TextStyle(
@@ -170,17 +187,17 @@ class AddLogView extends StatelessWidget {
     );
   }
 
-  Widget buildDate(AddLogController controller, BuildContext context) {
+  Widget buildDate(DiveLogController controller, BuildContext context) {
     return Row(
       children: [
         const Text(
           'Date',
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
         ),
-        Spacer(),
+        const Spacer(),
         Text(
           DateFormat('dd-MM-yyyy').format(controller.selectedDate.toLocal()),
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
@@ -205,7 +222,7 @@ class AddLogView extends StatelessWidget {
                 Icons.edit,
                 size: 12,
                 color: Colors.blue,
-              )
+              ),
             ],
           ),
         ),
@@ -213,17 +230,17 @@ class AddLogView extends StatelessWidget {
     );
   }
 
-  Widget buildTime(AddLogController controller, BuildContext context) {
+  Widget buildTime(DiveLogController controller, BuildContext context) {
     return Row(
       children: [
         const Text(
           'Time-In',
           style: TextStyle(fontSize: 14, fontWeight: FontWeight.w400),
         ),
-        Spacer(),
+        const Spacer(),
         Text(
           controller.selectedTime.format(context),
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.black,
             fontWeight: FontWeight.bold,
           ),
@@ -248,7 +265,7 @@ class AddLogView extends StatelessWidget {
                 Icons.edit,
                 size: 12,
                 color: Colors.blue,
-              )
+              ),
             ],
           ),
         ),
@@ -278,6 +295,7 @@ class AddLogView extends StatelessWidget {
 
     if (picked != null && picked != logic.controller.selectedTime) {
       logic.controller.selectedTime = picked;
+      log(logic.controller.selectedTime.toString());
       logic.controller.update();
     }
   }

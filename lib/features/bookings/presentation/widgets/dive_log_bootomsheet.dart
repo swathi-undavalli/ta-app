@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/phone_number/intl_phone_field.dart';
 import '../../models/booking_model.dart';
-import '../screens/add_log_view.dart';
-import 'app_text_fields.dart';
+import '../screens/dive_log_view.dart';
+import 'add_customer_dialog.dart';
 
 class DiveLogBottomSheet extends StatefulWidget {
   const DiveLogBottomSheet({
@@ -38,7 +36,9 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
   String? phoneNumber;
   String? countryCode;
   String? isoCode = 'IN';
-
+  TextEditingController nameTED = TextEditingController();
+  TextEditingController emailTED = TextEditingController();
+  bool showLoading = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -51,6 +51,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
+        color: AppColors.background.lightBlue,
       ),
       child: SingleChildScrollView(
         child: Column(
@@ -91,13 +92,19 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
                       const Spacer(),
                       IconButton(
                         onPressed: () {
-                          Get.toNamed(AddLogView.id);
+                          Get.toNamed(
+                            DiveLogView.id,
+                            arguments: [
+                              widget.bookingModel,
+                              widget.bookingModel.pax?[index]['email'],
+                            ],
+                          );
                         },
                         icon: Icon(
                           Icons.arrow_forward,
                           color: AppColors.text.skyBlue,
                         ),
-                      )
+                      ),
                     ],
                   ),
                 ],
@@ -108,95 +115,16 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
               AppButton.miniFlat(
                 text: 'Add Customer',
                 onTap: () {
-                  addCustomerDialog(context);
+                  AddCustomerDialog.show(
+                    context,
+                    bookingModel: widget.bookingModel,
+                  );
                 },
               ),
             Spacing.h30,
           ],
         ),
       ),
-    );
-  }
-
-  Future<void> addCustomerDialog(BuildContext context) async {
-    return showDialog(
-      context: context,
-      barrierDismissible: false,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text(
-            'Add Customer',
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-          ),
-          content: SizedBox(
-            height: 300,
-            child: Column(
-              children: [
-                AppTextField(
-                  hintText: 'Email',
-                  errorValidator: () {
-                    return null;
-                  },
-                  validator: (_) {
-                    return null;
-                  },
-                ),
-                AppTextField(
-                  hintText: 'Name',
-                  errorValidator: () {
-                    return null;
-                  },
-                  validator: (_) {
-                    return null;
-                  },
-                ),
-                buildPhoneNumber(),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            AppButton.miniText(
-              text: 'Cancel',
-              onTap: () {
-                Get.back();
-              },
-            ),
-            AppButton.miniFlat(
-              text: 'Okay',
-              onTap: () async {},
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  Widget buildPhoneNumber() {
-    return IntlPhoneField(
-      autoValidate: true,
-      initialCountryCode: isoCode,
-      showCountryFlag: false,
-      initialValue: phoneNumber,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      decoration: const InputDecoration(
-        labelText: 'Phone Number  *',
-        labelStyle: TextStyle(
-          fontSize: FontSize.small,
-          fontFamily: AppFonts.nunito,
-        ),
-      ),
-      style: const TextStyle(
-        fontFamily: AppFonts.nunito,
-        fontWeight: FontWeight.normal,
-        fontSize: 14,
-      ),
-      searchText: 'Search',
-      onSubmitted: (_) {},
-      onChanged: (phone) {
-        countryCode = phone.countryCode;
-        phoneNumber = phone.number!;
-        isoCode = phone.countryISOCode;
-      },
     );
   }
 }

@@ -39,6 +39,8 @@ class NotificationsScreen extends StatelessWidget {
           children: [
             buildShowLoading(),
             Scaffold(
+              backgroundColor: AppColors.background.lightBlue,
+
               appBar: AppBar(
                 toolbarHeight: 70,
                 centerTitle: true,

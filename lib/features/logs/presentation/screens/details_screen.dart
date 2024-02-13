@@ -28,6 +28,8 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
+
       appBar: AppBar(
         toolbarHeight: 70,
         centerTitle: true,

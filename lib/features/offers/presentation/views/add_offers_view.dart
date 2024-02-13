@@ -47,6 +47,8 @@ class _AddOffersViewState extends State<AddOffersView> {
             return true;
           },
           child: Scaffold(
+            backgroundColor: AppColors.background.lightBlue,
+
             appBar: buildAppBar(),
             body: GetBuilder<AddOffersController>(
               builder: (controller) {

@@ -72,6 +72,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
     return Container(
       height: 700,
       decoration: BoxDecoration(
+        color: AppColors.background.lightBlue,
         borderRadius: BorderRadius.circular(
           30,
         ),
@@ -310,12 +311,9 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
 
   Widget buildSearchBar() {
     return Container(
-      width: 328,
       height: 47,
-      decoration: BoxDecoration(
-        color: AppColors.background.white,
-        borderRadius: BorderRadius.circular(5),
-      ),
+      width: Get.width - 40,
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
       child: Container(
         margin: const EdgeInsets.only(left: 15, right: 15),
         alignment: Alignment.centerLeft,
@@ -324,7 +322,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
             Icon(Icons.search, color: AppColors.text.darkgrey),
             Spacing.w15,
             SizedBox(
-              width: 225,
+              width: Get.width - 150,
               child: TextField(
                 decoration: const InputDecoration(
                   enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),

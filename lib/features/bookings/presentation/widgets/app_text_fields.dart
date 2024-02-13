@@ -74,15 +74,9 @@ class _AppTextFieldsState extends State<AppTextField> {
           maxLines: widget.maxLines,
           controller: widget.controller,
           focusNode: widget.focusNode,
-          keyboardType: widget.isStrictNumber
-              ? TextInputType.number
-              : widget.keyboardType,
-          textInputAction: (widget.finalSubmit == null)
-              ? widget.textInputAction
-              : TextInputAction.done,
-          inputFormatters: widget.isStrictNumber
-              ? [FilteringTextInputFormatter.digitsOnly]
-              : null,
+          keyboardType: widget.isStrictNumber ? TextInputType.number : widget.keyboardType,
+          textInputAction: (widget.finalSubmit == null) ? widget.textInputAction : TextInputAction.done,
+          inputFormatters: widget.isStrictNumber ? [FilteringTextInputFormatter.digitsOnly] : null,
           enableSuggestions: widget.enableSuggestions,
           decoration: InputDecoration(
             labelText: "${widget.hintText}  ${(widget.required) ? "*" : ""}",

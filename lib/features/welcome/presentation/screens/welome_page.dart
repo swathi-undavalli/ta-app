@@ -13,13 +13,18 @@ class WelcomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
+
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Get.offAndToNamed(DashBoardScreen.id);
         },
         elevation: 0,
         backgroundColor: AppColors.IconColor.black,
-        child: const Icon(Icons.arrow_forward_ios_outlined),
+        child: const Icon(
+          Icons.arrow_forward_ios_outlined,
+          color: Colors.white,
+        ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       body: SafeArea(
@@ -66,8 +71,8 @@ class WelcomeScreen extends StatelessWidget {
     );
   }
 
- Widget buildHii() {
-   return SizedBox(
+  Widget buildHii() {
+    return SizedBox(
       width: Get.size.width,
       child: Text(
         'Hi,',

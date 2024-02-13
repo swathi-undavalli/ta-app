@@ -371,12 +371,9 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           onChangedCallBack: (_) {},
           errorValidator: () {
             return null;
-            // return Validator.validateName(
-            //     logic.controller.fNameTED.text);
           },
           validator: (email) {
             return null;
-            // return Validator.validateName(email);
           },
         ),
         const SizedBox(
@@ -392,12 +389,9 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           onChangedCallBack: (_) {},
           errorValidator: () {
             return null;
-            // return Validator.validateName(
-            //     logic.controller.lNameTED.text);
           },
           validator: (email) {
             return null;
-            // return Validator.validateName(email);
           },
         ),
       ],
@@ -409,11 +403,9 @@ class AddCustomerDetailsScreen extends StatelessWidget {
       hintText: 'Enter Customer Email ID',
       controller: logic.controller.emailTED,
       focusNode: logic.controller.emailNode,
-      // nextFocusNode: logic.controller.noOfPersonsNode,
       keyboardType: TextInputType.emailAddress,
       onChangedCallBack: (_) {},
       required: true,
-
       errorValidator: () {
         return Validator.validateEmail(logic.controller.emailTED.text);
       },

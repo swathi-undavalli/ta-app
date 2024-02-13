@@ -25,6 +25,8 @@ class EditPaymentsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // logic.controller.bookingModel = bookingArg;
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
+
       appBar: AppBar(
         toolbarHeight: 70,
         centerTitle: true,

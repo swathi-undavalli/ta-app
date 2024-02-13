@@ -47,7 +47,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar(),
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.black,
@@ -207,6 +207,8 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
       ).center,
       actions: [
         PopupMenuButton(
+          color: Colors.white,
+          surfaceTintColor: Colors.white,
           icon: const Icon(
             Icons.more_vert_rounded,
             color: Colors.black,

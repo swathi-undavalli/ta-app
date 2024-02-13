@@ -65,6 +65,8 @@ class EditBookingNewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
+
       appBar: AppBar(
         toolbarHeight: 70,
         centerTitle: true,
@@ -218,6 +220,7 @@ class EditBookingNewScreen extends StatelessWidget {
                     controller.bookingModel!.bookingDate!.add(getStringDate(date!));
                   }
                 }
+
                 await FirebaseFirestore.instance
                     .collection('bookings')
                     .doc(controller.bookingModel!.id)
@@ -232,8 +235,6 @@ class EditBookingNewScreen extends StatelessWidget {
 
                 BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
                 bookingCalenderLogicNew.onDateSelected(bookingCalenderLogicNew.controller.selectedDate);
-                // bookingCalenderLogic.controller.selectedDate
-                //     .subtract(Duration(days: 10));
               },
             ),
           ],

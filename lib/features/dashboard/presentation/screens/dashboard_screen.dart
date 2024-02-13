@@ -61,6 +61,8 @@ class DashBoardScreen extends StatelessWidget {
       child: Stack(
         children: [
           Scaffold(
+            backgroundColor: AppColors.background.lightBlue,
+
             bottomNavigationBar: buildBottomNavigationBar(),
             drawer: (currentEmployee?.role != 'Intern') ? NavDrawer() : const SizedBox(),
             key: dashboardDrawerKey,

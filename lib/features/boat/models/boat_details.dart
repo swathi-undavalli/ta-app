@@ -40,11 +40,11 @@ class BoatDetails {
         diveBuddies: diveBuddies ?? this.diveBuddies,
       );
 
-  factory BoatDetails.fromRawJson(String str) => BoatDetails.fromJson(json.decode(str));
+  factory BoatDetails.fromRawJson(String str) => BoatDetails.fromMap(json.decode(str));
 
   String toRawJson() => json.encode(toMap());
 
-  factory BoatDetails.fromJson(Map<String, dynamic>? json) {
+  factory BoatDetails.fromMap(Map<String, dynamic>? json) {
     if (json == null) return BoatDetails();
     return BoatDetails(
       boat: json['boat'] ?? {},
@@ -53,10 +53,10 @@ class BoatDetails {
       employeeNotes: json['employeeNotes'],
       bookingStatus: json['bookingStatus'],
       instructors: List<Instructor>.from(
-        (json['instructors'] ?? []).map((x) => Instructor.fromJson(x)),
+        (json['instructors'] ?? []).map((x) => Instructor.fromMap(x)),
       ),
       diveBuddies: List<Instructor>.from(
-        (json['diveBuddies'] ?? []).map((x) => Instructor.fromJson(x)),
+        (json['diveBuddies'] ?? []).map((x) => Instructor.fromMap(x)),
       ),
     );
   }
@@ -102,11 +102,11 @@ class Instructor {
         phone: this.phone,
       );
 
-  factory Instructor.fromRawJson(String str) => Instructor.fromJson(json.decode(str));
+  factory Instructor.fromRawJson(String str) => Instructor.fromMap(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Instructor.fromJson(Map<String, dynamic> json) => Instructor(
+  factory Instructor.fromMap(Map<String, dynamic> json) => Instructor(
         id: json['id'],
         name: json['name'],
         air: json['air'],

@@ -29,6 +29,7 @@ class _MarketingViewState extends State<MarketingView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar(),
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(

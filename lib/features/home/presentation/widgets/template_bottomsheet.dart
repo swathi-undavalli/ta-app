@@ -46,6 +46,7 @@ class _TemplateBottomSheetState extends State<TemplateBottomSheet> {
         right: 20,
       ),
       decoration: BoxDecoration(
+        color: Colors.white,
         borderRadius: BorderRadius.circular(
           30,
         ),

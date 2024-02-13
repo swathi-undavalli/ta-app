@@ -43,6 +43,7 @@ class _EmployeeProfileScreenState extends State<EmployeeProfileScreen> {
         return false;
       },
       child: Scaffold(
+        backgroundColor: AppColors.background.lightBlue,
         appBar: buildAppBar(),
         body: SafeArea(
           child: SingleChildScrollView(

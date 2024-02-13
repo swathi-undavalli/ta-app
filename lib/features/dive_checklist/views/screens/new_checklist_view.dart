@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../../core/models/checklist_model.dart';
@@ -43,6 +42,8 @@ class _NewChecklistViewState extends State<NewChecklistView> {
     return GetBuilder<NewChecklistController>(
       builder: (controller) {
         return Scaffold(
+          backgroundColor: AppColors.background.lightBlue,
+
           appBar: _buildAppBar(context),
           floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.black,
@@ -206,6 +207,8 @@ class _NewChecklistViewState extends State<NewChecklistView> {
         return GetBuilder<NewChecklistController>(
           builder: (controller) {
             return AlertDialog(
+              surfaceTintColor:Colors.white,
+              backgroundColor: Colors.white,
               title: const Text(
                 'Please fill the below details before saving the checklist',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),

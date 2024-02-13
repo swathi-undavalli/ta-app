@@ -162,7 +162,7 @@ class Booking {
       diveDate: List<DateTime>.from(json['diveDate'].map((x) => parseDateOrNull(x))),
       cancelBooking: json['cancelBooking'],
       cancellationReason: json['cancellationReason'],
-      boatDetails: BoatDetails.fromJson(json['boatDetails']),
+      boatDetails: BoatDetails.fromMap(json['boatDetails']),
     );
   }
 

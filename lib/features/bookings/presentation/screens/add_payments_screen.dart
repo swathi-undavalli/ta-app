@@ -21,6 +21,8 @@ class AddPaymentsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     logic.controller.bookingModel = bookingArg;
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
+
       appBar: buildAppBar() as PreferredSizeWidget?,
       body: WillPopScope(
         onWillPop: () async {

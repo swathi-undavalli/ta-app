@@ -39,6 +39,7 @@ class _OffersViewState extends State<OffersView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar(),
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(

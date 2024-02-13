@@ -590,14 +590,29 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                       ),
                                     Spacing.h10,
                                     if (!itemModel.bookingModel!.isQuickBooking && itemModel.colorCode != 'Blue')
-                                      AppButton.miniFlat(
-                                        text: 'Add Log',
-                                        onTap: () {
-                                          DiveLogBottomSheet.show(
-                                            context,
-                                            bookingModel: itemModel.bookingModel!,
-                                          );
-                                        },
+                                      Row(
+                                        children: [
+                                          AppButton.miniFlat(
+                                            text: 'Add Log',
+                                            onTap: () {
+                                              DiveLogBottomSheet.show(
+                                                context,
+                                                bookingModel: itemModel.bookingModel!,
+                                              );
+                                            },
+                                          ),
+                                          Spacer(),
+                                          AppButton.miniFlat(
+                                            text: 'Fetch Logs',
+                                            onTap: () {
+                                              DiveLogBottomSheet.show(
+                                                context,
+                                                bookingModel: itemModel.bookingModel!,
+                                              );
+                                            },
+                                          ),
+                                          Spacing.w10,
+                                        ],
                                       ),
                                     Spacing.h20,
                                     if (!itemModel.bookingModel!.isQuickBooking)

@@ -57,6 +57,8 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
                 return true;
               },
               child: Scaffold(
+                backgroundColor: AppColors.background.lightBlue,
+
                 appBar: buildAppBar(context) as PreferredSizeWidget?,
                 floatingActionButton: buildFloatingActionButton(),
                 body: SafeArea(

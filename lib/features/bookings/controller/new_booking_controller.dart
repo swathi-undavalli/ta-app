@@ -96,7 +96,7 @@ class NewBookingLogic {
                       BookingsCalenderWidgetLogic bookingCalenderLogic = BookingsCalenderWidgetLogic();
                       bookingCalenderLogic.onDateSelected(bookingCalenderLogic.controller.lastDateIndex);
                     },
-                  )
+                  ),
                 ],
               );
             }
@@ -172,7 +172,7 @@ class NewBookingLogic {
                       BookingsCalenderWidgetLogic bookingCalenderLogic = BookingsCalenderWidgetLogic();
                       bookingCalenderLogic.onDateSelected(bookingCalenderLogic.controller.lastDateIndex);
                     },
-                  )
+                  ),
                 ],
               );
             }

@@ -17,6 +17,8 @@ class PaymentDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
+
       appBar: buildAppBar() as PreferredSizeWidget?,
       body: SafeArea(
         child: SingleChildScrollView(
