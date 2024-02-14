@@ -10,10 +10,11 @@ class DiveLogModel {
   final Instructor instructor;
   final String course;
   final String diveSite;
-  final String tankNo;
-  final String bottomTime;
-  final String maxDepth;
+  final int tankNo;
+  final int bottomTime;
+  final double maxDepth;
   final String bookingId;
+  final String id;
 
   DiveLogModel({
     required this.date,
@@ -25,6 +26,7 @@ class DiveLogModel {
     required this.bottomTime,
     required this.maxDepth,
     required this.bookingId,
+    required this.id,
   });
 
   DiveLogModel copyWith({
@@ -33,10 +35,11 @@ class DiveLogModel {
     Instructor? instructor,
     String? course,
     String? diveSite,
-    String? tankNo,
-    String? bottomTime,
-    String? maxDepth,
+    int? tankNo,
+    int? bottomTime,
+    double? maxDepth,
     String? bookingId,
+    String? id,
   }) =>
       DiveLogModel(
         date: date ?? this.date,
@@ -48,6 +51,7 @@ class DiveLogModel {
         bottomTime: bottomTime ?? this.bottomTime,
         maxDepth: maxDepth ?? this.maxDepth,
         bookingId: bookingId ?? this.bookingId,
+        id: id ?? this.id,
       );
 
   factory DiveLogModel.fromRawJson(String str) => DiveLogModel.fromMap(json.decode(str));
@@ -64,6 +68,7 @@ class DiveLogModel {
         bottomTime: json?['bottomTime'],
         maxDepth: json?['maxDepth'],
         bookingId: json?['bookingId'],
+        id: json?['id'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -76,5 +81,6 @@ class DiveLogModel {
         'bottomTime': bottomTime,
         'maxDepth': maxDepth,
         'bookingId': bookingId,
+        'id': id,
       };
 }

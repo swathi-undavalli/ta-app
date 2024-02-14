@@ -27,9 +27,11 @@ class _DiveLogViewState extends State<DiveLogView> {
   @override
   void initState() {
     super.initState();
+    logic.clear();
     logic.controller.booking = args[0];
     logic.controller.email = args[1];
-    logic.clear();
+    log(logic.controller.email.toString());
+    log(logic.controller.booking!.activity!.map((e) => e?.toMap()).toString());
   }
 
   @override
@@ -40,6 +42,9 @@ class _DiveLogViewState extends State<DiveLogView> {
       body: SafeArea(
         child: GetBuilder<DiveLogController>(
           builder: (controller) {
+            if (controller.showLoading) {
+              return buildShowLoading();
+            }
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -76,7 +81,7 @@ class _DiveLogViewState extends State<DiveLogView> {
                 AppTextField(
                   hintText: 'Bottom Time',
                   controller: controller.bottomTimeTED,
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: TextInputType.number,
                   suffixText: 'mins',
                   errorValidator: () {
                     return controller.bottomTimeError;
@@ -112,6 +117,20 @@ class _DiveLogViewState extends State<DiveLogView> {
             );
           },
         ).paddingSymmetric(horizontal: 20, vertical: 30).scrollable,
+      ),
+    );
+  }
+
+  Widget buildShowLoading() {
+    return Container(
+      color: Colors.white,
+      height: Get.height,
+      width: Get.width,
+      child: const Center(
+        child: CircularProgressIndicator(
+          color: Colors.white,
+          backgroundColor: Colors.grey,
+        ),
       ),
     );
   }
