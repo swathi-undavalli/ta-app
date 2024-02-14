@@ -1,7 +1,9 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -10,16 +12,16 @@ import '../../../boat/presentation/widgets/employee_selector_bottom_sheet.dart';
 import '../../controller/dive_log_controller.dart';
 import '../widgets/app_text_fields.dart';
 
-class DiveLogView extends StatefulWidget {
-  const DiveLogView({Key? key}) : super(key: key);
+class AddDiveLogView extends StatefulWidget {
+  const AddDiveLogView({Key? key}) : super(key: key);
 
   static const String id = 'AddLogView';
 
   @override
-  State<DiveLogView> createState() => _DiveLogViewState();
+  State<AddDiveLogView> createState() => _AddDiveLogViewState();
 }
 
-class _DiveLogViewState extends State<DiveLogView> {
+class _AddDiveLogViewState extends State<AddDiveLogView> {
   final DiveLogLogic logic = DiveLogLogic();
 
   var args = Get.arguments;

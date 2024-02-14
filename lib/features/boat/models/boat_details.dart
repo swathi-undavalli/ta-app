@@ -82,9 +82,9 @@ class Instructor {
   Instructor({
     required this.id,
     required this.name,
-    required this.air,
-    required this.nitrox,
-    required this.phone,
+    this.air,
+    this.nitrox,
+    this.phone,
   });
 
   Instructor copyWith({
@@ -119,6 +119,11 @@ class Instructor {
         'name': name,
         'nitrox': nitrox,
         'air': air,
+      };
+
+  Map<String, dynamic> toMiniJson() => {
+        'id': id,
+        'name': name,
       };
 
   factory Instructor.fromEmployee(Employee employee) {

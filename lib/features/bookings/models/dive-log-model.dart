@@ -5,8 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../boat/models/boat_details.dart';
 
 class DiveLogModel {
-  final Timestamp date;
-  final Timestamp time;
+  final Timestamp timeIn;
   final Instructor instructor;
   final String course;
   final String diveSite;
@@ -17,8 +16,7 @@ class DiveLogModel {
   final String id;
 
   DiveLogModel({
-    required this.date,
-    required this.time,
+    required this.timeIn,
     required this.instructor,
     required this.course,
     required this.diveSite,
@@ -30,8 +28,7 @@ class DiveLogModel {
   });
 
   DiveLogModel copyWith({
-    Timestamp? date,
-    Timestamp? time,
+    Timestamp? timeIn,
     Instructor? instructor,
     String? course,
     String? diveSite,
@@ -42,8 +39,7 @@ class DiveLogModel {
     String? id,
   }) =>
       DiveLogModel(
-        date: date ?? this.date,
-        time: time ?? this.time,
+        timeIn: timeIn ?? this.timeIn,
         instructor: instructor ?? this.instructor,
         course: course ?? this.course,
         diveSite: diveSite ?? this.diveSite,
@@ -58,23 +54,21 @@ class DiveLogModel {
 
   String toRawJson() => json.encode(toMap());
 
-  factory DiveLogModel.fromMap(Map<String, dynamic>? json) => DiveLogModel(
-        date: json?['date'],
-        time: json?['time'],
-        instructor: Instructor.fromMap(json?['instructor']),
-        course: json?['course'],
-        diveSite: json?['diveSite'],
-        tankNo: json?['tankNo'],
-        bottomTime: json?['bottomTime'],
-        maxDepth: json?['maxDepth'],
-        bookingId: json?['bookingId'],
-        id: json?['id'],
+  factory DiveLogModel.fromMap(Map<String, dynamic>? map) => DiveLogModel(
+        timeIn: map?['timeIn'],
+        instructor: Instructor.fromMap(map?['instructor']),
+        course: map?['course'],
+        diveSite: map?['diveSite'],
+        tankNo: map?['tankNo'],
+        bottomTime: map?['bottomTime'],
+        maxDepth: map?['maxDepth'],
+        bookingId: map?['bookingId'],
+        id: map?['id'],
       );
 
   Map<String, dynamic> toMap() => {
-        'date': date,
-        'time': time,
-        'instructor': instructor.toJson(),
+        'timeIn': timeIn,
+        'instructor': instructor.toMiniJson(),
         'course': course,
         'diveSite': diveSite,
         'tankNo': tankNo,

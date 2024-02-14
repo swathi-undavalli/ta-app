@@ -3,11 +3,13 @@ import 'package:get/get.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/services/auto_update.dart';
+import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/access_levels.dart';
 import '../../../activities/presentation/screens/all_activities_screen.dart';
 import '../../../all_bookings/presentation/screens/all_bookings_screen.dart';
 import '../../../board_plan/presentation/views/board_plan_view.dart';
 import '../../../boat/presentation/screens/manage_general_info.dart';
+import '../../../bookings/presentation/screens/customer_logs_view.dart';
 import '../../../employees/model/employee.dart';
 import '../../../employees/presentation/screens/employee_profile_screen.dart';
 import '../../../events/views/events_view.dart';
@@ -109,6 +111,13 @@ class NavDrawer extends StatelessWidget {
                 Get.offAndToNamed(LogScreen.id);
               },
             ),
+            buildMenuItem(
+              icon: Icons.collections_bookmark_rounded,
+              text: 'Customer logs',
+              onTap: () {
+                Get.offAndToNamed(CustomerLogsView.id);
+              },
+            ),
             buildLine(),
             (logic.controller.version != null && logic.controller.buildNumber != null)
                 ? buildMiniMenuItem(
@@ -116,7 +125,7 @@ class NavDrawer extends StatelessWidget {
                   )
                 : buildMiniMenuItem(text: 'Loading version number...'),
             buildMiniMenuItem(text: 'templeadventures.com'),
-            const SizedBox(height: 20)
+            Spacing.h20,
           ],
         ),
       ),

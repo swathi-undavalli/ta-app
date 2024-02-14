@@ -87,7 +87,7 @@ class _AppTextFieldsState extends State<AppTextField> {
             suffixText: widget.suffixText,
             suffixIcon: widget.suffixIcon,
             icon: widget.icon,
-            errorText: widget.errorValidator!(),
+            errorText: (widget.errorValidator != null) ? widget.errorValidator!() : null,
             labelStyle: const TextStyle(
               fontSize: FontSize.small,
               fontFamily: AppFonts.nunito,

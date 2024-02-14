@@ -1,57 +1,60 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/core/util/utils.dart';
+
+import '../../../core/util/utils.dart';
 import '../../boat/models/boat_details.dart';
 import '../models/booking_model.dart';
-import '../models/customer_model.dart';
 import '../models/dive-log-model.dart';
 
 class DiveLogLogic {
   DiveLogController controller = Get.put(DiveLogController());
 
   Future<void> onSubmitPressed() async {
-    if (isValid()) {
-      controller.showLoading = true;
-      controller.update();
-      String id = DateTime.now().toIso8601String();
-      final now = DateTime.now();
-      DateTime newTime = DateTime(
-        now.year,
-        now.month,
-        now.day,
-        controller.selectedTime.hour,
-        controller.selectedTime.minute,
-      );
-      DiveLogModel diveLogModel = DiveLogModel(
-        date: Timestamp.fromDate(controller.selectedDate),
-        time: Timestamp.fromDate(newTime),
-        instructor: controller.instructor[0],
-        course: (controller.booking?.activity != null && controller.booking!.activity!.isNotEmpty)
-            ? controller.booking!.activity![0]!.name!
-            : '-',
-        diveSite: controller.diveSiteTED.text,
-        tankNo: int.tryParse(controller.tankNoTED.text) ?? 0,
-        bottomTime: int.tryParse(controller.bottomTimeTED.text) ?? 0,
-        maxDepth: double.tryParse(controller.maxDepthTED.text) ?? 0,
-        bookingId: controller.booking!.id!,
-        id: id,
-      );
+    if (isValid == false) return;
 
-      await FirebaseFirestore.instance
-          .collection('customers')
-          .doc(controller.email)
-          .collection('diveLogs')
-          .doc(id)
-          .set(diveLogModel.toMap());
-      controller.showLoading = false;
-      controller.update();
-      showToast('Log added successfully');
-      Get.back();
-    }
+    controller.showLoading = true;
+    controller.update();
+
+    String id = DateTime.now().microsecondsSinceEpoch.toString();
+    DateTime newTime = DateTime(
+      controller.selectedDate.year,
+      controller.selectedDate.month,
+      controller.selectedDate.day,
+      controller.selectedTime.hour,
+      controller.selectedTime.minute,
+    );
+    DiveLogModel diveLogModel = DiveLogModel(
+      timeIn: Timestamp.fromDate(newTime),
+      instructor: controller.instructor[0],
+      course: (controller.booking?.activity != null && controller.booking!.activity!.isNotEmpty)
+          ? controller.booking!.activity![0]!.name!
+          : '-',
+      diveSite: controller.diveSiteTED.text,
+      tankNo: int.tryParse(controller.tankNoTED.text) ?? 0,
+      bottomTime: int.tryParse(controller.bottomTimeTED.text) ?? 0,
+      maxDepth: double.tryParse(controller.maxDepthTED.text) ?? 0,
+      bookingId: controller.booking!.id!,
+      id: id,
+    );
+
+    await FirebaseFirestore.instance
+        .collection('customers')
+        .doc('kamesh.wb@gmail.com')
+        //TODO: Update this @Sahitha
+        // .doc(controller.email)
+        .collection('diveLogs')
+        .doc(id)
+        .set(diveLogModel.toMap());
+
+    controller.showLoading = false;
+    controller.update();
+
+    showToast('Log added successfully');
+    Get.back();
   }
 
-  bool isValid() {
+  bool get isValid {
     bool isValid = true;
     controller.diveSiteError = null;
     controller.tankNoError = null;

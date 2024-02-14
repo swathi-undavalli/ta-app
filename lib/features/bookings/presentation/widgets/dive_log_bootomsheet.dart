@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../models/booking_model.dart';
-import '../screens/dive_log_view.dart';
+import '../screens/add_dive_log_view.dart';
 import 'add_customer_dialog.dart';
 
 class DiveLogBottomSheet extends StatefulWidget {
@@ -93,7 +94,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
                       IconButton(
                         onPressed: () {
                           Get.toNamed(
-                            DiveLogView.id,
+                            AddDiveLogView.id,
                             arguments: [
                               widget.bookingModel,
                               widget.bookingModel.pax?[index]['email'],
