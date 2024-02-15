@@ -10,7 +10,7 @@ import '../../features/board_plan/presentation/views/board_plan_view.dart';
 import '../../features/boat/presentation/screens/manage_boats_page.dart';
 import '../../features/boat/presentation/screens/manage_general_info.dart';
 import '../../features/bookings/presentation/screens/add_customer_details_screen.dart';
-import '../../features/bookings/presentation/screens/add_dive_log_view.dart';
+import '../../features/bookings/presentation/screens/dive_log_view.dart';
 import '../../features/bookings/presentation/screens/add_payments_screen.dart';
 import '../../features/bookings/presentation/screens/book_date_time_screen.dart';
 import '../../features/bookings/presentation/screens/booking_screen.dart';
@@ -18,6 +18,7 @@ import '../../features/bookings/presentation/screens/customer_logs_view.dart';
 import '../../features/bookings/presentation/screens/edit_payments_screen.dart';
 import '../../features/bookings/presentation/screens/new_booking_screen.dart';
 import '../../features/bookings/presentation/screens/payment_details_screen.dart';
+import '../../features/bookings/presentation/widgets/pdf_preview.dart';
 import '../../features/conditions/screens/add_conditions_screen.dart';
 import '../../features/dashboard/controller/dashboard_controller.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
@@ -103,7 +104,7 @@ class MyApp extends StatelessWidget {
         EventsView.id: (context) => const EventsView(),
         AddOffersView.id: (context) => const AddOffersView(),
         OffersView.id: (context) => const OffersView(),
-        AddDiveLogView.id: (context) => const AddDiveLogView(),
+        DiveLogView.id: (context) => const DiveLogView(),
       },
     );
   }

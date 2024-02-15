@@ -9,7 +9,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart' as intl;
 import 'package:share/share.dart';
-import 'package:temple_adventures/core/util/spacing_widgets.dart';
+import '../util/spacing_widgets.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import '../../features/activities/model/colors_data.dart';
@@ -46,10 +46,17 @@ class BookingsExpansionPanel extends StatelessWidget {
   List<Widget> expansions = [];
   TextEditingController depositTED = TextEditingController();
   TextEditingController searchTED = TextEditingController();
+  final DateTime selectedDate;
 
   BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
 
-  BookingsExpansionPanel({Key? key, this.items, this.onDeletePressed, this.onSearchTap, required this.searchBar})
+  BookingsExpansionPanel(
+      {Key? key,
+      this.items,
+      this.onDeletePressed,
+      this.onSearchTap,
+      required this.searchBar,
+      required this.selectedDate})
       : super(key: key);
 
   generateList(List<ItemModel> itemsList) {
@@ -81,7 +88,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                 }).toList(),
               )
             else
-              ...generateList(items!)
+              ...generateList(items!),
           ],
         );
       },
@@ -283,14 +290,13 @@ Please click the below link : $link
             if (itemModel!.bookingModel != null) {
               String bookingId = itemModel.bookingModel!.id!;
               String bs64 = base64.encode(bookingId.codeUnits);
-              print(bs64);
               String link =
                   'https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=';
               log(link);
 
               var headers = {
                 'x-api-key': 'uSirf5x9fM5iYjPuu8GXS4TVvLbt1tdg9DUe7f7N',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
               };
               final result = await http.post(
                 Uri.parse('https://api.aws3.link/shorten'),
@@ -590,29 +596,15 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                       ),
                                     Spacing.h10,
                                     if (!itemModel.bookingModel!.isQuickBooking && itemModel.colorCode != 'Blue')
-                                      Row(
-                                        children: [
-                                          AppButton.miniFlat(
-                                            text: 'Add Log',
-                                            onTap: () {
-                                              DiveLogBottomSheet.show(
-                                                context,
-                                                bookingModel: itemModel.bookingModel!,
-                                              );
-                                            },
-                                          ),
-                                          Spacer(),
-                                          AppButton.miniFlat(
-                                            text: 'Fetch Logs',
-                                            onTap: () {
-                                              DiveLogBottomSheet.show(
-                                                context,
-                                                bookingModel: itemModel.bookingModel!,
-                                              );
-                                            },
-                                          ),
-                                          Spacing.w10,
-                                        ],
+                                      AppButton.miniFlat(
+                                        text: 'Add Log',
+                                        onTap: () {
+                                          DiveLogBottomSheet.show(
+                                            context,
+                                            bookingModel: itemModel.bookingModel!,
+                                            date: selectedDate,
+                                          );
+                                        },
                                       ),
                                     Spacing.h20,
                                     if (!itemModel.bookingModel!.isQuickBooking)
@@ -629,7 +621,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                             paymentMode: itemModel.bookingModel!.paymentMode,
                                             time: itemModel.bookingModel!.createdAt,
                                           ),
-                                          ...itemModel.bookingModel!.payments!
+                                          ...itemModel.bookingModel!.payments!,
                                         ],
                                       ),
                                     const SizedBox(height: 10),
@@ -770,7 +762,6 @@ Regards,
                                               onTap: () async {
                                                 String bookingId = itemModel.bookingModel!.id!;
                                                 String bs64 = base64.encode(bookingId.codeUnits);
-                                                print(bs64);
                                                 String link =
                                                     'https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=';
 
@@ -825,7 +816,7 @@ Regards,
                                                                   },
                                                                   child: const Icon(Icons.close),
                                                                 ),
-                                                              )
+                                                              ),
                                                             ],
                                                           ),
                                                           const SizedBox(height: 50),
@@ -968,7 +959,7 @@ Regards,
                                                                       },
                                                                       child: const Icon(Icons.close),
                                                                     ),
-                                                                  )
+                                                                  ),
                                                                 ],
                                                               ),
                                                               const SizedBox(height: 20),
@@ -1300,7 +1291,7 @@ Regards,
                 onTap: () {
                   Get.toNamed(AddPaymentsScreen.id, arguments: itemModel!.bookingModel);
                 },
-              ).paddingOnly(right: 15)
+              ).paddingOnly(right: 15),
             ],
           ),
         ),

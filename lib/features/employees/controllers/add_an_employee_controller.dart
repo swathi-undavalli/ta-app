@@ -55,6 +55,7 @@ class AddAnEmployeeLogic {
           notifications: controller.notifications,
           boatPlan: controller.boatPlan,
           marketingGallery: controller.marketingGallery,
+          offers: controller.offers,
         ),
       );
       FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
@@ -109,6 +110,7 @@ class AddAnEmployeeLogic {
           notifications: controller.notifications,
           boatPlan: controller.boatPlan,
           marketingGallery: controller.marketingGallery,
+          offers: controller.offers,
         ),
       );
       FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
@@ -204,6 +206,7 @@ class AddAnEmployeeController extends GetxController {
   bool? _notifications = false;
   bool? _boatPlan = false;
   bool? _marketingGallery = false;
+  bool? _offers = false;
 
   bool? get notifications => _notifications;
 
@@ -230,6 +233,13 @@ class AddAnEmployeeController extends GetxController {
 
   set viewBookings(bool? value) {
     _viewBookings = value;
+    update();
+  }
+
+  bool? get offers => _offers;
+
+  set offers(bool? value) {
+    _offers = value;
     update();
   }
 
@@ -274,6 +284,7 @@ class AddAnEmployeeController extends GetxController {
     addActivity = false;
     notifications = false;
     marketingGallery = false;
+    offers = false;
   }
 
   bool? get createBookings => _createBookings;

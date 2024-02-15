@@ -132,7 +132,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                           color: (boat.id == controller.selectedBoat?.id) ? AppColors.text.lightSkyBlue : Colors.white,
                           title: boat.name,
                         ),
-                      )
+                      ),
                     ],
                   ),
                   Spacing.h20,
@@ -183,7 +183,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                         key: widgetKey,
                         child: const GeneralInfo(),
                       ),
-                    )
+                    ),
                 ],
               ).paddingSymmetric(horizontal: 20, vertical: 20),
             );

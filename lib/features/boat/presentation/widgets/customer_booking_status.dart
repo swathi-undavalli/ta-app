@@ -100,7 +100,7 @@ class _BookingStatusState extends State<BookingStatus> {
               size: 16,
             ),
           ),
-        )
+        ),
       ],
     );
   }

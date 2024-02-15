@@ -40,7 +40,7 @@ class ShareBookingDetails {
               pw.Spacer(),
               pw.FittedBox(
                 child: pw.Text(
-                  'EAST COAST WATERSPORTS PVT LTD,\n#9A, Gandhi st., Colas Nagar,\nOpposite Indira Gandhi Stadium \nPondicerry, India \nContact : +91 9940219449',
+                  'EAST COAST WATERSPORTS PVT LTD,\n#6A, Gandhi st., Colas Nagar,\nOpposite to Indira Gandhi Stadium \nPondicherry, India \nContact : +91 9940219449 / 6385686600',
                   style: const pw.TextStyle(
                     color: PdfColor.fromInt(0xff263238),
                     fontSize: 14,

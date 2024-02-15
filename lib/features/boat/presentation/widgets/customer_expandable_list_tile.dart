@@ -34,21 +34,17 @@ class CustomerExpandableListTile extends StatefulWidget {
   final Color color;
 
   @override
-  State<CustomerExpandableListTile> createState() =>
-      _CustomerExpandableListTileState();
+  State<CustomerExpandableListTile> createState() => _CustomerExpandableListTileState();
 }
 
-class _CustomerExpandableListTileState
-    extends State<CustomerExpandableListTile> {
+class _CustomerExpandableListTileState extends State<CustomerExpandableListTile> {
   bool isExpanded = false;
 
   ItemModel get itemModel => widget.itemModel;
 
   @override
   Widget build(BuildContext context) {
-    final DocumentReference bookingDoc = FirebaseFirestore.instance
-        .collection('bookings')
-        .doc(itemModel.bookingID);
+    final DocumentReference bookingDoc = FirebaseFirestore.instance.collection('bookings').doc(itemModel.bookingID);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -96,17 +92,16 @@ class _CustomerExpandableListTileState
                   );
                 }
 
-                Booking bookingModel =
-                      Booking.fromMap(data as Map<String, dynamic>);
+                Booking bookingModel = Booking.fromMap(data as Map<String, dynamic>);
 
-                  return Row(
-                    children: [
-                      Expanded(
-                        child: Row(
-                          children: [
-                            Spacing.w10,
-                            Flexible(
-                              child: Text(
+                return Row(
+                  children: [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          Spacing.w10,
+                          Flexible(
+                            child: Text(
                               widget.title,
                               style: TextStyle(
                                 color: AppColors.text.black,
@@ -359,7 +354,7 @@ class _CustomerExpandableListTileState
                       );
                     },
                     initialValue: bookingModel.getBoatInfo(widget.selectedDate)?.nitrox ?? 0,
-                  )
+                  ),
                 ],
               ),
               Column(
@@ -381,7 +376,7 @@ class _CustomerExpandableListTileState
                       );
                     },
                     initialValue: bookingModel.getBoatInfo(widget.selectedDate)?.air ?? 0,
-                  )
+                  ),
                 ],
               ),
             ],
@@ -498,7 +493,7 @@ class _CustomerExpandableListTileState
                   );
                 },
                 initialValue: bookingModel.getInstructorTanks(widget.selectedDate)?.nitrox ?? 0,
-              )
+              ),
             ],
           ),
           Column(
@@ -520,7 +515,7 @@ class _CustomerExpandableListTileState
                   );
                 },
                 initialValue: bookingModel.getInstructorTanks(widget.selectedDate)?.air ?? 0,
-              )
+              ),
             ],
           ),
         ],
@@ -552,17 +547,14 @@ class _CustomerExpandableListTileState
             ),
             InkWell(
               onTap: () async {
-                List<Instructor> diveBuddies =
-                    (await EmpSelectorBottomSheet.getSelectedInstructors(
-                          context,
-                          initialSelectedInstructors: bookingItemModel
-                                  .bookingModel?.boatDetails?.diveBuddies ??
-                              [],
-                          instructorLimit: -1,
-                          employeeType: EmployeeType.showAllDiveTeam,
-                          tanksRequired: true,
-                        )) ??
-                        [];
+                List<Instructor> diveBuddies = (await EmpSelectorBottomSheet.getSelectedInstructors(
+                      context,
+                      initialSelectedInstructors: bookingItemModel.bookingModel?.boatDetails?.diveBuddies ?? [],
+                      instructorLimit: -1,
+                      employeeType: EmployeeType.showAllDiveTeam,
+                      tanksRequired: true,
+                    )) ??
+                    [];
 
                 await updateBoatDetails(
                   bookingModel: bookingModel,
@@ -714,8 +706,7 @@ class _CustomerExpandableListTileState
     } else if (boatId != null || air != null || nitrox != null) {
       BoatInfo? boatInfo = bookingModel.getBoatInfo(selectedDate);
       if (boatInfo == null) {
-        boatInfo =
-            BoatInfo(id: boatId ?? '', air: air ?? 0, nitrox: nitrox ?? 0);
+        boatInfo = BoatInfo(id: boatId ?? '', air: air ?? 0, nitrox: nitrox ?? 0);
       } else {
         boatInfo = boatInfo.copyWith(id: boatId, air: air, nitrox: nitrox);
       }
@@ -725,8 +716,7 @@ class _CustomerExpandableListTileState
         boatInfo,
       );
     } else if (instructorAir != null || instructorNitrox != null) {
-      InstructorTanks? instructorTanks =
-          bookingModel.getInstructorTanks(selectedDate);
+      InstructorTanks? instructorTanks = bookingModel.getInstructorTanks(selectedDate);
       if (instructorTanks == null) {
         instructorTanks = InstructorTanks(
           air: instructorAir ?? 0,
@@ -752,10 +742,7 @@ class _CustomerExpandableListTileState
       diveBuddies: diveBuddies,
     );
 
-    await FirebaseFirestore.instance
-        .collection('bookings')
-        .doc(bookingModel.id)
-        .set(
+    await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(
           bookingModel.toMap(),
         );
   }

@@ -549,38 +549,43 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
       children: [
         Row(
           children: [
-            SizedBox(
-              width: MediaQuery.of(context).size.width - 116,
-              child: Text(
-                "$title ${(isTanksRequired) ? "(N - A)" : ""}",
-                style: const TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
+            Expanded(
+              child: SizedBox(
+                width: MediaQuery.of(context).size.width,
+                child: Text(
+                  "$title ${(isTanksRequired) ? "(N - A)" : ""}",
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
             ),
-            GestureDetector(
-              onTap: () async {
-                employees = (await EmpSelectorBottomSheet.getSelectedInstructors(
-                      context,
-                      initialSelectedInstructors: employees,
-                      instructorLimit: employeeLimit,
-                      employeeType: employeeType,
-                      tanksRequired: isTanksRequired,
-                    )) ??
-                    [];
+            SizedBox(
+              width: 60,
+              child: GestureDetector(
+                onTap: () async {
+                  employees = (await EmpSelectorBottomSheet.getSelectedInstructors(
+                        context,
+                        initialSelectedInstructors: employees,
+                        instructorLimit: employeeLimit,
+                        employeeType: employeeType,
+                        tanksRequired: isTanksRequired,
+                      )) ??
+                      [];
 
-                setState(() {});
-              },
-              child: const Text(
-                'Change',
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Colors.blue,
-                  decoration: TextDecoration.underline,
-                ),
-              ).paddingOnly(left: 10, right: 7),
+                  setState(() {});
+                },
+                child: const Text(
+                  'Change',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Colors.blue,
+                    decoration: TextDecoration.underline,
+                  ),
+                ).paddingOnly(left: 10, right: 7),
+              ),
             ),
             const Icon(
               Icons.edit,

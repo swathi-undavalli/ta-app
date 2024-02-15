@@ -334,6 +334,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
       logic.controller.editActivityPrices = employee.accessLevels?.editActivityPrices ?? false;
       logic.controller.addActivity = employee.accessLevels?.addActivity ?? false;
       logic.controller.marketingGallery = employee.accessLevels?.marketingGallery ?? false;
+      logic.controller.offers = employee.accessLevels?.offers ?? false;
 
       return true;
     }

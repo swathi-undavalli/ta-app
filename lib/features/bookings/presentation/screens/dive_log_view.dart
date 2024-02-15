@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -8,20 +9,22 @@ import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../boat/models/boat_details.dart';
+import '../../../boat/models/boats.dart';
 import '../../../boat/presentation/widgets/employee_selector_bottom_sheet.dart';
 import '../../controller/dive_log_controller.dart';
 import '../widgets/app_text_fields.dart';
 
-class AddDiveLogView extends StatefulWidget {
-  const AddDiveLogView({Key? key}) : super(key: key);
+class DiveLogView extends StatefulWidget {
+  const DiveLogView({Key? key}) : super(key: key);
 
   static const String id = 'AddLogView';
 
   @override
-  State<AddDiveLogView> createState() => _AddDiveLogViewState();
+  State<DiveLogView> createState() => _DiveLogViewState();
 }
 
-class _AddDiveLogViewState extends State<AddDiveLogView> {
+class _DiveLogViewState extends State<DiveLogView> {
   final DiveLogLogic logic = DiveLogLogic();
 
   var args = Get.arguments;
@@ -32,8 +35,32 @@ class _AddDiveLogViewState extends State<AddDiveLogView> {
     logic.clear();
     logic.controller.booking = args[0];
     logic.controller.email = args[1];
-    log(logic.controller.email.toString());
-    log(logic.controller.booking!.activity!.map((e) => e?.toMap()).toString());
+    logic.controller.selectedDate = args[2];
+    String? boatId = logic.controller.booking?.getBoatInfo(logic.controller.selectedDate)?.id;
+    if (boatId != null) {
+      fetchBoatDetails(boatId);
+    }
+    if (logic.controller.booking?.instructor != null) {
+      logic.controller.instructor = [
+        logic.controller.booking!.instructor!,
+      ];
+    }
+  }
+
+  Future<void> fetchBoatDetails(String? boatId) async {
+    var d = await FirebaseFirestore.instance
+        .collection('dailyBoats')
+        .doc(DateFormat('dd-MM-yyyy').format(logic.controller.selectedDate))
+        .get();
+    Map<String, dynamic>? data = d.data();
+    BoatsModel? boatsModel = BoatsModel.fromMap(data);
+    List<Boat> allBoats = boatsModel.boats ?? [];
+    for (var boat in allBoats) {
+      if (boat.id == boatId) {
+        logic.controller.diveSiteTED.text = boat.diveSite ?? '-';
+      }
+    }
+    setState(() {});
   }
 
   @override
@@ -102,6 +129,16 @@ class _AddDiveLogViewState extends State<AddDiveLogView> {
                   },
                   validator: (maxDepthError) {
                     return maxDepthError;
+                  },
+                ),
+                AppTextField(
+                  hintText: 'Rental Equipment',
+                  controller: controller.rentalEquipmentTED,
+                  errorValidator: () {
+                    return null;
+                  },
+                  validator: (_) {
+                    return null;
                   },
                 ),
                 Spacing.h30,

@@ -1,22 +1,25 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../models/booking_model.dart';
-import '../screens/add_dive_log_view.dart';
+import '../screens/dive_log_view.dart';
 import 'add_customer_dialog.dart';
 
 class DiveLogBottomSheet extends StatefulWidget {
   const DiveLogBottomSheet({
     Key? key,
     required this.bookingModel,
+    required this.selectedDate,
   }) : super(key: key);
 
   final Booking bookingModel;
+  final DateTime selectedDate;
 
-  static void show(BuildContext context, {required Booking bookingModel}) async {
+  static void show(BuildContext context, {required Booking bookingModel, required DateTime date}) async {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -24,6 +27,7 @@ class DiveLogBottomSheet extends StatefulWidget {
       builder: (BuildContext context) {
         return DiveLogBottomSheet(
           bookingModel: bookingModel,
+          selectedDate: date,
         );
       },
     );
@@ -34,12 +38,6 @@ class DiveLogBottomSheet extends StatefulWidget {
 }
 
 class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
-  String? phoneNumber;
-  String? countryCode;
-  String? isoCode = 'IN';
-  TextEditingController nameTED = TextEditingController();
-  TextEditingController emailTED = TextEditingController();
-  bool showLoading = false;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -89,15 +87,16 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
                   Row(
                     children: [
                       Text("${widget.bookingModel.pax?[index]['first-name']}"
-                          "${widget.bookingModel.pax?[index]['last-name']}"),
+                          " ${widget.bookingModel.pax?[index]['last-name']}"),
                       const Spacer(),
                       IconButton(
                         onPressed: () {
                           Get.toNamed(
-                            AddDiveLogView.id,
+                            DiveLogView.id,
                             arguments: [
                               widget.bookingModel,
                               widget.bookingModel.pax?[index]['email'],
+                              widget.selectedDate,
                             ],
                           );
                         },
@@ -108,6 +107,13 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
                       ),
                     ],
                   ),
+                  AppButton.miniFlat(
+                    text: 'Copy Email',
+                    onTap: () async {
+                      String email = widget.bookingModel.pax?[index]['email'];
+                      await Clipboard.setData(ClipboardData(text: email));
+                    },
+                  )
                 ],
               ),
             ),

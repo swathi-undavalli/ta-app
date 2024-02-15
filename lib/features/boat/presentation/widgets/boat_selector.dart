@@ -54,7 +54,7 @@ class _BoatSelectorState extends State<BoatSelector> {
     return PopupMenuButton<Boat>(
       child: (selectedBoat == null)
           ? Container(
-        height: 31,
+              height: 31,
               width: 100,
               decoration: BoxDecoration(
                 color: Colors.black,
@@ -73,7 +73,7 @@ class _BoatSelectorState extends State<BoatSelector> {
                 Row(
                   children: [
                     const Text(
-                      'Selected Boat :',
+                      ' Boat :',
                       style: TextStyle(
                         fontSize: 12,
                         color: Colors.black,
@@ -96,14 +96,17 @@ class _BoatSelectorState extends State<BoatSelector> {
                     ),
                   ],
                 ),
-                Text(
-                  '${selectedBoat?.name} @ ${selectedBoat?.time}',
-                  style: const TextStyle(
-                    fontSize: 12,
-                    color: Colors.black,
-                    // fontWeight: FontWeight.bold,
-                  ),
-                ).paddingAll(2),
+                SizedBox(
+                  width: 100,
+                  child: Text(
+                    '${selectedBoat?.name} @ ${selectedBoat?.time}',
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.black,
+                      // fontWeight: FontWeight.bold,
+                    ),
+                  ).paddingAll(2),
+                ),
               ],
             ),
       itemBuilder: (BuildContext context) {

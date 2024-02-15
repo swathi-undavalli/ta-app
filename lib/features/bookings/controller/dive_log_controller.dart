@@ -36,13 +36,12 @@ class DiveLogLogic {
       maxDepth: double.tryParse(controller.maxDepthTED.text) ?? 0,
       bookingId: controller.booking!.id!,
       id: id,
+      rentalEquipment: controller.rentalEquipmentTED.text,
     );
 
     await FirebaseFirestore.instance
         .collection('customers')
-        .doc('kamesh.wb@gmail.com')
-        //TODO: Update this @Sahitha
-        // .doc(controller.email)
+        .doc(controller.email)
         .collection('diveLogs')
         .doc(id)
         .set(diveLogModel.toMap());
@@ -100,6 +99,7 @@ class DiveLogLogic {
     controller.tankNoTED.text = '';
     controller.bottomTimeTED.text = '';
     controller.maxDepthTED.text = '';
+    controller.rentalEquipmentTED.text = '';
     controller.instructor = [];
     controller.selectedTime = TimeOfDay.now();
     controller.selectedDate = DateTime.now();
@@ -115,6 +115,7 @@ class DiveLogController extends GetxController {
   TextEditingController tankNoTED = TextEditingController();
   TextEditingController bottomTimeTED = TextEditingController();
   TextEditingController maxDepthTED = TextEditingController();
+  TextEditingController rentalEquipmentTED = TextEditingController();
   String? diveSiteError;
   String? tankNoError;
   String? bottomTimeError;

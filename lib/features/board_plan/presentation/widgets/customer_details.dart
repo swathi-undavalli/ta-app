@@ -517,7 +517,7 @@ class CustomerListState extends State<CustomerList> {
                   Colors.white,
                   true,
                 ).paddingOnly(top: 2, left: 1, right: 1),
-              )
+              ),
             ],
           ).paddingOnly(top: 3),
           buildDiveBuddiesList(bookings, index),
@@ -579,7 +579,7 @@ class CustomerListState extends State<CustomerList> {
                         ],
                       ),
                     )
-                    .toList()
+                    .toList(),
             ],
           ),
         ),
@@ -682,7 +682,7 @@ class CustomerListState extends State<CustomerList> {
                 ],
               ),
             ],
-          ).paddingSymmetric(horizontal: 5)
+          ).paddingSymmetric(horizontal: 5),
         ],
       ),
     );

@@ -85,7 +85,7 @@ class NavDrawer extends StatelessWidget {
               },
             ),
             EmployeeAccess(
-              access: AccessRights.editActivityPrices,
+              access: AccessRights.offers,
               child: buildMenuItem(
                 icon: Icons.percent,
                 text: 'Offers',
@@ -111,12 +111,15 @@ class NavDrawer extends StatelessWidget {
                 Get.offAndToNamed(LogScreen.id);
               },
             ),
-            buildMenuItem(
-              icon: Icons.collections_bookmark_rounded,
-              text: 'Customer logs',
-              onTap: () {
-                Get.offAndToNamed(CustomerLogsView.id);
-              },
+            EmployeeAccess(
+              access: AccessRights.offers,
+              child: buildMenuItem(
+                icon: Icons.collections_bookmark_rounded,
+                text: 'Customer logs',
+                onTap: () {
+                  Get.offAndToNamed(CustomerLogsView.id);
+                },
+              ),
             ),
             buildLine(),
             (logic.controller.version != null && logic.controller.buildNumber != null)

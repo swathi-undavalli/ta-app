@@ -442,6 +442,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
             items: bookingExpansionList,
             onDeletePressed: () {},
             searchBar: true,
+            selectedDate: controller.selectedDate,
             onSearchTap: () {
               if (onSearchTap != null) onSearchTap!();
             },

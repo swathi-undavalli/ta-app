@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-
 import '../../models/customer_model.dart';
 import '../../models/dive-log-model.dart';
 import 'share_booking_details_widget.dart';
@@ -32,7 +30,7 @@ class CustomerLogs {
               pw.Spacer(),
               pw.FittedBox(
                 child: pw.Text(
-                  'EAST COAST WATERSPORTS PVT LTD,\n#9A, Gandhi st., Colas Nagar,\nOpposite Indira Gandhi Stadium \nPondicerry, India \nContact : +91 9940219449',
+                  'EAST COAST WATERSPORTS PVT LTD,\n#6A, Gandhi st., Colas Nagar,\nOpposite to Indira Gandhi Stadium \nPondicherry, India \nContact : +91 9940219449 / 6385686600',
                   style: const pw.TextStyle(
                     color: PdfColor.fromInt(0xff263238),
                     fontSize: 14,
@@ -55,7 +53,7 @@ class CustomerLogs {
               pw.SizedBox(height: 6),
               buildSubTitle(
                 title: 'Name',
-                text: 'booking name',
+                text: customer.name,
               ),
               buildSubTitle(
                 title: 'Email ID',
@@ -81,7 +79,7 @@ class CustomerLogs {
         ],
       ),
     );
-    return ShareBookingDetails.saveDocument(name: '${customer.email}.pdf', pdf: pdf);
+    return ShareBookingDetails.saveDocument(name: '${customer.name}.pdf', pdf: pdf);
   }
 
   static pw.Widget buildSectionTitle({required String title}) {
@@ -232,11 +230,10 @@ class CustomerLogs {
             child: buildText('${log.maxDepth}'),
           ),
           buildText(
-            DateFormat('kk:mm a').format(log.timeIn.toDate()),
+            DateFormat('hh:mm a').format(log.timeIn.toDate()),
           ),
           pw.SizedBox(width: 10),
-          //TODO: Update this @Sahitha
-          buildText('BCD, Fins, Regulator'),
+          buildText((log.rentalEquipment != null) ? log.rentalEquipment! : '-'),
         ],
       ),
     );
@@ -267,7 +264,7 @@ class CustomerLogs {
                 // fontWeight: FontWeight.w500,
               ),
             ),
-          )
+          ),
         ],
       ),
     );

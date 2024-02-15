@@ -58,7 +58,7 @@ class _CustomersExpansionPanelState extends State<CustomersExpansionPanel> {
                 context,
               )
             else
-              ...generateList(widget.items!, context)
+              ...generateList(widget.items!, context),
           ],
         );
       },

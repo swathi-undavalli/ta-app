@@ -43,7 +43,7 @@ class AllActivitiesScreen extends StatelessWidget {
             ),
           ),
         ),
-        buildShowLoading()
+        buildShowLoading(),
       ],
     );
   }
