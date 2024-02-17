@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:temple_adventures/features/offers/presentation/views/add_offers_view.dart';
+import '../../features/offers/presentation/views/add_offers_view.dart';
 
 import '../../features/activities/presentation/screens/activity_edit_screen.dart';
 import '../../features/activities/presentation/screens/add_new_activity_screen.dart';
@@ -18,7 +18,7 @@ import '../../features/bookings/presentation/screens/customer_logs_view.dart';
 import '../../features/bookings/presentation/screens/edit_payments_screen.dart';
 import '../../features/bookings/presentation/screens/new_booking_screen.dart';
 import '../../features/bookings/presentation/screens/payment_details_screen.dart';
-import '../../features/bookings/presentation/widgets/pdf_preview.dart';
+import '../../features/coast_guard_slip/presentation/views/coast_guard_slip_view.dart';
 import '../../features/conditions/screens/add_conditions_screen.dart';
 import '../../features/dashboard/controller/dashboard_controller.dart';
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
@@ -105,6 +105,7 @@ class MyApp extends StatelessWidget {
         AddOffersView.id: (context) => const AddOffersView(),
         OffersView.id: (context) => const OffersView(),
         DiveLogView.id: (context) => const DiveLogView(),
+        CoastGuardSlipView.id: (context) =>  CoastGuardSlipView(),
       },
     );
   }

@@ -15,27 +15,54 @@ class CustomerLogs {
     final imageUint8List = imageByteData.buffer.asUint8List(imageByteData.offsetInBytes, imageByteData.lengthInBytes);
 
     final image = pw.MemoryImage(imageUint8List);
-    const pageTheme = pw.PageTheme(
-      pageFormat: PdfPageFormat.a4,
-    );
 
     pdf.addPage(
       pw.MultiPage(
-        pageTheme: pageTheme,
+        pageTheme: pw.PageTheme(
+          pageFormat: PdfPageFormat.a4.landscape,
+        ),
         build: (context) => <pw.Widget>[
           pw.Row(
             children: [
+              pw.SizedBox(width: 30),
+              pw.Image(image, height: 70, width: 70),
               pw.Spacer(),
-              pw.Image(image, height: 60, width: 60),
-              pw.Spacer(),
-              pw.FittedBox(
-                child: pw.Text(
-                  'EAST COAST WATERSPORTS PVT LTD,\n#6A, Gandhi st., Colas Nagar,\nOpposite to Indira Gandhi Stadium \nPondicherry, India \nContact : +91 9940219449 / 6385686600',
-                  style: const pw.TextStyle(
-                    color: PdfColor.fromInt(0xff263238),
-                    fontSize: 14,
-                  ),
+              pw.Text(
+                'Temple Adventures',
+                textAlign: pw.TextAlign.center,
+                style: pw.TextStyle(
+                  color: PdfColor.fromInt(0xff263238),
+                  fontSize: 30,
+                  wordSpacing: 2,
+                  fontBold: pw.Font.courierBold(),
                 ),
+              ),
+              pw.Spacer(),
+              pw.Column(
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Text(
+                    customer.name,
+                    style: const pw.TextStyle(
+                      fontSize: 14,
+                      color: PdfColor.fromInt(0xff575757),
+                      // fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  pw.SizedBox(height: 5),
+                  pw.Text(
+                    customer.email ?? '-',
+                    style: const pw.TextStyle(
+                      fontSize: 14,
+                      color: PdfColor.fromInt(0xff575757),
+                      // fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  buildSubTitle(
+                    title: 'Total Dives :',
+                    text: logs.length.toString(),
+                  ),
+                ],
               ),
             ],
           ),
@@ -45,27 +72,6 @@ class CustomerLogs {
             width: Get.width * 2,
             color: const PdfColor.fromInt(0xffD9D9D9),
           ),
-          pw.SizedBox(height: 25),
-          pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              buildSectionTitle(title: 'Customer Details'),
-              pw.SizedBox(height: 6),
-              buildSubTitle(
-                title: 'Name',
-                text: customer.name,
-              ),
-              buildSubTitle(
-                title: 'Email ID',
-                text: customer.email,
-              ),
-              buildSubTitle(
-                title: 'Total Dives',
-                text: logs.length.toString(),
-              ),
-            ],
-          ),
-          pw.SizedBox(height: 20),
           pw.SizedBox(height: 20),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -87,7 +93,7 @@ class CustomerLogs {
       title,
       style: pw.TextStyle(
         fontWeight: pw.FontWeight.bold,
-        fontSize: 16,
+        fontSize: 20,
         color: PdfColors.black,
       ),
     );
@@ -97,79 +103,52 @@ class CustomerLogs {
     pw.Widget buildText(String text) => pw.Text(
           text,
           style: const pw.TextStyle(
-            fontSize: 10,
+            fontSize: 12,
             color: PdfColors.black,
           ),
         );
 
     return pw.Padding(
-      padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
+      padding: const pw.EdgeInsets.only(top: 10, bottom: 10),
       child: pw.Row(
         children: [
-          buildText('No'),
-          pw.SizedBox(width: 10),
-          buildText('Date         '),
-          pw.SizedBox(width: 10),
           pw.SizedBox(
-            width: 95,
+            width: 80,
+            child: buildText('Date'),
+          ),
+          pw.SizedBox(
+            width: 100,
             child: buildText('Instructor'),
           ),
           pw.SizedBox(
-            width: 40,
-            child: pw.Text(
-              'Course',
-              style: const pw.TextStyle(
-                fontSize: 7,
-                color: PdfColors.black,
-              ),
-            ),
+            width: 80,
+            child: buildText('Course'),
           ),
           pw.SizedBox(
-            width: 30,
-            child: pw.Text(
-              'Site',
-              style: const pw.TextStyle(
-                fontSize: 7,
-                color: PdfColors.black,
-              ),
-            ),
+            width: 80,
+            child: buildText('Site'),
           ),
           pw.SizedBox(
-            width: 18,
-            child: pw.Text(
-              'Tank\nNo',
-              style: const pw.TextStyle(
-                fontSize: 7,
-                color: PdfColors.black,
-              ),
-            ),
+            width: 70,
+            child: buildText('Tank No'),
+          ),
+          pw.SizedBox(
+            width: 70,
+            child: buildText('Bottom Time\n (mins)'),
           ),
           pw.SizedBox(width: 10),
           pw.SizedBox(
-            width: 40,
-            child: pw.Text(
-              'Bottom\nTime (mins)',
-              style: const pw.TextStyle(
-                fontSize: 7,
-                color: PdfColors.black,
-              ),
-              // textAlign: material.TextAlign.center,
-            ),
+            width: 70,
+            child: buildText('Max Depth\n (m)'),
           ),
           pw.SizedBox(
-            width: 40,
-            child: pw.Text(
-              'Max\nDepth (m)',
-              style: const pw.TextStyle(
-                fontSize: 7,
-                color: PdfColors.black,
-              ),
-            ),
+            width: 70,
+            child: buildText('Time in'),
           ),
-          buildText('Time in'),
-          pw.SizedBox(width: 10),
-          pw.SizedBox(width: 10),
-          buildText('Rental equipment'),
+          pw.SizedBox(
+            width: 70,
+            child: buildText('Rental equipment'),
+          ),
         ],
       ),
     );
@@ -179,7 +158,7 @@ class CustomerLogs {
     pw.Widget buildText(String text) => pw.Text(
           text,
           style: const pw.TextStyle(
-            fontSize: 10,
+            fontSize: 12,
             color: PdfColor.fromInt(0xff575757),
           ),
         );
@@ -199,41 +178,47 @@ class CustomerLogs {
       padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
       child: pw.Row(
         children: [
-          buildText('01'),
-          pw.SizedBox(width: 10),
-          buildText(
-            DateFormat('dd/MM/yyyy').format(log.timeIn.toDate()),
+          pw.SizedBox(
+            width: 80,
+            child: buildText(
+              DateFormat('dd/MM/yyyy').format(log.timeIn.toDate()),
+            ),
           ),
-          pw.SizedBox(width: 10),
           pw.SizedBox(
             width: 100,
             child: buildText(log.instructor.name),
           ),
           pw.SizedBox(
-            width: 30,
+            width: 80,
             child: buildText(getInitials(log.course)),
           ),
           pw.SizedBox(
-            width: 30,
-            child: buildText(log.diveSite.length < 3 ? log.diveSite : getInitials(log.diveSite)),
+            width: 80,
+            child: buildText(log.diveSite),
           ),
           pw.SizedBox(
-            width: 30,
-            child: buildText(log.tankNo.toString()),
+            width: 70,
+            child: buildText('${log.tankType ?? ''} ${log.tankNo.toString()}'),
           ),
           pw.SizedBox(
-            width: 40,
+            width: 70,
             child: buildText('${log.bottomTime}'),
           ),
+          pw.SizedBox(width: 10),
           pw.SizedBox(
-            width: 40,
+            width: 70,
             child: buildText('${log.maxDepth}'),
           ),
-          buildText(
-            DateFormat('hh:mm a').format(log.timeIn.toDate()),
+          pw.SizedBox(
+            width: 70,
+            child: buildText(
+              DateFormat('hh:mm a').format(log.timeIn.toDate()),
+            ),
           ),
-          pw.SizedBox(width: 10),
-          buildText((log.rentalEquipment != null) ? log.rentalEquipment! : '-'),
+          pw.SizedBox(
+            width: 70,
+            child: buildText((log.rentalEquipment != null) ? log.rentalEquipment! : '-'),
+          ),
         ],
       ),
     );
@@ -244,23 +229,24 @@ class CustomerLogs {
       padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
       child: pw.Row(
         children: [
-          pw.Expanded(
+          pw.Container(
+            width: 100,
             child: pw.Text(
               title,
               style: const pw.TextStyle(
-                fontSize: 12,
-                color: PdfColors.black,
+                fontSize: 14,
+                color: PdfColor.fromInt(0xff575757),
                 // fontWeight: FontWeight.w500,
               ),
             ),
           ),
           pw.Container(
-            width: 200,
+            width: 50,
             child: pw.Text(
               (text != null && text.isNotEmpty) ? text : '-',
               style: const pw.TextStyle(
-                fontSize: 12,
-                color: PdfColor.fromInt(0xff575757),
+                fontSize: 14,
+                color: PdfColors.black,
                 // fontWeight: FontWeight.w500,
               ),
             ),

@@ -10,6 +10,7 @@ import '../../../all_bookings/presentation/screens/all_bookings_screen.dart';
 import '../../../board_plan/presentation/views/board_plan_view.dart';
 import '../../../boat/presentation/screens/manage_general_info.dart';
 import '../../../bookings/presentation/screens/customer_logs_view.dart';
+import '../../../coast_guard_slip/presentation/views/coast_guard_slip_view.dart';
 import '../../../employees/model/employee.dart';
 import '../../../employees/presentation/screens/employee_profile_screen.dart';
 import '../../../events/views/events_view.dart';
@@ -103,6 +104,13 @@ class NavDrawer extends StatelessWidget {
                   Get.offAndToNamed(AllActivitiesScreen.id);
                 },
               ),
+            ),
+            buildMenuItem(
+              icon: Icons.directions_boat,
+              text: 'Coast Guard Slip',
+              onTap: () {
+                Get.offAndToNamed(CoastGuardSlipView.id);
+              },
             ),
             buildMenuItem(
               icon: Icons.book_rounded,

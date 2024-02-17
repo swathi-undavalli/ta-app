@@ -49,7 +49,6 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                             value: controller.isQuickBooking,
                             onChanged: (value) {
                               controller.isQuickBooking = value;
-                              log(controller.isQuickBooking.toString());
                             },
                             activeColor: AppColors.text.skyBlue,
                             inactiveThumbColor: AppColors.text.grey,

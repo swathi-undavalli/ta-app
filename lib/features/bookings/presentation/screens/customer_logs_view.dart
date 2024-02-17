@@ -16,7 +16,6 @@ import '../../models/customer_model.dart';
 import '../../models/dive-log-model.dart';
 import '../widgets/app_text_fields.dart';
 import '../widgets/customer_logs_pdf.dart';
-import '../widgets/pdf_preview.dart';
 
 class CustomerLogsView extends StatefulWidget {
   const CustomerLogsView({Key? key}) : super(key: key);
@@ -186,7 +185,7 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
         .collection('diveLogs')
         .where(
           'timeIn',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate!.add(const Duration(days: 1))),
+          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate!.subtract(const Duration(days: 1))),
           isLessThanOrEqualTo: Timestamp.fromDate(endDate!.add(const Duration(days: 1))),
         )
         .get();

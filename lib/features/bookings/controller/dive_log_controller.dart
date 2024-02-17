@@ -37,6 +37,7 @@ class DiveLogLogic {
       bookingId: controller.booking!.id!,
       id: id,
       rentalEquipment: controller.rentalEquipmentTED.text,
+      tankType: controller.tankTypeTED.text.capitalizeFirst,
     );
 
     await FirebaseFirestore.instance
@@ -97,6 +98,7 @@ class DiveLogLogic {
     controller.instructorError = null;
     controller.diveSiteTED.text = '';
     controller.tankNoTED.text = '';
+    controller.tankTypeTED.text = '';
     controller.bottomTimeTED.text = '';
     controller.maxDepthTED.text = '';
     controller.rentalEquipmentTED.text = '';
@@ -113,9 +115,12 @@ class DiveLogController extends GetxController {
   List<Instructor> instructor = [];
   TextEditingController diveSiteTED = TextEditingController();
   TextEditingController tankNoTED = TextEditingController();
+  TextEditingController tankTypeTED = TextEditingController();
   TextEditingController bottomTimeTED = TextEditingController();
   TextEditingController maxDepthTED = TextEditingController();
   TextEditingController rentalEquipmentTED = TextEditingController();
+  int? nitrox;
+  int? air;
   String? diveSiteError;
   String? tankNoError;
   String? bottomTimeError;

@@ -67,47 +67,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          buildButton(
-                            onTap: () {
-                              logic.onDateChanged(
-                                selectedDate.subtract(const Duration(days: 1)),
-                              );
-                            },
-                            icon: Icons.arrow_back_ios_rounded,
-                          ),
-                          Spacing.w15,
-                          buildTitle(
-                            DateFormat('dd-MM-yyyy').format(selectedDate),
-                          ),
-                          Spacing.w15,
-                          Text(
-                            DateFormat('EEEE').format(selectedDate),
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: AppColors.text.black,
-                              fontFamily: AppFonts.nunito,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Spacing.w15,
-                          buildButton(
-                            onTap: () {
-                              logic.onDateChanged(
-                                selectedDate.add(const Duration(days: 1)),
-                              );
-                            },
-                            icon: Icons.arrow_forward_ios_rounded,
-                          ),
-                        ],
-                      ),
-                      buildCalendarIcon(context),
-                    ],
-                  ),
+                  buildCalenderWidget(context),
                   Spacing.h20,
                   Wrap(
                     runSpacing: 15,
@@ -190,6 +150,55 @@ class _BoardPlanViewState extends State<BoardPlanView> {
           },
         ),
       ),
+    );
+  }
+
+  Widget buildCalenderWidget(BuildContext context) {
+    return Row(
+      children: [
+        buildButton(
+          onTap: () {
+            logic.onDateChanged(
+              selectedDate.subtract(const Duration(days: 1)),
+            );
+          },
+          icon: Icons.arrow_back_ios_rounded,
+        ),
+        Spacing.w15,
+        buildTitle(
+          DateFormat('dd-MM-yyyy').format(selectedDate),
+        ),
+        Spacing.w15,
+        Text(
+          DateFormat('EEEE').format(selectedDate),
+          style: TextStyle(
+            fontSize: 13,
+            color: AppColors.text.black,
+            fontFamily: AppFonts.nunito,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Spacing.w15,
+        buildButton(
+          onTap: () {
+            logic.onDateChanged(
+              selectedDate.add(const Duration(days: 1)),
+            );
+          },
+          icon: Icons.arrow_forward_ios_rounded,
+        ),
+        const Spacer(),
+        IconButton(
+          splashRadius: 20,
+          onPressed: () {
+            showDateSelector(context);
+          },
+          icon: const Icon(
+            Icons.calendar_today_outlined,
+            size: 17,
+          ),
+        ),
+      ],
     );
   }
 
@@ -338,19 +347,6 @@ class _BoardPlanViewState extends State<BoardPlanView> {
         }
         return const SizedBox();
       },
-    );
-  }
-
-  Widget buildCalendarIcon(BuildContext context) {
-    return IconButton(
-      splashRadius: 20,
-      onPressed: () {
-        showDateSelector(context);
-      },
-      icon: const Icon(
-        Icons.calendar_today_outlined,
-        size: 17,
-      ),
     );
   }
 

@@ -1,15 +1,12 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../boat/presentation/widgets/employee_selector_bottom_sheet.dart';
 import '../../controller/dive_log_controller.dart';
@@ -37,6 +34,9 @@ class _DiveLogViewState extends State<DiveLogView> {
     logic.controller.email = args[1];
     logic.controller.selectedDate = args[2];
     String? boatId = logic.controller.booking?.getBoatInfo(logic.controller.selectedDate)?.id;
+    logic.controller.nitrox = logic.controller.booking?.getBoatInfo(logic.controller.selectedDate)?.nitrox;
+    logic.controller.air = logic.controller.booking?.getBoatInfo(logic.controller.selectedDate)?.air;
+
     if (boatId != null) {
       fetchBoatDetails(boatId);
     }
@@ -45,6 +45,7 @@ class _DiveLogViewState extends State<DiveLogView> {
         logic.controller.booking!.instructor!,
       ];
     }
+    isAirOrNitrox();
   }
 
   Future<void> fetchBoatDetails(String? boatId) async {
@@ -61,6 +62,19 @@ class _DiveLogViewState extends State<DiveLogView> {
       }
     }
     setState(() {});
+  }
+
+  void isAirOrNitrox() {
+    log(logic.controller.air.toString());
+    log(logic.controller.nitrox.toString());
+    if ((logic.controller.air == null && logic.controller.nitrox == null) ||
+        (logic.controller.air == 0 && logic.controller.nitrox == 0)) {
+      logic.controller.tankTypeTED.text = '';
+    } else if (logic.controller.air != 0) {
+      logic.controller.tankTypeTED.text = 'Air';
+    } else if (logic.controller.nitrox != 0) {
+      logic.controller.tankTypeTED.text = 'Nitrox';
+    }
   }
 
   @override
@@ -94,6 +108,16 @@ class _DiveLogViewState extends State<DiveLogView> {
                   },
                   validator: (diveSite) {
                     return diveSite;
+                  },
+                ),
+                AppTextField(
+                  hintText: 'Tank Type',
+                  controller: controller.tankTypeTED,
+                  errorValidator: () {
+                    return null;
+                  },
+                  validator: (tankNo) {
+                    return null;
                   },
                 ),
                 AppTextField(
@@ -151,6 +175,7 @@ class _DiveLogViewState extends State<DiveLogView> {
                   color: Colors.black,
                   textColor: Colors.white,
                 ).center,
+                Spacing.h30,
                 Spacing.h30,
               ],
             );

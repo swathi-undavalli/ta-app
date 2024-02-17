@@ -15,6 +15,7 @@ class DiveLogModel {
   final String bookingId;
   final String id;
   final String? rentalEquipment;
+  final String? tankType;
 
   DiveLogModel({
     required this.timeIn,
@@ -27,6 +28,7 @@ class DiveLogModel {
     required this.bookingId,
     required this.id,
     required this.rentalEquipment,
+    required this.tankType,
   });
 
   DiveLogModel copyWith({
@@ -40,6 +42,7 @@ class DiveLogModel {
     String? bookingId,
     String? id,
     String? rentalEquipment,
+    String? tankType,
   }) =>
       DiveLogModel(
         timeIn: timeIn ?? this.timeIn,
@@ -52,6 +55,7 @@ class DiveLogModel {
         bookingId: bookingId ?? this.bookingId,
         id: id ?? this.id,
         rentalEquipment: rentalEquipment ?? this.rentalEquipment,
+        tankType: tankType ?? this.tankType,
       );
 
   factory DiveLogModel.fromRawJson(String str) => DiveLogModel.fromMap(json.decode(str));
@@ -69,6 +73,7 @@ class DiveLogModel {
         bookingId: map?['bookingId'],
         id: map?['id'],
         rentalEquipment: map?['rentalEquipment'],
+        tankType: map?['tankType'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -82,5 +87,6 @@ class DiveLogModel {
         'bookingId': bookingId,
         'id': id,
         'rentalEquipment': rentalEquipment,
+        'tankType': tankType,
       };
 }

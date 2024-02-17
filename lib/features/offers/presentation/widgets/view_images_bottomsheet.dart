@@ -1,8 +1,10 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -13,15 +15,18 @@ import 'dart:typed_data';
 
 class ViewPhotosBottomSheet extends StatefulWidget {
   final List<String>? images;
+  final String offerTitle;
 
   const ViewPhotosBottomSheet({
     Key? key,
     required this.images,
+    required this.offerTitle,
   }) : super(key: key);
 
   static Future<void> getImages(
     BuildContext context, {
     required List<String>? allImages,
+    required String offer,
   }) async {
     await showModalBottomSheet(
       context: context,
@@ -30,6 +35,7 @@ class ViewPhotosBottomSheet extends StatefulWidget {
       builder: (BuildContext context) {
         return ViewPhotosBottomSheet(
           images: allImages,
+          offerTitle: offer,
         );
       },
     );
@@ -45,9 +51,8 @@ class _ViewPhotosBottomSheetState extends State<ViewPhotosBottomSheet> {
     return Container(
       height: 700,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(
-          30,
-        ),
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
       ),
       child: Column(
         children: [
@@ -114,8 +119,26 @@ class _ViewPhotosBottomSheetState extends State<ViewPhotosBottomSheet> {
     );
   }
 
-  void shareImage(String imageUrl) {
-    Share.share('Sharing image: $imageUrl');
+  Future<void> shareImage(String imageUrl) async {
+    http.Response response = await http.get(Uri.parse(imageUrl));
+    if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
+        Directory tempDir = await getTemporaryDirectory();
+
+        File imageFile = File('${tempDir.path}/image.png');
+
+        await imageFile.writeAsBytes(response.bodyBytes);
+
+        await Share.shareFiles([imageFile.path],
+            text: 'Check out the new ${widget.offerTitle}!',
+            subject: 'Offer',
+            mimeTypes: ['image/png'],
+            sharePositionOrigin: Rect.fromCenter(center: Offset(0, 0), width: 0, height: 0));
+      } else {
+        throw Exception('Failed to load image');
+      }
+    }
+    // Share.share('Sharing image: $response');
   }
 
   Future<void> saveImageToGallery(String imageUrl) async {

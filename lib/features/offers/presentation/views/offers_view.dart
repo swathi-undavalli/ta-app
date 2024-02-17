@@ -267,7 +267,11 @@ class _OffersViewState extends State<OffersView> {
                 if (element.photos != null && element.photos!.isNotEmpty)
                   GestureDetector(
                     onTap: () {
-                      ViewPhotosBottomSheet.getImages(context, allImages: element.photos);
+                      ViewPhotosBottomSheet.getImages(
+                        context,
+                        allImages: element.photos,
+                        offer: element.name,
+                      );
                     },
                     child: Stack(
                       children: [
