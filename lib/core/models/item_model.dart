@@ -70,7 +70,6 @@ class ItemModel {
       return d.substring(0, d.length - 2);
     }
 
-    //log(bookingModel.balance.toString());
     return ItemModel(
       phone: bookingModel.pax![0]['countryCode'] + bookingModel.pax![0]['phoneNumber'],
       bookingID: bookingModel.id,

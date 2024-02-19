@@ -65,4 +65,6 @@ class AccessRights {
   static bool get boatPlan => accessLevel?.boatPlan ?? false;
 
   static bool get marketingGallery => accessLevel?.marketingGallery ?? false;
+
+  static bool get offers => accessLevel?.offers ?? false;
 }

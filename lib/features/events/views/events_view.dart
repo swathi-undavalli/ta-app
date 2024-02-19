@@ -26,6 +26,7 @@ class _EventsViewState extends State<EventsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar(),
       floatingActionButton: buildFloatingActionButton(context),
       body: SafeArea(
@@ -72,7 +73,7 @@ class _EventsViewState extends State<EventsView> {
                     children: [
                       Spacing.h10,
                       ...(event.eventElement ?? []).map(
-                        (element) => buildEventCard(
+                            (element) => buildEventCard(
                           element: element,
                           index: (event.eventElement ?? []).indexOf(element),
                         ).paddingOnly(top: 20),

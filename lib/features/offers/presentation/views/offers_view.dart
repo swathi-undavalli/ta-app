@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -39,6 +40,7 @@ class _OffersViewState extends State<OffersView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar(),
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(
@@ -126,7 +128,7 @@ class _OffersViewState extends State<OffersView> {
                           ).paddingAll(8).center,
                         ).paddingOnly(top: 16),
                       ...(offer.offerElement ?? []).map(
-                        (element) {
+                            (element) {
                           return buildOfferCard(
                             element: element,
                             index: (offer.offerElement ?? []).indexOf(element),
@@ -266,7 +268,11 @@ class _OffersViewState extends State<OffersView> {
                 if (element.photos != null && element.photos!.isNotEmpty)
                   GestureDetector(
                     onTap: () {
-                      ViewPhotosBottomSheet.getImages(context, allImages: element.photos);
+                      ViewPhotosBottomSheet.getImages(
+                        context,
+                        allImages: element.photos,
+                        offer: element.name,
+                      );
                     },
                     child: Stack(
                       children: [

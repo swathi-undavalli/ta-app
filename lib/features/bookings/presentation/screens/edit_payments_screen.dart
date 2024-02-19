@@ -25,6 +25,7 @@ class EditPaymentsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // logic.controller.bookingModel = bookingArg;
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: AppBar(
         toolbarHeight: 70,
         centerTitle: true,
@@ -53,7 +54,7 @@ class EditPaymentsScreen extends StatelessWidget {
                   const SizedBox(height: 20),
                   ...List.generate(
                     controller.bookingModel!.payments!.length,
-                    (index) {
+                        (index) {
                       return buildTransactions(
                         index: index,
                         payment: controller.bookingModel!.payments![index],

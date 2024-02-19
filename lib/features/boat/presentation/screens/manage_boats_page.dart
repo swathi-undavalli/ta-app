@@ -44,7 +44,6 @@ class ManageBoatsPage extends StatelessWidget {
             child: RefreshIndicator(
               color: Colors.black,
               onRefresh: () async {
-                // calenderLogic.controller.lastSelectedIndex ??= 50;
                 bookingsCalenderWidget.scrollToIndex(50);
                 await calenderLogic.onDateSelected(DateTime.now());
               },

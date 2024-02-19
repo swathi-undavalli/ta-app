@@ -1,14 +1,14 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../../../core/models/checklist_model.dart';
-import '../../../../core/util/utils.dart';
-import '../controllers/new_checklist_controller.dart';
+
 import '../../../../core/constants/constants.dart';
+import '../../../../core/models/checklist_model.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/app_measurements.dart';
 import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../controllers/new_checklist_controller.dart';
 
 class NewChecklistView extends StatefulWidget {
   static const String id = 'NewChecklistView';
@@ -31,7 +31,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
     logic.controller.checkListItems =
         (checkListElement?.items ?? []).map((e) => TextEditingController(text: e.name)).toList();
     logic.controller.focusNodes = (checkListElement?.items ?? []).map((e) => FocusNode()).toList();
-    logic.controller.id = (args[1]) ? checkListElement?.id : null;
+    logic.controller.id = (args[1] == TemplateType.existingChecklist) ? checkListElement?.id : null;
     logic.controller.titleTED.text = (checkListElement?.title ?? '');
     logic.controller.descriptionTED.text = (checkListElement?.description ?? '');
 
@@ -43,6 +43,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
     return GetBuilder<NewChecklistController>(
       builder: (controller) {
         return Scaffold(
+          backgroundColor: AppColors.background.lightBlue,
           appBar: _buildAppBar(context),
           floatingActionButton: FloatingActionButton(
             backgroundColor: Colors.black,
@@ -176,7 +177,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
         ),
       ),
       title: Text(
-        (logic.controller.id != null) ? logic.controller.titleTED.text : 'Custom checklist',
+        heading,
         style: TextStyle(
           color: AppColors.text.black,
           fontSize: 18,
@@ -188,6 +189,16 @@ class _NewChecklistViewState extends State<NewChecklistView> {
     );
   }
 
+  String get heading {
+    if (args[1] == TemplateType.newTemplate) {
+      return 'New Template';
+    } else if (args[1] == TemplateType.customChecklist) {
+      return 'Custom Checklist';
+    } else {
+      return logic.controller.titleTED.text;
+    }
+  }
+
   Future<void> saveChecklistDialog(BuildContext context) async {
     return showDialog(
       context: context,
@@ -196,6 +207,8 @@ class _NewChecklistViewState extends State<NewChecklistView> {
         return GetBuilder<NewChecklistController>(
           builder: (controller) {
             return AlertDialog(
+              surfaceTintColor: Colors.white,
+              backgroundColor: Colors.white,
               title: const Text(
                 'Please fill the below details before saving the checklist',
                 style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -229,7 +242,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
                     )
                   : Container(
                       height: Get.height / 2,
-                      color: Colors.grey.shade100,
+                      color: Colors.white,
                       child: const CircularProgressIndicator(
                         color: Colors.black,
                         backgroundColor: Colors.grey,
@@ -252,12 +265,7 @@ class _NewChecklistViewState extends State<NewChecklistView> {
                   text: 'Okay',
                   onTap: () async {
                     if (!controller.showLoading) {
-                      log('started');
-                      await logic.onSavePressed(context);
-                      if (args[1] == false) {
-                        Get.back();
-                      }
-                      log('ended');
+                      await logic.onSavePressed(context, args[1]);
                     }
                   },
                 ),
@@ -280,4 +288,10 @@ class _NewChecklistViewState extends State<NewChecklistView> {
       ),
     );
   }
+}
+
+enum TemplateType {
+  existingChecklist,
+  customChecklist,
+  newTemplate,
 }

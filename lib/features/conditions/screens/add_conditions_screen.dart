@@ -57,6 +57,7 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
                 return true;
               },
               child: Scaffold(
+                backgroundColor: AppColors.background.lightBlue,
                 appBar: buildAppBar(context) as PreferredSizeWidget?,
                 floatingActionButton: buildFloatingActionButton(),
                 body: SafeArea(
@@ -83,7 +84,7 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
                               child: Row(
                                 children: [
                                   ...controller.reefs.map(
-                                    (e) => buildChip(
+                                        (e) => buildChip(
                                       onTap: () {
                                         logic.onChipChanged(e);
                                       },
@@ -127,7 +128,7 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
                                   ),
                                 if (controller.conditions != null && controller.conditions!.levels.isNotEmpty)
                                   ...controller.conditions!.levels.asMap().entries.map(
-                                    (l) {
+                                        (l) {
                                       if (l.value.reef == controller.selectedReef) {
                                         return buildDepthExpansionPanel(
                                           level: l.value,

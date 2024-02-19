@@ -14,6 +14,7 @@ import '../../../bookings/models/booking_model.dart';
 
 List<String> coursesStatus = [
   'Booked In',
+  'Paperwork ongoing',
   'Paperwork done',
   'Dive center',
   'Harbour',
@@ -21,6 +22,7 @@ List<String> coursesStatus = [
 
 List<String> dsdStatus = [
   'Booked In',
+  'Paperwork ongoing',
   'Paperwork done',
   'Pool ongoing',
   'Pool completed',
@@ -500,11 +502,11 @@ class CustomerListState extends State<CustomerList> {
               Spacing.w5,
               Container(
                 decoration: BoxDecoration(
-                  color: getBookingStatusColor(
-                    bookings[index].isDSD
-                        ? bookings[index].boatDetails?.bookingStatus ?? 0
-                        : bookings[index].getStatus(selectedDate) ?? 0,
-                  ),
+                  color: (bookings[index].isDSD)
+                      ? getDSDProgressColor(bookings[index].boatDetails?.bookingStatus ?? 0)
+                      : getCourseProgressColor(
+                          bookings[index].getStatus(selectedDate) ?? 0,
+                        ),
                   borderRadius: BorderRadius.circular(2),
                 ),
                 child: buildText(
@@ -515,7 +517,7 @@ class CustomerListState extends State<CustomerList> {
                   Colors.white,
                   true,
                 ).paddingOnly(top: 2, left: 1, right: 1),
-              )
+              ),
             ],
           ).paddingOnly(top: 3),
           buildDiveBuddiesList(bookings, index),
@@ -577,7 +579,7 @@ class CustomerListState extends State<CustomerList> {
                         ],
                       ),
                     )
-                    .toList()
+                    .toList(),
             ],
           ),
         ),
@@ -680,7 +682,7 @@ class CustomerListState extends State<CustomerList> {
                 ],
               ),
             ],
-          ).paddingSymmetric(horizontal: 5)
+          ).paddingSymmetric(horizontal: 5),
         ],
       ),
     );
@@ -738,27 +740,43 @@ class CustomerListState extends State<CustomerList> {
     return activity?.name ?? '-';
   }
 
-  Color getBookingStatusColor(int index) {
+  Color getDSDProgressColor(int index) {
     if (index == 0) {
       return Colors.blueAccent.withOpacity(0.6);
     } else if (index == 1) {
-      return Colors.blue;
-    } else if (index == 2) {
-      return Colors.greenAccent;
-    } else if (index == 3) {
-      return Colors.green;
-    } else if (index == 4) {
-      return Colors.purple.shade400;
-    } else if (index == 5) {
-      return Colors.black.withOpacity(0.5);
-    } else if (index == 6) {
       return Colors.yellow;
+    } else if (index == 2) {
+      return Colors.blue;
+    } else if (index == 3) {
+      return Colors.greenAccent;
+    } else if (index == 4) {
+      return Colors.green;
+    } else if (index == 5) {
+      return Colors.grey;
+    } else if (index == 6) {
+      return Colors.black.withOpacity(0.5);
     } else if (index == 7) {
       return Colors.pink;
     } else if (index == 8) {
       return Colors.orange;
     } else if (index == 9) {
       return Colors.red;
+    } else {
+      return Colors.grey;
+    }
+  }
+
+  Color getCourseProgressColor(int index) {
+    if (index == 0) {
+      return Colors.blueAccent.withOpacity(0.6);
+    } else if (index == 1) {
+      return Colors.yellow;
+    } else if (index == 2) {
+      return Colors.blue;
+    } else if (index == 3) {
+      return Colors.grey;
+    } else if (index == 4) {
+      return Colors.black.withOpacity(0.5);
     } else {
       return Colors.grey;
     }

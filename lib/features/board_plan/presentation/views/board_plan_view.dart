@@ -8,7 +8,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 // ignore: depend_on_referenced_packages
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
@@ -67,47 +66,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        children: [
-                          buildButton(
-                            onTap: () {
-                              logic.onDateChanged(
-                                selectedDate.subtract(const Duration(days: 1)),
-                              );
-                            },
-                            icon: Icons.arrow_back_ios_rounded,
-                          ),
-                          Spacing.w15,
-                          buildTitle(
-                            DateFormat('dd-MM-yyyy').format(selectedDate),
-                          ),
-                          Spacing.w15,
-                          Text(
-                            DateFormat('EEEE').format(selectedDate),
-                            style: TextStyle(
-                              fontSize: 13,
-                              color: AppColors.text.black,
-                              fontFamily: AppFonts.nunito,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Spacing.w15,
-                          buildButton(
-                            onTap: () {
-                              logic.onDateChanged(
-                                selectedDate.add(const Duration(days: 1)),
-                              );
-                            },
-                            icon: Icons.arrow_forward_ios_rounded,
-                          ),
-                        ],
-                      ),
-                      buildCalendarIcon(context),
-                    ],
-                  ),
+                  buildCalenderWidget(context),
                   Spacing.h20,
                   Wrap(
                     runSpacing: 15,
@@ -132,7 +91,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                           color: (boat.id == controller.selectedBoat?.id) ? AppColors.text.lightSkyBlue : Colors.white,
                           title: boat.name,
                         ),
-                      )
+                      ),
                     ],
                   ),
                   Spacing.h20,
@@ -181,15 +140,64 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                       alignment: Alignment.topLeft,
                       child: RepaintBoundary(
                         key: widgetKey,
-                        child: const DSDTable(),
+                        child: const GeneralInfo(),
                       ),
-                    )
+                    ),
                 ],
               ).paddingSymmetric(horizontal: 20, vertical: 20),
             );
           },
         ),
       ),
+    );
+  }
+
+  Widget buildCalenderWidget(BuildContext context) {
+    return Row(
+      children: [
+        buildButton(
+          onTap: () {
+            logic.onDateChanged(
+              selectedDate.subtract(const Duration(days: 1)),
+            );
+          },
+          icon: Icons.arrow_back_ios_rounded,
+        ),
+        Spacing.w15,
+        buildTitle(
+          DateFormat('dd-MM-yyyy').format(selectedDate),
+        ),
+        Spacing.w15,
+        Text(
+          DateFormat('EEEE').format(selectedDate),
+          style: TextStyle(
+            fontSize: 13,
+            color: AppColors.text.black,
+            fontFamily: AppFonts.nunito,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Spacing.w15,
+        buildButton(
+          onTap: () {
+            logic.onDateChanged(
+              selectedDate.add(const Duration(days: 1)),
+            );
+          },
+          icon: Icons.arrow_forward_ios_rounded,
+        ),
+        const Spacer(),
+        IconButton(
+          splashRadius: 20,
+          onPressed: () {
+            showDateSelector(context);
+          },
+          icon: const Icon(
+            Icons.calendar_today_outlined,
+            size: 17,
+          ),
+        ),
+      ],
     );
   }
 
@@ -239,19 +247,13 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   Future<void> _captureAndShare() async {
     try {
       RenderRepaintBoundary boundary = widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      log('1..');
       ui.Image image = await boundary.toImage(pixelRatio: 10);
       ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
-      log('2..');
       final tempDir = await getTemporaryDirectory();
       final tempPath = '${tempDir.path}/screenshot.png';
       File(tempPath).writeAsBytesSync(pngBytes);
-      log('3..');
-      log('started sharingg..');
       shareImages([tempPath]);
-      log('4..');
-      log('ended sharing..');
     } catch (e) {
       log('Error while capturing and sharing the screenshot: $e');
     }
@@ -268,16 +270,12 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   Future<String?> captureImage() async {
     try {
       RenderRepaintBoundary boundary = widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      log('1..');
       ui.Image image = await boundary.toImage(pixelRatio: 10);
       ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
-      log('2..');
       final tempDir = await getTemporaryDirectory();
       final tempPath = '${tempDir.path}/screenshot${DateTime.now().toIso8601String()}.png';
       File(tempPath).writeAsBytesSync(pngBytes);
-      log('3..');
-      log('started sharing..');
       return tempPath;
     } catch (e) {
       log('Error while capturing the screenshot: $e');
@@ -296,9 +294,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
               FloatingActionButton(
                 elevation: 0,
                 onPressed: () async {
-                  log('chinni');
                   await _captureAndShare();
-                  log('swathi');
                 },
                 backgroundColor: AppColors.background.black,
                 child: const Icon(
@@ -353,19 +349,6 @@ class _BoardPlanViewState extends State<BoardPlanView> {
     );
   }
 
-  Widget buildCalendarIcon(BuildContext context) {
-    return IconButton(
-      splashRadius: 20,
-      onPressed: () {
-        showDateSelector(context);
-      },
-      icon: const Icon(
-        Icons.calendar_today_outlined,
-        size: 17,
-      ),
-    );
-  }
-
   Widget buildTitle(String text) {
     return Container(
       alignment: Alignment.centerLeft,
@@ -415,8 +398,8 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   }
 }
 
-class DSDTable extends StatelessWidget {
-  const DSDTable({Key? key}) : super(key: key);
+class GeneralInfo extends StatelessWidget {
+  const GeneralInfo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

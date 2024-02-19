@@ -3,14 +3,11 @@ import 'dart:io';
 
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
 // ignore: depend_on_referenced_packages
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
-
 // ignore: depend_on_referenced_packages
 import 'package:path/path.dart' show basename;
-
 // ignore: depend_on_referenced_packages
 import 'package:path_provider/path_provider.dart' show getApplicationDocumentsDirectory;
 import 'package:pdf/pdf.dart';
@@ -40,7 +37,7 @@ class ShareBookingDetails {
               pw.Spacer(),
               pw.FittedBox(
                 child: pw.Text(
-                  'EAST COAST WATERSPORTS PVT LTD,\n#9A, Gandhi st., Colas Nagar,\nOpposite Indira Gandhi Stadium \nPondicerry, India \nContact : +91 9940219449',
+                  'EAST COAST WATERSPORTS PVT LTD,\n#6A, Gandhi st., Colas Nagar,\nOpposite to Indira Gandhi Stadium \nPondicherry, India \nContact : +91 9940219449 / 6385686600',
                   style: const pw.TextStyle(
                     color: PdfColor.fromInt(0xff263238),
                     fontSize: 14,

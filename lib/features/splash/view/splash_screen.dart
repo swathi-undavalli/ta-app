@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../core/constants/assets.dart';
+import '../../../core/constants/constants.dart';
 import '../../../core/repository/employee_repo.dart';
 import '../../../core/services/auto_update.dart';
 import '../../../core/util/app_measurements.dart';
@@ -47,6 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     AppMeasures.init(context);
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       body: Container(
         width: Get.width,
         height: Get.height,

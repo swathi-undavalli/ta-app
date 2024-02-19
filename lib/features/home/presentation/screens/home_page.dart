@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../core/authentication/firebase_authentication.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
@@ -353,7 +354,6 @@ class _HomePageState extends State<HomePage> {
               isAddButton: true,
               onTap: () {
                 TemplateBottomSheet.show(context);
-                // Get.toNamed(NewChecklistView.id);
               },
             ).paddingOnly(bottom: 5),
           ],

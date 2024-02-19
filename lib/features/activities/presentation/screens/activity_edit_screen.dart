@@ -31,6 +31,7 @@ class ActivityEditScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar() as PreferredSizeWidget?,
       body: SafeArea(
         child: GetBuilder<ActivityEditController>(
@@ -66,7 +67,7 @@ class ActivityEditScreen extends StatelessWidget {
                         buildSubtitle('Color'),
                         buildColorCode(),
                         const SizedBox(height: 100),
-                        buildButtons()
+                        buildButtons(),
                       ],
                     );
                   },

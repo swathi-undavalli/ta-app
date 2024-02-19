@@ -73,7 +73,7 @@ class EventElement {
 
   factory EventElement.fromJson(Map<String, dynamic> json) => EventElement(
         session: json['session'],
-        employees: List<Instructor>.from((json['employees']).map((x) => Instructor.fromJson(x))),
+        employees: List<Instructor>.from((json['employees']).map((x) => Instructor.fromMap(x))),
         location: json['location'],
         time: json['time'],
         date: json['date'],

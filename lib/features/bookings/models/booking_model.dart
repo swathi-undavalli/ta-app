@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 import 'package:intl/intl.dart';
 
@@ -129,7 +128,6 @@ class Booking {
       );
 
   factory Booking.fromMap(Map<String, dynamic> json) {
-    log("fromMap");
     parseDateOrNull(date) {
       if (date == null) return null;
       return DateTime.parse(date);
@@ -162,7 +160,7 @@ class Booking {
       diveDate: List<DateTime>.from(json['diveDate'].map((x) => parseDateOrNull(x))),
       cancelBooking: json['cancelBooking'],
       cancellationReason: json['cancellationReason'],
-      boatDetails: BoatDetails.fromJson(json['boatDetails']),
+      boatDetails: BoatDetails.fromMap(json['boatDetails']),
     );
   }
 

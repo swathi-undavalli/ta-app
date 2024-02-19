@@ -116,14 +116,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
                                     FirebaseFirestore.instance
                                         .collection('employees')
                                         .doc(employeeArgument!.id)
-                                        // .collection("employeeFullInformation")
-                                        // .doc("employeeData")
                                         .delete();
-                                    // counterModel.employee--;
-                                    // FirebaseFirestore.instance
-                                    //     .collection("counter")
-                                    //     .doc("count")
-                                    //     .set(counterModel.toMap());
                                     LogModel logModel = LogModel(
                                       type: LogType.deleteEmployee,
                                       employeeName: employeeArgument!.name,
@@ -341,6 +334,7 @@ class EmployeeDetailsScreen extends StatelessWidget {
       logic.controller.editActivityPrices = employee.accessLevels?.editActivityPrices ?? false;
       logic.controller.addActivity = employee.accessLevels?.addActivity ?? false;
       logic.controller.marketingGallery = employee.accessLevels?.marketingGallery ?? false;
+      logic.controller.offers = employee.accessLevels?.offers ?? false;
 
       return true;
     }

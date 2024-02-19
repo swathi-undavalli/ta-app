@@ -144,9 +144,10 @@ class AddAnEmployeeScreen extends StatelessWidget {
   ///===============UI==============///
 
   Widget buildAccessLevels() {
-    return GetBuilder<AddAnEmployeeController>(builder: (controller) {
-      return Column(
-        children: [
+    return GetBuilder<AddAnEmployeeController>(
+      builder: (controller) {
+        return Column(
+          children: [
             buildSwitch(
               text: 'View Bookings',
               switchValue: controller.viewBookings!,
@@ -243,6 +244,13 @@ class AddAnEmployeeScreen extends StatelessWidget {
               switchValue: controller.marketingGallery!,
               onChanged: (value) {
                 controller.marketingGallery = value;
+              },
+            ),
+            buildSwitch(
+              text: 'Offers',
+              switchValue: controller.offers!,
+              onChanged: (value) {
+                controller.offers = value;
               },
             ),
             buildSwitch(

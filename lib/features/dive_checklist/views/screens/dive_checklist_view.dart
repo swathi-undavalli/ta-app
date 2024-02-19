@@ -1,7 +1,15 @@
 import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
+import 'dart:ui' as ui;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share/share.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -29,6 +37,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
   bool showLoading = false;
 
   final GlobalKey _menuKey = GlobalKey();
+  final GlobalKey widgetKey = GlobalKey();
 
   @override
   void initState() {
@@ -40,7 +49,18 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar(),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
+        onPressed: () async {
+          await _captureAndShare();
+        },
+        child: const Icon(
+          Icons.share,
+          color: Colors.white,
+        ),
+      ),
       body: SafeArea(
         child: SizedBox(
           height: Get.height,
@@ -60,11 +80,13 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildDescription(),
-                  _buildCheckList(),
-                  Spacing.h70,
+                  RepaintBoundary(
+                    key: widgetKey,
+                    child: _buildCheckList(),
+                  ),
+                  Spacing.h80,
                 ],
-              ).paddingSymmetric(horizontal: 20).scrollable,
+              ).scrollable,
               Positioned(
                 bottom: 20,
                 width: Get.width,
@@ -95,79 +117,68 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
     );
   }
 
+  Future<void> _captureAndShare() async {
+    try {
+      RenderRepaintBoundary boundary = widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage(pixelRatio: 10);
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      final tempDir = await getTemporaryDirectory();
+      final tempPath = '${tempDir.path}/screenshot.png';
+      File(tempPath).writeAsBytesSync(pngBytes);
+      shareImages([tempPath]);
+    } catch (e) {
+      log('Error while capturing and sharing the screenshot: $e');
+    }
+  }
+
+  Future<void> shareImages(List<String> images) async {
+    try {
+      Share.shareFiles(images);
+    } catch (e) {
+      log('Error while sharing images $e');
+    }
+  }
+
   Widget _buildCheckList() {
-    return Column(
-      children: [
-        ...checkListElement.items.map(
-          (e) {
-            return CheckBoxWidget(
-              onChanged: (bool value) {
-                checkListElement
-                    .items[checkListElement.items.indexOf(e)].isChecked = value;
-                setState(() {});
-                log(
-                  checkListElement.items
-                      .map((e) => e.isChecked)
-                      .toList()
-                      .toString(),
-                );
-              },
-              text: e.name,
-              initialValue: e.isChecked,
-            ).paddingOnly(bottom: 10);
-          },
-        ),
-      ],
+    return Container(
+      color: Colors.white,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Spacing.h10,
+          Text(
+            checkListElement.title,
+            style: TextStyle(
+              color: AppColors.text.black,
+              fontSize: 16,
+              fontFamily: AppFonts.nunito,
+              fontWeight: FontWeight.normal,
+              letterSpacing: 1.2,
+            ),
+          ),
+          _buildDescription(),
+          ...checkListElement.items.map(
+            (e) {
+              return CheckBoxWidget(
+                onChanged: (bool value) {
+                  checkListElement.items[checkListElement.items.indexOf(e)].isChecked = value;
+                  setState(() {});
+                  log(
+                    checkListElement.items.map((e) => e.isChecked).toList().toString(),
+                  );
+                },
+                text: e.name,
+                initialValue: e.isChecked,
+              ).paddingOnly(bottom: 10);
+            },
+          ),
+        ],
+      ).paddingSymmetric(horizontal: 20),
     );
   }
 
   AppBar buildAppBar() {
-    final button = PopupMenuButton(
-      icon: const Icon(
-        Icons.more_vert_rounded,
-        color: Colors.black,
-      ),
-      key: _menuKey,
-      itemBuilder: (_) => <PopupMenuItem<String>>[
-        PopupMenuItem<String>(
-          child: const Text(
-            'Edit',
-            style: TextStyle(fontSize: 12),
-          ),
-          onTap: () async {
-            Get.toNamed(
-              NewChecklistView.id,
-              arguments: [checkListElement, true],
-            );
-          },
-        ),
-        PopupMenuItem<String>(
-          child: const Text(
-            'Delete',
-            style: TextStyle(fontSize: 12),
-          ),
-          onTap: () async {
-            showLoading = true;
-            setState(() {});
-
-            log('started');
-
-            checklist.checklistElement?.remove(checkListElement);
-
-            await FirebaseFirestore.instance
-                .collection('employeeChecklists')
-                .doc(checkListElement.employeeId)
-                .set(checklist.toMap());
-
-            showLoading = false;
-            setState(() {});
-            log('ended');
-            Get.back();
-          },
-        ),
-      ],
-    );
-
     return AppBar(
       backgroundColor: AppColors.background.white,
       elevation: 0,
@@ -187,7 +198,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
         ),
       ),
       title: Text(
-        checkListElement.title,
+        'Checklist',
         style: TextStyle(
           color: AppColors.text.black,
           fontSize: 16,
@@ -197,7 +208,56 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
         ),
       ).center,
       actions: [
-        button,
+        PopupMenuButton(
+          color: Colors.white,
+          surfaceTintColor: Colors.white,
+          icon: const Icon(
+            Icons.more_vert_rounded,
+            color: Colors.black,
+          ),
+          key: _menuKey,
+          itemBuilder: (context) => <PopupMenuItem<String>>[
+            PopupMenuItem<String>(
+              child: const Text(
+                'Edit',
+                style: TextStyle(fontSize: 12),
+              ),
+              onTap: () async {
+                /// Delay is used because the PopupMenuButton closes automatically and because navigation happens to fast,it closes the new route instead of the menuButton.
+
+                await Future.delayed(const Duration(milliseconds: 10));
+                Get.toNamed(
+                  NewChecklistView.id,
+                  arguments: [checkListElement, TemplateType.existingChecklist],
+                );
+              },
+            ),
+            PopupMenuItem<String>(
+              child: const Text(
+                'Delete',
+                style: TextStyle(fontSize: 12),
+              ),
+              onTap: () async {
+                showLoading = true;
+                setState(() {});
+
+                log('started');
+
+                checklist.checklistElement?.remove(checkListElement);
+
+                await FirebaseFirestore.instance
+                    .collection('employeeChecklists')
+                    .doc(checkListElement.employeeId)
+                    .set(checklist.toMap());
+
+                showLoading = false;
+                setState(() {});
+                log('ended');
+                Get.back();
+              },
+            ),
+          ],
+        ),
         TextButton(
           onPressed: () {
             checkListElement.items
@@ -222,7 +282,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
       checkListElement.description,
       style: const TextStyle(
         color: Colors.black,
-        fontSize: 13,
+        fontSize: 12,
         fontFamily: AppFonts.nunito,
         height: 1.5,
       ),

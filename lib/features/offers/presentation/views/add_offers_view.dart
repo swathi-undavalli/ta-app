@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -47,6 +48,7 @@ class _AddOffersViewState extends State<AddOffersView> {
             return true;
           },
           child: Scaffold(
+            backgroundColor: AppColors.background.lightBlue,
             appBar: buildAppBar(),
             body: GetBuilder<AddOffersController>(
               builder: (controller) {

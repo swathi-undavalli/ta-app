@@ -28,11 +28,11 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       floatingActionButton: buildFloatingActionButton(),
       floatingActionButtonLocation: (MediaQuery.of(context).viewInsets.bottom == 0)
           ? (FloatingActionButtonLocation.centerFloat)
           : (FloatingActionButtonLocation.endFloat),
-      backgroundColor: AppColors.background.white,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),

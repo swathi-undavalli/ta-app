@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:get/get_utils/src/extensions/string_extensions.dart';
+
 CustomerModel customerModelFromMap(String str) => CustomerModel.fromMap(json.decode(str));
 
 String customerModelToMap(CustomerModel data) => json.encode(data.toMap());
@@ -74,4 +76,8 @@ class CustomerModel {
         'pinCode': pinCode,
         'state': state,
       };
+
+  DateTime? get dateOfBirth => DateTime.tryParse(dob ?? '');
+
+  String get name => '${(firstName ?? '').capitalizeFirst} ${(lastName ?? '').capitalizeFirst}';
 }

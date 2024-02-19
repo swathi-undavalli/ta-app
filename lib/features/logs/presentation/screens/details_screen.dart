@@ -28,6 +28,7 @@ class DetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: AppBar(
         toolbarHeight: 70,
         centerTitle: true,
@@ -37,10 +38,11 @@ class DetailsScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
       ),
       body: SafeArea(
-        child: GetBuilder<DetailsController>(builder: (controller) {
-          return SingleChildScrollView(
-            child: Padding(
-              padding: const EdgeInsets.only(
+        child: GetBuilder<DetailsController>(
+          builder: (controller) {
+            return SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.only(
                   top: 0,
                   left: 30,
                   right: 30,

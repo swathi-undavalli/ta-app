@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -11,12 +12,14 @@ import 'package:intl/intl.dart' as intl;
 import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
 import '../../features/activities/model/colors_data.dart';
 import '../../features/bookings/controller/edit_payments_controller.dart';
 import '../../features/bookings/models/booking_model.dart';
 import '../../features/bookings/presentation/screens/add_payments_screen.dart';
 import '../../features/bookings/presentation/screens/edit_payments_screen.dart';
 import '../../features/bookings/presentation/widgets/app_text_fields.dart';
+import '../../features/bookings/presentation/widgets/dive_log_bootomsheet.dart';
 import '../../features/bookings/presentation/widgets/share_booking_details_widget.dart';
 import '../../features/edit_booking/presentation/screens/edit_booking_new_screen.dart';
 import '../../features/employees/model/employee.dart';
@@ -26,6 +29,7 @@ import '../constants/assets.dart';
 import '../constants/constants.dart';
 import '../constants/enums.dart';
 import '../models/item_model.dart';
+import '../util/spacing_widgets.dart';
 import '../util/utils.dart';
 import 'access_levels.dart';
 import 'app_button.dart';
@@ -44,10 +48,17 @@ class BookingsExpansionPanel extends StatelessWidget {
   List<Widget> expansions = [];
   TextEditingController depositTED = TextEditingController();
   TextEditingController searchTED = TextEditingController();
+  final DateTime selectedDate;
 
   BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
 
-  BookingsExpansionPanel({Key? key, this.items, this.onDeletePressed, this.onSearchTap, required this.searchBar})
+  BookingsExpansionPanel(
+      {Key? key,
+      this.items,
+      this.onDeletePressed,
+      this.onSearchTap,
+      required this.searchBar,
+      required this.selectedDate})
       : super(key: key);
 
   generateList(List<ItemModel> itemsList) {
@@ -79,7 +90,7 @@ class BookingsExpansionPanel extends StatelessWidget {
                 }).toList(),
               )
             else
-              ...generateList(items!)
+              ...generateList(items!),
           ],
         );
       },
@@ -281,14 +292,13 @@ Please click the below link : $link
             if (itemModel!.bookingModel != null) {
               String bookingId = itemModel.bookingModel!.id!;
               String bs64 = base64.encode(bookingId.codeUnits);
-              print(bs64);
               String link =
                   'https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=';
               log(link);
 
               var headers = {
                 'x-api-key': 'uSirf5x9fM5iYjPuu8GXS4TVvLbt1tdg9DUe7f7N',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
               };
               final result = await http.post(
                 Uri.parse('https://api.aws3.link/shorten'),
@@ -579,7 +589,26 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
                                             (itemModel.bookingModel!.noOfPersons)),
                                       ),
-                                    const SizedBox(height: 30),
+                                    // if (!itemModel.bookingModel!.isQuickBooking && itemModel.colorCode != 'Blue')
+                                    //   buildKeyValuePairs(
+                                    //     'Dive Logs',
+                                    //     '${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}',
+                                    //     isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
+                                    //         (itemModel.bookingModel!.noOfPersons)),
+                                    //   ),
+                                    Spacing.h10,
+                                    if (itemModel.colorCode != 'Blue')
+                                      AppButton.miniFlat(
+                                        text: 'Add Log',
+                                        onTap: () {
+                                          DiveLogBottomSheet.show(
+                                            context,
+                                            bookingModel: itemModel.bookingModel!,
+                                            date: selectedDate,
+                                          );
+                                        },
+                                      ),
+                                    Spacing.h20,
                                     if (!itemModel.bookingModel!.isQuickBooking)
                                       buildPaymentStatus(
                                         itemModel: itemModel,
@@ -594,7 +623,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                             paymentMode: itemModel.bookingModel!.paymentMode,
                                             time: itemModel.bookingModel!.createdAt,
                                           ),
-                                          ...itemModel.bookingModel!.payments!
+                                          ...itemModel.bookingModel!.payments!,
                                         ],
                                       ),
                                     const SizedBox(height: 10),
@@ -735,7 +764,6 @@ Regards,
                                               onTap: () async {
                                                 String bookingId = itemModel.bookingModel!.id!;
                                                 String bs64 = base64.encode(bookingId.codeUnits);
-                                                print(bs64);
                                                 String link =
                                                     'https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl&paperwork_id=MTQ=';
 
@@ -790,7 +818,7 @@ Regards,
                                                                   },
                                                                   child: const Icon(Icons.close),
                                                                 ),
-                                                              )
+                                                              ),
                                                             ],
                                                           ),
                                                           const SizedBox(height: 50),
@@ -933,7 +961,7 @@ Regards,
                                                                       },
                                                                       child: const Icon(Icons.close),
                                                                     ),
-                                                                  )
+                                                                  ),
                                                                 ],
                                                               ),
                                                               const SizedBox(height: 20),
@@ -1265,7 +1293,7 @@ Regards,
                 onTap: () {
                   Get.toNamed(AddPaymentsScreen.id, arguments: itemModel!.bookingModel);
                 },
-              ).paddingOnly(right: 15)
+              ).paddingOnly(right: 15),
             ],
           ),
         ),
@@ -1362,55 +1390,6 @@ Regards,
     }
     return (total - t).toInt().toString();
   }
-
-  // Future<Uint8List> _createImageFromWidget(
-  //   Widget widget, {
-  //   Duration wait = const Duration(milliseconds: 450),
-  // }) async {
-  //   final RenderRepaintBoundary repaintBoundary = RenderRepaintBoundary();
-  //   Size logicalSize = ui.window.physicalSize / ui.window.devicePixelRatio;
-  //   double pixelRatio = ui.window.devicePixelRatio;
-  //   final RenderView renderView = RenderView(
-  //     window: ui.window,
-  //     child: RenderPositionedBox(
-  //         alignment: Alignment.center,
-  //         // heightFactor: Get.height,
-  //         child: repaintBoundary),
-  //     configuration: ViewConfiguration(
-  //       size: logicalSize,
-  //       devicePixelRatio: pixelRatio,
-  //     ),
-  //   );
-  //
-  //   final PipelineOwner pipelineOwner = PipelineOwner();
-  //   final BuildOwner buildOwner = BuildOwner(focusManager: FocusManager());
-  //   pipelineOwner.rootNode = renderView;
-  //   renderView.prepareInitialFrame();
-  //   final RenderObjectToWidgetElement<RenderBox> rootElement =
-  //       RenderObjectToWidgetAdapter<RenderBox>(
-  //     container: repaintBoundary,
-  //     child: Directionality(
-  //       textDirection: TextDirection.ltr,
-  //       child: widget,
-  //     ),
-  //   ).attachToRenderTree(buildOwner);
-  //   buildOwner.buildScope(rootElement);
-  //
-  //   await Future.delayed(wait);
-  //
-  //   buildOwner.buildScope(rootElement);
-  //   buildOwner.finalizeTree();
-  //   pipelineOwner.flushLayout();
-  //   pipelineOwner.flushCompositingBits();
-  //   pipelineOwner.flushPaint();
-  //
-  //   final ui.Image image =
-  //       await repaintBoundary.toImage(pixelRatio: pixelRatio);
-  //   //final ui.Image image = await repaintBoundary.toImage(pixelRatio: 1);
-  //   final ByteData byteData =
-  //       (await image.toByteData(format: ui.ImageByteFormat.png))!;
-  //   return byteData.buffer.asUint8List();
-  // }
 
   Future<void> onDeletePaxPressed(Booking bookingModel, int index) async {
     Get.defaultDialog(

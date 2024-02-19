@@ -93,7 +93,7 @@ class _BoatStatusState extends State<BoatStatus> {
               size: 16,
             ),
           ),
-        )
+        ),
       ],
     );
   }

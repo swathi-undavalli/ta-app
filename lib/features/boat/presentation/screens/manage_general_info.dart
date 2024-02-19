@@ -61,7 +61,8 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: buildAppBar() as PreferredSizeWidget?,
+      backgroundColor: AppColors.background.lightBlue,
+      appBar: buildAppBar(),
       body: WillPopScope(
         onWillPop: () async {
           logic.controller.reset();
@@ -567,7 +568,7 @@ class _ManageGeneralInfoState extends State<ManageGeneralInfo> {
     ).paddingSymmetric(vertical: 20);
   }
 
-  Widget buildAppBar() {
+  AppBar buildAppBar() {
     return AppBar(
       toolbarHeight: 70,
       centerTitle: true,

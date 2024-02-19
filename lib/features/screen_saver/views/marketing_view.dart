@@ -29,6 +29,7 @@ class _MarketingViewState extends State<MarketingView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar(),
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(
@@ -74,7 +75,7 @@ class _MarketingViewState extends State<MarketingView> {
                   children: [
                     Spacing.h10,
                     ...(marketing.marketingElements ?? []).map(
-                      (element) => buildMarketingCard(
+                          (element) => buildMarketingCard(
                         element: element,
                         index: (marketing.marketingElements ?? []).indexOf(element),
                       ).paddingOnly(top: 20),
