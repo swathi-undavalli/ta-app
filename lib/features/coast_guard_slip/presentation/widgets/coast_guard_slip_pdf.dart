@@ -5,24 +5,16 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
+import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
-import '../../../bookings/models/customer_model.dart';
 import '../../../bookings/presentation/widgets/share_booking_details_widget.dart';
 
 class CoastGuardSlip {
   static Future<File> generatePdf({
     required DateTime selectedDate,
-    required List<Boat> boats,
-    required List<Booking> allBookings,
+    required Map<Boat, List<Booking>> bookings,
   }) async {
-    List<Booking> getBookings(String boatId) {
-      List<Booking> bookings = allBookings.where((Booking booking) {
-        return (booking.getBoatInfo(selectedDate)?.id == boatId);
-      }).toList();
-      return bookings;
-    }
-
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -58,28 +50,56 @@ class CoastGuardSlip {
             ],
           ),
           pw.SizedBox(height: 25),
-          ...boats.map(
-            (boat) {
-              return pw.Column(
-                children: [
-                  buildLine(),
-                  pw.SizedBox(height: 25),
-                  buildBoatDetails(boat),
-                  buildLine(),
-                  buildTitles(),
-                  buildLine(),
-                  pw.SizedBox(height: 25),
-                  ...getBookings(boat.id).map((booking) => buildCustomerDetails(booking: booking, boat: boat)),
-                  pw.SizedBox(height: 20),
-                  buildLine(),
-                ],
-              );
-            },
+          ...bookings.keys.map(
+            (boat) => buildBoat(boat, bookings[boat] ?? []),
           ),
         ],
       ),
     );
     return ShareBookingDetails.saveDocument(name: 'coatGuardSlip.pdf', pdf: pdf);
+  }
+
+  static pw.Widget buildBoat(Boat boat, List<Booking> bookings) {
+    List<Instructor> instructors = getInstructors(bookings);
+    List<Customer> customers = getCustomers(bookings);
+
+    return pw.Column(
+      children: [
+        buildLine(),
+        pw.SizedBox(height: 25),
+        buildBoatDetails(boat),
+        buildLine(),
+        buildTitles(),
+        buildLine(),
+        pw.SizedBox(height: 25),
+        ...List.generate(
+          instructors.length,
+          (index) => buildCustomerDetails(
+            index: index + 1,
+            name: instructors[index].name,
+            gender: 'Get Gender',
+            category: 'Staff',
+            country: 'India',
+            boatTime: '${boat.name} - ${boat.time}',
+            isInstructor: true,
+          ),
+        ),
+        ...List.generate(
+          customers.length,
+          (index) => buildCustomerDetails(
+            index: instructors.length + index + 1,
+            name: customers[index].name ?? '-',
+            gender: customers[index].gender ?? '-',
+            category: customers[index].course ?? '-',
+            country: customers[index].country ?? '-',
+            boatTime: '${boat.name} - ${boat.time}',
+            isInstructor: true,
+          ),
+        ),
+        pw.SizedBox(height: 20),
+        buildLine(),
+      ],
+    );
   }
 
   static pw.Widget buildLine() {
@@ -174,7 +194,15 @@ class CoastGuardSlip {
     );
   }
 
-  static pw.Widget buildCustomerDetails({required Booking booking, required Boat boat}) {
+  static pw.Widget buildCustomerDetails({
+    required int index,
+    required String name,
+    required String gender,
+    required String category,
+    required String country,
+    required String boatTime,
+    required bool isInstructor,
+  }) {
     pw.Widget buildText(String text) => pw.Text(
           text,
           textAlign: pw.TextAlign.center,
@@ -185,45 +213,90 @@ class CoastGuardSlip {
           ),
         );
 
-    return pw.Column(
-      children: [
-        ...(booking.pax?.sublist(1) ?? []).map(
-          (e) {
-            CustomerModel customer = CustomerModel.fromMap(e);
-            return pw.Padding(
-              padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
-              child: pw.Row(
-                children: [
-                  pw.SizedBox(
-                    width: 100,
-                    child: buildText('1'),
-                  ),
-                  pw.SizedBox(
-                    width: 230,
-                    child: buildText(customer.name),
-                  ),
-                  pw.SizedBox(
-                    width: 170,
-                    child: buildText(customer.gender ?? '-'),
-                  ),
-                  pw.SizedBox(
-                    width: 170,
-                    child: buildText(booking.activity?[0]?.name ?? '-'),
-                  ),
-                  pw.SizedBox(
-                    width: 170,
-                    child: buildText(customer.country ?? 'India'),
-                  ),
-                  pw.SizedBox(
-                    width: 200,
-                    child: buildText('${boat.name} - ${boat.time}'),
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      ],
+    return pw.Padding(
+      padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
+      child: pw.Row(
+        children: [
+          pw.SizedBox(
+            width: 100,
+            child: buildText('$index'),
+          ),
+          pw.SizedBox(
+            width: 230,
+            child: buildText(name),
+          ),
+          pw.SizedBox(
+            width: 170,
+            child: buildText(gender),
+          ),
+          pw.SizedBox(
+            width: 170,
+            child: buildText(category),
+          ),
+          pw.SizedBox(
+            width: 170,
+            child: buildText(country),
+          ),
+          pw.SizedBox(
+            width: 200,
+            child: buildText(boatTime),
+          ),
+        ],
+      ),
     );
   }
+}
+
+List<Instructor> getInstructors(List<Booking> bookings) {
+  List<Instructor> instructors = [];
+
+  for (var booking in bookings) {
+    if (booking.instructor?.id != null) {
+      instructors.add(booking.instructor!);
+    }
+  }
+
+  return instructors.toSet().toList();
+}
+
+List<Customer> getCustomers(List<Booking> bookings) {
+  List<Customer> customers = [];
+
+  for (var booking in bookings) {
+    if ((booking.pax?.length ?? 0) > 1) {
+      booking.pax?.forEach((person) {
+        Customer customer = Customer(
+          name: (person['first-name'] ?? '') + (person['last-name'] ?? ''),
+          gender: person['gender'],
+          country: person['country'],
+          course: booking.activity?.firstOrNull?.shortName,
+        );
+        customers.add(customer);
+      });
+    }
+  }
+
+  return customers.toSet().toList();
+}
+
+class Customer {
+  String? name;
+  String? gender;
+  String? country;
+  String? course;
+
+  Customer({
+    required this.name,
+    required this.gender,
+    required this.country,
+    required this.course,
+  });
+
+  @override
+  bool operator ==(Object other) {
+    return (other is Customer) && other.name == name;
+  }
+
+  @override
+  int get hashCode => name.hashCode;
 }

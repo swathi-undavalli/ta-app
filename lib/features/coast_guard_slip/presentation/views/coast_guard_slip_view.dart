@@ -1,13 +1,19 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:share/share.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/back_navigation_icon.dart';
-import '../../controller/coast_guard_slip_controller.dart';
+import '../../../boat/models/boats.dart';
+import '../../../bookings/models/booking_model.dart';
+import '../widgets/coast_guard_slip_pdf.dart';
 
 class CoastGuardSlipView extends StatefulWidget {
   const CoastGuardSlipView({Key? key}) : super(key: key);
@@ -18,53 +24,52 @@ class CoastGuardSlipView extends StatefulWidget {
 }
 
 class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
-  final CoastGuardSlipLogic logic = CoastGuardSlipLogic();
+  DateTime selectedDate = DateTime.now();
+  bool showLoading = false;
 
   @override
   void initState() {
-    logic.init().whenComplete(() => logic.controller.update());
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: buildAppBar(),
       body: SafeArea(
-        child: GetBuilder<CoastGuardSlipController>(
-          builder: (controller) {
-            return Column(
-              children: [
-                buildCalenderWidget(controller, context),
-                Spacing.h20,
-                if (controller.showLoading)
-                  const CircularProgressIndicator(
-                    color: Colors.white,
-                    backgroundColor: Colors.black,
-                  ).center
-                else
-                  AppButton.flat(
-                    onTap: logic.generateCoastGuardSlip,
-                    text: 'Generate',
-                    color: Colors.black,
-                    textColor: Colors.white,
-                  ).center,
-              ],
-            ).paddingSymmetric(horizontal: 20, vertical: 20).scrollable;
-          },
-        ),
+        child: Column(
+          children: [
+            Spacing.h20,
+            buildCalenderWidget(context),
+            Spacing.h20,
+            Spacing.h30,
+            if (showLoading)
+              const CircularProgressIndicator(
+                color: Colors.white,
+                backgroundColor: Colors.black,
+              ).center
+            else
+              AppButton.flat(
+                onTap: generateCoastGuardSlip,
+                text: 'Generate',
+                color: Colors.black,
+                textColor: Colors.white,
+              ).center,
+          ],
+        ).paddingSymmetric(horizontal: 20, vertical: 20),
       ),
     );
   }
 
-  Widget buildCalenderWidget(CoastGuardSlipController controller, BuildContext context) {
+  Widget buildCalenderWidget(BuildContext context) {
     return Row(
       children: [
         buildButton(
           onTap: () {
-            logic.onDateChanged(
-              controller.selectedDate.subtract(const Duration(days: 1)),
-            );
+            setState(() {
+              selectedDate = selectedDate.subtract(const Duration(days: 1));
+            });
           },
           icon: Icons.arrow_back_ios_rounded,
         ),
@@ -72,7 +77,7 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
         Container(
           alignment: Alignment.centerLeft,
           child: Text(
-            DateFormat('dd-MM-yyyy').format(controller.selectedDate),
+            DateFormat('dd-MM-yyyy').format(selectedDate),
             style: TextStyle(
               fontSize: 16,
               color: AppColors.text.black,
@@ -83,7 +88,7 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
         ),
         Spacing.w15,
         Text(
-          DateFormat('EEEE').format(controller.selectedDate),
+          DateFormat('EEEE').format(selectedDate),
           style: TextStyle(
             fontSize: 13,
             color: AppColors.text.black,
@@ -94,9 +99,9 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
         Spacing.w15,
         buildButton(
           onTap: () {
-            logic.onDateChanged(
-              controller.selectedDate.add(const Duration(days: 1)),
-            );
+            setState(() {
+              selectedDate = selectedDate.add(const Duration(days: 1));
+            });
           },
           icon: Icons.arrow_forward_ios_rounded,
         ),
@@ -154,10 +159,10 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
     );
   }
 
-  showDateSelector(BuildContext context) async {
+  void showDateSelector(BuildContext context) async {
     DateTime? date = await showDatePicker(
       context: context,
-      initialDate: logic.controller.selectedDate,
+      initialDate: selectedDate,
       firstDate: DateTime(2010),
       lastDate: DateTime(2090),
       builder: (context, child) {
@@ -183,7 +188,68 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
     );
 
     if (date != null) {
-      logic.onDateChanged(date);
+      setState(() {
+        selectedDate = date;
+      });
     }
+  }
+
+  Future<void> generateCoastGuardSlip() async {
+    setState(() {
+      showLoading = true;
+    });
+
+    List<Boat> boats = await getAllBoats(selectedDate);
+    Map<Boat, List<Booking>> cachedBookings = {};
+    for (var boat in boats) {
+      List<Booking> bookings = await getBookings(selectedDate, boat);
+      cachedBookings[boat] = bookings;
+    }
+
+    File pdfFile = await CoastGuardSlip.generatePdf(
+      selectedDate: selectedDate,
+      bookings: cachedBookings,
+    );
+    Share.shareFiles([pdfFile.path]);
+
+    setState(() {
+      showLoading = false;
+    });
+  }
+
+  Future<List<Boat>> getAllBoats(DateTime date) async {
+    List<Boat> boats = [];
+
+    var data = await FirebaseFirestore.instance
+        .collection('dailyBoats')
+        .doc(
+          DateFormat('dd-MM-yyyy').format(date),
+        )
+        .get();
+    BoatsModel boatsModel = BoatsModel.fromMap(data.data());
+    boats.addAll(boatsModel.boats as Iterable<Boat>);
+    return boats;
+  }
+
+  Future<List<Booking>> getBookings(DateTime date, Boat boat) async {
+    List<Booking> bookings = [];
+
+    var data = await FirebaseFirestore.instance
+        .collection('bookings')
+        .where(
+          'bookingDate',
+          arrayContains: DateFormat('dd-MM-yyyy').format(selectedDate),
+        )
+        .get();
+    for (var doc in data.docs) {
+      Booking booking = Booking.fromMap(doc.data());
+
+      // Adding only boats that belong to selected boat.
+      if (booking.getBoatInfo(selectedDate)?.id == boat.id) {
+        bookings.add(booking);
+      }
+    }
+
+    return bookings;
   }
 }
