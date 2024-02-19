@@ -3,10 +3,25 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import '../../../board_plan/presentation/widgets/customer_details.dart';
+import '../../../boat/models/boats.dart';
+import '../../../bookings/models/booking_model.dart';
+import '../../../bookings/models/customer_model.dart';
 import '../../../bookings/presentation/widgets/share_booking_details_widget.dart';
 
 class CoastGuardSlip {
-  static Future<File> generatePdf({required DateTime selectedDate}) async {
+  static Future<File> generatePdf({
+    required DateTime selectedDate,
+    required List<Boat> boats,
+    required List<Booking> allBookings,
+  }) async {
+    List<Booking> getBookings(String boatId) {
+      List<Booking> bookings = allBookings.where((Booking booking) {
+        return (booking.getBoatInfo(selectedDate)?.id == boatId);
+      }).toList();
+      return bookings;
+    }
+
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -42,19 +57,24 @@ class CoastGuardSlip {
             ],
           ),
           pw.SizedBox(height: 25),
-          buildLine(),
-          pw.SizedBox(height: 25),
-          buildBoatDetails(),
-          buildLine(),
-          buildTitles(),
-          buildLine(),
-          pw.SizedBox(height: 25),
-          ...List.generate(
-            5,
-            (index) => buildCustomerDetails(),
+          ...boats.map(
+            (boat) {
+              return pw.Column(
+                children: [
+                  buildLine(),
+                  pw.SizedBox(height: 25),
+                  buildBoatDetails(boat),
+                  buildLine(),
+                  buildTitles(),
+                  buildLine(),
+                  pw.SizedBox(height: 25),
+                  ...getBookings(boat.id).map((booking) => buildCustomerDetails(booking: booking, boat: boat)),
+                  pw.SizedBox(height: 20),
+                  buildLine(),
+                ],
+              );
+            },
           ),
-          pw.SizedBox(height: 20),
-          buildLine(),
         ],
       ),
     );
@@ -69,7 +89,7 @@ class CoastGuardSlip {
     );
   }
 
-  static pw.Widget buildBoatDetails() {
+  static pw.Widget buildBoatDetails(Boat boat) {
     pw.Widget buildText(String text) => pw.Text(
           text,
           textAlign: pw.TextAlign.center,
@@ -85,7 +105,7 @@ class CoastGuardSlip {
       child: pw.Row(
         children: [
           pw.Text(
-            'BATMAN',
+            boat.name,
             style: pw.TextStyle(
               fontSize: 40,
               color: PdfColors.black,
@@ -97,10 +117,11 @@ class CoastGuardSlip {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             mainAxisAlignment: pw.MainAxisAlignment.start,
             children: [
-              buildText('Boat No    : PY234'),
-              buildText('Captain    : Venthan ( 9876543210 )'),
-              buildText('Captain No : 9876543210'),
-              buildText('Instructor : Donarun Das ( 9876543210 )'),
+              buildText('Boat No    : ${boat.time}'),
+              if (boat.captains != null && boat.captains!.isNotEmpty)
+                buildText('Captain    : ${boat.captains?[0].name} ( ${boat.captains?[0].phone} )'),
+              if (boat.captains != null && boat.captains?.length == 2)
+                buildText('Incharge   : ${boat.captains?[1].name} ( ${boat.captains?[1].phone} )'),
             ],
           ),
         ],
@@ -152,7 +173,7 @@ class CoastGuardSlip {
     );
   }
 
-  static pw.Widget buildCustomerDetails() {
+  static pw.Widget buildCustomerDetails({required Booking booking, required Boat boat}) {
     pw.Widget buildText(String text) => pw.Text(
           text,
           textAlign: pw.TextAlign.center,
@@ -163,36 +184,45 @@ class CoastGuardSlip {
           ),
         );
 
-    return pw.Padding(
-      padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
-      child: pw.Row(
-        children: [
-          pw.SizedBox(
-            width: 100,
-            child: buildText('1'),
-          ),
-          pw.SizedBox(
-            width: 230,
-            child: buildText('Sahitha Undavalli'),
-          ),
-          pw.SizedBox(
-            width: 170,
-            child: buildText('Female'),
-          ),
-          pw.SizedBox(
-            width: 170,
-            child: buildText('Customer'),
-          ),
-          pw.SizedBox(
-            width: 170,
-            child: buildText('India'),
-          ),
-          pw.SizedBox(
-            width: 200,
-            child: buildText('BATMAN-11:00AM'),
-          ),
-        ],
-      ),
+    return pw.Column(
+      children: [
+        ...(booking.pax?.sublist(1) ?? []).map(
+          (e) {
+            CustomerModel customer = CustomerModel.fromMap(e);
+            return pw.Padding(
+              padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
+              child: pw.Row(
+                children: [
+                  pw.SizedBox(
+                    width: 100,
+                    child: buildText('1'),
+                  ),
+                  pw.SizedBox(
+                    width: 230,
+                    child: buildText(customer.name),
+                  ),
+                  pw.SizedBox(
+                    width: 170,
+                    child: buildText(customer.gender ?? '-'),
+                  ),
+                  pw.SizedBox(
+                    width: 170,
+                    child: buildText(booking.activity?[0]?.name ?? '-'),
+                  ),
+                  pw.SizedBox(
+                    width: 170,
+                    child: buildText(customer.country ?? 'India'),
+                  ),
+                  pw.SizedBox(
+                    width: 200,
+                    child: buildText('${boat.name} - ${boat.time}'),
+                  ),
+                ],
+              ),
+            );
+          },
+        ),
+      ],
     );
   }
 }

@@ -133,30 +133,6 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
     );
   }
 
-  Widget buildChip({
-    required Function onTap,
-    required Color color,
-    required String title,
-  }) {
-    return GestureDetector(
-      onTap: () {
-        onTap();
-      },
-      child: Container(
-        height: 32,
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(20),
-        ),
-        child: Text(
-          title,
-          style: const TextStyle(color: Colors.black, fontSize: 12),
-          textAlign: TextAlign.center,
-        ).paddingSymmetric(horizontal: 10, vertical: 7),
-      ),
-    );
-  }
-
   AppBar buildAppBar() {
     return AppBar(
       toolbarHeight: 70,

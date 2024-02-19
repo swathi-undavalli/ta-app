@@ -129,7 +129,6 @@ class Booking {
       );
 
   factory Booking.fromMap(Map<String, dynamic> json) {
-    log("fromMap");
     parseDateOrNull(date) {
       if (date == null) return null;
       return DateTime.parse(date);
