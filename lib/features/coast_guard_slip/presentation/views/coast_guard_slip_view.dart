@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,6 +14,7 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/back_navigation_icon.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
+import '../../../employees/model/employee.dart';
 import '../widgets/coast_guard_slip_pdf.dart';
 
 class CoastGuardSlipView extends StatefulWidget {
@@ -206,9 +208,12 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
       cachedBookings[boat] = bookings;
     }
 
+    List<Employee> allEmployees = await getEmployees();
+
     File pdfFile = await CoastGuardSlip.generatePdf(
       selectedDate: selectedDate,
       bookings: cachedBookings,
+      employees: allEmployees,
     );
     Share.shareFiles([pdfFile.path]);
 
@@ -251,5 +256,20 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
     }
 
     return bookings;
+  }
+
+  Future<List<Employee>> getEmployees() async {
+    List<Employee> employees = [];
+    var data = await FirebaseFirestore.instance.collection('employees').get();
+    try {
+      for (var doc in data.docs) {
+        Employee employee = Employee.fromMap(doc.data());
+        employees.add(employee);
+      }
+    } catch (e) {
+      log(e.toString());
+    }
+
+    return employees;
   }
 }

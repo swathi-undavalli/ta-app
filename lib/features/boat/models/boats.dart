@@ -20,8 +20,7 @@ class BoatsModel {
         dsd: dsd ?? this.dsd,
       );
 
-  factory BoatsModel.fromRawJson(String str) =>
-      BoatsModel.fromMap(json.decode(str));
+  factory BoatsModel.fromRawJson(String str) => BoatsModel.fromMap(json.decode(str));
 
   String toRawJson() => json.encode(toMap());
 
@@ -174,15 +173,11 @@ class Dsd {
         'weights': weights?.toJson(),
         'dayOffs': List<dynamic>.from((dayOffs ?? []).map((x) => x.toJson())),
         'leaves': List<dynamic>.from((leaves ?? []).map((x) => x.toJson())),
-        'dsdOceanHead':
-            List<dynamic>.from((dsdOceanHead ?? []).map((x) => x.toJson())),
-        'courseCenter':
-            List<dynamic>.from((courseCenter ?? []).map((x) => x.toJson())),
-        'centerStaff':
-            List<dynamic>.from((centerStaff ?? []).map((x) => x.toJson())),
+        'dsdOceanHead': List<dynamic>.from((dsdOceanHead ?? []).map((x) => x.toJson())),
+        'courseCenter': List<dynamic>.from((courseCenter ?? []).map((x) => x.toJson())),
+        'centerStaff': List<dynamic>.from((centerStaff ?? []).map((x) => x.toJson())),
         'dsdPool': List<dynamic>.from((dsdPool ?? []).map((x) => x.toJson())),
-        'harboursStaff':
-            List<dynamic>.from((harboursStaff ?? []).map((x) => x.toJson())),
+        'harboursStaff': List<dynamic>.from((harboursStaff ?? []).map((x) => x.toJson())),
         'generalNotes': generalNotes,
         'highTides': highTides,
         'lowTides': lowTides,
@@ -323,7 +318,9 @@ class Boat {
   final int? nitrox;
   final int? air;
   final bool? hideBoat;
+  final bool? isBoat;
   final String name;
+  final String? boatNo;
   final String? diveSite;
   int? boatStatus;
 
@@ -333,6 +330,7 @@ class Boat {
     required this.photographer,
     required this.time,
     required this.hideBoat,
+    required this.isBoat,
     required this.id,
     required this.nitrox,
     required this.air,
@@ -340,6 +338,7 @@ class Boat {
     required this.internPhotoVideo,
     required this.notes,
     required this.name,
+    required this.boatNo,
     required this.diveSite,
     required this.boatStatus,
   });
@@ -353,11 +352,13 @@ class Boat {
     int? nitrox,
     int? air,
     bool? hideBoat,
+    bool? isBoat,
     int? boatStatus,
     String? notes,
     List<Instructor>? surfaceSupport,
     List<Instructor>? internPhotoVideo,
     String? name,
+    String? boatNo,
     String? diveSite,
   }) =>
       Boat(
@@ -369,10 +370,12 @@ class Boat {
         air: air ?? this.air,
         nitrox: nitrox ?? this.nitrox,
         hideBoat: hideBoat ?? this.hideBoat,
+        isBoat: isBoat ?? this.isBoat,
         surfaceSupport: surfaceSupport ?? this.surfaceSupport,
         internPhotoVideo: internPhotoVideo ?? this.internPhotoVideo,
         notes: notes ?? this.notes,
         name: name ?? this.name,
+        boatNo: boatNo ?? this.boatNo,
         diveSite: diveSite ?? this.diveSite,
         boatStatus: boatStatus ?? this.boatStatus,
       );
@@ -397,6 +400,7 @@ class Boat {
         nitrox: json['nitrox'],
         air: json['air'],
         hideBoat: json['hideBoat'],
+        isBoat: json['isBoat'],
         surfaceSupport: List<Instructor>.from(
           (json['surfaceSupport'] ?? []).map((x) => Instructor.fromMap(x)),
         ),
@@ -405,27 +409,26 @@ class Boat {
         ),
         diveSite: json['diveSite'],
         name: json['name'],
+        boatNo: json['boatNo'],
         boatStatus: json['boatStatus'],
       );
 
   Map<String, dynamic> toJson() => {
         'captains': List<dynamic>.from((captains ?? []).map((x) => x.toJson())),
-        'dsdInstructors':
-            List<dynamic>.from((dsdInstructors ?? []).map((x) => x.toJson())),
-        'photographer':
-            List<dynamic>.from((photographer ?? []).map((x) => x.toJson())),
+        'dsdInstructors': List<dynamic>.from((dsdInstructors ?? []).map((x) => x.toJson())),
+        'photographer': List<dynamic>.from((photographer ?? []).map((x) => x.toJson())),
         'id': id,
         'time': time,
-        'surfaceSupport':
-            List<dynamic>.from((surfaceSupport ?? []).map((x) => x.toJson())),
-        'internPhotoVideo':
-            List<dynamic>.from((internPhotoVideo ?? []).map((x) => x.toJson())),
+        'surfaceSupport': List<dynamic>.from((surfaceSupport ?? []).map((x) => x.toJson())),
+        'internPhotoVideo': List<dynamic>.from((internPhotoVideo ?? []).map((x) => x.toJson())),
         'notes': notes,
         'air': air,
         'hideBoat': hideBoat,
+        'isBoat': isBoat,
         'diveSite': diveSite,
         'nitrox': nitrox,
         'name': name,
+        'boatNo': boatNo,
         'boatStatus': boatStatus,
       };
 }

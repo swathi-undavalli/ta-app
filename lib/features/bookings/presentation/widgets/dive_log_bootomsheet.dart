@@ -135,7 +135,10 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
                       if (data == null || data.isEmpty) {
                         return Column(
                           children: [
-                            const Text('No Logs Added 🥲').center.height(Get.height),
+                            const Text(
+                              'No Logs Added 🥲',
+                              style: TextStyle(fontSize: 10),
+                            ).center,
                           ],
                         );
                       } else {

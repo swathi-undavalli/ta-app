@@ -1,26 +1,28 @@
+import 'dart:developer';
 import 'dart:io';
-
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-
+import '../../../board_plan/presentation/widgets/customer_details.dart';
 import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
 import '../../../bookings/presentation/widgets/share_booking_details_widget.dart';
+import '../../../employees/model/employee.dart';
 
 class CoastGuardSlip {
   static Future<File> generatePdf({
     required DateTime selectedDate,
     required Map<Boat, List<Booking>> bookings,
+    required List<Employee> employees,
   }) async {
     final pdf = pw.Document();
 
     pdf.addPage(
       pw.MultiPage(
-        pageTheme: pw.PageTheme(
-          pageFormat: PdfPageFormat.a3.landscape,
+        pageTheme: const pw.PageTheme(
+          pageFormat: PdfPageFormat.a4,
         ),
         build: (context) => <pw.Widget>[
           pw.Row(
@@ -32,7 +34,7 @@ class CoastGuardSlip {
                 textAlign: pw.TextAlign.center,
                 style: pw.TextStyle(
                   color: PdfColors.black,
-                  fontSize: 50,
+                  fontSize: 20,
                   wordSpacing: 2,
                   font: pw.Font.timesBold(),
                 ),
@@ -41,7 +43,7 @@ class CoastGuardSlip {
               pw.Text(
                 DateFormat('EEEE, MMMM dd, yyyy').format(selectedDate),
                 style: pw.TextStyle(
-                  fontSize: 23,
+                  fontSize: 15,
                   color: PdfColors.black,
                   font: pw.Font.timesBold(),
                 ),
@@ -49,9 +51,15 @@ class CoastGuardSlip {
               pw.Spacer(),
             ],
           ),
-          pw.SizedBox(height: 25),
+          pw.SizedBox(height: 15),
           ...bookings.keys.map(
-            (boat) => buildBoat(boat, bookings[boat] ?? []),
+            (boat) {
+              if (boat.isBoat ?? false) {
+                return buildBoat(boat, bookings[boat] ?? [], employees);
+              } else {
+                return pw.SizedBox();
+              }
+            },
           ),
         ],
       ),
@@ -59,29 +67,26 @@ class CoastGuardSlip {
     return ShareBookingDetails.saveDocument(name: 'coatGuardSlip.pdf', pdf: pdf);
   }
 
-  static pw.Widget buildBoat(Boat boat, List<Booking> bookings) {
+  static pw.Widget buildBoat(Boat boat, List<Booking> bookings, List<Employee> employees) {
     List<Instructor> instructors = getInstructors(bookings);
     List<Customer> customers = getCustomers(bookings);
-
     return pw.Column(
       children: [
         buildLine(),
-        pw.SizedBox(height: 25),
-        buildBoatDetails(boat),
+        buildBoatDetails(boat, employees),
         buildLine(),
         buildTitles(),
         buildLine(),
-        pw.SizedBox(height: 25),
+        pw.SizedBox(height: 15),
         ...List.generate(
           instructors.length,
           (index) => buildCustomerDetails(
             index: index + 1,
             name: instructors[index].name,
-            gender: 'Get Gender',
+            gender: allEmployees(employees, instructors[index].id)?.gender ?? '-',
             category: 'Staff',
             country: 'India',
-            boatTime: '${boat.name} - ${boat.time}',
-            isInstructor: true,
+            diveSite: '${boat.diveSite}',
           ),
         ),
         ...List.generate(
@@ -89,11 +94,10 @@ class CoastGuardSlip {
           (index) => buildCustomerDetails(
             index: instructors.length + index + 1,
             name: customers[index].name ?? '-',
-            gender: customers[index].gender ?? '-',
+            gender: customers[index].gender ?? 'Male',
             category: customers[index].course ?? '-',
-            country: customers[index].country ?? '-',
-            boatTime: '${boat.name} - ${boat.time}',
-            isInstructor: true,
+            country: customers[index].country ?? 'India',
+            diveSite: '${boat.diveSite}',
           ),
         ),
         pw.SizedBox(height: 20),
@@ -110,39 +114,58 @@ class CoastGuardSlip {
     );
   }
 
-  static pw.Widget buildBoatDetails(Boat boat) {
+  static pw.Widget buildBoatDetails(Boat boat, List<Employee> employees) {
     pw.Widget buildText(String text) => pw.Text(
           text,
           textAlign: pw.TextAlign.center,
           style: pw.TextStyle(
-            fontSize: 20,
+            fontSize: 12,
             color: PdfColors.black,
             font: pw.Font.timesBold(),
           ),
         );
 
     return pw.Padding(
-      padding: const pw.EdgeInsets.only(top: 25, bottom: 25),
+      padding: const pw.EdgeInsets.only(top: 15, bottom: 15),
       child: pw.Row(
         children: [
-          pw.Text(
-            boat.name,
-            style: pw.TextStyle(
-              fontSize: 40,
-              color: PdfColors.black,
-              font: pw.Font.timesBold(),
-            ),
+          pw.Column(
+            children: [
+              pw.Text(
+                '${boat.name} - ${boat.time}',
+                style: pw.TextStyle(
+                  fontSize: 20,
+                  color: PdfColors.black,
+                  font: pw.Font.timesBold(),
+                ),
+              ),
+            ],
           ),
           pw.Spacer(),
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             mainAxisAlignment: pw.MainAxisAlignment.start,
             children: [
-              buildText('Boat No    : ${boat.time}'),
+              buildText('Boat No : ${boat.boatNo ?? '-'}'),
+              pw.SizedBox(height: 2),
               if (boat.captains != null && boat.captains!.isNotEmpty)
-                buildText('Captain    : ${boat.captains?[0].name} ( ${boat.captains?[0].phone} )'),
+                buildText(
+                  'Captain : ${boat.captains?[0].name} ( ${allEmployees(employees, boat.captains![0].id)?.phoneNumber} )',
+                ),
+              pw.SizedBox(height: 2),
               if (boat.captains != null && boat.captains?.length == 2)
-                buildText('Incharge   : ${boat.captains?[1].name} ( ${boat.captains?[1].phone} )'),
+                buildText(
+                  'Incharge : ${boat.captains?[1].name} ( ${allEmployees(employees, boat.captains![1].id)?.phoneNumber} )',
+                ),
+              if (boat.surfaceSupport != null && boat.surfaceSupport!.isNotEmpty)
+                pw.Wrap(
+                  children: [
+                    buildText('Surface Support : '),
+                    ...?boat.surfaceSupport?.map(
+                      (e) => buildText('${e.name}, '),
+                    )
+                  ],
+                ),
             ],
           ),
         ],
@@ -155,39 +178,39 @@ class CoastGuardSlip {
           text,
           textAlign: pw.TextAlign.center,
           style: pw.TextStyle(
-            fontSize: 20,
+            fontSize: 12,
             color: PdfColors.black,
             font: pw.Font.timesBold(),
           ),
         );
 
     return pw.Padding(
-      padding: const pw.EdgeInsets.only(top: 25, bottom: 25),
+      padding: const pw.EdgeInsets.only(top: 15, bottom: 15),
       child: pw.Row(
         children: [
           pw.SizedBox(
-            width: 100,
-            child: buildText('SI.No.'),
+            width: 30,
+            child: buildText('SI.No'),
           ),
           pw.SizedBox(
-            width: 230,
+            width: 100,
             child: buildText('Diver Names'),
           ),
           pw.SizedBox(
-            width: 170,
+            width: 70,
             child: buildText('Gender'),
           ),
           pw.SizedBox(
-            width: 170,
+            width: 70,
             child: buildText('Dive Category'),
           ),
           pw.SizedBox(
-            width: 170,
+            width: 70,
             child: buildText('Country'),
           ),
           pw.SizedBox(
-            width: 200,
-            child: buildText('Boat-Time'),
+            width: 120,
+            child: buildText('Dive Site'),
           ),
         ],
       ),
@@ -200,14 +223,13 @@ class CoastGuardSlip {
     required String gender,
     required String category,
     required String country,
-    required String boatTime,
-    required bool isInstructor,
+    required String diveSite,
   }) {
     pw.Widget buildText(String text) => pw.Text(
           text,
           textAlign: pw.TextAlign.center,
           style: pw.TextStyle(
-            fontSize: 20,
+            fontSize: 12,
             color: PdfColors.black,
             font: pw.Font.timesBold(),
           ),
@@ -218,28 +240,28 @@ class CoastGuardSlip {
       child: pw.Row(
         children: [
           pw.SizedBox(
-            width: 100,
+            width: 30,
             child: buildText('$index'),
           ),
           pw.SizedBox(
-            width: 230,
+            width: 100,
             child: buildText(name),
           ),
           pw.SizedBox(
-            width: 170,
+            width: 70,
             child: buildText(gender),
           ),
           pw.SizedBox(
-            width: 170,
+            width: 70,
             child: buildText(category),
           ),
           pw.SizedBox(
-            width: 170,
+            width: 70,
             child: buildText(country),
           ),
           pw.SizedBox(
-            width: 200,
-            child: buildText(boatTime),
+            width: 120,
+            child: buildText(diveSite),
           ),
         ],
       ),
@@ -264,7 +286,7 @@ List<Customer> getCustomers(List<Booking> bookings) {
 
   for (var booking in bookings) {
     if ((booking.pax?.length ?? 0) > 1) {
-      booking.pax?.forEach((person) {
+      booking.pax?.sublist(1).forEach((person) {
         Customer customer = Customer(
           name: (person['first-name'] ?? '') + (person['last-name'] ?? ''),
           gender: person['gender'],
@@ -277,6 +299,15 @@ List<Customer> getCustomers(List<Booking> bookings) {
   }
 
   return customers.toSet().toList();
+}
+
+Employee? allEmployees(List<Employee> allEmployees, String id) {
+  for (var element in allEmployees) {
+    if (element.id == id) {
+      return element;
+    }
+  }
+  return null;
 }
 
 class Customer {

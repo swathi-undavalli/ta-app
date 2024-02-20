@@ -64,6 +64,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   List<Instructor> surfaceSupport = [];
   List<Instructor> internsPhotoVideo = [];
   late TextEditingController boatTED;
+  late TextEditingController boatNoTED;
   late TextEditingController diveSiteTED;
   late TextEditingController notesTED;
   int nitrox = 0;
@@ -71,6 +72,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
   late DateTime selectedTime;
   int boatStatus = 0;
   bool hideBoat = false;
+  bool isBoat = false;
   bool showLoading = false;
 
   @override
@@ -78,10 +80,12 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     boatTED = TextEditingController(text: widget.boat?.name ?? '');
     notesTED = TextEditingController(text: widget.boat?.notes ?? '');
     diveSiteTED = TextEditingController(text: widget.boat?.diveSite);
+    boatNoTED = TextEditingController(text: widget.boat?.boatNo);
     nitrox = widget.boat?.nitrox ?? 0;
     air = widget.boat?.air ?? 0;
     boatStatus = widget.boat?.boatStatus ?? 0;
     hideBoat = ((widget.boat?.hideBoat)) ?? hideBoat;
+    isBoat = ((widget.boat?.isBoat)) ?? isBoat;
     log('start ${hideBoat.toString()}');
     if (widget.boat?.time != null) {
       selectedTime = TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
@@ -229,9 +233,43 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   ),
                 ],
               ),
-              Spacing.h20,
+              Row(
+                children: [
+                  Text(
+                    'Is Boat',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.text.black,
+                      fontFamily: AppFonts.nunito,
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Spacing.w10,
+                  Switch(
+                    value: isBoat,
+                    activeColor: AppColors.text.skyBlue,
+                    onChanged: (bool value) {
+                      setState(() {
+                        isBoat = value;
+                        log(isBoat.toString());
+                      });
+                    },
+                  ),
+                ],
+              ),
               AppTextField(
-                hintText: 'Boat name',
+                hintText: 'Boat No',
+                controller: boatNoTED,
+                errorValidator: () {
+                  return null;
+                },
+                validator: (_) {
+                  return null;
+                },
+              ),
+              AppTextField(
+                hintText: 'Boat Name',
                 controller: boatTED,
                 errorValidator: () {
                   return null;
@@ -666,6 +704,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
           boatStatus: boatStatus,
           hideBoat: hideBoat,
           internPhotoVideo: internsPhotoVideo,
+          isBoat: isBoat,
+          boatNo: boatNoTED.text,
         );
 
         boatsModel?.boats?.removeWhere((b) => b.id == boatId);
@@ -687,6 +727,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
           boatStatus: boatStatus,
           hideBoat: hideBoat,
           internPhotoVideo: internsPhotoVideo,
+          isBoat: isBoat,
+          boatNo: boatNoTED.text,
         );
 
         boatsModel?.boats?.add(boat);
