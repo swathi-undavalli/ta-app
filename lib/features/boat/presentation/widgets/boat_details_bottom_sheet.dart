@@ -236,7 +236,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               Row(
                 children: [
                   Text(
-                    'Is Boat',
+                    'Other',
                     style: TextStyle(
                       fontSize: 13,
                       color: AppColors.text.black,
@@ -255,6 +255,17 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                         log(isBoat.toString());
                       });
                     },
+                  ),
+                  Spacing.w10,
+                  Text(
+                    'Boat',
+                    style: TextStyle(
+                      fontSize: 13,
+                      color: AppColors.text.black,
+                      fontFamily: AppFonts.nunito,
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),
@@ -325,13 +336,14 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 ],
               ),
               Spacing.h20,
-              buildEmployeeSelector(
-                employees: selectedCaptains,
-                title: 'Captains',
-                employeeLimit: 2,
-                isTanksRequired: false,
-                employeeType: EmployeeType.showCaptains,
-              ),
+              if (isBoat)
+                buildEmployeeSelector(
+                  employees: selectedCaptains,
+                  title: 'Captains',
+                  employeeLimit: 2,
+                  isTanksRequired: false,
+                  employeeType: EmployeeType.showCaptains,
+                ),
               Spacing.h20,
               buildEmployeeSelector(
                 employees: selectedDsdInstructors,

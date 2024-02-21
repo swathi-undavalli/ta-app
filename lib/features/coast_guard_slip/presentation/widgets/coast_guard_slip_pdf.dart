@@ -1,10 +1,9 @@
+import 'dart:developer';
 import 'dart:io';
-
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-
 import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
@@ -25,33 +24,10 @@ class CoastGuardSlip {
           pageFormat: PdfPageFormat.a4,
         ),
         build: (context) => <pw.Widget>[
-          pw.Row(
-            children: [
-              pw.Spacer(),
-              pw.Spacer(),
-              pw.Text(
-                'Temple Adventures',
-                textAlign: pw.TextAlign.center,
-                style: pw.TextStyle(
-                  color: PdfColors.black,
-                  fontSize: 20,
-                  wordSpacing: 2,
-                  font: pw.Font.timesBold(),
-                ),
-              ),
-              pw.Spacer(),
-              pw.Text(
-                DateFormat('EEEE, MMMM dd, yyyy').format(selectedDate),
-                style: pw.TextStyle(
-                  fontSize: 15,
-                  color: PdfColors.black,
-                  font: pw.Font.timesBold(),
-                ),
-              ),
-              pw.Spacer(),
-            ],
-          ),
+          buildCompanyDetails(selectedDate),
           pw.SizedBox(height: 15),
+          buildDarkLine(),
+          pw.SizedBox(height: 20),
           ...bookings.keys.map(
             (boat) {
               if (boat.isBoat ?? false) {
@@ -61,19 +37,60 @@ class CoastGuardSlip {
               }
             },
           ),
-          getDSDPAXCount(bookings),
+          pw.SizedBox(height: 15),
+          buildSubTitle(title: 'InCharge  :', text: 'Azharudheen ( 8098629070 )\n'),
+          buildSubTitle(title: 'OverAll InCharges  :  ', text: 'Rob ( 9789270958 )\nSanthosh ( 8508854778 )'),
         ],
       ),
     );
     return ShareBookingDetails.saveDocument(name: 'coatGuardSlip.pdf', pdf: pdf);
   }
 
+  static pw.Widget buildCompanyDetails(DateTime selectedDate) {
+    return pw.Column(
+      mainAxisAlignment: pw.MainAxisAlignment.center,
+      crossAxisAlignment: pw.CrossAxisAlignment.center,
+      children: [
+        pw.Text(
+          'Temple Adventures',
+          textAlign: pw.TextAlign.center,
+          style: pw.TextStyle(
+            color: PdfColors.black,
+            fontSize: 30,
+            wordSpacing: 2,
+            font: pw.Font.timesBold(),
+          ),
+        ),
+        pw.SizedBox(height: 15),
+        pw.Text(
+          'EAST COAST WATERSPORTS PVT LTD,#6A, Gandhi st., Colas Nagar,Opposite to Indira Gandhi Stadium Pondicherry, India Contact : +91 9940219449 / 6385686600',
+          style: pw.TextStyle(
+            color: PdfColor.fromInt(0xff263238),
+            font: pw.Font.times(),
+            fontSize: 12,
+          ),
+        ),
+        pw.SizedBox(height: 15),
+        pw.Text(
+          DateFormat('EEEE, MMMM dd, yyyy').format(selectedDate),
+          style: pw.TextStyle(
+            fontSize: 15,
+            color: PdfColors.black,
+            font: pw.Font.timesBold(),
+          ),
+        ),
+      ],
+    );
+  }
+
   static pw.Widget buildBoat(Boat boat, List<Booking> bookings, List<Employee> employees) {
     List<Instructor> instructors = getInstructors(bookings);
     List<Customer> customers = getCustomers(bookings);
+    List<Instructor> diveBuddies = getDiveBuddies(bookings);
     return pw.Column(
+      mainAxisAlignment: pw.MainAxisAlignment.start,
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        buildLine(),
         buildBoatDetails(boat, employees),
         buildLine(),
         buildTitles(),
@@ -87,22 +104,44 @@ class CoastGuardSlip {
             gender: allEmployees(employees, instructors[index].id)?.gender ?? '-',
             category: 'Staff',
             country: 'India',
-            diveSite: '${boat.diveSite}',
           ),
         ),
         ...List.generate(
-          customers.length,
+          diveBuddies.length,
           (index) => buildCustomerDetails(
             index: instructors.length + index + 1,
+            name: diveBuddies[index].name,
+            gender: allEmployees(employees, diveBuddies[index].id)?.gender ?? '-',
+            category: 'Staff',
+            country: 'India',
+          ),
+        ),
+        if (boat.dsdInstructors != null && boat.dsdInstructors!.isNotEmpty)
+          ...List.generate(
+            (boat.dsdInstructors ?? []).length,
+            (index) => buildCustomerDetails(
+              index: instructors.length + diveBuddies.length + index + 1,
+              name: boat.dsdInstructors?[index].name ?? '',
+              gender: allEmployees(employees, boat.dsdInstructors?[index].id)?.gender ?? '-',
+              category: 'Staff',
+              country: 'India',
+            ),
+          ),
+        ...List.generate(
+          customers.length,
+          (index) => buildCustomerDetails(
+            index: instructors.length + diveBuddies.length + (boat.dsdInstructors ?? []).length + index + 1,
             name: customers[index].name ?? '-',
-            gender: customers[index].gender ?? 'Male',
+            gender: customers[index].gender ?? '-',
             category: customers[index].course ?? '-',
             country: customers[index].country ?? 'India',
-            diveSite: '${boat.diveSite}',
           ),
         ),
         pw.SizedBox(height: 20),
-        buildLine(),
+        getDSDPAXCount(bookings, boat),
+        pw.SizedBox(height: 20),
+        buildDarkLine(),
+        pw.SizedBox(height: 20),
       ],
     );
   }
@@ -115,27 +154,84 @@ class CoastGuardSlip {
     );
   }
 
-  static pw.Widget buildBoatDetails(Boat boat, List<Employee> employees) {
-    pw.Widget buildText(String text) => pw.Text(
-          text,
-          textAlign: pw.TextAlign.center,
-          style: pw.TextStyle(
-            fontSize: 12,
-            color: PdfColors.black,
-            font: pw.Font.timesBold(),
-          ),
-        );
+  static pw.Widget buildDarkLine() {
+    return pw.Container(
+      height: 1,
+      width: Get.width * 4,
+      color: PdfColors.black,
+    );
+  }
 
+  static pw.Widget buildSubTitle({required String title, String? text}) {
     return pw.Padding(
-      padding: const pw.EdgeInsets.only(top: 15, bottom: 15),
+      padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
+      child: pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.end,
+        crossAxisAlignment: pw.CrossAxisAlignment.end,
+        children: [
+          pw.Container(
+            width: 130,
+            child: pw.Text(
+              title,
+              style: pw.TextStyle(
+                fontSize: 14,
+                font: pw.Font.timesBold(),
+                color: PdfColors.black,
+
+                // fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+          pw.Container(
+            width: 180,
+            child: pw.Text(
+              (text != null && text.isNotEmpty) ? text : '-',
+              style: pw.TextStyle(
+                fontSize: 14,
+                color: PdfColor.fromInt(0xff575757),
+                font: pw.Font.timesBold(),
+
+                // fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static pw.Widget buildText(String text) => pw.Text(
+        text,
+        textAlign: pw.TextAlign.center,
+        style: pw.TextStyle(
+          fontSize: 12,
+          color: PdfColors.black,
+          font: pw.Font.timesBold(),
+        ),
+      );
+
+  static pw.Widget buildBoatDetails(Boat boat, List<Employee> employees) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.only(top: 25, bottom: 25),
       child: pw.Row(
         children: [
           pw.Column(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Text(
-                '${boat.name} - ${boat.time}',
+                '${boat.name.replaceAll(RegExp(r'[^\w\s]+'), '')} - ${boat.time}',
                 style: pw.TextStyle(
                   fontSize: 20,
+                  color: PdfColors.black,
+                  font: pw.Font.timesBold(),
+                ),
+              ),
+              pw.SizedBox(height: 5),
+              pw.Text(
+                '${boat.diveSite}',
+                style: pw.TextStyle(
+                  fontSize: 15,
                   color: PdfColors.black,
                   font: pw.Font.timesBold(),
                 ),
@@ -147,7 +243,7 @@ class CoastGuardSlip {
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             mainAxisAlignment: pw.MainAxisAlignment.start,
             children: [
-              buildText('Boat No : ${boat.boatNo ?? '-'}'),
+              if (boat.boatNo != null && boat.boatNo != '') buildText('Boat No : ${boat.boatNo}'),
               pw.SizedBox(height: 2),
               if (boat.captains != null && boat.captains!.isNotEmpty)
                 buildText(
@@ -156,16 +252,19 @@ class CoastGuardSlip {
               pw.SizedBox(height: 2),
               if (boat.captains != null && boat.captains?.length == 2)
                 buildText(
-                  'Incharge : ${boat.captains?[1].name} ( ${allEmployees(employees, boat.captains![1].id)?.phoneNumber} )',
+                  'InCharge : ${boat.captains?[1].name} ( ${allEmployees(employees, boat.captains![1].id)?.phoneNumber} )',
                 ),
               if (boat.surfaceSupport != null && boat.surfaceSupport!.isNotEmpty)
-                pw.Wrap(
-                  children: [
-                    buildText('Surface Support : '),
-                    ...?boat.surfaceSupport?.map(
-                      (e) => buildText('${e.name}, '),
-                    )
-                  ],
+                pw.SizedBox(
+                  width: 200,
+                  child: pw.Wrap(
+                    children: [
+                      buildText('Surface Support : '),
+                      ...?boat.surfaceSupport?.map(
+                        (e) => buildText('${e.name}, '),
+                      ),
+                    ],
+                  ),
                 ),
             ],
           ),
@@ -175,43 +274,29 @@ class CoastGuardSlip {
   }
 
   static pw.Widget buildTitles() {
-    pw.Widget buildText(String text) => pw.Text(
-          text,
-          textAlign: pw.TextAlign.center,
-          style: pw.TextStyle(
-            fontSize: 12,
-            color: PdfColors.black,
-            font: pw.Font.timesBold(),
-          ),
-        );
-
     return pw.Padding(
       padding: const pw.EdgeInsets.only(top: 15, bottom: 15),
       child: pw.Row(
         children: [
           pw.SizedBox(
-            width: 30,
+            width: 40,
             child: buildText('SI.No'),
           ),
           pw.SizedBox(
-            width: 100,
+            width: 150,
             child: buildText('Diver Names'),
           ),
           pw.SizedBox(
-            width: 70,
+            width: 90,
             child: buildText('Gender'),
           ),
           pw.SizedBox(
-            width: 70,
+            width: 90,
             child: buildText('Dive Category'),
           ),
           pw.SizedBox(
-            width: 70,
+            width: 90,
             child: buildText('Country'),
-          ),
-          pw.SizedBox(
-            width: 120,
-            child: buildText('Dive Site'),
           ),
         ],
       ),
@@ -224,11 +309,44 @@ class CoastGuardSlip {
     required String gender,
     required String category,
     required String country,
-    required String diveSite,
   }) {
+    return pw.Padding(
+      padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
+      child: pw.Row(
+        children: [
+          pw.SizedBox(
+            width: 40,
+            child: buildText('$index'),
+          ),
+          pw.SizedBox(
+            width: 150,
+            child: buildText(name),
+          ),
+          pw.SizedBox(
+            width: 90,
+            child: buildText(gender),
+          ),
+          pw.SizedBox(
+            width: 90,
+            child: buildText(category),
+          ),
+          pw.SizedBox(
+            width: 90,
+            child: buildText(country),
+          ),
+        ],
+      ),
+    );
+  }
+
+  static pw.Widget getDSDPAXCount(List<Booking>? bookings, Boat boat) {
+    Iterable<Customer> totalCustomers = getCustomers(bookings ?? []);
+    Iterable<Customer> dsdCustomers = totalCustomers.where((customer) => customer.course == 'DSD').toList();
+    List<Instructor> staff = getInstructors(bookings ?? []);
+    List<Instructor> diveBuddies = getDiveBuddies(bookings ?? []);
+
     pw.Widget buildText(String text) => pw.Text(
           text,
-          textAlign: pw.TextAlign.center,
           style: pw.TextStyle(
             fontSize: 12,
             color: PdfColors.black,
@@ -236,55 +354,26 @@ class CoastGuardSlip {
           ),
         );
 
-    return pw.Padding(
-      padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
+    return pw.Container(
+      width: 3508,
       child: pw.Row(
+        mainAxisAlignment: pw.MainAxisAlignment.end,
+        crossAxisAlignment: pw.CrossAxisAlignment.end,
         children: [
-          pw.SizedBox(
-            width: 30,
-            child: buildText('$index'),
-          ),
-          pw.SizedBox(
-            width: 100,
-            child: buildText(name),
-          ),
-          pw.SizedBox(
-            width: 70,
-            child: buildText(gender),
-          ),
-          pw.SizedBox(
-            width: 70,
-            child: buildText(category),
-          ),
-          pw.SizedBox(
-            width: 70,
-            child: buildText(country),
-          ),
-          pw.SizedBox(
-            width: 120,
-            child: buildText(diveSite),
+          pw.Column(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              if (totalCustomers.isNotEmpty) buildText('Total Customers : ${totalCustomers.length}'),
+              if (dsdCustomers.isNotEmpty) buildText('Total DSD : ${dsdCustomers.length}'),
+              if (boat.dsdInstructors != null && boat.dsdInstructors!.isNotEmpty)
+                buildText('DSD Instructors : ${boat.dsdInstructors?.length}'),
+              if (staff.isNotEmpty) buildText('Total Staff : ${staff.length + diveBuddies.length}'),
+            ],
           ),
         ],
       ),
     );
-  }
-
-  static pw.Widget getDSDPAXCount(Map<Boat, List<Booking>> bookings) {
-    int totalDSD = 0;
-    int totalCustomers = 0;
-    int totalInstructors = 0;
-
-    for (Boat boat in bookings.keys) {
-      Iterable<Customer> customers = getCustomers(bookings[boat] ?? []);
-      Iterable<Customer> dsdCustomers = customers.where((customer) => customer.course == 'DSD').toList();
-      List<Instructor> instructors = getInstructors(bookings[boat] ?? []);
-
-      totalDSD += dsdCustomers.length;
-      totalCustomers += customers.length;
-      totalInstructors += instructors.length;
-    }
-
-    return pw.Text('DSD : $totalDSD');
   }
 }
 
@@ -298,6 +387,19 @@ List<Instructor> getInstructors(List<Booking> bookings) {
   }
 
   return instructors.toSet().toList();
+}
+
+List<Instructor> getDiveBuddies(List<Booking> bookings) {
+  List<Instructor> diveBuddies = [];
+
+  for (var booking in bookings) {
+    if (booking.boatDetails?.diveBuddies != null && booking.boatDetails!.diveBuddies!.isNotEmpty) {
+      for (var diveBuddy in booking.boatDetails!.diveBuddies!) {
+        diveBuddies.add(diveBuddy);
+      }
+    }
+  }
+  return diveBuddies;
 }
 
 List<Customer> getCustomers(List<Booking> bookings) {
@@ -320,9 +422,10 @@ List<Customer> getCustomers(List<Booking> bookings) {
   return customers.toSet().toList();
 }
 
-Employee? allEmployees(List<Employee> allEmployees, String id) {
+Employee? allEmployees(List<Employee> allEmployees, String? id) {
   for (var element in allEmployees) {
     if (element.id == id) {
+      log(element.toMap().toString());
       return element;
     }
   }

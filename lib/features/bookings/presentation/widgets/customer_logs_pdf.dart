@@ -33,7 +33,7 @@ class CustomerLogs {
                 'Temple Adventures',
                 textAlign: pw.TextAlign.center,
                 style: pw.TextStyle(
-                  color: PdfColor.fromInt(0xff263238),
+                  color: const PdfColor.fromInt(0xff263238),
                   fontSize: 30,
                   wordSpacing: 2,
                   fontBold: pw.Font.courierBold(),
@@ -128,7 +128,7 @@ class CustomerLogs {
           ),
           pw.SizedBox(
             width: 80,
-            child: buildText('Site'),
+            child: buildText('Dive Site'),
           ),
           pw.SizedBox(
             width: 70,
@@ -148,7 +148,7 @@ class CustomerLogs {
             child: buildText('Time in'),
           ),
           pw.SizedBox(
-            width: 70,
+            width: 100,
             child: buildText('Rental equipment'),
           ),
         ],
@@ -218,7 +218,7 @@ class CustomerLogs {
             ),
           ),
           pw.SizedBox(
-            width: 70,
+            width: 100,
             child: buildText((log.rentalEquipment != null) ? log.rentalEquipment! : '-'),
           ),
         ],

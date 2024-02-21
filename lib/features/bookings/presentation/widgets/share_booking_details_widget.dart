@@ -18,7 +18,6 @@ import '../../models/booking_model.dart';
 class ShareBookingDetails {
   static Future<File> generatePdf(Booking booking) async {
     final pdf = pw.Document();
-    // String fileName = "images/AppLogoPondy.png";
     final imageByteData = await rootBundle.load('images/AppLogoPondy.png');
     final imageUint8List = imageByteData.buffer.asUint8List(imageByteData.offsetInBytes, imageByteData.lengthInBytes);
 
@@ -240,15 +239,6 @@ class ShareBookingDetails {
               ...booking.payments!,
             ],
           ),
-          // ...List.generate(
-          //   booking.payments.length,
-          //   (index) {
-          //     return Container(
-          //       width: Get.width,
-          //       child: buildTransaction(payment: booking.payments[index]),
-          //     );
-          //   },
-          // )
         ],
       ),
     );

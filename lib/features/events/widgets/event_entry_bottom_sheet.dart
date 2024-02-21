@@ -86,6 +86,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
       padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
+        color: AppColors.background.lightBlue,
       ),
       child: Stack(
         children: [

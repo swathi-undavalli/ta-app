@@ -191,7 +191,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
     return Row(
       children: [
         buildText(
-          text: DateFormat('hh-MM-yy').format(diveLogModel.timeIn.toDate()).toString(),
+          text: DateFormat('dd-MM-yy').format(diveLogModel.timeIn.toDate()).toString(),
         ),
         buildText(text: diveLogModel.instructor.name),
         buildText(text: diveLogModel.course, width: 60),

@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
+import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/phone_number/intl_phone_field.dart';
 import '../../models/booking_model.dart';
@@ -41,11 +42,14 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
   String? isoCode = 'IN';
   TextEditingController nameTED = TextEditingController();
   TextEditingController emailTED = TextEditingController();
+  TextEditingController genderTED = TextEditingController();
   bool showLoading = false;
   String? nameError;
   String? emailError;
   String? phoneError;
+  String? genderError;
   CustomerModel? customerModel;
+  List<String> gender = ['Male', 'Female'];
 
   @override
   Widget build(BuildContext context) {
@@ -57,7 +61,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
       ),
       content: (!showLoading)
           ? SizedBox(
-              height: 300,
+              height: 350,
               child: Column(
                 children: [
                   AppTextField(
@@ -83,6 +87,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                     },
                   ),
                   buildPhoneNumber(),
+                  buildGender(),
                 ],
               ).scrollable,
             )
@@ -119,6 +124,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                 'phoneNumber': phoneNumber,
                 'isoCode': isoCode,
                 'dob': DateTime.now(),
+                'gender': genderTED.text,
               });
               await FirebaseFirestore.instance
                   .collection('bookings')
@@ -133,6 +139,47 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
           },
         ),
       ],
+    );
+  }
+
+  Widget buildGender() {
+    return Padding(
+      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(
+            'Gender *',
+            style: TextStyle(
+              color: Colors.black54,
+              fontFamily: AppFonts.nunito,
+              fontSize: 12,
+              fontWeight: FontWeight.normal,
+            ),
+          ),
+          DropdownButton(
+            underline: Container(height: 1, color: Colors.grey),
+            isExpanded: true,
+            value: genderTED.text.isNotEmpty ? genderTED.text : null,
+            onChanged: (dynamic newGender) {
+              genderTED.text = newGender;
+              setState(() {});
+            },
+            items: gender.map((gender) {
+              return DropdownMenuItem(
+                value: gender,
+                child: Text(gender),
+              );
+            }).toList(),
+          ),
+          Spacing.h5,
+          Text(
+            'Required',
+            style: TextStyle(fontSize: 12, color: Colors.red.shade900),
+          ),
+        ],
+      ),
     );
   }
 
@@ -151,7 +198,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
       email: emailTED.text,
       phoneNumber: phoneNumber,
       idProof: '',
-      gender: '',
+      gender: genderTED.text,
       dob: null,
     );
     await FirebaseFirestore.instance.collection('customers').doc(emailTED.text).set(customer.toMap());
@@ -162,6 +209,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
     nameError = null;
     emailError = null;
     phoneError = null;
+    genderError = null;
 
     if (nameTED.text.isEmpty) {
       nameError = 'Required';
@@ -175,6 +223,11 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
     }
     if (phoneNumber == null) {
       phoneError = 'Required';
+      isValid = false;
+      setState(() {});
+    }
+    if (genderTED.text.isEmpty) {
+      genderError = 'Required';
       isValid = false;
       setState(() {});
     }
