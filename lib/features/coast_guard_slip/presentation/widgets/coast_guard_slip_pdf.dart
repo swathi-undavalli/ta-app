@@ -1,14 +1,19 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+
+import '../../../../core/widgets/time_picker.dart';
 import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
 import '../../../bookings/presentation/widgets/share_booking_details_widget.dart';
 import '../../../employees/model/employee.dart';
+
+List<Employee> allEmployees = [];
 
 class CoastGuardSlip {
   static Future<File> generatePdf({
@@ -17,6 +22,12 @@ class CoastGuardSlip {
     required List<Employee> employees,
   }) async {
     final pdf = pw.Document();
+
+    List<Boat> boats = bookings.keys.toList();
+    boats.sort((a, b) {
+      return (TimePicker.getDateTime(a.time) ?? DateTime.now())
+          .compareTo(TimePicker.getDateTime(b.time) ?? DateTime.now());
+    });
 
     pdf.addPage(
       pw.MultiPage(
@@ -28,10 +39,10 @@ class CoastGuardSlip {
           pw.SizedBox(height: 15),
           buildDarkLine(),
           pw.SizedBox(height: 20),
-          ...bookings.keys.map(
+          ...boats.map(
             (boat) {
               if (boat.isBoat ?? false) {
-                return buildBoat(boat, bookings[boat] ?? [], employees);
+                return buildBoat(boat, bookings[boat] ?? []);
               } else {
                 return pw.SizedBox();
               }
@@ -83,15 +94,19 @@ class CoastGuardSlip {
     );
   }
 
-  static pw.Widget buildBoat(Boat boat, List<Booking> bookings, List<Employee> employees) {
+  static pw.Widget buildBoat(Boat boat, List<Booking> bookings) {
     List<Instructor> instructors = getInstructors(bookings);
     List<Customer> customers = getCustomers(bookings);
     List<Instructor> diveBuddies = getDiveBuddies(bookings);
+    List<Instructor> dsdInstructors = (boat.dsdInstructors ?? []).map((instructor) {
+      return Instructor.fromEmployee(getEmployee(instructor.id)!);
+    }).toList();
+
     return pw.Column(
       mainAxisAlignment: pw.MainAxisAlignment.start,
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        buildBoatDetails(boat, employees),
+        buildBoatDetails(boat),
         buildLine(),
         buildTitles(),
         buildLine(),
@@ -101,7 +116,7 @@ class CoastGuardSlip {
           (index) => buildCustomerDetails(
             index: index + 1,
             name: instructors[index].name,
-            gender: allEmployees(employees, instructors[index].id)?.gender ?? '-',
+            gender: instructors[index].gender ?? '-',
             category: 'Staff',
             country: 'India',
           ),
@@ -111,22 +126,21 @@ class CoastGuardSlip {
           (index) => buildCustomerDetails(
             index: instructors.length + index + 1,
             name: diveBuddies[index].name,
-            gender: allEmployees(employees, diveBuddies[index].id)?.gender ?? '-',
+            gender: diveBuddies[index].gender ?? '-',
             category: 'Staff',
             country: 'India',
           ),
         ),
-        if (boat.dsdInstructors != null && boat.dsdInstructors!.isNotEmpty)
-          ...List.generate(
-            (boat.dsdInstructors ?? []).length,
-            (index) => buildCustomerDetails(
-              index: instructors.length + diveBuddies.length + index + 1,
-              name: boat.dsdInstructors?[index].name ?? '',
-              gender: allEmployees(employees, boat.dsdInstructors?[index].id)?.gender ?? '-',
-              category: 'Staff',
-              country: 'India',
-            ),
+        ...List.generate(
+          dsdInstructors.length,
+          (index) => buildCustomerDetails(
+            index: instructors.length + diveBuddies.length + index + 1,
+            name: dsdInstructors[index].name,
+            gender: dsdInstructors[index].gender ?? '-',
+            category: 'Staff',
+            country: 'India',
           ),
+        ),
         ...List.generate(
           customers.length,
           (index) => buildCustomerDetails(
@@ -210,7 +224,7 @@ class CoastGuardSlip {
         ),
       );
 
-  static pw.Widget buildBoatDetails(Boat boat, List<Employee> employees) {
+  static pw.Widget buildBoatDetails(Boat boat) {
     return pw.Padding(
       padding: const pw.EdgeInsets.only(top: 25, bottom: 25),
       child: pw.Row(
@@ -247,12 +261,12 @@ class CoastGuardSlip {
               pw.SizedBox(height: 2),
               if (boat.captains != null && boat.captains!.isNotEmpty)
                 buildText(
-                  'Captain : ${boat.captains?[0].name} ( ${allEmployees(employees, boat.captains![0].id)?.phoneNumber} )',
+                  'Captain : ${boat.captains?[0].name} ( ${getEmployee(boat.captains![0].id)?.phoneNumber} )',
                 ),
               pw.SizedBox(height: 2),
               if (boat.captains != null && boat.captains?.length == 2)
                 buildText(
-                  'InCharge : ${boat.captains?[1].name} ( ${allEmployees(employees, boat.captains![1].id)?.phoneNumber} )',
+                  'InCharge : ${boat.captains?[1].name} ( ${getEmployee(boat.captains![1].id)?.phoneNumber} )',
                 ),
               if (boat.surfaceSupport != null && boat.surfaceSupport!.isNotEmpty)
                 pw.SizedBox(
@@ -379,11 +393,19 @@ class CoastGuardSlip {
 
 List<Instructor> getInstructors(List<Booking> bookings) {
   List<Instructor> instructors = [];
-
-  for (var booking in bookings) {
-    if (booking.instructor?.id != null) {
-      instructors.add(booking.instructor!);
+  try {
+    for (var booking in bookings) {
+      if (booking.instructor?.id != null) {
+        Employee? employee = getEmployee(booking.instructor?.id);
+        if (employee != null) {
+          instructors.add(Instructor.fromEmployee(employee));
+        } else {
+          instructors.add(booking.instructor!);
+        }
+      }
     }
+  } catch (e) {
+    log('Error running getInstructors: $e');
   }
 
   return instructors.toSet().toList();
@@ -393,13 +415,12 @@ List<Instructor> getDiveBuddies(List<Booking> bookings) {
   List<Instructor> diveBuddies = [];
 
   for (var booking in bookings) {
-    if (booking.boatDetails?.diveBuddies != null && booking.boatDetails!.diveBuddies!.isNotEmpty) {
-      for (var diveBuddy in booking.boatDetails!.diveBuddies!) {
-        diveBuddies.add(diveBuddy);
-      }
-    }
+    diveBuddies.addAll(booking.boatDetails?.diveBuddies ?? []);
   }
-  return diveBuddies;
+
+  return diveBuddies.map((instructor) {
+    return Instructor.fromEmployee(getEmployee(instructor.id)!);
+  }).toList();
 }
 
 List<Customer> getCustomers(List<Booking> bookings) {
@@ -422,10 +443,9 @@ List<Customer> getCustomers(List<Booking> bookings) {
   return customers.toSet().toList();
 }
 
-Employee? allEmployees(List<Employee> allEmployees, String? id) {
+Employee? getEmployee(String? id) {
   for (var element in allEmployees) {
     if (element.id == id) {
-      log(element.toMap().toString());
       return element;
     }
   }

@@ -78,12 +78,14 @@ class Instructor {
   int? air;
   int? nitrox;
   String? phone;
+  String? gender;
 
   Instructor({
     required this.id,
     required this.name,
     this.air,
     this.nitrox,
+    this.gender,
     this.phone,
   });
 
@@ -133,6 +135,7 @@ class Instructor {
       air: null,
       nitrox: null,
       phone: employee.phoneNumber,
+      gender: employee.gender,
     );
   }
 

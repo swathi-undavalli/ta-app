@@ -202,13 +202,13 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
     });
 
     List<Boat> boats = await getAllBoats(selectedDate);
+    allEmployees = await getEmployees();
+
     Map<Boat, List<Booking>> cachedBookings = {};
     for (var boat in boats) {
       List<Booking> bookings = await getBookings(selectedDate, boat);
       cachedBookings[boat] = bookings;
     }
-
-    List<Employee> allEmployees = await getEmployees();
 
     File pdfFile = await CoastGuardSlip.generatePdf(
       selectedDate: selectedDate,
@@ -261,13 +261,14 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
   Future<List<Employee>> getEmployees() async {
     List<Employee> employees = [];
     var data = await FirebaseFirestore.instance.collection('employees').get();
-    try {
-      for (var doc in data.docs) {
+    for (var doc in data.docs) {
+      try {
         Employee employee = Employee.fromMap(doc.data());
         employees.add(employee);
+      } catch (e) {
+        log('Error getting employes with data : ${doc.data()}');
+        log(e.toString());
       }
-    } catch (e) {
-      log(e.toString());
     }
 
     return employees;
