@@ -1,10 +1,10 @@
-import 'dart:developer';
 import 'dart:io';
+
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
-import '../../../board_plan/presentation/widgets/customer_details.dart';
+
 import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
@@ -61,6 +61,7 @@ class CoastGuardSlip {
               }
             },
           ),
+          getDSDPAXCount(bookings),
         ],
       ),
     );
@@ -266,6 +267,24 @@ class CoastGuardSlip {
         ],
       ),
     );
+  }
+
+  static pw.Widget getDSDPAXCount(Map<Boat, List<Booking>> bookings) {
+    int totalDSD = 0;
+    int totalCustomers = 0;
+    int totalInstructors = 0;
+
+    for (Boat boat in bookings.keys) {
+      Iterable<Customer> customers = getCustomers(bookings[boat] ?? []);
+      Iterable<Customer> dsdCustomers = customers.where((customer) => customer.course == 'DSD').toList();
+      List<Instructor> instructors = getInstructors(bookings[boat] ?? []);
+
+      totalDSD += dsdCustomers.length;
+      totalCustomers += customers.length;
+      totalInstructors += instructors.length;
+    }
+
+    return pw.Text('DSD : $totalDSD');
   }
 }
 
