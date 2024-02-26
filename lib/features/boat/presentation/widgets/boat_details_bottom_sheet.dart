@@ -156,6 +156,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
         right: 20,
       ),
       decoration: BoxDecoration(
+        color: AppColors.background.lightBlue,
         borderRadius: BorderRadius.circular(
           30,
         ),
