@@ -24,16 +24,14 @@ class _BookingStatusState extends State<BookingStatus> {
   @override
   void initState() {
     status = widget.initialStatus;
-    if (status > 5) {
-      status = 5;
-    }
 
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    int checkPoint = (widget.isDSD ? dsdStatus.length : coursesStatus.length) - 1;
+    int checkPoint =
+        (widget.isDSD ? dsdStatus.length : coursesStatus.length) - 1;
 
     return Row(
       children: [
@@ -50,7 +48,9 @@ class _BookingStatusState extends State<BookingStatus> {
             height: 33,
             width: 27,
             decoration: BoxDecoration(
-              color: widget.isDSD ? getDSDProgressColor(status) : getCourseProgressColor(status),
+              color: widget.isDSD
+                  ? getDSDProgressColor(status)
+                  : getCourseProgressColor(status),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(4),
                 bottomLeft: Radius.circular(4),
@@ -66,7 +66,9 @@ class _BookingStatusState extends State<BookingStatus> {
         Container(
           height: 33,
           decoration: BoxDecoration(
-            color: widget.isDSD ? getDSDProgressColor(status) : getCourseProgressColor(status),
+            color: widget.isDSD
+                ? getDSDProgressColor(status)
+                : getCourseProgressColor(status),
           ),
           child: Text(
             widget.isDSD ? dsdStatus[status] : coursesStatus[status],
@@ -89,7 +91,9 @@ class _BookingStatusState extends State<BookingStatus> {
             height: 33,
             width: 27,
             decoration: BoxDecoration(
-              color: widget.isDSD ? getDSDProgressColor(status) : getCourseProgressColor(status),
+              color: widget.isDSD
+                  ? getDSDProgressColor(status)
+                  : getCourseProgressColor(status),
               borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(4),
                 bottomRight: Radius.circular(4),
@@ -120,12 +124,6 @@ class _BookingStatusState extends State<BookingStatus> {
       return Colors.grey;
     } else if (index == 6) {
       return Colors.black.withOpacity(0.5);
-    } else if (index == 7) {
-      return Colors.pink;
-    } else if (index == 8) {
-      return Colors.orange;
-    } else if (index == 9) {
-      return Colors.red;
     } else {
       return Colors.grey;
     }

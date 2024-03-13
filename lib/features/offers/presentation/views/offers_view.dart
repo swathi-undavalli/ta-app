@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/firebase/api.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -29,8 +31,6 @@ class _OffersViewState extends State<OffersView> {
   bool showActiveOffersOnly = false;
   bool showAll = true;
 
-  // bool showValidOnly = false;
-
   @override
   void initState() {
     super.initState();
@@ -45,9 +45,11 @@ class _OffersViewState extends State<OffersView> {
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(
         child: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('allOffers').doc('offers').snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+          stream: firebaseApi.getAllOffers,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError ||
+                snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
                 height: 15,
                 width: 15,
@@ -57,9 +59,8 @@ class _OffersViewState extends State<OffersView> {
                 ),
               );
             }
-            final data = snapshot.data?.data();
 
-            if (data == null) {
+            if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
               return SizedBox(
                 height: Get.height,
                 child: const Text(
@@ -69,77 +70,81 @@ class _OffersViewState extends State<OffersView> {
               );
             }
 
-            Offer? offer = Offer.fromJson(data as Map<String, dynamic>);
+            return GetBuilder<OfferController>(
+              builder: (controller) {
+                return Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Show Active Offers only'),
+                        Switch(
+                          value: showActiveOffersOnly,
+                          onChanged: (value) {
+                            setState(() {
+                              showActiveOffersOnly = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text('Show All'),
+                        Switch(
+                          value: showAll,
+                          onChanged: (value) {
+                            setState(() {
+                              showAll = value;
+                            });
+                          },
+                        ),
+                      ],
+                    ),
+                    if (showAll == false && showActiveOffersOnly == false)
+                      Container(
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                          border: Border.all(color: Colors.black54, width: 1),
+                        ),
+                        child: const Text(
+                          'Showing expired offers',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ).paddingAll(8).center,
+                      ).paddingOnly(top: 16),
+                    Expanded(
+                      child: ListView(
+                        children: [
+                          ...snapshot.data!.docs
+                              .map((DocumentSnapshot document) {
+                            try {
+                              Offer? offer = Offer.fromJson(
+                                document.data() as Map<String, dynamic>,
+                              );
 
-            if ((offer.offerElement ?? []).isEmpty) {
-              return SizedBox(
-                height: Get.height,
-                child: const Text(
-                  'No offers added',
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                ).center,
-              );
-            }
-            return SingleChildScrollView(
-              child: GetBuilder<OfferController>(
-                builder: (controller) {
-                  return Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text('Show Active Offers only'),
-                          Switch(
-                            value: showActiveOffersOnly,
-                            onChanged: (value) {
-                              setState(() {
-                                showActiveOffersOnly = value;
-                              });
-                            },
-                          ),
+                              return Column(
+                                children: [
+                                  buildOfferCard(
+                                    offer: offer,
+                                  ).paddingOnly(top: 20),
+                                ],
+                              );
+                            } catch (e) {
+                              return const SizedBox();
+                            }
+                          }).toList(),
+                          Spacing.h100,
                         ],
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text('Show All'),
-                          Switch(
-                            value: showAll,
-                            onChanged: (value) {
-                              setState(() {
-                                showAll = value;
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      if (showAll == false && showActiveOffersOnly == false)
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: const BorderRadius.all(Radius.circular(8)),
-                            border: Border.all(color: Colors.black54, width: 1),
-                          ),
-                          child: const Text(
-                            'Showing expired offers',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ).paddingAll(8).center,
-                        ).paddingOnly(top: 16),
-                      ...(offer.offerElement ?? []).map(
-                            (element) {
-                          return buildOfferCard(
-                            element: element,
-                            index: (offer.offerElement ?? []).indexOf(element),
-                          ).paddingOnly(top: 20);
-                        },
-                      ),
-                      Spacing.h100,
-                    ],
-                  ).paddingSymmetric(horizontal: 20);
-                },
-              ),
+                    ),
+                  ],
+                ).paddingSymmetric(horizontal: 20);
+              },
             );
           },
         ),
@@ -214,21 +219,22 @@ class _OffersViewState extends State<OffersView> {
     );
   }
 
-  Widget buildOfferCard({required OfferElement element, required int index}) {
+  Widget buildOfferCard({required Offer offer}) {
     DateTime? startDate;
     DateTime? endDate;
     String? categoryName;
 
     bool showItem = false;
 
-    if (element.validDates?.length == 2) {
-      startDate = element.validDates?.first.toDate();
-      endDate = element.validDates?.last.toDate();
+    if (offer.validDates?.length == 2) {
+      startDate = offer.validDates?.first.toDate();
+      endDate = offer.validDates?.last.toDate();
     }
 
     if (startDate != null && endDate != null) {
       if (showActiveOffersOnly) {
-        if (isInFuture(DateTime.now(), startDate) || isDateInRange(DateTime.now(), startDate, endDate)) {
+        if (isInFuture(DateTime.now(), startDate) ||
+            isDateInRange(DateTime.now(), startDate, endDate)) {
           showItem = true;
         } else {
           showItem = false;
@@ -251,13 +257,17 @@ class _OffersViewState extends State<OffersView> {
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
-            BoxShadow(offset: const Offset(1, 3), spreadRadius: 2, color: Colors.grey.shade100),
+            BoxShadow(
+              offset: const Offset(1, 3),
+              spreadRadius: 2,
+              color: Colors.grey.shade100,
+            ),
           ],
         ),
         child: GetBuilder<OfferController>(
           builder: (controller) {
             for (Categories cat in logic.controller.categories) {
-              if (cat.id == element.categoryId) {
+              if (cat.id == offer.categoryId) {
                 categoryName = cat.name;
               }
             }
@@ -265,19 +275,19 @@ class _OffersViewState extends State<OffersView> {
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (element.photos != null && element.photos!.isNotEmpty)
+                if (offer.photos != null && offer.photos!.isNotEmpty)
                   GestureDetector(
                     onTap: () {
                       ViewPhotosBottomSheet.getImages(
                         context,
-                        allImages: element.photos,
-                        offer: element.name,
+                        allImages: offer.photos,
+                        offer: offer.name,
                       );
                     },
                     child: Stack(
                       children: [
                         TAImage(
-                          element.photos!.first,
+                          offer.photos!.first,
                           width: Get.width,
                           height: 150,
                           fit: BoxFit.cover,
@@ -289,26 +299,35 @@ class _OffersViewState extends State<OffersView> {
                           child: Container(
                             height: 25,
                             width: 25,
-                            decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: Colors.white,
+                            ),
                             child: Text(
-                              element.photos!.length.toString(),
-                              style: const TextStyle(color: Colors.black, fontSize: 12),
+                              offer.photos!.length.toString(),
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontSize: 12,
+                              ),
                             ).center,
                           ),
-                        )
+                        ),
                       ],
                     ),
                   ),
                 Spacing.h15,
                 Text(
-                  element.name,
+                  offer.name,
                   style: const TextStyle(
                     fontSize: 16,
                   ),
                 ),
                 Text(
                   categoryName ?? '-',
-                  style: TextStyle(fontSize: 13, color: Colors.black.withOpacity(0.75)),
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.black.withOpacity(0.75),
+                  ),
                 ),
                 if (startDate != null && endDate != null)
                   buildContent(
@@ -318,8 +337,11 @@ class _OffersViewState extends State<OffersView> {
                   ),
                 Spacing.h10,
                 Text(
-                  element.description ?? '--',
-                  style: TextStyle(fontSize: 13, color: Colors.black.withOpacity(0.5)),
+                  offer.description ?? '--',
+                  style: TextStyle(
+                    fontSize: 13,
+                    color: Colors.black.withOpacity(0.5),
+                  ),
                 ),
                 Row(
                   children: [
@@ -335,7 +357,7 @@ class _OffersViewState extends State<OffersView> {
                         children: <TextSpan>[
                           TextSpan(
                             style: TextStyle(color: AppColors.text.black),
-                            text: element.createdBy ?? '-',
+                            text: offer.createdBy ?? '-',
                           ),
                         ],
                       ),
@@ -343,13 +365,13 @@ class _OffersViewState extends State<OffersView> {
                     const Spacer(),
                     IconButton(
                       onPressed: () {
-                        logic.onEditPressed(index, element);
+                        logic.onEditPressed(offer);
                       },
                       icon: const Icon(Icons.edit),
                     ),
                     IconButton(
                       onPressed: () {
-                        deleteDialog(context, index: index, offerElement: element);
+                        deleteDialog(context, offer: offer);
                       },
                       icon: const Icon(Icons.delete),
                     ),
@@ -395,17 +417,21 @@ class _OffersViewState extends State<OffersView> {
     ).paddingOnly(top: 5);
   }
 
-  Future<void> deleteDialog(BuildContext context, {required int index, required OfferElement offerElement}) async {
+  Future<void> deleteDialog(
+    BuildContext context, {
+    required Offer offer,
+  }) async {
     return showDialog(
       context: context,
       builder: (context) {
         return AlertDialog(
+          backgroundColor: Colors.white,
           title: const Text(
             'Are you sure?',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           content: Text(
-            '${offerElement.name} will be completely deleted',
+            '${offer.name} will be completely deleted',
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           actions: <Widget>[
@@ -418,7 +444,7 @@ class _OffersViewState extends State<OffersView> {
             AppButton.miniFlat(
               text: 'Okay',
               onTap: () {
-                logic.onDeletePressed(index);
+                firebaseApi.deleteOffer(offer.id);
                 Get.back();
               },
             ),

@@ -589,15 +589,8 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
                                             (itemModel.bookingModel!.noOfPersons)),
                                       ),
-                                    // if (!itemModel.bookingModel!.isQuickBooking && itemModel.colorCode != 'Blue')
-                                    //   buildKeyValuePairs(
-                                    //     'Dive Logs',
-                                    //     '${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}',
-                                    //     isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
-                                    //         (itemModel.bookingModel!.noOfPersons)),
-                                    //   ),
                                     Spacing.h10,
-                                    if (itemModel.colorCode != 'Blue')
+                                    if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
                                       AppButton.miniFlat(
                                         text: 'Add Log',
                                         onTap: () {

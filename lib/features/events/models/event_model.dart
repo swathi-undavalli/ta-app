@@ -1,19 +1,45 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 import '../../boat/models/boat_details.dart';
 
 class Event {
-  final List<EventElement>? eventElement;
+  final String session;
+  final String id;
+  final List<Instructor> employees;
+  final String location;
+  final DateTime dateTime;
+  final String phone;
+  final String? createdBy;
 
   Event({
-    required this.eventElement,
+    required this.session,
+    required this.id,
+    required this.employees,
+    required this.location,
+    required this.dateTime,
+    required this.phone,
+    required this.createdBy,
   });
 
   Event copyWith({
-    List<EventElement>? event,
+    String? session,
+    String? id,
+    List<Instructor>? employees,
+    String? location,
+    DateTime? dateTime,
+    String? phone,
+    String? createdBy,
   }) =>
       Event(
-        eventElement: event ?? eventElement,
+        session: session ?? this.session,
+        id: id ?? this.id,
+        employees: employees ?? this.employees,
+        location: location ?? this.location,
+        dateTime: dateTime ?? this.dateTime,
+        phone: phone ?? this.phone,
+        createdBy: createdBy ?? this.createdBy,
       );
 
   factory Event.fromRawJson(String str) => Event.fromJson(json.decode(str));
@@ -21,72 +47,22 @@ class Event {
   String toRawJson() => json.encode(toJson());
 
   factory Event.fromJson(Map<String, dynamic> json) => Event(
-        eventElement: List<EventElement>.from((json['event'] ?? ([])).map((x) => EventElement.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        'event': List<dynamic>.from((eventElement ?? []).map((x) => x.toJson())),
-      };
-}
-
-class EventElement {
-  final String session;
-  final List<Instructor> employees;
-  final String location;
-  final String time;
-  final String date;
-  final String phone;
-  final String? createdBy;
-
-  EventElement({
-    required this.session,
-    required this.employees,
-    required this.location,
-    required this.time,
-    required this.date,
-    required this.phone,
-    required this.createdBy,
-  });
-
-  EventElement copyWith({
-    String? session,
-    List<Instructor>? employees,
-    String? location,
-    String? time,
-    String? date,
-    String? phone,
-    String? createdBy,
-  }) =>
-      EventElement(
-        session: session ?? this.session,
-        employees: employees ?? this.employees,
-        location: location ?? this.location,
-        time: time ?? this.time,
-        date: date ?? this.date,
-        phone: phone ?? this.phone,
-        createdBy: createdBy ?? this.createdBy,
-      );
-
-  factory EventElement.fromRawJson(String str) => EventElement.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory EventElement.fromJson(Map<String, dynamic> json) => EventElement(
         session: json['session'],
-        employees: List<Instructor>.from((json['employees']).map((x) => Instructor.fromMap(x))),
+        id: json['id'],
+        employees: List<Instructor>.from(
+            (json['employees']).map((x) => Instructor.fromMap(x))),
         location: json['location'],
-        time: json['time'],
-        date: json['date'],
+        dateTime: (json['dateTime'] as Timestamp).toDate(),
         phone: json['phone'],
         createdBy: json['createdBy'],
       );
 
   Map<String, dynamic> toJson() => {
         'session': session,
+        'id': id,
         'employees': List<dynamic>.from((employees).map((x) => x.toJson())),
         'location': location,
-        'time': time,
-        'date': date,
+        'dateTime': Timestamp.fromDate(dateTime),
         'phone': phone,
         'createdBy': createdBy,
       };

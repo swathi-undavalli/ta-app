@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/firebase/api.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -23,7 +24,8 @@ class DiveLogBottomSheet extends StatefulWidget {
   final Booking bookingModel;
   final DateTime selectedDate;
 
-  static void show(BuildContext context, {required Booking bookingModel, required DateTime date}) async {
+  static void show(BuildContext context,
+      {required Booking bookingModel, required DateTime date}) async {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -49,8 +51,6 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
         top: 40,
-        left: 25,
-        right: 20,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
@@ -62,124 +62,11 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Spacing.h30,
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Text(
-                  'Add Log',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 20,
-                  ),
-                ).paddingOnly(top: 8),
-                const Spacer(),
-                IconButton(
-                  icon: const Icon(Icons.close),
-                  onPressed: () async {
-                    Get.back();
-                  },
-                ),
-              ],
-            ),
+            buildAddLogHeader().paddingSymmetric(horizontal: 20),
             Spacing.h20,
-            ...List.generate(
-              widget.bookingModel.pax!.length,
-              (index) => Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      Text("${widget.bookingModel.pax?[index]['first-name']}"
-                          " ${widget.bookingModel.pax?[index]['last-name']}"),
-                      const Spacer(),
-                      IconButton(
-                        onPressed: () {
-                          Get.toNamed(
-                            DiveLogView.id,
-                            arguments: [
-                              widget.bookingModel,
-                              widget.bookingModel.pax?[index]['email'],
-                              widget.selectedDate,
-                            ],
-                          );
-                        },
-                        icon: Icon(
-                          Icons.arrow_forward,
-                          color: AppColors.text.skyBlue,
-                        ),
-                      ),
-                    ],
-                  ),
-                  StreamBuilder(
-                    stream: FirebaseFirestore.instance
-                        .collection('customers')
-                        .doc(widget.bookingModel.pax?[index]['email'])
-                        .collection('diveLogs')
-                        .snapshots(),
-                    builder: (
-                      BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot,
-                    ) {
-                      if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
-                        return SizedBox(
-                          height: 15,
-                          width: 15,
-                          child: const CircularProgressIndicator(
-                            strokeWidth: 2,
-                            color: Colors.black,
-                          ).center,
-                        );
-                      }
-                      final data = snapshot.data?.docs;
-                      if (data == null || data.isEmpty) {
-                        return Column(
-                          children: [
-                            const Text(
-                              'No Logs Added 🥲',
-                              style: TextStyle(fontSize: 10),
-                            ).center,
-                          ],
-                        );
-                      } else {
-                        return Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Spacing.h10,
-                            buildHeadings(),
-                            Spacing.h5,
-                            ...data.map((d) {
-                              DiveLogModel diveLogModel = DiveLogModel.fromMap(d.data() as Map<String, dynamic>?);
-                              return buildLogDetails(diveLogModel).paddingOnly(bottom: 4);
-                            }),
-                          ],
-                        );
-                      }
-                    },
-                  ),
-                  Spacing.h10,
-                  AppButton.miniFlat(
-                    text: 'Copy Email',
-                    onTap: () async {
-                      String email = widget.bookingModel.pax?[index]['email'];
-                      await Clipboard.setData(ClipboardData(text: email));
-                    },
-                  ),
-                ],
-              ),
-            ),
+            ...buildCustomers(),
             Spacing.h20,
-            if (widget.bookingModel.pax!.length != widget.bookingModel.noOfPersons)
-              AppButton.miniFlat(
-                text: 'Add Customer',
-                onTap: () {
-                  AddCustomerDialog.show(
-                    context,
-                    bookingModel: widget.bookingModel,
-                  );
-                },
-              ),
+            buildAddCustomerButton(),
             Spacing.h30,
           ],
         ),
@@ -187,19 +74,243 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
     );
   }
 
-  Widget buildLogDetails(DiveLogModel diveLogModel) {
+  List<Widget> buildCustomers() {
+    return List.generate(
+      widget.bookingModel.pax!.length,
+      (index) => Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text("${widget.bookingModel.pax?[index]['first-name']}"
+                  " ${widget.bookingModel.pax?[index]['last-name']}"),
+              const Spacer(),
+              IconButton(
+                  onPressed: () async {
+                    String email = widget.bookingModel.pax?[index]['email'];
+                    await Clipboard.setData(ClipboardData(text: email));
+                  },
+                  icon: const Icon(
+                    Icons.copy,
+                    color: Colors.black,
+                    size: 20,
+                  )),
+              Spacing.w10,
+              AppButton.miniFlat(
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    DiveLogView.addLogRoute(
+                      widget.bookingModel.pax?[index]['email'],
+                      widget.bookingModel,
+                      widget.selectedDate,
+                    ),
+                  );
+                },
+                text: 'Add Log',
+              ),
+            ],
+          ).paddingSymmetric(horizontal: 20),
+          Spacing.h15,
+          buildDiveLogs(index).paddingSymmetric(horizontal: 10),
+        ],
+      ),
+    );
+  }
+
+  Widget buildAddCustomerButton() {
+    if (widget.bookingModel.pax!.length != widget.bookingModel.noOfPersons) {
+      return AppButton.miniFlat(
+        text: 'Add Customer',
+        onTap: () {
+          AddCustomerDialog.show(
+            context,
+            bookingModel: widget.bookingModel,
+          );
+        },
+      );
+    }
+    return const SizedBox();
+  }
+
+  Widget buildAddLogHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        const Text(
+          'Add Log',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
+        ).paddingOnly(top: 8),
+        const Spacer(),
+        IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () async {
+            Get.back();
+          },
+        ),
+      ],
+    );
+  }
+
+  StreamBuilder<QuerySnapshot<Map<String, dynamic>>> buildDiveLogs(int index) {
+    return StreamBuilder(
+      stream: FirebaseFirestore.instance
+          .collection('customers')
+          .doc(widget.bookingModel.pax?[index]['email'])
+          .collection('diveLogs')
+          .snapshots(),
+      builder: (
+        BuildContext context,
+        AsyncSnapshot<QuerySnapshot> snapshot,
+      ) {
+        if (snapshot.hasError ||
+            snapshot.connectionState == ConnectionState.waiting) {
+          return SizedBox(
+            height: 15,
+            width: 15,
+            child: const CircularProgressIndicator(
+              strokeWidth: 2,
+              color: Colors.black,
+            ).center,
+          );
+        }
+        final data = snapshot.data?.docs;
+        if (data == null || data.isEmpty) {
+          return Column(
+            children: [
+              const Text(
+                'No Logs Added 🥲',
+                style: TextStyle(fontSize: 10),
+              ).center,
+            ],
+          );
+        } else {
+          return Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Spacing.h10,
+              buildHeadings(),
+              Spacing.h5,
+              ...data.map((d) {
+                DiveLogModel diveLogModel =
+                    DiveLogModel.fromMap(d.data() as Map<String, dynamic>?);
+                return buildLog(diveLogModel, index)
+                    .paddingSymmetric(vertical: 10);
+              }),
+            ],
+          );
+        }
+      },
+    );
+  }
+
+  Widget buildLog(DiveLogModel diveLogModel, int index) {
+    String getCourse(String text) {
+      String t = '';
+      text.split(' ').forEach((e) {
+        if (e.isNotEmpty) {
+          t = t + (e[0].capitalize).toString();
+        }
+      });
+
+      return t;
+    }
+
     return Row(
       children: [
         buildText(
-          text: DateFormat('dd-MM-yy').format(diveLogModel.timeIn.toDate()).toString(),
+          text: DateFormat('dd-MM-yy')
+              .format(diveLogModel.timeIn.toDate())
+              .toString(),
         ),
         buildText(text: diveLogModel.instructor.name),
-        buildText(text: diveLogModel.course, width: 60),
-        buildText(text: diveLogModel.diveSite, width: 60),
-        buildText(text: '${tankType(diveLogModel.tankType)}${diveLogModel.tankNo.toString()}', width: 30),
+        buildText(text: '  ${getCourse(diveLogModel.course)}', width: 35),
+        buildText(text: diveLogModel.diveSite, width: 40),
+        buildText(
+            text:
+                '${tankType(diveLogModel.tankType)}${diveLogModel.tankNo.toString()}',
+            width: 30),
         buildText(text: diveLogModel.bottomTime.toString(), width: 35),
         buildText(text: diveLogModel.maxDepth.toString(), width: 30),
+        Spacing.w10,
+        buildEditDeleteButtons(
+          onTap: () {
+            Navigator.push(
+              context,
+              DiveLogView.editLogRoute(
+                widget.bookingModel.pax?[index]['email'],
+                widget.bookingModel,
+                diveLogModel,
+              ),
+            );
+          },
+          icon: Icons.edit,
+        ),
+        Spacing.w20,
+        buildEditDeleteButtons(
+          onTap: () {
+            deleteDialog(context, id: diveLogModel.id, index: index);
+          },
+          icon: Icons.delete,
+        ),
       ],
+    );
+  }
+
+  Future<void> deleteDialog(
+    BuildContext context, {
+    required String id,
+    required int index,
+  }) async {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          shadowColor: Colors.white,
+          title: const Text(
+            'Are you sure?',
+            style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          ),
+          content: const Text(
+            'Log will be completely deleted',
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+          ),
+          actions: <Widget>[
+            AppButton.miniText(
+              text: 'Cancel',
+              onTap: () {
+                Get.back();
+              },
+            ),
+            AppButton.miniFlat(
+              text: 'Okay',
+              onTap: () {
+                firebaseApi.deleteDiveLog(
+                  id,
+                  widget.bookingModel.pax?[index]['email'],
+                );
+
+                Get.back();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  Widget buildEditDeleteButtons(
+      {required Function onTap, required IconData icon}) {
+    return InkWell(
+      onTap: () {
+        onTap();
+      },
+      child: Icon(icon, size: 12),
     );
   }
 
@@ -217,8 +328,8 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
       children: [
         buildText(text: 'Date', fontWeight: FontWeight.bold),
         buildText(text: 'Instructor', fontWeight: FontWeight.bold),
-        buildText(text: 'Course', width: 60, fontWeight: FontWeight.bold),
-        buildText(text: 'Dive Site', width: 60, fontWeight: FontWeight.bold),
+        buildText(text: 'Course', width: 35, fontWeight: FontWeight.bold),
+        buildText(text: 'Dive Site', width: 40, fontWeight: FontWeight.bold),
         buildText(text: 'Tank No', width: 30, fontWeight: FontWeight.bold),
         buildText(text: 'Bottom Time', width: 35, fontWeight: FontWeight.bold),
         buildText(text: 'Max Depth', width: 30, fontWeight: FontWeight.bold),
@@ -226,12 +337,15 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
     );
   }
 
-  Widget buildText({required String text, double width = 50, FontWeight fontWeight = FontWeight.normal}) {
+  Widget buildText(
+      {required String text,
+      double width = 50,
+      FontWeight fontWeight = FontWeight.normal}) {
     return SizedBox(
       width: width,
       child: Text(
         text,
-        style: TextStyle(fontSize: 8, fontWeight: fontWeight),
+        style: TextStyle(fontSize: 7, fontWeight: fontWeight),
       ).paddingSymmetric(horizontal: 2),
     );
   }

@@ -104,8 +104,7 @@ class MyApp extends StatelessWidget {
         EventsView.id: (context) => const EventsView(),
         AddOffersView.id: (context) => const AddOffersView(),
         OffersView.id: (context) => const OffersView(),
-        DiveLogView.id: (context) => const DiveLogView(),
-        CoastGuardSlipView.id: (context) => CoastGuardSlipView(),
+        CoastGuardSlipView.id: (context) => const CoastGuardSlipView(),
       },
     );
   }

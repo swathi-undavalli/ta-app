@@ -2,43 +2,19 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class Offer {
-  final List<OfferElement>? offerElement;
-
-  Offer({
-    required this.offerElement,
-  });
-
-  Offer copyWith({
-    List<OfferElement>? offer,
-  }) =>
-      Offer(
-        offerElement: offer ?? offerElement,
-      );
-
-  factory Offer.fromRawJson(String str) => Offer.fromJson(json.decode(str));
-
-  String toRawJson() => json.encode(toJson());
-
-  factory Offer.fromJson(Map<String, dynamic> json) => Offer(
-        offerElement: List<OfferElement>.from((json['offer'] ?? ([])).map((x) => OfferElement.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        'offer': List<dynamic>.from((offerElement ?? []).map((x) => x.toJson())),
-      };
-}
-
-class OfferElement {
   final String? categoryId;
+  final String id;
   final String name;
   final List<Timestamp>? validDates;
   final String? description;
   final List<String>? photos;
   final String? createdBy;
 
-  OfferElement({
+  Offer({
     required this.categoryId,
+    required this.id,
     required this.name,
     required this.validDates,
     required this.description,
@@ -46,16 +22,18 @@ class OfferElement {
     required this.createdBy,
   });
 
-  OfferElement copyWith({
+  Offer copyWith({
     String? categoryId,
+    String? id,
     String? name,
     List<Timestamp>? validDates,
     String? description,
     String? createdBy,
     List<String>? photos,
   }) =>
-      OfferElement(
+      Offer(
         categoryId: categoryId ?? this.categoryId,
+        id: id ?? this.id,
         name: name ?? this.name,
         validDates: validDates ?? this.validDates,
         description: description ?? this.description,
@@ -63,12 +41,13 @@ class OfferElement {
         createdBy: createdBy ?? this.createdBy,
       );
 
-  factory OfferElement.fromRawJson(String str) => OfferElement.fromJson(json.decode(str));
+  factory Offer.fromRawJson(String str) => Offer.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory OfferElement.fromJson(Map<String, dynamic> json) => OfferElement(
+  factory Offer.fromJson(Map<String, dynamic> json) => Offer(
         categoryId: json['categoryId'],
+        id: json['id'],
         name: json['name'],
         validDates: List<Timestamp>.from((json['validDates'] ?? []).map((x) => x)),
         description: json['description'],
@@ -78,6 +57,7 @@ class OfferElement {
 
   Map<String, dynamic> toJson() => {
         'categoryId': categoryId,
+        'id': id,
         'name': name,
         'validDates': List<Timestamp>.from((validDates ?? []).map((x) => x)),
         'description': description,

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../core/firebase/api.dart';
 import '../../../core/util/utils.dart';
 import '../../boat/models/boat_details.dart';
 import '../models/booking_model.dart';
@@ -27,7 +28,8 @@ class DiveLogLogic {
     DiveLogModel diveLogModel = DiveLogModel(
       timeIn: Timestamp.fromDate(newTime),
       instructor: controller.instructor[0],
-      course: (controller.booking?.activity != null && controller.booking!.activity!.isNotEmpty)
+      course: (controller.booking?.activity != null &&
+              controller.booking!.activity!.isNotEmpty)
           ? controller.booking!.activity![0]!.name!
           : '-',
       diveSite: controller.diveSiteTED.text,
@@ -35,22 +37,21 @@ class DiveLogLogic {
       bottomTime: int.tryParse(controller.bottomTimeTED.text) ?? 0,
       maxDepth: double.tryParse(controller.maxDepthTED.text) ?? 0,
       bookingId: controller.booking!.id!,
-      id: id,
+      id: controller.diveLog?.id ?? id,
       rentalEquipment: controller.rentalEquipmentTED.text,
       tankType: controller.tankTypeTED.text.capitalizeFirst,
     );
 
-    await FirebaseFirestore.instance
-        .collection('customers')
-        .doc(controller.email)
-        .collection('diveLogs')
-        .doc(id)
-        .set(diveLogModel.toMap());
+    await firebaseApi.updateDiveLog(diveLogModel, controller.email);
 
     controller.showLoading = false;
     controller.update();
 
-    showToast('Log added successfully');
+    showToast(
+      (controller.diveLog != null)
+          ? 'Log edited Successfully'
+          : 'Log added successfully',
+    );
     Get.back();
   }
 
@@ -106,6 +107,7 @@ class DiveLogLogic {
     controller.selectedTime = TimeOfDay.now();
     controller.selectedDate = DateTime.now();
     controller.showLoading = false;
+    controller.diveLog = null;
   }
 }
 
@@ -129,4 +131,5 @@ class DiveLogController extends GetxController {
   Booking? booking;
   String? email;
   bool showLoading = false;
+  DiveLogModel? diveLog;
 }

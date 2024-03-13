@@ -484,7 +484,7 @@ class NewBookingLogic {
     if (controller.isQuickBooking) {
       List<String> bookingDates = [];
 
-      if (controller.quickNameTED.text != '' &&
+      if (controller.quickNameTED.text != '' && controller.quickEmailTED.text != '' &&
           controller.quickNoOfPersonsTED.text != '' &&
           controller.quickSelectedActivity != null) {
         controller.quickShowLoading = true;
@@ -501,7 +501,7 @@ class NewBookingLogic {
           pax: [
             {
               'first-name': controller.quickNameTED.text,
-              'email': 'quickBooking@temple.com',
+              'email': (controller.isCustomerBooking)?controller.quickEmailTED.text:'quickBooking@temple.com',
               'last-name': '',
               'countryCode': '+91',
               'phoneNumber': '9876543210',
@@ -636,6 +636,7 @@ class NewBookingController extends GetxController {
   TextEditingController priceTED = TextEditingController();
   TextEditingController quickBookingIdTED = TextEditingController();
   TextEditingController quickNameTED = TextEditingController();
+  TextEditingController quickEmailTED = TextEditingController();
   TextEditingController quickNoOfPersonsTED = TextEditingController();
   Activity? quickSelectedActivity;
   List<DateTime?>? quickDiveDates;
@@ -664,6 +665,7 @@ class NewBookingController extends GetxController {
 
   bool _discountSwitch = true;
   bool _isQuickBooking = false;
+  bool _isCustomerBooking = false;
 
   DateTime _paymentDate = DateTime.now();
 
@@ -684,6 +686,13 @@ class NewBookingController extends GetxController {
   bool get getDetailsPressed => _getDetailsPressed;
 
   bool get isQuickBooking => _isQuickBooking;
+
+  bool get isCustomerBooking => _isCustomerBooking;
+
+  set isCustomerBooking(bool value) {
+    _isCustomerBooking = value;
+    update();
+  }
 
   set isQuickBooking(bool value) {
     _isQuickBooking = value;
@@ -795,6 +804,7 @@ class NewBookingController extends GetxController {
     quickSelectedActivity = null;
     quickNameTED.text = '';
     quickBookingIdTED.text = '';
+    quickEmailTED.text = '';
   }
 
   bool _showLoading = true;

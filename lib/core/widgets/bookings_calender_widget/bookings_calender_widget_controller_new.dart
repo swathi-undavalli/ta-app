@@ -1,5 +1,4 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -96,9 +95,7 @@ class BookingsCalenderWidgetLogicNew {
       }
       controller.expansionItemModels = newItemsList;
     }
-    // } catch (e) {
-    //   log('error parsing bookings in parent $e');
-    // }
+
 
     controller.showLoading = false;
     controller.update();

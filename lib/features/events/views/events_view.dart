@@ -1,14 +1,12 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
+import 'package:intl/intl.dart';
 import '../../../core/constants/constants.dart';
+import '../../../core/firebase/api.dart';
 import '../../../core/util/alignment_extensions.dart';
 import '../../../core/util/spacing_widgets.dart';
 import '../../../core/widgets/app_button.dart';
-import '../controllers/event_controller.dart';
 import '../models/event_model.dart';
 import '../widgets/event_entry_bottom_sheet.dart';
 
@@ -21,7 +19,6 @@ class EventsView extends StatefulWidget {
 }
 
 class _EventsViewState extends State<EventsView> {
-  EventLogic logic = EventLogic();
 
   @override
   Widget build(BuildContext context) {
@@ -30,59 +27,47 @@ class _EventsViewState extends State<EventsView> {
       appBar: buildAppBar(),
       floatingActionButton: buildFloatingActionButton(context),
       body: SafeArea(
-        child: GetBuilder<EventController>(
-          builder: (controller) {
-            return StreamBuilder(
-              stream: FirebaseFirestore.instance.collection('events').doc('events').snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox(
-                    height: 15,
-                    width: 15,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.black,
-                    ),
-                  );
-                }
-                final data = snapshot.data?.data();
+        child: StreamBuilder(
+          stream: firebaseApi.getAllEvents,
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox(
+                height: 15,
+                width: 15,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.black,
+                ),
+              );
+            }
 
-                if (data == null) {
-                  return SizedBox(
-                    height: Get.height,
-                    child: const Text(
-                      'No events are added',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    ).center,
-                  );
-                }
+            if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
+              return SizedBox(
+                height: Get.height,
+                child: const Text(
+                  'No events are added',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ).center,
+              );
+            }
 
-                Event? event = Event.fromJson(data as Map<String, dynamic>);
 
-                if ((event.eventElement ?? []).isEmpty) {
-                  return SizedBox(
-                    height: Get.height,
-                    child: const Text(
-                      'No events are added',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    ).center,
-                  );
-                }
-                return SingleChildScrollView(
-                  child: Column(
+            return ListView(
+              children: snapshot.data!.docs.map((DocumentSnapshot document) {
+                try {
+                  Event? event = Event.fromJson(document.data() as Map<String, dynamic>);
+
+                  return Column(
                     children: [
-                      Spacing.h10,
-                      ...(event.eventElement ?? []).map(
-                            (element) => buildEventCard(
-                          element: element,
-                          index: (event.eventElement ?? []).indexOf(element),
-                        ).paddingOnly(top: 20),
-                      ),
-                      Spacing.h30,
+                      buildEventCard(
+                        element: event,
+                      ).paddingOnly(top: 20),
                     ],
-                  ),
-                );
-              },
+                  );
+                } catch (e) {
+                  return const SizedBox();
+                }
+              }).toList(),
             );
           },
         ).paddingSymmetric(horizontal: 20),
@@ -90,9 +75,7 @@ class _EventsViewState extends State<EventsView> {
     );
   }
 
-  Widget buildEventCard({required EventElement element, required int index}) {
-    log("DateTime");
-    log(element.date.toString());
+  Widget buildEventCard({required Event element}) {
     return Container(
       width: Get.width,
       decoration: BoxDecoration(
@@ -106,10 +89,10 @@ class _EventsViewState extends State<EventsView> {
         children: [
           buildContent(title: 'Session Name', value: element.session),
           buildContent(title: 'Location', value: element.location),
-          buildContent(title: 'Date & Time', value: '${element.date} @ ${element.time}'),
+          buildContent(title: 'Date & Time', value: DateFormat('dd-MM-yyyy @ hh:mm a').format(element.dateTime)),
           buildContent(title: 'Contact Person', value: '${element.employees[0].name} ( ${element.phone} )'),
           Spacing.h15,
-          buildDeleteEdit(index: index, eventElement: element),
+          buildDeleteEdit(eventElement: element),
           Spacing.h15,
           RichText(
             text: TextSpan(
@@ -126,7 +109,7 @@ class _EventsViewState extends State<EventsView> {
             ),
           ).left,
         ],
-      ).paddingSymmetric(horizontal: 20, vertical: 20),
+      ).paddingSymmetric(horizontal: 15, vertical: 15),
     );
   }
 
@@ -161,7 +144,7 @@ class _EventsViewState extends State<EventsView> {
     ).paddingOnly(top: 5);
   }
 
-  Widget buildDeleteEdit({required int index, required EventElement eventElement}) {
+  Widget buildDeleteEdit({required Event eventElement}) {
     return SizedBox(
       width: Get.width,
       child: Row(
@@ -170,7 +153,7 @@ class _EventsViewState extends State<EventsView> {
           AppButton.miniFlat(
             text: 'Delete',
             onTap: () {
-              deleteDialog(context, index: index, eventElement: eventElement);
+              deleteDialog(context,  event: eventElement);
             },
           ),
           Spacing.w25,
@@ -179,7 +162,6 @@ class _EventsViewState extends State<EventsView> {
             onTap: () {
               EventEntryBottomSheet.show(
                 context,
-                elementIndex: index,
                 eventElementModel: eventElement,
               );
             },
@@ -211,7 +193,7 @@ class _EventsViewState extends State<EventsView> {
     );
   }
 
-  Future<void> deleteDialog(BuildContext context, {required int index, required EventElement eventElement}) async {
+  Future<void> deleteDialog(BuildContext context, {required Event event}) async {
     return showDialog(
       context: context,
       builder: (context) {
@@ -221,7 +203,7 @@ class _EventsViewState extends State<EventsView> {
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
           ),
           content: Text(
-            '${eventElement.session} will be completely deleted',
+            '${event.session} will be completely deleted',
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           actions: <Widget>[
@@ -234,7 +216,7 @@ class _EventsViewState extends State<EventsView> {
             AppButton.miniFlat(
               text: 'Okay',
               onTap: () {
-                logic.onDeletePressed(index);
+                firebaseApi.deleteEvent(event.id);
                 Get.back();
               },
             ),

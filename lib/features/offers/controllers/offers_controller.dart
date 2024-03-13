@@ -26,17 +26,9 @@ class OffersLogic {
     controller.update();
   }
 
-  onDeletePressed(int index) async {
-    DocumentSnapshot document = await FirebaseFirestore.instance.collection('allOffers').doc('offers').get();
-    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
-    Offer offer = Offer.fromJson(data);
-    offer.offerElement?.removeAt(index);
-    await FirebaseFirestore.instance.collection('allOffers').doc('offers').set(offer.toJson());
-  }
-
-  onEditPressed(int? index, OfferElement? offerElement) {
-    Get.toNamed(AddOffersView.id, arguments: [index, offerElement]);
+  onEditPressed(Offer? offer) {
+    Get.toNamed(AddOffersView.id, arguments: offer);
   }
 }
 

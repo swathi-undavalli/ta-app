@@ -12,10 +12,51 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../boat/models/boats.dart';
 import '../../../boat/presentation/widgets/employee_selector_bottom_sheet.dart';
 import '../../controller/dive_log_controller.dart';
+import '../../models/booking_model.dart';
+import '../../models/dive-log-model.dart';
 import '../widgets/app_text_fields.dart';
 
 class DiveLogView extends StatefulWidget {
-  const DiveLogView({Key? key}) : super(key: key);
+  const DiveLogView({
+    Key? key,
+    required this.email,
+    required this.booking,
+    this.date,
+    this.diveLog,
+  }) : super(key: key);
+
+  final Booking? booking;
+  final String email;
+  final DateTime? date;
+  final DiveLogModel? diveLog;
+
+  static Route addLogRoute(
+    String email,
+    Booking booking,
+    DateTime date,
+  ) {
+    return MaterialPageRoute(
+      builder: (_) => DiveLogView(
+        booking: booking,
+        email: email,
+        date: date,
+      ),
+    );
+  }
+
+  static Route editLogRoute(
+    String email,
+    Booking booking,
+    DiveLogModel log,
+  ) {
+    return MaterialPageRoute(
+      builder: (_) => DiveLogView(
+        email: email,
+        booking: booking,
+        diveLog: log,
+      ),
+    );
+  }
 
   static const String id = 'AddLogView';
 
@@ -26,18 +67,44 @@ class DiveLogView extends StatefulWidget {
 class _DiveLogViewState extends State<DiveLogView> {
   final DiveLogLogic logic = DiveLogLogic();
 
-  var args = Get.arguments;
-
   @override
   void initState() {
     super.initState();
     logic.clear();
-    logic.controller.booking = args[0];
-    logic.controller.email = args[1];
-    logic.controller.selectedDate = args[2];
-    String? boatId = logic.controller.booking?.getBoatInfo(logic.controller.selectedDate)?.id;
-    logic.controller.nitrox = logic.controller.booking?.getBoatInfo(logic.controller.selectedDate)?.nitrox;
-    logic.controller.air = logic.controller.booking?.getBoatInfo(logic.controller.selectedDate)?.air;
+    logic.controller.booking = widget.booking;
+    logic.controller.email = widget.email;
+    logic.controller.selectedDate = widget.date ?? DateTime.now();
+    logic.controller.diveLog = widget.diveLog;
+
+    if (logic.controller.diveLog != null) {
+      logic.controller.selectedDate = logic.controller.diveLog!.timeIn.toDate();
+      logic.controller.selectedTime = TimeOfDay(
+          hour: logic.controller.diveLog!.timeIn.toDate().hour,
+          minute: logic.controller.diveLog!.timeIn.toDate().minute);
+      logic.controller.instructor = [logic.controller.diveLog!.instructor];
+      logic.controller.diveSiteTED.text = logic.controller.diveLog!.diveSite;
+      logic.controller.tankTypeTED.text =
+          logic.controller.diveLog!.tankType ?? '';
+      logic.controller.tankNoTED.text =
+          logic.controller.diveLog!.tankNo.toString();
+      logic.controller.bottomTimeTED.text =
+          logic.controller.diveLog!.bottomTime.toString();
+      logic.controller.maxDepthTED.text =
+          logic.controller.diveLog!.maxDepth.toString();
+      logic.controller.rentalEquipmentTED.text =
+          logic.controller.diveLog!.rentalEquipment.toString();
+      return;
+    }
+
+    String? boatId = logic.controller.booking
+        ?.getBoatInfo(logic.controller.selectedDate)
+        ?.id;
+    logic.controller.nitrox = logic.controller.booking
+        ?.getBoatInfo(logic.controller.selectedDate)
+        ?.nitrox;
+    logic.controller.air = logic.controller.booking
+        ?.getBoatInfo(logic.controller.selectedDate)
+        ?.air;
 
     if (boatId != null) {
       fetchBoatDetails(boatId);
@@ -67,8 +134,6 @@ class _DiveLogViewState extends State<DiveLogView> {
   }
 
   void isAirOrNitrox() {
-    log(logic.controller.air.toString());
-    log(logic.controller.nitrox.toString());
     if ((logic.controller.air == null && logic.controller.nitrox == null) ||
         (logic.controller.air == 0 && logic.controller.nitrox == 0)) {
       logic.controller.tankTypeTED.text = '';
@@ -99,11 +164,13 @@ class _DiveLogViewState extends State<DiveLogView> {
                 Spacing.h20,
                 buildEmployeeSelector(context),
                 Text(
-                  (controller.instructorError != null) ? 'Instructor ${controller.instructorError}' : '',
+                  (controller.instructorError != null)
+                      ? 'Instructor ${controller.instructorError}'
+                      : '',
                   style: TextStyle(fontSize: 12, color: Colors.red.shade900),
                 ),
                 AppTextField(
-                  hintText: 'Dive Site',
+                  hintText: 'Dive Site *',
                   controller: controller.diveSiteTED,
                   errorValidator: () {
                     return controller.diveSiteError;
@@ -113,7 +180,7 @@ class _DiveLogViewState extends State<DiveLogView> {
                   },
                 ),
                 AppTextField(
-                  hintText: 'Tank Type',
+                  hintText: 'Tank Type *',
                   controller: controller.tankTypeTED,
                   errorValidator: () {
                     return null;
@@ -123,7 +190,7 @@ class _DiveLogViewState extends State<DiveLogView> {
                   },
                 ),
                 AppTextField(
-                  hintText: 'Tank No',
+                  hintText: 'Tank No *',
                   controller: controller.tankNoTED,
                   keyboardType: TextInputType.number,
                   errorValidator: () {
@@ -134,7 +201,7 @@ class _DiveLogViewState extends State<DiveLogView> {
                   },
                 ),
                 AppTextField(
-                  hintText: 'Bottom Time',
+                  hintText: 'Bottom Time *',
                   controller: controller.bottomTimeTED,
                   keyboardType: TextInputType.number,
                   suffixText: 'mins',
@@ -146,10 +213,11 @@ class _DiveLogViewState extends State<DiveLogView> {
                   },
                 ),
                 AppTextField(
-                  hintText: 'Max Depth',
+                  hintText: 'Max Depth *',
                   controller: controller.maxDepthTED,
                   suffixText: 'm',
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   errorValidator: () {
                     return controller.maxDepthError;
                   },
@@ -213,14 +281,15 @@ class _DiveLogViewState extends State<DiveLogView> {
           AppButton.miniFlat(
             text: 'Select',
             onTap: () async {
-              logic.controller.instructor = await EmpSelectorBottomSheet.getSelectedInstructors(
-                    context,
-                    initialSelectedInstructors: logic.controller.instructor,
-                    instructorLimit: 1,
-                    employeeType: EmployeeType.showAllDiveTeam,
-                    tanksRequired: false,
-                  ) ??
-                  [];
+              logic.controller.instructor =
+                  await EmpSelectorBottomSheet.getSelectedInstructors(
+                        context,
+                        initialSelectedInstructors: logic.controller.instructor,
+                        instructorLimit: 1,
+                        employeeType: EmployeeType.showAllDiveTeam,
+                        tanksRequired: false,
+                      ) ??
+                      [];
               logic.controller.update();
             },
           ),
@@ -243,14 +312,15 @@ class _DiveLogViewState extends State<DiveLogView> {
         ),
         InkWell(
           onTap: () async {
-            logic.controller.instructor = (await EmpSelectorBottomSheet.getSelectedInstructors(
-                  context,
-                  initialSelectedInstructors: logic.controller.instructor,
-                  instructorLimit: 1,
-                  employeeType: EmployeeType.showAllDiveTeam,
-                  tanksRequired: false,
-                )) ??
-                [];
+            logic.controller.instructor =
+                (await EmpSelectorBottomSheet.getSelectedInstructors(
+                      context,
+                      initialSelectedInstructors: logic.controller.instructor,
+                      instructorLimit: 1,
+                      employeeType: EmployeeType.showAllDiveTeam,
+                      tanksRequired: false,
+                    )) ??
+                    [];
             logic.controller.update();
           },
           child: const Text(

@@ -1,11 +1,9 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -99,7 +97,7 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
               ),
             Spacing.h20,
             AppTextField(
-              hintText: 'Customer Email',
+              hintText: 'Customer Email *',
               controller: emailTED,
               errorValidator: () {
                 return Validator.validateEmail(emailTED.text);
@@ -166,8 +164,11 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
 
   Future<void> generateLogs() async {
     FocusScope.of(context).unfocus();
-    if (Validator.validateEmail(emailTED.text) == null && startDate == null && endDate == null) {
+    if (startDate == null && endDate == null) {
       showToast('Please add start and end dates');
+      return;
+    }else if(emailTED.text.isEmpty){
+      showToast('Please enter email');
       return;
     }
     setState(() {

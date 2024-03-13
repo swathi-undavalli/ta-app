@@ -92,4 +92,11 @@ class ItemModel {
       bookingModel: bookingModel,
     );
   }
+
+   bool get isCustomerBooking{
+    if(email == 'quickBooking@temple.com'){
+      return false;
+  }
+    return true;
+}
 }

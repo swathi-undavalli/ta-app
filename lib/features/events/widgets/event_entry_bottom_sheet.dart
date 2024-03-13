@@ -1,11 +1,9 @@
 import 'dart:developer';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../../core/constants/constants.dart';
+import '../../../core/firebase/api.dart';
 import '../../../core/util/alignment_extensions.dart';
 import '../../../core/util/spacing_widgets.dart';
 import '../../../core/util/utils.dart';
@@ -17,27 +15,23 @@ import '../../employees/model/employee.dart';
 import '../models/event_model.dart';
 
 class EventEntryBottomSheet extends StatefulWidget {
-  final EventElement? eventElement;
-  final int? index;
+  final Event? event;
 
   const EventEntryBottomSheet({
     Key? key,
-    this.eventElement,
-    this.index,
+    this.event,
   }) : super(key: key);
 
   static Future show(
     BuildContext context, {
-    EventElement? eventElementModel,
-    int? elementIndex,
+    Event? eventElementModel,
   }) async {
     var data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       builder: (BuildContext context) {
         return EventEntryBottomSheet(
-          eventElement: eventElementModel,
-          index: elementIndex,
+          event: eventElementModel,
         );
       },
     );
@@ -55,27 +49,22 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
   String? locationError;
   String? sessionError;
   List<Instructor> employees = [];
-  DateTime sessionTime = DateTime.now();
-  DateTime sessionDate = DateTime.now();
+  late DateTime sessionDate;
+  late DateTime sessionTime;
   bool showLoading = false;
 
   @override
   void initState() {
     super.initState();
-    locationTED = TextEditingController(text: widget.eventElement?.location ?? '');
-    sessionNameTED = TextEditingController(text: widget.eventElement?.session ?? '');
-    sessionTime = TimePicker.getDateTime(widget.eventElement?.time) ?? DateTime.now();
-    if (widget.eventElement != null) {
-      try {
-        sessionDate = DateTime.parse(widget.eventElement!.date);
-      } catch (e) {
-        List date = widget.eventElement!.date.split('-');
-        sessionDate = DateTime.parse('${date.last}-${date[1]}-${date.first}');
-      }
-    }
-    employees = widget.eventElement?.employees ?? [];
-    if (widget.eventElement != null) {
-      employees[0].phone = widget.eventElement?.phone ?? '';
+    locationTED =
+        TextEditingController(text: widget.event?.location ?? '');
+    sessionNameTED =
+        TextEditingController(text: widget.event?.session ?? '');
+    sessionDate = widget.event?.dateTime ?? DateTime.now();
+    sessionTime = widget.event?.dateTime ?? DateTime.now();
+    employees = widget.event?.employees ?? [];
+    if (widget.event != null) {
+      employees[0].phone = widget.event?.phone ?? '';
     }
     log('called');
   }
@@ -83,7 +72,8 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         color: AppColors.background.lightBlue,
@@ -125,7 +115,8 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
                   selectTime(context);
                 },
                 title: 'Time',
-                value: TimePicker.getFormattedTime(sessionTime) ?? 'No time selected',
+                value: TimePicker.getFormattedTime(sessionTime) ??
+                    'No time selected',
               ),
               Spacing.h35,
               buildDateAndTime(
@@ -204,13 +195,14 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
             ),
             GestureDetector(
               onTap: () async {
-                employees = (await EmpSelectorBottomSheet.getSelectedInstructors(
-                      context,
-                      initialSelectedInstructors: employees,
-                      instructorLimit: employeeLimit,
-                      employeeType: employeeType,
-                    )) ??
-                    [];
+                employees =
+                    (await EmpSelectorBottomSheet.getSelectedInstructors(
+                          context,
+                          initialSelectedInstructors: employees,
+                          instructorLimit: employeeLimit,
+                          employeeType: employeeType,
+                        )) ??
+                        [];
                 setState(() {});
               },
               child: const Text(
@@ -309,36 +301,36 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
   Widget buildSubmitButton() {
     return AppButton.flat(
       onTap: () async {
-        if (isValid()) {
+        if (!isValid) return;
+        setState(() {
           showLoading = true;
-          setState(() {});
-          DocumentSnapshot document = await FirebaseFirestore.instance.collection('events').doc('events').get();
-          Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+        });
 
-          Event event = Event.fromJson(data);
+        Event event = Event(
+          id: widget.event?.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
+          session: sessionNameTED.text,
+          location: locationTED.text,
+          employees: employees,
+          phone: employees[0].phone ?? '',
+          dateTime: DateTime(
+            sessionDate.year,
+            sessionDate.month,
+            sessionDate.day,
+            sessionTime.hour,
+            sessionTime.minute,
+          ),
+          createdBy: currentEmployee?.firstName,
+        );
 
-          EventElement eventElement = EventElement(
-            session: sessionNameTED.text,
-            location: locationTED.text,
-            time: TimePicker.getFormattedTime(sessionTime) ?? '',
-            employees: employees,
-            phone: employees[0].phone ?? '',
-            date: DateFormat('dd-MM-yyyy').format(sessionDate),
-            createdBy: currentEmployee?.firstName,
-          );
+        await firebaseApi.updateEvent(event);
 
-          if (widget.index != null) {
-            event.eventElement?[widget.index!] = eventElement;
-          } else {
-            event.eventElement?.add(eventElement);
-          }
-          await FirebaseFirestore.instance.collection('events').doc('events').set(event.toJson());
-
+        setState(() {
           showLoading = false;
-          setState(() {});
-          clear();
-          Get.back();
-        }
+        });
+        clear();
+        Get.back();
+        return;
+
       },
       text: 'Submit',
       color: Colors.black,
@@ -346,7 +338,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
     );
   }
 
-  bool isValid() {
+  bool get isValid {
     bool isValid = true;
     locationError = null;
     sessionError = null;

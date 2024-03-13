@@ -6,6 +6,8 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/util/alignment_extensions.dart';
+import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/util/validator.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/phone_number/intl_phone_field.dart';
@@ -52,7 +54,7 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                             },
                             activeColor: AppColors.text.skyBlue,
                             inactiveThumbColor: AppColors.text.grey,
-                          )
+                          ),
                         ],
                       ),
                       (controller.isQuickBooking)
@@ -60,9 +62,26 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                               children: [
                                 Column(
                                   children: [
+                                    Row(
+                                      children: [
+                                        buildSubTitle('Customer Booking'),
+                                        const Spacer(),
+                                        Switch(
+                                          value: controller.isCustomerBooking,
+                                          onChanged: (value) {
+                                            controller.isCustomerBooking =
+                                                value;
+                                          },
+                                          activeColor: AppColors.text.skyBlue,
+                                          inactiveThumbColor:
+                                              AppColors.text.grey,
+                                        ),
+                                      ],
+                                    ),
                                     AppTextField(
                                       hintText: 'Parent Booking Id',
-                                      controller: logic.controller.quickBookingIdTED,
+                                      controller:
+                                          logic.controller.quickBookingIdTED,
                                       keyboardType: TextInputType.number,
                                       required: true,
                                       errorValidator: () {
@@ -83,9 +102,23 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                                         return null;
                                       },
                                     ),
+                                    if (controller.isCustomerBooking)
+                                      AppTextField(
+                                        hintText: 'Customer Email Id',
+                                        controller:
+                                            logic.controller.quickEmailTED,
+                                        required: true,
+                                        errorValidator: () {
+                                          return null;
+                                        },
+                                        validator: (_) {
+                                          return null;
+                                        },
+                                      ),
                                     AppTextField(
                                       hintText: 'No of Persons',
-                                      controller: logic.controller.quickNoOfPersonsTED,
+                                      controller:
+                                          logic.controller.quickNoOfPersonsTED,
                                       keyboardType: TextInputType.number,
                                       required: true,
                                       errorValidator: () {
@@ -108,9 +141,10 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                                       },
                                       color: Colors.black,
                                       textColor: Colors.white,
-                                    )
+                                    ),
+                                    Spacing.h40,
                                   ],
-                                ),
+                                ).scrollable,
                                 if (controller.quickShowLoading)
                                   Container(
                                     height: Get.height,
@@ -202,7 +236,9 @@ class AddCustomerDetailsScreen extends StatelessWidget {
               ],
             ),
             Wrap(
-              children: (controller.quickDiveDates ?? []).map((e) => buildTime(e, DateType.dive)).toList(),
+              children: (controller.quickDiveDates ?? [])
+                  .map((e) => buildTime(e, DateType.dive))
+                  .toList(),
             ),
           ],
         );
@@ -221,7 +257,6 @@ class AddCustomerDetailsScreen extends StatelessWidget {
           logic.controller.update();
         },
         child: Container(
-          width: 170,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           margin: const EdgeInsets.only(right: 10, bottom: 10),
           decoration: BoxDecoration(
@@ -230,15 +265,18 @@ class AddCustomerDetailsScreen extends StatelessWidget {
               Radius.circular(20),
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(DateFormat('MMM  dd @ hh:mm a').format(date)),
-              const Icon(
-                Icons.close,
-                size: 16,
-              ),
-            ],
+          child: FittedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(DateFormat('MMM  dd @ hh:mm a').format(date)),
+                Spacing.w20,
+                const Icon(
+                  Icons.close,
+                  size: 16,
+                ),
+              ],
+            ),
           ),
         ),
       );
@@ -277,7 +315,8 @@ class AddCustomerDetailsScreen extends StatelessWidget {
                         logic.controller.update();
                       }
                     },
-                    items: controller.activities.toSet().toList().map((activity) {
+                    items:
+                        controller.activities.toSet().toList().map((activity) {
                       return DropdownMenuItem(
                         value: activity,
                         child: Text(
