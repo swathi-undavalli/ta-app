@@ -32,7 +32,8 @@ class NewBookingLogic {
   }
 
   NewBookingController controller = Get.put(NewBookingController());
-  final AutoScrollController autoScrollControllerTheory = AutoScrollController();
+  final AutoScrollController autoScrollControllerTheory =
+      AutoScrollController();
   final AutoScrollController autoScrollControllerPool = AutoScrollController();
   final AutoScrollController autoScrollControllerDive = AutoScrollController();
 
@@ -44,21 +45,25 @@ class NewBookingLogic {
   }
 
   getDataFromFireBase() async {
-    QuerySnapshot<Map<String, dynamic>> catalogue = await FirebaseFirestore.instance.collection('catalogue').get();
+    QuerySnapshot<Map<String, dynamic>> catalogue =
+        await FirebaseFirestore.instance.collection('catalogue').get();
     controller.activities = [];
     for (int i = 0; i < catalogue.docs.length; i++) {
       if (catalogue.docs[i].id == 'colors') continue;
       Activity activity = Activity.fromMap(catalogue.docs[i].data());
       controller.activities.add(activity);
-      controller.activities.sort((a1, a2) => a2.priority!.compareTo(a1.priority!));
+      controller.activities
+          .sort((a1, a2) => a2.priority!.compareTo(a1.priority!));
       controller.showLoading = false;
     }
   }
 
   onContinuePressedBookingForm() {
     controller.bookingModel.remarks = controller.remarksTED.text.toString();
-    controller.bookingModel.employeeName = currentEmployee!.firstName! + currentEmployee!.lastName!;
-    if (controller.payingNowTED.text == '' || int.parse(controller.payingNowTED.text) == 0) {
+    controller.bookingModel.employeeName =
+        currentEmployee!.firstName! + currentEmployee!.lastName!;
+    if (controller.payingNowTED.text == '' ||
+        int.parse(controller.payingNowTED.text) == 0) {
       createCustomer();
       createBooking();
       Get.defaultDialog(
@@ -90,11 +95,14 @@ class NewBookingLogic {
                     textColor: AppColors.text.white,
                     onTap: () async {
                       Get.offAllNamed(DashBoardScreen.id);
-                      DashBoardScreenLogic dashboardlogic = DashBoardScreenLogic();
+                      DashBoardScreenLogic dashboardlogic =
+                          DashBoardScreenLogic();
                       dashboardlogic.controller.currentIndex = 2;
                       controller.reset();
-                      BookingsCalenderWidgetLogic bookingCalenderLogic = BookingsCalenderWidgetLogic();
-                      bookingCalenderLogic.onDateSelected(bookingCalenderLogic.controller.lastDateIndex);
+                      BookingsCalenderWidgetLogic bookingCalenderLogic =
+                          BookingsCalenderWidgetLogic();
+                      bookingCalenderLogic.onDateSelected(
+                          bookingCalenderLogic.controller.lastDateIndex);
                     },
                   ),
                 ],
@@ -128,13 +136,17 @@ class NewBookingLogic {
       gender: '',
       dob: controller.dob.toString(),
     );
-    await FirebaseFirestore.instance.collection('customers').doc(controller.emailTED.text).set(customer.toMap());
+    await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(controller.emailTED.text)
+        .set(customer.toMap());
   }
 
   onPaymentDetailsFilled() {
     if (controller.paymentModeTED.text != '') {
       controller.bookingModel.paymentMode = controller.paymentModeTED.text;
-      controller.bookingModel.paymentTransactionId = controller.paymentReferenceTED.text;
+      controller.bookingModel.paymentTransactionId =
+          controller.paymentReferenceTED.text;
       controller.bookingModel.receiptNo = controller.receiptNoTED.text;
       createCustomer();
       createBooking();
@@ -169,8 +181,10 @@ class NewBookingLogic {
                       Get.offAllNamed(DashBoardScreen.id);
                       dashboardLogic.controller.currentIndex = 2;
                       controller.reset();
-                      BookingsCalenderWidgetLogic bookingCalenderLogic = BookingsCalenderWidgetLogic();
-                      bookingCalenderLogic.onDateSelected(bookingCalenderLogic.controller.lastDateIndex);
+                      BookingsCalenderWidgetLogic bookingCalenderLogic =
+                          BookingsCalenderWidgetLogic();
+                      bookingCalenderLogic.onDateSelected(
+                          bookingCalenderLogic.controller.lastDateIndex);
                     },
                   ),
                 ],
@@ -277,7 +291,8 @@ class NewBookingLogic {
                   onTap: () {
                     controller.bookingModel.poolDate ??= [];
                     controller.bookingModel.poolDate!.add(selectedPoolDate);
-                    controller.bookingModel.poolDate = controller.bookingModel.poolDate!.toSet().toList();
+                    controller.bookingModel.poolDate =
+                        controller.bookingModel.poolDate!.toSet().toList();
                     // //print(controller.bookingModel.poolDate);
                     controller.update();
                     Get.back();
@@ -340,7 +355,8 @@ class NewBookingLogic {
                   onTap: () {
                     controller.bookingModel.diveDate ??= [];
                     controller.bookingModel.diveDate!.add(selectedDiveDate);
-                    controller.bookingModel.diveDate = controller.bookingModel.diveDate!.toSet().toList();
+                    controller.bookingModel.diveDate =
+                        controller.bookingModel.diveDate!.toSet().toList();
                     controller.update();
                     Get.back();
                   },
@@ -402,7 +418,8 @@ class NewBookingLogic {
                   onTap: () {
                     controller.quickDiveDates ??= [];
                     controller.quickDiveDates!.add(selectedDiveDate);
-                    controller.quickDiveDates = controller.quickDiveDates!.toSet().toList();
+                    controller.quickDiveDates =
+                        controller.quickDiveDates!.toSet().toList();
                     controller.update();
                     Get.back();
                   },
@@ -465,7 +482,8 @@ class NewBookingLogic {
                   onTap: () {
                     controller.bookingModel.theoryDate ??= [];
                     controller.bookingModel.theoryDate!.add(selectedTheoryDate);
-                    controller.bookingModel.theoryDate = controller.bookingModel.theoryDate!.toSet().toList();
+                    controller.bookingModel.theoryDate =
+                        controller.bookingModel.theoryDate!.toSet().toList();
                     //log(controller.bookingModel.theoryDate.toString());
                     controller.update();
                     Get.back();
@@ -484,11 +502,12 @@ class NewBookingLogic {
     if (controller.isQuickBooking) {
       List<String> bookingDates = [];
 
-      if (controller.quickNameTED.text != '' && controller.quickEmailTED.text != '' &&
+      if (controller.quickNameTED.text != '' &&
           controller.quickNoOfPersonsTED.text != '' &&
           controller.quickSelectedActivity != null) {
         controller.quickShowLoading = true;
-        if (controller.quickDiveDates != null && controller.quickDiveDates!.isNotEmpty) {
+        if (controller.quickDiveDates != null &&
+            controller.quickDiveDates!.isNotEmpty) {
           for (var element in controller.quickDiveDates!) {
             bookingDates.add(getStringDate(element!));
           }
@@ -501,7 +520,9 @@ class NewBookingLogic {
           pax: [
             {
               'first-name': controller.quickNameTED.text,
-              'email': (controller.isCustomerBooking)?controller.quickEmailTED.text:'quickBooking@temple.com',
+              'email': (controller.isCustomerBooking)
+                  ? controller.quickEmailTED.text
+                  : 'quickBooking@temple.com',
               'last-name': '',
               'countryCode': '+91',
               'phoneNumber': '9876543210',
@@ -526,8 +547,12 @@ class NewBookingLogic {
         );
 
         controller.bookingId = await FirebaseApi.addNewBooking(bookingModel);
-        LogModel logModel = LogModel(type: LogType.quickBookingCreated, bookingId: controller.bookingId);
-        FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
+        LogModel logModel = LogModel(
+            type: LogType.quickBookingCreated, bookingId: controller.bookingId);
+        FirebaseFirestore.instance
+            .collection('logs')
+            .doc()
+            .set(logModel.toMap());
         controller.quickShowLoading = false;
         controller.reset();
         Get.back();
@@ -541,33 +566,41 @@ class NewBookingLogic {
     }
 
     controller.bookingModel.bookingDate = [];
-    if (controller.bookingModel.theoryDate != null && controller.bookingModel.theoryDate!.isNotEmpty) {
+    if (controller.bookingModel.theoryDate != null &&
+        controller.bookingModel.theoryDate!.isNotEmpty) {
       for (var element in controller.bookingModel.theoryDate!) {
         log(element.toString());
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       }
     }
-    if (controller.bookingModel.poolDate != null && controller.bookingModel.poolDate!.isNotEmpty) {
+    if (controller.bookingModel.poolDate != null &&
+        controller.bookingModel.poolDate!.isNotEmpty) {
       for (var element in controller.bookingModel.poolDate!) {
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       }
     }
-    if (controller.bookingModel.diveDate != null && controller.bookingModel.diveDate!.isNotEmpty) {
+    if (controller.bookingModel.diveDate != null &&
+        controller.bookingModel.diveDate!.isNotEmpty) {
       for (var element in controller.bookingModel.diveDate!) {
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       }
     }
-    controller.bookingId = await FirebaseApi.addNewBooking(controller.bookingModel);
-    LogModel logModel = LogModel(type: LogType.bookingCreated, bookingId: controller.bookingId);
+    controller.bookingId =
+        await FirebaseApi.addNewBooking(controller.bookingModel);
+    LogModel logModel =
+        LogModel(type: LogType.bookingCreated, bookingId: controller.bookingId);
     FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
     controller.update();
   }
 
   onContinueChooseDatesPressed() {
     if (controller.bookingModel.activity != null) {
-      if ((controller.bookingModel.theoryDate != null && controller.bookingModel.theoryDate!.isNotEmpty) ||
-          (controller.bookingModel.poolDate != null && controller.bookingModel.poolDate!.isNotEmpty) ||
-          (controller.bookingModel.diveDate != null && controller.bookingModel.diveDate!.isNotEmpty)) {
+      if ((controller.bookingModel.theoryDate != null &&
+              controller.bookingModel.theoryDate!.isNotEmpty) ||
+          (controller.bookingModel.poolDate != null &&
+              controller.bookingModel.poolDate!.isNotEmpty) ||
+          (controller.bookingModel.diveDate != null &&
+              controller.bookingModel.diveDate!.isNotEmpty)) {
         Get.toNamed(NewBookingScreen.id);
       } else {
         showToast('Please select at-least one session');
@@ -604,7 +637,10 @@ class NewBookingLogic {
   }
 
   Future<bool> isCustomerExists() async {
-    var d = await FirebaseFirestore.instance.collection('customers').doc(controller.emailTED.text).get();
+    var d = await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(controller.emailTED.text)
+        .get();
     Map<String, dynamic>? data = d.data();
     if (data == null) return false;
     controller.customerModel = CustomerModel.fromMap(data);
@@ -613,12 +649,14 @@ class NewBookingLogic {
     controller.lNameTED.text = controller.customerModel.lastName ?? '';
     controller.phoneNumberTED.text = controller.customerModel.phoneNumber ?? '';
     controller.countryCodeTED.text =
-        ((controller.customerModel.countryCode != null && controller.customerModel.countryCode!.isNotEmpty)
+        ((controller.customerModel.countryCode != null &&
+                controller.customerModel.countryCode!.isNotEmpty)
             ? controller.customerModel.countryCode
             : '+91')!;
     if (controller.customerModel.dateOfBirth != null) {
       controller.dob = controller.customerModel.dateOfBirth;
-      controller.dobTED.text = DateFormat('dd MMM, yyyy').format(controller.customerModel.dateOfBirth!);
+      controller.dobTED.text = DateFormat('dd MMM, yyyy')
+          .format(controller.customerModel.dateOfBirth!);
     }
 
     return true;

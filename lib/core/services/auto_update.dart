@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
 import '../../features/messaging/notification_screen.dart';
+import '../../main.dart';
 import '../widgets/app_button.dart';
 
 class AutoUpdateView extends StatelessWidget {
@@ -19,6 +18,12 @@ class AutoUpdateView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String latestIosVersion = '${logic.controller.iosVersionNumber}';
+    String currentAndroidVersion =
+        '${logic.controller.version}+${logic.controller.buildNumber}';
+
+    String latestAndroidVersion = '${logic.controller.latestVersionNumber}';
+
     return Scaffold(
       body: SafeArea(
         child: Column(
@@ -75,14 +80,14 @@ class AutoUpdateView extends StatelessWidget {
               height: 10,
             ),
             Text(
-              'Current version : ${logic.controller.version}+${logic.controller.buildNumber}',
+              'Current version : ${(isIOS) ? currentIosVersion : currentAndroidVersion}',
               style: const TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-              'Latest version : ${logic.controller.latestVersionNumber}',
+              'Latest version : ${(isIOS) ? latestIosVersion : latestAndroidVersion}',
               style: const TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
@@ -91,14 +96,24 @@ class AutoUpdateView extends StatelessWidget {
             const SizedBox(
               height: 100,
             ),
-            AppButton.flat(
-              text: 'Update',
-              color: Colors.black,
-              textColor: Colors.white,
-              onTap: () async {
-                logic.openLink();
-              },
-            )
+            if (isIOS)
+              const Text(
+                'Please install the latest update from the TestFlight App',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  // fontWeight: FontWeight.bold,
+                ),
+              )
+            else
+              AppButton.flat(
+                text: 'Update',
+                color: Colors.black,
+                textColor: Colors.white,
+                onTap: () async {
+                  logic.openLink();
+                },
+              )
           ],
         ),
       ),
@@ -121,7 +136,8 @@ class AutoUpdateLogic {
         titleStyle: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
-        middleText: '\n\nError occurred while auto-update. Please contact developer.\n\n',
+        middleText:
+            '\n\nError occurred while auto-update. Please contact developer.\n\n',
         middleTextStyle: const TextStyle(
           color: Colors.black54,
           fontSize: 14,
@@ -132,11 +148,6 @@ class AutoUpdateLogic {
   }
 
   checkForUpdate() async {
-    if (GetPlatform.isIOS) {
-      Get.offAllNamed(DashBoardScreen.id);
-      return;
-    }
-
     ///completely terminated
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null && message.notification != null) {
@@ -144,17 +155,30 @@ class AutoUpdateLogic {
       }
     });
 
-    var data = await FirebaseFirestore.instance.collection('ota_update').doc('version').get();
+    var data = await FirebaseFirestore.instance
+        .collection('ota_update')
+        .doc('version')
+        .get();
+
     controller.latestVersionNumber = data.data()!['number'];
     controller.downloadLink = data.data()!['downloadLink'];
     controller.criticalUpdate = data.data()!['critical_update'];
+    controller.iosVersionNumber = data.data()!['iosNumber'];
+
+    if (isIOS) {
+      if (currentIosVersion != controller.iosVersionNumber) {
+        Get.offAllNamed(AutoUpdateView.id);
+      }
+      Get.offAllNamed(DashBoardScreen.id);
+      return;
+    }
 
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     controller.version = packageInfo.version;
     controller.buildNumber = packageInfo.buildNumber;
 
-    if (controller.latestVersionNumber != '${controller.version!}+${controller.buildNumber!}') {
-      log('Auto update called');
+    if (controller.latestVersionNumber !=
+        '${controller.version!}+${controller.buildNumber!}') {
       Get.offAllNamed(AutoUpdateView.id);
     } else {
       Get.offAllNamed(DashBoardScreen.id);
@@ -163,7 +187,11 @@ class AutoUpdateLogic {
 }
 
 class AutoUpdateController extends GetxController {
-  String? latestVersionNumber, version, buildNumber, downloadLink;
+  String? latestVersionNumber,
+      version,
+      buildNumber,
+      downloadLink,
+      iosVersionNumber;
 
   bool? criticalUpdate = false;
 }

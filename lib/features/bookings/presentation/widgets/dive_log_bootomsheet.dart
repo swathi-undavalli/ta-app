@@ -66,7 +66,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
             Spacing.h20,
             ...buildCustomers(),
             Spacing.h20,
-            buildAddCustomerButton(),
+            buildAddCustomerButton().paddingSymmetric(horizontal: 20),
             Spacing.h30,
           ],
         ),
