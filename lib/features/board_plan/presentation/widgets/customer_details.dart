@@ -514,7 +514,7 @@ class CustomerListState extends State<CustomerList> {
                       ?  dsdStatus[bookings[index].boatDetails?.bookingStatus ?? 0]
                       : coursesStatus[bookings[index].getStatus(selectedDate) ?? 0],
                   40,
-                  Colors.white,
+                  Colors.black,
                   true,
                 ).paddingOnly(top: 2, left: 1, right: 1),
               ),

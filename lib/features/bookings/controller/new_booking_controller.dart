@@ -70,6 +70,7 @@ class NewBookingLogic {
         barrierDismissible: false,
         title: '',
         titlePadding: const EdgeInsets.all(0),
+        backgroundColor: Colors.white,
         titleStyle: const TextStyle(fontSize: 0),
         content: GetBuilder<NewBookingController>(
           builder: (controller) {
@@ -155,6 +156,7 @@ class NewBookingLogic {
         title: '',
         titlePadding: const EdgeInsets.all(0),
         titleStyle: const TextStyle(fontSize: 0),
+        backgroundColor: Colors.white,
         content: GetBuilder<NewBookingController>(
           builder: (controller) {
             if (controller.bookingId != null) {
@@ -293,7 +295,6 @@ class NewBookingLogic {
                     controller.bookingModel.poolDate!.add(selectedPoolDate);
                     controller.bookingModel.poolDate =
                         controller.bookingModel.poolDate!.toSet().toList();
-                    // //print(controller.bookingModel.poolDate);
                     controller.update();
                     Get.back();
                   },

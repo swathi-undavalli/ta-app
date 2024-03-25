@@ -1,9 +1,11 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -11,7 +13,7 @@ import '../../../../core/util/utils.dart';
 import '../../../../core/util/validator.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../models/customer_model.dart';
-import '../../models/dive-log-model.dart';
+import '../../models/dive_log_model.dart';
 import '../widgets/app_text_fields.dart';
 import '../widgets/customer_logs_pdf.dart';
 

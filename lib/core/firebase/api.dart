@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../../features/bookings/models/dive-log-model.dart';
+import '../../features/bookings/models/dive_log_model.dart';
 import '../../features/events/models/event_model.dart';
 import '../../features/offers/models/offer.dart';
 

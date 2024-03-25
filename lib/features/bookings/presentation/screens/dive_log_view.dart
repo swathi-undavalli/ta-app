@@ -13,7 +13,7 @@ import '../../../boat/models/boats.dart';
 import '../../../boat/presentation/widgets/employee_selector_bottom_sheet.dart';
 import '../../controller/dive_log_controller.dart';
 import '../../models/booking_model.dart';
-import '../../models/dive-log-model.dart';
+import '../../models/dive_log_model.dart';
 import '../widgets/app_text_fields.dart';
 
 class DiveLogView extends StatefulWidget {

@@ -1,0 +1,1 @@
+Temple Adventures Admin app is used to record the attendance of employees and manage bookings made by the customers. It is available for Android and other smartphones.

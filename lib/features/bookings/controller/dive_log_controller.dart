@@ -6,7 +6,7 @@ import '../../../core/firebase/api.dart';
 import '../../../core/util/utils.dart';
 import '../../boat/models/boat_details.dart';
 import '../models/booking_model.dart';
-import '../models/dive-log-model.dart';
+import '../models/dive_log_model.dart';
 
 class DiveLogLogic {
   DiveLogController controller = Get.put(DiveLogController());

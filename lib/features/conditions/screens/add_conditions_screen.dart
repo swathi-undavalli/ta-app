@@ -39,7 +39,8 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
           children: [
             WillPopScope(
               onWillPop: () async {
-                if (logic.controller.conditions != null && logic.controller.conditions!.levels.isNotEmpty) {
+                if (logic.controller.conditions != null &&
+                    logic.controller.conditions!.levels.isNotEmpty) {
                   _showAlert(
                     context: context,
                     content: 'All your changes will be discarded.',
@@ -71,7 +72,8 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
                             SizedBox(
                               width: 103,
                               child: Text(
-                                DateFormat('dd-MMM-yyyy').format(DateTime.now()),
+                                DateFormat('dd-MMM-yyyy')
+                                    .format(DateTime.now()),
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -84,7 +86,7 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
                               child: Row(
                                 children: [
                                   ...controller.reefs.map(
-                                        (e) => buildChip(
+                                    (e) => buildChip(
                                       onTap: () {
                                         logic.onChipChanged(e);
                                       },
@@ -96,9 +98,11 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
                             ),
                             const SizedBox(height: 30),
                             if (controller.conditions != null)
-                              buildSurfaceConditionsExpansionWidget(controller).paddingSymmetric(horizontal: 27),
+                              buildSurfaceConditionsExpansionWidget(controller)
+                                  .paddingSymmetric(horizontal: 27),
                             const SizedBox(height: 30),
-                            if (controller.conditions != null && controller.conditions!.levels.isNotEmpty)
+                            if (controller.conditions != null &&
+                                controller.conditions!.levels.isNotEmpty)
                               const Text(
                                 'Water Conditions : ',
                                 style: TextStyle(
@@ -126,19 +130,27 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
                                       ),
                                     ),
                                   ),
-                                if (controller.conditions != null && controller.conditions!.levels.isNotEmpty)
-                                  ...controller.conditions!.levels.asMap().entries.map(
-                                        (l) {
-                                      if (l.value.reef == controller.selectedReef) {
+                                if (controller.conditions != null &&
+                                    controller.conditions!.levels.isNotEmpty)
+                                  ...controller.conditions!.levels
+                                      .asMap()
+                                      .entries
+                                      .map(
+                                    (l) {
+                                      if (l.value.reef ==
+                                          controller.selectedReef) {
                                         return buildDepthExpansionPanel(
                                           level: l.value,
                                           onDeletePressed: () {
                                             _showAlert(
                                               context: context,
-                                              title: 'Are you you want to delete ?',
-                                              content: 'Added information will be completely removed.',
+                                              title:
+                                                  'Are you you want to delete ?',
+                                              content:
+                                                  'Added information will be completely removed.',
                                               onOkayPressed: () {
-                                                controller.conditions!.levels.removeAt(l.key);
+                                                controller.conditions!.levels
+                                                    .removeAt(l.key);
                                                 Get.back();
                                                 controller.update();
                                               },
@@ -149,8 +161,11 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
                                             double visibility,
                                             double currents,
                                           ) {
-                                            controller.conditions!.levels[l.key] =
-                                                controller.conditions!.levels[l.key].copyWith(
+                                            controller
+                                                    .conditions!.levels[l.key] =
+                                                controller
+                                                    .conditions!.levels[l.key]
+                                                    .copyWith(
                                               fish: fish.toInt(),
                                               visibility: visibility.toInt(),
                                               currents: currents.toInt(),
@@ -206,7 +221,8 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
       key: UniqueKey(),
       surfaceConditions: controller.conditions!.surfaceConditions,
       onChanged: (List<SurfaceCondition> surfaceConditions) {
-        controller.conditions = controller.conditions!.copyWith(surfaceConditions: surfaceConditions);
+        controller.conditions = controller.conditions!
+            .copyWith(surfaceConditions: surfaceConditions);
       },
       selectedReef: controller.selectedReef,
       disableTouches: false,
@@ -216,7 +232,8 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
   Widget buildDepthExpansionPanel({
     required Level level,
     required Function onDeletePressed,
-    required Function(double fish, double visibility, double currents) onChanged,
+    required Function(double fish, double visibility, double currents)
+        onChanged,
   }) {
     return DepthExpansionPanelWidget(
       level: level,
@@ -234,12 +251,16 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
         height: 27,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          color: logic.controller.selectedReef == reefName ? AppColors.text.skyBlue : AppColors.text.white,
+          color: logic.controller.selectedReef == reefName
+              ? AppColors.text.skyBlue
+              : AppColors.text.white,
         ),
         child: Text(
           reefName,
           style: TextStyle(
-            color: logic.controller.selectedReef == reefName ? AppColors.text.white : AppColors.text.black,
+            color: logic.controller.selectedReef == reefName
+                ? AppColors.text.white
+                : AppColors.text.black,
             fontSize: FontSize.small,
           ),
         ).paddingSymmetric(horizontal: 9, vertical: 5),
@@ -283,7 +304,8 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
               child: const Center(
                 child: Text(
                   'Save',
-                  style: TextStyle(fontSize: FontSize.small),
+                  style:
+                      TextStyle(fontSize: FontSize.small, color: Colors.white),
                 ),
               ),
             ).paddingOnly(right: 30),
@@ -364,7 +386,8 @@ class _AddConditionsScreenState extends State<AddConditionsScreen> {
                   children: [
                     const Text(
                       'Add Depth',
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
                     AppTextField(

@@ -7,7 +7,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 import '../../models/customer_model.dart';
-import '../../models/dive-log-model.dart';
+import '../../models/dive_log_model.dart';
 import 'share_booking_details_widget.dart';
 
 class CustomerLogs {

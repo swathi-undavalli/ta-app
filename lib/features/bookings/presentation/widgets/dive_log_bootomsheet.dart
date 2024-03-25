@@ -10,7 +10,7 @@ import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../models/booking_model.dart';
-import '../../models/dive-log-model.dart';
+import '../../models/dive_log_model.dart';
 import '../screens/dive_log_view.dart';
 import 'add_customer_dialog.dart';
 
@@ -190,8 +190,6 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
           );
         } else {
           return Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Spacing.h10,
               buildHeadings(),
@@ -272,6 +270,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
       builder: (context) {
         return AlertDialog(
           shadowColor: Colors.white,
+          surfaceTintColor: Colors.white,
           title: const Text(
             'Are you sure?',
             style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
@@ -310,6 +309,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
       onTap: () {
         onTap();
       },
+      radius: 50,
       child: Icon(icon, size: 12),
     );
   }

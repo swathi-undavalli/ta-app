@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/back_navigation_icon.dart';
 import '../../controller/new_booking_controller.dart';
@@ -18,7 +19,6 @@ class BookDateTime extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-
       appBar: buildAppBar(),
       body: SafeArea(
         child: Padding(
@@ -82,16 +82,19 @@ class BookDateTime extends StatelessWidget {
                     underline: Container(height: 1, color: Colors.black45),
                     isExpanded: true,
                     value: controller.selectedActivity,
+                    dropdownColor: Colors.white,
                     onChanged: (Activity? activity) {
                       if (activity != null) {
                         controller.selectedActivity = activity;
                         controller.priceTED.text = activity.price.toString();
-                        controller.bookingModel.price = (activity.price ?? 0) * 1.0;
+                        controller.bookingModel.price =
+                            (activity.price ?? 0) * 1.0;
                         controller.bookingModel.activity = [activity];
                         logic.controller.update();
                       }
                     },
-                    items: controller.activities.toSet().toList().map((activity) {
+                    items:
+                        controller.activities.toSet().toList().map((activity) {
                       return DropdownMenuItem(
                         value: activity,
                         child: Text(
@@ -111,14 +114,15 @@ class BookDateTime extends StatelessWidget {
   }
 
   Widget buildPoolSession() {
-    return GetBuilder<NewBookingController>(builder: (controller) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+    return GetBuilder<NewBookingController>(
+      builder: (controller) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 const Text(
                   'Pool Session',
                   style: TextStyle(
@@ -137,7 +141,9 @@ class BookDateTime extends StatelessWidget {
               ],
             ),
             Wrap(
-              children: (controller.bookingModel.poolDate ?? []).map((e) => buildTime(e, DateType.pool)).toList(),
+              children: (controller.bookingModel.poolDate ?? [])
+                  .map((e) => buildTime(e, DateType.pool))
+                  .toList(),
             ),
           ],
         );
@@ -146,14 +152,15 @@ class BookDateTime extends StatelessWidget {
   }
 
   Widget buildDiveSession() {
-    return GetBuilder<NewBookingController>(builder: (controller) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+    return GetBuilder<NewBookingController>(
+      builder: (controller) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 const Text(
                   'Dive Session',
                   style: TextStyle(
@@ -172,7 +179,9 @@ class BookDateTime extends StatelessWidget {
               ],
             ),
             Wrap(
-              children: (controller.bookingModel.diveDate ?? []).map((e) => buildTime(e, DateType.dive)).toList(),
+              children: (controller.bookingModel.diveDate ?? [])
+                  .map((e) => buildTime(e, DateType.dive))
+                  .toList(),
             ),
           ],
         );
@@ -181,14 +190,15 @@ class BookDateTime extends StatelessWidget {
   }
 
   Widget buildTheorySession() {
-    return GetBuilder<NewBookingController>(builder: (controller) {
-      return Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
+    return GetBuilder<NewBookingController>(
+      builder: (controller) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
                 const Text(
                   'Theory Session',
                   style: TextStyle(
@@ -207,7 +217,9 @@ class BookDateTime extends StatelessWidget {
               ],
             ),
             Wrap(
-              children: (controller.bookingModel.theoryDate ?? []).map((e) => buildTime(e, DateType.theory)).toList(),
+              children: (controller.bookingModel.theoryDate ?? [])
+                  .map((e) => buildTime(e, DateType.theory))
+                  .toList(),
             ),
           ],
         );
@@ -231,7 +243,6 @@ class BookDateTime extends StatelessWidget {
           logic.controller.update();
         },
         child: Container(
-          width: 170,
           padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
           margin: const EdgeInsets.only(right: 10, bottom: 10),
           decoration: BoxDecoration(
@@ -240,15 +251,18 @@ class BookDateTime extends StatelessWidget {
               Radius.circular(20),
             ),
           ),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(DateFormat('MMM  dd @ hh:mm a').format(date)),
-              const Icon(
-                Icons.close,
-                size: 16,
-              ),
-            ],
+          child: FittedBox(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(DateFormat('MMM  dd @ hh:mm a').format(date)),
+                Spacing.w20,
+                const Icon(
+                  Icons.close,
+                  size: 16,
+                ),
+              ],
+            ),
           ),
         ),
       );
