@@ -2,16 +2,26 @@ import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:intl/intl.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
+import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../activities/model/colors_data.dart';
 import '../../../board_plan/presentation/widgets/customer_details.dart';
 import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
+import '../../../boat/presentation/widgets/customer_booking_status.dart';
+import '../../../boat/presentation/widgets/customer_expandable_list_tile.dart';
 import '../../../bookings/models/booking_model.dart';
+import '../../../bookings/presentation/widgets/dive_log_bootomsheet.dart';
+import '../../../employees/model/employee.dart';
 import '../../controllers/home_controller.dart';
 
 class EmployeeDiveCalenderListTile extends StatefulWidget {
@@ -23,7 +33,8 @@ class EmployeeDiveCalenderListTile extends StatefulWidget {
 
   final ItemModel itemModel;
   final DateTime selectedDate;
-  final EmployeeDiveCalenderListTileState employeeDiveCalenderListTileState = EmployeeDiveCalenderListTileState();
+  final EmployeeDiveCalenderListTileState employeeDiveCalenderListTileState =
+      EmployeeDiveCalenderListTileState();
 
   @override
   State<EmployeeDiveCalenderListTile> createState() {
@@ -36,7 +47,8 @@ class EmployeeDiveCalenderListTile extends StatefulWidget {
   }
 }
 
-class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTile> {
+class EmployeeDiveCalenderListTileState
+    extends State<EmployeeDiveCalenderListTile> {
   bool isExpanded = false;
   HomeController controller = Get.put(HomeController());
 
@@ -92,7 +104,8 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                   children: [
                     Text(
                       '${widget.itemModel.activity} ',
-                      style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                      style: const TextStyle(
+                          fontSize: 14, fontWeight: FontWeight.w600),
                     ),
                     Text(
                       '${widget.itemModel.name?.capitalizeFirst} '
@@ -110,11 +123,14 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                 ),
                 const Spacer(),
                 IconButton(
-                  visualDensity: const VisualDensity(horizontal: 0, vertical: 0),
+                  visualDensity:
+                      const VisualDensity(horizontal: 0, vertical: 0),
                   padding: const EdgeInsets.all(0),
                   splashRadius: 20,
                   iconSize: 20,
-                  icon: Icon(isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded),
+                  icon: Icon(isExpanded
+                      ? Icons.keyboard_arrow_up_rounded
+                      : Icons.keyboard_arrow_down_rounded),
                   onPressed: () {
                     setState(() {
                       isExpanded = !isExpanded;
@@ -128,7 +144,8 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Spacing.h10,
-                  _buildKeyValuePairs('Booking Id', widget.itemModel.bookingID ?? '-'),
+                  _buildKeyValuePairs(
+                      'Booking Id', widget.itemModel.bookingID ?? '-'),
                   if (!widget.itemModel.bookingModel!.isQuickBooking)
                     _buildKeyValuePairs(
                       'Balance',
@@ -138,28 +155,119 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                     _buildKeyValuePairs(
                       'Registered',
                       '${widget.itemModel.bookingModel!.pax!.length - 1} / ${widget.itemModel.bookingModel!.noOfPersons}',
-                      isDanger: ((widget.itemModel.bookingModel!.pax!.length - 1) !=
-                          (widget.itemModel.bookingModel!.noOfPersons)),
+                      isDanger:
+                          ((widget.itemModel.bookingModel!.pax!.length - 1) !=
+                              (widget.itemModel.bookingModel!.noOfPersons)),
                     ),
                   (widget.itemModel.remarks == '')
                       ? _buildKeyValuePairs('Remarks', '-')
-                      : _buildKeyValuePairs('Remarks', widget.itemModel.remarks.toString()),
-                  _buildKeyValuePairs('Status', getStatus(widget.itemModel.bookingModel!)),
+                      : _buildKeyValuePairs(
+                          'Remarks',
+                          widget.itemModel.remarks.toString(),
+                        ),
+                  // _buildKeyValuePairs(
+                  //     'Status', getStatus(widget.itemModel.bookingModel!)),
                   _buildKeyValuePairs('Boat', selectedBoat?.name ?? '-'),
                   _buildKeyValuePairs(
                       'Customer Tanks',
                       'N/${widget.itemModel.bookingModel?.getBoatInfo(controller.selectedDate)?.nitrox ?? 0} - '
                           'A/${widget.itemModel.bookingModel?.getBoatInfo(controller.selectedDate)?.air ?? 0}'),
-                  _buildDiveBuddies(widget.itemModel.bookingModel?.boatDetails?.diveBuddies ?? []),
+                  _buildDiveBuddies(
+                      widget.itemModel.bookingModel?.boatDetails?.diveBuddies ??
+                          []),
                   _buildKeyValuePairs(
                     'Notes',
-                    (widget.itemModel.bookingModel!.boatDetails!.employeeNotes != null &&
-                            widget.itemModel.bookingModel!.boatDetails!.employeeNotes!.isNotEmpty)
-                        ? widget.itemModel.bookingModel!.boatDetails!.employeeNotes!
+                    (widget.itemModel.bookingModel!.boatDetails!
+                                    .employeeNotes !=
+                                null &&
+                            widget.itemModel.bookingModel!.boatDetails!
+                                .employeeNotes!.isNotEmpty)
+                        ? widget
+                            .itemModel.bookingModel!.boatDetails!.employeeNotes!
                         : '-',
                   ),
+                  Spacing.h5,
+                  Row(
+                    children: [
+                      Text(
+                        'Status',
+                        style: TextStyle(
+                          color: Colors.grey[700],
+                          fontSize: 13,
+                          letterSpacing: 0.3,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Spacer(),
+                      BookingStatus(
+                        initialStatus: widget.itemModel.bookingModel!.isDSD
+                            ? widget.itemModel.bookingModel?.boatDetails
+                                    ?.bookingStatus ??
+                                0
+                            : widget.itemModel.bookingModel
+                                    ?.getStatus(widget.selectedDate) ??
+                                0,
+                        onChanged: (int status) async {
+                          await updateBoatDetails(
+                            bookingModel: widget.itemModel.bookingModel!,
+                            bookingStatus: status,
+                            selectedDate: widget.selectedDate,
+                          );
+                        },
+                        isDSD: (colorsData!.blue
+                            .contains(widget.itemModel.activity)),
+                      ).centerR,
+                    ],
+                  ).paddingOnly(right: 15),
                   Spacing.h10,
-                  const Divider(thickness: 1, color: Colors.black).paddingOnly(right: 20),
+                  if (widget.itemModel.colorCode != 'Blue' &&
+                      (!widget.itemModel.bookingModel!.isQuickBooking))
+                    Row(
+                      children: [
+                        AppButton.miniFlat(
+                          text: 'Process Cert',
+                          onTap: () async {
+                            String message = """
+
+*${widget.itemModel.name!.trim().toLowerCase().capitalizeFirst! + widget.itemModel.bookingModel!.pax![0]["last-name"]} 's* ${widget.itemModel.activity}
+
+*Certification details:* 
+
+Email : *${widget.itemModel.email}* 
+Date of Birth : *${(widget.itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((widget.itemModel.bookingModel!.pax![0]["dob"] as Timestamp).toDate()) : "-"}* 
+Certification : *${widget.itemModel.activity}* 
+Course Completion Date : *${intl.DateFormat("dd-MM-yyy").format(DateTime.now())}* 
+Balance : *${getBalance(widget.itemModel.bookingModel!.payments!, double.parse(widget.itemModel.paid).roundToDouble(), double.parse(widget.itemModel.cost).roundToDouble())} /-* 
+Completed instructor : *${currentEmployee!.name.trim()}* 
+Instructor No : *${(currentEmployee?.agencyId != null && currentEmployee?.agencyId != '') ? currentEmployee?.agencyId : "-"}* 
+Invoice No : *${widget.itemModel.bookingModel?.receiptNo ?? '-'}* 
+Course / Equipment Upsell :     *${"-"}*
+ 
+Regards,
+*${currentEmployee!.name.trim()}*
+                                          """;
+                            await Clipboard.setData(
+                                ClipboardData(text: message));
+                            Fluttertoast.showToast(
+                                msg: 'Message copied to Clipboard');
+                          },
+                        ),
+                        const Spacer(),
+                        AppButton.miniFlat(
+                          text: 'Add Log',
+                          onTap: () {
+                            DiveLogBottomSheet.show(
+                              context,
+                              bookingModel: widget.itemModel.bookingModel!,
+                              date: selectedDate,
+                            );
+                          },
+                        ),
+                      ],
+                    ).paddingOnly(right: 15),
+                  Spacing.h10,
+                  const Divider(thickness: 1, color: Colors.black)
+                      .paddingOnly(right: 20),
                 ],
               ).paddingOnly(left: 20)
           ],
@@ -180,14 +288,14 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
     String key,
     String value, {
     bool isDanger = false,
-    bool shrinkKey = false,
   }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (shrinkKey)
-          Text(
+        SizedBox(
+          width: 150,
+          child: Text(
             key,
             style: TextStyle(
               color: Colors.grey[700],
@@ -195,21 +303,9 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
               letterSpacing: 0.3,
               fontWeight: FontWeight.w600,
             ),
-          ).paddingOnly(right: 10)
-        else
-          Expanded(
-            child: Text(
-              key,
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 13,
-                letterSpacing: 0.3,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
           ),
-        SizedBox(
-          width: 170,
+        ),
+        Expanded(
           child: Text(
             value,
             style: TextStyle(
@@ -224,16 +320,14 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
     ).paddingOnly(bottom: 6);
   }
 
-  Widget _buildDiveBuddies(
-    List<Instructor> interns, {
-    bool shrinkKey = false,
-  }) {
+  Widget _buildDiveBuddies(List<Instructor> interns) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (shrinkKey)
-          Text(
+        SizedBox(
+          width: 150,
+          child: Text(
             'Dive Buddies (N - A)',
             style: TextStyle(
               color: Colors.grey[700],
@@ -241,26 +335,15 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
               letterSpacing: 0.3,
               fontWeight: FontWeight.w600,
             ),
-          ).paddingOnly(right: 10)
-        else
-          Expanded(
-            child: Text(
-              'Dive Buddies (N - A)',
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 13,
-                letterSpacing: 0.3,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
           ),
-        SizedBox(
-          width: 170,
-          child: Wrap(
-            children: [
-              if (interns.isEmpty) const Text('-'),
-              ...interns.map(
-                (e) => Text(
+        ),
+        Wrap(
+          children: [
+            if (interns.isEmpty) const Text('-'),
+            ...interns.map(
+              (e) => SizedBox(
+                width: Get.width - 210,
+                child: Text(
                   "${e.name}${"(${e.nitrox ?? 0} - ${e.air ?? 0})"}, ",
                   style: const TextStyle(
                     color: Colors.black,
@@ -269,9 +352,9 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                     letterSpacing: 0.3,
                   ),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
       ],
     ).paddingOnly(bottom: 6);

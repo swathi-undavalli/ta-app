@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -188,15 +186,10 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
         if (num == null && showDetails) return const SizedBox();
         return GestureDetector(
           onTap: () {
-            log('1');
             if (highlightInvalidTime && DateTime.now().difference(date).inSeconds > 0) {
               showToast('Invalid Date');
             } else {
-              log('2');
               controller.selectedDate = date;
-              log('3');
-              // logic.filterBookingsList();
-              log('4');
               onDateTimeSelected(controller.selectedDate);
             }
           },

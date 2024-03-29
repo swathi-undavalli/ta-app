@@ -273,9 +273,9 @@ class NewBookingLogic {
               calenderType: FilterType.Pool,
               startDate: DateTime.now(),
               onDateTimeSelected: (date) {
-                // //print("updated");
                 selectedPoolDate = date;
               },
+              isDiveSession: true,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,

@@ -849,8 +849,8 @@ Certification : *${itemModel.activity}* 
 Course Completion Date : *${intl.DateFormat("dd-MM-yyy").format(DateTime.now())}* 
 Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-* 
 Completed instructor : *${currentEmployee!.name.trim()}* 
-Instructor No : *${currentEmployee!.agencyId ?? "-"}* 
-Invoice No : *${itemModel.bookingModel!.receiptNo}* 
+Instructor No : *${(currentEmployee?.agencyId != null && currentEmployee?.agencyId != '') ? currentEmployee?.agencyId : "-"}* 
+Invoice No : *${itemModel.bookingModel?.receiptNo ?? '-'}* 
 Course / Equipment Upsell :     *${"-"}*
  
 Regards,
@@ -875,7 +875,7 @@ Last Name : *${(itemModel.bookingModel!.pax![0]["last-name"] != "") ? itemModel.
 Email : *${itemModel.email}* 
 Date of Birth : *${(itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.pax![0]["dob"] as Timestamp).toDate()) : "-"}* 
 Course Name : *${itemModel.activity}* 
-Invoice No : *${itemModel.bookingModel!.receiptNo}* 
+Invoice No : *${itemModel.bookingModel!.receiptNo ?? '-'}* 
 Phone Number : *${itemModel.bookingModel!.pax![0]["phoneNumber"]}* 
  
 Regards,

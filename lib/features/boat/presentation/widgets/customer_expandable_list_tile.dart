@@ -679,71 +679,75 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
     }
     return (total - t).toInt().toString();
   }
+}
 
-  Future<void> updateBoatDetails({
-    required Booking bookingModel,
-    required DateTime selectedDate,
-    String? boatId,
-    String? boatName,
-    int? bookingStatus,
-    int? nitrox,
-    int? air,
-    int? instructorNitrox,
-    int? instructorAir,
-    String? employeeNotes,
-    List<Instructor>? instructors,
-    List<Instructor>? diveBuddies,
-  }) async {
-    if (bookingStatus != null) {
-      if (bookingModel.isDSD) {
-        bookingModel.boatDetails?.bookingStatus = bookingStatus;
-      } else {
-        bookingModel.setStatus(
-          selectedDate,
-          bookingStatus,
-        );
-      }
-    } else if (boatId != null || air != null || nitrox != null) {
-      BoatInfo? boatInfo = bookingModel.getBoatInfo(selectedDate);
-      if (boatInfo == null) {
-        boatInfo = BoatInfo(id: boatId ?? '', air: air ?? 0, nitrox: nitrox ?? 0);
-      } else {
-        boatInfo = boatInfo.copyWith(id: boatId, air: air, nitrox: nitrox);
-      }
-
-      bookingModel.setBoatInfo(
+Future<void> updateBoatDetails({
+  required Booking bookingModel,
+  required DateTime selectedDate,
+  String? boatId,
+  String? boatName,
+  int? bookingStatus,
+  int? nitrox,
+  int? air,
+  int? instructorNitrox,
+  int? instructorAir,
+  String? employeeNotes,
+  List<Instructor>? instructors,
+  List<Instructor>? diveBuddies,
+}) async {
+  if (bookingStatus != null) {
+    if (bookingModel.isDSD) {
+      bookingModel.boatDetails?.bookingStatus = bookingStatus;
+    } else {
+      bookingModel.setStatus(
         selectedDate,
-        boatInfo,
+        bookingStatus,
       );
-    } else if (instructorAir != null || instructorNitrox != null) {
-      InstructorTanks? instructorTanks = bookingModel.getInstructorTanks(selectedDate);
-      if (instructorTanks == null) {
-        instructorTanks = InstructorTanks(
-          air: instructorAir ?? 0,
-          nitrox: instructorNitrox ?? 0,
-        );
-      } else {
-        instructorTanks = instructorTanks.copyWith(
-          air: instructorAir,
-          nitrox: instructorNitrox,
-        );
-      }
+    }
+  } else if (boatId != null || air != null || nitrox != null) {
+    BoatInfo? boatInfo = bookingModel.getBoatInfo(selectedDate);
+    if (boatInfo == null) {
+      boatInfo = BoatInfo(id: boatId ?? '', air: air ?? 0, nitrox: nitrox ?? 0);
+    } else {
+      boatInfo = boatInfo.copyWith(id: boatId, air: air, nitrox: nitrox);
+    }
 
-      bookingModel.setInstructorTanks(
-        selectedDate,
-        instructorTanks,
+    bookingModel.setBoatInfo(
+      selectedDate,
+      boatInfo,
+    );
+  } else if (instructorAir != null || instructorNitrox != null) {
+    InstructorTanks? instructorTanks =
+        bookingModel.getInstructorTanks(selectedDate);
+    if (instructorTanks == null) {
+      instructorTanks = InstructorTanks(
+        air: instructorAir ?? 0,
+        nitrox: instructorNitrox ?? 0,
+      );
+    } else {
+      instructorTanks = instructorTanks.copyWith(
+        air: instructorAir,
+        nitrox: instructorNitrox,
       );
     }
 
-    bookingModel.boatDetails = bookingModel.boatDetails?.copyWith(
-      bookingStatus: bookingStatus,
-      employeeNotes: employeeNotes,
-      instructors: instructors,
-      diveBuddies: diveBuddies,
+    bookingModel.setInstructorTanks(
+      selectedDate,
+      instructorTanks,
     );
-
-    await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(
-          bookingModel.toMap(),
-        );
   }
+
+  bookingModel.boatDetails = bookingModel.boatDetails?.copyWith(
+    bookingStatus: bookingStatus,
+    employeeNotes: employeeNotes,
+    instructors: instructors,
+    diveBuddies: diveBuddies,
+  );
+
+  await FirebaseFirestore.instance
+      .collection('bookings')
+      .doc(bookingModel.id)
+      .set(
+        bookingModel.toMap(),
+      );
 }

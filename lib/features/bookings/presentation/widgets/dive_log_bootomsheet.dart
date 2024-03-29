@@ -64,6 +64,35 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
             Spacing.h30,
             buildAddLogHeader().paddingSymmetric(horizontal: 20),
             Spacing.h20,
+            ElevatedButton(
+              onPressed: () async {
+                String src = 'ishitaagarwal020802@gmail.com';
+                String dest = 'manseemohta@gmail.com';
+                List<DiveLogModel> allLogs = [];
+                // 1. Get Logs
+
+                var d = await FirebaseFirestore.instance
+                    .collection("customers")
+                    .doc(src)
+                    .collection('diveLogs')
+                    .get();
+                for (var element in d.docs) {
+                  DiveLogModel diveLogs = DiveLogModel.fromMap(element.data());
+                  allLogs.add(diveLogs);
+                }
+                allLogs.forEach((element) async {
+                  String id = DateTime.now().microsecondsSinceEpoch.toString();
+                  await FirebaseFirestore.instance
+                      .collection('customers')
+                      .doc(dest)
+                      .collection('diveLogs')
+                      .doc(id)
+                      .set(element.copyWith(id: id).toMap());
+                });
+              },
+              child: Text('Do'),
+            ),
+            Spacing.h20,
             ...buildCustomers(),
             Spacing.h20,
             buildAddCustomerButton().paddingSymmetric(horizontal: 20),

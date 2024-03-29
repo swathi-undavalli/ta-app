@@ -10,7 +10,8 @@ import '../../models/item_model.dart';
 import '../../util/utils.dart';
 
 class BookingsCalenderWidgetLogic {
-  BookingsCalenderWidgetController controller = Get.put(BookingsCalenderWidgetController());
+  BookingsCalenderWidgetController controller =
+      Get.put(BookingsCalenderWidgetController());
 
   getBookings(DateTime date) async {
     //log("getBookings");
@@ -205,7 +206,6 @@ class BookingsCalenderWidgetLogic {
   }
 
   getDates() {
-    //log("getDates");
     controller.calenderDates = [];
     var temp = controller.startDate;
     for (int i = 0; i < 400; i++) {
@@ -245,7 +245,7 @@ class BookingsCalenderWidgetLogic {
       if (controller.calenderType == FilterType.Theory) {
         endHour = 12 + 5;
       } else if (controller.calenderType == FilterType.Pool) {
-        endHour = 12 + 6;
+        endHour = 12 + 11;
       } else if (controller.calenderType == FilterType.Dive) {
         endHour = 12 + 11;
       }
@@ -320,9 +320,6 @@ class BookingsCalenderWidgetController extends GetxController {
   late bool isDiveSession;
 
   FilterType? calenderType;
-
-  // AutoScrollController autoScrollController = AutoScrollController();
-  // AutoScrollController autoScrollController;
 
   get selectedDate => _selectedDate;
 
