@@ -137,7 +137,19 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
     return const SizedBox();
   }
 
-  Widget buildAddLogHeader() {
+  Widget buildCopyLogsButton() {
+    return AppButton.miniFlat(
+      text: 'Copy Logs',
+      onTap: () {
+        CopyDivesBottomSheet.show(
+          context,
+          booking: widget.bookingModel,
+        );
+      },
+    ).paddingSymmetric(horizontal: 20);
+  }
+
+  Widget buildHeader() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
