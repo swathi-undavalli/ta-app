@@ -57,7 +57,8 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
                           children: [
                             buildButton(
                               onTap: () {
-                                logic.onDateChanged(controller.selectedDate.subtract(const Duration(days: 1)));
+                                logic.onDateChanged(controller.selectedDate
+                                    .subtract(const Duration(days: 1)));
                               },
                               icon: Icons.arrow_back_ios_rounded,
                             ),
@@ -65,14 +66,17 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
                             SizedBox(
                               width: 103,
                               child: Text(
-                                DateFormat('dd-MMM-yyyy').format(controller.selectedDate),
-                                style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                                DateFormat('dd-MMM-yyyy')
+                                    .format(controller.selectedDate),
+                                style: const TextStyle(
+                                    fontSize: 16, fontWeight: FontWeight.w600),
                               ),
                             ),
                             Spacing.w20,
                             buildButton(
                               onTap: () {
-                                logic.onDateChanged(controller.selectedDate.add(const Duration(days: 1)));
+                                logic.onDateChanged(controller.selectedDate
+                                    .add(const Duration(days: 1)));
                               },
                               icon: Icons.arrow_forward_ios_rounded,
                             ),
@@ -118,9 +122,11 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
                               SurfaceConditionsExpansionWidget(
                                 key: UniqueKey(),
                                 disableTouches: true,
-                                surfaceConditions: controller.conditions!.surfaceConditions,
+                                surfaceConditions:
+                                    controller.conditions!.surfaceConditions,
                                 selectedReef: controller.selectedReef,
-                                onChanged: (List<SurfaceCondition> surfaceConditions) {},
+                                onChanged: (List<SurfaceCondition>
+                                    surfaceConditions) {},
                               ).paddingSymmetric(horizontal: 27),
                             const SizedBox(height: 25),
                             Container(
@@ -129,7 +135,8 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
                                 borderRadius: BorderRadius.circular(12),
                                 color: Colors.white,
                               ),
-                              child: buildGraph().paddingSymmetric(vertical: 20),
+                              child:
+                                  buildGraph().paddingSymmetric(vertical: 20),
                             ).paddingSymmetric(horizontal: 20),
                             const SizedBox(height: 22),
                           ],
@@ -191,7 +198,8 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
           width: 120,
           child: Text(
             title,
-            style: const TextStyle(fontSize: FontSize.small, fontWeight: FontWeight.bold),
+            style: const TextStyle(
+                fontSize: FontSize.small, fontWeight: FontWeight.bold),
           ),
         ),
         Text(
@@ -222,7 +230,9 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                textStyle: TextStyle(fontWeight: FontWeight.w500, color: AppColors.text.black), // button text color
+                textStyle: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    color: AppColors.text.black), // button text color
               ),
             ),
           ),
@@ -238,7 +248,9 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
 
   Widget buildGraph() {
     if (logic.getLevels.isEmpty) {
-      return const SizedBox(height: 100, child: Center(child: Text('No entries found in selected reef')));
+      return const SizedBox(
+          height: 100,
+          child: Center(child: Text('No entries found in selected reef')));
     }
 
     return Column(
@@ -307,8 +319,11 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                    style: TextStyle(color: AppColors.text.darkgrey, fontWeight: FontWeight.w600),
-                    text: " (${DateFormat("hh : mm a").format(level.updatedAt)})",
+                    style: TextStyle(
+                        color: AppColors.text.darkgrey,
+                        fontWeight: FontWeight.w600),
+                    text:
+                        " (${DateFormat("hh : mm a").format(level.updatedAt)})",
                   ),
                 ],
               ),
@@ -403,12 +418,16 @@ class _ConditionsScreenState extends State<ConditionsScreen> {
         height: 27,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          color: logic.controller.selectedReef == reefName ? AppColors.text.skyBlue : AppColors.text.white,
+          color: logic.controller.selectedReef == reefName
+              ? AppColors.text.skyBlue
+              : AppColors.text.white,
         ),
         child: Text(
           reefName,
           style: TextStyle(
-            color: logic.controller.selectedReef == reefName ? AppColors.text.white : AppColors.text.black,
+            color: logic.controller.selectedReef == reefName
+                ? AppColors.text.white
+                : AppColors.text.black,
             fontSize: FontSize.small,
           ),
         ).paddingSymmetric(horizontal: 9, vertical: 5),

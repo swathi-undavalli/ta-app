@@ -13,6 +13,7 @@ import '../../models/booking_model.dart';
 import '../../models/dive_log_model.dart';
 import '../screens/dive_log_view.dart';
 import 'add_customer_dialog.dart';
+import 'copy_dives_bottomsheet.dart';
 
 class DiveLogBottomSheet extends StatefulWidget {
   const DiveLogBottomSheet({
@@ -50,7 +51,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
       height: Get.height,
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
-        top: 40,
+        top: 30,
       ),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
@@ -62,40 +63,13 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Spacing.h30,
-            buildAddLogHeader().paddingSymmetric(horizontal: 20),
-            Spacing.h20,
-            ElevatedButton(
-              onPressed: () async {
-                String src = 'ishitaagarwal020802@gmail.com';
-                String dest = 'manseemohta@gmail.com';
-                List<DiveLogModel> allLogs = [];
-                // 1. Get Logs
-
-                var d = await FirebaseFirestore.instance
-                    .collection("customers")
-                    .doc(src)
-                    .collection('diveLogs')
-                    .get();
-                for (var element in d.docs) {
-                  DiveLogModel diveLogs = DiveLogModel.fromMap(element.data());
-                  allLogs.add(diveLogs);
-                }
-                allLogs.forEach((element) async {
-                  String id = DateTime.now().microsecondsSinceEpoch.toString();
-                  await FirebaseFirestore.instance
-                      .collection('customers')
-                      .doc(dest)
-                      .collection('diveLogs')
-                      .doc(id)
-                      .set(element.copyWith(id: id).toMap());
-                });
-              },
-              child: Text('Do'),
-            ),
+            buildHeader(),
             Spacing.h20,
             ...buildCustomers(),
             Spacing.h20,
-            buildAddCustomerButton().paddingSymmetric(horizontal: 20),
+            buildCopyLogsButton(),
+            Spacing.h20,
+            buildAddCustomerButton(),
             Spacing.h30,
           ],
         ),
@@ -158,7 +132,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
             bookingModel: widget.bookingModel,
           );
         },
-      );
+      ).paddingSymmetric(horizontal: 20);
     }
     return const SizedBox();
   }
@@ -182,7 +156,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
           },
         ),
       ],
-    );
+    ).paddingSymmetric(horizontal: 20);
   }
 
   StreamBuilder<QuerySnapshot<Map<String, dynamic>>> buildDiveLogs(int index) {

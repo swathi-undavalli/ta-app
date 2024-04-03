@@ -31,7 +31,10 @@ class LogScreen extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.all(20.0),
           child: StreamBuilder(
-            stream: FirebaseFirestore.instance.collection('logs').orderBy('timeStamp', descending: true).snapshots(),
+            stream: FirebaseFirestore.instance
+                .collection('logs')
+                .orderBy('timeStamp', descending: true)
+                .snapshots(),
             builder: (
               BuildContext context,
               AsyncSnapshot<QuerySnapshot> snapshot,
@@ -44,7 +47,8 @@ class LogScreen extends StatelessWidget {
               return ListView.builder(
                 itemBuilder: (BuildContext context, int index) {
                   if (snapshot.data != null) {
-                    Map<String, dynamic>? map = snapshot.data?.docs[index].data() as Map<String, dynamic>?;
+                    Map<String, dynamic>? map = snapshot.data?.docs[index]
+                        .data() as Map<String, dynamic>?;
                     if (map != null) {
                       LogModel logModel = LogModel.fromMap(map);
                       return buildLog(
@@ -191,7 +195,10 @@ class LogScreen extends StatelessWidget {
     return GestureDetector(
       onTap: () async {
         if (getTitle() == 'Booking Created') {
-          var data = await FirebaseFirestore.instance.collection('bookings').doc(log.bookingId!.trim()).get();
+          var data = await FirebaseFirestore.instance
+              .collection('bookings')
+              .doc(log.bookingId!.trim())
+              .get();
           if (data.data() != null) {
             if (kDebugMode) {
               print(log.bookingId);
@@ -213,7 +220,8 @@ class LogScreen extends StatelessWidget {
               Container(
                 height: 40,
                 width: 40,
-                decoration: BoxDecoration(shape: BoxShape.circle, color: getColor()),
+                decoration:
+                    BoxDecoration(shape: BoxShape.circle, color: getColor()),
                 child: Center(
                   child: getIcon(),
                 ),

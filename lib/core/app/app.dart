@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
 import '../../features/activities/presentation/screens/activity_edit_screen.dart';
@@ -13,7 +14,6 @@ import '../../features/bookings/presentation/screens/add_payments_screen.dart';
 import '../../features/bookings/presentation/screens/book_date_time_screen.dart';
 import '../../features/bookings/presentation/screens/booking_screen.dart';
 import '../../features/bookings/presentation/screens/customer_logs_view.dart';
-import '../../features/bookings/presentation/screens/dive_log_view.dart';
 import '../../features/bookings/presentation/screens/edit_payments_screen.dart';
 import '../../features/bookings/presentation/screens/new_booking_screen.dart';
 import '../../features/bookings/presentation/screens/payment_details_screen.dart';
@@ -47,6 +47,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Get.put(DashBoardScreenController());
+    SystemChrome.setEnabledSystemUIMode(
+      SystemUiMode.manual,
+      overlays: SystemUiOverlay.values,
+    );
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarIconBrightness: Brightness.dark,
+    ));
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
