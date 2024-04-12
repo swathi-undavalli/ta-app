@@ -76,7 +76,7 @@ class CoastGuardSlip {
         pw.Text(
           'EAST COAST WATERSPORTS PVT LTD,#6A, Gandhi st., Colas Nagar,Opposite to Indira Gandhi Stadium Pondicherry, India Contact : +91 9940219449 / 6385686600',
           style: pw.TextStyle(
-            color: PdfColor.fromInt(0xff263238),
+            color: const PdfColor.fromInt(0xff263238),
             font: pw.Font.times(),
             fontSize: 12,
           ),
@@ -202,7 +202,7 @@ class CoastGuardSlip {
               (text != null && text.isNotEmpty) ? text : '-',
               style: pw.TextStyle(
                 fontSize: 14,
-                color: PdfColor.fromInt(0xff575757),
+                color: const PdfColor.fromInt(0xff575757),
                 font: pw.Font.timesBold(),
 
                 // fontWeight: FontWeight.w500,

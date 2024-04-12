@@ -1,13 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/firebase/api.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/ta_image.dart';
 import '../../controllers/offers_controller.dart';
@@ -41,15 +40,13 @@ class _OffersViewState extends State<OffersView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      appBar: buildAppBar(),
+      appBar: const AppBarWidget(heading: 'All Offers'),
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(
         child: StreamBuilder(
           stream: firebaseApi.getAllOffers,
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError ||
-                snapshot.connectionState == ConnectionState.waiting) {
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
                 height: 15,
                 width: 15,
@@ -105,8 +102,7 @@ class _OffersViewState extends State<OffersView> {
                     if (showAll == false && showActiveOffersOnly == false)
                       Container(
                         decoration: BoxDecoration(
-                          borderRadius:
-                              const BorderRadius.all(Radius.circular(8)),
+                          borderRadius: const BorderRadius.all(Radius.circular(8)),
                           border: Border.all(color: Colors.black54, width: 1),
                         ),
                         child: const Text(
@@ -120,8 +116,7 @@ class _OffersViewState extends State<OffersView> {
                     Expanded(
                       child: ListView(
                         children: [
-                          ...snapshot.data!.docs
-                              .map((DocumentSnapshot document) {
+                          ...snapshot.data!.docs.map((DocumentSnapshot document) {
                             try {
                               Offer? offer = Offer.fromJson(
                                 document.data() as Map<String, dynamic>,
@@ -190,35 +185,6 @@ class _OffersViewState extends State<OffersView> {
     );
   }
 
-  AppBar buildAppBar() {
-    return AppBar(
-      toolbarHeight: 70,
-      centerTitle: true,
-      title: Text(
-        'All Offers',
-        style: TextStyle(
-          color: AppColors.text.black,
-          fontSize: 20,
-          fontFamily: AppFonts.nunito,
-          fontWeight: FontWeight.normal,
-          letterSpacing: 1.0,
-        ),
-      ),
-      leading: TextButton(
-        onPressed: () {
-          Get.back();
-        },
-        child: Icon(
-          Icons.arrow_back_ios,
-          color: AppColors.text.black,
-          size: 17,
-        ),
-      ),
-      elevation: 0,
-      backgroundColor: AppColors.background.white,
-    );
-  }
-
   Widget buildOfferCard({required Offer offer}) {
     DateTime? startDate;
     DateTime? endDate;
@@ -233,8 +199,7 @@ class _OffersViewState extends State<OffersView> {
 
     if (startDate != null && endDate != null) {
       if (showActiveOffersOnly) {
-        if (isInFuture(DateTime.now(), startDate) ||
-            isDateInRange(DateTime.now(), startDate, endDate)) {
+        if (isInFuture(DateTime.now(), startDate) || isDateInRange(DateTime.now(), startDate, endDate)) {
           showItem = true;
         } else {
           showItem = false;

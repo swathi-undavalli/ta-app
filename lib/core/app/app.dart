@@ -1,43 +1,43 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-
-import '../../features/activities/presentation/screens/activity_edit_screen.dart';
-import '../../features/activities/presentation/screens/add_new_activity_screen.dart';
-import '../../features/activities/presentation/screens/all_activities_screen.dart';
-import '../../features/all_bookings/presentation/screens/all_bookings_screen.dart';
+import '../../features/activities/presentation/views/activity_edit_view.dart';
+import '../../features/activities/presentation/views/add_new_activity_view.dart';
+import '../../features/activities/presentation/views/all_activities_view.dart';
+import '../../features/all_bookings/presentation/views/all_bookings_view.dart';
 import '../../features/board_plan/presentation/views/board_plan_view.dart';
-import '../../features/boat/presentation/screens/manage_boats_page.dart';
-import '../../features/boat/presentation/screens/manage_general_info.dart';
-import '../../features/bookings/presentation/screens/add_customer_details_screen.dart';
-import '../../features/bookings/presentation/screens/add_payments_screen.dart';
-import '../../features/bookings/presentation/screens/book_date_time_screen.dart';
-import '../../features/bookings/presentation/screens/booking_screen.dart';
-import '../../features/bookings/presentation/screens/customer_logs_view.dart';
-import '../../features/bookings/presentation/screens/edit_payments_screen.dart';
-import '../../features/bookings/presentation/screens/new_booking_screen.dart';
-import '../../features/bookings/presentation/screens/payment_details_screen.dart';
+import '../../features/boat/presentation/views/boats_view.dart';
+import '../../features/bookings/presentation/views/add_customer_details_view.dart';
+import '../../features/bookings/presentation/views/add_payments_view.dart';
+import '../../features/bookings/presentation/views/book_date_time_view.dart';
+import '../../features/bookings/presentation/views/booking_view.dart';
+import '../../features/bookings/presentation/views/customer_logs_view.dart';
+import '../../features/bookings/presentation/views/edit_payments_view.dart';
+import '../../features/bookings/presentation/views/new_booking_view.dart';
+import '../../features/bookings/presentation/views/payment_details_view.dart';
 import '../../features/coast_guard_slip/presentation/views/coast_guard_slip_view.dart';
-import '../../features/conditions/screens/add_conditions_screen.dart';
+import '../../features/conditions/presentation/views/add_conditions_view.dart';
 import '../../features/dashboard/controller/dashboard_controller.dart';
-import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
-import '../../features/dive_checklist/views/screens/dive_checklist_view.dart';
-import '../../features/dive_checklist/views/screens/new_checklist_view.dart';
-import '../../features/edit_booking/presentation/screens/edit_booking_new_screen.dart';
-import '../../features/employees/presentation/screens/add_an_employee_screen.dart';
-import '../../features/employees/presentation/screens/all_employees_screen.dart';
-import '../../features/employees/presentation/screens/employee_details_screen.dart';
-import '../../features/employees/presentation/screens/employee_profile_screen.dart';
-import '../../features/events/views/events_view.dart';
-import '../../features/login/presentation/screens/login_page.dart';
-import '../../features/logs/presentation/screens/details_screen.dart';
-import '../../features/logs/presentation/screens/log_screen.dart';
+import '../../features/dashboard/presentation/views/dashboard_view.dart';
+import '../../features/dive_checklist/presentation/views/dive_checklist_view.dart';
+import '../../features/dive_checklist/presentation/views/new_checklist_view.dart';
+import '../../features/bookings/presentation/views/edit_booking_view.dart';
+import '../../features/employees/presentation/views/add_employee_view.dart';
+import '../../features/employees/presentation/views/all_employees_view.dart';
+import '../../features/employees/presentation/views/employee_details_view.dart';
+import '../../features/employees/presentation/views/employee_profile_view.dart';
+import '../../features/events/presentation/views/events_view.dart';
+import '../../features/general_info/presentation/views/general_info_view.dart';
+import '../../features/login/presentation/views/login_view.dart';
+import '../../features/logs/presentation/views/notification_view.dart';
+import '../../features/logs/presentation/views/log_view.dart';
 import '../../features/messaging/notification_screen.dart';
 import '../../features/offers/presentation/views/add_offers_view.dart';
 import '../../features/offers/presentation/views/offers_view.dart';
+import '../../features/roaster/presentation/views/roaster_view.dart';
 import '../../features/screen_saver/views/marketing_view.dart';
-import '../../features/splash/view/splash_screen.dart';
-import '../../features/welcome/presentation/screens/welome_page.dart';
+import '../../features/splash/view/splash_view.dart';
+import '../../features/welcome/presentation/views/welome_view.dart';
 import '../constants/constants.dart';
 import '../services/auto_update.dart';
 
@@ -51,13 +51,15 @@ class MyApp extends StatelessWidget {
       SystemUiMode.manual,
       overlays: SystemUiOverlay.values,
     );
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarIconBrightness: Brightness.dark,
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarIconBrightness: Brightness.dark,
+      ),
+    );
 
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      initialRoute: SplashScreen.id,
+      initialRoute: SplashView.id,
       theme: ThemeData(
         textTheme: const TextTheme(
           displayLarge: TextStyle(fontFamily: AppFonts.nunito),
@@ -76,34 +78,34 @@ class MyApp extends StatelessWidget {
         ),
       ),
       routes: {
-        AllActivitiesScreen.id: (context) => AllActivitiesScreen(),
-        AddNewActivityScreen.id: (context) => AddNewActivityScreen(),
-        ActivityEditScreen.id: (context) => ActivityEditScreen(),
-        AllBookingsScreen.id: (context) => const AllBookingsScreen(),
-        BookingScreen.id: (context) => BookingScreen(),
-        PaymentDetailsScreen.id: (context) => PaymentDetailsScreen(),
-        BookDateTime.id: (context) => BookDateTime(),
-        NewBookingScreen.id: (context) => NewBookingScreen(),
-        LoginScreen.id: (context) => const LoginScreen(),
-        EditBookingNewScreen.id: (context) => EditBookingNewScreen(),
-        WelcomeScreen.id: (context) => const WelcomeScreen(),
-        DashBoardScreen.id: (context) => DashBoardScreen(),
-        AddAnEmployeeScreen.id: (context) => AddAnEmployeeScreen(),
-        AddCustomerDetailsScreen.id: (context) => AddCustomerDetailsScreen(),
-        AllEmployeesScreen.id: (context) => const AllEmployeesScreen(),
-        LogScreen.id: (context) => const LogScreen(),
+        AllActivitiesView.id: (context) => AllActivitiesView(),
+        AddNewActivityView.id: (context) => AddNewActivityView(),
+        ActivityEditView.id: (context) => ActivityEditView(),
+        AllBookingsView.id: (context) => const AllBookingsView(),
+        BookingView.id: (context) => BookingView(),
+        PaymentDetailsView.id: (context) => PaymentDetailsView(),
+        BookDateTimeView.id: (context) => BookDateTimeView(),
+        NewBookingView.id: (context) => NewBookingView(),
+        LoginView.id: (context) => const LoginView(),
+        EditBookingView.id: (context) => EditBookingView(),
+        WelcomeView.id: (context) => const WelcomeView(),
+        DashBoardView.id: (context) => DashBoardView(),
+        AddEmployeeView.id: (context) => AddEmployeeView(),
+        AddCustomerDetailsView.id: (context) => AddCustomerDetailsView(),
+        AllEmployeesView.id: (context) => const AllEmployeesView(),
+        LogView.id: (context) => const LogView(),
         CustomerLogsView.id: (context) => const CustomerLogsView(),
-        EmployeeProfileScreen.id: (context) => const EmployeeProfileScreen(),
-        EmployeeDetailsScreen.id: (context) => EmployeeDetailsScreen(),
+        EmployeeProfileView.id: (context) => const EmployeeProfileView(),
+        EmployeeDetailsView.id: (context) => EmployeeDetailsView(),
         AutoUpdateView.id: (context) => AutoUpdateView(),
-        AddPaymentsScreen.id: (context) => AddPaymentsScreen(),
-        EditPaymentsScreen.id: (context) => EditPaymentsScreen(),
+        AddPaymentsView.id: (context) => AddPaymentsView(),
+        EditPaymentsView.id: (context) => EditPaymentsView(),
         NotificationsScreen.id: (context) => NotificationsScreen(),
-        DetailsScreen.id: (context) => DetailsScreen(),
-        SplashScreen.id: (context) => const SplashScreen(),
-        AddConditionsScreen.id: (context) => const AddConditionsScreen(),
-        ManageBoatsPage.id: (context) => ManageBoatsPage(),
-        ManageGeneralInfo.id: (context) => const ManageGeneralInfo(),
+        NotificationView.id: (context) => NotificationView(),
+        SplashView.id: (context) => const SplashView(),
+        AddConditionsView.id: (context) => const AddConditionsView(),
+        BoatsView.id: (context) => BoatsView(),
+        GeneralInfoView.id: (context) => const GeneralInfoView(),
         BoardPlanView.id: (context) => const BoardPlanView(),
         DiveChecklistView.id: (context) => const DiveChecklistView(),
         NewChecklistView.id: (context) => const NewChecklistView(),
@@ -112,6 +114,7 @@ class MyApp extends StatelessWidget {
         AddOffersView.id: (context) => const AddOffersView(),
         OffersView.id: (context) => const OffersView(),
         CoastGuardSlipView.id: (context) => const CoastGuardSlipView(),
+        RoasterView.id: (context) => const RoasterView(),
       },
     );
   }

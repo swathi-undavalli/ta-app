@@ -330,7 +330,7 @@ class ShareBookingDetails {
                 // fontWeight: FontWeight.w500,
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -387,7 +387,7 @@ class ShareBookingDetails {
                       // overflow: TextOverflow.ellipsis,
                     ),
                   ),
-                )
+                ),
             ],
           ),
         ],

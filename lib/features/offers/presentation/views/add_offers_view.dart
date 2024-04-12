@@ -7,6 +7,7 @@ import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/ta_image.dart';
 import '../../controllers/add_offers_controller.dart';
@@ -45,7 +46,9 @@ class _AddOffersViewState extends State<AddOffersView> {
           },
           child: Scaffold(
             backgroundColor: AppColors.background.lightBlue,
-            appBar: buildAppBar(),
+            appBar: AppBarWidget(
+              heading: (logic.controller.offer != null) ? 'Edit Offer' : 'Add Offer',
+            ),
             body: GetBuilder<AddOffersController>(
               builder: (controller) {
                 return SafeArea(
@@ -119,9 +122,7 @@ class _AddOffersViewState extends State<AddOffersView> {
               _showImageSourceBottomSheet();
             }
           },
-          child: (controller.pickedMediaFiles.isEmpty)
-              ? _buildNoImageBox()
-              : buildPhotos(),
+          child: (controller.pickedMediaFiles.isEmpty) ? _buildNoImageBox() : buildPhotos(),
         );
       },
     );
@@ -179,8 +180,7 @@ class _AddOffersViewState extends State<AddOffersView> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TAImage(AppImages.icons.add,
-              color: Colors.black, height: 30, width: 30),
+          TAImage(AppImages.icons.add, color: Colors.black, height: 30, width: 30),
           Spacing.h33,
           const Text('Add Photos'),
         ],
@@ -212,8 +212,7 @@ class _AddOffersViewState extends State<AddOffersView> {
                 borderRadius: BorderRadius.circular(10),
                 child: controller.pickedMediaFiles.isNotEmpty
                     ? Image.file(
-                        controller
-                            .pickedMediaFiles[controller.selectedImageIndex],
+                        controller.pickedMediaFiles[controller.selectedImageIndex],
                         height: MediaQuery.of(context).size.width * 4 / 3,
                         width: MediaQuery.of(context).size.width,
                         fit: BoxFit.cover,
@@ -230,8 +229,7 @@ class _AddOffersViewState extends State<AddOffersView> {
                       scrollDirection: Axis.horizontal,
                       child: Row(
                         children: [
-                          ...List.generate(controller.pickedMediaFiles.length,
-                              (index) {
+                          ...List.generate(controller.pickedMediaFiles.length, (index) {
                             return GestureDetector(
                               onTap: () {
                                 logic.onImageHolderTap(index);
@@ -242,10 +240,7 @@ class _AddOffersViewState extends State<AddOffersView> {
                                 decoration: BoxDecoration(
                                   border: Border.all(
                                     color: Colors.white,
-                                    width:
-                                        index == controller.selectedImageIndex
-                                            ? 1.5
-                                            : 0,
+                                    width: index == controller.selectedImageIndex ? 1.5 : 0,
                                   ),
                                   borderRadius: BorderRadius.circular(3),
                                 ),
@@ -263,8 +258,9 @@ class _AddOffersViewState extends State<AddOffersView> {
                           }),
                           GestureDetector(
                             onTap: () {
-                              if (!controller.showLoading)
+                              if (!controller.showLoading) {
                                 _showImageSourceBottomSheet();
+                              }
                             },
                             child: Container(
                               height: 40,
@@ -297,8 +293,7 @@ class _AddOffersViewState extends State<AddOffersView> {
                   child: Container(
                     height: 24,
                     width: 24,
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.white),
+                    decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
                     child: TAImage(
                       AppImages.icons.cancel,
                       height: 24,
@@ -395,15 +390,11 @@ class _AddOffersViewState extends State<AddOffersView> {
                 width: Get.width,
                 child: Text(
                   'Valid Dates',
-                  style: TextStyle(
-                      color: AppColors.text.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600),
+                  style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
                 ),
               ),
             ),
-            (logic.controller.startDate == null &&
-                    logic.controller.endDate == null)
+            (logic.controller.startDate == null && logic.controller.endDate == null)
                 ? AppButton.miniFlat(
                     onTap: () {
                       showDateRangePickerBottomSheet(context);
@@ -416,16 +407,13 @@ class _AddOffersViewState extends State<AddOffersView> {
                     },
                     child: const Text(
                       'Change',
-                      style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          color: Colors.blue),
+                      style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
                     ),
                   ),
           ],
         ),
         Spacing.h10,
-        if (logic.controller.startDate != null &&
-            logic.controller.endDate != null)
+        if (logic.controller.startDate != null && logic.controller.endDate != null)
           Text(
             "${DateFormat("dd-MM-yyyy").format(logic.controller.startDate!)} - ${DateFormat("dd-MM-yyyy").format(logic.controller.endDate!)}",
             style: const TextStyle(
@@ -474,8 +462,7 @@ class _AddOffersViewState extends State<AddOffersView> {
       logic.controller.showLoading = true;
 
       if (logic.controller.startDate != null) {
-        Timestamp startTimestamp =
-            Timestamp.fromDate(logic.controller.startDate!);
+        Timestamp startTimestamp = Timestamp.fromDate(logic.controller.startDate!);
         logic.controller.validDates.add(startTimestamp);
       }
       if (logic.controller.endDate != null) {
@@ -484,34 +471,5 @@ class _AddOffersViewState extends State<AddOffersView> {
       }
       logic.controller.showLoading = false;
     });
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      toolbarHeight: 70,
-      centerTitle: true,
-      title: Text(
-        (logic.controller.offer != null) ? 'Edit Offer' : 'Add Offer',
-        style: TextStyle(
-          color: AppColors.text.black,
-          fontSize: 20,
-          fontFamily: AppFonts.nunito,
-          fontWeight: FontWeight.normal,
-          letterSpacing: 1.0,
-        ),
-      ),
-      leading: TextButton(
-        onPressed: () {
-          Get.back();
-        },
-        child: Icon(
-          Icons.arrow_back_ios,
-          color: AppColors.text.black,
-          size: 17,
-        ),
-      ),
-      elevation: 0,
-      backgroundColor: AppColors.background.white,
-    );
   }
 }

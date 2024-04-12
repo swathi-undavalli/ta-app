@@ -9,6 +9,7 @@ import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/util/alignment_extensions.dart';
 import '../../../core/util/spacing_widgets.dart';
+import '../../../core/widgets/app_bar.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/ta_image.dart';
 import '../controllers/marketing_controller.dart';
@@ -30,7 +31,7 @@ class _MarketingViewState extends State<MarketingView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      appBar: buildAppBar(),
+      appBar: const AppBarWidget(heading: 'Marketing'),
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(
         child: GetBuilder<MarketingController>(
@@ -75,7 +76,7 @@ class _MarketingViewState extends State<MarketingView> {
                   children: [
                     Spacing.h10,
                     ...(marketing.marketingElements ?? []).map(
-                          (element) => buildMarketingCard(
+                      (element) => buildMarketingCard(
                         element: element,
                         index: (marketing.marketingElements ?? []).indexOf(element),
                       ).paddingOnly(top: 20),
@@ -314,35 +315,6 @@ class _MarketingViewState extends State<MarketingView> {
         Icons.add,
         color: Colors.white,
       ),
-    );
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      toolbarHeight: 70,
-      centerTitle: true,
-      title: Text(
-        'Marketing',
-        style: TextStyle(
-          color: AppColors.text.black,
-          fontSize: 20,
-          fontFamily: AppFonts.nunito,
-          fontWeight: FontWeight.normal,
-          letterSpacing: 1.0,
-        ),
-      ),
-      leading: TextButton(
-        onPressed: () {
-          Get.back();
-        },
-        child: Icon(
-          Icons.arrow_back_ios,
-          color: AppColors.text.black,
-          size: 17,
-        ),
-      ),
-      elevation: 0,
-      backgroundColor: AppColors.background.white,
     );
   }
 }

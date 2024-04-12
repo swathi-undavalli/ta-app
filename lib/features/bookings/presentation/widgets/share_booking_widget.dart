@@ -278,7 +278,7 @@ class ShareBookingWidget extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
             ),
-          )
+          ),
         ],
       ),
     );
@@ -319,7 +319,7 @@ class ShareBookingWidget extends StatelessWidget {
                     ),
                   );
                 },
-              )
+              ),
             ],
           ),
         ],

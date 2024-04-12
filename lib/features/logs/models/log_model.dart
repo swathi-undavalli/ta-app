@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../employees/model/employee.dart';
-import '../presentation/screens/log_screen.dart';
+import '../presentation/views/log_view.dart';
 
 LogModel logModelFromMap(String str) => LogModel.fromMap(json.decode(str));
 

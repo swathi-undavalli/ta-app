@@ -50,7 +50,8 @@ class Event {
         session: json['session'],
         id: json['id'],
         employees: List<Instructor>.from(
-            (json['employees']).map((x) => Instructor.fromMap(x))),
+          (json['employees']).map((x) => Instructor.fromMap(x)),
+        ),
         location: json['location'],
         dateTime: (json['dateTime'] as Timestamp).toDate(),
         phone: json['phone'],

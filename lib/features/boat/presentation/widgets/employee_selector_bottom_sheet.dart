@@ -163,7 +163,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                                         const Icon(
                                           Icons.close,
                                           size: 16,
-                                        )
+                                        ),
                                       ],
                                     ),
                             ).paddingOnly(bottom: 10),
@@ -175,7 +175,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                 buildEmployees(),
               ],
             ).scrollable,
-          )
+          ),
         ],
       ),
     );
@@ -201,7 +201,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                   instructor.nitrox = val;
                 },
                 initialValue: instructor.nitrox ?? 0,
-              )
+              ),
             ],
           ),
           Column(
@@ -220,7 +220,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                   instructor.air = val;
                 },
                 initialValue: instructor.air ?? 0,
-              )
+              ),
             ],
           ),
         ],

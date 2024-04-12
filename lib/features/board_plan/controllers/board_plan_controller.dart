@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-
 import '../../boat/models/boats.dart';
 import '../../bookings/models/booking_model.dart';
 import '../presentation/widgets/customer_details.dart';

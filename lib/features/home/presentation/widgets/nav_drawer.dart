@@ -5,17 +5,18 @@ import '../../../../core/constants/constants.dart';
 import '../../../../core/services/auto_update.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/access_levels.dart';
-import '../../../activities/presentation/screens/all_activities_screen.dart';
-import '../../../all_bookings/presentation/screens/all_bookings_screen.dart';
+import '../../../activities/presentation/views/all_activities_view.dart';
+import '../../../all_bookings/presentation/views/all_bookings_view.dart';
 import '../../../board_plan/presentation/views/board_plan_view.dart';
-import '../../../boat/presentation/screens/manage_general_info.dart';
-import '../../../bookings/presentation/screens/customer_logs_view.dart';
+import '../../../bookings/presentation/views/customer_logs_view.dart';
 import '../../../coast_guard_slip/presentation/views/coast_guard_slip_view.dart';
 import '../../../employees/model/employee.dart';
-import '../../../employees/presentation/screens/employee_profile_screen.dart';
-import '../../../events/views/events_view.dart';
-import '../../../logs/presentation/screens/log_screen.dart';
+import '../../../employees/presentation/views/employee_profile_view.dart';
+import '../../../events/presentation/views/events_view.dart';
+import '../../../general_info/presentation/views/general_info_view.dart';
+import '../../../logs/presentation/views/log_view.dart';
 import '../../../offers/presentation/views/offers_view.dart';
+import '../../../roaster/presentation/views/roaster_view.dart';
 import '../../../screen_saver/views/marketing_view.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -31,17 +32,18 @@ class NavDrawer extends StatelessWidget {
       child: SingleChildScrollView(
         child: Column(
           children: [
-            const SizedBox(height: 100),
+            Spacing.h100,
             buildUserProfile(),
-            const SizedBox(height: 20),
+            Spacing.h20,
             buildName(),
-            const SizedBox(height: 10),
+            Spacing.h30,
             buildLine(),
+            Spacing.h10,
             buildMenuItem(
               icon: Icons.account_circle,
               text: 'Profile',
               onTap: () {
-                Get.offAndToNamed(EmployeeProfileScreen.id);
+                Get.offAndToNamed(EmployeeProfileView.id);
               },
             ),
             EmployeeAccess(
@@ -50,7 +52,7 @@ class NavDrawer extends StatelessWidget {
                 icon: Icons.add_to_photos_sharp,
                 text: 'All Bookings',
                 onTap: () {
-                  Get.offAndToNamed(AllBookingsScreen.id);
+                  Get.offAndToNamed(AllBookingsView.id);
                 },
               ),
             ),
@@ -65,7 +67,7 @@ class NavDrawer extends StatelessWidget {
               icon: Icons.scuba_diving_rounded,
               text: 'General Info',
               onTap: () {
-                Get.toNamed(ManageGeneralInfo.id);
+                Get.toNamed(GeneralInfoView.id);
               },
             ),
             EmployeeAccess(
@@ -101,7 +103,7 @@ class NavDrawer extends StatelessWidget {
                 icon: Icons.edit,
                 text: 'Programs List',
                 onTap: () {
-                  Get.offAndToNamed(AllActivitiesScreen.id);
+                  Get.offAndToNamed(AllActivitiesView.id);
                 },
               ),
             ),
@@ -113,10 +115,17 @@ class NavDrawer extends StatelessWidget {
               },
             ),
             buildMenuItem(
+              icon: Icons.add_card_rounded,
+              text: 'Roaster',
+              onTap: () {
+                Get.offAndToNamed(RoasterView.id);
+              },
+            ),
+            buildMenuItem(
               icon: Icons.book_rounded,
               text: 'Logs',
               onTap: () {
-                Get.offAndToNamed(LogScreen.id);
+                Get.offAndToNamed(LogView.id);
               },
             ),
             EmployeeAccess(
@@ -149,10 +158,8 @@ class NavDrawer extends StatelessWidget {
     return const SizedBox(
       height: 50,
       child: CircleAvatar(
-        //   backgroundImage: AssetImage('images/emperor.png'),
         backgroundImage: AssetImage('images/AppLogoPondy.png'),
       ),
-      // child: Image.asset('images/emperor.png'),w
     );
   }
 
@@ -206,11 +213,13 @@ class NavDrawer extends StatelessWidget {
             letterSpacing: 1.2,
           ),
         ),
+        Spacing.h10,
         Text(
-          currentEmployee?.firstName ?? '' ' !',
+          '${currentEmployee?.name} !',
+          textAlign: TextAlign.center,
           style: const TextStyle(
             color: Colors.black54,
-            fontSize: 25,
+            fontSize: 20,
             fontWeight: FontWeight.w600,
             letterSpacing: 0.2,
           ),
@@ -220,13 +229,10 @@ class NavDrawer extends StatelessWidget {
   }
 
   Widget buildLine() {
-    return Padding(
-      padding: const EdgeInsets.only(top: 30.0),
-      child: Container(
-        width: 250,
-        height: 1,
-        color: Colors.grey[300],
-      ),
-    );
+    return Container(
+      width: Get.width,
+      height: 1,
+      color: Colors.grey[300],
+    ).paddingSymmetric(horizontal: 20);
   }
 }

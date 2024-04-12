@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 
@@ -12,7 +13,7 @@ class PDFViewerPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('PDF Viewer'),
+        title: const Text('PDF Viewer'),
       ),
       body: PDFView(
         filePath: pdfPath,
@@ -21,11 +22,11 @@ class PDFViewerPage extends StatelessWidget {
         autoSpacing: false,
         pageSnap: true,
         pageFling: false,
-        onRender: (pages) {
-          print("Rendered $pages pages.");
-        },
+        onRender: (pages) {},
         onError: (error) {
-          print(error.toString());
+          if (kDebugMode) {
+            print(error.toString());
+          }
         },
       ),
     );

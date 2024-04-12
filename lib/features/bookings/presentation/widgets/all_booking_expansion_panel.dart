@@ -9,12 +9,12 @@ import '../../../../core/models/item_model.dart';
 import '../../../../core/widgets/access_levels.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../activities/model/colors_data.dart';
-import '../../../all_bookings/presentation/screens/all_bookings_screen.dart';
-import '../../../edit_booking/presentation/screens/edit_booking_new_screen.dart';
+import '../../../all_bookings/presentation/views/all_bookings_view.dart';
+import '../views/edit_booking_view.dart';
 import '../../../logs/models/log_model.dart';
-import '../../../logs/presentation/screens/log_screen.dart';
+import '../../../logs/presentation/views/log_view.dart';
 import '../../models/booking_model.dart';
-import '../screens/add_payments_screen.dart';
+import '../views/add_payments_view.dart';
 
 // ignore: must_be_immutable
 class AllBookingsExpansionPanel extends StatefulWidget {
@@ -109,10 +109,10 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
             child: Column(
               children: [
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
-                        height: 7,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: 7,
                       width: 7,
                       decoration: BoxDecoration(
                         color: getBalance(
@@ -220,27 +220,20 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                     FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
 
                                     Get.back();
-                                    const AllBookingsScreen();
+                                    const AllBookingsView();
                                     setState(() {});
-                                    // onDeletePressed();
-                                    // BookingsCalenderWidgetLogic
-                                    //     bookingCalenderLogic =
-                                    //     BookingsCalenderWidgetLogic();
-                                    // bookingCalenderLogic.onDateSelected(
-                                    //     bookingCalenderLogic
-                                    //         .controller.lastDateIndex);
                                   },
-                                  ),
-                                ],
-                              ),
-                              barrierDismissible: false,
-                              radius: 10,
-                            );
-                          },
-                        ),
+                                ),
+                              ],
+                            ),
+                            barrierDismissible: false,
+                            radius: 10,
+                          );
+                        },
                       ),
-                      EmployeeAccess(
-                        access: AccessRights.editBookings,
+                    ),
+                    EmployeeAccess(
+                      access: AccessRights.editBookings,
                       child: IconButton(
                         splashRadius: 20,
                         icon: Icon(
@@ -251,7 +244,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                         onPressed: () {
                           var model = itemModel.bookingModel;
                           Get.toNamed(
-                            EditBookingNewScreen.id,
+                            EditBookingView.id,
                             arguments: model,
                           );
                         },
@@ -341,7 +334,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                       paymentMode: item!.bookingModel!.paymentMode,
                                       time: item!.bookingModel!.createdAt,
                                     ),
-                                    ...item!.bookingModel!.payments!
+                                    ...item!.bookingModel!.payments!,
                                   ],
                                 ),
                                 const SizedBox(height: 10),
@@ -353,13 +346,13 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                         text: 'Add Payment',
                                         onTap: () {
                                           Get.toNamed(
-                                            AddPaymentsScreen.id,
+                                            AddPaymentsView.id,
                                             arguments: item!.bookingModel,
                                           );
                                         },
                                       ).paddingOnly(right: 15),
                                       // alignment: Alignment.centerRight,
-                                    )
+                                    ),
                                   ],
                                 ),
                                 const SizedBox(height: 20),
@@ -432,9 +425,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                 Expanded(
                   child: Container(
                     height: 1,
-                    color: (totalAmount == deposits)
-                        ? Colors.green.shade400
-                        : Colors.black,
+                    color: (totalAmount == deposits) ? Colors.green.shade400 : Colors.black,
                   ),
                 ),
               ],
@@ -543,7 +534,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
           (index) {
             return buildTransactions(payment: payments[index]);
           },
-        )
+        ),
       ],
     );
   }

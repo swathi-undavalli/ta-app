@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../features/dashboard/presentation/screens/dashboard_screen.dart';
+import '../../features/dashboard/presentation/views/dashboard_view.dart';
 import '../../features/messaging/notification_screen.dart';
 import '../../main.dart';
 import '../widgets/app_button.dart';
@@ -19,8 +19,7 @@ class AutoUpdateView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String latestIosVersion = '${logic.controller.iosVersionNumber}';
-    String currentAndroidVersion =
-        '${logic.controller.version}+${logic.controller.buildNumber}';
+    String currentAndroidVersion = '${logic.controller.version}+${logic.controller.buildNumber}';
 
     String latestAndroidVersion = '${logic.controller.latestVersionNumber}';
 
@@ -40,7 +39,7 @@ class AutoUpdateView extends StatelessWidget {
                   text: 'Skip',
                   textColor: Colors.white,
                   onTap: () async {
-                    Get.offAllNamed(DashBoardScreen.id);
+                    Get.offAllNamed(DashBoardView.id);
                   },
                 ),
               ).paddingOnly(right: 20),
@@ -113,7 +112,7 @@ class AutoUpdateView extends StatelessWidget {
                 onTap: () async {
                   logic.openLink();
                 },
-              )
+              ),
           ],
         ),
       ),
@@ -136,8 +135,7 @@ class AutoUpdateLogic {
         titleStyle: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
-        middleText:
-            '\n\nError occurred while auto-update. Please contact developer.\n\n',
+        middleText: '\n\nError occurred while auto-update. Please contact developer.\n\n',
         middleTextStyle: const TextStyle(
           color: Colors.black54,
           fontSize: 14,
@@ -155,10 +153,7 @@ class AutoUpdateLogic {
       }
     });
 
-    var data = await FirebaseFirestore.instance
-        .collection('ota_update')
-        .doc('version')
-        .get();
+    var data = await FirebaseFirestore.instance.collection('ota_update').doc('version').get();
 
     controller.latestVersionNumber = data.data()!['number'];
     controller.downloadLink = data.data()!['downloadLink'];
@@ -169,7 +164,7 @@ class AutoUpdateLogic {
       if (currentIosVersion != controller.iosVersionNumber) {
         Get.offAllNamed(AutoUpdateView.id);
       }
-      Get.offAllNamed(DashBoardScreen.id);
+      Get.offAllNamed(DashBoardView.id);
       return;
     }
 
@@ -177,21 +172,16 @@ class AutoUpdateLogic {
     controller.version = packageInfo.version;
     controller.buildNumber = packageInfo.buildNumber;
 
-    if (controller.latestVersionNumber !=
-        '${controller.version!}+${controller.buildNumber!}') {
+    if (controller.latestVersionNumber != '${controller.version!}+${controller.buildNumber!}') {
       Get.offAllNamed(AutoUpdateView.id);
     } else {
-      Get.offAllNamed(DashBoardScreen.id);
+      Get.offAllNamed(DashBoardView.id);
     }
   }
 }
 
 class AutoUpdateController extends GetxController {
-  String? latestVersionNumber,
-      version,
-      buildNumber,
-      downloadLink,
-      iosVersionNumber;
+  String? latestVersionNumber, version, buildNumber, downloadLink, iosVersionNumber;
 
   bool? criticalUpdate = false;
 }

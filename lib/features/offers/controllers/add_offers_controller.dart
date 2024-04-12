@@ -53,8 +53,9 @@ class AddOffersLogic {
 
     final documentDirectory = await getTemporaryDirectory();
 
-    final file = File(path.join(documentDirectory.path,
-        '${DateTime.now().microsecondsSinceEpoch}.png'));
+    final file = File(
+      path.join(documentDirectory.path, '${DateTime.now().microsecondsSinceEpoch}.png'),
+    );
 
     file.writeAsBytesSync(response.bodyBytes);
 
@@ -63,8 +64,7 @@ class AddOffersLogic {
 
   Future<void> pickImage(ImageSource source) async {
     if (PermissionStatus.granted.isGranted) {
-      final result =
-          await ImagePicker.platform.getImageFromSource(source: source);
+      final result = await ImagePicker.platform.getImageFromSource(source: source);
 
       if (result != null) {
         controller.pickedImage = File(result.path);
@@ -91,8 +91,7 @@ class AddOffersLogic {
 
       return;
     }
-    if (controller.selectedImageIndex + 1 ==
-        controller.pickedMediaFiles.length) {
+    if (controller.selectedImageIndex + 1 == controller.pickedMediaFiles.length) {
       controller.selectedImageIndex = controller.selectedImageIndex - 1;
       controller.pickedMediaFiles.removeLast();
       log(controller.selectedImageIndex.toString());
@@ -115,8 +114,7 @@ class AddOffersLogic {
         try {
           String fileName = '${DateTime.now().millisecondsSinceEpoch}_$i';
 
-          Reference storageReference =
-              _storage.ref().child('offers/$fileName.jpg');
+          Reference storageReference = _storage.ref().child('offers/$fileName.jpg');
 
           await storageReference.putFile(imageFile);
 
@@ -139,8 +137,7 @@ class AddOffersLogic {
     List<String> downloadURLs = await uploadImages();
 
     Offer offer = Offer(
-      id: controller.offer?.id ??
-          DateTime.now().microsecondsSinceEpoch.toString(),
+      id: controller.offer?.id ?? DateTime.now().microsecondsSinceEpoch.toString(),
       categoryId: controller.selectedCategory?.id,
       name: controller.nameTED.text,
       validDates: controller.validDates,

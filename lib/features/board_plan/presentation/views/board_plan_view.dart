@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui' as ui;
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -11,7 +10,6 @@ import 'package:intl/intl.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path_provider/path_provider.dart';
 import 'package:share/share.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -140,7 +138,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                       alignment: Alignment.topLeft,
                       child: RepaintBoundary(
                         key: widgetKey,
-                        child: const GeneralInfo(),
+                        child: const GeneralInfoData(),
                       ),
                     ),
                 ],
@@ -398,8 +396,8 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   }
 }
 
-class GeneralInfo extends StatelessWidget {
-  const GeneralInfo({Key? key}) : super(key: key);
+class GeneralInfoData extends StatelessWidget {
+  const GeneralInfoData({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

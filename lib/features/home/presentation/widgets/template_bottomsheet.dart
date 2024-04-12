@@ -5,7 +5,7 @@ import 'package:get/get.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
 import '../../../../core/util/spacing_widgets.dart';
-import '../../../dive_checklist/views/screens/new_checklist_view.dart';
+import '../../../dive_checklist/presentation/views/new_checklist_view.dart';
 
 class TemplateBottomSheet extends StatefulWidget {
   const TemplateBottomSheet({

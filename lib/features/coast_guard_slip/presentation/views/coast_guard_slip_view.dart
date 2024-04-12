@@ -6,12 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:share/share.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/back_navigation_icon.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
 import '../../../employees/model/employee.dart';
@@ -38,7 +37,7 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      appBar: buildAppBar(),
+      appBar: const AppBarWidget(heading: 'Coast Guard Slip'),
       body: SafeArea(
         child: Column(
           children: [
@@ -138,26 +137,6 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
           size: 14,
         ),
       ),
-    );
-  }
-
-  AppBar buildAppBar() {
-    return AppBar(
-      toolbarHeight: 70,
-      centerTitle: true,
-      title: Text(
-        'Coast Guard Slip',
-        style: TextStyle(
-          color: AppColors.text.black,
-          fontSize: 20,
-          fontFamily: AppFonts.nunito,
-          fontWeight: FontWeight.normal,
-          letterSpacing: 1.2,
-        ),
-      ),
-      leading: const BackNavigationIcon(),
-      elevation: 0,
-      backgroundColor: AppColors.background.white,
     );
   }
 

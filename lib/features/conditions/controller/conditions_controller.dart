@@ -1,8 +1,8 @@
 import 'package:get/get.dart';
 
 import '../models/conditions_model.dart';
+import '../presentation/views/add_conditions_view.dart';
 import '../repositories/conditions_repository.dart';
-import '../screens/add_conditions_screen.dart';
 
 class ConditionsLogic {
   ConditionsController controller = Get.put(ConditionsController());
@@ -28,7 +28,7 @@ class ConditionsLogic {
   }
 
   void onFloatingActionButtonPressed() {
-    Get.toNamed(AddConditionsScreen.id, arguments: controller.selectedReef);
+    Get.toNamed(AddConditionsView.id, arguments: controller.selectedReef);
   }
 
   List<Level> get getLevels {

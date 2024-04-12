@@ -8,7 +8,7 @@ import '../../../core/repository/employee_repo.dart';
 import '../../../core/util/utils.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../employees/model/employee.dart';
-import '../../welcome/presentation/screens/welome_page.dart';
+import '../../welcome/presentation/views/welome_view.dart';
 
 LoginScreenLogic logic = LoginScreenLogic();
 
@@ -74,7 +74,7 @@ class LoginScreenLogic {
               EmployeeRepo.initiateRepo(currentEmployee!.id);
               controller.reset();
               controller.update();
-              Get.offAndToNamed(WelcomeScreen.id);
+              Get.offAndToNamed(WelcomeView.id);
             } else {
               //log('Failed');
             }
@@ -95,7 +95,7 @@ class LoginScreenLogic {
               EmployeeRepo.initiateRepo(currentEmployee!.id);
               controller.reset();
               controller.update();
-              Get.offAndToNamed(WelcomeScreen.id);
+              Get.offAndToNamed(WelcomeView.id);
             } else {
               //log('Failed');
             }
@@ -149,7 +149,7 @@ class LoginScreenLogic {
         if (FirebaseAuth.instance.currentUser != null) {
           controller.reset();
           controller.update();
-          Get.offAndToNamed(WelcomeScreen.id);
+          Get.offAndToNamed(WelcomeView.id);
         } else {
           //log('Failed');
         }
@@ -168,7 +168,7 @@ class LoginScreenLogic {
         if (FirebaseAuth.instance.currentUser != null) {
           controller.reset();
           controller.update();
-          Get.offAndToNamed(WelcomeScreen.id);
+          Get.offAndToNamed(WelcomeView.id);
         } else {
           //log('Failed');
         }

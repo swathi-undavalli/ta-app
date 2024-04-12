@@ -105,12 +105,13 @@ class _ViewPhotosBottomSheetState extends State<ViewPhotosBottomSheet> {
                     ),
                     Spacing.w10,
                     IconButton(
-                        onPressed: () {
-                          shareImage(e);
-                        },
-                        icon: const Icon(Icons.share)),
+                      onPressed: () {
+                        shareImage(e);
+                      },
+                      icon: const Icon(Icons.share),
+                    ),
                   ],
-                )
+                ),
               ],
             ).paddingSymmetric(vertical: 20, horizontal: 20),
           ),
@@ -130,11 +131,13 @@ class _ViewPhotosBottomSheetState extends State<ViewPhotosBottomSheet> {
 
         await imageFile.writeAsBytes(response.bodyBytes);
 
-        await Share.shareFiles([imageFile.path],
-            text: 'Check out the new ${widget.offerTitle}!',
-            subject: 'Offer',
-            mimeTypes: ['image/png'],
-            sharePositionOrigin: Rect.fromCenter(center: Offset(0, 0), width: 0, height: 0));
+        await Share.shareFiles(
+          [imageFile.path],
+          text: 'Check out the new ${widget.offerTitle}!',
+          subject: 'Offer',
+          mimeTypes: ['image/png'],
+          sharePositionOrigin: Rect.fromCenter(center: const Offset(0, 0), width: 0, height: 0),
+        );
       } else {
         throw Exception('Failed to load image');
       }

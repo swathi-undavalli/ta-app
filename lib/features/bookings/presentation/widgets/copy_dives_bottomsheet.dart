@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -109,9 +110,10 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
                 child: Text(
                   'Select Dates',
                   style: TextStyle(
-                      color: AppColors.text.black,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600),
+                    color: AppColors.text.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -130,9 +132,7 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
                       },
                       child: const Text(
                         'Change',
-                        style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: Colors.blue),
+                        style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
                       ),
                     ),
             ),
@@ -169,7 +169,7 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
                   maxWidth: 400.0,
                 ),
                 child: child,
-              )
+              ),
             ],
           ),
         );
@@ -199,7 +199,7 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
           Expanded(
             child: Text(
               "(${widget.bookingModel.pax?[index]['email']})",
-              style: TextStyle(fontSize: 10),
+              style: const TextStyle(fontSize: 10),
             ),
           ),
           Spacing.w10,
@@ -207,7 +207,6 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
             onPressed: () async {
               String email = widget.bookingModel.pax?[index]['email'];
               await Clipboard.setData(ClipboardData(text: email));
-              print(email);
             },
             icon: const Icon(
               Icons.copy,
@@ -257,10 +256,8 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
           .collection('diveLogs')
           .where(
             'timeIn',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(
-                startDate!.subtract(const Duration(days: 1))),
-            isLessThanOrEqualTo:
-                Timestamp.fromDate(endDate!.add(const Duration(days: 1))),
+            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate!.subtract(const Duration(days: 1))),
+            isLessThanOrEqualTo: Timestamp.fromDate(endDate!.add(const Duration(days: 1))),
           )
           .get();
       for (var element in data.docs) {
@@ -268,7 +265,9 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
           Map<String, dynamic> d = element.data();
           diveLogs.add(DiveLogModel.fromMap(d));
         } catch (e) {
-          print('Error parsing DiveLogModel ${element.data()}');
+          if (kDebugMode) {
+            print('Error parsing DiveLogModel ${element.data()}');
+          }
         }
       }
       diveLogs.forEach((element) async {

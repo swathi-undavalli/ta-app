@@ -237,7 +237,7 @@ class NotificationsScreen extends StatelessWidget {
                           ),
                         );
                       },
-                    )
+                    ),
                   ],
                 )
               : const SizedBox(width: 150, child: Text('-')),

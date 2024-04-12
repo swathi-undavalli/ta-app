@@ -15,6 +15,7 @@ class Employee {
     this.shiftTiming,
     this.firstName,
     this.lastName,
+    this.nickName,
     this.countryIsoCode,
     this.leaves,
     this.agencyId,
@@ -48,6 +49,7 @@ class Employee {
   DateTime? shiftTiming;
   String? firstName;
   String? lastName;
+  String? nickName;
   String? countryIsoCode;
   String? agencyId;
   List<Timestamp>? leaves;
@@ -63,6 +65,7 @@ class Employee {
       shiftTiming.hashCode ^
       firstName.hashCode ^
       lastName.hashCode ^
+      nickName.hashCode ^
       countryIsoCode.hashCode ^
       leaves.hashCode ^
       agencyId.hashCode;
@@ -99,12 +102,14 @@ class Employee {
       ),
       firstName: json['firstName'],
       lastName: json['lastName'],
+      nickName: json['nickName'],
       agencyId: json['agencyId'],
       leaves: List<Timestamp>.from((json['leaves'] ?? []).map((x) => (x))),
     );
   }
 
-  String get name => '${firstName!} ${lastName ?? ''}';
+  String get name =>
+      '${firstName!} ${(nickName != null && nickName!.isNotEmpty) ? '"$nickName" ' : ""}${lastName ?? ''}';
 
   get authPhone => countryCode! + phoneNumber!;
 
@@ -119,6 +124,7 @@ class Employee {
         'shiftTiming': '${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}',
         'firstName': firstName,
         'lastName': lastName,
+        'nickName': nickName,
         'agencyId': agencyId,
         'leaves': List<Timestamp>.from((leaves ?? []).map((x) => (x))),
       };

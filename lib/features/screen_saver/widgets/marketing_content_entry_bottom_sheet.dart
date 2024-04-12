@@ -108,7 +108,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
               Spacing.h25,
               buildDropDown(),
               Spacing.h50,
-              buildSubmitButton()
+              buildSubmitButton(),
             ],
           ).paddingSymmetric(horizontal: 20, vertical: 20).scrollable,
         ],

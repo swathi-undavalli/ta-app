@@ -39,20 +39,17 @@ class InstructorTanksBottomSheet extends StatefulWidget {
   }
 
   @override
-  State<InstructorTanksBottomSheet> createState() =>
-      _InstructorTanksBottomSheetState();
+  State<InstructorTanksBottomSheet> createState() => _InstructorTanksBottomSheetState();
 }
 
-class _InstructorTanksBottomSheetState
-    extends State<InstructorTanksBottomSheet> {
+class _InstructorTanksBottomSheetState extends State<InstructorTanksBottomSheet> {
   late Map<Instructor, List<int>> instructorTanks;
 
   @override
   void initState() {
     super.initState();
     instructorTanks = {};
-    if (widget.nitrox.length != widget.instructors.length ||
-        widget.air.length != widget.instructors.length) {
+    if (widget.nitrox.length != widget.instructors.length || widget.air.length != widget.instructors.length) {
       widget.nitrox.clear();
       widget.air.clear();
       for (int i = 0; i < widget.instructors.length; i++) {
@@ -63,7 +60,7 @@ class _InstructorTanksBottomSheetState
     for (int i = 0; i < widget.instructors.length; i++) {
       instructorTanks[widget.instructors[i]] = [
         widget.nitrox[i],
-        widget.air[i]
+        widget.air[i],
       ];
     }
   }
@@ -116,10 +113,10 @@ class _InstructorTanksBottomSheetState
                     },
                     nitrox: instructorTanks[instructor]![0],
                     air: instructorTanks[instructor]![1],
-                  )
+                  ),
                 ],
               ).paddingOnly(bottom: 30),
-            )
+            ),
           ],
         ).paddingSymmetric(horizontal: 25),
       ),

@@ -7,7 +7,7 @@ import '../../../core/models/counter_model.dart';
 import '../../../core/util/utils.dart';
 import '../../bookings/models/activity_model.dart';
 import '../../logs/models/log_model.dart';
-import '../../logs/presentation/screens/log_screen.dart';
+import '../../logs/presentation/views/log_view.dart';
 import 'all_activities_controller.dart';
 
 class AddNewActivityLogic {
