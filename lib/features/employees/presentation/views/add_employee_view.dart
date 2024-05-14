@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/counter_model.dart';
+import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/back_navigation_icon.dart';
@@ -40,7 +41,7 @@ class AddEmployeeView extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      const SizedBox(height: 10),
+                      Spacing.h10,
                       Text(
                         'Last Employee ID : ${counterModel!.employee.toString()}',
                         style: const TextStyle(

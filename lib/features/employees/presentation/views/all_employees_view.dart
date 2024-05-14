@@ -1,12 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/access_levels.dart';
 import '../../../../core/widgets/app_bar.dart';
-import '../../../../core/widgets/back_navigation_icon.dart';
 import '../../controllers/all_employees_controller.dart';
 import '../../model/employee.dart';
 import 'add_employee_view.dart';
@@ -148,14 +146,23 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
         width: Get.width,
         child: Row(
           children: [
-            const Icon(
-              Icons.account_circle,
-              color: Colors.black38,
-              size: 25,
+            Container(
+              width: 30,
+              height: 30,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: AppColors.background.lightSkyBlue,
+                shape: BoxShape.circle,
+              ),
+              child: Text(
+                e.id,
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 12),
+              ),
             ),
-            const SizedBox(width: 20),
+            const SizedBox(width: 30),
             Text(
-              '   ${e.name}',
+              e.name,
               style: TextStyle(color: AppColors.text.black, fontSize: 14),
             ),
             Expanded(

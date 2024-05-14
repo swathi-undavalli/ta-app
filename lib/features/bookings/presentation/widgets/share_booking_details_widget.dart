@@ -94,9 +94,9 @@ class ShareBookingDetails {
                 title: 'Activity',
                 text: booking.activity![0]!.name,
               ),
-              buildDates(title: 'Dive Dates', dates: booking.diveDate!),
-              buildDates(title: 'Theory Dates', dates: booking.theoryDate!),
-              buildDates(title: 'Pool Dates', dates: booking.poolDate!),
+              buildDates(title: 'Dive Dates', dates: booking.diveDate!, showTime: false),
+              buildDates(title: 'Theory Dates', dates: booking.theoryDate!, showTime: true),
+              buildDates(title: 'Pool Dates', dates: booking.poolDate!, showTime: true),
             ],
           ),
           pw.SizedBox(height: 20),
@@ -337,8 +337,9 @@ class ShareBookingDetails {
   }
 
   static pw.Widget buildDates({
-    required String title,
+    required bool showTime,
     required List<DateTime?> dates,
+    required String title,
   }) {
     return pw.Padding(
       padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
@@ -359,7 +360,7 @@ class ShareBookingDetails {
               if (dates.isNotEmpty)
                 ...dates.map(
                   (e) {
-                    String date = (title != 'Pool Dates')
+                    String date = (showTime == false)
                         ? DateFormat('dd-MM-yyyy').format(e!)
                         : DateFormat('dd-MM-yyyy @ hh:mm a').format(e!);
                     log(date.toString());

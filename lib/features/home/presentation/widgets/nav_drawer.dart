@@ -28,7 +28,7 @@ class NavDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      backgroundColor: AppColors.background.lightBlue,
+      backgroundColor: Colors.white,
       child: SingleChildScrollView(
         child: Column(
           children: [

@@ -105,7 +105,7 @@ class AllActivitiesView extends StatelessWidget {
                 child: SizedBox(
                   width: Get.width,
                   child: Text(
-                    activityModel.name!,
+                    '${activityModel.id} - ${activityModel.name!}',
                     style: TextStyle(
                       color: AppColors.text.black,
                       fontSize: FontSize.small,
