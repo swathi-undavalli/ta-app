@@ -8,7 +8,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -47,6 +47,9 @@ class ViewPhotosBottomSheet extends StatefulWidget {
 }
 
 class _ViewPhotosBottomSheetState extends State<ViewPhotosBottomSheet> {
+  bool isDownloading = false;
+  bool isSharing = false;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -94,22 +97,38 @@ class _ViewPhotosBottomSheetState extends State<ViewPhotosBottomSheet> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    IconButton(
-                      onPressed: () {
-                        saveImageToGallery(e);
-                      },
-                      icon: const Icon(
-                        Icons.arrow_circle_down_rounded,
-                        size: 28,
-                      ),
-                    ),
+                    (isDownloading)
+                        ? const CircularProgressIndicator(color: Colors.black, strokeWidth: 3).size(20, 20)
+                        : IconButton(
+                            onPressed: () async {
+                              setState(() {
+                                isDownloading = true;
+                              });
+                              await saveImageToGallery(e);
+                              setState(() {
+                                isDownloading = false;
+                              });
+                            },
+                            icon: const Icon(
+                              Icons.arrow_circle_down_rounded,
+                              size: 28,
+                            ),
+                          ),
                     Spacing.w10,
-                    IconButton(
-                      onPressed: () {
-                        shareImage(e);
-                      },
-                      icon: const Icon(Icons.share),
-                    ),
+                    (isSharing)
+                        ? const CircularProgressIndicator(color: Colors.black, strokeWidth: 3).size(20, 20)
+                        : IconButton(
+                            onPressed: () async {
+                              setState(() {
+                                isSharing = true;
+                              });
+                              await shareImage(e);
+                              setState(() {
+                                isSharing = false;
+                              });
+                            },
+                            icon: const Icon(Icons.share),
+                          ),
                   ],
                 ),
               ],
@@ -131,11 +150,10 @@ class _ViewPhotosBottomSheetState extends State<ViewPhotosBottomSheet> {
 
         await imageFile.writeAsBytes(response.bodyBytes);
 
-        await Share.shareFiles(
-          [imageFile.path],
+        await Share.shareXFiles(
+          [XFile(imageFile.path)],
           text: 'Check out the new ${widget.offerTitle}!',
           subject: 'Offer',
-          mimeTypes: ['image/png'],
           sharePositionOrigin: Rect.fromCenter(center: const Offset(0, 0), width: 0, height: 0),
         );
       } else {

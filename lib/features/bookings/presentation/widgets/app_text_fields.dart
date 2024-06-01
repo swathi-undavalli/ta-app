@@ -26,6 +26,7 @@ class AppTextField extends StatefulWidget {
   Function? finalSubmit;
   String? labelText;
   bool isStrictNumber;
+  List<TextInputFormatter>? inputFormatter;
 
   AppTextField({
     Key? key,
@@ -50,6 +51,7 @@ class AppTextField extends StatefulWidget {
     this.required = false,
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.go,
+    this.inputFormatter,
   }) : super(key: key);
 
   @override
@@ -76,7 +78,7 @@ class _AppTextFieldsState extends State<AppTextField> {
           focusNode: widget.focusNode,
           keyboardType: widget.isStrictNumber ? TextInputType.number : widget.keyboardType,
           textInputAction: (widget.finalSubmit == null) ? widget.textInputAction : TextInputAction.done,
-          inputFormatters: widget.isStrictNumber ? [FilteringTextInputFormatter.digitsOnly] : null,
+          inputFormatters: widget.isStrictNumber ? [FilteringTextInputFormatter.digitsOnly] : widget.inputFormatter,
           enableSuggestions: widget.enableSuggestions,
           decoration: InputDecoration(
             labelText: "${widget.hintText}  ${(widget.required) ? "*" : ""}",

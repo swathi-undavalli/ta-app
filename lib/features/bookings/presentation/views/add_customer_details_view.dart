@@ -111,6 +111,11 @@ class AddCustomerDetailsView extends StatelessWidget {
                                         validator: (_) {
                                           return null;
                                         },
+                                        inputFormatter: [
+                                          TextInputFormatter.withFunction((oldValue, newValue) {
+                                            return newValue.copyWith(text: newValue.text.toLowerCase());
+                                          }),
+                                        ],
                                       ),
                                     AppTextField(
                                       hintText: 'No of Persons',
@@ -437,6 +442,11 @@ class AddCustomerDetailsView extends StatelessWidget {
       keyboardType: TextInputType.emailAddress,
       onChangedCallBack: (_) {},
       required: true,
+      inputFormatter: [
+        TextInputFormatter.withFunction((oldValue, newValue) {
+          return newValue.copyWith(text: newValue.text.toLowerCase());
+        }),
+      ],
       errorValidator: () {
         return Validator.validateEmail(logic.controller.emailTED.text);
       },

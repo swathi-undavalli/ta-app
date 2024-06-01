@@ -5,7 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -208,7 +208,7 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
 
     if (diveLogs.isNotEmpty) {
       File pdfFile = await CustomerLogs.generatePdf(customer, diveLogs);
-      Share.shareFiles([pdfFile.path]);
+      Share.shareXFiles([XFile(pdfFile.path)]);
     } else {
       showToast('No logs added');
     }

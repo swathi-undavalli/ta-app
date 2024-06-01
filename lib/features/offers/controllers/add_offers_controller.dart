@@ -1,19 +1,20 @@
 import 'dart:developer';
 import 'dart:io';
-import 'package:firebase_storage/firebase_storage.dart';
-import 'package:permission_handler/permission_handler.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart' as path;
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import '../../../core/firebase/api.dart';
 import '../../employees/model/employee.dart';
 import '../models/category.dart';
 import '../models/offer.dart';
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
-import 'package:path_provider/path_provider.dart';
-
 import 'offers_controller.dart';
 
 class AddOffersLogic {
@@ -64,7 +65,7 @@ class AddOffersLogic {
 
   Future<void> pickImage(ImageSource source) async {
     if (PermissionStatus.granted.isGranted) {
-      final result = await ImagePicker.platform.getImageFromSource(source: source);
+      final result = await ImagePicker().pickImage(source: source);
 
       if (result != null) {
         controller.pickedImage = File(result.path);

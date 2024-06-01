@@ -7,7 +7,6 @@ import '../../../../core/models/counter_model.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/back_navigation_icon.dart';
 import '../../../../core/widgets/phone_number/intl_phone_field.dart';
 import '../../../bookings/presentation/widgets/app_text_fields.dart';
 import '../../controllers/add_employee_controller.dart';

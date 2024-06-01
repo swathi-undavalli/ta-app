@@ -8,9 +8,12 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../features/dashboard/presentation/views/dashboard_view.dart';
 import '../../features/messaging/notification_screen.dart';
 import '../../main.dart';
+import '../authentication/firebase_authentication.dart';
 import '../widgets/app_button.dart';
 
 class AutoUpdateView extends StatelessWidget {
+  bool firstRun = true;
+
   AutoUpdateView({Key? key}) : super(key: key);
   static const String id = 'AutoUpdateView';
 
@@ -22,6 +25,8 @@ class AutoUpdateView extends StatelessWidget {
     String currentAndroidVersion = '${logic.controller.version}+${logic.controller.buildNumber}';
 
     String latestAndroidVersion = '${logic.controller.latestVersionNumber}';
+
+    logout();
 
     return Scaffold(
       body: SafeArea(
@@ -118,6 +123,16 @@ class AutoUpdateView extends StatelessWidget {
       ),
     );
   }
+
+  void logout() {
+    if (!firstRun) {
+      return;
+    }
+    firstRun = false;
+    if (logic.controller.criticalUpdate == true && logic.controller.forceLogout == true) {
+      FirebaseAuthentication.logout();
+    }
+  }
 }
 
 class AutoUpdateLogic {
@@ -159,6 +174,7 @@ class AutoUpdateLogic {
     controller.downloadLink = data.data()!['downloadLink'];
     controller.criticalUpdate = data.data()!['critical_update'];
     controller.iosVersionNumber = data.data()!['iosNumber'];
+    controller.forceLogout = data.data()!['force_logout'];
 
     if (isIOS) {
       if (currentIosVersion != controller.iosVersionNumber) {
@@ -184,4 +200,5 @@ class AutoUpdateController extends GetxController {
   String? latestVersionNumber, version, buildNumber, downloadLink, iosVersionNumber;
 
   bool? criticalUpdate = false;
+  bool? forceLogout = false;
 }

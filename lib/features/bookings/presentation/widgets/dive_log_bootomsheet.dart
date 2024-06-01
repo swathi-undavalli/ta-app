@@ -77,8 +77,16 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
   }
 
   List<Widget> buildCustomers() {
+    int count = 0;
+    List emails = (widget.bookingModel.pax ?? []).map((e) => e['email']).toList();
+    for (int i = 0; i < emails.length; i++) {
+      if (emails[0] == emails[i]) {
+        count += 1;
+      }
+    }
+
     return List.generate(
-      widget.bookingModel.pax!.length,
+      (count == 2) ? widget.bookingModel.pax!.sublist(1).length : widget.bookingModel.pax!.length,
       (index) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -123,16 +131,19 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
   }
 
   Widget buildAddCustomerButton() {
-    if (widget.bookingModel.pax!.length != widget.bookingModel.noOfPersons) {
-      return AppButton.miniFlat(
-        text: 'Add Customer',
-        onTap: () {
-          AddCustomerDialog.show(
-            context,
-            bookingModel: widget.bookingModel,
-          );
-        },
-      ).paddingSymmetric(horizontal: 20);
+    if (widget.bookingModel.noOfPersons! > 1) {
+      if (widget.bookingModel.pax!.length - 1 < widget.bookingModel.noOfPersons!) {
+        return AppButton.miniFlat(
+          text: 'Add Customer',
+          onTap: () {
+            AddCustomerDialog.show(
+              context,
+              bookingModel: widget.bookingModel,
+            );
+          },
+        ).paddingSymmetric(horizontal: 20);
+      }
+      return const SizedBox();
     }
     return const SizedBox();
   }
@@ -233,18 +244,17 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
 
     return Row(
       children: [
-        buildText(
-          text: DateFormat('dd-MM-yy').format(diveLogModel.timeIn.toDate()).toString(),
-        ),
-        buildText(text: diveLogModel.instructor.name),
-        buildText(text: '  ${getCourse(diveLogModel.course)}', width: 35),
-        buildText(text: diveLogModel.diveSite, width: 40),
+        buildText(text: DateFormat('dd-MM-yy').format(diveLogModel.timeIn.toDate()).toString(), width: 43),
+        buildText(text: diveLogModel.instructor.name, width: 45),
+        buildText(text: '  ${getCourse(diveLogModel.course)}', width: 32),
+        buildText(text: diveLogModel.diveSite, width: 38),
         buildText(
           text: '${tankType(diveLogModel.tankType)}${diveLogModel.tankNo.toString()}',
-          width: 30,
+          width: 28,
         ),
-        buildText(text: diveLogModel.bottomTime.toString(), width: 35),
-        buildText(text: diveLogModel.maxDepth.toString(), width: 30),
+        buildText(text: diveLogModel.bottomTime.toString(), width: 32),
+        buildText(text: diveLogModel.maxDepth.toString(), width: 28),
+        buildText(text: DateFormat('hh:mm').format(diveLogModel.timeIn.toDate()).toString(), width: 28),
         Spacing.w10,
         buildEditDeleteButtons(
           onTap: () {
@@ -335,13 +345,14 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
   Widget buildHeadings() {
     return Row(
       children: [
-        buildText(text: 'Date', fontWeight: FontWeight.bold),
-        buildText(text: 'Instructor', fontWeight: FontWeight.bold),
-        buildText(text: 'Course', width: 35, fontWeight: FontWeight.bold),
-        buildText(text: 'Dive Site', width: 40, fontWeight: FontWeight.bold),
-        buildText(text: 'Tank No', width: 30, fontWeight: FontWeight.bold),
-        buildText(text: 'Bottom Time', width: 35, fontWeight: FontWeight.bold),
-        buildText(text: 'Max Depth', width: 30, fontWeight: FontWeight.bold),
+        buildText(text: 'Date', width: 43, fontWeight: FontWeight.bold),
+        buildText(text: 'Instructor', fontWeight: FontWeight.bold, width: 45),
+        buildText(text: 'Course', width: 32, fontWeight: FontWeight.bold),
+        buildText(text: 'Dive Site', width: 38, fontWeight: FontWeight.bold),
+        buildText(text: 'Tank No', width: 28, fontWeight: FontWeight.bold),
+        buildText(text: 'Bottom Time', width: 32, fontWeight: FontWeight.bold),
+        buildText(text: 'Max Depth', width: 28, fontWeight: FontWeight.bold),
+        buildText(text: 'Time In', width: 28, fontWeight: FontWeight.bold),
       ],
     );
   }

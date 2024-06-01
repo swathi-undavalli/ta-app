@@ -16,7 +16,6 @@ import '../../../events/presentation/views/events_view.dart';
 import '../../../general_info/presentation/views/general_info_view.dart';
 import '../../../logs/presentation/views/log_view.dart';
 import '../../../offers/presentation/views/offers_view.dart';
-import '../../../roaster/presentation/views/roaster_view.dart';
 import '../../../screen_saver/views/marketing_view.dart';
 
 class NavDrawer extends StatelessWidget {
@@ -114,13 +113,13 @@ class NavDrawer extends StatelessWidget {
                 Get.offAndToNamed(CoastGuardSlipView.id);
               },
             ),
-            buildMenuItem(
-              icon: Icons.add_card_rounded,
-              text: 'Roaster',
-              onTap: () {
-                Get.offAndToNamed(RoasterView.id);
-              },
-            ),
+            // buildMenuItem(
+            //   icon: Icons.add_card_rounded,
+            //   text: 'Roaster',
+            //   onTap: () {
+            //     Get.offAndToNamed(RoasterView.id);
+            //   },
+            // ),
             buildMenuItem(
               icon: Icons.book_rounded,
               text: 'Logs',

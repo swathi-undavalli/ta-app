@@ -9,7 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart' as intl;
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
@@ -17,11 +17,11 @@ import '../../features/activities/model/colors_data.dart';
 import '../../features/bookings/controller/edit_payments_controller.dart';
 import '../../features/bookings/models/booking_model.dart';
 import '../../features/bookings/presentation/views/add_payments_view.dart';
+import '../../features/bookings/presentation/views/edit_booking_view.dart';
 import '../../features/bookings/presentation/views/edit_payments_view.dart';
 import '../../features/bookings/presentation/widgets/app_text_fields.dart';
 import '../../features/bookings/presentation/widgets/dive_log_bootomsheet.dart';
 import '../../features/bookings/presentation/widgets/share_booking_details_widget.dart';
-import '../../features/bookings/presentation/views/edit_booking_view.dart';
 import '../../features/employees/model/employee.dart';
 import '../../features/logs/models/log_model.dart';
 import '../../features/logs/presentation/views/log_view.dart';
@@ -206,44 +206,46 @@ class BookingsExpansionPanel extends StatelessWidget {
           onTap: () async {
             if (itemModel != null && itemModel.bookingModel != null) {
               File pdfFile = await ShareBookingDetails.generatePdf(itemModel.bookingModel!);
-              Share.shareFiles([pdfFile.path]);
+              Share.shareXFiles([XFile(pdfFile.path)]);
             }
           },
         ),
-        PopupMenuItem<String>(
-          child: const Text(
-            'Confirmation of timing',
-            style: TextStyle(fontSize: 12),
-          ),
-          onTap: () async {
-            if (itemModel != null) {
-              log(itemModel.phone.toString());
-              String phone = itemModel.phone!.replaceAll('+', '');
-              String message = """
+        if (itemModel?.colorCode == 'Blue')
+          PopupMenuItem<String>(
+            child: const Text(
+              'Confirmation of timing',
+              style: TextStyle(fontSize: 12),
+            ),
+            onTap: () async {
+              if (itemModel != null) {
+                log(itemModel.phone.toString());
+                String phone = itemModel.phone!.replaceAll('+', '');
+                String message = """
                Hello "${itemModel.name}"
 Hope you are excited to have your scuba diving session. Please note that the time for your boat is ${intl.DateFormat("dd-MM-yyy @ hh:mm a").format(itemModel.bookingModel!.diveDate![0]!)}. Please report to the dive center before 15 minutes. 
 Please note that if you are not present at the center by the scheduled time, the boat will leave without you, and there will be no scheduling change or refunds applicable as per our policies.
                          """;
 
-              var uri = 'https://wa.me/$phone?text=$message';
-              var encoded = Uri.encodeFull(uri);
-              if (!await launchUrl(Uri.parse(encoded), mode: LaunchMode.externalApplication)) {
-                showToast('cannot launch whatsapp');
+                var uri = 'https://wa.me/$phone?text=$message';
+                var encoded = Uri.encodeFull(uri);
+                if (!await launchUrl(Uri.parse(encoded), mode: LaunchMode.externalApplication)) {
+                  showToast('cannot launch whatsapp');
+                }
               }
-            }
-          },
-        ),
-        PopupMenuItem<String>(
-          child: const Text(
-            'Cancellation warning',
-            style: TextStyle(fontSize: 12),
+            },
           ),
-          onTap: () async {
-            log('booking cancellation');
-            if (itemModel != null) {
-              log(itemModel.phone.toString());
-              String phone = itemModel.phone!.replaceAll('+', '');
-              String message = '''
+        if (itemModel?.colorCode == 'Blue')
+          PopupMenuItem<String>(
+            child: const Text(
+              'Cancellation warning',
+              style: TextStyle(fontSize: 12),
+            ),
+            onTap: () async {
+              log('booking cancellation');
+              if (itemModel != null) {
+                log(itemModel.phone.toString());
+                String phone = itemModel.phone!.replaceAll('+', '');
+                String message = '''
                Hello "${itemModel.name}"
 Please note that you are late for your scheduled ocean dive as part of your Discover Scuba Diving Experience. As previously mentioned in our bookings policies, the boat will leave without you and and we will be unable to reschedule you to a different slot. There will also be no refund for the missed dives. However you can get in touch with our bookings team, who can give you options on how you can schedule another ocean dive session for an added cost.
 
@@ -252,14 +254,14 @@ Regards,
 Temple Adventures Dive Operations team
                          ''';
 
-              var uri = 'https://wa.me/$phone?text=$message';
-              var encoded = Uri.encodeFull(uri);
-              if (!await launchUrl(Uri.parse(encoded), mode: LaunchMode.externalApplication)) {
-                showToast('cannot launch whatsapp');
+                var uri = 'https://wa.me/$phone?text=$message';
+                var encoded = Uri.encodeFull(uri);
+                if (!await launchUrl(Uri.parse(encoded), mode: LaunchMode.externalApplication)) {
+                  showToast('cannot launch whatsapp');
+                }
               }
-            }
-          },
-        ),
+            },
+          ),
         PopupMenuItem<String>(
           child: const Text(
             'Feedback',
@@ -292,9 +294,7 @@ Please click the below link : $link
             if (itemModel!.bookingModel != null) {
               String bookingId = itemModel.bookingModel!.id!;
               String bs64 = base64.encode(bookingId.codeUnits);
-              String link =
-                  'http://3.109.20.82/temple_paperwork/paperwork/temple/14?booking_id=$bs64&author=dGVtcGxl&paperwork_id=MTQ=';
-
+              String link = 'https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl';
               var headers = {
                 'x-api-key': 'uSirf5x9fM5iYjPuu8GXS4TVvLbt1tdg9DUe7f7N',
                 'Content-Type': 'application/json',
@@ -589,17 +589,8 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                             (itemModel.bookingModel!.noOfPersons)),
                                       ),
                                     Spacing.h10,
-                                    if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
-                                      AppButton.miniFlat(
-                                        text: 'Add Log',
-                                        onTap: () {
-                                          DiveLogBottomSheet.show(
-                                            context,
-                                            bookingModel: itemModel.bookingModel!,
-                                            date: selectedDate,
-                                          );
-                                        },
-                                      ),
+                                    // if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
+                                    //   CertificationStatus(initialStatus: 0, onChanged: (int status) {}),
                                     Spacing.h20,
                                     if (!itemModel.bookingModel!.isQuickBooking)
                                       buildPaymentStatus(
@@ -619,7 +610,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         ],
                                       ),
                                     const SizedBox(height: 10),
-                                    if (itemModel.colorCode == 'Blue' && (!itemModel.bookingModel!.isQuickBooking))
+                                    if ((!itemModel.bookingModel!.isQuickBooking))
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
@@ -703,6 +694,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
 
 *Certification details:* 
 
+Name : *${itemModel.name!.trim().toLowerCase().capitalizeFirst!}  ${(itemModel.bookingModel!.pax![0]["last-name"] != "" && itemModel.bookingModel!.pax![0]["last-name"] != null) ? itemModel.bookingModel!.pax![0]["last-name"] : ""}* 
 Email : *${itemModel.email}* 
 Date of Birth : *${(itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.pax![0]["dob"] as Timestamp).toDate()) : "-"}* 
 Certification : *${itemModel.activity}* 
@@ -747,125 +739,134 @@ Regards,
                                     if (!itemModel.bookingModel!.isQuickBooking)
                                       Row(
                                         children: [
-                                          const Spacer(),
-                                          if (itemModel.colorCode == 'Blue') button,
-                                          if (itemModel.colorCode == 'Blue')
+                                          if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
                                             AppButton.miniFlat(
-                                              text: 'PaperWork',
-                                              bgColor: AppColors.text.green.withOpacity(0.8),
-                                              onTap: () async {
-                                                String bookingId = itemModel.bookingModel!.id!;
-                                                String bs64 = base64.encode(bookingId.codeUnits);
-                                                String link =
-                                                    'http://3.109.20.82/temple_paperwork/paperwork/temple/14?booking_id=$bs64&author=dGVtcGxl&paperwork_id=MTQ=';
+                                              text: 'Add Log',
+                                              onTap: () {
+                                                DiveLogBottomSheet.show(
+                                                  context,
+                                                  bookingModel: itemModel.bookingModel!,
+                                                  date: selectedDate,
+                                                );
+                                              },
+                                            ),
+                                          const Spacer(),
+                                          button,
+                                          AppButton.miniFlat(
+                                            text: 'PaperWork',
+                                            bgColor: AppColors.text.green.withOpacity(0.8),
+                                            onTap: () async {
+                                              String bookingId = itemModel.bookingModel!.id!;
+                                              String bs64 = base64.encode(bookingId.codeUnits);
+                                              String link =
+                                                  'https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl';
 
-                                                showModalBottomSheet(
-                                                  backgroundColor: Colors.transparent,
-                                                  isScrollControlled: true,
-                                                  context: context,
-                                                  useRootNavigator: true,
-                                                  builder: (context) {
-                                                    return Container(
-                                                      padding: EdgeInsets.only(
-                                                        bottom: MediaQuery.of(context).viewInsets.bottom,
-                                                        top: 30,
-                                                        left: 30,
-                                                        right: 30,
+                                              showModalBottomSheet(
+                                                backgroundColor: Colors.transparent,
+                                                isScrollControlled: true,
+                                                context: context,
+                                                useRootNavigator: true,
+                                                builder: (context) {
+                                                  return Container(
+                                                    padding: EdgeInsets.only(
+                                                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                                                      top: 30,
+                                                      left: 30,
+                                                      right: 30,
+                                                    ),
+                                                    decoration: const BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius: BorderRadius.only(
+                                                        topLeft: Radius.circular(15),
+                                                        topRight: Radius.circular(15),
                                                       ),
-                                                      decoration: const BoxDecoration(
-                                                        color: Colors.white,
-                                                        borderRadius: BorderRadius.only(
-                                                          topLeft: Radius.circular(15),
-                                                          topRight: Radius.circular(15),
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 150,
+                                                              child: Text(
+                                                                '${itemModel.name!.capitalizeFirst!}x${itemModel.pax}',
+                                                                style: const TextStyle(
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: FontSize.textSize,
+                                                                ),
+                                                                overflow: TextOverflow.ellipsis,
+                                                              ),
+                                                            ),
+                                                            const Spacer(),
+                                                            Material(
+                                                              color: Colors.transparent,
+                                                              child: InkWell(
+                                                                highlightColor: Colors.blue.withOpacity(0.2),
+                                                                splashColor: Colors.grey.withOpacity(0.3),
+                                                                borderRadius: BorderRadius.circular(20),
+                                                                radius: 100,
+                                                                onTap: () {
+                                                                  Navigator.pop(context);
+                                                                  // provider.onCancelPressed();
+                                                                },
+                                                                child: const Icon(Icons.close),
+                                                              ),
+                                                            ),
+                                                          ],
                                                         ),
-                                                      ),
-                                                      child: Column(
-                                                        mainAxisSize: MainAxisSize.min,
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        children: [
-                                                          Row(
+                                                        const SizedBox(height: 50),
+                                                        Container(
+                                                          height: 50,
+                                                          decoration: BoxDecoration(
+                                                            borderRadius: BorderRadius.circular(20),
+                                                            color: AppColors.text.lightSkyBlue.withOpacity(0.1),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment: MainAxisAlignment.start,
+                                                            crossAxisAlignment: CrossAxisAlignment.center,
                                                             children: [
-                                                              SizedBox(
-                                                                width: 150,
+                                                              const SizedBox(width: 15),
+                                                              const SizedBox(
+                                                                width: 200,
                                                                 child: Text(
-                                                                  '${itemModel.name!.capitalizeFirst!}x${itemModel.pax}',
-                                                                  style: const TextStyle(
-                                                                    fontWeight: FontWeight.w600,
-                                                                    fontSize: FontSize.textSize,
-                                                                  ),
+                                                                  'temple_paperwork/?bookingId..',
                                                                   overflow: TextOverflow.ellipsis,
                                                                 ),
                                                               ),
                                                               const Spacer(),
-                                                              Material(
-                                                                color: Colors.transparent,
-                                                                child: InkWell(
-                                                                  highlightColor: Colors.blue.withOpacity(0.2),
-                                                                  splashColor: Colors.grey.withOpacity(0.3),
-                                                                  borderRadius: BorderRadius.circular(20),
-                                                                  radius: 100,
-                                                                  onTap: () {
-                                                                    Navigator.pop(context);
-                                                                    // provider.onCancelPressed();
-                                                                  },
-                                                                  child: const Icon(Icons.close),
-                                                                ),
+                                                              IconButton(
+                                                                onPressed: () async {
+                                                                  await Clipboard.setData(
+                                                                    ClipboardData(text: link),
+                                                                  );
+                                                                  Fluttertoast.showToast(
+                                                                    msg: 'Link copied to Clipboard',
+                                                                  );
+                                                                },
+                                                                icon: const Icon(Icons.copy_outlined, size: 20),
                                                               ),
                                                             ],
                                                           ),
-                                                          const SizedBox(height: 50),
-                                                          Container(
-                                                            height: 50,
-                                                            decoration: BoxDecoration(
-                                                              borderRadius: BorderRadius.circular(20),
-                                                              color: AppColors.text.lightSkyBlue.withOpacity(0.1),
-                                                            ),
-                                                            child: Row(
-                                                              mainAxisAlignment: MainAxisAlignment.start,
-                                                              crossAxisAlignment: CrossAxisAlignment.center,
-                                                              children: [
-                                                                const SizedBox(width: 15),
-                                                                const SizedBox(
-                                                                  width: 200,
-                                                                  child: Text(
-                                                                    'temple_paperwork/?bookingId..',
-                                                                    overflow: TextOverflow.ellipsis,
-                                                                  ),
-                                                                ),
-                                                                const Spacer(),
-                                                                IconButton(
-                                                                  onPressed: () async {
-                                                                    await Clipboard.setData(
-                                                                      ClipboardData(text: link),
-                                                                    );
-                                                                    Fluttertoast.showToast(
-                                                                      msg: 'Link copied to Clipboard',
-                                                                    );
-                                                                  },
-                                                                  icon: const Icon(Icons.copy_outlined, size: 20),
-                                                                ),
-                                                              ],
-                                                            ),
+                                                        ),
+                                                        const SizedBox(height: 50),
+                                                        Container(
+                                                          alignment: Alignment.center,
+                                                          child: QRImage(
+                                                            height: 150,
+                                                            width: 150,
+                                                            data:
+                                                                'https://templeadventures.com/temple_paperwork/?bookingId=$bs64&author=dGVtcGxl',
                                                           ),
-                                                          const SizedBox(height: 50),
-                                                          Container(
-                                                            alignment: Alignment.center,
-                                                            child: QRImage(
-                                                              height: 150,
-                                                              width: 150,
-                                                              // http://3.109.20.82/temple_paperwork/paperwork/temple/14?booking_id=NTYxOQ==&email=d2Iua2FtZXNoQGdtYWlsLmNvbQ==&custom_booking_id=NTYxOQ==&author_identity=dGVtcGxl
-                                                              data:
-                                                                  'http://3.109.20.82/temple_paperwork/paperwork/temple/14?booking_id=$bs64&author=dGVtcGxl&paperwork_id=MTQ=',
-                                                            ),
-                                                          ),
-                                                          const SizedBox(height: 50),
-                                                        ],
-                                                      ),
-                                                    );
-                                                  },
-                                                );
-                                              },
-                                            ).paddingOnly(right: 15),
+                                                        ),
+                                                        const SizedBox(height: 50),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ).paddingOnly(right: 15),
                                         ],
                                       ),
                                     const SizedBox(height: 20),
@@ -897,103 +898,93 @@ Regards,
                                           ),
                                         const Spacer(),
                                         if (!itemModel.bookingModel!.isQuickBooking)
-                                          (itemModel.colorCode == 'Blue')
-                                              ? AppButton.miniFlat(
-                                                  text: 'Manage PAX',
-                                                  onTap: () async {
-                                                    Booking? bookingModel = itemModel.bookingModel;
-                                                    showModalBottomSheet(
-                                                      backgroundColor: Colors.transparent,
-                                                      isScrollControlled: true,
-                                                      context: context,
-                                                      useRootNavigator: true,
-                                                      builder: (context) {
-                                                        return Container(
-                                                          padding: EdgeInsets.only(
-                                                            bottom: MediaQuery.of(context).viewInsets.bottom,
-                                                            top: 30,
-                                                            left: 30,
-                                                            right: 30,
-                                                          ),
-                                                          constraints: const BoxConstraints(minHeight: 300),
-                                                          decoration: const BoxDecoration(
-                                                            color: Colors.white,
-                                                            borderRadius: BorderRadius.only(
-                                                              topLeft: Radius.circular(15),
-                                                              topRight: Radius.circular(15),
-                                                            ),
-                                                          ),
-                                                          child: Column(
-                                                            mainAxisSize: MainAxisSize.min,
-                                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                                            children: [
-                                                              Row(
-                                                                children: [
-                                                                  SizedBox(
-                                                                    width: 150,
-                                                                    child: Text(
-                                                                      '${itemModel.name!.capitalizeFirst!} X ${itemModel.pax}',
-                                                                      style: const TextStyle(
-                                                                        fontWeight: FontWeight.w600,
-                                                                        fontSize: FontSize.textSize,
-                                                                      ),
-                                                                      overflow: TextOverflow.ellipsis,
-                                                                    ),
-                                                                  ),
-                                                                  const Spacer(),
-                                                                  Material(
-                                                                    color: Colors.transparent,
-                                                                    child: InkWell(
-                                                                      highlightColor: Colors.blue.withOpacity(0.2),
-                                                                      splashColor: Colors.grey.withOpacity(0.3),
-                                                                      borderRadius: BorderRadius.circular(20),
-                                                                      radius: 100,
-                                                                      onTap: () {
-                                                                        Navigator.pop(context);
-                                                                        // provider.onCancelPressed();
-                                                                      },
-                                                                      child: const Icon(Icons.close),
-                                                                    ),
-                                                                  ),
-                                                                ],
+                                          AppButton.miniFlat(
+                                            text: 'Manage PAX',
+                                            onTap: () async {
+                                              Booking? bookingModel = itemModel.bookingModel;
+                                              showModalBottomSheet(
+                                                backgroundColor: Colors.transparent,
+                                                isScrollControlled: true,
+                                                context: context,
+                                                useRootNavigator: true,
+                                                builder: (context) {
+                                                  return Container(
+                                                    padding: EdgeInsets.only(
+                                                      bottom: MediaQuery.of(context).viewInsets.bottom,
+                                                      top: 30,
+                                                      left: 30,
+                                                      right: 30,
+                                                    ),
+                                                    constraints: const BoxConstraints(minHeight: 300),
+                                                    decoration: const BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius: BorderRadius.only(
+                                                        topLeft: Radius.circular(15),
+                                                        topRight: Radius.circular(15),
+                                                      ),
+                                                    ),
+                                                    child: Column(
+                                                      mainAxisSize: MainAxisSize.min,
+                                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                                      children: [
+                                                        Row(
+                                                          children: [
+                                                            SizedBox(
+                                                              width: 150,
+                                                              child: Text(
+                                                                '${itemModel.name!.capitalizeFirst!} X ${itemModel.pax}',
+                                                                style: const TextStyle(
+                                                                  fontWeight: FontWeight.w600,
+                                                                  fontSize: FontSize.textSize,
+                                                                ),
+                                                                overflow: TextOverflow.ellipsis,
                                                               ),
-                                                              const SizedBox(height: 20),
-                                                              ...bookingModel!.pax!.asMap().entries.map((e) {
-                                                                int index = e.key;
-                                                                String? email = e.value['email'];
-                                                                if (index == 0) return const SizedBox();
-                                                                return Row(
-                                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                                  children: [
-                                                                    Text(email!),
-                                                                    IconButton(
-                                                                      onPressed: () {
-                                                                        onDeletePaxPressed(bookingModel, index);
-                                                                      },
-                                                                      icon: const Icon(
-                                                                        Icons.delete,
-                                                                        size: 20,
-                                                                      ),
-                                                                    ),
-                                                                  ],
-                                                                );
-                                                              }),
+                                                            ),
+                                                            const Spacer(),
+                                                            Material(
+                                                              color: Colors.transparent,
+                                                              child: InkWell(
+                                                                highlightColor: Colors.blue.withOpacity(0.2),
+                                                                splashColor: Colors.grey.withOpacity(0.3),
+                                                                borderRadius: BorderRadius.circular(20),
+                                                                radius: 100,
+                                                                onTap: () {
+                                                                  Navigator.pop(context);
+                                                                  // provider.onCancelPressed();
+                                                                },
+                                                                child: const Icon(Icons.close),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        const SizedBox(height: 20),
+                                                        ...bookingModel!.pax!.asMap().entries.map((e) {
+                                                          int index = e.key;
+                                                          String? email = e.value['email'];
+                                                          if (index == 0) return const SizedBox();
+                                                          return Row(
+                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                            children: [
+                                                              Text(email!),
+                                                              IconButton(
+                                                                onPressed: () {
+                                                                  onDeletePaxPressed(bookingModel, index);
+                                                                },
+                                                                icon: const Icon(
+                                                                  Icons.delete,
+                                                                  size: 20,
+                                                                ),
+                                                              ),
                                                             ],
-                                                          ),
-                                                        );
-                                                      },
-                                                    );
-                                                  },
-                                                ).paddingOnly(right: 15)
-                                              : AppButton.miniFlat(
-                                                  text: 'Booking Info',
-                                                  bgColor: AppColors.text.orange.withOpacity(0.8),
-                                                  onTap: () async {
-                                                    File pdfFile =
-                                                        await ShareBookingDetails.generatePdf(itemModel.bookingModel!);
-                                                    Share.shareFiles([pdfFile.path]);
-                                                  },
-                                                ).paddingOnly(right: 15),
+                                                          );
+                                                        }),
+                                                      ],
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ).paddingOnly(right: 15)
                                       ],
                                     ),
                                     const SizedBox(height: 20),

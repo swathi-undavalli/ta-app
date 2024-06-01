@@ -69,6 +69,11 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
               errorValidator: () {
                 return copyFromError;
               },
+              inputFormatter: [
+                TextInputFormatter.withFunction((oldValue, newValue) {
+                  return newValue.copyWith(text: newValue.text.toLowerCase());
+                }),
+              ],
             ),
             AppTextField(
               controller: copyToTED,
@@ -76,6 +81,11 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
               errorValidator: () {
                 return copyFromError;
               },
+              inputFormatter: [
+                TextInputFormatter.withFunction((oldValue, newValue) {
+                  return newValue.copyWith(text: newValue.text.toLowerCase());
+                }),
+              ],
             ),
             Spacing.h50,
             if (showLoading)

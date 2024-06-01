@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
@@ -134,7 +134,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
 
   Future<void> shareImages(List<String> images) async {
     try {
-      Share.shareFiles(images);
+      Share.shareXFiles(images.map((e) => XFile(e)).toList());
     } catch (e) {
       log('Error while sharing images $e');
     }

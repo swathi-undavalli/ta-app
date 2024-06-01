@@ -5,7 +5,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:share/share.dart';
+import 'package:share_plus/share_plus.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -194,7 +195,7 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
       bookings: cachedBookings,
       employees: allEmployees,
     );
-    Share.shareFiles([pdfFile.path]);
+    Share.shareXFiles([XFile(pdfFile.path)]);
 
     setState(() {
       showLoading = false;

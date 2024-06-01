@@ -23,8 +23,7 @@ class ConditionsLogic {
   }
 
   getLatestConditions() async {
-    controller.conditions =
-        await conditionsRepo.getConditions(controller.selectedDate);
+    controller.conditions = await conditionsRepo.getConditions(controller.selectedDate);
   }
 
   void onFloatingActionButtonPressed() {
@@ -32,8 +31,7 @@ class ConditionsLogic {
   }
 
   List<Level> get getLevels {
-    if (controller.conditions == null ||
-        controller.conditions!.levels.isEmpty) {
+    if (controller.conditions == null || controller.conditions!.levels.isEmpty) {
       return [];
     }
 
