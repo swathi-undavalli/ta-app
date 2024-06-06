@@ -249,6 +249,13 @@ class AddEmployeeView extends StatelessWidget {
               },
             ),
             buildSwitch(
+              text: 'Process Certificate',
+              switchValue: controller.processCertificate!,
+              onChanged: (value) {
+                controller.processCertificate = value;
+              },
+            ),
+            buildSwitch(
               text: 'Subscribe Notifications',
               switchValue: controller.notifications!,
               onChanged: (value) {

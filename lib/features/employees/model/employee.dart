@@ -37,6 +37,7 @@ class Employee {
       boatPlan: false,
       marketingGallery: false,
       offers: false,
+      processCertificate: false,
     );
   }
 
@@ -148,6 +149,7 @@ class AccessLevels {
     required this.boatPlan,
     required this.marketingGallery,
     required this.offers,
+    required this.processCertificate,
   });
 
   bool? viewBookings;
@@ -166,6 +168,7 @@ class AccessLevels {
   bool? boatPlan;
   bool? marketingGallery;
   bool? offers;
+  bool? processCertificate;
 
   factory AccessLevels.fromMap(Map<String, dynamic> json) => AccessLevels(
         viewBookings: json['viewBookings'],
@@ -184,6 +187,7 @@ class AccessLevels {
         notifications: json['notifications'],
         marketingGallery: json['marketingGallery'],
         offers: json['offers'],
+        processCertificate: json['processCertificate'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -203,5 +207,6 @@ class AccessLevels {
         'notifications': notifications,
         'marketingGallery': marketingGallery,
         'offers': offers,
+        'processCertificate': processCertificate,
       };
 }

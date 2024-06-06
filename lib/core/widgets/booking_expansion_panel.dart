@@ -20,6 +20,7 @@ import '../../features/bookings/presentation/views/add_payments_view.dart';
 import '../../features/bookings/presentation/views/edit_booking_view.dart';
 import '../../features/bookings/presentation/views/edit_payments_view.dart';
 import '../../features/bookings/presentation/widgets/app_text_fields.dart';
+import '../../features/bookings/presentation/widgets/certification_status.dart';
 import '../../features/bookings/presentation/widgets/dive_log_bootomsheet.dart';
 import '../../features/bookings/presentation/widgets/share_booking_details_widget.dart';
 import '../../features/employees/model/employee.dart';
@@ -588,9 +589,20 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
                                             (itemModel.bookingModel!.noOfPersons)),
                                       ),
-                                    Spacing.h10,
-                                    // if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
-                                    //   CertificationStatus(initialStatus: 0, onChanged: (int status) {}),
+                                    Spacing.h20,
+                                    if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
+                                      CertificationStatus(
+                                        initialStatus: itemModel.bookingModel?.certificateStatus ?? 0,
+                                        itemModel: itemModel,
+                                        onChanged: (int status) async {
+                                          itemModel.bookingModel?.certificateStatus = status;
+                                          await FirebaseFirestore.instance
+                                              .collection('bookings')
+                                              .doc(itemModel.bookingModel!.id)
+                                              .set(itemModel.bookingModel!.toMap());
+                                        },
+                                        isCertificationDetailsView: false,
+                                      ),
                                     Spacing.h20,
                                     if (!itemModel.bookingModel!.isQuickBooking)
                                       buildPaymentStatus(
@@ -700,9 +712,9 @@ Date of Birth : *${(itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateF
 Certification : *${itemModel.activity}* 
 Course Completion Date : *${intl.DateFormat("dd-MM-yyy").format(DateTime.now())}* 
 Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-* 
-Completed instructor : *${currentEmployee!.name.trim()}* 
+Completed instructor : *${itemModel.bookingModel?.boatDetails!.instructors?[0].name.trim()}* 
 Instructor No : *${(currentEmployee?.agencyId != null && currentEmployee?.agencyId != '') ? currentEmployee?.agencyId : "-"}* 
-Invoice No : *${itemModel.bookingModel?.receiptNo ?? '-'}* 
+Invoice No : *${(itemModel.bookingModel?.receiptNo != null && itemModel.bookingModel?.receiptNo != '') ? itemModel.bookingModel?.receiptNo : '-'}* 
 Course / Equipment Upsell :     *${"-"}*
  
 Regards,
@@ -724,7 +736,7 @@ Last Name : *${(itemModel.bookingModel!.pax![0]["last-name"] != "") ? itemModel.
 Email : *${itemModel.email}* 
 Date of Birth : *${(itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.pax![0]["dob"] as Timestamp).toDate()) : "-"}* 
 Course Name : *${itemModel.activity}* 
-Invoice No : *${itemModel.bookingModel!.receiptNo ?? '-'}* 
+Invoice No : *${(itemModel.bookingModel?.receiptNo != null && itemModel.bookingModel?.receiptNo != '') ? itemModel.bookingModel?.receiptNo : '-'}* 
 Phone Number : *${itemModel.bookingModel!.pax![0]["phoneNumber"]}* 
  
 Regards,
@@ -736,22 +748,22 @@ Regards,
                                           ).paddingOnly(right: 15),
                                         ],
                                       ),
-                                    if (!itemModel.bookingModel!.isQuickBooking)
-                                      Row(
-                                        children: [
-                                          if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
-                                            AppButton.miniFlat(
-                                              text: 'Add Log',
-                                              onTap: () {
-                                                DiveLogBottomSheet.show(
-                                                  context,
-                                                  bookingModel: itemModel.bookingModel!,
-                                                  date: selectedDate,
-                                                );
-                                              },
-                                            ),
-                                          const Spacer(),
-                                          button,
+                                    Row(
+                                      children: [
+                                        if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
+                                          AppButton.miniFlat(
+                                            text: 'Add Log',
+                                            onTap: () {
+                                              DiveLogBottomSheet.show(
+                                                context,
+                                                bookingModel: itemModel.bookingModel!,
+                                                date: selectedDate,
+                                              );
+                                            },
+                                          ),
+                                        const Spacer(),
+                                        if (!itemModel.bookingModel!.isQuickBooking) button,
+                                        if (!itemModel.bookingModel!.isQuickBooking)
                                           AppButton.miniFlat(
                                             text: 'PaperWork',
                                             bgColor: AppColors.text.green.withOpacity(0.8),
@@ -867,8 +879,8 @@ Regards,
                                               );
                                             },
                                           ).paddingOnly(right: 15),
-                                        ],
-                                      ),
+                                      ],
+                                    ),
                                     const SizedBox(height: 20),
                                     Row(
                                       children: [

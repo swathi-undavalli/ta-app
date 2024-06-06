@@ -402,7 +402,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
               SizedBox(
                 width: Get.width - 170,
                 child: const Text(
-                  'Instructors :',
+                  'Instructor :',
                   style: TextStyle(
                     fontSize: FontSize.textSize,
                     fontWeight: FontWeight.w600,
@@ -717,8 +717,7 @@ Future<void> updateBoatDetails({
       boatInfo,
     );
   } else if (instructorAir != null || instructorNitrox != null) {
-    InstructorTanks? instructorTanks =
-        bookingModel.getInstructorTanks(selectedDate);
+    InstructorTanks? instructorTanks = bookingModel.getInstructorTanks(selectedDate);
     if (instructorTanks == null) {
       instructorTanks = InstructorTanks(
         air: instructorAir ?? 0,
@@ -744,10 +743,7 @@ Future<void> updateBoatDetails({
     diveBuddies: diveBuddies,
   );
 
-  await FirebaseFirestore.instance
-      .collection('bookings')
-      .doc(bookingModel.id)
-      .set(
+  await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(
         bookingModel.toMap(),
       );
 }

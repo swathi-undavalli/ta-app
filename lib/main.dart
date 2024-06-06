@@ -5,7 +5,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get_utils/src/platform/platform.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'core/app/app.dart';
@@ -14,7 +13,7 @@ import 'features/messaging/firebase_messaging_controller.dart';
 
 String currentIosVersion = '1.1.3+14';
 
-bool get isIOS => GetPlatform.isIOS;
+// bool get isIOS => Platform.isIOS;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

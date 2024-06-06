@@ -526,6 +526,7 @@ class NewBookingLogic {
           createdAt: DateTime.now(),
           isQuickBooking: true,
           parentBookingId: controller.quickBookingIdTED.text,
+          certificateStatus: 0,
         );
 
         controller.bookingId = await FirebaseApi.addNewBooking(bookingModel);
@@ -560,6 +561,7 @@ class NewBookingLogic {
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       }
     }
+    controller.bookingModel.certificateStatus = 0;
     controller.bookingId = await FirebaseApi.addNewBooking(controller.bookingModel);
     LogModel logModel = LogModel(type: LogType.bookingCreated, bookingId: controller.bookingId);
     FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());

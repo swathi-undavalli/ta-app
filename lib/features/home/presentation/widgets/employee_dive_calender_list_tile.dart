@@ -1,13 +1,8 @@
 import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart' as intl;
 import 'package:intl/intl.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -20,8 +15,8 @@ import '../../../boat/models/boats.dart';
 import '../../../boat/presentation/widgets/customer_booking_status.dart';
 import '../../../boat/presentation/widgets/customer_expandable_list_tile.dart';
 import '../../../bookings/models/booking_model.dart';
+import '../../../bookings/presentation/widgets/certification_status.dart';
 import '../../../bookings/presentation/widgets/dive_log_bootomsheet.dart';
-import '../../../employees/model/employee.dart';
 import '../../controllers/home_controller.dart';
 
 class EmployeeDiveCalenderListTile extends StatefulWidget {
@@ -175,14 +170,15 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                   Spacing.h5,
                   Row(
                     children: [
-                      Text(
-                        'Status',
-                        style: TextStyle(
-                          color: Colors.grey[700],
-                          fontSize: 13,
-                          letterSpacing: 0.3,
-                          fontWeight: FontWeight.w600,
-                        ),
+                      AppButton.miniFlat(
+                        text: 'Add Log',
+                        onTap: () {
+                          DiveLogBottomSheet.show(
+                            context,
+                            bookingModel: widget.itemModel.bookingModel!,
+                            date: selectedDate,
+                          );
+                        },
                       ),
                       const Spacer(),
                       BookingStatus(
@@ -200,48 +196,19 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                       ).centerR,
                     ],
                   ).paddingOnly(right: 15),
-                  Spacing.h10,
+                  Spacing.h15,
                   if (widget.itemModel.colorCode != 'Blue' && (!widget.itemModel.bookingModel!.isQuickBooking))
-                    Row(
-                      children: [
-                        AppButton.miniFlat(
-                          text: 'Process Cert',
-                          onTap: () async {
-                            String message = """
-
-*${widget.itemModel.name!.trim().toLowerCase().capitalizeFirst! + widget.itemModel.bookingModel!.pax![0]["last-name"]} 's* ${widget.itemModel.activity}
-
-*Certification details:* 
-
-Email : *${widget.itemModel.email}* 
-Date of Birth : *${(widget.itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((widget.itemModel.bookingModel!.pax![0]["dob"] as Timestamp).toDate()) : "-"}* 
-Certification : *${widget.itemModel.activity}* 
-Course Completion Date : *${intl.DateFormat("dd-MM-yyy").format(DateTime.now())}* 
-Balance : *${getBalance(widget.itemModel.bookingModel!.payments!, double.parse(widget.itemModel.paid).roundToDouble(), double.parse(widget.itemModel.cost).roundToDouble())} /-* 
-Completed instructor : *${currentEmployee!.name.trim()}* 
-Instructor No : *${(currentEmployee?.agencyId != null && currentEmployee?.agencyId != '') ? currentEmployee?.agencyId : "-"}* 
-Invoice No : *${widget.itemModel.bookingModel?.receiptNo ?? '-'}* 
-Course / Equipment Upsell :     *${"-"}*
- 
-Regards,
-*${currentEmployee!.name.trim()}*
-                                          """;
-                            await Clipboard.setData(ClipboardData(text: message));
-                            Fluttertoast.showToast(msg: 'Message copied to Clipboard');
-                          },
-                        ),
-                        const Spacer(),
-                        AppButton.miniFlat(
-                          text: 'Add Log',
-                          onTap: () {
-                            DiveLogBottomSheet.show(
-                              context,
-                              bookingModel: widget.itemModel.bookingModel!,
-                              date: selectedDate,
-                            );
-                          },
-                        ),
-                      ],
+                    CertificationStatus(
+                      initialStatus: widget.itemModel.bookingModel?.certificateStatus ?? 0,
+                      itemModel: widget.itemModel,
+                      onChanged: (int status) async {
+                        widget.itemModel.bookingModel?.certificateStatus = status;
+                        await FirebaseFirestore.instance
+                            .collection('bookings')
+                            .doc(widget.itemModel.bookingModel!.id)
+                            .set(widget.itemModel.bookingModel!.toMap());
+                      },
+                      isCertificationDetailsView: false,
                     ).paddingOnly(right: 15),
                   Spacing.h10,
                   const Divider(thickness: 1, color: Colors.black).paddingOnly(right: 20),

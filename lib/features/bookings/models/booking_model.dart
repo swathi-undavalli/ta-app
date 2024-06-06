@@ -38,6 +38,7 @@ class Booking {
     this.boatDetails,
     this.parentBookingId,
     this.isQuickBooking = false,
+    this.certificateStatus,
   });
 
   List<Activity?>? activity;
@@ -67,6 +68,7 @@ class Booking {
   BoatDetails? boatDetails;
   bool isQuickBooking;
   String? parentBookingId;
+  int? certificateStatus;
 
   Booking copyWith({
     List<Activity?>? activity,
@@ -96,6 +98,7 @@ class Booking {
     BoatDetails? boatDetails,
     bool? isQuickBooking,
     String? parentBookingId,
+    int? certificateStatus,
   }) =>
       Booking(
         activity: activity ?? this.activity,
@@ -125,6 +128,7 @@ class Booking {
         boatDetails: boatDetails ?? this.boatDetails,
         parentBookingId: parentBookingId ?? this.parentBookingId,
         isQuickBooking: isQuickBooking ?? this.isQuickBooking,
+        certificateStatus: certificateStatus ?? this.certificateStatus,
       );
 
   factory Booking.fromMap(Map<String, dynamic> json) {
@@ -161,6 +165,7 @@ class Booking {
       cancelBooking: json['cancelBooking'],
       cancellationReason: json['cancellationReason'],
       boatDetails: BoatDetails.fromMap(json['boatDetails']),
+      certificateStatus: json['certificateStatus'],
     );
   }
 
@@ -195,6 +200,7 @@ class Booking {
       'parentBookingId': parentBookingId,
       'cancellationReason': cancellationReason,
       'boatDetails': boatDetails?.toMap(),
+      'certificateStatus': certificateStatus,
     };
   }
 
@@ -273,7 +279,6 @@ class Booking {
     if (boatDetails?.instructors?.isEmpty ?? false) return null;
     return boatDetails?.instructors?[0];
   }
-
 
   BoatInfo? getBoatInfo(DateTime date) {
     String d = DateFormat('dd-MM-yyyy').format(date);

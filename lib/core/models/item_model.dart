@@ -5,6 +5,7 @@ import '../../features/bookings/models/booking_model.dart';
 class ItemModel {
   bool expanded;
   final String? name;
+  final String? lastName;
   String time;
   String session;
   final String? email;
@@ -26,6 +27,7 @@ class ItemModel {
 
   ItemModel({
     required this.phone,
+    required this.lastName,
     required this.activity,
     required this.bookingID,
     required this.colorCode,
@@ -83,6 +85,7 @@ class ItemModel {
       registration: true,
       receiptNo: bookingModel.receiptNo,
       name: bookingModel.pax![0]['first-name'],
+      lastName: bookingModel.pax![0]['last-name'],
       pax: bookingModel.noOfPersons,
       email: bookingModel.pax![0]['email'],
       remarks: bookingModel.remarks,

@@ -336,6 +336,7 @@ class EmployeeDetailsView extends StatelessWidget {
       logic.controller.addActivity = employee.accessLevels?.addActivity ?? false;
       logic.controller.marketingGallery = employee.accessLevels?.marketingGallery ?? false;
       logic.controller.offers = employee.accessLevels?.offers ?? false;
+      logic.controller.processCertificate = employee.accessLevels?.processCertificate ?? false;
 
       return true;
     }

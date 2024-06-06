@@ -56,6 +56,7 @@ class AddEmployeeLogic {
           boatPlan: controller.boatPlan,
           marketingGallery: controller.marketingGallery,
           offers: controller.offers,
+          processCertificate: controller.processCertificate,
         ),
       );
       FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
@@ -112,6 +113,7 @@ class AddEmployeeLogic {
           boatPlan: controller.boatPlan,
           marketingGallery: controller.marketingGallery,
           offers: controller.offers,
+          processCertificate: controller.processCertificate,
         ),
       );
       FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
@@ -210,6 +212,14 @@ class AddAnEmployeeController extends GetxController {
   bool? _boatPlan = false;
   bool? _marketingGallery = false;
   bool? _offers = false;
+  bool? _processCertificate = false;
+
+  bool? get processCertificate => _processCertificate;
+
+  set processCertificate(bool? value) {
+    _processCertificate = value;
+    update();
+  }
 
   bool? get notifications => _notifications;
 

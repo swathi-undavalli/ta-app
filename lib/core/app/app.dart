@@ -15,6 +15,8 @@ import '../../features/bookings/presentation/views/customer_logs_view.dart';
 import '../../features/bookings/presentation/views/edit_payments_view.dart';
 import '../../features/bookings/presentation/views/new_booking_view.dart';
 import '../../features/bookings/presentation/views/payment_details_view.dart';
+import '../../features/certifications/presentation/views/certification_details_view.dart';
+import '../../features/certifications/presentation/views/certification_progress_view.dart';
 import '../../features/coast_guard_slip/presentation/views/coast_guard_slip_view.dart';
 import '../../features/conditions/presentation/views/add_conditions_view.dart';
 import '../../features/dashboard/controller/dashboard_controller.dart';
@@ -115,6 +117,8 @@ class MyApp extends StatelessWidget {
         OffersView.id: (context) => const OffersView(),
         CoastGuardSlipView.id: (context) => const CoastGuardSlipView(),
         RoasterView.id: (context) => const RoasterView(),
+        CertificationProgressView.id: (context) => const CertificationProgressView(),
+        CertificationDetailsView.id: (context) => CertificationDetailsView(),
       },
     );
   }

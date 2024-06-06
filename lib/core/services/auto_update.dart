@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -84,14 +86,14 @@ class AutoUpdateView extends StatelessWidget {
               height: 10,
             ),
             Text(
-              'Current version : ${(isIOS) ? currentIosVersion : currentAndroidVersion}',
+              'Current version : ${(Platform.isIOS) ? currentIosVersion : currentAndroidVersion}',
               style: const TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-              'Latest version : ${(isIOS) ? latestIosVersion : latestAndroidVersion}',
+              'Latest version : ${(Platform.isIOS) ? latestIosVersion : latestAndroidVersion}',
               style: const TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
@@ -100,7 +102,7 @@ class AutoUpdateView extends StatelessWidget {
             const SizedBox(
               height: 100,
             ),
-            if (isIOS)
+            if (Platform.isIOS)
               const Text(
                 'Please install the latest update from the TestFlight App',
                 textAlign: TextAlign.center,
@@ -176,7 +178,7 @@ class AutoUpdateLogic {
     controller.iosVersionNumber = data.data()!['iosNumber'];
     controller.forceLogout = data.data()!['force_logout'];
 
-    if (isIOS) {
+    if (Platform.isIOS) {
       if (currentIosVersion != controller.iosVersionNumber) {
         Get.offAllNamed(AutoUpdateView.id);
       }

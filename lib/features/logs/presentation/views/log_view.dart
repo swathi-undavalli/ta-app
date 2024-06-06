@@ -5,6 +5,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import '../../../../core/constants/constants.dart';
+import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../models/log_model.dart';
 import 'notification_view.dart';
@@ -210,7 +211,7 @@ class LogView extends StatelessWidget {
                   child: getIcon(),
                 ),
               ),
-              const SizedBox(width: 20),
+              Spacing.w20,
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -238,13 +239,11 @@ class LogView extends StatelessWidget {
                   ),
                 ],
               ),
-              // Spacer(),
               Expanded(
                 child: Container(
                   color: Colors.transparent,
                 ),
               ),
-
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
