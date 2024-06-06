@@ -16,7 +16,7 @@ dependencies:
   # DO NOT UPDATE WITHOUT PROPER TESTING.
   firebase_messaging: ^14.2.5
   flutter_local_notifications: ^13.0.0
-  get: ^4.6.5
+  get: ^4.6.6
   get_storage: ^2.1.1
   pdf: ^3.10.4
   intl:

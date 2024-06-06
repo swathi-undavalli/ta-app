@@ -43,6 +43,8 @@
 	<string>location is used to confirm the user login for atendance purpose</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>location is used to confirm the user login for atendance purpose</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>We need access to save images to the photo library</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>user may be required to upload images as profile pictures or scan documents</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
@@ -53,7 +55,7 @@
 		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
-	<string>LaunchScreen</string>
+	<string>Launch Screen</string>
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
@@ -71,8 +73,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-    <string>We need access to save images to the photo library</string>
-
 </dict>
 </plist>
