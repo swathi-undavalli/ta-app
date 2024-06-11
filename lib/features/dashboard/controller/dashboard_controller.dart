@@ -36,7 +36,6 @@ class DashBoardScreenLogic {
       controller.update();
     }
     controller.showLoading = false;
-    controller.update();
   }
 }
 

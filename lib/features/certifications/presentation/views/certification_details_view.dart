@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
 import 'package:intl/intl.dart' as intl;
 
@@ -22,6 +23,7 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.background.lightBlue,
       appBar: const AppBarWidget(heading: 'Certification Details'),
       body: SafeArea(
         child: Column(

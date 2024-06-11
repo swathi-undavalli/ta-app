@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/authentication/firebase_authentication.dart';
 import '../../../../core/constants/constants.dart';
@@ -16,6 +17,7 @@ import '../../../employees/presentation/views/all_employees_view.dart';
 import '../../../login/presentation/views/login_view.dart';
 import '../../controllers/home_controller.dart';
 import '../widgets/employee_dive_calender_list_tile.dart';
+import '../widgets/nav_drawer.dart';
 import '../widgets/template_bottomsheet.dart';
 
 class HomeView extends StatefulWidget {
@@ -38,6 +40,7 @@ class _HomeViewState extends State<HomeView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
+      drawer: NavDrawer(),
       body: SafeArea(
         child: Column(
           children: [
@@ -120,7 +123,7 @@ class _HomeViewState extends State<HomeView> {
           if (currentEmployee?.role != 'Intern')
             IconButton(
               onPressed: () {
-                dashboardDrawerKey.currentState!.openDrawer();
+                Scaffold.of(context).openDrawer();
               },
               icon: const Icon(Icons.menu_rounded),
             ),

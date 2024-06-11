@@ -2,12 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/repository/employee_repo.dart';
 import '../../../core/util/utils.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../employees/model/employee.dart';
+import '../../splash/view/splash_view.dart';
 import '../../welcome/presentation/views/welome_view.dart';
 
 LoginScreenLogic logic = LoginScreenLogic();
@@ -95,6 +97,7 @@ class LoginScreenLogic {
               EmployeeRepo.initiateRepo(currentEmployee!.id);
               controller.reset();
               controller.update();
+              storeDateTime();
               Get.offAndToNamed(WelcomeView.id);
             } else {
               //log('Failed');
@@ -138,6 +141,14 @@ class LoginScreenLogic {
     } else {
       Fluttertoast.showToast(msg: 'Invalid Employee');
     }
+  }
+
+  Future<void> storeDateTime() async {
+    print('storeDateTime saving...');
+    final prefs = await SharedPreferences.getInstance();
+    String dateTimeString = DateTime.now().toIso8601String();
+    await prefs.setString(lastLoginTime, dateTimeString);
+    print('storeDateTime saved....');
   }
 
   resendOTP() async {

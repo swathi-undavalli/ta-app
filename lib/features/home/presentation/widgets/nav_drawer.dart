@@ -9,7 +9,7 @@ import '../../../activities/presentation/views/all_activities_view.dart';
 import '../../../all_bookings/presentation/views/all_bookings_view.dart';
 import '../../../board_plan/presentation/views/board_plan_view.dart';
 import '../../../bookings/presentation/views/customer_logs_view.dart';
-import '../../../certifications/presentation/views/certification_progress_view.dart';
+import '../../../certifications/presentation/views/certification_logs_view.dart';
 import '../../../coast_guard_slip/presentation/views/coast_guard_slip_view.dart';
 import '../../../employees/model/employee.dart';
 import '../../../employees/presentation/views/employee_profile_view.dart';
@@ -27,6 +27,10 @@ class NavDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    if (currentEmployee?.role == 'Intern') {
+      return const SizedBox();
+    }
+
     return Drawer(
       backgroundColor: Colors.white,
       child: SingleChildScrollView(
@@ -144,7 +148,7 @@ class NavDrawer extends StatelessWidget {
                 icon: Icons.card_membership_outlined,
                 text: 'Certifications',
                 onTap: () {
-                  Get.offAndToNamed(CertificationProgressView.id);
+                  Get.offAndToNamed(CertificationLogsView.id);
                 },
               ),
             ),

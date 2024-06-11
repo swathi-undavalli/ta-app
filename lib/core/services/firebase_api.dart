@@ -5,23 +5,12 @@ import '../../features/bookings/models/booking_model.dart';
 import '../../features/employees/model/employee.dart';
 
 class FirebaseApi {
-  static Future<DocumentSnapshot<Map<String, dynamic>>>
-      getEmployeeFullInformation(String? employeeID) async {
-    return await FirebaseFirestore.instance
-        .collection('employees')
-        .doc(employeeID)
-        // .collection('employeeFullInformation')
-        // .doc('employeeData')
-        .get();
+  static Future<DocumentSnapshot<Map<String, dynamic>>> getEmployeeFullInformation(String? employeeID) async {
+    return await FirebaseFirestore.instance.collection('employees').doc(employeeID).get();
   }
 
   static Future<void> updateEmployeeFullInformation(Employee employee) async {
-    return await FirebaseFirestore.instance
-        .collection('employees')
-        .doc(employee.id)
-        // .collection('employeeFullInformation')
-        // .doc('employeeData')
-        .set(employee.toMap());
+    return await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
   }
 
   static Future<DocumentSnapshot<Map<String, dynamic>>> getAttendance(
@@ -37,19 +26,15 @@ class FirebaseApi {
   }
 
   static addNewBooking(Booking booking) async {
-    DocumentReference counterRef =
-        FirebaseFirestore.instance.collection('counter').doc('count');
+    DocumentReference counterRef = FirebaseFirestore.instance.collection('counter').doc('count');
 
     int? bookingId;
     await FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentSnapshot counterSnapshot = await transaction.get(counterRef);
-      Map<String, dynamic> data =
-          counterSnapshot.data() as Map<String, dynamic>;
+      Map<String, dynamic> data = counterSnapshot.data() as Map<String, dynamic>;
       int? newBookingID = data['booking'] + 1;
 
-      DocumentReference bookingRef = FirebaseFirestore.instance
-          .collection('bookings')
-          .doc(newBookingID.toString());
+      DocumentReference bookingRef = FirebaseFirestore.instance.collection('bookings').doc(newBookingID.toString());
 
       booking.id = newBookingID.toString();
       transaction.set(bookingRef, booking.toMap());

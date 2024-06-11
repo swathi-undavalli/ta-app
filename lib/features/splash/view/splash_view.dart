@@ -2,13 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../core/authentication/firebase_authentication.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/repository/employee_repo.dart';
 import '../../../core/services/auto_update.dart';
 import '../../../core/util/app_measurements.dart';
 import '../../login/presentation/views/login_view.dart';
+
+String lastLoginTime = 'lastLoginTime';
 
 class SplashView extends StatefulWidget {
   const SplashView({Key? key}) : super(key: key);
@@ -33,6 +37,13 @@ class _SplashViewState extends State<SplashView> {
       if (user == null) {
         Get.offAllNamed(LoginView.id);
       } else {
+        final prefs = await SharedPreferences.getInstance();
+        DateTime? lastLogin = DateTime.tryParse(prefs.getString(lastLoginTime) ?? '');
+        if ((lastLogin?.difference(DateTime.now()).inDays ?? 16) > 15) {
+          FirebaseAuthentication.logout();
+          Get.offAllNamed(LoginView.id);
+          return;
+        }
         await EmployeeRepo.synchronise();
         AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
         await autoUpdateLogic.checkForUpdate();

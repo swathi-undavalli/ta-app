@@ -62,8 +62,7 @@ class DashBoardView extends StatelessWidget {
           Scaffold(
             backgroundColor: AppColors.background.lightBlue,
             bottomNavigationBar: buildBottomNavigationBar(),
-            drawer: (currentEmployee?.role != 'Intern') ? NavDrawer() : const SizedBox(),
-            key: dashboardDrawerKey,
+            drawer: NavDrawer(),
             body: SafeArea(
               child: buildSelectedPage(),
             ),
@@ -110,16 +109,17 @@ class DashBoardView extends StatelessWidget {
   }
 
   Widget buildBottomNavigationBar() {
-    return GetBuilder<DashBoardScreenController>(builder: (controller) {
-      return BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        backgroundColor: Colors.black,
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white,
-        showUnselectedLabels: false,
-        showSelectedLabels: false,
-        iconSize: 30,
-        currentIndex: controller.currentIndex,
+    return GetBuilder<DashBoardScreenController>(
+      builder: (controller) {
+        return BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
+          backgroundColor: Colors.black,
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white,
+          showUnselectedLabels: false,
+          showSelectedLabels: false,
+          iconSize: 30,
+          currentIndex: controller.currentIndex,
           onTap: (index) {
             controller.currentIndex = index;
           },

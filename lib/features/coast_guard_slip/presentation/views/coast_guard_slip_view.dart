@@ -43,7 +43,7 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
         child: Column(
           children: [
             Spacing.h20,
-            buildCalenderWidget(context),
+            buildCalenderWidget(),
             Spacing.h20,
             Spacing.h30,
             if (showLoading)
@@ -64,7 +64,7 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
     );
   }
 
-  Widget buildCalenderWidget(BuildContext context) {
+  Widget buildCalenderWidget() {
     return Row(
       children: [
         buildButton(
@@ -111,7 +111,7 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
         IconButton(
           splashRadius: 20,
           onPressed: () {
-            showDateSelector(context);
+            showDateSelector();
           },
           icon: const Icon(
             Icons.calendar_today_outlined,
@@ -141,7 +141,7 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
     );
   }
 
-  void showDateSelector(BuildContext context) async {
+  void showDateSelector() async {
     DateTime? date = await showDatePicker(
       context: context,
       initialDate: selectedDate,
