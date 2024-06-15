@@ -22,8 +22,9 @@ class FirebaseMessagingLogic {
     });
 
     ///app is in Background
-
-    FirebaseMessaging.onMessageOpenedApp.listen((message) {});
+    FirebaseMessaging.onMessageOpenedApp.listen((message) {
+      LocalNotificationService.display(message);
+    });
   }
 }
 

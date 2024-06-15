@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/util/alignment_extensions.dart';
@@ -77,7 +78,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
         children: [
           if (showLoading)
             Container(
-              width: Get.width,
+              width: Screen.width,
               height: 550,
               color: Colors.grey,
               child: const CircularProgressIndicator(
@@ -108,7 +109,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
               Spacing.h25,
               buildDropDown(),
               Spacing.h50,
-              buildSubmitButton(),
+              buildSubmitButton(context),
             ],
           ).paddingSymmetric(horizontal: 20, vertical: 20).scrollable,
         ],
@@ -116,7 +117,7 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
     );
   }
 
-  Widget buildSubmitButton() {
+  Widget buildSubmitButton(BuildContext context) {
     return AppButton.flat(
       onTap: () async {
         if (isValid()) {
@@ -144,8 +145,9 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
 
           showLoading = false;
           setState(() {});
-
-          Get.back();
+          if (context.mounted) {
+            Navigator.pop(context);
+          }
         }
         setState(() {});
       },

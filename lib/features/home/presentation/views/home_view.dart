@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/authentication/firebase_authentication.dart';
 import '../../../../core/constants/constants.dart';
@@ -22,6 +22,10 @@ import '../widgets/template_bottomsheet.dart';
 
 class HomeView extends StatefulWidget {
   const HomeView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const HomeView(),
+      );
 
   @override
   State<HomeView> createState() => _HomeViewState();
@@ -57,7 +61,7 @@ class _HomeViewState extends State<HomeView> {
                             text: 'Add Employees',
                             subText: 'Only admins can modify',
                             onTap: () {
-                              Get.toNamed(AllEmployeesView.id);
+                              Navigator.push(context, AllEmployeesView.route());
                             },
                           ).paddingOnly(bottom: 20),
                         buildCheckLists().paddingOnly(bottom: 10),
@@ -77,8 +81,8 @@ class _HomeViewState extends State<HomeView> {
                     ).paddingSymmetric(horizontal: 20),
                     if (controller.showLoading)
                       Container(
-                        height: Get.height,
-                        width: Get.width,
+                        height: Screen.height,
+                        width: Screen.width,
                         color: Colors.white,
                         child: const CircularProgressIndicator(
                           color: Colors.black,
@@ -116,7 +120,7 @@ class _HomeViewState extends State<HomeView> {
   Widget buildMenuAndLogOut() {
     return Container(
       margin: const EdgeInsets.only(top: 10),
-      width: Get.width,
+      width: Screen.width,
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
@@ -156,14 +160,14 @@ class _HomeViewState extends State<HomeView> {
             AppButton.miniText(
               text: 'Cancel',
               onTap: () {
-                Get.back();
+                Navigator.pop(context);
               },
             ),
             AppButton.miniFlat(
               text: 'Okay',
               onTap: () {
                 FirebaseAuthentication.logout();
-                Get.offAndToNamed(LoginView.id);
+                Navigator.pushReplacement(context, LoginView.route());
               },
             ),
           ],
@@ -174,7 +178,7 @@ class _HomeViewState extends State<HomeView> {
 
   Widget buildEmployeeDiveCalender() {
     return Container(
-      width: Get.width,
+      width: Screen.width,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(12),
         color: Colors.white,
@@ -289,7 +293,7 @@ class _HomeViewState extends State<HomeView> {
   Widget buildCheckLists() {
     if (currentEmployee?.role != 'Intern') {
       return Container(
-        width: Get.width,
+        width: Screen.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),
           color: Colors.white,
@@ -341,10 +345,7 @@ class _HomeViewState extends State<HomeView> {
                       (checklistElement) => buildChecklistTiles(
                         text: checklistElement.title,
                         onTap: () {
-                          Get.toNamed(
-                            DiveChecklistView.id,
-                            arguments: [checklistElement, checklist],
-                          );
+                          Navigator.push(context, DiveChecklistView.route(checklistElement, checklist));
                         },
                       ).paddingOnly(bottom: 5),
                     ),
@@ -396,7 +397,7 @@ class _HomeViewState extends State<HomeView> {
           ),
         ),
       ],
-    ).width(Get.width - 80);
+    ).width(Screen.width - 80);
   }
 
   getFirstName(String d) {

@@ -152,7 +152,6 @@ class AddOffersLogic {
     controller.showLoading = false;
     controller.update();
     controller.clear();
-    Get.back();
   }
 }
 

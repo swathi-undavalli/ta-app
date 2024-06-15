@@ -1,9 +1,12 @@
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/constants/enums.dart';
 import '../../../../core/util/utils.dart';
@@ -12,46 +15,64 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/booking_calender_widget_old/booking_calender_old.dart';
 import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import '../../../../core/widgets/phone_number/intl_phone_field.dart';
-import '../../models/booking_model.dart';
-import 'book_date_time_view.dart';
-import '../widgets/app_text_fields.dart';
 import '../../../logs/models/log_model.dart';
 import '../../../logs/presentation/views/log_view.dart';
 import '../../controller/edit_booking_new_controller.dart';
+import '../../models/booking_model.dart';
+import '../widgets/app_text_fields.dart';
+import 'book_date_time_view.dart';
 
-class EditBookingView extends StatelessWidget {
-  static const String id = 'EditBookingNewScreen';
+class EditBookingView extends StatefulWidget {
+  final Booking? booking;
+
+  const EditBookingView({Key? key, required this.booking}) : super(key: key);
+
+  static Route route(Booking booking) => MaterialPageRoute(
+        builder: (context) => EditBookingView(
+          booking: booking,
+        ),
+      );
+
+  @override
+  State<EditBookingView> createState() => _EditBookingViewState();
+}
+
+class _EditBookingViewState extends State<EditBookingView> {
   final EditBookingNewLogic logic = EditBookingNewLogic();
-  final Booking? bookingArg = Get.arguments;
+
   final AutoScrollController autoScrollControllerTheory = AutoScrollController();
+
   final AutoScrollController autoScrollControllerPool = AutoScrollController();
+
   final AutoScrollController autoScrollControllerDive = AutoScrollController();
 
-  EditBookingView({Key? key}) : super(key: key) {
-    logic.controller.bookingModel = bookingArg;
-    logic.controller.activityNAmeTED.text = bookingArg!.activity![0]!.name.toString();
-    logic.controller.totalAmountTED.text = ((bookingArg!.totalCost).round()).toString();
-    logic.controller.priceTED.text = bookingArg!.price.toString();
-    logic.controller.depositTED.text = bookingArg!.paid.toString();
-    logic.controller.balanceTED.text = bookingArg!.balance.toString();
-    logic.controller.paxTED.text = bookingArg!.noOfPersons.toString();
-    logic.controller.remarksTED.text = bookingArg!.remarks ?? '';
-    logic.controller.invoiceTED.text = bookingArg!.receiptNo ?? '';
-    logic.controller.countryCodeTED.text = bookingArg!.pax![0]['countryCode'] ?? '';
-    logic.controller.phoneTED.text = bookingArg!.pax![0]['phoneNumber'] ?? '';
-    logic.controller.emailTED.text = bookingArg!.pax![0]['email'] ?? '';
-    logic.controller.firstNameTED.text = bookingArg!.pax![0]['first-name'];
-    logic.controller.lastNameTED.text = bookingArg!.pax![0]['last-name'] ?? '';
-    logic.controller.isoCode = bookingArg!.pax![0]['isoCode'] ?? '';
-    logic.controller.discountTED.text = bookingArg!.discount?.toString() ?? '0';
-    logic.controller.taxable = bookingArg!.tax != 0;
-    logic.controller.discountSwitch = bookingArg!.discountType == '%';
+  @override
+  void initState() {
+    super.initState();
+    logic.controller.bookingModel = widget.booking;
+    logic.controller.activityNAmeTED.text = widget.booking!.activity![0]!.name.toString();
+    logic.controller.totalAmountTED.text = ((widget.booking!.totalCost).round()).toString();
+    logic.controller.priceTED.text = widget.booking!.price.toString();
+    logic.controller.depositTED.text = widget.booking!.paid.toString();
+    logic.controller.balanceTED.text = widget.booking!.balance.toString();
+    logic.controller.paxTED.text = widget.booking!.noOfPersons.toString();
+    logic.controller.remarksTED.text = widget.booking!.remarks ?? '';
+    logic.controller.invoiceTED.text = widget.booking!.receiptNo ?? '';
+    logic.controller.countryCodeTED.text = widget.booking!.pax![0]['countryCode'] ?? '';
+    logic.controller.phoneTED.text = widget.booking!.pax![0]['phoneNumber'] ?? '';
+    logic.controller.emailTED.text = widget.booking!.pax![0]['email'] ?? '';
+    logic.controller.firstNameTED.text = widget.booking!.pax![0]['first-name'];
+    logic.controller.lastNameTED.text = widget.booking!.pax![0]['last-name'] ?? '';
+    logic.controller.isoCode = widget.booking!.pax![0]['isoCode'] ?? '';
+    logic.controller.discountTED.text = widget.booking!.discount?.toString() ?? '0';
+    logic.controller.taxable = widget.booking!.tax != 0;
+    logic.controller.discountSwitch = widget.booking!.discountType == '%';
 
-    if (bookingArg!.pax![0]['dob'] != null) {
+    if (widget.booking!.pax![0]['dob'] != null) {
       try {
-        logic.controller.dob = (bookingArg!.pax![0]['dob'] as Timestamp).toDate();
+        logic.controller.dob = (widget.booking!.pax![0]['dob'] as Timestamp).toDate();
       } catch (e) {
-        showToast(bookingArg!.id!);
+        showToast(widget.booking!.id!);
         logic.controller.dob = DateTime.now();
       }
       logic.controller.dobTED.text = DateFormat('dd MMM, yyyy').format(logic.controller.dob);
@@ -103,16 +124,19 @@ class EditBookingView extends StatelessWidget {
                             buildPhoneNumber(),
                             const SizedBox(height: 50),
                             buildEditSessions(
+                              context,
                               controller,
                               type: DateType.theory,
                             ),
                             const SizedBox(height: 30),
                             buildEditSessions(
+                              context,
                               controller,
                               type: DateType.pool,
                             ),
                             const SizedBox(height: 30),
                             buildEditSessions(
+                              context,
                               controller,
                               type: DateType.dive,
                             ),
@@ -123,7 +147,7 @@ class EditBookingView extends StatelessWidget {
                     ),
                   ),
                 ),
-                buildButtons(),
+                buildButtons(context),
                 const SizedBox(height: 50),
               ],
             ),
@@ -168,7 +192,7 @@ class EditBookingView extends StatelessWidget {
     );
   }
 
-  Widget buildButtons() {
+  Widget buildButtons(BuildContext context) {
     return GetBuilder<EditBookingNewController>(
       builder: (controller) {
         return Row(
@@ -182,7 +206,7 @@ class EditBookingView extends StatelessWidget {
               textColor: AppColors.text.black,
               onTap: () {
                 disposeKeyboard();
-                Get.back();
+                Navigator.pop(context);
                 controller.reset();
               },
             ),
@@ -220,7 +244,9 @@ class EditBookingView extends StatelessWidget {
                   bookingId: controller.bookingModel!.id,
                 );
                 FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
-                Get.back();
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
                 controller.reset();
 
                 BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
@@ -233,7 +259,7 @@ class EditBookingView extends StatelessWidget {
     );
   }
 
-  Widget buildEditSessions(
+  Widget buildEditSessions(BuildContext context,
     EditBookingNewController controller, {
     required DateType type,
   }) {
@@ -289,7 +315,7 @@ class EditBookingView extends StatelessWidget {
                             AppButton.miniText(
                               text: 'Cancel',
                               onTap: () {
-                                Get.back();
+                                Navigator.pop(context);
                               },
                             ),
                             AppButton.miniFlat(
@@ -303,9 +329,8 @@ class EditBookingView extends StatelessWidget {
                                     selectedTheoryDate?.day != null) {
                                   int index = controller.bookingModel!.theoryDate!.indexOf(e);
                                   controller.bookingModel!.theoryDate![index] = selectedTheoryDate;
-                                  //print(controller.bookingModel.theoryDate);
                                   controller.update();
-                                  Get.back();
+                                  Navigator.pop(context);
                                 } else {
                                   showToast('Select Time');
                                 }
@@ -375,7 +400,7 @@ class EditBookingView extends StatelessWidget {
                             AppButton.miniText(
                               text: 'Cancel',
                               onTap: () {
-                                Get.back();
+                                Navigator.pop(context);
                               },
                             ),
                             AppButton.miniFlat(
@@ -391,7 +416,7 @@ class EditBookingView extends StatelessWidget {
                                   controller.bookingModel!.poolDate![index] = selectedPoolDate;
                                   //print(controller.bookingModel.poolDate);
                                   controller.update();
-                                  Get.back();
+                                  Navigator.pop(context);
                                 } else {
                                   showToast('Select Time');
                                 }
@@ -461,7 +486,7 @@ class EditBookingView extends StatelessWidget {
                             AppButton.miniText(
                               text: 'Cancel',
                               onTap: () {
-                                Get.back();
+                                Navigator.pop(context);
                               },
                             ),
                             AppButton.miniFlat(
@@ -475,9 +500,8 @@ class EditBookingView extends StatelessWidget {
                                     selectedDiveDate?.day != null) {
                                   int index = controller.bookingModel!.diveDate!.indexOf(e);
                                   controller.bookingModel!.diveDate![index] = selectedDiveDate;
-                                  //print(controller.bookingModel.diveDate);
                                   controller.update();
-                                  Get.back();
+                                  Navigator.pop(context);
                                 } else {
                                   showToast('Select Time');
                                 }
@@ -551,7 +575,7 @@ class EditBookingView extends StatelessWidget {
                             AppButton.miniText(
                               text: 'Cancel',
                               onTap: () {
-                                Get.back();
+                                Navigator.pop(context);
                               },
                             ),
                             AppButton.miniFlat(
@@ -574,7 +598,7 @@ class EditBookingView extends StatelessWidget {
                                   controller.bookingModel!.bookingDate!.add(getStringDate(selectedDate!));
 
                                   controller.update();
-                                  Get.back();
+                                  Navigator.pop(context);
                                 } else {
                                   showToast('Select Time');
                                 }
@@ -654,14 +678,14 @@ class EditBookingView extends StatelessWidget {
 
   Widget buildActivityDropDown() {
     return SizedBox(
-      width: Get.width,
+      width: Screen.width,
       child: Row(
         children: [
           Expanded(
             child: Padding(
               padding: const EdgeInsets.only(right: 12, top: 12),
               child: Container(
-                width: Get.width,
+                width: Screen.width,
                 alignment: Alignment.centerLeft,
                 child: buildSubTitle(text: 'Activities'),
               ),
@@ -831,7 +855,7 @@ class EditBookingView extends StatelessWidget {
     return GetBuilder<EditBookingNewController>(
       builder: (controller) {
         return SizedBox(
-          width: Get.width,
+          width: Screen.width,
           child: Row(
             children: [
               Expanded(
@@ -862,7 +886,7 @@ class EditBookingView extends StatelessWidget {
 
   Widget buildDiscount() {
     return SizedBox(
-      width: Get.width,
+      width: Screen.width,
       child: GetBuilder<EditBookingNewController>(
         builder: (controller) {
           return Row(
@@ -946,7 +970,7 @@ class EditBookingView extends StatelessWidget {
 
   Widget buildTax() {
     return SizedBox(
-      width: Get.width,
+      width: Screen.width,
       child: GetBuilder<EditBookingNewController>(
         builder: (controller) {
           return Row(
@@ -1020,13 +1044,13 @@ class EditBookingView extends StatelessWidget {
       children: [
         Expanded(
           child: SizedBox(
-            width: Get.width,
+            width: Screen.width,
             child: buildFirstName(controller),
           ),
         ),
         const SizedBox(width: 20),
         SizedBox(
-          width: (Get.width / 2.5),
+          width: (Screen.width / 2.5),
           child: buildLastName(controller),
         ),
       ],
@@ -1105,7 +1129,7 @@ class EditBookingView extends StatelessWidget {
     Function(String)? onChangedCallBack,
   }) {
     return AppTextField(
-      width: Get.width,
+      width: Screen.width,
       hintText: text,
       controller: textEditingController,
       keyboardType: keyBoardType,

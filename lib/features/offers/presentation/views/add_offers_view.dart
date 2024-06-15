@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -12,10 +14,17 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/ta_image.dart';
 import '../../controllers/add_offers_controller.dart';
 import '../../models/category.dart';
+import '../../models/offer.dart';
 
 class AddOffersView extends StatefulWidget {
-  const AddOffersView({Key? key}) : super(key: key);
-  static const String id = 'addOffersView';
+  const AddOffersView({Key? key, required this.offer}) : super(key: key);
+  final Offer? offer;
+
+  static Route route(Offer? offer) => MaterialPageRoute(
+        builder: (context) => AddOffersView(
+          offer: offer,
+        ),
+      );
 
   @override
   State<AddOffersView> createState() => _AddOffersViewState();
@@ -28,7 +37,7 @@ class _AddOffersViewState extends State<AddOffersView> {
   void initState() {
     super.initState();
     logic.controller.clear();
-    logic.controller.offer = Get.arguments;
+    logic.controller.offer = widget.offer;
 
     if (logic.controller.offer != null) {
       logic.init(logic.controller.offer);
@@ -58,7 +67,7 @@ class _AddOffersViewState extends State<AddOffersView> {
                       Spacing.h15,
                       buildName(),
                       Spacing.h30,
-                      buildValidDates(context),
+                      buildValidDates(),
                       Spacing.h30,
                       buildDescription(),
                       Spacing.h30,
@@ -86,8 +95,8 @@ class _AddOffersViewState extends State<AddOffersView> {
             color: Colors.transparent,
             child: Container(
               color: Colors.black54,
-              height: Get.height,
-              width: Get.width,
+              height: Screen.height,
+              width: Screen.width,
               child: const Center(
                 child: CircularProgressIndicator(
                   color: Colors.white,
@@ -105,8 +114,11 @@ class _AddOffersViewState extends State<AddOffersView> {
   Widget buildAddButton() {
     return AppButton.flat(
       text: (logic.controller.offer != null) ? 'Update' : 'Add',
-      onTap: () {
-        logic.onAddPressed();
+      onTap: () async {
+        await logic.onAddPressed();
+        if (mounted) {
+          Navigator.pop(context);
+        }
       },
       color: Colors.black,
       textColor: Colors.white,
@@ -170,7 +182,7 @@ class _AddOffersViewState extends State<AddOffersView> {
   Widget _buildNoImageBox() {
     return Container(
       height: 183,
-      width: MediaQuery.of(context).size.width,
+      width: Screen.width,
       decoration: BoxDecoration(
         // color: const Color(0xffC4C4C4),
         color: Colors.white,
@@ -193,7 +205,7 @@ class _AddOffersViewState extends State<AddOffersView> {
       builder: (controller) {
         return Container(
           height: 183,
-          width: MediaQuery.of(context).size.width,
+          width: Screen.width,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(10),
             color: const Color(0xffc4c4c4),
@@ -213,8 +225,8 @@ class _AddOffersViewState extends State<AddOffersView> {
                 child: controller.pickedMediaFiles.isNotEmpty
                     ? Image.file(
                         controller.pickedMediaFiles[controller.selectedImageIndex],
-                        height: MediaQuery.of(context).size.width * 4 / 3,
-                        width: MediaQuery.of(context).size.width,
+                        height: Screen.width * 4 / 3,
+                        width: Screen.width,
                         fit: BoxFit.cover,
                       )
                     : _buildNoImageBox(),
@@ -224,7 +236,7 @@ class _AddOffersViewState extends State<AddOffersView> {
                   bottom: 16,
                   child: SizedBox(
                     height: 40,
-                    width: MediaQuery.of(context).size.width,
+                    width: Screen.width,
                     child: SingleChildScrollView(
                       scrollDirection: Axis.horizontal,
                       child: Row(
@@ -378,7 +390,7 @@ class _AddOffersViewState extends State<AddOffersView> {
     );
   }
 
-  Widget buildValidDates(BuildContext context) {
+  Widget buildValidDates() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -387,7 +399,7 @@ class _AddOffersViewState extends State<AddOffersView> {
           children: [
             Expanded(
               child: SizedBox(
-                width: Get.width,
+                width: Screen.width,
                 child: Text(
                   'Valid Dates',
                   style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),

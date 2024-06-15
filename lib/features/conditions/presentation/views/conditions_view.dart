@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -12,6 +13,10 @@ import '../widgets/surface_conditions_expansion_panel.dart';
 
 class ConditionsView extends StatefulWidget {
   const ConditionsView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const ConditionsView(),
+      );
 
   @override
   State<ConditionsView> createState() => _ConditionsViewState();
@@ -35,7 +40,7 @@ class _ConditionsViewState extends State<ConditionsView> {
           floatingActionButton: FloatingActionButton(
             elevation: 0,
             onPressed: () {
-              logic.onFloatingActionButtonPressed();
+              logic.onFloatingActionButtonPressed(context);
             },
             backgroundColor: AppColors.background.black,
             child: const Icon(
@@ -111,7 +116,7 @@ class _ConditionsViewState extends State<ConditionsView> {
                       ],
                     ),
                     SizedBox(
-                      height: Get.height - 240,
+                      height: Screen.height - 240,
                       child: SingleChildScrollView(
                         physics: const BouncingScrollPhysics(),
                         child: Column(
@@ -126,7 +131,7 @@ class _ConditionsViewState extends State<ConditionsView> {
                               ).paddingSymmetric(horizontal: 27),
                             const SizedBox(height: 25),
                             Container(
-                              width: Get.width,
+                              width: Screen.width,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(12),
                                 color: Colors.white,
@@ -148,8 +153,8 @@ class _ConditionsViewState extends State<ConditionsView> {
           builder: (controller) {
             if (controller.showLoading) {
               return Container(
-                height: Get.height,
-                width: Get.width,
+                height: Screen.height,
+                width: Screen.width,
                 color: Colors.white70,
                 child: const Center(
                   child: CircularProgressIndicator(
@@ -325,7 +330,7 @@ class _ConditionsViewState extends State<ConditionsView> {
     return Row(
       children: [
         SizedBox(
-          width: Get.width - 197,
+          width: Screen.width - 197,
           child: SliderTheme(
             data: const SliderThemeData(
               trackHeight: 3,

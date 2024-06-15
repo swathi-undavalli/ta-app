@@ -1,8 +1,11 @@
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -286,7 +289,7 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
             if (interns.isEmpty) const Text('-'),
             ...interns.map(
               (e) => SizedBox(
-                width: Get.width - 210,
+                width: Screen.width - 210,
                 child: Text(
                   "${e.name}${"(${e.nitrox ?? 0} - ${e.air ?? 0})"}, ",
                   style: const TextStyle(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../features/boat/models/boats.dart';
 import '../../../features/boat/presentation/widgets/boat_details_bottom_sheet.dart';
@@ -309,7 +310,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     return GetBuilder<BookingsCalenderWidgetControllerNew>(
       builder: (controller) {
         return Container(
-          width: Get.width,
+          width: Screen.width,
           decoration: BoxDecoration(
             color: AppColors.background.white,
             borderRadius: BorderRadiusDirectional.circular(10),
@@ -589,7 +590,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
       builder: (controller) {
         return SizedBox(
           height: 100,
-          width: Get.width,
+          width: Screen.width,
           child: ListView.builder(
             itemCount: 400,
             controller: autoScrollController,

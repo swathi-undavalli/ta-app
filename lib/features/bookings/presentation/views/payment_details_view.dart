@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -8,10 +9,13 @@ import '../../controller/new_booking_controller.dart';
 import '../widgets/app_text_fields.dart';
 
 class PaymentDetailsView extends StatelessWidget {
-  static const String id = 'PaymentDetailsScreen';
   final NewBookingLogic logic = NewBookingLogic();
 
   PaymentDetailsView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => PaymentDetailsView(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +38,7 @@ class PaymentDetailsView extends StatelessWidget {
                   buildPaymentReferenceTextField(),
                   buildReceiptNo(),
                   const SizedBox(height: 40),
-                  buildProceed(),
+                  buildProceed(context),
                 ],
               ),
             ),
@@ -199,14 +203,14 @@ class PaymentDetailsView extends StatelessWidget {
     );
   }
 
-  Widget buildProceed() {
+  Widget buildProceed(BuildContext context) {
     return Center(
       child: AppButton.flat(
         text: 'Proceed',
         textColor: AppColors.text.white,
         color: AppColors.background.black,
         onTap: () {
-          logic.onPaymentDetailsFilled();
+          logic.onPaymentDetailsFilled(context);
         },
       ),
     );

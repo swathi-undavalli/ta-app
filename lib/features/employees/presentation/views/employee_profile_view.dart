@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -15,9 +16,11 @@ import '../../controllers/employee_profile_controller.dart';
 import '../../model/employee.dart';
 
 class EmployeeProfileView extends StatefulWidget {
-  static const String id = 'EmployeeProfileScreen';
-
   const EmployeeProfileView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const EmployeeProfileView(),
+      );
 
   @override
   State<EmployeeProfileView> createState() => _EmployeeProfileViewState();
@@ -54,7 +57,7 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
                   children: [
                     if (controller.showLoading)
                       Container(
-                        height: Get.height,
+                        height: Screen.height,
                         color: Colors.grey.shade300,
                         child: const CircularProgressIndicator().center,
                       ),
@@ -150,7 +153,7 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
             children: [
               Expanded(
                 child: SizedBox(
-                  width: Get.width,
+                  width: Screen.width,
                   child: Text(
                     'Apply Leaves',
                     style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
@@ -195,7 +198,7 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
     if (logic.controller.isEditMode) {
       logic.controller.isEditMode = !logic.controller.isEditMode;
     } else {
-      Get.back();
+      Navigator.pop(context);
     }
   }
 
@@ -384,14 +387,14 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
           if (!controller.isEditMode) {
             return TextButton(
               style: ButtonStyle(
-                overlayColor: MaterialStateProperty.all(Colors.black.withOpacity(0.2)),
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.transparent),
-                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                overlayColor: WidgetStateProperty.all(Colors.black.withOpacity(0.2)),
+                backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
+                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
                   RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-                minimumSize: MaterialStateProperty.all<Size>(const Size(100, 31)),
+                minimumSize: WidgetStateProperty.all<Size>(const Size(100, 31)),
               ),
               onPressed: () {
                 controller.reset();
@@ -432,7 +435,7 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
                 children: [
                   Expanded(
                     child: SizedBox(
-                      width: Get.width,
+                      width: Screen.width,
                       child: Text(
                         subHeading!,
                         style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),

@@ -7,9 +7,11 @@ import '../../../bookings/models/booking_model.dart';
 import '../../../bookings/presentation/widgets/all_booking_expansion_panel.dart';
 
 class AllBookingsView extends StatefulWidget {
-  static const String id = 'AllBookingsScreen';
-
   const AllBookingsView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const AllBookingsView(),
+      );
 
   @override
   // ignore: library_private_types_in_public_api
@@ -68,11 +70,11 @@ class _AllBookingsViewState extends State<AllBookingsView> {
                 final documents = snapshot.data!.docs.where((doc) {
                   Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-                  return data['PAX'][0]['first-name'].toLowerCase().contains(_searchText) ||
-                      data['PAX'][0]['last-name'].toLowerCase().contains(_searchText) ||
-                      data['PAX'][0]['phoneNumber'].toLowerCase().contains(_searchText) ||
-                      data['PAX'][0]['email'].toLowerCase().contains(_searchText) ||
-                      data['id'].toLowerCase().contains(_searchText);
+                  return data['PAX'][0]['first-name'].contains(_searchText) ||
+                      data['PAX'][0]['last-name'].contains(_searchText) ||
+                      data['PAX'][0]['phoneNumber'].contains(_searchText) ||
+                      data['PAX'][0]['email'].contains(_searchText) ||
+                      data['id'].contains(_searchText);
                 });
 
                 if (documents.isEmpty) {

@@ -6,9 +6,12 @@ import '../../../dashboard/presentation/views/dashboard_view.dart';
 import '../../../employees/model/employee.dart';
 
 class WelcomeView extends StatelessWidget {
-  static const String id = 'WelcomeScreen';
 
   const WelcomeView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const WelcomeView(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -16,10 +19,10 @@ class WelcomeView extends StatelessWidget {
       backgroundColor: AppColors.background.lightBlue,
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Get.offAndToNamed(DashBoardView.id);
+          Navigator.push(context, DashBoardView.route());
         },
         elevation: 0,
-        backgroundColor: AppColors.IconColor.black,
+        backgroundColor: AppColors.iconColor.black,
         child: const Icon(
           Icons.arrow_forward_ios_outlined,
           color: Colors.white,

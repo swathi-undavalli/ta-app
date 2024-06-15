@@ -11,7 +11,7 @@ import '../models/dive_log_model.dart';
 class DiveLogLogic {
   DiveLogController controller = Get.put(DiveLogController());
 
-  Future<void> onSubmitPressed() async {
+  Future<void> onSubmitPressed(BuildContext context) async {
     if (isValid == false) return;
 
     controller.showLoading = true;
@@ -28,8 +28,7 @@ class DiveLogLogic {
     DiveLogModel diveLogModel = DiveLogModel(
       timeIn: Timestamp.fromDate(newTime),
       instructor: controller.instructor[0],
-      course: (controller.booking?.activity != null &&
-              controller.booking!.activity!.isNotEmpty)
+      course: (controller.booking?.activity != null && controller.booking!.activity!.isNotEmpty)
           ? controller.booking!.activity![0]!.name!
           : '-',
       diveSite: controller.diveSiteTED.text,
@@ -48,11 +47,11 @@ class DiveLogLogic {
     controller.update();
 
     showToast(
-      (controller.diveLog != null)
-          ? 'Log edited Successfully'
-          : 'Log added successfully',
+      (controller.diveLog != null) ? 'Log edited Successfully' : 'Log added successfully',
     );
-    Get.back();
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
   }
 
   bool get isValid {

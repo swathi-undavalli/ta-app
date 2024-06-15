@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -313,7 +314,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
   Widget buildSearchBar() {
     return Container(
       height: 47,
-      width: Get.width - 40,
+      width: Screen.width - 40,
       decoration: BoxDecoration(borderRadius: BorderRadius.circular(5), color: Colors.white),
       child: Container(
         margin: const EdgeInsets.only(left: 15, right: 15),
@@ -323,7 +324,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
             Icon(Icons.search, color: AppColors.text.darkgrey),
             Spacing.w15,
             SizedBox(
-              width: Get.width - 150,
+              width: Screen.width - 150,
               child: TextField(
                 decoration: const InputDecoration(
                   enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),

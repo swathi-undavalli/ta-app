@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/constants/constants.dart';
@@ -15,15 +16,18 @@ import '../../model/employee.dart';
 import 'add_employee_view.dart';
 
 class EmployeeDetailsView extends StatelessWidget {
-  static const String id = 'EmployeeDetailsScreen';
-  final Employee? employeeArgument = Get.arguments as Employee?;
+  final Employee employeeArgument;
   final AddEmployeeLogic logic = AddEmployeeLogic();
 
-  EmployeeDetailsView({Key? key}) : super(key: key);
+  EmployeeDetailsView({Key? key, required this.employeeArgument}) : super(key: key);
+
+  static Route route(Employee employeeArgument) => MaterialPageRoute(
+        builder: (context) => EmployeeDetailsView(employeeArgument: employeeArgument),
+      );
 
   @override
   Widget build(BuildContext context) {
-    final DateTime date = employeeArgument!.shiftTiming!;
+    final DateTime date = employeeArgument.shiftTiming!;
     final DateFormat formatter = DateFormat('HH:mm');
     final String shiftTiming = formatter.format(date);
     return Scaffold(
@@ -45,7 +49,7 @@ class EmployeeDetailsView extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  employeeArgument!.name,
+                  employeeArgument.name,
                   style: TextStyle(
                     color: AppColors.text.black,
                     fontWeight: FontWeight.w700,
@@ -60,8 +64,8 @@ class EmployeeDetailsView extends StatelessWidget {
                       Icons.call_rounded,
                       () {
                         makingPhoneCall(
-                          employeeArgument!.phoneNumber!,
-                          employeeArgument!.countryCode!,
+                          employeeArgument.phoneNumber!,
+                          employeeArgument.countryCode!,
                         );
                       },
                     ),
@@ -70,7 +74,9 @@ class EmployeeDetailsView extends StatelessWidget {
                       child: buildIcons(Icons.edit, () async {
                         if (await checkFirebase()) {
                           await Future.delayed(const Duration(milliseconds: 300));
-                          Get.toNamed(AddEmployeeView.id, arguments: true);
+                          if (context.mounted) {
+                            Navigator.push(context, AddEmployeeView.route(true));
+                          }
                         }
                       }),
                     ),
@@ -107,7 +113,7 @@ class EmployeeDetailsView extends StatelessWidget {
                                 AppButton.miniText(
                                   text: 'Cancel',
                                   onTap: () {
-                                    Get.back();
+                                    Navigator.pop(context);
                                   },
                                 ),
                                 AppButton.miniFlat(
@@ -115,15 +121,15 @@ class EmployeeDetailsView extends StatelessWidget {
                                   onTap: () {
                                     FirebaseFirestore.instance
                                         .collection('employees')
-                                        .doc(employeeArgument!.id)
+                                        .doc(employeeArgument.id)
                                         .delete();
                                     LogModel logModel = LogModel(
                                       type: LogType.deleteEmployee,
-                                      employeeName: employeeArgument!.name,
+                                      employeeName: employeeArgument.name,
                                     );
                                     FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
-                                    Get.back();
-                                    Get.back();
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
                                   },
                                 ),
                               ],
@@ -147,19 +153,19 @@ class EmployeeDetailsView extends StatelessWidget {
                     children: [
                       buildEmployeeInfo(
                         subHeading: 'Name',
-                        text: employeeArgument!.name,
+                        text: employeeArgument.name,
                       ),
                       buildEmployeeInfo(
                         subHeading: 'Employee ID',
-                        text: employeeArgument!.id,
+                        text: employeeArgument.id,
                       ),
                       buildEmployeeInfo(
                         subHeading: 'Padi No',
-                        text: employeeArgument!.agencyId,
+                        text: employeeArgument.agencyId,
                       ),
                       buildEmployeeInfo(
                         subHeading: 'Phone Number',
-                        text: employeeArgument!.countryCode! + employeeArgument!.phoneNumber!,
+                        text: employeeArgument.countryCode! + employeeArgument.phoneNumber!,
                       ),
                       buildEmployeeInfo(
                         subHeading: 'ShiftTiming',
@@ -167,7 +173,7 @@ class EmployeeDetailsView extends StatelessWidget {
                       ),
                       buildEmployeeInfo(
                         subHeading: 'Role',
-                        text: employeeArgument!.role!,
+                        text: employeeArgument.role!,
                       ),
                     ],
                   ),
@@ -180,7 +186,7 @@ class EmployeeDetailsView extends StatelessWidget {
                     children: [
                       buildEmployeeInfo(
                         subHeading: 'Login Time',
-                        text: DateFormat('hh:mm a').format(employeeArgument!.shiftTiming!),
+                        text: DateFormat('hh:mm a').format(employeeArgument.shiftTiming!),
                       ),
                       buildEmployeeInfo(
                         subHeading: 'Login Location',
@@ -223,13 +229,13 @@ class EmployeeDetailsView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.all(5.0),
       child: SizedBox(
-        width: Get.width,
+        width: Screen.width,
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Expanded(
               child: SizedBox(
-                width: Get.width,
+                width: Screen.width,
                 child: Text(
                   subHeading,
                   style: TextStyle(
@@ -302,7 +308,7 @@ class EmployeeDetailsView extends StatelessWidget {
   }
 
   checkFirebase() async {
-    var info = await FirebaseFirestore.instance.collection('employees').doc(employeeArgument!.id).get();
+    var info = await FirebaseFirestore.instance.collection('employees').doc(employeeArgument.id).get();
     if (info.data() != null) {
       Employee employee = Employee.fromMap(info.data()!);
       final DateTime date = employee.shiftTiming!;

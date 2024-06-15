@@ -1,4 +1,5 @@
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -95,7 +96,6 @@ class BookingsCalenderWidgetLogicNew {
       }
       controller.expansionItemModels = newItemsList;
     }
-
 
     controller.showLoading = false;
     controller.update();
@@ -312,7 +312,6 @@ class BookingsCalenderWidgetControllerNew extends GetxController {
 
   set startDate(DateTime? value) {
     _startDate = value;
-    update();
   }
 
   set showLoading(bool value) {

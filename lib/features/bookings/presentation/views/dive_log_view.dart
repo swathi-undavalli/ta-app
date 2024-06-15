@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -58,8 +59,6 @@ class DiveLogView extends StatefulWidget {
       ),
     );
   }
-
-  static const String id = 'AddLogView';
 
   @override
   State<DiveLogView> createState() => _DiveLogViewState();
@@ -227,7 +226,7 @@ class _DiveLogViewState extends State<DiveLogView> {
                 Spacing.h30,
                 AppButton.flat(
                   onTap: () {
-                    logic.onSubmitPressed();
+                    logic.onSubmitPressed(context);
                   },
                   text: 'Submit',
                   color: Colors.black,
@@ -246,8 +245,8 @@ class _DiveLogViewState extends State<DiveLogView> {
   Widget buildShowLoading() {
     return Container(
       color: Colors.white,
-      height: Get.height,
-      width: Get.width,
+      height: Screen.height,
+      width: Screen.width,
       child: const Center(
         child: CircularProgressIndicator(
           color: Colors.white,

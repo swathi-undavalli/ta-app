@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../models/customer_model.dart';
 import '../../models/dive_log_model.dart';
@@ -71,7 +72,7 @@ class CustomerLogs {
           pw.SizedBox(height: 25),
           pw.Container(
             height: 1,
-            width: Get.width * 2,
+            width: Screen.width * 2,
             color: const PdfColor.fromInt(0xffD9D9D9),
           ),
           pw.SizedBox(height: 20),

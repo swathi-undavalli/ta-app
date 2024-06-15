@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../constants/constants.dart';
 
@@ -12,7 +11,7 @@ class BackNavigationIcon extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: TextButton(
         onPressed: () {
-          Get.back();
+          Navigator.pop(context);
         },
         child: Icon(
           Icons.arrow_back_ios,

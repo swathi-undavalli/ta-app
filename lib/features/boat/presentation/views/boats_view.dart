@@ -11,7 +11,6 @@ import '../../controller/manage_boats_controller.dart';
 
 // ignore: must_be_immutable
 class BoatsView extends StatelessWidget {
-  static const String id = 'ManageBoatsPage';
   final ManageBoatsLogic logic = ManageBoatsLogic();
   final AutoScrollController autoScrollController = AutoScrollController();
   var bookings = [DateTime.now()];
@@ -20,6 +19,10 @@ class BoatsView extends StatelessWidget {
   late BookingsCalenderWidgetNew bookingsCalenderWidget;
 
   BoatsView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => BoatsView(),
+      );
 
   @override
   Widget build(BuildContext context) {

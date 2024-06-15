@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../features/dashboard/presentation/views/dashboard_view.dart';
@@ -17,9 +18,12 @@ class AutoUpdateView extends StatelessWidget {
   bool firstRun = true;
 
   AutoUpdateView({Key? key}) : super(key: key);
-  static const String id = 'AutoUpdateView';
 
   final AutoUpdateLogic logic = AutoUpdateLogic();
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => AutoUpdateView(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +44,13 @@ class AutoUpdateView extends StatelessWidget {
             ),
             if (!logic.controller.criticalUpdate!)
               Container(
-                width: Get.width,
+                width: Screen.width,
                 alignment: Alignment.topRight,
                 child: AppButton.miniFlat(
                   text: 'Skip',
                   textColor: Colors.white,
                   onTap: () async {
-                    Get.offAllNamed(DashBoardView.id);
+                    Navigator.pushReplacement(context, DashBoardView.route());
                   },
                 ),
               ).paddingOnly(right: 20),
@@ -162,13 +166,15 @@ class AutoUpdateLogic {
     }
   }
 
-  checkForUpdate() async {
+  checkForUpdate(BuildContext context) async {
     ///completely terminated
-    FirebaseMessaging.instance.getInitialMessage().then((message) {
-      if (message != null && message.notification != null) {
-        Get.toNamed(NotificationsScreen.id, arguments: message);
-      }
-    });
+    FirebaseMessaging.instance.getInitialMessage().then(
+      (message) {
+        if (message != null && message.notification != null) {
+          Navigator.pushReplacement(context, NotificationsScreen.route(message));
+        }
+      },
+    );
 
     var data = await FirebaseFirestore.instance.collection('ota_update').doc('version').get();
 
@@ -180,9 +186,13 @@ class AutoUpdateLogic {
 
     if (Platform.isIOS) {
       if (currentIosVersion != controller.iosVersionNumber) {
-        Get.offAllNamed(AutoUpdateView.id);
+        if (context.mounted) {
+          Navigator.pushReplacement(context, AutoUpdateView.route());
+        }
       }
-      Get.offAllNamed(DashBoardView.id);
+      if (context.mounted) {
+        Navigator.pushReplacement(context, DashBoardView.route());
+      }
       return;
     }
 
@@ -191,9 +201,13 @@ class AutoUpdateLogic {
     controller.buildNumber = packageInfo.buildNumber;
 
     if (controller.latestVersionNumber != '${controller.version!}+${controller.buildNumber!}') {
-      Get.offAllNamed(AutoUpdateView.id);
+      if (context.mounted) {
+        Navigator.pushReplacement(context, AutoUpdateView.route());
+      }
     } else {
-      Get.offAllNamed(DashBoardView.id);
+      if (context.mounted) {
+        Navigator.pushReplacement(context, DashBoardView.route());
+      }
     }
   }
 }

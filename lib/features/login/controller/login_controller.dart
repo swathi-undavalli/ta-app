@@ -61,7 +61,7 @@ class LoginScreenLogic {
     }
   }
 
-  signInWithPhoneNumber() async {
+  signInWithPhoneNumber(BuildContext context) async {
     if (controller.employeeIdTED.text.isNotEmpty) {
       controller.showFab = false;
       controller.showLoading = true;
@@ -76,7 +76,9 @@ class LoginScreenLogic {
               EmployeeRepo.initiateRepo(currentEmployee!.id);
               controller.reset();
               controller.update();
-              Get.offAndToNamed(WelcomeView.id);
+              if (context.mounted) {
+                Navigator.pushReplacement(context, WelcomeView.route());
+              }
             } else {
               //log('Failed');
             }
@@ -98,9 +100,9 @@ class LoginScreenLogic {
               controller.reset();
               controller.update();
               storeDateTime();
-              Get.offAndToNamed(WelcomeView.id);
-            } else {
-              //log('Failed');
+              if (context.mounted) {
+                Navigator.pushReplacement(context, WelcomeView.route());
+              }
             }
           },
           codeAutoRetrievalTimeout: (String verificationId) {},
@@ -127,7 +129,7 @@ class LoginScreenLogic {
           cancel: AppButton.miniFlat(
             text: 'OK',
             onTap: () {
-              Get.back();
+              Navigator.pop(context);
               controller.showPhoneNumber = true;
               controller.showLoading = false;
               controller.countryCodeTED.text = '';
@@ -144,14 +146,12 @@ class LoginScreenLogic {
   }
 
   Future<void> storeDateTime() async {
-    print('storeDateTime saving...');
     final prefs = await SharedPreferences.getInstance();
     String dateTimeString = DateTime.now().toIso8601String();
     await prefs.setString(lastLoginTime, dateTimeString);
-    print('storeDateTime saved....');
   }
 
-  resendOTP() async {
+  resendOTP(BuildContext context) async {
     controller.otpStatus = '';
     await FirebaseAuth.instance.verifyPhoneNumber(
       phoneNumber: getPhoneNumber(),
@@ -160,7 +160,9 @@ class LoginScreenLogic {
         if (FirebaseAuth.instance.currentUser != null) {
           controller.reset();
           controller.update();
-          Get.offAndToNamed(WelcomeView.id);
+          if (context.mounted) {
+            Navigator.push(context, WelcomeView.route());
+          }
         } else {
           //log('Failed');
         }
@@ -179,7 +181,9 @@ class LoginScreenLogic {
         if (FirebaseAuth.instance.currentUser != null) {
           controller.reset();
           controller.update();
-          Get.offAndToNamed(WelcomeView.id);
+          if (context.mounted) {
+            Navigator.push(context, WelcomeView.route());
+          }
         } else {
           //log('Failed');
         }

@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -92,7 +92,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
               ).scrollable,
             )
           : Container(
-              height: Get.height / 2,
+              height: Screen.height / 2,
               color: Colors.white,
               child: const CircularProgressIndicator(
                 color: Colors.black,
@@ -103,7 +103,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
         AppButton.miniText(
           text: 'Cancel',
           onTap: () {
-            Get.back();
+            Navigator.pop(context);
           },
         ),
         AppButton.miniFlat(
@@ -134,7 +134,9 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                 showLoading = false;
               });
               clear();
-              Get.back();
+              if (context.mounted) {
+                Navigator.pop(context);
+              }
             }
           },
         ),
@@ -248,8 +250,8 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
         color: Colors.transparent,
         child: Container(
           color: Colors.black54,
-          height: Get.height,
-          width: Get.width,
+          height: Screen.height,
+          width: Screen.width,
           child: const Center(
             child: CircularProgressIndicator(
               color: Colors.white,

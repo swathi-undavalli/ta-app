@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/services/auto_update.dart';
@@ -47,7 +48,7 @@ class NavDrawer extends StatelessWidget {
               icon: Icons.account_circle,
               text: 'Profile',
               onTap: () {
-                Get.offAndToNamed(EmployeeProfileView.id);
+                Navigator.push(context, EmployeeProfileView.route());
               },
             ),
             EmployeeAccess(
@@ -56,7 +57,7 @@ class NavDrawer extends StatelessWidget {
                 icon: Icons.add_to_photos_sharp,
                 text: 'All Bookings',
                 onTap: () {
-                  Get.offAndToNamed(AllBookingsView.id);
+                  Navigator.push(context, AllBookingsView.route());
                 },
               ),
             ),
@@ -64,14 +65,14 @@ class NavDrawer extends StatelessWidget {
               icon: Icons.content_paste,
               text: 'Board Plan',
               onTap: () {
-                Get.offAndToNamed(BoardPlanView.id);
+                Navigator.push(context, BoardPlanView.route());
               },
             ),
             buildMenuItem(
               icon: Icons.scuba_diving_rounded,
               text: 'General Info',
               onTap: () {
-                Get.toNamed(GeneralInfoView.id);
+                Navigator.push(context, GeneralInfoView.route());
               },
             ),
             EmployeeAccess(
@@ -80,7 +81,7 @@ class NavDrawer extends StatelessWidget {
                 icon: Icons.collections_bookmark_rounded,
                 text: 'Marketing Gallery',
                 onTap: () {
-                  Get.offAndToNamed(MarketingView.id);
+                  Navigator.push(context, MarketingView.route());
                 },
               ),
             ),
@@ -88,7 +89,7 @@ class NavDrawer extends StatelessWidget {
               icon: Icons.event_rounded,
               text: 'Upcoming Events',
               onTap: () {
-                Get.offAndToNamed(EventsView.id);
+                Navigator.push(context, EventsView.route());
               },
             ),
             EmployeeAccess(
@@ -97,7 +98,7 @@ class NavDrawer extends StatelessWidget {
                 icon: Icons.percent,
                 text: 'Offers',
                 onTap: () {
-                  Get.offAndToNamed(OffersView.id);
+                  Navigator.push(context, OffersView.route());
                 },
               ),
             ),
@@ -107,7 +108,7 @@ class NavDrawer extends StatelessWidget {
                 icon: Icons.edit,
                 text: 'Programs List',
                 onTap: () {
-                  Get.offAndToNamed(AllActivitiesView.id);
+                  Navigator.push(context, AllActivitiesView.route());
                 },
               ),
             ),
@@ -115,21 +116,21 @@ class NavDrawer extends StatelessWidget {
               icon: Icons.directions_boat,
               text: 'Coast Guard Slip',
               onTap: () {
-                Get.offAndToNamed(CoastGuardSlipView.id);
+                Navigator.push(context, CoastGuardSlipView.route());
               },
             ),
             // buildMenuItem(
             //   icon: Icons.add_card_rounded,
             //   text: 'Roaster',
             //   onTap: () {
-            //     Get.offAndToNamed(RoasterView.id);
+            //     Navigator.push(context, RoasterView.route());
             //   },
             // ),
             buildMenuItem(
               icon: Icons.book_rounded,
               text: 'Logs',
               onTap: () {
-                Get.offAndToNamed(LogView.id);
+                Navigator.push(context, LogView.route());
               },
             ),
             EmployeeAccess(
@@ -138,7 +139,7 @@ class NavDrawer extends StatelessWidget {
                 icon: Icons.collections_bookmark_rounded,
                 text: 'Customer logs',
                 onTap: () {
-                  Get.offAndToNamed(CustomerLogsView.id);
+                  Navigator.push(context, CustomerLogsView.route());
                 },
               ),
             ),
@@ -148,7 +149,7 @@ class NavDrawer extends StatelessWidget {
                 icon: Icons.card_membership_outlined,
                 text: 'Certifications',
                 onTap: () {
-                  Get.offAndToNamed(CertificationLogsView.id);
+                  Navigator.push(context, CertificationLogsView.route());
                 },
               ),
             ),
@@ -197,7 +198,7 @@ class NavDrawer extends StatelessWidget {
     required Function onTap,
   }) {
     return Container(
-      width: Get.width,
+      width: Screen.width,
       alignment: Alignment.centerLeft,
       child: ListTile(
         contentPadding: const EdgeInsets.only(left: 30),
@@ -244,7 +245,7 @@ class NavDrawer extends StatelessWidget {
 
   Widget buildLine() {
     return Container(
-      width: Get.width,
+      width: Screen.width,
       height: 1,
       color: Colors.grey[300],
     ).paddingSymmetric(horizontal: 20);

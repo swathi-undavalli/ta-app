@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -12,7 +14,10 @@ import 'certification_details_view.dart';
 
 class CertificationLogsView extends StatefulWidget {
   const CertificationLogsView({super.key});
-  static const String id = 'CertificationProgressView';
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const CertificationLogsView(),
+      );
 
   @override
   State<CertificationLogsView> createState() => _CertificationLogsViewState();
@@ -28,8 +33,8 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
       appBar: const AppBarWidget(heading: 'Certification Logs'),
       body: SafeArea(
         child: SizedBox(
-          height: MediaQuery.of(context).size.height,
-          width: MediaQuery.of(context).size.width,
+          height: Screen.height,
+          width: Screen.width,
           child: Column(
             children: [
               Spacing.h10,
@@ -63,7 +68,7 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
                         ItemModel itemModel = ItemModel.fromBooking(newBooking);
                         return InkWell(
                           onTap: () {
-                            Get.toNamed(CertificationDetailsView.id, arguments: itemModel);
+                            Navigator.push(context, CertificationDetailsView.route(itemModel));
                           },
                           child: Column(
                             children: [
@@ -127,7 +132,7 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
                               ),
                               Container(
                                 height: 1,
-                                width: Get.width,
+                                width: Screen.width,
                                 color: AppColors.text.grey,
                               ).paddingSymmetric(horizontal: 15, vertical: 20),
                             ],
@@ -183,7 +188,7 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
         if (result.selectedDate != null || result.showCompletedLogs == true || result.showOngoingLogs == true)
           SizedBox(
             height: 40,
-            width: MediaQuery.of(context).size.width - 150,
+            width: Screen.width - 150,
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(

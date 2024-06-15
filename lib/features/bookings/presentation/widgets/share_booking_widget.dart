@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/constants.dart';
@@ -16,8 +17,8 @@ class ShareBookingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Get.height,
-      width: Get.width,
+      height: Screen.height,
+      width: Screen.width,
       color: Colors.white,
       child: SingleChildScrollView(
         child: Column(
@@ -34,7 +35,7 @@ class ShareBookingWidget extends StatelessWidget {
             ),
             const SizedBox(height: 5),
             SizedBox(
-              width: Get.width,
+              width: Screen.width,
               child: FittedBox(
                 child: Text(
                   booking.activity![0]!.name!,
@@ -177,7 +178,7 @@ class ShareBookingWidget extends StatelessWidget {
         //   booking.payments.length,
         //   (index) {
         //     return Container(
-        //       width: Get.width,
+        //       width: Screen.width,
         //       child: buildTransaction(payment: booking.payments[index]),
         //     );
         //   },

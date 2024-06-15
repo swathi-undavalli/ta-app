@@ -1,4 +1,5 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 
@@ -6,7 +7,9 @@ import '../../features/messaging/notification_screen.dart';
 
 class FirebaseNotificationService {
   static handleNavigation(RemoteMessage message) {
-    Get.toNamed(NotificationsScreen.id, arguments: message);
+    if (Get.context != null) {
+      Navigator.push(Get.context!, NotificationsScreen.route(message));
+    }
     LocalNotificationService.display(message);
   }
 
@@ -14,7 +17,9 @@ class FirebaseNotificationService {
     RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
 
     if (message != null) {
-      Get.toNamed(NotificationsScreen.id, arguments: message);
+      if (Get.context != null) {
+        Navigator.push(Get.context!, NotificationsScreen.route(message));
+      }
       LocalNotificationService.display(message);
     }
   }
@@ -26,7 +31,7 @@ class LocalNotificationService {
   static FlutterLocalNotificationsPlugin _notificationsPlugin = FlutterLocalNotificationsPlugin();
 
   static void initialize() async {
-    var androidInitilize = const AndroidInitializationSettings('@mipmap/ic_launcher');
+    var androidInitialize = const AndroidInitializationSettings('@mipmap/ic_launcher');
     //New Added
     DarwinInitializationSettings initializationSettingsIOS = const DarwinInitializationSettings(
       requestSoundPermission: true,
@@ -34,7 +39,7 @@ class LocalNotificationService {
       requestAlertPermission: true,
     );
     var initializationsSettings = InitializationSettings(
-      android: androidInitilize,
+      android: androidInitialize,
       iOS: initializationSettingsIOS,
     );
     _notificationsPlugin = FlutterLocalNotificationsPlugin();

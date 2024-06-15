@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 
@@ -40,8 +41,6 @@ class AddConditionsLogic {
   }
 
   List<Level> get getLevels {
-    log('calling get levels');
-
     if (controller.conditions == null || controller.conditions!.levels.isEmpty) {
       return [];
     }
@@ -85,13 +84,11 @@ class AddConditionsLogic {
         updatedBy: (currentEmployee != null) ? currentEmployee!.name : '-',
       ),
     );
-    log('=======================================');
-    log(controller.conditions!.levels.toString());
     controller.update();
     return true;
   }
 
-  Future<void> onSavePressed() async {
+  Future<void> onSavePressed(BuildContext context) async {
     log('on save pressed');
 
     controller.showLoading = true;
@@ -99,7 +96,9 @@ class AddConditionsLogic {
     await conditionsRepo.updateConditions(controller.conditions!);
     controller.showLoading = false;
 
-    Get.back();
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
     ConditionsLogic conditionsLogic = ConditionsLogic();
     conditionsLogic.init();
   }

@@ -11,6 +11,7 @@ import 'package:intl/intl.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -22,7 +23,10 @@ import '../widgets/customer_details.dart';
 
 class BoardPlanView extends StatefulWidget {
   const BoardPlanView({Key? key}) : super(key: key);
-  static const String id = 'boardPlanView';
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const BoardPlanView(),
+      );
 
   @override
   State<BoardPlanView> createState() => _BoardPlanViewState();
@@ -53,8 +57,8 @@ class _BoardPlanViewState extends State<BoardPlanView> {
             if (controller.showLoading) {
               return Container(
                 color: Colors.transparent,
-                width: Get.width,
-                height: Get.height,
+                width: Screen.width,
+                height: Screen.height,
                 child: const Center(
                   child: CircularProgressIndicator(
                     color: Colors.black,

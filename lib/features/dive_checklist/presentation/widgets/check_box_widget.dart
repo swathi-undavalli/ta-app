@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/constants.dart';
@@ -38,7 +39,7 @@ class _CheckBoxWidgetState extends State<CheckBoxWidget> {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: Get.width,
+        width: Screen.width,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(6),
           color: (isChecked) ? AppColors.text.skyBlue.withOpacity(0.26) : const Color(0xffDADADA).withOpacity(0.26),

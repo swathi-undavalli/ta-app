@@ -13,8 +13,6 @@ import 'features/messaging/firebase_messaging_controller.dart';
 
 String currentIosVersion = '1.1.3+14';
 
-// bool get isIOS => Platform.isIOS;
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   try {
@@ -46,9 +44,6 @@ void main() async {
 
   ///app is in Background
   FirebaseMessaging.onMessageOpenedApp.listen((message) {
-    if (kDebugMode) {
-      print('called onMessageOpenedApp');
-    }
     FirebaseNotificationService.handleNavigation(message);
   });
 

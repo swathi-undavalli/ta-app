@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -22,7 +23,9 @@ import '../widgets/customer_logs_pdf.dart';
 class CustomerLogsView extends StatefulWidget {
   const CustomerLogsView({Key? key}) : super(key: key);
 
-  static const String id = 'CustomerLogsView';
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const CustomerLogsView(),
+      );
 
   @override
   State<CustomerLogsView> createState() => _CustomerLogsViewState();
@@ -63,7 +66,7 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
               children: [
                 Expanded(
                   child: SizedBox(
-                    width: Get.width,
+                    width: Screen.width,
                     child: Text(
                       'Select Dates',
                       style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
@@ -221,8 +224,8 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
   Widget buildShowLoading() {
     return Container(
       color: Colors.white,
-      height: Get.height,
-      width: Get.width,
+      height: Screen.height,
+      width: Screen.width,
       child: const Center(
         child: CircularProgressIndicator(
           color: Colors.white,

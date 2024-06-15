@@ -3,24 +3,36 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/back_navigation_icon.dart';
 import '../../../bookings/models/booking_model.dart';
 
-class NotificationView extends StatelessWidget {
-  static const String id = 'DetailsScreen';
+class NotificationView extends StatefulWidget {
+  final Booking booking;
 
+  const NotificationView({Key? key, required this.booking}) : super(key: key);
+
+  static Route route(Booking booking) => MaterialPageRoute(
+        builder: (context) => NotificationView(booking: booking),
+      );
+
+  @override
+  State<NotificationView> createState() => _NotificationViewState();
+}
+
+class _NotificationViewState extends State<NotificationView> {
   final DetailsLogic logic = DetailsLogic();
 
-  final booking = Get.arguments;
-
-  NotificationView({Key? key}) : super(key: key) {
+  @override
+  void initState() {
+    super.initState();
     checkFireBase();
   }
 
   checkFireBase() async {
-    logic.controller.bookingModel = Booking.fromMap(booking);
+    logic.controller.bookingModel = widget.booking;
     logic.controller.update();
     log(logic.controller.bookingModel.id!);
   }
@@ -49,7 +61,7 @@ class NotificationView extends StatelessWidget {
                   bottom: 30,
                 ),
                 child: SizedBox(
-                  width: Get.width,
+                  width: Screen.width,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
@@ -177,7 +189,7 @@ class NotificationView extends StatelessWidget {
 
   Widget buildHeading({String? title, String? text}) {
     return SizedBox(
-      width: Get.width,
+      width: Screen.width,
       child: FittedBox(
         child: Text.rich(
           TextSpan(

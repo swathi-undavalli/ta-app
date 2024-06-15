@@ -12,7 +12,6 @@ import 'add_customer_details_view.dart';
 
 // ignore: must_be_immutable
 class BookingView extends StatelessWidget {
-  static const String id = 'BookingPage';
   final BookingScreenLogic logic = BookingScreenLogic();
   final AutoScrollController autoScrollController = AutoScrollController();
   var bookings = [DateTime.now()];
@@ -21,6 +20,10 @@ class BookingView extends StatelessWidget {
   late BookingsCalenderWidgetNew bookingsCalenderWidget;
 
   BookingView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => BookingView(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -41,10 +44,10 @@ class BookingView extends StatelessWidget {
           backgroundColor: AppColors.background.lightBlue,
           floatingActionButton: EmployeeAccess(
             access: AccessRights.createBookings,
-            child: buildFloatingActionButton(),
+            child: buildFloatingActionButton(context),
           ),
           body: RefreshIndicator(
-            color: AppColors.IconColor.black,
+            color: AppColors.iconColor.black,
             onRefresh: () async {
               // calenderLogic.controller.lastSelectedIndex ??= 50;
               bookingsCalenderWidget.scrollToIndex(50);
@@ -94,11 +97,11 @@ class BookingView extends StatelessWidget {
 
   ///===============UI==============///
 
-  Widget buildFloatingActionButton() {
+  Widget buildFloatingActionButton(BuildContext context) {
     return FloatingActionButton(
       elevation: 0,
       onPressed: () {
-        Get.toNamed(AddCustomerDetailsView.id);
+        Navigator.push(context, AddCustomerDetailsView.route());
       },
       backgroundColor: AppColors.background.black,
       child: const Icon(

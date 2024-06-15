@@ -8,10 +8,13 @@ import '../../../bookings/presentation/widgets/app_text_fields.dart';
 import '../../controller/add_new_activity_controller.dart';
 
 class AddNewActivityView extends StatelessWidget {
-  static const String id = 'AddNewActivityScreen';
   final AddNewActivityLogic logic = AddNewActivityLogic();
 
   AddNewActivityView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => AddNewActivityView(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -67,8 +70,8 @@ class AddNewActivityView extends StatelessWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            buildCancelButton(),
-                            buildSubmitButton(),
+                            buildCancelButton(context),
+                            buildSubmitButton(context),
                           ],
                         ),
                       ],
@@ -155,7 +158,7 @@ class AddNewActivityView extends StatelessWidget {
     );
   }
 
-  Widget buildCancelButton() {
+  Widget buildCancelButton(BuildContext context) {
     return Center(
       child: AppButton.flat(
         text: 'Cancel',
@@ -163,20 +166,20 @@ class AddNewActivityView extends StatelessWidget {
         color: AppColors.background.grey,
         onTap: () {
           logic.controller.reset();
-          Get.back();
+          Navigator.pop(context);
         },
       ),
     );
   }
 
-  Widget buildSubmitButton() {
+  Widget buildSubmitButton(BuildContext context) {
     return Center(
       child: AppButton.flat(
         text: 'Submit',
         textColor: AppColors.text.white,
         color: AppColors.background.black,
         onTap: () {
-          logic.onSubmit();
+          logic.onSubmit(context);
         },
       ),
     );

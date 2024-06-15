@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
@@ -53,7 +54,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
       constraints: BoxConstraints(
         minHeight: isExpanded ? 500 : 50,
       ),
-      width: Get.width,
+      width: Screen.width,
       decoration: BoxDecoration(
         color: widget.color,
         borderRadius: BorderRadius.circular(10),
@@ -400,7 +401,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               SizedBox(
-                width: Get.width - 170,
+                width: Screen.width - 170,
                 child: const Text(
                   'Instructor :',
                   style: TextStyle(
@@ -536,7 +537,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             SizedBox(
-              width: Get.width - 170,
+              width: Screen.width - 170,
               child: const Text(
                 'Dive buddies (N - A) :',
                 style: TextStyle(

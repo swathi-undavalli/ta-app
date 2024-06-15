@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/firebase/api.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -18,7 +20,9 @@ import 'add_offers_view.dart';
 class OffersView extends StatefulWidget {
   const OffersView({Key? key}) : super(key: key);
 
-  static String id = 'OffersView';
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const OffersView(),
+      );
 
   @override
   State<OffersView> createState() => _OffersViewState();
@@ -59,7 +63,7 @@ class _OffersViewState extends State<OffersView> {
 
             if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
               return SizedBox(
-                height: Get.height,
+                height: Screen.height,
                 child: const Text(
                   'No offers added',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -169,8 +173,8 @@ class _OffersViewState extends State<OffersView> {
             color: Colors.transparent,
             child: Container(
               color: Colors.black54,
-              height: Get.height,
-              width: Get.width,
+              height: Screen.height,
+              width: Screen.width,
               child: const Center(
                 child: CircularProgressIndicator(
                   color: Colors.white,
@@ -217,7 +221,7 @@ class _OffersViewState extends State<OffersView> {
 
     if (showItem) {
       return Container(
-        width: Get.width,
+        width: Screen.width,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(10),
@@ -253,7 +257,7 @@ class _OffersViewState extends State<OffersView> {
                       children: [
                         TAImage(
                           offer.photos!.first,
-                          width: Get.width,
+                          width: Screen.width,
                           height: 150,
                           fit: BoxFit.cover,
                           borderRadius: 5,
@@ -330,7 +334,7 @@ class _OffersViewState extends State<OffersView> {
                     const Spacer(),
                     IconButton(
                       onPressed: () {
-                        logic.onEditPressed(offer);
+                        logic.onEditPressed(context, offer);
                       },
                       icon: const Icon(Icons.edit),
                     ),
@@ -403,14 +407,14 @@ class _OffersViewState extends State<OffersView> {
             AppButton.miniText(
               text: 'Cancel',
               onTap: () {
-                Get.back();
+                Navigator.pop(context);
               },
             ),
             AppButton.miniFlat(
               text: 'Okay',
               onTap: () {
                 firebaseApi.deleteOffer(offer.id);
-                Get.back();
+                Navigator.pop(context);
               },
             ),
           ],
@@ -423,7 +427,7 @@ class _OffersViewState extends State<OffersView> {
     return FloatingActionButton(
       elevation: 0,
       onPressed: () {
-        Get.toNamed(AddOffersView.id, arguments: null);
+        Navigator.push(context, AddOffersView.route(null));
       },
       backgroundColor: AppColors.background.black,
       child: const Icon(

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/access_levels.dart';
@@ -11,9 +13,11 @@ import 'add_employee_view.dart';
 import 'employee_details_view.dart';
 
 class AllEmployeesView extends StatefulWidget {
-  static const String id = 'AllEmployeesScreen';
-
   const AllEmployeesView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const AllEmployeesView(),
+      );
 
   @override
   State<AllEmployeesView> createState() => _AllEmployeesViewState();
@@ -50,7 +54,7 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
         appBar: const AppBarWidget(heading: 'All Employees'),
         body: RefreshIndicator(
-          color: AppColors.IconColor.black,
+          color: AppColors.iconColor.black,
           onRefresh: () async {
             logic.controller.update();
           },
@@ -123,7 +127,7 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
       access: AccessRights.createEmployees,
       child: FloatingActionButton(
         onPressed: () {
-          Get.toNamed(AddEmployeeView.id);
+          Navigator.push(context, AddEmployeeView.route(false));
         },
         backgroundColor: AppColors.background.black,
         elevation: 0,
@@ -139,11 +143,11 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
     return GestureDetector(
       onTap: () {
         logic.controller.searchTED.text = '';
-        Get.toNamed(EmployeeDetailsView.id, arguments: e);
+        Navigator.push(context, EmployeeDetailsView.route(e));
       },
       child: SizedBox(
         height: 47,
-        width: Get.width,
+        width: Screen.width,
         child: Row(
           children: [
             Container(
@@ -157,7 +161,7 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
               child: Text(
                 e.id,
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 12),
+                style: const TextStyle(fontSize: 12),
               ),
             ),
             const SizedBox(width: 30),

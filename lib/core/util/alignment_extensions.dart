@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'app_measurements.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 
 extension WidgetAlignment on Widget {
   Align get left => Align(
@@ -39,11 +38,11 @@ extension WidgetSizes on Widget {
       );
 
   SingleChildScrollView get scrollableBody {
-    if (AppMeasures.isSmallDevice) {
+    if (Screen.height < 708) {
       return scrollable;
     }
     return SizedBox(
-      height: AppMeasures.screenHeight,
+      height: Screen.height,
       child: this,
     ).scrollable;
   }

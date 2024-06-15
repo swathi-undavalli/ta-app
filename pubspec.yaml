@@ -41,7 +41,10 @@ dependencies:
   carousel_slider:
   image_gallery_saver:
   flutter_pdfview:
-
+  temple_ui_tools:
+    git:
+      url: https://github.com/kameshWB/temple_ui_tools.git
+      ref: main
 
 
   # Data storage & DB

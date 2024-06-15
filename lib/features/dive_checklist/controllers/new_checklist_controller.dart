@@ -81,9 +81,11 @@ class NewChecklistLogic {
 
       controller.showLoading = false;
       controller.update();
-      Get.back();
-      Get.back();
-      Get.back();
+      if (context.mounted) {
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+      }
       controller.clear();
     }
   }

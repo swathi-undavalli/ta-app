@@ -2,18 +2,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../../../core/widgets/app_bar.dart';
-import '../../models/event_model.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/firebase/api.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../models/event_model.dart';
 import '../widgets/event_entry_bottom_sheet.dart';
 
 class EventsView extends StatefulWidget {
   const EventsView({Key? key}) : super(key: key);
-  static const String id = 'eventsView';
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const EventsView(),
+      );
 
   @override
   State<EventsView> createState() => _EventsViewState();
@@ -43,7 +48,7 @@ class _EventsViewState extends State<EventsView> {
 
             if (snapshot.data == null || snapshot.data!.docs.isEmpty) {
               return SizedBox(
-                height: Get.height,
+                height: Screen.height,
                 child: const Text(
                   'No events are added',
                   style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -76,7 +81,7 @@ class _EventsViewState extends State<EventsView> {
 
   Widget buildEventCard({required Event element}) {
     return Container(
-      width: Get.width,
+      width: Screen.width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -145,7 +150,7 @@ class _EventsViewState extends State<EventsView> {
 
   Widget buildDeleteEdit({required Event eventElement}) {
     return SizedBox(
-      width: Get.width,
+      width: Screen.width,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -209,14 +214,14 @@ class _EventsViewState extends State<EventsView> {
             AppButton.miniText(
               text: 'Cancel',
               onTap: () {
-                Get.back();
+                Navigator.pop(context);
               },
             ),
             AppButton.miniFlat(
               text: 'Okay',
               onTap: () {
                 firebaseApi.deleteEvent(event.id);
-                Get.back();
+                Navigator.pop(context);
               },
             ),
           ],

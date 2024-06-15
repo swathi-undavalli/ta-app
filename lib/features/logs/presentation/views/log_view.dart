@@ -1,19 +1,22 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
+import '../../../bookings/models/booking_model.dart';
 import '../../models/log_model.dart';
 import 'notification_view.dart';
 
 class LogView extends StatelessWidget {
-  static const String id = 'LogScreen';
-
   const LogView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const LogView(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -41,6 +44,7 @@ class LogView extends StatelessWidget {
                     if (map != null) {
                       LogModel logModel = LogModel.fromMap(map);
                       return buildLog(
+                        context,
                         log: logModel,
                       );
                     }
@@ -55,7 +59,7 @@ class LogView extends StatelessWidget {
     );
   }
 
-  Widget buildLog({required LogModel log}) {
+  Widget buildLog(BuildContext context, {required LogModel log}) {
     getIcon() {
       switch (log.type) {
         case LogType.bookingCreated:
@@ -186,10 +190,10 @@ class LogView extends StatelessWidget {
         if (getTitle() == 'Booking Created') {
           var data = await FirebaseFirestore.instance.collection('bookings').doc(log.bookingId!.trim()).get();
           if (data.data() != null) {
-            if (kDebugMode) {
-              print(log.bookingId);
+            Booking booking = Booking.fromMap(data.data()!);
+            if (context.mounted) {
+              Navigator.push(context, NotificationView.route(booking));
             }
-            Get.toNamed(NotificationView.id, arguments: data.data());
           } else {
             Fluttertoast.showToast(
               msg: "${log.bookingId} Booking Doesn't Exit",
@@ -279,7 +283,7 @@ class LogView extends StatelessWidget {
             ),
             child: Container(
               height: 1,
-              width: Get.width,
+              width: Screen.width,
               color: AppColors.text.grey,
             ),
           ),

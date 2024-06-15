@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../constants/constants.dart';
 import '../access_levels.dart';
@@ -18,7 +18,7 @@ class AddEmployeeWidget extends StatelessWidget {
     return EmployeeAccess(
       access: AccessRights.viewEmployees,
       child: Container(
-        width: Get.width,
+        width: Screen.width,
         height: 80,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(12),

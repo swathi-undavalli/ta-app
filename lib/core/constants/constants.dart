@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 final GlobalKey<ScaffoldState> dashboardDrawerKey = GlobalKey();
 
 class AppColors {
-  static const _BackgroundColors background = _BackgroundColors();
-  static const _TextColors text = _TextColors();
-  static const _IconColors IconColor = _IconColors();
+  static const BackgroundColors background = BackgroundColors();
+  static const TextColors text = TextColors();
+  static const IconColors iconColor = IconColors();
 }
 
-class _BackgroundColors {
-  const _BackgroundColors();
+class BackgroundColors {
+  const BackgroundColors();
   Color get white => Colors.white;
   Color get black => Colors.black;
   Color get datesBlue => const Color(0xffF4FDFF);
@@ -24,8 +24,8 @@ class _BackgroundColors {
   Color get datesGreen => Colors.green.withOpacity(0.5);
 }
 
-class _TextColors {
-  const _TextColors();
+class TextColors {
+  const TextColors();
   Color get lightSkyBlue => const Color(0xffB3E9F0);
   Color get black => Colors.black;
   Color get white => Colors.white;
@@ -37,8 +37,8 @@ class _TextColors {
   Color get red => Colors.red;
 }
 
-class _IconColors {
-  const _IconColors();
+class IconColors {
+  const IconColors();
   Color get grey => const Color(0x3f909090);
   Color get black => Colors.black;
 }

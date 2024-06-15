@@ -4,6 +4,7 @@ import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 import '../../../core/models/counter_model.dart';
 import '../../../core/util/utils.dart';
 import '../../logs/models/log_model.dart';
@@ -16,7 +17,7 @@ class AddEmployeeLogic {
   AddAnEmployeeController controller = Get.put(AddAnEmployeeController());
   Employee? employee;
 
-  createEmployee() async {
+  createEmployee(BuildContext context) async {
     //TODO: Change.
     var data = await FirebaseFirestore.instance.collection('counter').doc('count').get();
     CounterModel counterModel = CounterModel.fromMap(data.data()!);
@@ -71,16 +72,18 @@ class AddEmployeeLogic {
       FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
 
       disposeKeyboard();
-      Get.back();
-      Get.back();
-      Get.back();
+      if (context.mounted) {
+        Navigator.pop(context);
+        Navigator.pop(context);
+      }
+
       controller.reset();
     } else {
       Fluttertoast.showToast(msg: 'Invalid Input');
     }
   }
 
-  updateEmployee() async {
+  updateEmployee(BuildContext context) async {
     if (controller.firstNameTED.text != '' &&
         controller.employeeIdTED.text != '' &&
         controller.shiftTimeTED.text != '') {
@@ -122,9 +125,11 @@ class AddEmployeeLogic {
 
       Fluttertoast.showToast(msg: 'Saved');
       disposeKeyboard();
-      Get.back();
-      Get.back();
-      Get.back();
+      if (context.mounted) {
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
+      }
       controller.reset();
     } else {
       Fluttertoast.showToast(msg: 'Invalid Input');
@@ -299,6 +304,8 @@ class AddAnEmployeeController extends GetxController {
     notifications = false;
     marketingGallery = false;
     offers = false;
+    boatPlan = false;
+    processCertificate = false;
   }
 
   bool? get createBookings => _createBookings;

@@ -9,6 +9,7 @@ import 'package:flutter/rendering.dart';
 import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
@@ -19,31 +20,35 @@ import '../widgets/check_box_widget.dart';
 import 'new_checklist_view.dart';
 
 class DiveChecklistView extends StatefulWidget {
-  static const String id = 'RecreationalStudentDiveChecklist';
+  const DiveChecklistView({Key? key, required this.checkListElement, required this.checklist}) : super(key: key);
+  final ChecklistElement checkListElement;
+  final Checklist checklist;
 
-  const DiveChecklistView({Key? key}) : super(key: key);
+  static Route route(ChecklistElement checkListElement, Checklist checklist) => MaterialPageRoute(
+        builder: (context) => DiveChecklistView(
+          checkListElement: checkListElement,
+          checklist: checklist,
+        ),
+      );
 
   @override
   State<DiveChecklistView> createState() => _DiveChecklistViewState();
 }
 
 class _DiveChecklistViewState extends State<DiveChecklistView> {
-  var args = Get.arguments;
-
-  late ChecklistElement checkListElement;
-
-  late Checklist checklist;
-
   bool showLoading = false;
 
   final GlobalKey _menuKey = GlobalKey();
   final GlobalKey widgetKey = GlobalKey();
 
+  late ChecklistElement checkListElement;
+  late Checklist checklist;
+
   @override
   void initState() {
-    checkListElement = args[0];
-    checklist = args[1];
     super.initState();
+    checkListElement = widget.checkListElement;
+    checklist = widget.checklist;
   }
 
   @override
@@ -63,12 +68,12 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
       ),
       body: SafeArea(
         child: SizedBox(
-          height: Get.height,
+          height: Screen.height,
           child: Stack(
             children: [
               if (showLoading)
                 Container(
-                  height: Get.height,
+                  height: Screen.height,
                   color: Colors.grey.shade100,
                   child: const CircularProgressIndicator(
                     color: Colors.black,
@@ -89,7 +94,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
               ).scrollable,
               Positioned(
                 bottom: 20,
-                width: Get.width,
+                width: Screen.width,
                 child: AppButton.flat(
                   text: 'Save',
                   onTap: () async {
@@ -103,8 +108,9 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
 
                     showLoading = false;
                     setState(() {});
-
-                    Get.back();
+                    if (context.mounted) {
+                      Navigator.pop(context);
+                    }
                   },
                   textColor: Colors.white,
                   color: Colors.black,
@@ -161,12 +167,10 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
           ...checkListElement.items.map(
             (e) {
               return CheckBoxWidget(
+                key: UniqueKey(),
                 onChanged: (bool value) {
                   checkListElement.items[checkListElement.items.indexOf(e)].isChecked = value;
                   setState(() {});
-                  log(
-                    checkListElement.items.map((e) => e.isChecked).toList().toString(),
-                  );
                 },
                 text: e.name,
                 initialValue: e.isChecked,
@@ -188,7 +192,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
         alignment: Alignment.centerLeft,
         child: TextButton(
           onPressed: () {
-            Get.back();
+            Navigator.pop(context);
           },
           child: Icon(
             Icons.arrow_back_ios,
@@ -226,10 +230,9 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
                 /// Delay is used because the PopupMenuButton closes automatically and because navigation happens to fast,it closes the new route instead of the menuButton.
 
                 await Future.delayed(const Duration(milliseconds: 10));
-                Get.toNamed(
-                  NewChecklistView.id,
-                  arguments: [checkListElement, TemplateType.existingChecklist],
-                );
+                if (context.mounted) {
+                  Navigator.push(context, NewChecklistView.route(checkListElement, TemplateType.existingChecklist));
+                }
               },
             ),
             PopupMenuItem<String>(
@@ -241,8 +244,6 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
                 showLoading = true;
                 setState(() {});
 
-                log('started');
-
                 checklist.checklistElement?.remove(checkListElement);
 
                 await FirebaseFirestore.instance
@@ -252,19 +253,18 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
 
                 showLoading = false;
                 setState(() {});
-                log('ended');
-                Get.back();
+                if (context.mounted) {
+                  Navigator.pop(context);
+                }
               },
             ),
           ],
         ),
         TextButton(
           onPressed: () {
-            checkListElement.items
-                .map(
-                  (e) => e.isChecked = false,
-                )
-                .toList();
+            for (var e in checkListElement.items) {
+              e.isChecked = false;
+            }
             setState(() {});
           },
           child: Icon(

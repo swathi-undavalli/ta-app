@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../core/constants/constants.dart';
 import '../../core/widgets/back_navigation_icon.dart';
@@ -12,15 +13,17 @@ import '../bookings/models/booking_model.dart';
 import 'firebase_messaging_controller.dart';
 
 class NotificationsScreen extends StatelessWidget {
-  static const String id = 'NotificationsScreen';
-
   final NotificationsLogic logic = NotificationsLogic();
 
-  final RemoteMessage? message = Get.arguments;
+  final RemoteMessage? message;
 
-  NotificationsScreen({Key? key}) : super(key: key) {
+  NotificationsScreen({Key? key, this.message}) : super(key: key) {
     checkFireBase();
   }
+
+  static Route route(RemoteMessage? message) => MaterialPageRoute(
+        builder: (context) => NotificationsScreen(message: message),
+      );
 
   void checkFireBase() async {
     logic.controller.loading = true;
@@ -53,7 +56,7 @@ class NotificationsScreen extends StatelessWidget {
                   builder: (controller) {
                     return SingleChildScrollView(
                       child: SizedBox(
-                        width: Get.width,
+                        width: Screen.width,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
@@ -120,8 +123,8 @@ class NotificationsScreen extends StatelessWidget {
         if (controller.loading) {
           return Container(
             color: Colors.black54,
-            height: Get.height,
-            width: Get.width,
+            height: Screen.height,
+            width: Screen.width,
             child: const Center(
               child: CircularProgressIndicator(
                 color: Colors.white,
@@ -171,7 +174,7 @@ class NotificationsScreen extends StatelessWidget {
 
   Widget buildHeading({String? title, String? text}) {
     return SizedBox(
-      width: Get.width,
+      width: Screen.width,
       child: FittedBox(
         child: Text.rich(
           TextSpan(

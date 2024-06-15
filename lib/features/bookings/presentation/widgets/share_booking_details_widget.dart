@@ -12,6 +12,7 @@ import 'package:path/path.dart' show basename;
 import 'package:path_provider/path_provider.dart' show getApplicationDocumentsDirectory;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../models/booking_model.dart';
 
@@ -48,7 +49,7 @@ class ShareBookingDetails {
           pw.SizedBox(height: 25),
           pw.Container(
             height: 1,
-            width: Get.width * 2,
+            width: Screen.width * 2,
             color: const PdfColor.fromInt(0xffD9D9D9),
           ),
           pw.SizedBox(height: 25),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -10,10 +11,13 @@ import '../../controller/new_booking_controller.dart';
 import '../../models/activity_model.dart';
 
 class BookDateTimeView extends StatelessWidget {
-  static const String id = 'BookDate&Time';
   final NewBookingLogic logic = NewBookingLogic();
 
   BookDateTimeView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => BookDateTimeView(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -25,9 +29,9 @@ class BookDateTimeView extends StatelessWidget {
           padding: const EdgeInsets.only(left: 30, right: 30),
           child: Column(
             children: [
-              const SizedBox(height: 20),
+              Spacing.h20,
               buildActivityDropDown(),
-              const SizedBox(height: 30),
+              Spacing.h30,
               Container(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -39,14 +43,14 @@ class BookDateTimeView extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
-              buildTheorySession(),
-              const SizedBox(height: 30),
-              buildPoolSession(),
-              const SizedBox(height: 30),
-              buildDiveSession(),
+              Spacing.h30,
+              buildTheorySession(context),
+              Spacing.h30,
+              buildPoolSession(context),
+              Spacing.h30,
+              buildDiveSession(context),
               const Spacer(),
-              buildContinueButton(),
+              buildContinueButton(context),
               const Spacer(),
             ],
           ),
@@ -66,7 +70,7 @@ class BookDateTimeView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 12, top: 12),
               child: Container(
-                width: Get.width,
+                width: Screen.width,
                 alignment: Alignment.centerLeft,
                 child: buildSubTitle('Activities'),
               ),
@@ -111,7 +115,7 @@ class BookDateTimeView extends StatelessWidget {
     );
   }
 
-  Widget buildPoolSession() {
+  Widget buildPoolSession(BuildContext context) {
     return GetBuilder<NewBookingController>(
       builder: (controller) {
         return Column(
@@ -131,7 +135,7 @@ class BookDateTimeView extends StatelessWidget {
                 AppButton.miniFlat(
                   text: 'ADD',
                   onTap: () {
-                    logic.addPoolSessionDateTime();
+                    logic.addPoolSessionDateTime(context);
                   },
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
@@ -147,7 +151,7 @@ class BookDateTimeView extends StatelessWidget {
     );
   }
 
-  Widget buildDiveSession() {
+  Widget buildDiveSession(BuildContext context) {
     return GetBuilder<NewBookingController>(
       builder: (controller) {
         return Column(
@@ -167,7 +171,7 @@ class BookDateTimeView extends StatelessWidget {
                 AppButton.miniFlat(
                   text: 'ADD',
                   onTap: () {
-                    logic.addDiveSessionDateTime();
+                    logic.addDiveSessionDateTime(context);
                   },
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
@@ -183,7 +187,7 @@ class BookDateTimeView extends StatelessWidget {
     );
   }
 
-  Widget buildTheorySession() {
+  Widget buildTheorySession(BuildContext context) {
     return GetBuilder<NewBookingController>(
       builder: (controller) {
         return Column(
@@ -203,7 +207,7 @@ class BookDateTimeView extends StatelessWidget {
                 AppButton.miniFlat(
                   text: 'ADD',
                   onTap: () {
-                    logic.addTheorySessionDateTime();
+                    logic.addTheorySessionDateTime(context);
                   },
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
@@ -262,13 +266,15 @@ class BookDateTimeView extends StatelessWidget {
     return const SizedBox();
   }
 
-  Widget buildContinueButton() {
+  Widget buildContinueButton(BuildContext context) {
     return Center(
       child: AppButton.flat(
         text: 'Continue',
         textColor: AppColors.text.white,
         color: AppColors.background.black,
-        onTap: logic.onContinueChooseDatesPressed,
+        onTap: () {
+          logic.onContinueChooseDatesPressed(context);
+        },
       ),
     );
   }

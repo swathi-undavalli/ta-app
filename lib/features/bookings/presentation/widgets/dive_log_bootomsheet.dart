@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/firebase/api.dart';
@@ -47,7 +48,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Get.height,
+      height: Screen.height,
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
         top: 30,
@@ -175,7 +176,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
         IconButton(
           icon: const Icon(Icons.close),
           onPressed: () async {
-            Get.back();
+            Navigator.pop(context);
           },
         ),
       ],
@@ -303,7 +304,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
             AppButton.miniText(
               text: 'Cancel',
               onTap: () {
-                Get.back();
+                Navigator.pop(context);
               },
             ),
             AppButton.miniFlat(
@@ -313,8 +314,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
                   id,
                   widget.bookingModel.pax?[index]['email'],
                 );
-
-                Get.back();
+                Navigator.pop(context);
               },
             ),
           ],

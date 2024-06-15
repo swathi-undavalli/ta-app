@@ -1,8 +1,10 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../models/event_model.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/firebase/api.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -13,6 +15,7 @@ import '../../../../core/widgets/time_picker.dart';
 import '../../../boat/models/boat_details.dart';
 import '../../../boat/presentation/widgets/employee_selector_bottom_sheet.dart';
 import '../../../employees/model/employee.dart';
+import '../../models/event_model.dart';
 
 class EventEntryBottomSheet extends StatefulWidget {
   final Event? event;
@@ -56,10 +59,8 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
   @override
   void initState() {
     super.initState();
-    locationTED =
-        TextEditingController(text: widget.event?.location ?? '');
-    sessionNameTED =
-        TextEditingController(text: widget.event?.session ?? '');
+    locationTED = TextEditingController(text: widget.event?.location ?? '');
+    sessionNameTED = TextEditingController(text: widget.event?.session ?? '');
     sessionDate = widget.event?.dateTime ?? DateTime.now();
     sessionTime = widget.event?.dateTime ?? DateTime.now();
     employees = widget.event?.employees ?? [];
@@ -72,8 +73,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding:
-          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         color: AppColors.background.lightBlue,
@@ -82,7 +82,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
         children: [
           if (showLoading)
             Container(
-              width: Get.width,
+              width: Screen.width,
               height: 650,
               color: Colors.grey,
               child: const CircularProgressIndicator(
@@ -115,8 +115,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
                   selectTime(context);
                 },
                 title: 'Time',
-                value: TimePicker.getFormattedTime(sessionTime) ??
-                    'No time selected',
+                value: TimePicker.getFormattedTime(sessionTime) ?? 'No time selected',
               ),
               Spacing.h35,
               buildDateAndTime(
@@ -195,14 +194,13 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
             ),
             GestureDetector(
               onTap: () async {
-                employees =
-                    (await EmpSelectorBottomSheet.getSelectedInstructors(
-                          context,
-                          initialSelectedInstructors: employees,
-                          instructorLimit: employeeLimit,
-                          employeeType: employeeType,
-                        )) ??
-                        [];
+                employees = (await EmpSelectorBottomSheet.getSelectedInstructors(
+                      context,
+                      initialSelectedInstructors: employees,
+                      instructorLimit: employeeLimit,
+                      employeeType: employeeType,
+                    )) ??
+                    [];
                 setState(() {});
               },
               child: const Text(
@@ -328,9 +326,10 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
           showLoading = false;
         });
         clear();
-        Get.back();
+        if (mounted) {
+          Navigator.pop(context);
+        }
         return;
-
       },
       text: 'Submit',
       color: Colors.black,

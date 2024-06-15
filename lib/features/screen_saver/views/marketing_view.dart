@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
@@ -18,7 +19,10 @@ import '../widgets/marketing_content_entry_bottom_sheet.dart';
 
 class MarketingView extends StatefulWidget {
   const MarketingView({Key? key}) : super(key: key);
-  static const String id = 'MarketingView';
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const MarketingView(),
+      );
 
   @override
   State<MarketingView> createState() => _MarketingViewState();
@@ -53,7 +57,7 @@ class _MarketingViewState extends State<MarketingView> {
 
                 if (data == null) {
                   return SizedBox(
-                    height: Get.height,
+                    height: Screen.height,
                     child: const Text(
                       'Marketing Gallery is empty',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -65,7 +69,7 @@ class _MarketingViewState extends State<MarketingView> {
 
                 if ((marketing.marketingElements ?? []).isEmpty) {
                   return SizedBox(
-                    height: Get.height,
+                    height: Screen.height,
                     child: const Text(
                       'Marketing Gallery is empty',
                       style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
@@ -94,7 +98,7 @@ class _MarketingViewState extends State<MarketingView> {
 
   Widget buildMarketingCard({required MarketingElement element, required int index}) {
     return Container(
-      width: Get.width,
+      width: Screen.width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
@@ -249,14 +253,14 @@ class _MarketingViewState extends State<MarketingView> {
             AppButton.miniText(
               text: 'Cancel',
               onTap: () {
-                Get.back();
+                Navigator.pop(context);
               },
             ),
             AppButton.miniFlat(
               text: 'Okay',
               onTap: () {
                 logic.onDeletePressed(index);
-                Get.back();
+                Navigator.pop(context);
               },
             ),
           ],
@@ -290,7 +294,7 @@ class _MarketingViewState extends State<MarketingView> {
 
   Widget buildContent({required String? value, double fontSize = 12, Color color = Colors.grey}) {
     return SizedBox(
-      width: Get.width - 190,
+      width: Screen.width - 190,
       child: Text(
         (value != null && value.isNotEmpty) ? value : 'Untitled',
         style: TextStyle(

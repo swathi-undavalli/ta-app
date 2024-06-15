@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/access_levels.dart';
@@ -10,10 +11,13 @@ import 'activity_edit_view.dart';
 import 'add_new_activity_view.dart';
 
 class AllActivitiesView extends StatelessWidget {
-  static const String id = 'PriceEditingScreen';
   final AllActivitiesLogic logic = AllActivitiesLogic();
 
   AllActivitiesView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => AllActivitiesView(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +25,7 @@ class AllActivitiesView extends StatelessWidget {
       children: [
         Scaffold(
           backgroundColor: AppColors.background.lightBlue,
-          floatingActionButton: buildFloatingActionButton(),
+          floatingActionButton: buildFloatingActionButton(context),
           appBar: const AppBarWidget(heading: 'All Activities'),
           body: SafeArea(
             child: SingleChildScrollView(
@@ -33,7 +37,7 @@ class AllActivitiesView extends StatelessWidget {
                       children: [
                         const SizedBox(height: 20),
                         for (int i = 0; i < controller.allActivitiesList.length; i++)
-                          buildActivities(controller.allActivitiesList[i]),
+                          buildActivities(context, controller.allActivitiesList[i]),
                         const SizedBox(height: 50),
                       ],
                     );
@@ -50,13 +54,13 @@ class AllActivitiesView extends StatelessWidget {
 
   ///============UI=============///
 
-  Widget buildFloatingActionButton() {
+  Widget buildFloatingActionButton(BuildContext context) {
     return EmployeeAccess(
       access: AccessRights.addActivity,
       child: FloatingActionButton(
         elevation: 0,
         onPressed: () {
-          Get.toNamed(AddNewActivityView.id);
+          Navigator.push(context, AddNewActivityView.route());
         },
         backgroundColor: AppColors.background.black,
         child: const Icon(
@@ -73,8 +77,8 @@ class AllActivitiesView extends StatelessWidget {
         if (controller.showLoading) {
           return Container(
             color: Colors.black54,
-            height: Get.height,
-            width: Get.width,
+            height: Screen.height,
+            width: Screen.width,
             child: const Center(
               child: CircularProgressIndicator(
                 color: Colors.white,
@@ -88,10 +92,10 @@ class AllActivitiesView extends StatelessWidget {
     );
   }
 
-  Widget buildActivities(Activity activityModel) {
+  Widget buildActivities(BuildContext context, Activity activityModel) {
     return GestureDetector(
       onTap: () {
-        Get.toNamed(ActivityEditView.id, arguments: activityModel);
+        Navigator.push(context, ActivityEditView.route(activityModel));
       },
       child: SizedBox(
         height: 50,
@@ -103,7 +107,7 @@ class AllActivitiesView extends StatelessWidget {
             children: [
               Expanded(
                 child: SizedBox(
-                  width: Get.width,
+                  width: Screen.width,
                   child: Text(
                     '${activityModel.id} - ${activityModel.name!}',
                     style: TextStyle(

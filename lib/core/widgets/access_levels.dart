@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../features/employees/model/employee.dart';
 
@@ -14,7 +14,7 @@ class EmployeeAccess extends StatelessWidget {
   Widget build(BuildContext context) {
     if ((!access) && showMessage != null && showMessage!) {
       return SizedBox(
-        height: Get.height,
+        height: Screen.height,
         child: const Center(
           child: Text("You Don't have Access to this page"),
         ),

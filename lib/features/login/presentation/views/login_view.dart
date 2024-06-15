@@ -9,9 +9,11 @@ import '../../../../core/widgets/phone_number/intl_phone_field.dart';
 import '../../controller/login_controller.dart';
 
 class LoginView extends StatefulWidget {
-  static const String id = 'LoginScreen';
-
   const LoginView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const LoginView(),
+      );
 
   @override
   State<LoginView> createState() => _LoginViewState();
@@ -110,7 +112,7 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Widget buildPhoneNumberTextField() {
+  Widget buildPhoneNumberTextField(BuildContext context) {
     return IntlPhoneField(
       initialCountryCode: 'IN',
       showCountryFlag: false,
@@ -128,7 +130,7 @@ class _LoginViewState extends State<LoginView> {
       ),
       searchText: 'Search',
       onSubmitted: (_) {
-        logic.signInWithPhoneNumber();
+        logic.signInWithPhoneNumber(context);
       },
       onChanged: (phone) {
         logic.controller.phoneNumberTED.text = phone.number!;
@@ -144,7 +146,7 @@ class _LoginViewState extends State<LoginView> {
           return AppButton.flat(
             text: 'Resend',
             onTap: () {
-              logic.resendOTP();
+              logic.resendOTP(context);
             },
             color: AppColors.background.black,
             textColor: AppColors.text.white,
@@ -292,10 +294,10 @@ class _LoginViewState extends State<LoginView> {
         if (controller.showFab && controller.showResend == false) {
           return FloatingActionButton(
             onPressed: () {
-              logic.signInWithPhoneNumber();
+              logic.signInWithPhoneNumber(context);
             },
             elevation: 0,
-            backgroundColor: AppColors.IconColor.black,
+            backgroundColor: AppColors.iconColor.black,
             child: (controller.showLoading)
                 ? const SizedBox(
                     height: 20,

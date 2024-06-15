@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/app_bar.dart';
@@ -8,10 +10,13 @@ import '../../controller/new_booking_controller.dart';
 import '../widgets/app_text_fields.dart';
 
 class NewBookingView extends StatelessWidget {
-  static const String id = 'BookingFormScreen';
   final NewBookingLogic logic = NewBookingLogic();
 
   NewBookingView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => NewBookingView(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +27,12 @@ class NewBookingView extends StatelessWidget {
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Column(
-            children: [buildTextFields(), buildBreakdown(), buildButtons(), const SizedBox(height: 30)],
+            children: [
+              buildTextFields(),
+              buildBreakdown(),
+              buildButtons(context),
+              const SizedBox(height: 30),
+            ],
           ),
         ),
       ),
@@ -40,7 +50,7 @@ class NewBookingView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 12, top: 10),
               child: Container(
-                width: Get.width,
+                width: Screen.width,
                 alignment: Alignment.centerLeft,
                 child: buildSubTitle(text: 'Dive Location'),
               ),
@@ -160,7 +170,7 @@ class NewBookingView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(top: 100, left: 40, bottom: 100),
       child: SizedBox(
-        width: Get.width,
+        width: Screen.width,
         height: 120,
         child: GetBuilder<NewBookingController>(
           builder: (controller) {
@@ -209,7 +219,7 @@ class NewBookingView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(right: 12),
               child: Container(
-                width: Get.width,
+                width: Screen.width,
                 alignment: Alignment.centerLeft,
                 child: buildSubTitle(text: text),
               ),
@@ -227,12 +237,12 @@ class NewBookingView extends StatelessWidget {
     );
   }
 
-  Widget buildButtons() {
+  Widget buildButtons(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
-        buildCancelButton(),
-        buildContinueButton(),
+        buildCancelButton(context),
+        buildContinueButton(context),
       ],
     );
   }
@@ -243,8 +253,8 @@ class NewBookingView extends StatelessWidget {
         if (controller.showLoading) {
           return Container(
             color: Colors.black54,
-            height: Get.height,
-            width: Get.width,
+            height: Screen.height,
+            width: Screen.width,
             child: const Center(
               child: CircularProgressIndicator(
                 color: Colors.white,
@@ -418,20 +428,20 @@ class NewBookingView extends StatelessWidget {
     );
   }
 
-  Widget buildCancelButton() {
+  Widget buildCancelButton(BuildContext context) {
     return Center(
       child: AppButton.flat(
         text: 'Cancel',
         textColor: AppColors.text.black,
         color: AppColors.background.grey,
         onTap: () {
-          Get.back();
+          Navigator.pop(context);
         },
       ),
     );
   }
 
-  Widget buildContinueButton() {
+  Widget buildContinueButton(BuildContext context) {
     return Center(
       child: GetBuilder<NewBookingController>(
         builder: (controller) {
@@ -440,7 +450,7 @@ class NewBookingView extends StatelessWidget {
             textColor: AppColors.text.white,
             color: AppColors.background.black,
             onTap: () {
-              logic.onContinuePressedBookingForm();
+              logic.onContinuePressedBookingForm(context);
             },
           );
         },

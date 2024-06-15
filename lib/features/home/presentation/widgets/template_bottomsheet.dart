@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
@@ -110,9 +109,9 @@ class _TemplateBottomSheetState extends State<TemplateBottomSheet> {
                       (checklistElement) => buildChecklistTiles(
                         text: checklistElement.title,
                         onTap: () {
-                          Get.toNamed(
-                            NewChecklistView.id,
-                            arguments: [checklistElement, TemplateType.existingChecklist],
+                          Navigator.push(
+                            context,
+                            NewChecklistView.route(checklistElement, TemplateType.existingChecklist),
                           );
                         },
                       ),
@@ -120,9 +119,9 @@ class _TemplateBottomSheetState extends State<TemplateBottomSheet> {
                     buildChecklistTiles(
                       text: 'Create custom checklist',
                       onTap: () {
-                        Get.toNamed(
-                          NewChecklistView.id,
-                          arguments: [
+                        Navigator.push(
+                          context,
+                          NewChecklistView.route(
                             ChecklistElement(
                               items: [],
                               employeeId: null,
@@ -131,16 +130,16 @@ class _TemplateBottomSheetState extends State<TemplateBottomSheet> {
                               description: '',
                             ),
                             TemplateType.customChecklist,
-                          ],
+                          ),
                         );
                       },
                     ),
                     buildChecklistTiles(
                       text: 'Create Template',
                       onTap: () {
-                        Get.toNamed(
-                          NewChecklistView.id,
-                          arguments: [
+                        Navigator.push(
+                          context,
+                          NewChecklistView.route(
                             ChecklistElement(
                               items: [],
                               employeeId: null,
@@ -149,7 +148,7 @@ class _TemplateBottomSheetState extends State<TemplateBottomSheet> {
                               description: '',
                             ),
                             TemplateType.newTemplate,
-                          ],
+                          ),
                         );
                       },
                     ),

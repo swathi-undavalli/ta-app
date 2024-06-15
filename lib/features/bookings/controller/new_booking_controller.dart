@@ -55,12 +55,12 @@ class NewBookingLogic {
     }
   }
 
-  onContinuePressedBookingForm() {
+  onContinuePressedBookingForm(BuildContext context) {
     controller.bookingModel.remarks = controller.remarksTED.text.toString();
     controller.bookingModel.employeeName = currentEmployee!.firstName! + currentEmployee!.lastName!;
     if (controller.payingNowTED.text == '' || int.parse(controller.payingNowTED.text) == 0) {
       createCustomer();
-      createBooking();
+      createBooking(context);
       Get.defaultDialog(
         barrierDismissible: false,
         title: '',
@@ -90,9 +90,9 @@ class NewBookingLogic {
                     bgColor: AppColors.background.black,
                     textColor: AppColors.text.white,
                     onTap: () async {
-                      Get.offAllNamed(DashBoardView.id);
-                      DashBoardScreenLogic dashboardlogic = DashBoardScreenLogic();
-                      dashboardlogic.controller.currentIndex = 2;
+                      Navigator.push(context, DashBoardView.route());
+                      DashBoardScreenLogic dashboardLogic = DashBoardScreenLogic();
+                      dashboardLogic.controller.currentIndex = 2;
                       controller.reset();
                       BookingsCalenderWidgetLogic bookingCalenderLogic = BookingsCalenderWidgetLogic();
                       bookingCalenderLogic.onDateSelected(
@@ -116,7 +116,7 @@ class NewBookingLogic {
         ),
       );
     } else {
-      Get.toNamed(PaymentDetailsView.id);
+      Navigator.push(context, PaymentDetailsView.route());
     }
   }
 
@@ -134,13 +134,13 @@ class NewBookingLogic {
     await FirebaseFirestore.instance.collection('customers').doc(controller.emailTED.text).set(customer.toMap());
   }
 
-  onPaymentDetailsFilled() {
+  onPaymentDetailsFilled(BuildContext context) {
     if (controller.paymentModeTED.text != '') {
       controller.bookingModel.paymentMode = controller.paymentModeTED.text;
       controller.bookingModel.paymentTransactionId = controller.paymentReferenceTED.text;
       controller.bookingModel.receiptNo = controller.receiptNoTED.text;
       createCustomer();
-      createBooking();
+      createBooking(context);
       Get.defaultDialog(
         barrierDismissible: false,
         title: '',
@@ -170,7 +170,7 @@ class NewBookingLogic {
                     bgColor: AppColors.background.black,
                     textColor: AppColors.text.white,
                     onTap: () async {
-                      Get.offAllNamed(DashBoardView.id);
+                      Navigator.push(context, DashBoardView.route());
                       dashboardLogic.controller.currentIndex = 2;
                       controller.reset();
                       BookingsCalenderWidgetLogic bookingCalenderLogic = BookingsCalenderWidgetLogic();
@@ -233,7 +233,7 @@ class NewBookingLogic {
     );
   }
 
-  addPoolSessionDateTime() {
+  addPoolSessionDateTime(BuildContext context) {
     DateTime? selectedPoolDate;
     Get.defaultDialog(
       title: '',
@@ -271,7 +271,7 @@ class NewBookingLogic {
                 AppButton.miniText(
                   text: 'Cancel',
                   onTap: () {
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
                 AppButton.miniFlat(
@@ -283,7 +283,7 @@ class NewBookingLogic {
                     controller.bookingModel.poolDate!.add(selectedPoolDate);
                     controller.bookingModel.poolDate = controller.bookingModel.poolDate!.toSet().toList();
                     controller.update();
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
               ],
@@ -295,7 +295,7 @@ class NewBookingLogic {
     );
   }
 
-  addDiveSessionDateTime() {
+  addDiveSessionDateTime(BuildContext context) {
     DateTime? selectedDiveDate;
     Get.defaultDialog(
       title: '',
@@ -333,7 +333,7 @@ class NewBookingLogic {
                 AppButton.miniText(
                   text: 'Cancel',
                   onTap: () {
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
                 AppButton.miniFlat(
@@ -345,7 +345,7 @@ class NewBookingLogic {
                     controller.bookingModel.diveDate!.add(selectedDiveDate);
                     controller.bookingModel.diveDate = controller.bookingModel.diveDate!.toSet().toList();
                     controller.update();
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
               ],
@@ -357,7 +357,7 @@ class NewBookingLogic {
     );
   }
 
-  addQuickDiveSessionDateTime() {
+  addQuickDiveSessionDateTime(BuildContext context) {
     DateTime? selectedDiveDate;
     Get.defaultDialog(
       title: '',
@@ -395,7 +395,7 @@ class NewBookingLogic {
                 AppButton.miniText(
                   text: 'Cancel',
                   onTap: () {
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
                 AppButton.miniFlat(
@@ -407,7 +407,7 @@ class NewBookingLogic {
                     controller.quickDiveDates!.add(selectedDiveDate);
                     controller.quickDiveDates = controller.quickDiveDates!.toSet().toList();
                     controller.update();
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
               ],
@@ -419,7 +419,7 @@ class NewBookingLogic {
     );
   }
 
-  addTheorySessionDateTime() {
+  addTheorySessionDateTime(BuildContext context) {
     DateTime? selectedTheoryDate;
     Get.defaultDialog(
       title: '',
@@ -458,7 +458,7 @@ class NewBookingLogic {
                 AppButton.miniText(
                   text: 'Cancel',
                   onTap: () {
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
                 AppButton.miniFlat(
@@ -469,9 +469,8 @@ class NewBookingLogic {
                     controller.bookingModel.theoryDate ??= [];
                     controller.bookingModel.theoryDate!.add(selectedTheoryDate);
                     controller.bookingModel.theoryDate = controller.bookingModel.theoryDate!.toSet().toList();
-                    //log(controller.bookingModel.theoryDate.toString());
                     controller.update();
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
               ],
@@ -483,7 +482,7 @@ class NewBookingLogic {
     );
   }
 
-  createBooking() async {
+  createBooking(BuildContext context) async {
     if (controller.isQuickBooking) {
       List<String> bookingDates = [];
 
@@ -534,7 +533,9 @@ class NewBookingLogic {
         FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
         controller.quickShowLoading = false;
         controller.reset();
-        Get.back();
+        if (context.mounted) {
+          Navigator.pop(context);
+        }
         controller.update();
 
         return;
@@ -568,12 +569,12 @@ class NewBookingLogic {
     controller.update();
   }
 
-  onContinueChooseDatesPressed() {
+  onContinueChooseDatesPressed(BuildContext context) {
     if (controller.bookingModel.activity != null) {
       if ((controller.bookingModel.theoryDate != null && controller.bookingModel.theoryDate!.isNotEmpty) ||
           (controller.bookingModel.poolDate != null && controller.bookingModel.poolDate!.isNotEmpty) ||
           (controller.bookingModel.diveDate != null && controller.bookingModel.diveDate!.isNotEmpty)) {
-        Get.toNamed(NewBookingView.id);
+        Navigator.push(context, NewBookingView.route());
       } else {
         showToast('Please select at-least one session');
       }
@@ -582,7 +583,7 @@ class NewBookingLogic {
     }
   }
 
-  void onCheckPressed() {
+  void onCheckPressed(BuildContext context) {
     if (controller.emailTED.text != '' &&
         controller.fNameTED.text != '' &&
         controller.paxTED.text != '' &&
@@ -601,7 +602,7 @@ class NewBookingLogic {
       log('country code${controller.countryCodeTED.text}');
       controller.bookingModel.noOfPersons = getInt(controller.paxTED.text);
       disposeKeyboard();
-      Get.toNamed(BookDateTimeView.id);
+      Navigator.push(context, BookDateTimeView.route());
     } else {
       log('not allowed');
       showToast('Invalid Input');

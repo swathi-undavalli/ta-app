@@ -1,20 +1,24 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart' as intl;
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
-import 'package:intl/intl.dart' as intl;
-
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../bookings/models/booking_model.dart';
 import '../../../bookings/presentation/widgets/certification_status.dart';
 
 class CertificationDetailsView extends StatefulWidget {
-  CertificationDetailsView({super.key});
-  static const String id = 'CertificationDetailsView';
-  final ItemModel itemModel = Get.arguments;
+  const CertificationDetailsView({super.key, required this.itemModel});
+
+  final ItemModel itemModel;
+
+  static Route route(ItemModel itemModel) => MaterialPageRoute(
+        builder: (context) => CertificationDetailsView(itemModel: itemModel),
+      );
+
   @override
   State<CertificationDetailsView> createState() => _CertificationDetailsViewState();
 }

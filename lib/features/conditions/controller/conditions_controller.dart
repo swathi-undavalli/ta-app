@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
 import '../models/conditions_model.dart';
@@ -26,8 +27,8 @@ class ConditionsLogic {
     controller.conditions = await conditionsRepo.getConditions(controller.selectedDate);
   }
 
-  void onFloatingActionButtonPressed() {
-    Get.toNamed(AddConditionsView.id, arguments: controller.selectedReef);
+  void onFloatingActionButtonPressed(BuildContext context) {
+    Navigator.push(context, AddConditionsView.route());
   }
 
   List<Level> get getLevels {

@@ -1,10 +1,10 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/widgets/time_picker.dart';
 import '../../../boat/models/boat_details.dart';
@@ -163,7 +163,7 @@ class CoastGuardSlip {
   static pw.Widget buildLine() {
     return pw.Container(
       height: 1,
-      width: Get.width * 4,
+      width: Screen.width * 4,
       color: const PdfColor.fromInt(0xffD9D9D9),
     );
   }
@@ -171,7 +171,7 @@ class CoastGuardSlip {
   static pw.Widget buildDarkLine() {
     return pw.Container(
       height: 1,
-      width: Get.width * 4,
+      width: Screen.width * 4,
       color: PdfColors.black,
     );
   }

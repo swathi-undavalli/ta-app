@@ -48,6 +48,7 @@ class HomeLogic {
 
     await getBoatsData();
     controller.showLoading = false;
+    controller.update();
   }
 
   Future<void> getBoatsData() async {
@@ -112,8 +113,10 @@ class HomeLogic {
   Future<void> onDateChanged(DateTime date) async {
     controller.selectedDate = date;
     controller.showLoading = true;
+    controller.update();
     await getBookings();
     controller.showLoading = false;
+    controller.update();
   }
 }
 
@@ -128,12 +131,5 @@ class HomeController extends GetxController {
 
   DateTime selectedDate = DateTime.now();
 
-  bool _showLoading = false;
-
-  bool get showLoading => _showLoading;
-
-  set showLoading(bool value) {
-    _showLoading = value;
-    update();
-  }
+  bool showLoading = false;
 }

@@ -1,6 +1,9 @@
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+
 import '../models/category.dart';
 import '../models/offer.dart';
 import '../presentation/views/add_offers_view.dart';
@@ -26,9 +29,8 @@ class OffersLogic {
     controller.update();
   }
 
-
-  onEditPressed(Offer? offer) {
-    Get.toNamed(AddOffersView.id, arguments: offer);
+  onEditPressed(BuildContext context, Offer? offer) {
+    Navigator.push(context, AddOffersView.route(offer));
   }
 }
 

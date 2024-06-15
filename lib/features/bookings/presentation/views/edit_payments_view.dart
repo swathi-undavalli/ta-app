@@ -1,8 +1,11 @@
 import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -13,10 +16,13 @@ import '../widgets/app_text_fields.dart';
 
 // ignore: must_be_immutable
 class EditPaymentsView extends StatelessWidget {
-  static const String id = 'EditPaymentsScreen';
   EditPaymentsLogic logic = EditPaymentsLogic();
 
   EditPaymentsView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => EditPaymentsView(),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -37,6 +43,7 @@ class EditPaymentsView extends StatelessWidget {
                     controller.bookingModel!.payments!.length,
                     (index) {
                       return buildTransactions(
+                        context: context,
                         index: index,
                         payment: controller.bookingModel!.payments![index],
                       );
@@ -51,7 +58,7 @@ class EditPaymentsView extends StatelessWidget {
     );
   }
 
-  Widget buildTransactions({required PaymentModel payment, int? index}) {
+  Widget buildTransactions({required BuildContext context, required PaymentModel payment, int? index}) {
     DateTime now = DateTime.now();
     return Stack(
       children: [
@@ -73,7 +80,7 @@ class EditPaymentsView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SizedBox(
-                  width: Get.width - 100,
+                  width: Screen.width - 100,
                   child: Text(
                     'Payment ${payment.amount!.round()} by ${payment.paymentMode} collected by ${payment.collectedBy}',
                     overflow: TextOverflow.ellipsis,
@@ -189,7 +196,7 @@ class EditPaymentsView extends StatelessWidget {
                             AppButton.miniText(
                               text: 'Cancel',
                               onTap: () {
-                                Get.back();
+                                Navigator.pop(context);
                               },
                             ),
                             AppButton.miniFlat(
@@ -210,9 +217,11 @@ class EditPaymentsView extends StatelessWidget {
                                     .collection('bookings')
                                     .doc(logic.controller.bookingModel!.id)
                                     .set(logic.controller.bookingModel!.toMap());
-                                Get.back();
                                 controller.update();
-                                Get.back();
+                                if (context.mounted) {
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                }
                               },
                             ),
                           ],

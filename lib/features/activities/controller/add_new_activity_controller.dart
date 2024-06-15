@@ -15,7 +15,7 @@ class AddNewActivityLogic {
 
   AllActivitiesLogic allActivitiesLogic = AllActivitiesLogic();
 
-  onSubmit() async {
+  onSubmit(BuildContext context) async {
     var data = await FirebaseFirestore.instance.collection('counter').doc('count').get();
     CounterModel counterModel = CounterModel.fromMap(data.data()!);
 
@@ -42,7 +42,9 @@ class AddNewActivityLogic {
       Fluttertoast.showToast(msg: 'Saved');
       disposeKeyboard();
       controller.reset();
-      Get.back();
+      if (context.mounted) {
+        Navigator.pop(context);
+      }
       allActivitiesLogic.getAllActivities();
     }
   }

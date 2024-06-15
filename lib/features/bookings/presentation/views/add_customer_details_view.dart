@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -18,16 +19,19 @@ import '../widgets/app_text_fields.dart';
 import 'book_date_time_view.dart';
 
 class AddCustomerDetailsView extends StatelessWidget {
-  static const String id = 'AddCustomerDetailsScreen';
   final NewBookingLogic logic = NewBookingLogic();
 
   AddCustomerDetailsView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => AddCustomerDetailsView(),
+      );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const AppBarWidget(heading: 'New Booking'),
-      floatingActionButton: buildFloatingActionButton(),
+      floatingActionButton: buildFloatingActionButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor: AppColors.background.lightBlue,
       body: WillPopScope(
@@ -131,13 +135,13 @@ class AddCustomerDetailsView extends StatelessWidget {
                                     ),
                                     buildActivityDropDown(),
                                     const SizedBox(height: 20),
-                                    buildQuickDiveSession(),
+                                    buildQuickDiveSession(context),
                                     const SizedBox(height: 100),
                                     AppButton.flat(
                                       text: 'Create Booking',
                                       onTap: () {
                                         log('started creating');
-                                        logic.createBooking();
+                                        logic.createBooking(context);
                                         log('done');
                                       },
                                       color: Colors.black,
@@ -148,8 +152,8 @@ class AddCustomerDetailsView extends StatelessWidget {
                                 ).scrollable,
                                 if (controller.quickShowLoading)
                                   Container(
-                                    height: Get.height,
-                                    width: Get.width,
+                                    height: Screen.height,
+                                    width: Screen.width,
                                     color: Colors.grey.shade50,
                                     child: const SizedBox(
                                       height: 30,
@@ -215,7 +219,7 @@ class AddCustomerDetailsView extends StatelessWidget {
 
   ///======================UI==============///
 
-  Widget buildQuickDiveSession() {
+  Widget buildQuickDiveSession(BuildContext context) {
     return GetBuilder<NewBookingController>(
       builder: (controller) {
         return Column(
@@ -229,7 +233,7 @@ class AddCustomerDetailsView extends StatelessWidget {
                 AppButton.miniFlat(
                   text: 'ADD',
                   onTap: () {
-                    logic.addQuickDiveSessionDateTime();
+                    logic.addQuickDiveSessionDateTime(context);
                   },
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
@@ -292,7 +296,7 @@ class AddCustomerDetailsView extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.only(top: 12),
               child: Container(
-                width: Get.width,
+                width: Screen.width,
                 alignment: Alignment.centerLeft,
                 child: buildSubTitle('Activity'),
               ),
@@ -398,7 +402,7 @@ class AddCustomerDetailsView extends StatelessWidget {
     return Row(
       children: [
         AppTextField(
-          width: (Get.width / 2) - 45,
+          width: (Screen.width / 2) - 45,
           hintText: 'First Name',
           controller: logic.controller.fNameTED,
           focusNode: logic.controller.fNameNode,
@@ -416,7 +420,7 @@ class AddCustomerDetailsView extends StatelessWidget {
           width: 10,
         ),
         AppTextField(
-          width: (Get.width / 2) - 45,
+          width: (Screen.width / 2) - 45,
           hintText: 'Last Name',
           controller: logic.controller.lNameTED,
           focusNode: logic.controller.lNameNode,
@@ -508,16 +512,16 @@ class AddCustomerDetailsView extends StatelessWidget {
     );
   }
 
-  Widget buildFloatingActionButton() {
+  Widget buildFloatingActionButton(BuildContext context) {
     return GetBuilder<NewBookingController>(
       builder: (controller) {
         if (controller.getDetailsPressed && !controller.isQuickBooking) {
           return FloatingActionButton(
             onPressed: () {
-              logic.onCheckPressed();
+              logic.onCheckPressed(context);
             },
             elevation: 0,
-            backgroundColor: AppColors.IconColor.black,
+            backgroundColor: AppColors.iconColor.black,
             child: const Icon(
               Icons.check,
               color: Colors.white,

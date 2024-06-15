@@ -10,19 +10,24 @@ import '../widgets/app_text_fields.dart';
 
 // ignore: must_be_immutable
 class AddPaymentsView extends StatelessWidget {
-  static const String id = 'AddPaymentsScreen';
   AddPaymentsLogic logic = AddPaymentsLogic();
 
-  Booking? bookingArg = Get.arguments;
+  final Booking? booking;
 
-  AddPaymentsView({Key? key}) : super(key: key);
+  AddPaymentsView({Key? key, required this.booking}) : super(key: key);
+
+  static Route route(Booking booking) => MaterialPageRoute(
+        builder: (context) => AddPaymentsView(
+          booking: booking,
+        ),
+      );
 
   @override
   Widget build(BuildContext context) {
-    logic.controller.bookingModel = bookingArg;
+    logic.controller.bookingModel = booking;
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      appBar: buildAppBar() as PreferredSizeWidget?,
+      appBar: buildAppBar(context) as PreferredSizeWidget?,
       body: WillPopScope(
         onWillPop: () async {
           logic.controller.reset();
@@ -46,7 +51,7 @@ class AddPaymentsView extends StatelessWidget {
                   buildPaymentReferenceTextField(),
                   buildReceiptNo(),
                   const SizedBox(height: 70),
-                  buildProceed(),
+                  buildProceed(context),
                 ],
               ),
             ),
@@ -78,7 +83,7 @@ class AddPaymentsView extends StatelessWidget {
     );
   }
 
-  Widget buildAppBar() {
+  Widget buildAppBar(BuildContext context) {
     return AppBar(
       toolbarHeight: 70,
       centerTitle: true,
@@ -86,7 +91,7 @@ class AddPaymentsView extends StatelessWidget {
       leading: TextButton(
         onPressed: () {
           logic.controller.reset();
-          Get.back();
+          Navigator.pop(context);
         },
         child: Icon(
           Icons.arrow_back_ios,
@@ -238,7 +243,7 @@ class AddPaymentsView extends StatelessWidget {
               height: 30,
               width: 120,
               child: Text(
-                ' ${getBalance(bookingArg!.payments!, double.parse(bookingArg!.paid.toString()).roundToDouble(), double.parse(bookingArg!.totalCost.toString()).roundToDouble())} /-',
+                ' ${getBalance(booking!.payments!, double.parse(booking!.paid.toString()).roundToDouble(), double.parse(booking!.totalCost.toString()).roundToDouble())} /-',
               ),
             ),
           ],
@@ -268,7 +273,7 @@ class AddPaymentsView extends StatelessWidget {
     );
   }
 
-  Widget buildProceed() {
+  Widget buildProceed(BuildContext context) {
     return Center(
       child: AppButton.flat(
         text: 'Proceed',
@@ -276,10 +281,11 @@ class AddPaymentsView extends StatelessWidget {
         color: AppColors.background.black,
         onTap: () {
           logic.onPaymentDetailsFilled(
+            context,
             getBalance(
-              bookingArg!.payments!,
-              double.parse(bookingArg!.paid.toString()).roundToDouble(),
-              double.parse(bookingArg!.totalCost.toString()).roundToDouble(),
+              booking!.payments!,
+              double.parse(booking!.paid.toString()).roundToDouble(),
+              double.parse(booking!.totalCost.toString()).roundToDouble(),
             ),
           );
         },

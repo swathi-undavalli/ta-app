@@ -4,6 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -194,7 +195,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             if (showLoading)
               const CircularProgressIndicator(
                 color: Colors.black,
-              ).center.height(Get.height)
+              ).center.height(Screen.height)
             else ...[
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -473,7 +474,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
             AppButton.miniText(
               text: 'Cancel',
               onTap: () {
-                Get.back();
+                Navigator.pop(context);
               },
             ),
             AppButton.miniFlat(
@@ -514,8 +515,11 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                     .collection('dailyBoats')
                     .doc(DateFormat('dd-MM-yyyy').format(widget.selectedDate))
                     .set(boatsModel.toMap());
-                Get.back();
-                Get.back();
+                if (context.mounted) {
+                  Navigator.pop(context);
+                  Navigator.pop(context);
+                }
+
                 setState(() {});
                 log('deleted');
               },
@@ -604,7 +608,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
           children: [
             Expanded(
               child: SizedBox(
-                width: MediaQuery.of(context).size.width,
+                width: Screen.width,
                 child: Text(
                   "$title ${(isTanksRequired) ? "(N - A)" : ""}",
                   style: const TextStyle(

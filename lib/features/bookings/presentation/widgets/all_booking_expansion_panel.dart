@@ -10,11 +10,11 @@ import '../../../../core/widgets/access_levels.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../activities/model/colors_data.dart';
 import '../../../all_bookings/presentation/views/all_bookings_view.dart';
-import '../views/edit_booking_view.dart';
 import '../../../logs/models/log_model.dart';
 import '../../../logs/presentation/views/log_view.dart';
 import '../../models/booking_model.dart';
 import '../views/add_payments_view.dart';
+import '../views/edit_booking_view.dart';
 
 // ignore: must_be_immutable
 class AllBookingsExpansionPanel extends StatefulWidget {
@@ -203,7 +203,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                 AppButton.miniText(
                                   text: 'Cancel',
                                   onTap: () {
-                                    Get.back();
+                                    Navigator.pop(context);
                                   },
                                 ),
                                 AppButton.miniFlat(
@@ -219,7 +219,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                     );
                                     FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
 
-                                    Get.back();
+                                    Navigator.pop(context);
                                     const AllBookingsView();
                                     setState(() {});
                                   },
@@ -242,11 +242,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                         ),
                         iconSize: 15,
                         onPressed: () {
-                          var model = itemModel.bookingModel;
-                          Get.toNamed(
-                            EditBookingView.id,
-                            arguments: model,
-                          );
+                          Navigator.push(context, EditBookingView.route(itemModel.bookingModel!));
                         },
                       ),
                     ),
@@ -345,10 +341,7 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                       child: AppButton.miniFlat(
                                         text: 'Add Payment',
                                         onTap: () {
-                                          Get.toNamed(
-                                            AddPaymentsView.id,
-                                            arguments: item!.bookingModel,
-                                          );
+                                          Navigator.push(context, AddPaymentsView.route(itemModel.bookingModel!));
                                         },
                                       ).paddingOnly(right: 15),
                                       // alignment: Alignment.centerRight,

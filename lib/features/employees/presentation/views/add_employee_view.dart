@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/counter_model.dart';
@@ -12,11 +13,14 @@ import '../../../bookings/presentation/widgets/app_text_fields.dart';
 import '../../controllers/add_employee_controller.dart';
 
 class AddEmployeeView extends StatelessWidget {
-  static const String id = 'AddAnEmployeeScreen';
   final AddEmployeeLogic logic = AddEmployeeLogic();
-  final bool isEdit = (Get.arguments) ?? false;
+  final bool isEdit;
 
-  AddEmployeeView({Key? key}) : super(key: key);
+  AddEmployeeView({Key? key, required this.isEdit}) : super(key: key);
+
+  static Route route(bool isEdit) => MaterialPageRoute(
+        builder: (context) => AddEmployeeView(isEdit: isEdit),
+      );
 
   @override
   Widget build(BuildContext context) {
@@ -123,8 +127,8 @@ class AddEmployeeView extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    buildCancelButton(),
-                    buildSubmitButton(),
+                    buildCancelButton(context),
+                    buildSubmitButton(context),
                   ],
                 ),
                 const SizedBox(height: 30),
@@ -362,7 +366,7 @@ class AddEmployeeView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: AppTextField(
-        width: Get.width / 3,
+        width: Screen.width / 3,
         hintText: 'First Name',
         controller: logic.controller.firstNameTED,
         focusNode: logic.controller.firstNameNode,
@@ -380,7 +384,7 @@ class AddEmployeeView extends StatelessWidget {
 
   Widget buildNickName() {
     return AppTextField(
-      width: Get.width,
+      width: Screen.width,
       hintText: 'Nick Name',
       controller: logic.controller.nickNameTED,
       focusNode: logic.controller.nickNameNode,
@@ -397,7 +401,7 @@ class AddEmployeeView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: AppTextField(
-        width: Get.width,
+        width: Screen.width,
         hintText: 'Padi No',
         controller: logic.controller.agencyIdTED,
         focusNode: logic.controller.agencyIdNode,
@@ -416,7 +420,7 @@ class AddEmployeeView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 10, right: 10),
       child: AppTextField(
-        width: Get.width / 3,
+        width: Screen.width / 3,
         hintText: 'Last Name',
         controller: logic.controller.lastNameTED,
         focusNode: logic.controller.lastNameNode,
@@ -522,21 +526,21 @@ class AddEmployeeView extends StatelessWidget {
     );
   }
 
-  Widget buildCancelButton() {
+  Widget buildCancelButton(BuildContext context) {
     return Center(
       child: AppButton.flat(
         text: 'Cancel',
         textColor: AppColors.text.black,
         color: AppColors.background.white,
         onTap: () {
-          Get.back();
+          Navigator.pop(context);
           logic.controller.reset();
         },
       ),
     );
   }
 
-  Widget buildSubmitButton() {
+  Widget buildSubmitButton(BuildContext context) {
     return Center(
       child: AppButton.flat(
         text: 'Submit',
@@ -544,9 +548,9 @@ class AddEmployeeView extends StatelessWidget {
         color: AppColors.background.black,
         onTap: () {
           if (isEdit) {
-            logic.updateEmployee();
+            logic.updateEmployee(context);
           } else {
-            logic.createEmployee();
+            logic.createEmployee(context);
           }
         },
       ),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/utils.dart';
@@ -12,9 +13,11 @@ import '../widgets/depth_expansion_panel_widget.dart';
 import '../widgets/surface_conditions_expansion_panel.dart';
 
 class AddConditionsView extends StatefulWidget {
-  static const String id = 'AddConditionsPage';
-
   const AddConditionsView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const AddConditionsView(),
+      );
 
   @override
   State<AddConditionsView> createState() => _AddConditionsViewState();
@@ -46,13 +49,13 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                     title: 'Are you sure,you want to go back?',
                     onOkayPressed: () {
                       logic.controller.reset();
-                      Get.back();
-                      Get.back();
+                      Navigator.pop(context);
+                      Navigator.pop(context);
                     },
                   );
                 } else {
                   logic.controller.reset();
-                  Get.back();
+                  Navigator.pop(context);
                 }
                 return true;
               },
@@ -110,7 +113,7 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                           ],
                         ),
                         SizedBox(
-                          height: Get.height - 373,
+                          height: Screen.height - 373,
                           child: SingleChildScrollView(
                             physics: const BouncingScrollPhysics(),
                             child: Column(
@@ -118,8 +121,8 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                               children: [
                                 if (logic.getLevels.isEmpty)
                                   SizedBox(
-                                    height: Get.height / 3,
-                                    width: Get.width,
+                                    height: Screen.height / 3,
+                                    width: Screen.width,
                                     child: const Center(
                                       child: Text(
                                         'Please add water conditions by clicking below',
@@ -139,7 +142,7 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                                               content: 'Added information will be completely removed.',
                                               onOkayPressed: () {
                                                 controller.conditions!.levels.removeAt(l.key);
-                                                Get.back();
+                                                Navigator.pop(context);
                                                 controller.update();
                                               },
                                             );
@@ -183,8 +186,8 @@ class _AddConditionsViewState extends State<AddConditionsView> {
             if (controller.showLoading)
               Container(
                 color: Colors.white.withOpacity(0.6),
-                height: Get.height,
-                width: Get.width,
+                height: Screen.height,
+                width: Screen.width,
                 child: const Center(
                   child: CircularProgressIndicator(
                     color: Colors.black,
@@ -260,8 +263,8 @@ class _AddConditionsViewState extends State<AddConditionsView> {
             title: 'Are you sure,you want to go back?',
             onOkayPressed: () {
               logic.controller.reset();
-              Get.back();
-              Get.back();
+              Navigator.pop(context);
+              Navigator.pop(context);
             },
           );
         },
@@ -270,7 +273,7 @@ class _AddConditionsViewState extends State<AddConditionsView> {
       actions: [
         GestureDetector(
           onTap: () {
-            logic.onSavePressed();
+            logic.onSavePressed(context);
           },
           child: Center(
             child: Container(
@@ -319,7 +322,7 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                 AppButton.miniText(
                   text: 'Cancel',
                   onTap: () {
-                    Get.back();
+                    Navigator.pop(context);
                   },
                 ),
                 const Spacer(),
@@ -384,7 +387,7 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                         AppButton.miniText(
                           text: 'Cancel',
                           onTap: () {
-                            Get.back();
+                            Navigator.pop(context);
                             depthTED.clear();
                           },
                         ),
@@ -397,7 +400,7 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                               reefName: controller.selectedReef,
                             )) {
                               depthTED.clear();
-                              Get.back();
+                              Navigator.pop(context);
                             } else {
                               showToast('Depth is already added in this site');
                             }

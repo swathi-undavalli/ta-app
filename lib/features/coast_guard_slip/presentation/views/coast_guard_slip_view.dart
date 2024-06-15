@@ -19,7 +19,10 @@ import '../widgets/coast_guard_slip_pdf.dart';
 
 class CoastGuardSlipView extends StatefulWidget {
   const CoastGuardSlipView({Key? key}) : super(key: key);
-  static const String id = 'CoastGuardSlipView';
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const CoastGuardSlipView(),
+      );
 
   @override
   State<CoastGuardSlipView> createState() => _CoastGuardSlipViewState();

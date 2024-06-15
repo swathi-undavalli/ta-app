@@ -15,17 +15,33 @@ import '../../controller/all_activities_controller.dart';
 import '../../model/colors_data.dart';
 
 // ignore: must_be_immutable
-class ActivityEditView extends StatelessWidget {
-  static const String id = 'PriceEditScreen';
-  final Activity? activityArg = Get.arguments;
+class ActivityEditView extends StatefulWidget {
+  final Activity? activity;
+
+  const ActivityEditView({Key? key, required this.activity}) : super(key: key);
+
+  static Route route(Activity? activity) => MaterialPageRoute(
+        builder: (context) => ActivityEditView(
+          activity: activity,
+        ),
+      );
+
+  @override
+  State<ActivityEditView> createState() => _ActivityEditViewState();
+}
+
+class _ActivityEditViewState extends State<ActivityEditView> {
   final ActivityEditLogic logic = ActivityEditLogic();
+
   final AllActivitiesLogic allActivitiesLogic = AllActivitiesLogic();
 
-  ActivityEditView({Key? key}) : super(key: key) {
-    logic.controller.priceTED.text = activityArg!.price.toString();
-    logic.controller.nameTED.text = activityArg!.name!;
-    logic.controller.shortNameTED.text = activityArg?.shortName ?? '';
-    logic.controller.colorTED.text = activityArg!.color!;
+  @override
+  void initState() {
+    super.initState();
+    logic.controller.priceTED.text = widget.activity!.price.toString();
+    logic.controller.nameTED.text = widget.activity!.name!;
+    logic.controller.shortNameTED.text = widget.activity?.shortName ?? '';
+    logic.controller.colorTED.text = widget.activity!.color!;
   }
 
   @override
@@ -130,7 +146,7 @@ class ActivityEditView extends StatelessWidget {
               text: 'Cancel',
               textColor: AppColors.text.black,
               onTap: () {
-                Get.back();
+                Navigator.pop(context);
                 disposeKeyboard();
               },
             ),
@@ -141,21 +157,27 @@ class ActivityEditView extends StatelessWidget {
               text: 'Update',
               textColor: AppColors.text.white,
               onTap: () async {
-                activityArg!.name = controller.nameTED.text;
-                activityArg!.shortName = controller.shortNameTED.text;
-                activityArg!.price = int.parse(controller.priceTED.text);
-                activityArg!.color = controller.colorTED.text;
-                await FirebaseFirestore.instance.collection('catalogue').doc(activityArg!.id).set(activityArg!.toMap());
+                widget.activity!.name = controller.nameTED.text;
+                widget.activity!.shortName = controller.shortNameTED.text;
+                widget.activity!.price = int.parse(controller.priceTED.text);
+                widget.activity!.color = controller.colorTED.text;
+                await FirebaseFirestore.instance
+                    .collection('catalogue')
+                    .doc(widget.activity!.id)
+                    .set(widget.activity!.toMap());
 
                 await updateColorsDocument();
 
                 LogModel logModel = LogModel(
                   type: LogType.editActivity,
-                  activityName: activityArg!.name,
+                  activityName: widget.activity!.name,
                 );
                 FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
 
-                Get.back();
+                if (mounted) {
+                  Navigator.pop(context);
+                }
+
                 controller.reset();
                 allActivitiesLogic.controller.allActivitiesList = [];
                 allActivitiesLogic.controller.update();
@@ -220,15 +242,15 @@ class ActivityEditView extends StatelessWidget {
                   AppButton.miniText(
                     text: 'Cancel',
                     onTap: () {
-                      Get.back();
+                      Navigator.pop(context);
                     },
                   ),
                   AppButton.miniFlat(
                     text: 'OK',
                     onTap: () {
-                      FirebaseFirestore.instance.collection('catalogue').doc(activityArg!.id).delete();
-                      Get.back();
-                      Get.back();
+                      FirebaseFirestore.instance.collection('catalogue').doc(widget.activity!.id).delete();
+                      Navigator.pop(context);
+                      Navigator.pop(context);
                       allActivitiesLogic.controller.update();
                       allActivitiesLogic.getAllActivities();
                     },

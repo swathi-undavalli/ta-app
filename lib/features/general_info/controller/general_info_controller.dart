@@ -60,7 +60,7 @@ class GeneralInfoLogic {
     controller.showLoading = false;
   }
 
-  Future<void> onSubmitPressed() async {
+  Future<void> onSubmitPressed(BuildContext context) async {
     controller.currentDsd.highTides = TimePicker.getFormattedTime(controller.highTideTime);
     controller.currentDsd.lowTides = TimePicker.getFormattedTime(controller.lowTideTime);
 
@@ -73,7 +73,9 @@ class GeneralInfoLogic {
         .collection('dailyBoats')
         .doc(DateFormat('dd-MM-yyyy').format(controller.selectedDate))
         .set({'dsd': controller.currentDsd.toJson()}, SetOptions(merge: true));
-    Get.back();
+    if (context.mounted) {
+      Navigator.pop(context);
+    }
   }
 }
 

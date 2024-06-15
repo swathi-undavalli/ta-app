@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/services/notification_service.dart';
 import '../../../board_plan/presentation/views/board_plan_view.dart';
@@ -15,8 +17,20 @@ import '../../controller/dashboard_controller.dart';
 late DashBoardScreenLogic dashboardLogic;
 
 // ignore: must_be_immutable
-class DashBoardView extends StatelessWidget {
-  static const String id = 'DashBoardScreen';
+class DashBoardView extends StatefulWidget {
+  DashBoardView({Key? key}) : super(key: key) {
+    dashboardLogic = DashBoardScreenLogic();
+  }
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => DashBoardView(),
+      );
+
+  @override
+  State<DashBoardView> createState() => _DashBoardViewState();
+}
+
+class _DashBoardViewState extends State<DashBoardView> {
   final screens = [
     const HomeView(),
     BoatsView(),
@@ -31,8 +45,9 @@ class DashBoardView extends StatelessWidget {
 
   DateTime? currentBackPressTime;
 
-  DashBoardView({Key? key}) : super(key: key) {
-    dashboardLogic = DashBoardScreenLogic();
+  @override
+  void initState() {
+    super.initState();
 
     ///app is in Terminated
     FirebaseNotificationService.handleTerminatedNavigation();
@@ -83,8 +98,8 @@ class DashBoardView extends StatelessWidget {
             color: Colors.transparent,
             child: Container(
               color: Colors.black54,
-              height: Get.height,
-              width: Get.width,
+              height: Screen.height,
+              width: Screen.width,
               child: const Center(
                 child: CircularProgressIndicator(
                   color: Colors.white,

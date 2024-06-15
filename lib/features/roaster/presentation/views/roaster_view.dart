@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
@@ -8,7 +9,11 @@ import '../../controller/roaster_controller.dart';
 
 class RoasterView extends StatefulWidget {
   const RoasterView({super.key});
-  static const String id = 'RoasterView';
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const RoasterView(),
+      );
+
   @override
   State<RoasterView> createState() => _RoasterViewState();
 }
@@ -68,7 +73,6 @@ class _RoasterViewState extends State<RoasterView> {
                     ),
                   ],
                 ),
-
               ],
             ).paddingSymmetric(horizontal: 20);
           },

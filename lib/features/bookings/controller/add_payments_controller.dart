@@ -11,7 +11,7 @@ import '../models/booking_model.dart';
 class AddPaymentsLogic {
   AddPaymentsController controller = Get.put(AddPaymentsController());
 
-  onPaymentDetailsFilled(String balance) {
+  onPaymentDetailsFilled(BuildContext context, String balance) {
     if (controller.paymentModeTED.text != '') {
       if (controller.depositTED.text != '' &&
           double.parse(controller.depositTED.text) > 0 &&
@@ -30,7 +30,7 @@ class AddPaymentsLogic {
             .collection('bookings')
             .doc(controller.bookingModel!.id)
             .set(controller.bookingModel!.toMap());
-        Get.back();
+        Navigator.pop(context);
         controller.reset();
         BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
         bookingCalenderLogicNew.onDateSelected(bookingCalenderLogicNew.controller.selectedDate);

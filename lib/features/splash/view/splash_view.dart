@@ -1,22 +1,24 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../core/authentication/firebase_authentication.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/repository/employee_repo.dart';
 import '../../../core/services/auto_update.dart';
-import '../../../core/util/app_measurements.dart';
 import '../../login/presentation/views/login_view.dart';
 
 String lastLoginTime = 'lastLoginTime';
 
 class SplashView extends StatefulWidget {
   const SplashView({Key? key}) : super(key: key);
-  static const String id = 'SplashScreen';
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const SplashView(),
+      );
 
   @override
   State<SplashView> createState() => _SplashViewState();
@@ -35,18 +37,32 @@ class _SplashViewState extends State<SplashView> {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
-        Get.offAllNamed(LoginView.id);
+        if (mounted) {
+          Navigator.pushAndRemoveUntil(
+            context,
+            LoginView.route(),
+            (Route<dynamic> route) => false,
+          );
+        }
       } else {
         final prefs = await SharedPreferences.getInstance();
         DateTime? lastLogin = DateTime.tryParse(prefs.getString(lastLoginTime) ?? '');
         if ((lastLogin?.difference(DateTime.now()).inDays ?? 16) > 15) {
           FirebaseAuthentication.logout();
-          Get.offAllNamed(LoginView.id);
+          if (mounted) {
+            Navigator.pushAndRemoveUntil(
+              context,
+              LoginView.route(),
+              (Route<dynamic> route) => false,
+            );
+          }
           return;
         }
         await EmployeeRepo.synchronise();
         AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
-        await autoUpdateLogic.checkForUpdate();
+        if (mounted) {
+          await autoUpdateLogic.checkForUpdate(context);
+        }
       }
     } catch (e) {
       if (kDebugMode) {
@@ -57,12 +73,11 @@ class _SplashViewState extends State<SplashView> {
 
   @override
   Widget build(BuildContext context) {
-    AppMeasures.init(context);
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
       body: Container(
-        width: Get.width,
-        height: Get.height,
+        width: Screen.width,
+        height: Screen.height,
         color: Colors.white,
         child: Center(
           child: SizedBox(

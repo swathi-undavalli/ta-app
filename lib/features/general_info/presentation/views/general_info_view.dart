@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
@@ -13,9 +15,12 @@ import '../../../bookings/presentation/widgets/app_text_fields.dart';
 import '../../controller/general_info_controller.dart';
 
 class GeneralInfoView extends StatefulWidget {
-  static const String id = 'GeneralInfo';
 
   const GeneralInfoView({Key? key}) : super(key: key);
+
+  static Route route() => MaterialPageRoute(
+        builder: (context) => const GeneralInfoView(),
+      );
 
   @override
   State<GeneralInfoView> createState() => _GeneralInfoViewState();
@@ -72,8 +77,8 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
             builder: (controller) {
               if (controller.showLoading) {
                 return SizedBox(
-                  height: Get.height,
-                  width: Get.width,
+                  height: Screen.height,
+                  width: Screen.width,
                   child: const Center(
                     child: CircularProgressIndicator(
                       color: Colors.black,
@@ -393,7 +398,7 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
                       child: AppButton.flat(
                         text: 'Submit',
                         onTap: () {
-                          logic.onSubmitPressed();
+                          logic.onSubmitPressed(context);
                         },
                         color: Colors.black,
                         textColor: Colors.white,

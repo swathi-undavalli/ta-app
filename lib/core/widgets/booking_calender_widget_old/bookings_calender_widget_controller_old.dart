@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -10,12 +8,9 @@ import '../../models/item_model.dart';
 import '../../util/utils.dart';
 
 class BookingsCalenderWidgetLogic {
-  BookingsCalenderWidgetController controller =
-      Get.put(BookingsCalenderWidgetController());
+  BookingsCalenderWidgetController controller = Get.put(BookingsCalenderWidgetController());
 
   getBookings(DateTime date) async {
-    //log("getBookings");
-    //log("Started");
     controller.bookingTimings = [];
     controller.bookings = [];
     controller.showLoading = true;
@@ -111,41 +106,19 @@ class BookingsCalenderWidgetLogic {
   }
 
   filterBookingsList() {
-    print('==============================');
-    print('Selected Time : ${controller.selectedDate}');
-
-    for (var element in controller.bookings) {
-      print('.........');
-      print(element.activity![0]!.name);
-      print(element.theoryDate);
-      print(element.poolDate);
-      print(element.diveDate);
-      print('.........');
-    }
-
-    print('filtering started........\n\n');
     List<ItemModel> newItemsList = [];
     controller.poolCount = 0;
     controller.theoryCount = 0;
     controller.diveCount = 0;
 
-    log('1');
-
     for (var booking in controller.bookings) {
       ItemModel im = ItemModel.fromBooking(booking);
-      log('1.1');
 
       if (booking.theoryDate != null && booking.theoryDate!.isNotEmpty) {
-        log('1.2');
-
         for (var date in booking.theoryDate!) {
-          //print("+++++++++++");
-          //print(date);
-          //print(controller.selectedDate);
           if (isSameMinute(date!, controller.selectedDate)) {
             im.session = 'Theory';
             im.time = DateFormat('hh:mm').format(date);
-            //print("im.time ${im.time}");
             controller.theoryCount++;
             controller.theoryCountN += booking.noOfPersons!;
             newItemsList.add(im);
@@ -154,13 +127,9 @@ class BookingsCalenderWidgetLogic {
       }
       if (booking.poolDate != null && booking.poolDate!.isNotEmpty) {
         for (var date in booking.poolDate!) {
-          //print("+++++++++++");
-          //print(date);
-          //print(controller.selectedDate);
           if (isSameMinute(date!, controller.selectedDate)) {
             im.session = 'Pool';
             im.time = DateFormat('hh:mm').format(date);
-            //print("im.time ${im.time}");
             controller.poolCount += booking.noOfPersons!;
             newItemsList.add(im);
           }
@@ -168,27 +137,14 @@ class BookingsCalenderWidgetLogic {
       }
       if (booking.diveDate != null && booking.diveDate!.isNotEmpty) {
         for (var date in booking.diveDate!) {
-          //print("+++++++++++");
-          //print(date);
-          //print(controller.selectedDate);
           if (isSameMinute(date!, controller.selectedDate)) {
             im.session = 'Dive';
             im.time = DateFormat('hh:mm').format(date);
-            //print("im.time ${im.time}");
             controller.diveCount += booking.noOfPersons!;
             newItemsList.add(im);
           }
         }
       }
-    }
-    //print("filtering done........");
-
-    for (var element in newItemsList) {
-      //print(".........");
-      //print(element.activity);
-      //print(element.time);
-      //print(element.session);
-      //print(".........");
     }
 
     if (controller.theoryCount != 0) {
@@ -201,8 +157,6 @@ class BookingsCalenderWidgetLogic {
 
     controller.expansionItemModels = newItemsList;
     controller.update();
-
-    //print('==============================');
   }
 
   getDates() {

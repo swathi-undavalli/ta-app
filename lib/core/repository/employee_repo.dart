@@ -39,8 +39,7 @@ class EmployeeRepo {
     var empID = _getStorage.read(_employeeKey);
     if (empID != null) {
       currentEmployee = await getEmployee(empID);
-      NotificationSettings settings =
-          await FirebaseMessaging.instance.requestPermission(
+      NotificationSettings settings = await FirebaseMessaging.instance.requestPermission(
         alert: true,
         announcement: false,
         badge: true,
@@ -50,11 +49,8 @@ class EmployeeRepo {
         sound: true,
       );
 
-      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      } else if (settings.authorizationStatus ==
-          AuthorizationStatus.provisional) {
-      } else {
-      }
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {} else
+      if (settings.authorizationStatus == AuthorizationStatus.provisional) {} else {}
       if (currentEmployee!.accessLevels!.notifications == true) {
         FirebaseMessaging.instance.subscribeToTopic('newBooking').whenComplete(() => showToast('Subscribed'));
       }

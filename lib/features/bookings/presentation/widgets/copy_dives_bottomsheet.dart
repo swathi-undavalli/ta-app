@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -47,7 +48,7 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: Get.height,
+      height: Screen.height,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
         color: AppColors.background.lightBlue,
@@ -116,7 +117,7 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
           children: [
             Expanded(
               child: SizedBox(
-                width: Get.width,
+                width: Screen.width,
                 child: Text(
                   'Select Dates',
                   style: TextStyle(
@@ -244,7 +245,7 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
         IconButton(
           icon: const Icon(Icons.close),
           onPressed: () async {
-            Get.back();
+            Navigator.pop(context);
           },
         ),
       ],
@@ -292,7 +293,9 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
       setState(() {
         showLoading = false;
       });
-      Get.back();
+      if (mounted) {
+        Navigator.pop(context);
+      }
     }
   }
 
