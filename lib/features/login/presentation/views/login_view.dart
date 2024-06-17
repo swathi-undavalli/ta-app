@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -41,7 +42,7 @@ class _LoginViewState extends State<LoginView> {
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             child: SizedBox(
-              height: Get.size.height - 80,
+              height: Screen.height - 80,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
@@ -275,7 +276,7 @@ class _LoginViewState extends State<LoginView> {
 
   Widget buildHowdy() {
     return SizedBox(
-      width: Get.size.width,
+      width: Screen.width,
       child: Text(
         'Howdy,',
         style: TextStyle(

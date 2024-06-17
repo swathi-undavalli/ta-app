@@ -397,8 +397,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                   '  💵  ',
                                   style: TextStyle(fontSize: FontSize.small, color: Colors.grey),
                                 ),
-                              if (itemModel.colorCode == 'Blue' &&
-                                  itemModel.bookingModel!.pax!.length - 1 == itemModel.bookingModel!.noOfPersons)
+                              if (itemModel.bookingModel!.pax!.length - 1 == itemModel.bookingModel!.noOfPersons)
                                 Icon(
                                   Icons.verified,
                                   color: AppColors.text.skyBlue,
@@ -588,7 +587,9 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                             (itemModel.bookingModel!.noOfPersons)),
                                       ),
                                     Spacing.h20,
-                                    if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
+                                    if (itemModel.colorCode != 'Blue' &&
+                                        itemModel.isCustomerBooking &&
+                                        itemModel.bookingModel!.boatDetails!.instructors!.isNotEmpty)
                                       CertificationStatus(
                                         initialStatus: itemModel.bookingModel?.certificateStatus ?? 0,
                                         itemModel: itemModel,

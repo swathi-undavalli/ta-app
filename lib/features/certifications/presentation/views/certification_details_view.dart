@@ -33,14 +33,19 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
         child: Column(
           children: [
             buildKeyValuePairs(
+              key: 'Booking Id',
+              value: '${widget.itemModel.bookingID} ',
+            ),
+            buildKeyValuePairs(
               key: 'Name',
               value: '${widget.itemModel.name} ${widget.itemModel.lastName}',
             ),
             buildKeyValuePairs(key: 'Email', value: widget.itemModel.email ?? '-'),
             buildKeyValuePairs(
-                key: 'Date of Birth',
-                value: intl.DateFormat('dd-MM-yyy')
-                    .format((widget.itemModel.bookingModel!.pax![0]['dob'] as Timestamp).toDate())),
+              key: 'Date of Birth',
+              value: intl.DateFormat('dd-MM-yyy')
+                  .format((widget.itemModel.bookingModel!.pax![0]['dob'] as Timestamp).toDate()),
+            ),
             buildKeyValuePairs(key: 'Certification', value: widget.itemModel.activity),
             buildKeyValuePairs(
               key: 'Course Completion Date',

@@ -55,7 +55,7 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      appBar: const AppBarWidget(heading: 'Customer Logs'),
+      appBar: const AppBarWidget(heading: 'Customer Dive Logs'),
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

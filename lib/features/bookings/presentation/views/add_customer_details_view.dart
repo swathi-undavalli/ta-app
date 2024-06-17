@@ -85,7 +85,6 @@ class AddCustomerDetailsView extends StatelessWidget {
                                       hintText: 'Parent Booking Id',
                                       controller: logic.controller.quickBookingIdTED,
                                       keyboardType: TextInputType.number,
-                                      required: true,
                                       errorValidator: () {
                                         return null;
                                       },
@@ -488,27 +487,9 @@ class AddCustomerDetailsView extends StatelessWidget {
             controller.countryCodeTED.text = phone.countryCode;
             controller.phoneNumberTED.text = phone.number!;
             controller.isoCode = phone.countryISOCode;
-            //print(phone.number);
-            //print(phone.countryCode);
-            //print(phone.countryISOCode);
           },
         );
       },
-    );
-  }
-
-  Widget buildHii() {
-    return SizedBox(
-      width: Get.size.width,
-      child: Text(
-        'Hi,',
-        style: TextStyle(
-          fontSize: FontSize.title,
-          color: AppColors.text.black,
-          fontFamily: AppFonts.nunito,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
     );
   }
 

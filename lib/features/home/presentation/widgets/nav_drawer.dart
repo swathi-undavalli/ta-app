@@ -137,21 +137,18 @@ class NavDrawer extends StatelessWidget {
               access: AccessRights.offers,
               child: buildMenuItem(
                 icon: Icons.collections_bookmark_rounded,
-                text: 'Customer logs',
+                text: 'Customer Dive Logs',
                 onTap: () {
                   Navigator.push(context, CustomerLogsView.route());
                 },
               ),
             ),
-            EmployeeAccess(
-              access: AccessRights.processCertificate,
-              child: buildMenuItem(
-                icon: Icons.card_membership_outlined,
-                text: 'Certifications',
-                onTap: () {
-                  Navigator.push(context, CertificationLogsView.route());
-                },
-              ),
+            buildMenuItem(
+              icon: Icons.card_membership_outlined,
+              text: 'Certifications',
+              onTap: () {
+                Navigator.push(context, CertificationLogsView.route());
+              },
             ),
             buildLine(),
             (logic.controller.version != null && logic.controller.buildNumber != null)

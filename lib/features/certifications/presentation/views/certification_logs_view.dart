@@ -30,7 +30,7 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      appBar: const AppBarWidget(heading: 'Certification Logs'),
+      appBar: const AppBarWidget(heading: 'Certifications'),
       body: SafeArea(
         child: SizedBox(
           height: Screen.height,

@@ -107,7 +107,7 @@ class AddEmployeeView extends StatelessWidget {
                           bottom: 20,
                         ),
                         child: SizedBox(
-                          width: Get.size.width,
+                          width: Screen.width,
                           child: const Text(
                             'Access Levels',
                             style: TextStyle(
@@ -460,7 +460,7 @@ class AddEmployeeView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 10, top: 30),
       child: SizedBox(
-        width: Get.size.width,
+        width: Screen.width,
         child: Text(
           name,
           style: const TextStyle(

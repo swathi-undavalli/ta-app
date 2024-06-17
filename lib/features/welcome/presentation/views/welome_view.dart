@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../dashboard/presentation/views/dashboard_view.dart';
 import '../../../employees/model/employee.dart';
 
 class WelcomeView extends StatelessWidget {
-
   const WelcomeView({Key? key}) : super(key: key);
 
   static Route route() => MaterialPageRoute(
@@ -75,7 +74,7 @@ class WelcomeView extends StatelessWidget {
 
   Widget buildHii() {
     return SizedBox(
-      width: Get.size.width,
+      width: Screen.width,
       child: Text(
         'Hi,',
         style: TextStyle(

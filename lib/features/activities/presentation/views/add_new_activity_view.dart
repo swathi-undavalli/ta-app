@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_bar.dart';
@@ -92,7 +93,7 @@ class AddNewActivityView extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 10, top: 30),
       child: SizedBox(
-        width: Get.size.width,
+        width: Screen.width,
         child: Text(
           name,
           style: const TextStyle(

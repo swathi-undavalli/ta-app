@@ -176,11 +176,6 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                               'Course Name',
                               itemModel.activity,
                             ),
-                            if (!itemModel.bookingModel!.isQuickBooking)
-                              _buildKeyValuePairs(
-                                'Balance',
-                                '${getBalance(itemModel.bookingModel?.payments ?? [], double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} / -',
-                              ),
                             _buildKeyValuePairs('Session', itemModel.session),
                             if (!itemModel.bookingModel!.isQuickBooking)
                               _buildKeyValuePairs(
@@ -195,7 +190,6 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                                     'Remarks',
                                     itemModel.remarks.toString(),
                                   ),
-                            const SizedBox(height: 20),
                             StreamBuilder(
                               stream: bookingDoc.snapshots(),
                               builder: (
@@ -272,8 +266,8 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                                 );
                               },
                             ),
-                            const SizedBox(height: 20),
-                            const SizedBox(height: 20),
+                            Spacing.h20,
+                            Spacing.h20,
                           ],
                         ).paddingSymmetric(horizontal: 15);
                       }
@@ -671,14 +665,6 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
         ),
       ],
     ).paddingOnly(bottom: 6);
-  }
-
-  String getBalance(List<PaymentModel> payments, double deposit, double total) {
-    double t = deposit;
-    for (var payment in payments) {
-      t += payment.amount!;
-    }
-    return (total - t).toInt().toString();
   }
 }
 

@@ -296,7 +296,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),

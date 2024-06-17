@@ -93,13 +93,7 @@ class _CertificationStatusState extends State<CertificationStatus> {
               onTap: () {
                 if (status < checkPoint) {
                   if (status == 0 &&
-                      widget.itemModel.bookingModel?.boatDetails!.instructors?[0].id == currentEmployee?.id &&
-                      getBalance(
-                            widget.itemModel.bookingModel!.payments!,
-                            double.parse(widget.itemModel.paid).roundToDouble(),
-                            double.parse(widget.itemModel.cost).roundToDouble(),
-                          ) ==
-                          '0' &&
+                      (widget.itemModel.bookingModel?.boatDetails!.instructors?[0].id) == currentEmployee?.id &&
                       !widget.isCertificationDetailsView) {
                     status += 1;
                   } else if (status == 1 && AccessRights.processCertificate && widget.isCertificationDetailsView) {
@@ -130,11 +124,11 @@ class _CertificationStatusState extends State<CertificationStatus> {
         Spacing.h5,
         Text(
           ((widget.itemModel.bookingModel!.certificateStatus ?? 0) < 1)
-              ? 'Only the assigned instructor can update the status after full payment is processed.'
+              ? 'Only the assigned instructor ${widget.itemModel.bookingModel?.boatDetails!.instructors?[0].name} can update the status.'
               : 'Only the shop instructor is authorized to update the status once certification has been processed.',
           style: TextStyle(
             fontSize: 10,
-            color: AppColors.text.darkgrey,
+            color: AppColors.text.black,
           ),
         ),
       ],

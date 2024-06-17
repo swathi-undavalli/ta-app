@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -57,7 +58,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
           Spacing.h30,
           buildDateSelector(),
           buildCheckBoxWidget(
-            title: 'Show ongoing logs',
+            title: 'Show ongoing certifications',
             value: result.showOngoingLogs ?? false,
             onChanged: (bool? value) {
               setState(() {
@@ -66,7 +67,7 @@ class _FiltersBottomSheetState extends State<FiltersBottomSheet> {
             },
           ),
           buildCheckBoxWidget(
-            title: 'Show completed logs',
+            title: 'Show completed certifications',
             value: result.showCompletedLogs ?? false,
             onChanged: (bool? value) {
               setState(() {

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/utils.dart';
@@ -98,7 +99,7 @@ class _ActivityEditViewState extends State<ActivityEditView> {
 
   Widget buildSubtitle(String name) {
     return SizedBox(
-      width: Get.size.width,
+      width: Screen.width,
       child: Text(
         name,
         style: const TextStyle(

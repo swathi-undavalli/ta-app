@@ -200,7 +200,9 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                     ],
                   ).paddingOnly(right: 15),
                   Spacing.h15,
-                  if (widget.itemModel.colorCode != 'Blue' && (!widget.itemModel.bookingModel!.isQuickBooking))
+                  if (widget.itemModel.colorCode != 'Blue' &&
+                      (widget.itemModel.isCustomerBooking) &&
+                      (widget.itemModel.bookingModel!.boatDetails!.instructors!.isNotEmpty))
                     CertificationStatus(
                       initialStatus: widget.itemModel.bookingModel?.certificateStatus ?? 0,
                       itemModel: widget.itemModel,
