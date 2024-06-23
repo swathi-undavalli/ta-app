@@ -38,7 +38,7 @@ class Booking {
     this.boatDetails,
     this.parentBookingId,
     this.isQuickBooking = false,
-    this.certificateStatus,
+    this.certificationStatuses,
   });
 
   List<Activity?>? activity;
@@ -68,7 +68,7 @@ class Booking {
   BoatDetails? boatDetails;
   bool isQuickBooking;
   String? parentBookingId;
-  int? certificateStatus;
+  List<int>? certificationStatuses;
 
   Booking copyWith({
     List<Activity?>? activity,
@@ -98,7 +98,7 @@ class Booking {
     BoatDetails? boatDetails,
     bool? isQuickBooking,
     String? parentBookingId,
-    int? certificateStatus,
+    List<int>? certificationStatuses,
   }) =>
       Booking(
         activity: activity ?? this.activity,
@@ -128,7 +128,7 @@ class Booking {
         boatDetails: boatDetails ?? this.boatDetails,
         parentBookingId: parentBookingId ?? this.parentBookingId,
         isQuickBooking: isQuickBooking ?? this.isQuickBooking,
-        certificateStatus: certificateStatus ?? this.certificateStatus,
+        certificationStatuses: certificationStatuses ?? this.certificationStatuses,
       );
 
   factory Booking.fromMap(Map<String, dynamic> json) {
@@ -137,8 +137,30 @@ class Booking {
       return DateTime.parse(date);
     }
 
+    int? getExistingIndex(List<String> list) {
+      Set<String> seen = {};
+      for (int i = 0; i < list.length; i++) {
+        if (seen.contains(list[i])) {
+          return i;
+        }
+        seen.add(list[i]);
+      }
+      return null; // If no duplicates are found
+    }
+
+    List<dynamic>? pax = json['PAX'];
+
+    List<String> allEmails =
+        pax?.map((data) => data['email']).where((email) => email != null).cast<String>().toList() ?? [];
+    allEmails = allEmails.map((e) => e.toLowerCase()).toList();
+
+    if (getExistingIndex(allEmails) != null) {
+      pax?[0] = pax[getExistingIndex(allEmails)!];
+      pax?.removeAt(getExistingIndex(allEmails)!);
+    }
+
     return Booking(
-      pax: List<Map<String, dynamic>>.from(json['PAX'].map((x) => x)),
+      pax: List<Map<String, dynamic>>.from((pax ?? []).map((x) => x)),
       activity: List<Activity>.from(json['activity'].map((x) => Activity.fromMap(x))),
       payments: List<PaymentModel>.from((json['payments'] ?? []).map((x) => PaymentModel.fromMap(x))),
       noOfPersons: json['noOfPersons'],
@@ -165,8 +187,16 @@ class Booking {
       cancelBooking: json['cancelBooking'],
       cancellationReason: json['cancellationReason'],
       boatDetails: BoatDetails.fromMap(json['boatDetails']),
-      certificateStatus: json['certificateStatus'],
+      certificationStatuses: List<int>.from(json['certificationStatuses'] ?? [].map((x) => x)),
     );
+  }
+
+  List<Map<String, dynamic>> get registeredUsers {
+    return pax?.where((e) => e['activity_id'] != null).toList() ?? [];
+  }
+
+  bool isPaperworkDone(int index) {
+    return pax?[index]['activity_id'] != null;
   }
 
   bool get isDSD => activity?[0]?.name?.toLowerCase() == 'Discover scuba diving'.toLowerCase();
@@ -200,7 +230,7 @@ class Booking {
       'parentBookingId': parentBookingId,
       'cancellationReason': cancellationReason,
       'boatDetails': boatDetails?.toMap(),
-      'certificateStatus': certificateStatus,
+      'certificationStatuses': List<int>.from((certificationStatuses ?? []).map((x) => x)),
     };
   }
 
@@ -246,7 +276,6 @@ class Booking {
       } else {
         total = total - discount!;
       }
-      //print("total $total");
     }
     return total.floorToDouble();
   }
@@ -264,13 +293,11 @@ class Booking {
 
   bool get hasMedicalIssues {
     bool val = false;
-    if (pax!.length > 1) {
-      pax!.sublist(1).forEach((e) {
-        if (e['needDoctor'] != null && e['needDoctor'] == true) {
-          val = true;
-        }
-      });
-    }
+    pax?.forEach((e) {
+      if (e['needDoctor'] != null && e['needDoctor'] == true) {
+        val = true;
+      }
+    });
 
     return val;
   }

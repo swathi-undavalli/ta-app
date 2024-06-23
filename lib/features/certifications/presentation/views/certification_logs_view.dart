@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -53,94 +52,64 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
                       ),
                     );
                   }
+
                   if (snapshot.data?.docs.isEmpty ?? true) {
                     return const Center(child: Text('No bookings found.'));
                   }
 
-                  final sortedBookings = snapshot.data?.docs ?? [];
+                  final bookings = snapshot.data?.docs ?? [];
+                  List<Booking> visibleBookings = [];
 
-                  return Expanded(
-                    child: ListView.builder(
-                      itemCount: sortedBookings.length,
-                      itemBuilder: (context, index) {
-                        var booking = sortedBookings[index];
-                        Booking newBooking = Booking.fromMap(booking.data());
-                        ItemModel itemModel = ItemModel.fromBooking(newBooking);
-                        return InkWell(
-                          onTap: () {
-                            Navigator.push(context, CertificationDetailsView.route(itemModel));
-                          },
-                          child: Column(
-                            children: [
-                              Spacing.h20,
-                              Row(
-                                children: [
-                                  Spacing.w15,
-                                  Container(
-                                    height: 40,
-                                    width: 40,
-                                    decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.text.skyBlue),
-                                    child: Center(
-                                      child: Text(
-                                        itemModel.bookingID ?? '',
-                                        style: TextStyle(
-                                          color: AppColors.text.white,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w600,
-                                          fontFamily: AppFonts.nunito,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                  Spacing.w20,
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          itemModel.email ?? '',
-                                          style: TextStyle(
-                                            color: AppColors.text.black,
-                                            fontSize: 13,
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: AppFonts.nunito,
-                                          ),
-                                        ),
-                                        Spacing.h5,
-                                        Text(
-                                          'Instructor: ${itemModel.bookingModel?.boatDetails!.instructors?[0].name}',
-                                          style: TextStyle(
-                                            color: AppColors.text.darkgrey,
-                                            fontSize: 12,
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: AppFonts.nunito,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Icon(
-                                    (newBooking.certificateStatus == 1)
-                                        ? Icons.incomplete_circle_outlined
-                                        : Icons.check_circle,
-                                    color: (newBooking.certificateStatus == 1)
-                                        ? Colors.orange.shade400
-                                        : Colors.green.shade400,
-                                  ),
-                                  Spacing.w15,
-                                ],
-                              ),
-                              Container(
-                                height: 1,
-                                width: Screen.width,
-                                color: AppColors.text.grey,
-                              ).paddingSymmetric(horizontal: 15, vertical: 20),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
-                  );
+                  for (int i = 0; i < bookings.length; i++) {
+                    Booking booking = Booking.fromMap(bookings[i].data());
+                    if (result.showOngoingLogs == true && (booking.certificationStatuses?.contains(1) ?? false)) {
+                      visibleBookings.add(booking);
+                      continue;
+                    }
+                    if (result.showCompletedLogs == true && (booking.certificationStatuses?.contains(2) ?? false)) {
+                      visibleBookings.add(booking);
+                      continue;
+                    }
+                    if ((result.showCompletedLogs ?? false) == false &&
+                        (result.showOngoingLogs ?? false) == false &&
+                        ((booking.certificationStatuses?.contains(1) ?? false) ||
+                            (booking.certificationStatuses?.contains(2) ?? false))) {
+                      visibleBookings.add(booking);
+                      continue;
+                    }
+                  }
+
+                  if (visibleBookings.isNotEmpty) {
+                    return Expanded(
+                      child: ListView.builder(
+                        itemCount: bookings.length,
+                        itemBuilder: (context, index) {
+                          Booking booking = Booking.fromMap(bookings[index].data());
+                          ItemModel itemModel = ItemModel.fromBooking(booking);
+
+                          return Column(
+                            children: booking.pax!.map((p) {
+                              int status = p['certificateStatus'] ?? 0;
+                              if (result.showOngoingLogs == true && status == 1) {
+                                return buildItem(context, itemModel, p);
+                              }
+                              if (result.showCompletedLogs == true && status == 2) {
+                                return buildItem(context, itemModel, p);
+                              }
+                              if ((result.showCompletedLogs ?? false) == false &&
+                                  (result.showOngoingLogs ?? false) == false &&
+                                  status != 0) {
+                                return buildItem(context, itemModel, p);
+                              }
+                              return const SizedBox();
+                            }).toList(),
+                          );
+                        },
+                      ),
+                    );
+                  }
+
+                  return const Center(child: Text('No bookings found.'));
                 },
               ),
             ],
@@ -150,32 +119,97 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
     );
   }
 
-  Stream<QuerySnapshot<Map<String, dynamic>>> getBookingsQuery() {
+  InkWell buildItem(BuildContext context, ItemModel itemModel, Map<String, dynamic> customer) {
+    return InkWell(
+      onTap: () {
+        Navigator.push(context, CertificationDetailsView.route(itemModel, customer));
+      },
+      child: Column(
+        children: [
+          Spacing.h20,
+          Row(
+            children: [
+              Spacing.w15,
+              Container(
+                height: 40,
+                width: 40,
+                decoration: BoxDecoration(shape: BoxShape.circle, color: AppColors.text.skyBlue),
+                child: Center(
+                  child: Text(
+                    itemModel.bookingID ?? '',
+                    style: TextStyle(
+                      color: AppColors.text.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: AppFonts.nunito,
+                    ),
+                  ),
+                ),
+              ),
+              Spacing.w20,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      customer['email'],
+                      style: TextStyle(
+                        color: AppColors.text.black,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: AppFonts.nunito,
+                      ),
+                    ),
+                    Spacing.h5,
+                    Text(
+                      'Instructor: ${itemModel.bookingModel?.boatDetails!.instructors?[0].name}',
+                      style: TextStyle(
+                        color: AppColors.text.darkgrey,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: AppFonts.nunito,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(
+                (customer['certificateStatus'] == 1) ? Icons.incomplete_circle_outlined : Icons.check_circle,
+                color: (customer['certificateStatus'] == 1) ? Colors.orange.shade400 : Colors.green.shade400,
+              ),
+              Spacing.w15,
+            ],
+          ),
+          Container(
+            height: 1,
+            width: Screen.width,
+            color: AppColors.text.grey,
+          ).paddingSymmetric(horizontal: 15, vertical: 20),
+        ],
+      ),
+    );
+  }
+
+  Stream getBookingsQuery() {
     var query = FirebaseFirestore.instance.collection('bookings');
     var whereQuery;
 
-    if ((result.showOngoingLogs == true && result.showCompletedLogs == true) ||
-        ((result.showOngoingLogs ?? false) == false && (result.showCompletedLogs ?? false) == false)) {
-      whereQuery = query
-          .where('certificateStatus', isGreaterThanOrEqualTo: 1)
-          .where('certificateStatus', isLessThanOrEqualTo: 2);
-    } else if (result.showOngoingLogs == true) {
-      whereQuery =
-          query.where('certificateStatus', isGreaterThanOrEqualTo: 1).where('certificateStatus', isLessThan: 2);
-    } else if (result.showCompletedLogs == true) {
-      whereQuery =
-          query.where('certificateStatus', isGreaterThanOrEqualTo: 2).where('certificateStatus', isLessThan: 3);
-    }
-
-    // date
     if (result.selectedDate != null) {
-      whereQuery = whereQuery.where(
+      whereQuery = query.where(
         'bookingDate',
         arrayContains: DateFormat('dd-MM-yyyy').format(result.selectedDate!),
       );
+      return whereQuery.snapshots();
     }
 
-    whereQuery = whereQuery.orderBy('certificateStatus');
+    if ((result.showOngoingLogs == true && result.showCompletedLogs == true) ||
+        ((result.showOngoingLogs ?? false) == false && (result.showCompletedLogs ?? false) == false)) {
+      whereQuery = query.where('certificationStatuses', arrayContainsAny: [1, 2]);
+    } else if (result.showOngoingLogs == true) {
+      whereQuery = query.where('certificationStatuses', arrayContains: 1);
+    } else if (result.showCompletedLogs == true) {
+      whereQuery = query.where('certificationStatuses', arrayContains: 2);
+    }
 
     return whereQuery.snapshots();
   }
@@ -230,17 +264,18 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
         ),
         Spacing.w5,
         IconButton(
-            onPressed: () async {
-              var r = await FiltersBottomSheet.show(
-                context,
-                result: result,
-              );
-              if (r != null) {
-                result = r;
-                setState(() {});
-              }
-            },
-            icon: const Icon(Icons.filter_list_rounded)),
+          onPressed: () async {
+            var r = await FiltersBottomSheet.show(
+              context,
+              result: result,
+            );
+            if (r != null) {
+              result = r;
+              setState(() {});
+            }
+          },
+          icon: const Icon(Icons.filter_list_rounded),
+        ),
         Spacing.w10,
       ],
     );
@@ -257,13 +292,13 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
           Spacing.w5,
           Text(
             text,
-            style: TextStyle(color: Colors.black, fontSize: 14),
+            style: const TextStyle(color: Colors.black, fontSize: 14),
           ),
           InkWell(
             onTap: () {
               onTap();
             },
-            child: Icon(
+            child: const Icon(
               Icons.clear,
               size: 14,
             ).paddingAll(5),

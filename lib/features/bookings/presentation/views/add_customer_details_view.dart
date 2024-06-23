@@ -185,6 +185,8 @@ class AddCustomerDetailsView extends StatelessWidget {
                                   buildNameFields(),
                                   buildEmailID(),
                                   buildDOB(context),
+                                  Spacing.h10,
+                                  buildGender(),
                                   buildNoOfPersons(),
                                   buildPhoneNumber(),
                                   const SizedBox(height: 40),
@@ -216,7 +218,49 @@ class AddCustomerDetailsView extends StatelessWidget {
     );
   }
 
-  ///======================UI==============///
+  ///===============UI==============///
+
+  Widget buildGender() {
+    return GetBuilder<NewBookingController>(
+      builder: (controller) {
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Gender *',
+              style: TextStyle(
+                color: Colors.black54,
+                fontFamily: AppFonts.nunito,
+                fontSize: 12,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            DropdownButton(
+              underline: Container(height: 1, color: Colors.grey),
+              isExpanded: true,
+              value: controller.genderTED.text.isNotEmpty ? controller.genderTED.text : null,
+              onChanged: (dynamic newGender) {
+                controller.genderTED.text = newGender;
+                controller.update();
+              },
+              items: controller.gender.map((gender) {
+                return DropdownMenuItem(
+                  value: gender,
+                  child: Text(gender),
+                );
+              }).toList(),
+            ),
+            Spacing.h5,
+            Text(
+              'Required',
+              style: TextStyle(fontSize: 12, color: Colors.red.shade900),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   Widget buildQuickDiveSession(BuildContext context) {
     return GetBuilder<NewBookingController>(
@@ -350,20 +394,24 @@ class AddCustomerDetailsView extends StatelessWidget {
   }
 
   Widget buildNoOfPersons() {
-    return AppTextField(
-      hintText: 'No of Persons',
-      controller: logic.controller.paxTED,
-      focusNode: logic.controller.noOfPersonsNode,
-      nextFocusNode: logic.controller.phoneNumberNode,
-      keyboardType: TextInputType.number,
-      required: true,
-      onChangedCallBack: (_) {},
-      isStrictNumber: true,
-      errorValidator: () {
-        return null;
-      },
-      validator: (email) {
-        return null;
+    return GetBuilder<NewBookingController>(
+      builder: (controller) {
+        return AppTextField(
+          hintText: 'No of Persons',
+          controller: logic.controller.paxTED,
+          focusNode: logic.controller.noOfPersonsNode,
+          nextFocusNode: logic.controller.phoneNumberNode,
+          keyboardType: TextInputType.number,
+          required: true,
+          onChangedCallBack: (_) {},
+          isStrictNumber: true,
+          errorValidator: () {
+            return controller.paxError;
+          },
+          validator: (email) {
+            return null;
+          },
+        );
       },
     );
   }
@@ -382,13 +430,12 @@ class AddCustomerDetailsView extends StatelessWidget {
               focusNode: logic.controller.dobNode,
               nextFocusNode: logic.controller.noOfPersonsNode,
               keyboardType: TextInputType.number,
-              required: false,
-              onChangedCallBack: (_) {},
+              required: true,
               errorValidator: () {
-                return null;
+                return controller.dobError;
               },
-              validator: (email) {
-                return null;
+              validator: (dob) {
+                return dob;
               },
             ),
           ),
@@ -398,42 +445,46 @@ class AddCustomerDetailsView extends StatelessWidget {
   }
 
   Widget buildNameFields() {
-    return Row(
-      children: [
-        AppTextField(
-          width: (Screen.width / 2) - 45,
-          hintText: 'First Name',
-          controller: logic.controller.fNameTED,
-          focusNode: logic.controller.fNameNode,
-          nextFocusNode: logic.controller.lNameNode,
-          required: true,
-          onChangedCallBack: (_) {},
-          errorValidator: () {
-            return null;
-          },
-          validator: (email) {
-            return null;
-          },
-        ),
-        const SizedBox(
-          width: 10,
-        ),
-        AppTextField(
-          width: (Screen.width / 2) - 45,
-          hintText: 'Last Name',
-          controller: logic.controller.lNameTED,
-          focusNode: logic.controller.lNameNode,
-          nextFocusNode: logic.controller.emailNode,
-          required: false,
-          onChangedCallBack: (_) {},
-          errorValidator: () {
-            return null;
-          },
-          validator: (email) {
-            return null;
-          },
-        ),
-      ],
+    return GetBuilder<NewBookingController>(
+      builder: (controller) {
+        return Row(
+          children: [
+            AppTextField(
+              width: (Screen.width / 2) - 45,
+              hintText: 'First Name',
+              controller: logic.controller.fNameTED,
+              focusNode: logic.controller.fNameNode,
+              nextFocusNode: logic.controller.lNameNode,
+              required: true,
+              onChangedCallBack: (_) {},
+              errorValidator: () {
+                return controller.nameError;
+              },
+              validator: (email) {
+                return null;
+              },
+            ),
+            const SizedBox(
+              width: 10,
+            ),
+            AppTextField(
+              width: (Screen.width / 2) - 45,
+              hintText: 'Last Name',
+              controller: logic.controller.lNameTED,
+              focusNode: logic.controller.lNameNode,
+              nextFocusNode: logic.controller.emailNode,
+              required: false,
+              onChangedCallBack: (_) {},
+              errorValidator: () {
+                return null;
+              },
+              validator: (email) {
+                return null;
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -443,7 +494,6 @@ class AddCustomerDetailsView extends StatelessWidget {
       controller: logic.controller.emailTED,
       focusNode: logic.controller.emailNode,
       keyboardType: TextInputType.emailAddress,
-      onChangedCallBack: (_) {},
       required: true,
       inputFormatter: [
         TextInputFormatter.withFunction((oldValue, newValue) {
@@ -462,32 +512,40 @@ class AddCustomerDetailsView extends StatelessWidget {
   Widget buildPhoneNumber() {
     return GetBuilder<NewBookingController>(
       builder: (controller) {
-        return IntlPhoneField(
-          autoValidate: true,
-          focusNode: controller.phoneNumberNode,
-          initialCountryCode: controller.isoCode,
-          showCountryFlag: false,
-          initialValue: controller.phoneNumberTED.text,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          decoration: const InputDecoration(
-            labelText: 'Phone Number  *',
-            labelStyle: TextStyle(
-              fontSize: FontSize.small,
-              fontFamily: AppFonts.nunito,
+        return Column(
+          children: [
+            IntlPhoneField(
+              autoValidate: true,
+              focusNode: controller.phoneNumberNode,
+              initialCountryCode: controller.isoCode,
+              showCountryFlag: false,
+              initialValue: controller.phoneNumberTED.text,
+              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+              decoration: const InputDecoration(
+                labelText: 'Phone Number  *',
+                labelStyle: TextStyle(
+                  fontSize: FontSize.small,
+                  fontFamily: AppFonts.nunito,
+                ),
+              ),
+              style: const TextStyle(
+                fontFamily: AppFonts.nunito,
+                fontWeight: FontWeight.normal,
+                fontSize: 14,
+              ),
+              searchText: 'Search',
+              onSubmitted: (_) {},
+              onChanged: (phone) {
+                controller.countryCodeTED.text = phone.countryCode;
+                controller.phoneNumberTED.text = phone.number!;
+                controller.isoCode = phone.countryISOCode;
+              },
             ),
-          ),
-          style: const TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.normal,
-            fontSize: 14,
-          ),
-          searchText: 'Search',
-          onSubmitted: (_) {},
-          onChanged: (phone) {
-            controller.countryCodeTED.text = phone.countryCode;
-            controller.phoneNumberTED.text = phone.number!;
-            controller.isoCode = phone.countryISOCode;
-          },
+            Text(
+              (controller.phoneError != null) ? 'Phone ${controller.phoneError}' : '',
+              style: TextStyle(fontSize: 12, color: Colors.red.shade900),
+            ),
+          ],
         );
       },
     );

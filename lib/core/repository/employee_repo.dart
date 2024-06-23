@@ -17,10 +17,7 @@ class EmployeeRepo {
   }
 
   static getEmployee(String employeeID) async {
-    //print("getEmployee");
-    //print(employeeID);
     var data = await FirebaseApi.getEmployeeFullInformation(employeeID);
-    //print(data.data());
     return Employee.fromMap(data.data()!);
   }
 
@@ -49,8 +46,9 @@ class EmployeeRepo {
         sound: true,
       );
 
-      if (settings.authorizationStatus == AuthorizationStatus.authorized) {} else
-      if (settings.authorizationStatus == AuthorizationStatus.provisional) {} else {}
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      } else if (settings.authorizationStatus == AuthorizationStatus.provisional) {
+      } else {}
       if (currentEmployee!.accessLevels!.notifications == true) {
         FirebaseMessaging.instance.subscribeToTopic('newBooking').whenComplete(() => showToast('Subscribed'));
       }

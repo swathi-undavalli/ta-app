@@ -18,7 +18,6 @@ class BookingsCalenderWidgetLogicNew {
     controller.bookingTimings = [];
     controller.bookings = [];
     controller.showLoading = true;
-    // try {
     var data = await FirebaseFirestore.instance
         .collection('bookings')
         .where(
@@ -27,7 +26,6 @@ class BookingsCalenderWidgetLogicNew {
         )
         .get();
 
-    log(data.docs.toString());
     for (var element in data.docs) {
       Booking booking = Booking.fromMap(element.data());
 
@@ -54,7 +52,6 @@ class BookingsCalenderWidgetLogicNew {
       controller.poolCountA = 0;
       controller.diveCountA = 0;
 
-      //log("===================wb1");
       for (var booking in controller.bookings) {
         var im = ItemModel.fromBooking(booking);
         im.session = '';

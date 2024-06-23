@@ -78,16 +78,8 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
   }
 
   List<Widget> buildCustomers() {
-    int count = 0;
-    List emails = (widget.bookingModel.pax ?? []).map((e) => e['email']).toList();
-    for (int i = 0; i < emails.length; i++) {
-      if (emails[0] == emails[i]) {
-        count += 1;
-      }
-    }
-
     return List.generate(
-      (count == 2) ? widget.bookingModel.pax!.sublist(1).length : widget.bookingModel.pax!.length,
+      widget.bookingModel.pax!.length,
       (index) => Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,19 +124,16 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
   }
 
   Widget buildAddCustomerButton() {
-    if (widget.bookingModel.noOfPersons! > 1) {
-      if (widget.bookingModel.pax!.length - 1 < widget.bookingModel.noOfPersons!) {
-        return AppButton.miniFlat(
-          text: 'Add Customer',
-          onTap: () {
-            AddCustomerDialog.show(
-              context,
-              bookingModel: widget.bookingModel,
-            );
-          },
-        ).paddingSymmetric(horizontal: 20);
-      }
-      return const SizedBox();
+    if (widget.bookingModel.pax!.length < widget.bookingModel.noOfPersons!) {
+      return AppButton.miniFlat(
+        text: 'Add Customer',
+        onTap: () {
+          AddCustomerDialog.show(
+            context,
+            bookingModel: widget.bookingModel,
+          );
+        },
+      ).paddingSymmetric(horizontal: 20);
     }
     return const SizedBox();
   }

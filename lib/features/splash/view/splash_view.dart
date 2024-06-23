@@ -3,7 +3,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
-
 import '../../../core/authentication/firebase_authentication.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';

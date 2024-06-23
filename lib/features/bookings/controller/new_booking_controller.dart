@@ -128,7 +128,7 @@ class NewBookingLogic {
       email: controller.emailTED.text,
       phoneNumber: controller.phoneNumberTED.text,
       idProof: '',
-      gender: '',
+      gender: controller.genderTED.text,
       dob: controller.dob.toString(),
     );
     await FirebaseFirestore.instance.collection('customers').doc(controller.emailTED.text).set(customer.toMap());
@@ -525,7 +525,6 @@ class NewBookingLogic {
           createdAt: DateTime.now(),
           isQuickBooking: true,
           parentBookingId: controller.quickBookingIdTED.text,
-          certificateStatus: 0,
         );
 
         controller.bookingId = await FirebaseApi.addNewBooking(bookingModel);
@@ -562,7 +561,6 @@ class NewBookingLogic {
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       }
     }
-    controller.bookingModel.certificateStatus = 0;
     controller.bookingId = await FirebaseApi.addNewBooking(controller.bookingModel);
     LogModel logModel = LogModel(type: LogType.bookingCreated, bookingId: controller.bookingId);
     FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
@@ -584,10 +582,7 @@ class NewBookingLogic {
   }
 
   void onCheckPressed(BuildContext context) {
-    if (controller.emailTED.text != '' &&
-        controller.fNameTED.text != '' &&
-        controller.paxTED.text != '' &&
-        controller.phoneNumberTED.text != '') {
+    if (isValid()) {
       controller.bookingModel.pax = [];
       controller.bookingModel.pax!.add({
         'email': controller.emailTED.text,
@@ -597,16 +592,56 @@ class NewBookingLogic {
         'phoneNumber': controller.phoneNumberTED.text,
         'isoCode': controller.isoCode,
         'dob': controller.dob,
+        'gender': controller.genderTED.text,
       });
-      log(controller.dob.toString());
-      log('country code${controller.countryCodeTED.text}');
       controller.bookingModel.noOfPersons = getInt(controller.paxTED.text);
       disposeKeyboard();
       Navigator.push(context, BookDateTimeView.route());
     } else {
       log('not allowed');
-      showToast('Invalid Input');
     }
+  }
+
+  bool isValid() {
+    bool isValid = true;
+    controller.nameError = null;
+    controller.emailError = null;
+    controller.phoneError = null;
+    controller.genderError = null;
+    controller.dobError = null;
+    controller.paxError = null;
+
+    if (controller.fNameTED.text.isEmpty) {
+      controller.nameError = 'Required';
+      isValid = false;
+      controller.update();
+    }
+    if (controller.emailTED.text.isEmpty) {
+      controller.emailError = 'Required';
+      isValid = false;
+      controller.update();
+    }
+    if (controller.phoneNumberTED.text.isEmpty) {
+      controller.phoneError = 'Required';
+      isValid = false;
+      controller.update();
+    }
+    if (controller.genderTED.text.isEmpty) {
+      controller.genderError = 'Required';
+      isValid = false;
+      controller.update();
+    }
+    if (controller.dobTED.text.isEmpty) {
+      controller.dobError = 'Required';
+      isValid = false;
+      controller.update();
+    }
+    if (controller.paxTED.text.isEmpty) {
+      controller.paxError = 'Required';
+      isValid = false;
+      controller.update();
+    }
+    return isValid;
   }
 
   Future<bool> isCustomerExists() async {
@@ -644,8 +679,16 @@ class NewBookingController extends GetxController {
   TextEditingController quickNameTED = TextEditingController();
   TextEditingController quickEmailTED = TextEditingController();
   TextEditingController quickNoOfPersonsTED = TextEditingController();
+  TextEditingController genderTED = TextEditingController();
   Activity? quickSelectedActivity;
   List<DateTime?>? quickDiveDates;
+  List<String> gender = ['Male', 'Female'];
+  String? nameError;
+  String? emailError;
+  String? phoneError;
+  String? genderError;
+  String? dobError;
+  String? paxError;
 
   bool _quickShowLoading = false;
 
@@ -811,6 +854,7 @@ class NewBookingController extends GetxController {
     quickNameTED.text = '';
     quickBookingIdTED.text = '';
     quickEmailTED.text = '';
+    genderTED.text = '';
   }
 
   bool _showLoading = true;

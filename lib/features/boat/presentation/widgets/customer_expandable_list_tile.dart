@@ -180,8 +180,8 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                             if (!itemModel.bookingModel!.isQuickBooking)
                               _buildKeyValuePairs(
                                 'Registered',
-                                '${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}',
-                                isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
+                                '${itemModel.bookingModel!.registeredUsers.length} / ${itemModel.bookingModel!.noOfPersons}',
+                                isDanger: ((itemModel.bookingModel!.registeredUsers.length) !=
                                     (itemModel.bookingModel!.noOfPersons)),
                               ),
                             (itemModel.remarks == '')

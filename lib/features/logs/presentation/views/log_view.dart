@@ -307,3 +307,4 @@ enum LogType {
   addEmployee,
   deleteEmployee,
 }
+

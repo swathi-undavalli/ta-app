@@ -1,11 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_datetime_picker/flutter_datetime_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/util/validator.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/phone_number/intl_phone_field.dart';
 import '../../models/booking_model.dart';
@@ -43,13 +46,16 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
   TextEditingController nameTED = TextEditingController();
   TextEditingController emailTED = TextEditingController();
   TextEditingController genderTED = TextEditingController();
+  TextEditingController dobTED = TextEditingController();
   bool showLoading = false;
   String? nameError;
   String? emailError;
   String? phoneError;
   String? genderError;
+  String? dobError;
   CustomerModel? customerModel;
   List<String> gender = ['Male', 'Female'];
+  DateTime? dob = DateTime.now();
 
   @override
   Widget build(BuildContext context) {
@@ -68,11 +74,17 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                     hintText: 'Email',
                     controller: emailTED,
                     required: true,
+                    keyboardType: TextInputType.emailAddress,
+                    inputFormatter: [
+                      TextInputFormatter.withFunction((oldValue, newValue) {
+                        return newValue.copyWith(text: newValue.text.toLowerCase());
+                      }),
+                    ],
                     errorValidator: () {
-                      return emailError;
+                      return Validator.validateEmail(emailTED.text);
                     },
                     validator: (email) {
-                      return emailError;
+                      return Validator.validateEmail(emailTED.text);
                     },
                   ),
                   AppTextField(
@@ -87,6 +99,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                     },
                   ),
                   buildPhoneNumber(),
+                  buildDOB(),
                   buildGender(),
                 ],
               ).scrollable,
@@ -123,7 +136,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                 'countryCode': countryCode,
                 'phoneNumber': phoneNumber,
                 'isoCode': isoCode,
-                'dob': DateTime.now(),
+                'dob': dob,
                 'gender': genderTED.text,
               });
               await FirebaseFirestore.instance
@@ -141,6 +154,47 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
           },
         ),
       ],
+    );
+  }
+
+  Widget buildDOB() {
+    return GestureDetector(
+      onTap: () {
+        dobDatePicker();
+      },
+      child: AbsorbPointer(
+        child: AppTextField(
+          hintText: 'Date of Birth',
+          controller: dobTED,
+          keyboardType: TextInputType.number,
+          required: true,
+          errorValidator: () {
+            return dobError;
+          },
+          validator: (dob) {
+            return dob;
+          },
+        ),
+      ),
+    );
+  }
+
+  dobDatePicker() {
+    DatePicker.showDatePicker(
+      context,
+      showTitleActions: true,
+      minTime: DateTime.now().subtract(const Duration(days: 36500)),
+      maxTime: DateTime.now().subtract(const Duration(days: 2920)),
+      onChanged: (date) {
+        dob = date;
+        dobTED.text = DateFormat('dd MMM, yyyy').format(date);
+      },
+      onConfirm: (date) {
+        dob = date;
+        dobTED.text = DateFormat('dd MMM, yyyy').format(date);
+        setState(() {});
+      },
+      currentTime: dob,
     );
   }
 
@@ -212,6 +266,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
     emailError = null;
     phoneError = null;
     genderError = null;
+    dobError = null;
 
     if (nameTED.text.isEmpty) {
       nameError = 'Required';
@@ -233,6 +288,11 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
       isValid = false;
       setState(() {});
     }
+    if (dobTED.text.isEmpty) {
+      dobError = 'Required';
+      isValid = false;
+      setState(() {});
+    }
     return isValid;
   }
 
@@ -242,6 +302,8 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
     nameTED.text = '';
     emailTED.text = '';
     isoCode = 'IN';
+    dobTED.text = '';
+    dob = null;
   }
 
   Widget buildShowLoading() {

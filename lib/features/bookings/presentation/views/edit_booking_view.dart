@@ -259,7 +259,8 @@ class _EditBookingViewState extends State<EditBookingView> {
     );
   }
 
-  Widget buildEditSessions(BuildContext context,
+  Widget buildEditSessions(
+    BuildContext context,
     EditBookingNewController controller, {
     required DateType type,
   }) {

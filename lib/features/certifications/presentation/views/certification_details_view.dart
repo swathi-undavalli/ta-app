@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart' as intl;
+import 'package:intl/intl.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
@@ -11,12 +11,16 @@ import '../../../bookings/models/booking_model.dart';
 import '../../../bookings/presentation/widgets/certification_status.dart';
 
 class CertificationDetailsView extends StatefulWidget {
-  const CertificationDetailsView({super.key, required this.itemModel});
+  const CertificationDetailsView({super.key, required this.itemModel, required this.customer});
 
   final ItemModel itemModel;
+  final Map<String, dynamic> customer;
 
-  static Route route(ItemModel itemModel) => MaterialPageRoute(
-        builder: (context) => CertificationDetailsView(itemModel: itemModel),
+  static Route route(ItemModel itemModel, Map<String, dynamic> customer) => MaterialPageRoute(
+        builder: (context) => CertificationDetailsView(
+          itemModel: itemModel,
+          customer: customer,
+        ),
       );
 
   @override
@@ -38,13 +42,15 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
             ),
             buildKeyValuePairs(
               key: 'Name',
-              value: '${widget.itemModel.name} ${widget.itemModel.lastName}',
+              value: '${widget.customer['first-name']} ${widget.customer['last-name']}',
             ),
-            buildKeyValuePairs(key: 'Email', value: widget.itemModel.email ?? '-'),
+            buildKeyValuePairs(key: 'Email', value: widget.customer['email']),
             buildKeyValuePairs(
               key: 'Date of Birth',
-              value: intl.DateFormat('dd-MM-yyy')
-                  .format((widget.itemModel.bookingModel!.pax![0]['dob'] as Timestamp).toDate()),
+              value: widget.customer['dateOfBirth'] ??
+                  ((widget.customer['dob'] != null)
+                      ? DateFormat('dd-MM-yyy').format((widget.customer['dob'] as Timestamp).toDate())
+                      : '-'),
             ),
             buildKeyValuePairs(key: 'Certification', value: widget.itemModel.activity),
             buildKeyValuePairs(
@@ -68,16 +74,20 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
             buildKeyValuePairs(key: 'Course / Equipment Upsell', value: '-'),
             Spacing.h30,
             CertificationStatus(
-              initialStatus: widget.itemModel.bookingModel!.certificateStatus!,
               onChanged: (int status) async {
-                widget.itemModel.bookingModel?.certificateStatus = status;
-                await FirebaseFirestore.instance
-                    .collection('bookings')
-                    .doc(widget.itemModel.bookingModel!.id)
-                    .set(widget.itemModel.bookingModel!.toMap());
+                Booking booking = widget.itemModel.bookingModel!;
+
+                booking.pax![widget.itemModel.bookingModel!.pax!.indexOf(widget.customer)]['certificateStatus'] =
+                    status;
+                booking.certificationStatuses?.clear();
+                booking.pax?.forEach((pax) {
+                  booking.certificationStatuses?.add(pax['certificateStatus']);
+                });
+                await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
               },
               itemModel: widget.itemModel,
               isCertificationDetailsView: true,
+              paxIndex: widget.itemModel.bookingModel!.pax!.indexOf(widget.customer),
             ),
           ],
         ).paddingSymmetric(horizontal: 20, vertical: 20),

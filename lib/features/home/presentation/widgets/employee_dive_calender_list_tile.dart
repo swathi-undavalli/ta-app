@@ -18,7 +18,7 @@ import '../../../boat/models/boats.dart';
 import '../../../boat/presentation/widgets/customer_booking_status.dart';
 import '../../../boat/presentation/widgets/customer_expandable_list_tile.dart';
 import '../../../bookings/models/booking_model.dart';
-import '../../../bookings/presentation/widgets/certification_status.dart';
+import '../../../bookings/presentation/widgets/certification_bottomsheet.dart';
 import '../../../bookings/presentation/widgets/dive_log_bootomsheet.dart';
 import '../../controllers/home_controller.dart';
 
@@ -145,8 +145,8 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                   if (!widget.itemModel.bookingModel!.isQuickBooking)
                     _buildKeyValuePairs(
                       'Registered',
-                      '${widget.itemModel.bookingModel!.pax!.length - 1} / ${widget.itemModel.bookingModel!.noOfPersons}',
-                      isDanger: ((widget.itemModel.bookingModel!.pax!.length - 1) !=
+                      '${widget.itemModel.bookingModel!.registeredUsers} / ${widget.itemModel.bookingModel!.noOfPersons}',
+                      isDanger: ((widget.itemModel.bookingModel!.registeredUsers.length) !=
                           (widget.itemModel.bookingModel!.noOfPersons)),
                     ),
                   (widget.itemModel.remarks == '')
@@ -200,21 +200,12 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                     ],
                   ).paddingOnly(right: 15),
                   Spacing.h15,
-                  if (widget.itemModel.colorCode != 'Blue' &&
-                      (widget.itemModel.isCustomerBooking) &&
-                      (widget.itemModel.bookingModel!.boatDetails!.instructors!.isNotEmpty))
-                    CertificationStatus(
-                      initialStatus: widget.itemModel.bookingModel?.certificateStatus ?? 0,
-                      itemModel: widget.itemModel,
-                      onChanged: (int status) async {
-                        widget.itemModel.bookingModel?.certificateStatus = status;
-                        await FirebaseFirestore.instance
-                            .collection('bookings')
-                            .doc(widget.itemModel.bookingModel!.id)
-                            .set(widget.itemModel.bookingModel!.toMap());
-                      },
-                      isCertificationDetailsView: false,
-                    ).paddingOnly(right: 15),
+                  AppButton.miniFlat(
+                    onTap: () {
+                      CertificationBottomSheet.show(context, itemModel: widget.itemModel);
+                    },
+                    text: 'Manage Certs',
+                  ),
                   Spacing.h10,
                   const Divider(thickness: 1, color: Colors.black).paddingOnly(right: 20),
                 ],

@@ -313,9 +313,9 @@ class _AllBookingsExpansionPanelState extends State<AllBookingsExpansionPanel> {
                                 buildKeyValuePairs('Session', item!.session),
                                 buildKeyValuePairs(
                                   'Registered',
-                                  '${item!.bookingModel!.pax!.length - 1} / ${item!.bookingModel!.noOfPersons}',
-                                  isDanger:
-                                      ((item!.bookingModel!.pax!.length - 1) != (item!.bookingModel!.noOfPersons)),
+                                  '${item!.bookingModel!.registeredUsers.length} / ${item!.bookingModel!.noOfPersons}',
+                                  isDanger: ((item!.bookingModel!.registeredUsers.length) !=
+                                      (item!.bookingModel!.noOfPersons)),
                                 ),
                                 const SizedBox(height: 30),
                                 buildPaymentStatus(

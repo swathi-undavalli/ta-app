@@ -6,20 +6,19 @@ import '../../../../core/models/item_model.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/access_levels.dart';
 import '../../../employees/model/employee.dart';
-import '../../models/booking_model.dart';
 
 class CertificationStatus extends StatefulWidget {
   const CertificationStatus({
     Key? key,
-    required this.initialStatus,
     required this.onChanged,
     required this.itemModel,
     required this.isCertificationDetailsView,
+    required this.paxIndex,
   }) : super(key: key);
-  final int initialStatus;
   final ItemModel itemModel;
   final Function(int status) onChanged;
   final bool isCertificationDetailsView;
+  final int paxIndex;
 
   @override
   State<CertificationStatus> createState() => _CertificationStatusState();
@@ -30,7 +29,7 @@ class _CertificationStatusState extends State<CertificationStatus> {
 
   @override
   void initState() {
-    status = widget.initialStatus;
+    status = widget.itemModel.bookingModel?.pax?[widget.paxIndex]['certificateStatus'] ?? 0;
 
     super.initState();
   }
@@ -123,7 +122,7 @@ class _CertificationStatusState extends State<CertificationStatus> {
         ),
         Spacing.h5,
         Text(
-          ((widget.itemModel.bookingModel!.certificateStatus ?? 0) < 1)
+          ((widget.itemModel.bookingModel!.pax?[widget.paxIndex]['certificateStatus'] ?? 0) < 1)
               ? 'Only the assigned instructor ${widget.itemModel.bookingModel?.boatDetails!.instructors?[0].name} can update the status.'
               : 'Only the shop instructor is authorized to update the status once certification has been processed.',
           style: TextStyle(
@@ -133,14 +132,6 @@ class _CertificationStatusState extends State<CertificationStatus> {
         ),
       ],
     );
-  }
-
-  String getBalance(List<PaymentModel> payments, double deposit, double total) {
-    double t = deposit;
-    for (var payment in payments) {
-      t += payment.amount!;
-    }
-    return (total - t).toInt().toString();
   }
 
   Color getCertificationStatusColor(int index) {

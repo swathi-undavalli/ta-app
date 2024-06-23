@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -13,7 +12,6 @@ import 'package:share_plus/share_plus.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
 import '../../features/activities/model/colors_data.dart';
 import '../../features/bookings/controller/edit_payments_controller.dart';
 import '../../features/bookings/models/booking_model.dart';
@@ -21,7 +19,7 @@ import '../../features/bookings/presentation/views/add_payments_view.dart';
 import '../../features/bookings/presentation/views/edit_booking_view.dart';
 import '../../features/bookings/presentation/views/edit_payments_view.dart';
 import '../../features/bookings/presentation/widgets/app_text_fields.dart';
-import '../../features/bookings/presentation/widgets/certification_status.dart';
+import '../../features/bookings/presentation/widgets/certification_bottomsheet.dart';
 import '../../features/bookings/presentation/widgets/dive_log_bootomsheet.dart';
 import '../../features/bookings/presentation/widgets/share_booking_details_widget.dart';
 import '../../features/employees/model/employee.dart';
@@ -397,7 +395,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                   '  💵  ',
                                   style: TextStyle(fontSize: FontSize.small, color: Colors.grey),
                                 ),
-                              if (itemModel.bookingModel!.pax!.length - 1 == itemModel.bookingModel!.noOfPersons)
+                              if (itemModel.bookingModel!.registeredUsers.length == itemModel.bookingModel!.noOfPersons)
                                 Icon(
                                   Icons.verified,
                                   color: AppColors.text.skyBlue,
@@ -424,9 +422,8 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                 : Icons.keyboard_arrow_down_rounded,
                           ),
                           onPressed: () {
-                            //log("tapped");
+                            log(itemModel.bookingModel!.registeredUsers.toString());
                             controller.isExpanded[i] = !controller.isExpanded[i];
-                            //log(controller.isExpanded.toString());
                             controller.update();
                           },
                         ),
@@ -582,25 +579,17 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                     if (!itemModel.bookingModel!.isQuickBooking)
                                       buildKeyValuePairs(
                                         'Registered',
-                                        '${itemModel.bookingModel!.pax!.length - 1} / ${itemModel.bookingModel!.noOfPersons}',
-                                        isDanger: ((itemModel.bookingModel!.pax!.length - 1) !=
+                                        '${itemModel.bookingModel!.registeredUsers.length} / ${itemModel.bookingModel!.noOfPersons}',
+                                        isDanger: ((itemModel.bookingModel!.registeredUsers.length) !=
                                             (itemModel.bookingModel!.noOfPersons)),
                                       ),
                                     Spacing.h20,
-                                    if (itemModel.colorCode != 'Blue' &&
-                                        itemModel.isCustomerBooking &&
-                                        itemModel.bookingModel!.boatDetails!.instructors!.isNotEmpty)
-                                      CertificationStatus(
-                                        initialStatus: itemModel.bookingModel?.certificateStatus ?? 0,
-                                        itemModel: itemModel,
-                                        onChanged: (int status) async {
-                                          itemModel.bookingModel?.certificateStatus = status;
-                                          await FirebaseFirestore.instance
-                                              .collection('bookings')
-                                              .doc(itemModel.bookingModel!.id)
-                                              .set(itemModel.bookingModel!.toMap());
+                                    if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
+                                      AppButton.miniFlat(
+                                        onTap: () {
+                                          CertificationBottomSheet.show(context, itemModel: itemModel);
                                         },
-                                        isCertificationDetailsView: false,
+                                        text: 'Manage Certs',
                                       ),
                                     Spacing.h20,
                                     if (!itemModel.bookingModel!.isQuickBooking)
@@ -962,7 +951,6 @@ Regards,
                                                                 radius: 100,
                                                                 onTap: () {
                                                                   Navigator.pop(context);
-                                                                  // provider.onCancelPressed();
                                                                 },
                                                                 child: const Icon(Icons.close),
                                                               ),
@@ -973,18 +961,31 @@ Regards,
                                                         ...bookingModel!.pax!.asMap().entries.map((e) {
                                                           int index = e.key;
                                                           String? email = e.value['email'];
-                                                          if (index == 0) return const SizedBox();
                                                           return Row(
                                                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                             children: [
-                                                              Text(email!),
+                                                              Column(
+                                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                                children: [
+                                                                  Text(email!),
+                                                                  if (bookingModel.isPaperworkDone(index))
+                                                                    const Text(
+                                                                      'Paperwork completed',
+                                                                      style: TextStyle(fontSize: 10),
+                                                                    ),
+                                                                ],
+                                                              ),
                                                               IconButton(
                                                                 onPressed: () {
-                                                                  onDeletePaxPressed(context, bookingModel, index);
+                                                                  if (index != 0) {
+                                                                    onDeletePaxPressed(context, bookingModel, index);
+                                                                  }
                                                                 },
-                                                                icon: const Icon(
+                                                                icon: Icon(
                                                                   Icons.delete,
                                                                   size: 20,
+                                                                  color: (index == 0) ? Colors.grey : Colors.black,
                                                                 ),
                                                               ),
                                                             ],
@@ -1057,7 +1058,6 @@ Regards,
                   if (reason != '') {
                     /// do delete.
                     //remove assigned boats
-                    log('remove assigned boats');
                     if (itemModel.bookingModel?.boatDetails?.boat != null) {
                       await removeBoat(
                         bookingModel: itemModel.bookingModel!,
@@ -1066,26 +1066,22 @@ Regards,
                     }
 
                     //set cancellation to true.
-                    log('set cancellation to true.');
                     await FirebaseFirestore.instance
                         .collection('bookings')
                         .doc(itemModel.bookingModel!.id)
                         .set({'cancelBooking': true, 'cancellationReason': reason}, SetOptions(merge: true));
 
                     //add logs
-                    log('add logs');
                     LogModel logModel = LogModel(type: LogType.bookingDeleted, bookingId: itemModel.bookingModel!.id);
                     await FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
 
                     // reset ted
-                    log('reset ted');
                     logic.controller.cancelMessage.text = '';
                     if (context.mounted) {
                       Navigator.pop(context);
                     }
 
                     // refresh bookings
-                    log('refresh bookings');
                     BookingsCalenderWidgetLogicNew bookingCalenderLogic = BookingsCalenderWidgetLogicNew();
                     bookingCalenderLogic.onDateSelected(DateTime.now());
                   } else {
@@ -1429,7 +1425,6 @@ Regards,
               BookingsCalenderWidgetLogicNew bookingCalenderLogic = BookingsCalenderWidgetLogicNew();
               bookingCalenderLogic.onDateSelected(
                 DateTime.now(),
-                // bookingCalenderLogic.controller.lastDateIndex,
               );
             },
           ),
