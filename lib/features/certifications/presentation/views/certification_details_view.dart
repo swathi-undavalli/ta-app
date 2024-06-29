@@ -1,14 +1,25 @@
+import 'dart:developer';
+import 'dart:io';
+import 'dart:typed_data';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
+import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../bookings/models/booking_model.dart';
 import '../../../bookings/presentation/widgets/certification_status.dart';
+import 'package:http/http.dart' as http;
 
 class CertificationDetailsView extends StatefulWidget {
   const CertificationDetailsView({super.key, required this.itemModel, required this.customer});
@@ -28,6 +39,9 @@ class CertificationDetailsView extends StatefulWidget {
 }
 
 class _CertificationDetailsViewState extends State<CertificationDetailsView> {
+  bool isDownloading = false;
+  bool isSharing = false;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -89,8 +103,57 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
               isCertificationDetailsView: true,
               paxIndex: widget.itemModel.bookingModel!.pax!.indexOf(widget.customer),
             ),
+            Spacing.h30,
+            if (widget.customer['photo'] != null)
+              Row(
+                children: [
+                  SizedBox(
+                    height: 130,
+                    width: 130,
+                    child: Image.network(
+                      widget.customer['photo'],
+                      height: Screen.width * 4 / 3,
+                      width: Screen.width,
+                      fit: BoxFit.cover,
+                    ),
+                  ).left,
+                  Spacing.w20,
+                  (isDownloading)
+                      ? const CircularProgressIndicator(color: Colors.black, strokeWidth: 3).size(20, 20)
+                      : IconButton(
+                          onPressed: () async {
+                            setState(() {
+                              isDownloading = true;
+                            });
+                            await saveImageToGallery(widget.customer['photo']);
+                            setState(() {
+                              isDownloading = false;
+                            });
+                          },
+                          icon: const Icon(
+                            Icons.arrow_circle_down_rounded,
+                            size: 28,
+                          ),
+                        ),
+                  Spacing.w10,
+                  (isSharing)
+                      ? const CircularProgressIndicator(color: Colors.black, strokeWidth: 3).size(20, 20)
+                      : IconButton(
+                          onPressed: () async {
+                            setState(() {
+                              isSharing = true;
+                            });
+                            await shareImage(widget.customer['photo']);
+                            setState(() {
+                              isSharing = false;
+                            });
+                          },
+                          icon: const Icon(Icons.share),
+                        ),
+                ],
+              ),
           ],
-        ).paddingSymmetric(horizontal: 20, vertical: 20),
+        ).paddingSymmetric(horizontal: 20, vertical: 20).scrollable,
       ),
     );
   }
@@ -135,5 +198,43 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
         ),
       ],
     ).paddingOnly(bottom: 5);
+  }
+
+  Future<void> shareImage(String imageUrl) async {
+    http.Response response = await http.get(Uri.parse(imageUrl));
+    if (response.statusCode == 200) {
+      if (response.statusCode == 200) {
+        Directory tempDir = await getTemporaryDirectory();
+
+        File imageFile = File('${tempDir.path}/image.png');
+
+        await imageFile.writeAsBytes(response.bodyBytes);
+
+        await Share.shareXFiles(
+          [XFile(imageFile.path)],
+          text: '${widget.customer['first-name']} ${widget.customer['last-name']}',
+          subject: '${widget.customer['email']}',
+          sharePositionOrigin: Rect.fromCenter(center: const Offset(0, 0), width: 0, height: 0),
+        );
+      } else {
+        throw Exception('Failed to load image');
+      }
+    }
+  }
+
+  Future<void> saveImageToGallery(String imageUrl) async {
+    await _downloadAndSaveImage(imageUrl);
+
+    Fluttertoast.showToast(msg: 'Image downloaded successfully');
+  }
+
+  Future<void> _downloadAndSaveImage(String imageUrl) async {
+    try {
+      http.Response response = await http.get(Uri.parse(imageUrl));
+
+      await ImageGallerySaver.saveImage(Uint8List.fromList(response.bodyBytes));
+    } catch (error) {
+      log('Error downloading or saving image: $error');
+    }
   }
 }

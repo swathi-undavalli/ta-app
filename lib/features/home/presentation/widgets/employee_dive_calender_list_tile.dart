@@ -145,7 +145,7 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                   if (!widget.itemModel.bookingModel!.isQuickBooking)
                     _buildKeyValuePairs(
                       'Registered',
-                      '${widget.itemModel.bookingModel!.registeredUsers} / ${widget.itemModel.bookingModel!.noOfPersons}',
+                      '${widget.itemModel.bookingModel!.registeredUsers.length} / ${widget.itemModel.bookingModel!.noOfPersons}',
                       isDanger: ((widget.itemModel.bookingModel!.registeredUsers.length) !=
                           (widget.itemModel.bookingModel!.noOfPersons)),
                     ),
@@ -184,28 +184,29 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                         },
                       ),
                       const Spacer(),
-                      BookingStatus(
-                        initialStatus: widget.itemModel.bookingModel!.isDSD
-                            ? widget.itemModel.bookingModel?.boatDetails?.bookingStatus ?? 0
-                            : widget.itemModel.bookingModel?.getStatus(widget.selectedDate) ?? 0,
-                        onChanged: (int status) async {
-                          await updateBoatDetails(
-                            bookingModel: widget.itemModel.bookingModel!,
-                            bookingStatus: status,
-                            selectedDate: widget.selectedDate,
-                          );
+                      AppButton.miniFlat(
+                        onTap: () {
+                          CertificationBottomSheet.show(context, itemModel: widget.itemModel);
                         },
-                        isDSD: (colorsData!.blue.contains(widget.itemModel.activity)),
-                      ).centerR,
+                        text: 'Manage Certs',
+                      ),
                     ],
                   ).paddingOnly(right: 15),
                   Spacing.h15,
-                  AppButton.miniFlat(
-                    onTap: () {
-                      CertificationBottomSheet.show(context, itemModel: widget.itemModel);
+                  BookingStatus(
+                    initialStatus: widget.itemModel.bookingModel!.isDSD
+                        ? widget.itemModel.bookingModel?.boatDetails?.bookingStatus ?? 0
+                        : widget.itemModel.bookingModel?.getStatus(widget.selectedDate) ?? 0,
+                    onChanged: (int status) async {
+                      await updateBoatDetails(
+                        bookingModel: widget.itemModel.bookingModel!,
+                        bookingStatus: status,
+                        selectedDate: widget.selectedDate,
+                      );
                     },
-                    text: 'Manage Certs',
+                    isDSD: (colorsData!.blue.contains(widget.itemModel.activity)),
                   ),
+
                   Spacing.h10,
                   const Divider(thickness: 1, color: Colors.black).paddingOnly(right: 20),
                 ],

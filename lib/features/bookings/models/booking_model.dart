@@ -231,6 +231,7 @@ class Booking {
       'cancellationReason': cancellationReason,
       'boatDetails': boatDetails?.toMap(),
       'certificationStatuses': List<int>.from((certificationStatuses ?? []).map((x) => x)),
+      'instructorName': boatDetails?.instructors?.firstOrNull?.name,
     };
   }
 

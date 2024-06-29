@@ -59,7 +59,6 @@ class NewBookingLogic {
     controller.bookingModel.remarks = controller.remarksTED.text.toString();
     controller.bookingModel.employeeName = currentEmployee!.firstName! + currentEmployee!.lastName!;
     if (controller.payingNowTED.text == '' || int.parse(controller.payingNowTED.text) == 0) {
-      createCustomer();
       createBooking(context);
       Get.defaultDialog(
         barrierDismissible: false,
@@ -139,7 +138,6 @@ class NewBookingLogic {
       controller.bookingModel.paymentMode = controller.paymentModeTED.text;
       controller.bookingModel.paymentTransactionId = controller.paymentReferenceTED.text;
       controller.bookingModel.receiptNo = controller.receiptNoTED.text;
-      createCustomer();
       createBooking(context);
       Get.defaultDialog(
         barrierDismissible: false,
@@ -483,13 +481,11 @@ class NewBookingLogic {
   }
 
   createBooking(BuildContext context) async {
-    if (controller.isQuickBooking) {
-      List<String> bookingDates = [];
+    List<String> bookingDates = [];
 
-      if (controller.quickNameTED.text != '' &&
-          controller.quickNoOfPersonsTED.text != '' &&
-          controller.quickSelectedActivity != null) {
-        controller.quickShowLoading = true;
+    if (controller.isQuickBooking) {
+      if (isValid()) {
+        controller.showLoading = true;
         if (controller.quickDiveDates != null && controller.quickDiveDates!.isNotEmpty) {
           for (var element in controller.quickDiveDates!) {
             bookingDates.add(getStringDate(element!));
@@ -498,17 +494,17 @@ class NewBookingLogic {
 
         Booking bookingModel = Booking(
           activity: [controller.quickSelectedActivity!],
-          noOfPersons: int.parse(controller.quickNoOfPersonsTED.text),
-          id: controller.quickBookingIdTED.text,
+          noOfPersons: int.parse(controller.paxTED.text),
+          id: '',
           pax: [
             {
-              'first-name': controller.quickNameTED.text,
-              'email': (controller.isCustomerBooking) ? controller.quickEmailTED.text : 'quickBooking@temple.com',
-              'last-name': '',
-              'countryCode': '+91',
-              'phoneNumber': '9876543210',
-              'isoCode': 'IN',
-              'dob': DateTime.now(),
+              'first-name': controller.fNameTED.text,
+              'last-name': controller.lNameTED.text,
+              'email': (controller.isCustomerBooking) ? controller.emailTED.text : 'quickBooking@temple.com',
+              'countryCode': (controller.countryCodeTED.text != '') ? controller.countryCodeTED.text : '+91',
+              'phoneNumber': (controller.phoneNumberTED.text != '') ? controller.phoneNumberTED.text : '9876543210',
+              'isoCode': (controller.isoCode != '') ? controller.isoCode : 'IN',
+              'dob': (controller.dob != null) ? controller.dob : DateTime.now(),
             }
           ],
           diveDate: controller.quickDiveDates,
@@ -524,13 +520,15 @@ class NewBookingLogic {
           payments: [],
           createdAt: DateTime.now(),
           isQuickBooking: true,
-          parentBookingId: controller.quickBookingIdTED.text,
+          price: ((controller.quickSelectedActivity?.price ?? 0) * 1.0) * int.parse(controller.paxTED.text),
         );
+
+        createCustomer();
 
         controller.bookingId = await FirebaseApi.addNewBooking(bookingModel);
         LogModel logModel = LogModel(type: LogType.quickBookingCreated, bookingId: controller.bookingId);
         FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
-        controller.quickShowLoading = false;
+        controller.showLoading = false;
         controller.reset();
         if (context.mounted) {
           Navigator.pop(context);
@@ -561,6 +559,8 @@ class NewBookingLogic {
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       }
     }
+    createCustomer();
+
     controller.bookingId = await FirebaseApi.addNewBooking(controller.bookingModel);
     LogModel logModel = LogModel(type: LogType.bookingCreated, bookingId: controller.bookingId);
     FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
@@ -602,6 +602,16 @@ class NewBookingLogic {
     }
   }
 
+  clear() {
+    controller.nameError = null;
+    controller.emailError = null;
+    controller.phoneError = null;
+    controller.genderError = null;
+    controller.dobError = null;
+    controller.paxError = null;
+    controller.update();
+  }
+
   bool isValid() {
     bool isValid = true;
     controller.nameError = null;
@@ -611,37 +621,59 @@ class NewBookingLogic {
     controller.dobError = null;
     controller.paxError = null;
 
-    if (controller.fNameTED.text.isEmpty) {
-      controller.nameError = 'Required';
-      isValid = false;
-      controller.update();
+    if (controller.isQuickBooking && !controller.isCustomerBooking) {
+      if (controller.fNameTED.text.isEmpty) {
+        controller.nameError = 'Required';
+        isValid = false;
+        controller.update();
+      }
+      if (controller.paxTED.text.isEmpty) {
+        controller.paxError = 'Required';
+        isValid = false;
+        controller.update();
+      }
+      if (controller.quickSelectedActivity == null) {
+        isValid = false;
+        controller.update();
+      }
+      if (controller.quickDiveDates == null && controller.quickDiveDates!.isEmpty) {
+        isValid = false;
+        controller.update();
+      }
+      return isValid;
+    } else {
+      if (controller.fNameTED.text.isEmpty) {
+        controller.nameError = 'Required';
+        isValid = false;
+        controller.update();
+      }
+      if (controller.emailTED.text.isEmpty) {
+        controller.emailError = 'Required';
+        isValid = false;
+        controller.update();
+      }
+      if (controller.phoneNumberTED.text.isEmpty) {
+        controller.phoneError = 'Required';
+        isValid = false;
+        controller.update();
+      }
+      if (controller.genderTED.text.isEmpty) {
+        controller.genderError = 'Required';
+        isValid = false;
+        controller.update();
+      }
+      if (controller.dobTED.text.isEmpty) {
+        controller.dobError = 'Required';
+        isValid = false;
+        controller.update();
+      }
+      if (controller.paxTED.text.isEmpty) {
+        controller.paxError = 'Required';
+        isValid = false;
+        controller.update();
+      }
+      return isValid;
     }
-    if (controller.emailTED.text.isEmpty) {
-      controller.emailError = 'Required';
-      isValid = false;
-      controller.update();
-    }
-    if (controller.phoneNumberTED.text.isEmpty) {
-      controller.phoneError = 'Required';
-      isValid = false;
-      controller.update();
-    }
-    if (controller.genderTED.text.isEmpty) {
-      controller.genderError = 'Required';
-      isValid = false;
-      controller.update();
-    }
-    if (controller.dobTED.text.isEmpty) {
-      controller.dobError = 'Required';
-      isValid = false;
-      controller.update();
-    }
-    if (controller.paxTED.text.isEmpty) {
-      controller.paxError = 'Required';
-      isValid = false;
-      controller.update();
-    }
-    return isValid;
   }
 
   Future<bool> isCustomerExists() async {
@@ -649,18 +681,22 @@ class NewBookingLogic {
     Map<String, dynamic>? data = d.data();
     if (data == null) return false;
     controller.customerModel = CustomerModel.fromMap(data);
-    log(controller.customerModel.toMap().toString());
     controller.fNameTED.text = controller.customerModel.firstName ?? '';
     controller.lNameTED.text = controller.customerModel.lastName ?? '';
     controller.phoneNumberTED.text = controller.customerModel.phoneNumber ?? '';
     controller.countryCodeTED.text =
         ((controller.customerModel.countryCode != null && controller.customerModel.countryCode!.isNotEmpty)
-            ? controller.customerModel.countryCode
-            : '+91')!;
+            ? controller.customerModel.countryCode!
+            : '+91');
     if (controller.customerModel.dateOfBirth != null) {
       controller.dob = controller.customerModel.dateOfBirth;
       controller.dobTED.text = DateFormat('dd MMM, yyyy').format(controller.customerModel.dateOfBirth!);
     }
+    controller.genderTED.text =
+        ((controller.customerModel.gender != null) && (controller.customerModel.gender!.isNotEmpty))
+            ? controller.customerModel.gender!
+            : '';
+    controller.update();
 
     return true;
   }
@@ -675,11 +711,8 @@ class NewBookingController extends GetxController {
   TextEditingController phoneNumberTED = TextEditingController();
   TextEditingController remarksTED = TextEditingController();
   TextEditingController priceTED = TextEditingController();
-  TextEditingController quickBookingIdTED = TextEditingController();
-  TextEditingController quickNameTED = TextEditingController();
-  TextEditingController quickEmailTED = TextEditingController();
-  TextEditingController quickNoOfPersonsTED = TextEditingController();
   TextEditingController genderTED = TextEditingController();
+
   Activity? quickSelectedActivity;
   List<DateTime?>? quickDiveDates;
   List<String> gender = ['Male', 'Female'];
@@ -689,15 +722,6 @@ class NewBookingController extends GetxController {
   String? genderError;
   String? dobError;
   String? paxError;
-
-  bool _quickShowLoading = false;
-
-  bool get quickShowLoading => _quickShowLoading;
-
-  set quickShowLoading(bool value) {
-    _quickShowLoading = value;
-    update();
-  }
 
   FocusNode emailNode = FocusNode();
   FocusNode priceNode = FocusNode();
@@ -847,14 +871,10 @@ class NewBookingController extends GetxController {
     showLoading = false;
     getDetailsPressed = false;
     isQuickBooking = false;
-    quickShowLoading = false;
-    quickNoOfPersonsTED.text = '';
     quickDiveDates = [];
     quickSelectedActivity = null;
-    quickNameTED.text = '';
-    quickBookingIdTED.text = '';
-    quickEmailTED.text = '';
     genderTED.text = '';
+    isCustomerBooking = false;
   }
 
   bool _showLoading = true;

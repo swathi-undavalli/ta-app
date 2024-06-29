@@ -25,6 +25,8 @@ class CertificationLogsView extends StatefulWidget {
 class _CertificationLogsViewState extends State<CertificationLogsView> {
   FiltersResult result = FiltersResult();
 
+  TextEditingController searchTED = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,6 +40,9 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
             children: [
               Spacing.h10,
               buildFiltersHeader(),
+              Spacing.h10,
+              buildSearchBar(),
+              Spacing.h10,
               StreamBuilder(
                 stream: getBookingsQuery(),
                 builder: (context, snapshot) {
@@ -115,6 +120,52 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
             ],
           ),
         ),
+      ),
+    );
+  }
+
+  Widget buildSearchBar() {
+    return Container(
+      width: Screen.width - 30,
+      height: 47,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(5),
+        border: Border.all(color: Colors.black),
+      ),
+      child: Row(
+        children: [
+          Spacing.w15,
+          Icon(Icons.search, color: AppColors.text.darkgrey),
+          Spacing.w15,
+          SizedBox(
+            width: 225,
+            child: TextField(
+              decoration: const InputDecoration(
+                enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                hintText: 'Search...',
+                hintStyle: TextStyle(fontSize: FontSize.textSize, height: 1),
+              ),
+              controller: searchTED,
+              onChanged: (query) {
+                // _stream = _filterStream(query);
+                setState(() {});
+              },
+            ),
+          ),
+          if (searchTED.text != '')
+            InkWell(
+              onTap: () {
+                searchTED.text = '';
+                setState(() {});
+              },
+              highlightColor: Colors.grey,
+              splashColor: Colors.red,
+              radius: 30,
+              child: Icon(Icons.close, color: AppColors.text.darkgrey).paddingAll(5),
+            ),
+        ],
       ),
     );
   }
@@ -199,6 +250,9 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
         'bookingDate',
         arrayContains: DateFormat('dd-MM-yyyy').format(result.selectedDate!),
       );
+      if (searchTED.text.isNotEmpty) {
+        whereQuery = whereQuery.where('instructorName', isGreaterThanOrEqualTo: searchTED.text.capitalizeFirst);
+      }
       return whereQuery.snapshots();
     }
 
@@ -210,7 +264,9 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
     } else if (result.showCompletedLogs == true) {
       whereQuery = query.where('certificationStatuses', arrayContains: 2);
     }
-
+    if (searchTED.text.isNotEmpty) {
+      whereQuery = whereQuery.where('instructorName', isGreaterThanOrEqualTo: searchTED.text.capitalizeFirst);
+    }
     return whereQuery.snapshots();
   }
 

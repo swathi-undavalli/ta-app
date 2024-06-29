@@ -34,10 +34,9 @@ class AddCustomerDetailsView extends StatelessWidget {
       floatingActionButton: buildFloatingActionButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor: AppColors.background.lightBlue,
-      body: WillPopScope(
-        onWillPop: () async {
+      body: PopScope(
+        onPopInvoked: (_) {
           logic.controller.reset();
-          return true;
         },
         child: SafeArea(
           child: SingleChildScrollView(
@@ -45,9 +44,13 @@ class AddCustomerDetailsView extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 40),
               child: GetBuilder<NewBookingController>(
                 builder: (controller) {
+                  if (controller.showLoading) {
+                    return const CircularProgressIndicator().center.height(Screen.height - 100);
+                  }
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
+                      //quick booking
                       Row(
                         children: [
                           buildSubTitle('Quick Booking'),
@@ -56,157 +59,75 @@ class AddCustomerDetailsView extends StatelessWidget {
                             value: controller.isQuickBooking,
                             onChanged: (value) {
                               controller.isQuickBooking = value;
+                              logic.clear();
                             },
                             activeColor: AppColors.text.skyBlue,
                             inactiveThumbColor: AppColors.text.grey,
                           ),
                         ],
                       ),
-                      (controller.isQuickBooking)
-                          ? Stack(
-                              children: [
-                                Column(
-                                  children: [
-                                    Row(
-                                      children: [
-                                        buildSubTitle('Customer Booking'),
-                                        const Spacer(),
-                                        Switch(
-                                          value: controller.isCustomerBooking,
-                                          onChanged: (value) {
-                                            controller.isCustomerBooking = value;
-                                          },
-                                          activeColor: AppColors.text.skyBlue,
-                                          inactiveThumbColor: AppColors.text.grey,
-                                        ),
-                                      ],
-                                    ),
-                                    AppTextField(
-                                      hintText: 'Parent Booking Id',
-                                      controller: logic.controller.quickBookingIdTED,
-                                      keyboardType: TextInputType.number,
-                                      errorValidator: () {
-                                        return null;
-                                      },
-                                      validator: (_) {
-                                        return null;
-                                      },
-                                    ),
-                                    AppTextField(
-                                      hintText: 'Name',
-                                      controller: logic.controller.quickNameTED,
-                                      required: true,
-                                      errorValidator: () {
-                                        return null;
-                                      },
-                                      validator: (_) {
-                                        return null;
-                                      },
-                                    ),
-                                    if (controller.isCustomerBooking)
-                                      AppTextField(
-                                        hintText: 'Customer Email Id',
-                                        controller: logic.controller.quickEmailTED,
-                                        required: true,
-                                        errorValidator: () {
-                                          return null;
-                                        },
-                                        validator: (_) {
-                                          return null;
-                                        },
-                                        inputFormatter: [
-                                          TextInputFormatter.withFunction((oldValue, newValue) {
-                                            return newValue.copyWith(text: newValue.text.toLowerCase());
-                                          }),
-                                        ],
-                                      ),
-                                    AppTextField(
-                                      hintText: 'No of Persons',
-                                      controller: logic.controller.quickNoOfPersonsTED,
-                                      keyboardType: TextInputType.number,
-                                      required: true,
-                                      errorValidator: () {
-                                        return null;
-                                      },
-                                      validator: (_) {
-                                        return null;
-                                      },
-                                    ),
-                                    buildActivityDropDown(),
-                                    const SizedBox(height: 20),
-                                    buildQuickDiveSession(context),
-                                    const SizedBox(height: 100),
-                                    AppButton.flat(
-                                      text: 'Create Booking',
-                                      onTap: () {
-                                        log('started creating');
-                                        logic.createBooking(context);
-                                        log('done');
-                                      },
-                                      color: Colors.black,
-                                      textColor: Colors.white,
-                                    ),
-                                    Spacing.h40,
-                                  ],
-                                ).scrollable,
-                                if (controller.quickShowLoading)
-                                  Container(
-                                    height: Screen.height,
-                                    width: Screen.width,
-                                    color: Colors.grey.shade50,
-                                    child: const SizedBox(
-                                      height: 30,
-                                      width: 30,
-                                      child: Center(
-                                        child: CircularProgressIndicator(),
-                                      ),
-                                    ),
-                                  ),
-                              ],
-                            )
-                          : Column(
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: [
-                                if (!controller.getDetailsPressed) ...[
-                                  buildEmailID(),
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.end,
-                                    children: [
-                                      AppButton.miniFlat(
-                                        text: 'Get Details',
-                                        onTap: () {
-                                          logic.getDetailsPressed();
-                                        },
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                                if (controller.getDetailsPressed) ...[
-                                  buildNameFields(),
-                                  buildEmailID(),
-                                  buildDOB(context),
-                                  Spacing.h10,
-                                  buildGender(),
-                                  buildNoOfPersons(),
-                                  buildPhoneNumber(),
-                                  const SizedBox(height: 40),
-                                ],
-                                if (controller.showLoading)
-                                  const SizedBox(
-                                    height: 200,
-                                    child: Center(
-                                      child: SizedBox(
-                                        height: 20,
-                                        width: 20,
-                                        child: CircularProgressIndicator(
-                                          color: Colors.black,
-                                          strokeWidth: 2,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                              ],
+
+                      //fill all details
+                      if (controller.isQuickBooking)
+                        Row(
+                          children: [
+                            buildSubTitle('Fill All Details'),
+                            const Spacer(),
+                            Switch(
+                              value: controller.isCustomerBooking,
+                              onChanged: (value) {
+                                controller.isCustomerBooking = value;
+                                logic.clear();
+                              },
+                              activeColor: AppColors.text.skyBlue,
+                              inactiveThumbColor: AppColors.text.grey,
                             ),
+                          ],
+                        ),
+
+                      if (fillAllDetails(controller) || controller.isQuickBooking == false) ...[
+                        buildEmailID(),
+                        if (controller.getDetailsPressed == false)
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              AppButton.miniFlat(
+                                text: 'Get Details',
+                                onTap: () {
+                                  logic.getDetailsPressed();
+                                },
+                              ),
+                            ],
+                          ),
+                      ],
+
+                      buildNameFields(),
+                      buildNoOfPersons(),
+
+                      if (fillAllDetails(controller) || controller.isQuickBooking == false) ...[
+                        //other details.
+                        buildDOB(context),
+                        buildPhoneNumber(),
+                        buildGender(),
+                      ],
+
+                      if (controller.isQuickBooking) ...[
+                        buildActivityDropDown(),
+                        Spacing.h20,
+                        buildQuickDiveSession(context),
+                        Spacing.h50,
+                        AppButton.flat(
+                          text: 'Create Booking',
+                          onTap: () {
+                            log('started creating');
+                            logic.createBooking(context);
+                            log('done');
+                          },
+                          color: Colors.black,
+                          textColor: Colors.white,
+                        ),
+                        Spacing.h50,
+                      ],
                     ],
                   );
                 },
@@ -217,6 +138,8 @@ class AddCustomerDetailsView extends StatelessWidget {
       ),
     );
   }
+
+  bool fillAllDetails(NewBookingController controller) => (controller.isQuickBooking && controller.isCustomerBooking);
 
   ///===============UI==============///
 
@@ -251,9 +174,8 @@ class AddCustomerDetailsView extends StatelessWidget {
                 );
               }).toList(),
             ),
-            Spacing.h5,
             Text(
-              'Required',
+              (controller.genderError != null) ? '${controller.genderError}' : '',
               style: TextStyle(fontSize: 12, color: Colors.red.shade900),
             ),
           ],
@@ -541,10 +463,11 @@ class AddCustomerDetailsView extends StatelessWidget {
                 controller.isoCode = phone.countryISOCode;
               },
             ),
-            Text(
-              (controller.phoneError != null) ? 'Phone ${controller.phoneError}' : '',
-              style: TextStyle(fontSize: 12, color: Colors.red.shade900),
-            ),
+            if (controller.phoneError != null)
+              Text(
+                'Phone ${controller.phoneError}',
+                style: TextStyle(fontSize: 12, color: Colors.red.shade900),
+              ),
           ],
         );
       },
@@ -554,7 +477,7 @@ class AddCustomerDetailsView extends StatelessWidget {
   Widget buildFloatingActionButton(BuildContext context) {
     return GetBuilder<NewBookingController>(
       builder: (controller) {
-        if (controller.getDetailsPressed && !controller.isQuickBooking) {
+        if (!controller.isQuickBooking) {
           return FloatingActionButton(
             onPressed: () {
               logic.onCheckPressed(context);

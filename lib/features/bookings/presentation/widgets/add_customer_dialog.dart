@@ -23,8 +23,8 @@ class AddCustomerDialog extends StatefulWidget {
 
   final Booking bookingModel;
 
-  static void show(BuildContext context, {required Booking bookingModel}) async {
-    await showDialog(
+  static Future<Booking> show(BuildContext context, {required Booking bookingModel}) async {
+    var data = await showDialog(
       context: context,
       barrierDismissible: false,
       builder: (context) {
@@ -33,6 +33,7 @@ class AddCustomerDialog extends StatefulWidget {
         );
       },
     );
+    return data as Booking;
   }
 
   @override
@@ -148,7 +149,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
               });
               clear();
               if (context.mounted) {
-                Navigator.pop(context);
+                Navigator.pop(context, widget.bookingModel);
               }
             }
           },

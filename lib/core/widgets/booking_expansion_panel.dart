@@ -536,9 +536,6 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                           ),
                                         ).paddingOnly(right: 10, bottom: 15),
                                       ),
-                                    if (itemModel.bookingModel!.parentBookingId != null &&
-                                        itemModel.bookingModel!.parentBookingId != '')
-                                      buildKeyValuePairs('Parent Booking Id', itemModel.bookingModel!.parentBookingId!),
                                     buildKeyValuePairs('Booking Id', itemModel.bookingID!),
                                     buildKeyValuePairs('Activity', itemModel.activity),
                                     if (!itemModel.bookingModel!.isQuickBooking)
@@ -582,14 +579,6 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         '${itemModel.bookingModel!.registeredUsers.length} / ${itemModel.bookingModel!.noOfPersons}',
                                         isDanger: ((itemModel.bookingModel!.registeredUsers.length) !=
                                             (itemModel.bookingModel!.noOfPersons)),
-                                      ),
-                                    Spacing.h20,
-                                    if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
-                                      AppButton.miniFlat(
-                                        onTap: () {
-                                          CertificationBottomSheet.show(context, itemModel: itemModel);
-                                        },
-                                        text: 'Manage Certs',
                                       ),
                                     Spacing.h20,
                                     if (!itemModel.bookingModel!.isQuickBooking)
@@ -686,33 +675,40 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                     if (itemModel.colorCode != 'Blue' && (!itemModel.bookingModel!.isQuickBooking))
                                       Row(
                                         children: [
-                                          AppButton.miniFlat(
-                                            text: 'Process Cert',
-                                            onTap: () async {
-                                              String message = """
-
-*${itemModel.name!.trim().toLowerCase().capitalizeFirst! + itemModel.bookingModel!.pax![0]["last-name"]} 's* ${itemModel.activity}
-
-*Certification details:* 
-
-Name : *${itemModel.name!.trim().toLowerCase().capitalizeFirst!}  ${(itemModel.bookingModel!.pax![0]["last-name"] != "" && itemModel.bookingModel!.pax![0]["last-name"] != null) ? itemModel.bookingModel!.pax![0]["last-name"] : ""}* 
-Email : *${itemModel.email}* 
-Date of Birth : *${(itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.pax![0]["dob"] as Timestamp).toDate()) : "-"}* 
-Certification : *${itemModel.activity}* 
-Course Completion Date : *${intl.DateFormat("dd-MM-yyy").format(DateTime.now())}* 
-Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-* 
-Completed instructor : *${itemModel.bookingModel?.boatDetails!.instructors?[0].name.trim()}* 
-Instructor No : *${(currentEmployee?.agencyId != null && currentEmployee?.agencyId != '') ? currentEmployee?.agencyId : "-"}* 
-Invoice No : *${(itemModel.bookingModel?.receiptNo != null && itemModel.bookingModel?.receiptNo != '') ? itemModel.bookingModel?.receiptNo : '-'}* 
-Course / Equipment Upsell :     *${"-"}*
- 
-Regards,
-*${currentEmployee!.name.trim()}*
-                                          """;
-                                              await Clipboard.setData(ClipboardData(text: message));
-                                              Fluttertoast.showToast(msg: 'Message copied to Clipboard');
-                                            },
-                                          ).paddingOnly(right: 15),
+//                                           AppButton.miniFlat(
+//                                             text: 'Process Cert',
+//                                             onTap: () async {
+//                                               String message = """
+//
+// *${itemModel.name!.trim().toLowerCase().capitalizeFirst! + itemModel.bookingModel!.pax![0]["last-name"]} 's* ${itemModel.activity}
+//
+// *Certification details:*
+//
+// Name : *${itemModel.name!.trim().toLowerCase().capitalizeFirst!}  ${(itemModel.bookingModel!.pax![0]["last-name"] != "" && itemModel.bookingModel!.pax![0]["last-name"] != null) ? itemModel.bookingModel!.pax![0]["last-name"] : ""}*
+// Email : *${itemModel.email}*
+// Date of Birth : *${(itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.pax![0]["dob"] as Timestamp).toDate()) : "-"}*
+// Certification : *${itemModel.activity}*
+// Course Completion Date : *${intl.DateFormat("dd-MM-yyy").format(DateTime.now())}*
+// Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-*
+// Completed instructor : *${itemModel.bookingModel?.boatDetails!.instructors?[0].name.trim()}*
+// Instructor No : *${(currentEmployee?.agencyId != null && currentEmployee?.agencyId != '') ? currentEmployee?.agencyId : "-"}*
+// Invoice No : *${(itemModel.bookingModel?.receiptNo != null && itemModel.bookingModel?.receiptNo != '') ? itemModel.bookingModel?.receiptNo : '-'}*
+// Course / Equipment Upsell :     *${"-"}*
+//
+// Regards,
+// *${currentEmployee!.name.trim()}*
+//                                           """;
+//                                               await Clipboard.setData(ClipboardData(text: message));
+//                                               Fluttertoast.showToast(msg: 'Message copied to Clipboard');
+//                                             },
+//                                           ).paddingOnly(right: 15),
+                                          if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
+                                            AppButton.miniFlat(
+                                              onTap: () {
+                                                CertificationBottomSheet.show(context, itemModel: itemModel);
+                                              },
+                                              text: 'Manage Certs',
+                                            ),
                                           const Spacer(),
                                           AppButton.miniFlat(
                                             text: 'E-Learning',
