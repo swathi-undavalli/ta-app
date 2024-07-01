@@ -1,7 +1,4 @@
-import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -9,7 +6,6 @@ import 'package:temple_ui_tools/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../features/dashboard/presentation/views/dashboard_view.dart';
-import '../../features/messaging/notification_screen.dart';
 import '../../main.dart';
 import '../authentication/firebase_authentication.dart';
 import '../widgets/app_button.dart';
@@ -29,7 +25,6 @@ class AutoUpdateView extends StatelessWidget {
   Widget build(BuildContext context) {
     String latestIosVersion = '${logic.controller.iosVersionNumber}';
     String currentAndroidVersion = '${logic.controller.version}+${logic.controller.buildNumber}';
-
     String latestAndroidVersion = '${logic.controller.latestVersionNumber}';
 
     logout();
@@ -90,14 +85,14 @@ class AutoUpdateView extends StatelessWidget {
               height: 10,
             ),
             Text(
-              'Current version : ${(Platform.isIOS) ? currentIosVersion : currentAndroidVersion}',
+              'Current version : ${(isIos) ? currentIosVersion : currentAndroidVersion}',
               style: const TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
               ),
             ),
             Text(
-              'Latest version : ${(Platform.isIOS) ? latestIosVersion : latestAndroidVersion}',
+              'Latest version : ${(isIos) ? latestIosVersion : latestAndroidVersion}',
               style: const TextStyle(
                 fontSize: 10,
                 fontWeight: FontWeight.bold,
@@ -106,7 +101,7 @@ class AutoUpdateView extends StatelessWidget {
             const SizedBox(
               height: 100,
             ),
-            if (Platform.isIOS)
+            if (isIos)
               const Text(
                 'Please install the latest update from the TestFlight App',
                 textAlign: TextAlign.center,
@@ -166,16 +161,7 @@ class AutoUpdateLogic {
     }
   }
 
-  checkForUpdate(BuildContext context) async {
-    ///completely terminated
-    FirebaseMessaging.instance.getInitialMessage().then(
-      (message) {
-        if (message != null && message.notification != null) {
-          Navigator.pushReplacement(context, NotificationsScreen.route(message));
-        }
-      },
-    );
-
+  Future<bool> updateRequired() async {
     var data = await FirebaseFirestore.instance.collection('ota_update').doc('version').get();
 
     controller.latestVersionNumber = data.data()!['number'];
@@ -184,30 +170,20 @@ class AutoUpdateLogic {
     controller.iosVersionNumber = data.data()!['iosNumber'];
     controller.forceLogout = data.data()!['force_logout'];
 
-    if (Platform.isIOS) {
+    if (isIos) {
       if (currentIosVersion != controller.iosVersionNumber) {
-        if (context.mounted) {
-          Navigator.pushReplacement(context, AutoUpdateView.route());
-        }
+        return true;
       }
-      if (context.mounted) {
-        Navigator.pushReplacement(context, DashBoardView.route());
-      }
-      return;
+      return false;
     }
-
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     controller.version = packageInfo.version;
     controller.buildNumber = packageInfo.buildNumber;
 
     if (controller.latestVersionNumber != '${controller.version!}+${controller.buildNumber!}') {
-      if (context.mounted) {
-        Navigator.pushReplacement(context, AutoUpdateView.route());
-      }
+      return true;
     } else {
-      if (context.mounted) {
-        Navigator.pushReplacement(context, DashBoardView.route());
-      }
+      return false;
     }
   }
 }

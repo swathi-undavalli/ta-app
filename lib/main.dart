@@ -11,7 +11,9 @@ import 'core/app/app.dart';
 import 'core/services/notification_service.dart';
 import 'features/messaging/firebase_messaging_controller.dart';
 
-String currentIosVersion = '1.1.3+15';
+String currentIosVersion = '1.1.3+16';
+
+bool get isIos => Platform.isIOS;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -22,7 +24,8 @@ void main() async {
       print('error starting notification listener');
     }
   }
-  if (Platform.isIOS) {
+  // if (isIos && false) {
+  if (isIos) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
         apiKey: 'AIzaSyAJFHDoc1lfQtTRtEpRmCJue2kwfB5jUh8',

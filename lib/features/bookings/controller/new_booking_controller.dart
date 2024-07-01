@@ -500,11 +500,11 @@ class NewBookingLogic {
             {
               'first-name': controller.fNameTED.text,
               'last-name': controller.lNameTED.text,
-              'email': (controller.isCustomerBooking) ? controller.emailTED.text : 'quickBooking@temple.com',
-              'countryCode': (controller.countryCodeTED.text != '') ? controller.countryCodeTED.text : '+91',
-              'phoneNumber': (controller.phoneNumberTED.text != '') ? controller.phoneNumberTED.text : '9876543210',
-              'isoCode': (controller.isoCode != '') ? controller.isoCode : 'IN',
-              'dob': (controller.dob != null) ? controller.dob : DateTime.now(),
+              'email': 'quickBooking@temple.com',
+              'countryCode': '+91',
+              'phoneNumber': '9876543210',
+              'isoCode': 'IN',
+              'dob': DateTime.now(),
             }
           ],
           diveDate: controller.quickDiveDates,
@@ -522,8 +522,6 @@ class NewBookingLogic {
           isQuickBooking: true,
           price: ((controller.quickSelectedActivity?.price ?? 0) * 1.0) * int.parse(controller.paxTED.text),
         );
-
-        createCustomer();
 
         controller.bookingId = await FirebaseApi.addNewBooking(bookingModel);
         LogModel logModel = LogModel(type: LogType.quickBookingCreated, bookingId: controller.bookingId);
@@ -621,7 +619,7 @@ class NewBookingLogic {
     controller.dobError = null;
     controller.paxError = null;
 
-    if (controller.isQuickBooking && !controller.isCustomerBooking) {
+    if (controller.isQuickBooking) {
       if (controller.fNameTED.text.isEmpty) {
         controller.nameError = 'Required';
         isValid = false;
@@ -738,7 +736,6 @@ class NewBookingController extends GetxController {
 
   bool _discountSwitch = true;
   bool _isQuickBooking = false;
-  bool _isCustomerBooking = false;
 
   DateTime _paymentDate = DateTime.now();
 
@@ -759,13 +756,6 @@ class NewBookingController extends GetxController {
   bool get getDetailsPressed => _getDetailsPressed;
 
   bool get isQuickBooking => _isQuickBooking;
-
-  bool get isCustomerBooking => _isCustomerBooking;
-
-  set isCustomerBooking(bool value) {
-    _isCustomerBooking = value;
-    update();
-  }
 
   set isQuickBooking(bool value) {
     _isQuickBooking = value;
@@ -874,7 +864,6 @@ class NewBookingController extends GetxController {
     quickDiveDates = [];
     quickSelectedActivity = null;
     genderTED.text = '';
-    isCustomerBooking = false;
   }
 
   bool _showLoading = true;

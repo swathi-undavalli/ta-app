@@ -68,24 +68,8 @@ class AddCustomerDetailsView extends StatelessWidget {
                       ),
 
                       //fill all details
-                      if (controller.isQuickBooking)
-                        Row(
-                          children: [
-                            buildSubTitle('Fill All Details'),
-                            const Spacer(),
-                            Switch(
-                              value: controller.isCustomerBooking,
-                              onChanged: (value) {
-                                controller.isCustomerBooking = value;
-                                logic.clear();
-                              },
-                              activeColor: AppColors.text.skyBlue,
-                              inactiveThumbColor: AppColors.text.grey,
-                            ),
-                          ],
-                        ),
 
-                      if (fillAllDetails(controller) || controller.isQuickBooking == false) ...[
+                      if (controller.isQuickBooking == false) ...[
                         buildEmailID(),
                         if (controller.getDetailsPressed == false)
                           Row(
@@ -104,7 +88,7 @@ class AddCustomerDetailsView extends StatelessWidget {
                       buildNameFields(),
                       buildNoOfPersons(),
 
-                      if (fillAllDetails(controller) || controller.isQuickBooking == false) ...[
+                      if (controller.isQuickBooking == false) ...[
                         //other details.
                         buildDOB(context),
                         buildPhoneNumber(),
@@ -138,8 +122,6 @@ class AddCustomerDetailsView extends StatelessWidget {
       ),
     );
   }
-
-  bool fillAllDetails(NewBookingController controller) => (controller.isQuickBooking && controller.isCustomerBooking);
 
   ///===============UI==============///
 

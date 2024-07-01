@@ -1,15 +1,11 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:get/get.dart';
-
-import '../../features/messaging/notification_screen.dart';
 
 class FirebaseNotificationService {
   static handleNavigation(RemoteMessage message) {
-    if (Get.context != null) {
-      Navigator.push(Get.context!, NotificationsScreen.route(message));
-    }
+    // if (Get.context != null) {
+    //   Navigator.push(Get.context!, NotificationsScreen.route(message));
+    // }
     LocalNotificationService.display(message);
   }
 
@@ -17,9 +13,9 @@ class FirebaseNotificationService {
     RemoteMessage? message = await FirebaseMessaging.instance.getInitialMessage();
 
     if (message != null) {
-      if (Get.context != null) {
-        Navigator.push(Get.context!, NotificationsScreen.route(message));
-      }
+      // if (Get.context != null) {
+      //   Navigator.push(Get.context!, NotificationsScreen.route(message));
+      // }
       LocalNotificationService.display(message);
     }
   }

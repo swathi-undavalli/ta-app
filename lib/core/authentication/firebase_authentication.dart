@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 class FirebaseAuthentication {
   static FirebaseAuth auth = FirebaseAuth.instance;
 
-  static logout() async {
+  static Future<void> logout() async {
     await auth.signOut();
   }
 

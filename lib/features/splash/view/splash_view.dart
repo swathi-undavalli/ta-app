@@ -3,11 +3,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../core/authentication/firebase_authentication.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/repository/employee_repo.dart';
 import '../../../core/services/auto_update.dart';
+import '../../dashboard/presentation/views/dashboard_view.dart';
 import '../../login/presentation/views/login_view.dart';
 
 String lastLoginTime = 'lastLoginTime';
@@ -34,7 +36,19 @@ class _SplashViewState extends State<SplashView> {
     await Future.delayed(const Duration(microseconds: 500));
 
     try {
+      AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
+      bool updateRequired = false;
+      if (mounted) {
+        updateRequired = await autoUpdateLogic.updateRequired();
+      }
+
+      if (updateRequired) {
+        if (mounted) Navigator.pushReplacement(context, AutoUpdateView.route());
+        return;
+      }
+
       User? user = FirebaseAuth.instance.currentUser;
+      //login expired
       if (user == null) {
         if (mounted) {
           Navigator.pushAndRemoveUntil(
@@ -43,11 +57,15 @@ class _SplashViewState extends State<SplashView> {
             (Route<dynamic> route) => false,
           );
         }
-      } else {
+      }
+
+      //login not expired
+      else {
         final prefs = await SharedPreferences.getInstance();
         DateTime? lastLogin = DateTime.tryParse(prefs.getString(lastLoginTime) ?? '');
+        //check expiry
         if ((lastLogin?.difference(DateTime.now()).inDays ?? 16) > 15) {
-          FirebaseAuthentication.logout();
+          await FirebaseAuthentication.logout();
           if (mounted) {
             Navigator.pushAndRemoveUntil(
               context,
@@ -57,11 +75,10 @@ class _SplashViewState extends State<SplashView> {
           }
           return;
         }
+
         await EmployeeRepo.synchronise();
-        AutoUpdateLogic autoUpdateLogic = AutoUpdateLogic();
-        if (mounted) {
-          await autoUpdateLogic.checkForUpdate(context);
-        }
+
+        if (mounted) Navigator.pushReplacement(context, DashBoardView.route());
       }
     } catch (e) {
       if (kDebugMode) {
