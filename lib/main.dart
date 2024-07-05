@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
 
 import 'core/app/app.dart';
+import 'core/services/locator/locator.dart';
 import 'core/services/notification_service.dart';
 import 'features/messaging/firebase_messaging_controller.dart';
 
@@ -24,7 +25,6 @@ void main() async {
       print('error starting notification listener');
     }
   }
-  // if (isIos && false) {
   if (isIos) {
     await Firebase.initializeApp(
       options: const FirebaseOptions(
@@ -53,5 +53,8 @@ void main() async {
   await GetStorage.init();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   FirebaseMessagingLogic();
+
+  await setupLocator();
+
   runApp(const MyApp());
 }

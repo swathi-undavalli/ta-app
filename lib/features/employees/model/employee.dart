@@ -11,16 +11,7 @@ class Employee {
     this.phoneNumber,
     this.countryCode,
     this.role,
-    this.accessLevels,
-    this.shiftTiming,
-    this.firstName,
-    this.lastName,
-    this.nickName,
-    this.countryIsoCode,
-    this.leaves,
-    this.agencyId,
-  }) {
-    accessLevels ??= AccessLevels(
+    this.accessLevels = const AccessLevels(
       viewBookings: false,
       createBookings: false,
       editBookings: false,
@@ -38,22 +29,29 @@ class Employee {
       marketingGallery: false,
       offers: false,
       processCertificate: false,
-    );
-  }
+    ),
+    this.shiftTiming,
+    this.firstName,
+    this.lastName,
+    this.nickName,
+    this.countryIsoCode,
+    this.leaves,
+    this.agencyId,
+  });
 
-  String id;
-  String? gender;
-  String? phoneNumber;
-  String? countryCode;
-  String? role;
-  AccessLevels? accessLevels;
-  DateTime? shiftTiming;
-  String? firstName;
-  String? lastName;
-  String? nickName;
-  String? countryIsoCode;
-  String? agencyId;
-  List<Timestamp>? leaves;
+  final String id;
+  final String? gender;
+  final String? phoneNumber;
+  final String? countryCode;
+  final String? role;
+  final AccessLevels? accessLevels;
+  final DateTime? shiftTiming;
+  final String? firstName;
+  final String? lastName;
+  final String? nickName;
+  final String? countryIsoCode;
+  final String? agencyId;
+  final List<Timestamp>? leaves;
 
   @override
   int get hashCode =>
@@ -129,10 +127,36 @@ class Employee {
         'agencyId': agencyId,
         'leaves': List<Timestamp>.from((leaves ?? []).map((x) => (x))),
       };
+
+  Employee copyWith({
+    String? firstName,
+    String? lastName,
+    String? countryIsoCode,
+    String? countryCode,
+    String? phoneNumber,
+    AccessLevels? accessLevels,
+    List<Timestamp>? leaves,
+  }) {
+    return Employee(
+      id: id,
+      gender: gender,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
+      countryCode: countryCode ?? this.countryCode,
+      role: role,
+      accessLevels: accessLevels ?? this.accessLevels,
+      shiftTiming: shiftTiming,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      nickName: nickName,
+      countryIsoCode: countryIsoCode ?? this.countryIsoCode,
+      leaves: leaves ?? this.leaves,
+      agencyId: agencyId,
+    );
+  }
 }
 
 class AccessLevels {
-  AccessLevels({
+  const AccessLevels({
     required this.viewBookings,
     required this.createBookings,
     required this.editBookings,
@@ -152,23 +176,23 @@ class AccessLevels {
     required this.processCertificate,
   });
 
-  bool? viewBookings;
-  bool? createBookings;
-  bool? editBookings;
-  bool? viewEmployees;
-  bool? createEmployees;
-  bool? editEmployees;
-  bool? personalProfileEdit;
-  bool? personalAttendanceReport;
-  bool? attendanceReport;
-  bool? weatherReport;
-  bool? editActivityPrices;
-  bool? addActivity;
-  bool? notifications;
-  bool? boatPlan;
-  bool? marketingGallery;
-  bool? offers;
-  bool? processCertificate;
+  final bool? viewBookings;
+  final bool? createBookings;
+  final bool? editBookings;
+  final bool? viewEmployees;
+  final bool? createEmployees;
+  final bool? editEmployees;
+  final bool? personalProfileEdit;
+  final bool? personalAttendanceReport;
+  final bool? attendanceReport;
+  final bool? weatherReport;
+  final bool? editActivityPrices;
+  final bool? addActivity;
+  final bool? notifications;
+  final bool? boatPlan;
+  final bool? marketingGallery;
+  final bool? offers;
+  final bool? processCertificate;
 
   factory AccessLevels.fromMap(Map<String, dynamic> json) => AccessLevels(
         viewBookings: json['viewBookings'],

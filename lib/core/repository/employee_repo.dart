@@ -25,7 +25,7 @@ class EmployeeRepo {
     await FirebaseApi.getEmployeeFullInformation(employeeID);
   }
 
-  /// Get user information form local data persistance.
+  /// Get user information form local data persistence.
   /// Should call at the start of the App.
 
   static synchronise() async {

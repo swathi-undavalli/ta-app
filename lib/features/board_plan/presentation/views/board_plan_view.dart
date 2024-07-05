@@ -18,7 +18,6 @@ import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
-import '../../controllers/board_plan_controller.dart';
 import '../widgets/customer_details.dart';
 
 class BoardPlanView extends StatefulWidget {
@@ -33,15 +32,20 @@ class BoardPlanView extends StatefulWidget {
 }
 
 class _BoardPlanViewState extends State<BoardPlanView> {
-  final BoardPlanLogic logic = BoardPlanLogic();
+  bool showLoading = true;
+  bool isGeneralInfoSelected = false;
+  Boat? selectedBoat;
+
+  List<Boat> boats = [];
+
+  List<Booking> bookings = [];
 
   final GlobalKey widgetKey = GlobalKey();
 
   @override
   void initState() {
     selectedDate = DateTime.now();
-
-    logic.init(selectedDate).whenComplete(() => logic.controller.update());
+    init(selectedDate).whenComplete(() => setState(() {}));
     super.initState();
   }
 
@@ -49,13 +53,10 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      floatingActionButton: buildFloatingActionButton(),
+      floatingActionButton: (boats.isNotEmpty) ? buildFloatingActionButton() : const SizedBox(),
       body: SafeArea(
-        child: GetBuilder<BoardPlanController>(
-          assignId: true,
-          builder: (controller) {
-            if (controller.showLoading) {
-              return Container(
+        child: (showLoading)
+            ? Container(
                 color: Colors.transparent,
                 width: Screen.width,
                 height: Screen.height,
@@ -64,96 +65,127 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                     color: Colors.black,
                   ),
                 ),
-              );
-            }
-            return SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  buildCalenderWidget(context),
-                  Spacing.h20,
-                  Wrap(
-                    runSpacing: 15,
-                    spacing: 15,
-                    children: [
-                      buildChip(
-                        onTap: () {
-                          controller.isGeneralInfoSelected = true;
-                          controller.selectedBoat = null;
-                          controller.update();
-                        },
-                        color: (controller.isGeneralInfoSelected) ? AppColors.text.lightSkyBlue : Colors.white,
-                        title: 'General Info',
-                      ),
-                      ...controller.boats.map(
-                        (boat) => buildChip(
+              )
+            : SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    buildCalenderWidget(context),
+                    Spacing.h20,
+                    Wrap(
+                      runSpacing: 15,
+                      spacing: 15,
+                      children: [
+                        buildChip(
                           onTap: () {
-                            controller.selectedBoat = boat;
-                            controller.isGeneralInfoSelected = false;
-                            controller.update();
+                            isGeneralInfoSelected = true;
+                            selectedBoat = null;
+                            setState(() {});
                           },
-                          color: (boat.id == controller.selectedBoat?.id) ? AppColors.text.lightSkyBlue : Colors.white,
-                          title: boat.name,
+                          color: (isGeneralInfoSelected) ? AppColors.text.lightSkyBlue : Colors.white,
+                          title: 'General Info',
+                        ),
+                        ...boats.map(
+                          (boat) => buildChip(
+                            onTap: () {
+                              selectedBoat = boat;
+                              isGeneralInfoSelected = false;
+                              setState(() {});
+                            },
+                            color: (boat.id == selectedBoat?.id) ? AppColors.text.lightSkyBlue : Colors.white,
+                            title: boat.name,
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacing.h20,
+                    if (selectedBoat != null && !isGeneralInfoSelected)
+                      StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+                        stream: FirebaseFirestore.instance
+                            .collection('bookings')
+                            .where(
+                              'bookingDate',
+                              arrayContains: DateFormat('dd-MM-yyyy').format(selectedDate),
+                            )
+                            .snapshots(),
+                        builder: (context, snapshot) {
+                          if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+                            return const SizedBox(
+                              height: 15,
+                              width: 15,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 2,
+                                color: Colors.black,
+                              ),
+                            );
+                          }
+                          final data = snapshot.data?.docs;
+                          List<Booking> bookings = [];
+                          data?.forEach((element) {
+                            Booking booking = Booking.fromMap(element.data());
+                            bookings.add(booking);
+                          });
+                          return Transform.scale(
+                            scale: 1.7,
+                            alignment: Alignment.topLeft,
+                            child: RepaintBoundary(
+                              key: widgetKey,
+                              child: CustomerList(
+                                bookings: bookings,
+                                boat: selectedBoat!,
+                              ),
+                            ).paddingOnly(bottom: 1000),
+                          );
+                        },
+                      ),
+                    if (isGeneralInfoSelected)
+                      Transform.scale(
+                        scale: 1,
+                        alignment: Alignment.topLeft,
+                        child: RepaintBoundary(
+                          key: widgetKey,
+                          child: const GeneralInfoData(),
                         ),
                       ),
-                    ],
-                  ),
-                  Spacing.h20,
-                  if (controller.selectedBoat != null && !controller.isGeneralInfoSelected)
-                    StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
-                      stream: FirebaseFirestore.instance
-                          .collection('bookings')
-                          .where(
-                            'bookingDate',
-                            arrayContains: DateFormat('dd-MM-yyyy').format(selectedDate),
-                          )
-                          .snapshots(),
-                      builder: (context, snapshot) {
-                        if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
-                          return const SizedBox(
-                            height: 15,
-                            width: 15,
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: Colors.black,
-                            ),
-                          );
-                        }
-                        final data = snapshot.data?.docs;
-                        List<Booking> bookings = [];
-                        data?.forEach((element) {
-                          Booking booking = Booking.fromMap(element.data());
-                          bookings.add(booking);
-                        });
-                        return Transform.scale(
-                          scale: 1.7,
-                          alignment: Alignment.topLeft,
-                          child: RepaintBoundary(
-                            key: widgetKey,
-                            child: CustomerList(
-                              bookings: bookings,
-                              boat: controller.selectedBoat!,
-                            ),
-                          ).paddingOnly(bottom: 1000),
-                        );
-                      },
-                    ),
-                  if (controller.isGeneralInfoSelected)
-                    Transform.scale(
-                      scale: 1,
-                      alignment: Alignment.topLeft,
-                      child: RepaintBoundary(
-                        key: widgetKey,
-                        child: const GeneralInfoData(),
-                      ),
-                    ),
-                ],
-              ).paddingSymmetric(horizontal: 20, vertical: 20),
-            );
-          },
-        ),
+                  ],
+                ).paddingSymmetric(horizontal: 20, vertical: 20),
+              ),
       ),
     );
+  }
+
+  Future<void> init(DateTime date) async {
+    showLoading = true;
+    await getAllBoats(date);
+    showLoading = false;
+    setState(() {});
+  }
+
+  Future<void> getAllBoats(DateTime date) async {
+    boats = [];
+    selectedBoat = null;
+    isGeneralInfoSelected = false;
+
+    var data =
+        await FirebaseFirestore.instance.collection('dailyBoats').doc(DateFormat('dd-MM-yyyy').format(date)).get();
+
+    BoatsModel boatsModel = BoatsModel.fromMap(data.data());
+    boats.addAll(boatsModel.boats as Iterable<Boat>);
+    if (boats.isNotEmpty) {
+      selectedBoat = boats[0];
+    } else {
+      isGeneralInfoSelected = true;
+    }
+  }
+
+  Future<void> onDateChanged(DateTime date) async {
+    selectedDate = date;
+    showLoading = true;
+    setState(() {});
+
+    await init(selectedDate);
+    showLoading = false;
+    setState(() {});
   }
 
   Widget buildCalenderWidget(BuildContext context) {
@@ -161,7 +193,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
       children: [
         buildButton(
           onTap: () {
-            logic.onDateChanged(
+            onDateChanged(
               selectedDate.subtract(const Duration(days: 1)),
             );
           },
@@ -184,7 +216,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
         Spacing.w15,
         buildButton(
           onTap: () {
-            logic.onDateChanged(
+            onDateChanged(
               selectedDate.add(const Duration(days: 1)),
             );
           },
@@ -288,68 +320,62 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   }
 
   Widget buildFloatingActionButton() {
-    return GetBuilder<BoardPlanController>(
-      assignId: true,
-      builder: (controller) {
-        if (controller.boats.isNotEmpty) {
-          return Column(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              FloatingActionButton(
-                elevation: 0,
-                onPressed: () async {
-                  await _captureAndShare();
-                },
-                backgroundColor: AppColors.background.black,
-                child: const Icon(
-                  Icons.share,
-                  color: Colors.white,
-                ),
-              ),
-              Spacing.h20,
-              FloatingActionButton(
-                elevation: 0,
-                onPressed: () async {
-                  List<String> images = [];
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        FloatingActionButton(
+          elevation: 0,
+          onPressed: () async {
+            await _captureAndShare();
+          },
+          backgroundColor: AppColors.background.black,
+          child: const Icon(
+            Icons.share,
+            color: Colors.white,
+          ),
+        ),
+        Spacing.h20,
+        FloatingActionButton(
+          elevation: 0,
+          onPressed: () async {
+            List<String> images = [];
 
-                  controller.selectedBoat = null;
-                  controller.isGeneralInfoSelected = true;
-                  await Future.delayed(const Duration(seconds: 1));
-                  controller.isGeneralInfoSelected = false;
+            selectedBoat = null;
+            isGeneralInfoSelected = true;
+            setState(() {});
+            await Future.delayed(const Duration(seconds: 1));
+            isGeneralInfoSelected = false;
+            setState(() {});
 
-                  //General Info
-                  String? image = await captureImage();
-                  if (image != null) {
-                    images.add(image);
-                  }
+            //General Info
+            String? image = await captureImage();
+            if (image != null) {
+              images.add(image);
+            }
 
-                  for (Boat boat in controller.boats) {
-                    controller.selectedBoat = boat;
-                    controller.update();
-                    await Future.delayed(const Duration(seconds: 1));
+            for (Boat boat in boats) {
+              selectedBoat = boat;
+              setState(() {});
+              await Future.delayed(const Duration(seconds: 1));
 
-                    //Boats
-                    String? boatImage = await captureImage();
-                    if (boatImage != null) {
-                      images.add(boatImage);
-                    }
-                  }
+              //Boats
+              String? boatImage = await captureImage();
+              if (boatImage != null) {
+                images.add(boatImage);
+              }
+            }
 
-                  controller.isGeneralInfoSelected = false;
+            isGeneralInfoSelected = false;
 
-                  await shareImages(images);
-                },
-                backgroundColor: AppColors.background.black,
-                child: const Icon(
-                  Icons.directions_boat_filled_rounded,
-                  color: Colors.white,
-                ),
-              ),
-            ],
-          );
-        }
-        return const SizedBox();
-      },
+            await shareImages(images);
+          },
+          backgroundColor: AppColors.background.black,
+          child: const Icon(
+            Icons.directions_boat_filled_rounded,
+            color: Colors.white,
+          ),
+        ),
+      ],
     );
   }
 
@@ -397,7 +423,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
     );
 
     if (date != null) {
-      logic.onDateChanged(date);
+      onDateChanged(date);
     }
   }
 }

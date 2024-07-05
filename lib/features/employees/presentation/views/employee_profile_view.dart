@@ -12,7 +12,6 @@ import '../../../../core/widgets/access_levels.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/phone_number/intl_phone_field.dart';
 import '../../../bookings/presentation/widgets/app_text_fields.dart';
-import '../../controllers/employee_profile_controller.dart';
 import '../../model/employee.dart';
 
 class EmployeeProfileView extends StatefulWidget {
@@ -27,88 +26,98 @@ class EmployeeProfileView extends StatefulWidget {
 }
 
 class _EmployeeProfileViewState extends State<EmployeeProfileView> {
-  final EmployeeProfileLogic logic = EmployeeProfileLogic();
+  late TextEditingController phoneNumberTED, countryCodeTED, firstNameTED, lastNameTED;
+
+  late Employee employee;
+  late String isoCode;
+
+  DateTime? startDate;
+  DateTime? endDate;
+
+  bool isEditMode = false;
+
+  DateTimeRange? dateRange;
+  List<Timestamp> leaves = [];
+
+  bool showLoading = false;
 
   @override
   void initState() {
     super.initState();
-    logic.init();
+    phoneNumberTED = TextEditingController();
+    countryCodeTED = TextEditingController();
+    firstNameTED = TextEditingController();
+    lastNameTED = TextEditingController();
+
+    employee = currentEmployee!;
+
+    isoCode = employee.countryIsoCode ?? 'IN';
+    if (employee.leaves?.length == 2) {
+      startDate = employee.leaves?.first.toDate();
+      endDate = employee.leaves?.last.toDate();
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final DateTime date = currentEmployee!.shiftTiming!;
-    final DateFormat formatter = DateFormat('HH-mm-ss');
-    final String shiftTiming = formatter.format(date);
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
+        }
         onBackPressed();
-        return false;
       },
+      canPop: false,
       child: Scaffold(
         backgroundColor: AppColors.background.lightBlue,
         appBar: buildAppBar(),
         body: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
-            child: GetBuilder<EmployeeProfileController>(
-              builder: (controller) {
-                return Stack(
+            child: Stack(
+              children: [
+                if (showLoading)
+                  Container(
+                    height: Screen.height,
+                    color: Colors.grey.shade300,
+                    child: const CircularProgressIndicator().center,
+                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    if (controller.showLoading)
-                      Container(
-                        height: Screen.height,
-                        color: Colors.grey.shade300,
-                        child: const CircularProgressIndicator().center,
+                    buildUserProfile(),
+                    Spacing.h20,
+                    const Divider(),
+                    Spacing.h20,
+                    Text(
+                      (isEditMode) ? 'Edit Details' : 'Employee Details',
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: AppColors.text.skyBlue,
+                        fontWeight: FontWeight.w700,
+                        fontFamily: AppFonts.nunito,
                       ),
-                    Column(
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              buildUserProfile(),
-                              const SizedBox(height: 20),
-                              const Divider(),
-                              const SizedBox(height: 20),
-                              (controller.isEditMode) ? buildTitle('Edit Details') : buildTitle('Employee Details'),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-                                child: Column(
-                                  mainAxisAlignment: MainAxisAlignment.start,
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    buildEmployeeInfo(subHeading: 'Name', text: currentEmployee!.name),
-                                    buildEmployeeInfo(
-                                      subHeading: 'Phone Number',
-                                      text: currentEmployee!.countryCode! + currentEmployee!.phoneNumber!,
-                                    ),
-                                    buildEmployeeInfo(subHeading: 'ShiftTiming', text: shiftTiming),
-                                    buildEmployeeInfo(subHeading: 'Role', text: currentEmployee!.role),
-                                    if (!controller.isEditMode) buildApplyLeaves(context).paddingOnly(top: 20),
-                                  ],
-                                ),
-                              ),
-                              buildTextFields(
-                                hintText: 'Name',
-                                textEditingController: controller.nameTED,
-                                focus: controller.nameNode,
-                                nextFocus: controller.phoneNumberNode,
-                                keyBoardType: TextInputType.text,
-                              ),
-                              buildPhoneNumber(),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        buildButtons(),
-                        const SizedBox(height: 30),
-                      ],
-                    ),
+                    ).left,
+                    Spacing.h20,
+                    if (isEditMode) ...[
+                      buildNameTED(),
+                      buildPhoneNumber(),
+                      Spacing.h20,
+                      buildButtons(),
+                      Spacing.h20,
+                    ] else ...[
+                      buildEmployeeInfo(subHeading: 'Name', text: employee.name),
+                      buildEmployeeInfo(
+                        subHeading: 'Phone Number',
+                        text: '${employee.countryCode!} ${employee.phoneNumber!}',
+                      ),
+                      buildEmployeeInfo(subHeading: 'Role', text: employee.role),
+                      Spacing.h20,
+                      buildApplyLeaves(),
+                    ],
                   ],
-                );
-              },
+                ).paddingAll(20),
+              ],
             ),
           ),
         ),
@@ -116,7 +125,6 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
     );
   }
 
-  ///=====================UI=====================///
   AppBar buildAppBar() {
     return AppBar(
       backgroundColor: AppColors.background.white,
@@ -137,14 +145,72 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
       ),
       title: Container(
         alignment: Alignment.centerRight,
-        child: buildEditButton(),
+        child: isEditMode ? const SizedBox() : buildEditButton(),
       ),
     );
   }
 
-  Widget buildApplyLeaves(BuildContext context) {
+  Widget buildNameTED() {
+    return Row(
+      children: [
+        Expanded(
+          child: AppTextField(
+            hintText: 'First Name',
+            controller: firstNameTED,
+            keyboardType: TextInputType.text,
+            errorValidator: () {
+              return null;
+            },
+            validator: (_) {
+              return null;
+            },
+          ),
+        ),
+        Spacing.w20,
+        Expanded(
+          child: AppTextField(
+            hintText: 'Last Name',
+            controller: lastNameTED,
+            keyboardType: TextInputType.text,
+            errorValidator: () {
+              return null;
+            },
+            validator: (_) {
+              return null;
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildPhoneNumber() {
+    return IntlPhoneField(
+      autoValidate: true,
+      initialCountryCode: isoCode,
+      showCountryFlag: false,
+      initialValue: phoneNumberTED.text,
+      decoration: const InputDecoration(
+        labelText: 'Phone Number',
+        labelStyle: TextStyle(
+          fontSize: FontSize.small,
+          fontFamily: AppFonts.nunito,
+        ),
+      ),
+      style: const TextStyle(fontFamily: AppFonts.nunito, fontWeight: FontWeight.normal, fontSize: 14),
+      searchText: 'Search',
+      onSubmitted: (_) {},
+      onChanged: (phone) {
+        phoneNumberTED.text = phone.number!;
+        countryCodeTED.text = phone.countryCode;
+        isoCode = phone.countryISOCode!;
+      },
+    );
+  }
+
+  Widget buildApplyLeaves() {
     return SizedBox(
-      width: 320,
+      width: Screen.width,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -152,26 +218,22 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
             mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Expanded(
-                child: SizedBox(
-                  width: Screen.width,
-                  child: Text(
-                    'Apply Leaves',
-                    style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
-                  ),
+                child: Text(
+                  'Apply Leaves',
+                  style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
                 ),
               ),
-              SizedBox(
-                width: 130,
-                child: (logic.controller.startDate == null && logic.controller.endDate == null)
+              Expanded(
+                child: (startDate == null && endDate == null)
                     ? AppButton.miniFlat(
                         onTap: () {
-                          showDateRangePickerBottomSheet(context);
+                          showDateRangePickerBottomSheet();
                         },
                         text: 'Apply',
                       ).center
                     : GestureDetector(
                         onTap: () {
-                          showDateRangePickerBottomSheet(context);
+                          showDateRangePickerBottomSheet();
                         },
                         child: const Text(
                           'Change',
@@ -182,9 +244,9 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
             ],
           ),
           Spacing.h10,
-          if (logic.controller.startDate != null && logic.controller.endDate != null)
+          if (startDate != null && endDate != null)
             Text(
-              "${DateFormat("dd-MM-yyyy").format(logic.controller.startDate!)} - ${DateFormat("dd-MM-yyyy").format(logic.controller.endDate!)}",
+              "${DateFormat("dd-MM-yyyy").format(startDate!)} - ${DateFormat("dd-MM-yyyy").format(endDate!)}",
               style: const TextStyle(
                 fontSize: 13,
               ),
@@ -195,15 +257,64 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
   }
 
   onBackPressed() {
-    if (logic.controller.isEditMode) {
-      logic.controller.isEditMode = !logic.controller.isEditMode;
+    if (isEditMode) {
+      isEditMode = !isEditMode;
+      setState(() {});
     } else {
       Navigator.pop(context);
     }
   }
 
-  Future showDateRangePickerBottomSheet(BuildContext context) {
-    return showDateRangePicker(
+  Widget buildButtons() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceAround,
+      children: [
+        AppButton.flat(
+          height: 45,
+          width: 140,
+          color: AppColors.background.grey,
+          text: 'Cancel',
+          textColor: AppColors.text.black,
+          onTap: () {
+            disposeKeyboard();
+            isEditMode = !isEditMode;
+            setState(() {});
+          },
+        ),
+        AppButton.flat(
+          height: 45,
+          width: 140,
+          color: AppColors.background.black,
+          text: 'Update',
+          textColor: AppColors.text.white,
+          onTap: () async {
+            if (firstNameTED.text != '' && phoneNumberTED.text != '') {
+              showLoading = true;
+              setState(() {});
+
+              employee = employee.copyWith(
+                firstName: firstNameTED.text,
+                lastName: lastNameTED.text,
+                countryCode: countryCodeTED.text,
+                countryIsoCode: isoCode,
+                phoneNumber: phoneNumberTED.text,
+              );
+
+              await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
+
+              showLoading = false;
+              isEditMode = !isEditMode;
+
+              setState(() {});
+            }
+          },
+        ),
+      ],
+    );
+  }
+
+  Future showDateRangePickerBottomSheet() async {
+    DateTimeRange? pickedDateRange = await showDateRangePicker(
       context: context,
       builder: (context, child) {
         return Theme(
@@ -228,307 +339,130 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
       lastDate: DateTime(2100),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       currentDate: DateTime.now(),
-    ).then((pickedDateRange) async {
-      if (pickedDateRange != null) {
-        logic.controller.dateRange = pickedDateRange;
-        logic.controller.startDate = logic.controller.dateRange!.start;
-        logic.controller.endDate = logic.controller.dateRange!.end;
-      }
-      logic.controller.leaves = [];
+    );
 
-      logic.controller.showLoading = true;
+    if (pickedDateRange != null) {
+      dateRange = pickedDateRange;
+      startDate = dateRange!.start;
+      endDate = dateRange!.end;
+    }
+    leaves = [];
 
-      if (logic.controller.startDate != null) {
-        Timestamp startTimestamp = Timestamp.fromDate(logic.controller.startDate!);
-        logic.controller.leaves.add(startTimestamp);
-      }
-      if (logic.controller.endDate != null) {
-        Timestamp endTimestamp = Timestamp.fromDate(logic.controller.endDate!);
-        logic.controller.leaves.add(endTimestamp);
-        currentEmployee?.leaves = logic.controller.leaves;
-        await FirebaseFirestore.instance.collection('employees').doc(currentEmployee!.id).set(currentEmployee!.toMap());
-        await FirebaseFirestore.instance
-            .collection('employees')
-            .doc(currentEmployee!.id)
-            .collection('employeeFullInformation')
-            .doc('employeeData')
-            .set(currentEmployee!.toMap());
-        logic.controller.update();
-      }
-      logic.controller.showLoading = false;
+    setState(() {
+      showLoading = true;
     });
-  }
 
-  Widget buildPhoneNumber() {
-    return GetBuilder<EmployeeProfileController>(
-      builder: (controller) {
-        if (controller.isEditMode) {
-          return IntlPhoneField(
-            autoValidate: true,
-            initialCountryCode: controller.isoCode,
-            showCountryFlag: false,
-            initialValue: controller.phoneNumberTED.text,
-            decoration: const InputDecoration(
-              labelText: 'Phone Number',
-              labelStyle: TextStyle(
-                fontSize: FontSize.small,
-                fontFamily: AppFonts.nunito,
-              ),
-            ),
-            style: const TextStyle(fontFamily: AppFonts.nunito, fontWeight: FontWeight.normal, fontSize: 14),
-            searchText: 'Search',
-            onSubmitted: (_) {},
-            onChanged: (phone) {
-              controller.phoneNumberTED.text = phone.number!;
-              controller.countryCodeTED.text = phone.countryCode;
-            },
-          );
-        } else {
-          return const SizedBox();
-        }
-      },
-    );
-  }
-
-  Widget buildButtons() {
-    return GetBuilder<EmployeeProfileController>(
-      builder: (controller) {
-        if (controller.isEditMode) {
-          return Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              AppButton.flat(
-                height: 45,
-                width: 140,
-                color: AppColors.background.grey,
-                text: 'Cancel',
-                textColor: AppColors.text.black,
-                onTap: () {
-                  disposeKeyboard();
-                  controller.isEditMode = !controller.isEditMode;
-                },
-              ),
-              AppButton.flat(
-                height: 45,
-                width: 140,
-                color: AppColors.background.black,
-                text: 'Update',
-                textColor: AppColors.text.white,
-                onTap: () async {
-                  if (controller.nameTED.text != '') currentEmployee!.firstName = controller.nameTED.text;
-                  if (controller.phoneNumberTED.text != '') {
-                    currentEmployee!.countryIsoCode = controller.isoCode;
-                    currentEmployee!.countryCode = controller.countryCodeTED.text;
-                    currentEmployee!.phoneNumber = controller.phoneNumberTED.text;
-                  }
-                  controller.showLoading = true;
-                  await FirebaseFirestore.instance
-                      .collection('employees')
-                      .doc(currentEmployee!.id)
-                      .collection('employeeFullInformation')
-                      .doc('employeeData')
-                      .set(currentEmployee!.toMap());
-                  await FirebaseFirestore.instance
-                      .collection('employees')
-                      .doc(currentEmployee!.id)
-                      .set(currentEmployee!.toMap());
-                  controller.showLoading = false;
-
-                  controller.isEditMode = !controller.isEditMode;
-                },
-              ),
-            ],
-          );
-        } else {
-          return const SizedBox();
-        }
-      },
-    );
-  }
-
-  Widget buildTextFields({
-    String? hintText,
-    TextEditingController? textEditingController,
-    FocusNode? focus,
-    FocusNode? nextFocus,
-    TextInputType? keyBoardType,
-  }) {
-    return GetBuilder<EmployeeProfileController>(
-      builder: (controller) {
-        if (controller.isEditMode) {
-          return SizedBox(
-            width: 280,
-            child: AppTextField(
-              hintText: hintText,
-              keyboardType: keyBoardType,
-              focusNode: focus,
-              nextFocusNode: nextFocus,
-              controller: textEditingController,
-              errorValidator: () {
-                return null;
-              },
-              validator: (_) {
-                return null;
-              },
-            ),
-          );
-        } else {
-          return const SizedBox();
-        }
-      },
-    );
+    if (startDate != null) {
+      Timestamp startTimestamp = Timestamp.fromDate(startDate!);
+      leaves.add(startTimestamp);
+    }
+    if (endDate != null) {
+      Timestamp endTimestamp = Timestamp.fromDate(endDate!);
+      leaves.add(endTimestamp);
+      employee = employee.copyWith(leaves: leaves);
+      await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
+    }
+    setState(() {
+      showLoading = false;
+    });
   }
 
   Widget buildEditButton() {
     return EmployeeAccess(
       access: AccessRights.personalProfileEdit,
-      child: GetBuilder<EmployeeProfileController>(
-        builder: (controller) {
-          if (!controller.isEditMode) {
-            return TextButton(
-              style: ButtonStyle(
-                overlayColor: WidgetStateProperty.all(Colors.black.withOpacity(0.2)),
-                backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
-                shape: WidgetStateProperty.all<RoundedRectangleBorder>(
-                  RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                ),
-                minimumSize: WidgetStateProperty.all<Size>(const Size(100, 31)),
-              ),
-              onPressed: () {
-                controller.reset();
-                controller.isEditMode = !controller.isEditMode;
-                controller.phoneNumberTED.text = currentEmployee?.phoneNumber ?? '';
-                controller.countryCodeTED.text = currentEmployee?.countryCode ?? '';
-                controller.nameTED.text = currentEmployee?.firstName ?? '';
-              },
-              child: Text(
-                'Edit',
-                style: TextStyle(
-                  color: AppColors.text.black,
-                  fontSize: 14,
-                  fontFamily: AppFonts.nunito,
-                  fontWeight: FontWeight.w600,
-                  letterSpacing: 0.60,
-                ),
-              ),
-            );
-          } else {
-            return const SizedBox();
-          }
-        },
-      ),
-    );
-  }
-
-  Widget buildEmployeeInfo({String? subHeading, String? text}) {
-    return GetBuilder<EmployeeProfileController>(
-      builder: (controller) {
-        if (!controller.isEditMode) {
-          return Padding(
-            padding: const EdgeInsets.all(5.0),
-            child: SizedBox(
-              width: 320,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Expanded(
-                    child: SizedBox(
-                      width: Screen.width,
-                      child: Text(
-                        subHeading!,
-                        style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: 150,
-                    child: Text(
-                      ':      ${text!}',
-                      style: TextStyle(color: AppColors.text.black, fontSize: 12, fontWeight: FontWeight.w500),
-                    ),
-                  ),
-                ],
-              ),
+      child: TextButton(
+        style: ButtonStyle(
+          overlayColor: WidgetStateProperty.all(Colors.black.withOpacity(0.2)),
+          backgroundColor: WidgetStateProperty.all<Color>(Colors.transparent),
+          shape: WidgetStateProperty.all<RoundedRectangleBorder>(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
             ),
-          );
-        } else {
-          return const SizedBox();
-        }
-      },
-    );
-  }
-
-  Widget buildTitle(String text) {
-    return Container(
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      alignment: Alignment.centerLeft,
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 16,
-          color: AppColors.text.skyBlue,
-          fontWeight: FontWeight.w700,
-          fontFamily: AppFonts.nunito,
+          ),
+          minimumSize: WidgetStateProperty.all<Size>(const Size(100, 31)),
+        ),
+        onPressed: () {
+          isEditMode = !isEditMode;
+          phoneNumberTED.text = employee.phoneNumber ?? '';
+          countryCodeTED.text = employee.countryCode ?? '';
+          isoCode = employee.countryIsoCode ?? 'IN';
+          firstNameTED.text = employee.firstName ?? '';
+          lastNameTED.text = employee.lastName ?? '';
+          setState(() {});
+        },
+        child: Text(
+          'Edit',
+          style: TextStyle(
+            color: AppColors.text.black,
+            fontSize: 14,
+            fontFamily: AppFonts.nunito,
+            fontWeight: FontWeight.w600,
+            letterSpacing: 0.60,
+          ),
         ),
       ),
     );
   }
 
-  Widget buildIcons(IconData icon, Function onTap) {
-    return Center(
-      child: IconButton(
-        onPressed: () {},
-        icon: Icon(icon),
-        iconSize: 20,
-        color: AppColors.background.black,
-      ),
-    );
+  Widget buildEmployeeInfo({String? subHeading, String? text}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        Expanded(
+          child: Text(
+            subHeading!,
+            style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
+          ),
+        ),
+        SizedBox(
+          width: 150,
+          child: Text(
+            text!,
+            style: TextStyle(color: AppColors.text.black, fontSize: 12, fontWeight: FontWeight.w500),
+          ),
+        ),
+      ],
+    ).paddingAll(5);
   }
 
   Widget buildUserProfile() {
-    return GetBuilder<EmployeeProfileController>(
-      builder: (controller) {
-        return Center(
-          child: Column(
+    return Center(
+      child: Column(
+        children: [
+          Stack(
             children: [
-              Stack(
-                children: [
-                  const SizedBox(
+              const SizedBox(
+                height: 100,
+                width: 100,
+                child: CircleAvatar(
+                  backgroundImage: NetworkImage(
+                    'https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/profile_user.jpg',
+                  ),
+                ),
+              ),
+              if (isEditMode)
+                Positioned(
+                  child: Container(
                     height: 100,
                     width: 100,
-                    child: CircleAvatar(
-                      backgroundImage: NetworkImage(
-                        'https://preview.keenthemes.com/metronic-v4/theme/assets/pages/media/profile/profile_user.jpg',
-                      ),
-                    ),
-                  ),
-                  if (controller.isEditMode)
-                    Positioned(
-                      child: Container(
-                        height: 100,
-                        width: 100,
-                        color: Colors.white54,
-                        child: const CircleAvatar(
-                          backgroundColor: Colors.transparent,
-                          child: Text(
-                            'Upload',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.w700,
-                              fontSize: FontSize.small,
-                            ),
-                          ),
+                    color: Colors.white54,
+                    child: const CircleAvatar(
+                      backgroundColor: Colors.transparent,
+                      child: Text(
+                        'Upload',
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontWeight: FontWeight.w700,
+                          fontSize: FontSize.small,
                         ),
                       ),
                     ),
-                ],
-              ),
+                  ),
+                ),
             ],
           ),
-        );
-      },
+        ],
+      ),
     );
   }
 }

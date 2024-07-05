@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
-
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/util/alignment_extensions.dart';
@@ -13,7 +12,6 @@ import '../../../core/util/spacing_widgets.dart';
 import '../../../core/widgets/app_bar.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/ta_image.dart';
-import '../controllers/marketing_controller.dart';
 import '../models/marketing.dart';
 import '../widgets/marketing_content_entry_bottom_sheet.dart';
 
@@ -29,8 +27,6 @@ class MarketingView extends StatefulWidget {
 }
 
 class _MarketingViewState extends State<MarketingView> {
-  MarketingLogic logic = MarketingLogic();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,58 +34,54 @@ class _MarketingViewState extends State<MarketingView> {
       appBar: const AppBarWidget(heading: 'Marketing'),
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(
-        child: GetBuilder<MarketingController>(
-          builder: (controller) {
-            return StreamBuilder(
-              stream: FirebaseFirestore.instance.collection('marketing').doc('marketing').snapshots(),
-              builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox(
-                    height: 15,
-                    width: 15,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.black,
-                    ),
-                  );
-                }
-                final data = snapshot.data?.data();
+        child: StreamBuilder(
+          stream: FirebaseFirestore.instance.collection('marketing').doc('marketing').snapshots(),
+          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+              return const SizedBox(
+                height: 15,
+                width: 15,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                  color: Colors.black,
+                ),
+              );
+            }
+            final data = snapshot.data?.data();
 
-                if (data == null) {
-                  return SizedBox(
-                    height: Screen.height,
-                    child: const Text(
-                      'Marketing Gallery is empty',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    ).center,
-                  );
-                }
+            if (data == null) {
+              return SizedBox(
+                height: Screen.height,
+                child: const Text(
+                  'Marketing Gallery is empty',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ).center,
+              );
+            }
 
-                Marketing? marketing = Marketing.fromJson(data as Map<String, dynamic>);
+            Marketing? marketing = Marketing.fromJson(data as Map<String, dynamic>);
 
-                if ((marketing.marketingElements ?? []).isEmpty) {
-                  return SizedBox(
-                    height: Screen.height,
-                    child: const Text(
-                      'Marketing Gallery is empty',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
-                    ).center,
-                  );
-                }
-                return Column(
-                  children: [
-                    Spacing.h10,
-                    ...(marketing.marketingElements ?? []).map(
-                      (element) => buildMarketingCard(
-                        element: element,
-                        index: (marketing.marketingElements ?? []).indexOf(element),
-                      ).paddingOnly(top: 20),
-                    ),
-                    Spacing.h30,
-                  ],
-                ).scrollable;
-              },
-            );
+            if ((marketing.marketingElements ?? []).isEmpty) {
+              return SizedBox(
+                height: Screen.height,
+                child: const Text(
+                  'Marketing Gallery is empty',
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                ).center,
+              );
+            }
+            return Column(
+              children: [
+                Spacing.h10,
+                ...(marketing.marketingElements ?? []).map(
+                  (element) => buildMarketingCard(
+                    element: element,
+                    index: (marketing.marketingElements ?? []).indexOf(element),
+                  ).paddingOnly(top: 20),
+                ),
+                Spacing.h30,
+              ],
+            ).scrollable;
           },
         ).paddingSymmetric(horizontal: 20),
       ),
@@ -259,7 +251,7 @@ class _MarketingViewState extends State<MarketingView> {
             AppButton.miniFlat(
               text: 'Okay',
               onTap: () {
-                logic.onDeletePressed(index);
+                onDeletePressed(index);
                 Navigator.pop(context);
               },
             ),
@@ -267,6 +259,15 @@ class _MarketingViewState extends State<MarketingView> {
         );
       },
     );
+  }
+
+  onDeletePressed(int index) async {
+    DocumentSnapshot document = await FirebaseFirestore.instance.collection('marketing').doc('marketing').get();
+    Map<String, dynamic> data = document.data() as Map<String, dynamic>;
+
+    Marketing marketing = Marketing.fromJson(data);
+    marketing.marketingElements?.removeAt(index);
+    await FirebaseFirestore.instance.collection('marketing').doc('marketing').set(marketing.toJson());
   }
 
   Widget buildIcons({required IconData icon, required Function onTap}) {

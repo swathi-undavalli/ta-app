@@ -8,12 +8,12 @@ class Activity {
     this.color,
   });
 
-  String? name;
-  String? shortName;
-  int? price;
-  String? id;
-  int? priority;
-  String? color;
+  final String? name;
+  final String? shortName;
+  final int? price;
+  final String? id;
+  final int? priority;
+  final String? color;
 
   factory Activity.fromMap(Map<String, dynamic> json) => Activity(
         name: json['name'],
@@ -32,6 +32,24 @@ class Activity {
         'id': id,
         'color': color,
       };
+
+  Activity copyWith({
+    String? name,
+    String? shortName,
+    int? price,
+    String? id,
+    int? priority,
+    String? color,
+  }) {
+    return Activity(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      shortName: shortName ?? this.shortName,
+      price: price ?? this.price,
+      priority: priority ?? this.priority,
+      color: color ?? this.color,
+    );
+  }
 
   @override
   bool operator ==(dynamic other) {

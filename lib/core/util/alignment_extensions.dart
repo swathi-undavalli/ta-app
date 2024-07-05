@@ -37,6 +37,11 @@ extension WidgetSizes on Widget {
         child: this,
       );
 
+  SizedBox width(double x) => SizedBox(
+        width: x,
+        child: this,
+      );
+
   SingleChildScrollView get scrollableBody {
     if (Screen.height < 708) {
       return scrollable;
@@ -46,11 +51,6 @@ extension WidgetSizes on Widget {
       child: this,
     ).scrollable;
   }
-
-  SizedBox width(double x) => SizedBox(
-        width: x,
-        child: this,
-      );
 
   SizedBox size(double h, double w) => SizedBox(
         height: h * 1.0,

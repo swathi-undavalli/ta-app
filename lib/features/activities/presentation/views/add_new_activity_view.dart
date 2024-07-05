@@ -1,86 +1,113 @@
+import 'dart:developer';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
-
 import '../../../../core/constants/constants.dart';
+import '../../../../core/models/counter_model.dart';
+import '../../../../core/util/alignment_extensions.dart';
+import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/continue_dialog.dart';
+import '../../../bookings/models/activity_model.dart';
 import '../../../bookings/presentation/widgets/app_text_fields.dart';
-import '../../controller/add_new_activity_controller.dart';
+import '../../../logs/models/log_model.dart';
+import '../../../logs/presentation/views/log_view.dart';
+import '../../model/colors_data.dart';
 
-class AddNewActivityView extends StatelessWidget {
-  final AddNewActivityLogic logic = AddNewActivityLogic();
+class AddNewActivityView extends StatefulWidget {
+  const AddNewActivityView({Key? key, required this.activity}) : super(key: key);
 
-  AddNewActivityView({Key? key}) : super(key: key);
-
-  static Route route() => MaterialPageRoute(
-        builder: (context) => AddNewActivityView(),
+  static Route route(Activity? activity) => MaterialPageRoute(
+        builder: (context) => AddNewActivityView(activity: activity),
       );
+
+  final Activity? activity;
+
+  @override
+  State<AddNewActivityView> createState() => _AddNewActivityViewState();
+}
+
+class _AddNewActivityViewState extends State<AddNewActivityView> {
+  late TextEditingController nameTED;
+  late TextEditingController shortNameTED;
+  late TextEditingController priceTED;
+  late TextEditingController priorityTED;
+  late TextEditingController colorTED;
+
+  bool showLoading = false;
+
+  List<String> priority = ['0', '1'];
+
+  List<String> colorCode = ['Blue', 'Green', 'Purple', 'Red', 'White'];
+
+  bool get isEditMode => widget.activity != null;
+
+  @override
+  void initState() {
+    super.initState();
+    log(isEditMode.toString());
+
+    nameTED = TextEditingController(text: widget.activity?.name);
+    shortNameTED = TextEditingController(text: widget.activity?.shortName);
+    priceTED = TextEditingController(text: widget.activity?.price.toString());
+    colorTED = TextEditingController(text: widget.activity?.color);
+    priorityTED = TextEditingController(text: widget.activity?.priority.toString());
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      appBar: const AppBarWidget(heading: 'Add Activity'),
-      body: WillPopScope(
-        onWillPop: () async {
-          logic.controller.reset();
-          return true;
+      appBar: AppBarWidget(
+        heading: (isEditMode) ? 'Edit Activity' : 'Add Activity',
+        actions: [
+          if (isEditMode) buildDeleteButton(),
+        ],
+      ),
+      body: PopScope(
+        onPopInvoked: (_) async {
+          reset();
         },
         child: SafeArea(
-          child: GetBuilder<AddNewActivityController>(
-            builder: (controller) {
-              return SingleChildScrollView(
-                physics: const BouncingScrollPhysics(),
-                child: Center(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      children: [
-                        buildTextFields(
-                          name: 'Name',
-                          textEditingController: controller.nameTED,
-                          focusNode: controller.nameNode,
-                          nextFocusNode: controller.shortNameNode,
-                        ),
-                        buildTextFields(
-                          name: 'Short name',
-                          textEditingController: controller.shortNameTED,
-                          focusNode: controller.shortNameNode,
-                          nextFocusNode: controller.priceNode,
-                        ),
-                        buildTextFields(
-                          name: 'Price',
-                          textEditingController: controller.priceTED,
-                          focusNode: controller.priceNode,
-                          nextFocusNode: controller.priorityNode,
-                          keyBoardType: TextInputType.number,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: Column(
-                            children: [
-                              buildSubtitle('Priority'),
-                              buildPriority(),
-                              buildSubtitle('Color Code'),
-                              buildColorCode(),
-                            ],
-                          ),
-                        ),
-                        const SizedBox(height: 100),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            buildCancelButton(context),
-                            buildSubmitButton(context),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              );
-            },
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: (showLoading)
+                ? SizedBox(
+                    height: Screen.height,
+                    child: const CircularProgressIndicator(
+                      strokeWidth: 3,
+                      backgroundColor: Colors.grey,
+                      color: Colors.black,
+                    ).center,
+                  )
+                : Column(
+                    children: [
+                      buildTextFields(
+                        name: 'Name',
+                        textEditingController: nameTED,
+                      ),
+                      buildTextFields(
+                        name: 'Short name',
+                        textEditingController: shortNameTED,
+                      ),
+                      buildTextFields(
+                        name: 'Price',
+                        textEditingController: priceTED,
+                        keyBoardType: TextInputType.number,
+                      ),
+                      Spacing.h30,
+                      buildPriority(),
+                      Spacing.h30,
+                      buildColorCode(),
+                      Spacing.h100,
+                      buildButtons(),
+                    ],
+                  ).paddingSymmetric(horizontal: 10),
           ),
         ),
       ),
@@ -89,127 +116,211 @@ class AddNewActivityView extends StatelessWidget {
 
   ///===========UI============///
 
+  Widget buildDeleteButton() {
+    return IconButton(
+      onPressed: () async {
+        bool delete = await ContinueDialog.show(
+          context,
+          title: 'Are You Sure ? ',
+          content: 'Activity will Be Deleted Permanently.',
+        );
+        if (delete) {
+          FirebaseFirestore.instance.collection('catalogue').doc(widget.activity!.id).delete();
+          if (mounted) Navigator.pop(context);
+        }
+      },
+      icon: const Icon(
+        Icons.delete,
+        size: 20,
+        color: Colors.black,
+      ),
+    );
+  }
+
+  reset() {
+    nameTED.text = '';
+    shortNameTED.text = '';
+    priceTED.text = '';
+    priorityTED.text = '';
+    colorTED.text = '';
+  }
+
   Widget buildSubtitle(String name) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, top: 30),
-      child: SizedBox(
-        width: Screen.width,
-        child: Text(
-          name,
-          style: const TextStyle(
-            color: Colors.black54,
-            fontFamily: AppFonts.nunito,
-            fontSize: 12,
-            fontWeight: FontWeight.normal,
-          ),
+    return SizedBox(
+      width: Screen.width,
+      child: Text(
+        name,
+        style: const TextStyle(
+          color: Colors.black54,
+          fontFamily: AppFonts.nunito,
+          fontSize: 12,
+          fontWeight: FontWeight.normal,
         ),
       ),
     );
   }
 
   Widget buildPriority() {
-    return GetBuilder<AddNewActivityController>(
-      builder: (controller) {
-        return Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: DropdownButton(
-            focusNode: controller.priorityNode,
-            underline: Container(height: 1, color: Colors.grey),
-            isExpanded: true,
-            value: controller.priorityTED.text.isNotEmpty ? controller.priorityTED.text : null,
-            onChanged: (dynamic priority) {
-              controller.priorityTED.text = priority;
-              controller.update();
-            },
-            items: controller.priority.map((priority) {
-              return DropdownMenuItem(
-                value: priority,
-                child: Text(priority),
-              );
-            }).toList(),
-          ),
-        );
-      },
-    );
+    return Column(
+      children: [
+        buildSubtitle('Priority'),
+        DropdownButton(
+          underline: Container(height: 1, color: Colors.grey),
+          isExpanded: true,
+          value: priorityTED.text.isNotEmpty ? priorityTED.text : null,
+          onChanged: (dynamic priority) {
+            priorityTED.text = priority;
+            setState(() {});
+          },
+          items: priority.map((priority) {
+            return DropdownMenuItem(
+              value: priority,
+              child: Text(priority),
+            );
+          }).toList(),
+        ),
+      ],
+    ).paddingSymmetric(horizontal: 10);
   }
 
   Widget buildColorCode() {
-    return GetBuilder<AddNewActivityController>(
-      builder: (controller) {
-        return Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: DropdownButton(
-            focusNode: controller.colorNode,
-            underline: Container(height: 1, color: Colors.grey),
-            isExpanded: true,
-            value: controller.colorTED.text.isNotEmpty ? controller.colorTED.text : null,
-            onChanged: (dynamic newColor) {
-              controller.colorTED.text = newColor;
-              controller.update();
-            },
-            items: controller.colorCode.map((color) {
-              return DropdownMenuItem(
-                value: color,
-                child: Text(color),
-              );
-            }).toList(),
-          ),
-        );
-      },
+    return Column(
+      children: [
+        buildSubtitle('Color code'),
+        DropdownButton(
+          underline: Container(height: 1, color: Colors.grey),
+          isExpanded: true,
+          value: colorTED.text.isNotEmpty ? colorTED.text : null,
+          onChanged: (dynamic newColor) {
+            colorTED.text = newColor;
+            setState(() {});
+          },
+          items: colorCode.map((color) {
+            return DropdownMenuItem(
+              value: color,
+              child: Text(color),
+            );
+          }).toList(),
+        ),
+      ],
+    ).paddingSymmetric(horizontal: 10);
+  }
+
+  Widget buildButtons() {
+    return Row(
+      children: [
+        AppButton.flat(
+          text: 'Cancel',
+          textColor: AppColors.text.black,
+          color: AppColors.background.grey,
+          onTap: () {
+            reset();
+            Navigator.pop(context);
+          },
+        ),
+        const Spacer(),
+        AppButton.flat(
+          text: (isEditMode) ? 'Update' : 'Submit',
+          textColor: AppColors.text.white,
+          color: AppColors.background.black,
+          onTap: () {
+            onSubmit();
+          },
+        ),
+      ],
     );
   }
 
-  Widget buildCancelButton(BuildContext context) {
-    return Center(
-      child: AppButton.flat(
-        text: 'Cancel',
-        textColor: AppColors.text.black,
-        color: AppColors.background.grey,
-        onTap: () {
-          logic.controller.reset();
-          Navigator.pop(context);
-        },
-      ),
-    );
+  onSubmit() async {
+    if (nameTED.text.trim().isNotEmpty &&
+        priceTED.text.trim().isNotEmpty &&
+        priorityTED.text.trim().isNotEmpty &&
+        colorTED.text.trim().isNotEmpty) {
+      setState(() {
+        showLoading = true;
+      });
+
+      String activityId;
+      if (isEditMode) {
+        activityId = widget.activity!.id!;
+      } else {
+        var data = await FirebaseFirestore.instance.collection('counter').doc('count').get();
+        CounterModel counterModel = CounterModel.fromMap(data.data() ?? {});
+        activityId = (counterModel.activity + 1).toString();
+        counterModel = counterModel.copyWith(activity: int.tryParse(activityId) ?? 0);
+        await FirebaseFirestore.instance.collection('counter').doc('count').set(counterModel.toMap());
+      }
+
+      Activity activity = Activity(
+        name: nameTED.text,
+        shortName: shortNameTED.text,
+        price: int.parse(priceTED.text),
+        priority: int.parse(priorityTED.text),
+        color: colorTED.text,
+        id: activityId,
+      );
+
+      await FirebaseFirestore.instance.collection('catalogue').doc(activityId).set(activity.toMap());
+
+      if (isEditMode) {
+        await updateColorsDocument();
+      }
+
+      LogModel logModel =
+          LogModel(type: (isEditMode) ? LogType.editActivity : LogType.addActivity, activityName: activity.name);
+      await FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
+
+      Fluttertoast.showToast(msg: (isEditMode) ? 'Updated' : 'Saved');
+      disposeKeyboard();
+      reset();
+
+      setState(() {
+        showLoading = false;
+      });
+      if (mounted) {
+        Navigator.pop(context);
+      }
+    }
   }
 
-  Widget buildSubmitButton(BuildContext context) {
-    return Center(
-      child: AppButton.flat(
-        text: 'Submit',
-        textColor: AppColors.text.white,
-        color: AppColors.background.black,
-        onTap: () {
-          logic.onSubmit(context);
-        },
-      ),
-    );
+  Future<void> updateColorsDocument() async {
+    var data = await FirebaseFirestore.instance.collection('catalogue').get();
+    var map = {
+      'Blue': [],
+      'Purple': [],
+      'White': [],
+      'Red': [],
+      'Green': [],
+    };
+
+    for (var d in data.docs) {
+      if (d.id == 'colors') continue;
+      var color = d.data()['color'];
+      var name = d.data()['name'];
+      map[color]!.add(name);
+    }
+
+    await FirebaseFirestore.instance.collection('catalogue').doc('colors').set(map);
+
+    colorsData = ColorsDataModel.fromMap(map);
   }
 
   Widget buildTextFields({
     String? name,
     TextEditingController? textEditingController,
-    FocusNode? focusNode,
-    FocusNode? nextFocusNode,
-    TextInputType? keyBoardType,
+    TextInputType? keyBoardType = TextInputType.text,
   }) {
-    return GetBuilder<AddNewActivityController>(
-      builder: (controller) {
-        return AppTextField(
-          hintText: name,
-          controller: textEditingController,
-          focusNode: focusNode,
-          nextFocusNode: nextFocusNode,
-          required: false,
-          keyboardType: keyBoardType,
-          onChangedCallBack: (_) {},
-          errorValidator: () {
-            return null;
-          },
-          validator: (_) {
-            return null;
-          },
-        );
+    return AppTextField(
+      hintText: name,
+      controller: textEditingController,
+      required: false,
+      keyboardType: keyBoardType,
+      onChangedCallBack: (_) {},
+      errorValidator: () {
+        return null;
+      },
+      validator: (_) {
+        return null;
       },
     );
   }

@@ -6,6 +6,8 @@ import 'package:temple_ui_tools/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../features/dashboard/presentation/views/dashboard_view.dart';
+import '../../features/employees/model/employee.dart';
+import '../../features/login/presentation/views/login_view.dart';
 import '../../main.dart';
 import '../authentication/firebase_authentication.dart';
 import '../widgets/app_button.dart';
@@ -45,7 +47,11 @@ class AutoUpdateView extends StatelessWidget {
                   text: 'Skip',
                   textColor: Colors.white,
                   onTap: () async {
-                    Navigator.pushReplacement(context, DashBoardView.route());
+                    if (currentEmployee != null) {
+                      Navigator.pushReplacement(context, DashBoardView.route());
+                    } else {
+                      Navigator.pushReplacement(context, LoginView.route());
+                    }
                   },
                 ),
               ).paddingOnly(right: 20),

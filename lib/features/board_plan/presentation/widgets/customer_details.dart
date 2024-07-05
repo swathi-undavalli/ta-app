@@ -511,7 +511,7 @@ class CustomerListState extends State<CustomerList> {
                 ),
                 child: buildText(
                   bookings[index].isDSD
-                      ?  dsdStatus[bookings[index].boatDetails?.bookingStatus ?? 0]
+                      ? dsdStatus[bookings[index].boatDetails?.bookingStatus ?? 0]
                       : coursesStatus[bookings[index].getStatus(selectedDate) ?? 0],
                   40,
                   Colors.black,
