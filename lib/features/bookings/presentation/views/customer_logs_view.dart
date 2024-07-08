@@ -78,13 +78,13 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
                   child: (startDate == null && endDate == null)
                       ? AppButton.miniFlat(
                           onTap: () {
-                            showDateRangePickerBottomSheet(context);
+                            showDateRangePickerBottomSheet();
                           },
                           text: 'Select',
                         ).center
                       : GestureDetector(
                           onTap: () {
-                            showDateRangePickerBottomSheet(context);
+                            showDateRangePickerBottomSheet();
                           },
                           child: const Text(
                             'Change',
@@ -131,8 +131,8 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
     );
   }
 
-  Future showDateRangePickerBottomSheet(BuildContext context) {
-    return showDateRangePicker(
+  Future showDateRangePickerBottomSheet() async {
+    DateTimeRange? pickedDateRange = await showDateRangePicker(
       context: context,
       builder: (context, child) {
         return Theme(
@@ -159,14 +159,14 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
       lastDate: DateTime(2100),
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       currentDate: DateTime.now(),
-    ).then((pickedDateRange) async {
-      if (pickedDateRange != null) {
-        dateRange = pickedDateRange;
-        startDate = dateRange!.start;
-        endDate = dateRange!.end;
-        setState(() {});
-      }
-    });
+    );
+
+    if (pickedDateRange != null) {
+      dateRange = pickedDateRange;
+      startDate = dateRange!.start;
+      endDate = dateRange!.end;
+      setState(() {});
+    }
   }
 
   Future<void> generateLogs() async {
