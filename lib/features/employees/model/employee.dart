@@ -30,7 +30,6 @@ class Employee {
       offers: false,
       processCertificate: false,
     ),
-    this.shiftTiming,
     this.firstName,
     this.lastName,
     this.nickName,
@@ -45,7 +44,6 @@ class Employee {
   final String? countryCode;
   final String? role;
   final AccessLevels? accessLevels;
-  final DateTime? shiftTiming;
   final String? firstName;
   final String? lastName;
   final String? nickName;
@@ -61,7 +59,6 @@ class Employee {
       countryCode.hashCode ^
       role.hashCode ^
       accessLevels.hashCode ^
-      shiftTiming.hashCode ^
       firstName.hashCode ^
       lastName.hashCode ^
       nickName.hashCode ^
@@ -91,14 +88,6 @@ class Employee {
       countryIsoCode: json['countryIsoCode'],
       role: json['role'],
       accessLevels: AccessLevels.fromMap(json['accessLevels']),
-      shiftTiming: DateTime(
-        2021,
-        1,
-        1,
-        int.parse(json['shiftTiming'].split(':')[0]),
-        int.parse(json['shiftTiming'].split(':')[0]),
-        int.parse(json['shiftTiming'].split(':')[0]),
-      ),
       firstName: json['firstName'],
       lastName: json['lastName'],
       nickName: json['nickName'],
@@ -120,7 +109,6 @@ class Employee {
         'countryIsoCode': countryIsoCode,
         'role': role,
         'accessLevels': accessLevels!.toMap(),
-        'shiftTiming': '${shiftTiming!.hour}:${shiftTiming!.minute}:${shiftTiming!.second}',
         'firstName': firstName,
         'lastName': lastName,
         'nickName': nickName,
@@ -144,7 +132,6 @@ class Employee {
       countryCode: countryCode ?? this.countryCode,
       role: role,
       accessLevels: accessLevels ?? this.accessLevels,
-      shiftTiming: shiftTiming,
       firstName: firstName ?? this.firstName,
       lastName: lastName ?? this.lastName,
       nickName: nickName,

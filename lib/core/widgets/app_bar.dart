@@ -3,10 +3,11 @@ import '../constants/constants.dart';
 import 'back_navigation_icon.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
-  const AppBarWidget({super.key, required this.heading, this.actions});
+  const AppBarWidget({super.key, required this.heading, this.actions, this.color});
 
   final String heading;
   final List<Widget>? actions;
+  final Color? color;
 
   @override
   Size get preferredSize => const Size.fromHeight(70);
@@ -29,7 +30,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       leading: const BackNavigationIcon(),
       actions: actions,
       elevation: 0,
-      backgroundColor: AppColors.background.white,
+      backgroundColor: color ?? Colors.white,
     );
   }
 }

@@ -6,7 +6,6 @@ import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/access_levels.dart';
 import '../../../../core/widgets/app_bar.dart';
-import '../../controllers/all_employees_controller.dart';
 import '../../model/employee.dart';
 import 'add_employee_view.dart';
 import 'employee_details_view.dart';
@@ -23,15 +22,14 @@ class AllEmployeesView extends StatefulWidget {
 }
 
 class _AllEmployeesViewState extends State<AllEmployeesView> {
-  final AllEmployeesLogic logic = AllEmployeesLogic();
   final Query<Map<String, dynamic>> employeesCollection =
       FirebaseFirestore.instance.collection('employees').orderBy('firstName');
   late Stream<QuerySnapshot> _stream; // Declare the stream
-
+  late TextEditingController searchTED;
   @override
   void initState() {
     super.initState();
-    logic.controller.searchTED.text = '';
+    searchTED = TextEditingController();
     _stream = employeesCollection.snapshots(); // Initialize the stream
   }
 
@@ -39,8 +37,8 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (logic.controller.searchTED.text != '') {
-          logic.controller.searchTED.text = '';
+        if (searchTED.text != '') {
+          searchTED.text = '';
           _stream = employeesCollection.snapshots();
           setState(() {});
           return false;
@@ -51,22 +49,22 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
         backgroundColor: AppColors.background.lightBlue,
         floatingActionButton: buildFloatingActionButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        appBar: const AppBarWidget(heading: 'All Employees'),
+        appBar:  AppBarWidget(heading: 'All Employees'),
         body: RefreshIndicator(
           color: AppColors.iconColor.black,
           onRefresh: () async {
-            logic.controller.update();
+            setState(() {});
           },
           child: SafeArea(
             child: Stack(
               children: [
                 Column(
                   children: [
-                    const SizedBox(height: 10),
+                    Spacing.h10,
                     buildSearchBar(),
                     buildAllEmployees(),
                   ],
-                ),
+                ).paddingSymmetric(horizontal: 20),
                 // buildSuggestions(),
               ],
             ),
@@ -97,12 +95,7 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
             children: snapshot.data!.docs.map((DocumentSnapshot document) {
               try {
                 Employee employee = Employee.fromMap(document.data() as Map<String, dynamic>);
-
-                return Column(
-                  children: [
-                    buildEmployeeNames(employee),
-                  ],
-                ).paddingSymmetric(horizontal: 20);
+                return buildEmployeeNames(employee);
               } catch (e) {
                 return const SizedBox();
               }
@@ -117,7 +110,6 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
     if (query.isEmpty) {
       return employeesCollection.snapshots();
     }
-
     return employeesCollection.where('firstName', isGreaterThanOrEqualTo: query.capitalizeFirst).snapshots();
   }
 
@@ -126,7 +118,7 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
       access: AccessRights.createEmployees,
       child: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context, AddEmployeeView.route(false));
+          Navigator.push(context, AddEmployeeView.route(null));
         },
         backgroundColor: AppColors.background.black,
         elevation: 0,
@@ -141,7 +133,7 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
   Widget buildEmployeeNames(Employee e) {
     return GestureDetector(
       onTap: () {
-        logic.controller.searchTED.text = '';
+        searchTED.text = '';
         Navigator.push(context, EmployeeDetailsView.route(e));
       },
       child: SizedBox(
@@ -163,7 +155,7 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
                 style: const TextStyle(fontSize: 12),
               ),
             ),
-            const SizedBox(width: 30),
+            Spacing.w30,
             Text(
               e.name,
               style: TextStyle(color: AppColors.text.black, fontSize: 14),
@@ -182,50 +174,46 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
 
   Widget buildSearchBar() {
     return Container(
-      width: 328,
+      width: Screen.width,
       height: 47,
       decoration: BoxDecoration(
         color: AppColors.background.white,
         borderRadius: BorderRadius.circular(5),
       ),
-      child: Container(
-        margin: const EdgeInsets.only(left: 15, right: 15),
-        alignment: Alignment.centerLeft,
-        child: Row(
-          children: [
-            Icon(Icons.search, color: AppColors.text.darkgrey),
-            Spacing.w15,
-            SizedBox(
-              width: 225,
-              child: TextField(
-                decoration: const InputDecoration(
-                  enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                  focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                  disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-                  hintText: 'Search...',
-                  hintStyle: TextStyle(fontSize: FontSize.textSize, height: 1),
-                ),
-                controller: logic.controller.searchTED,
-                onChanged: (query) {
-                  _stream = _filterStream(query);
-                  setState(() {});
-                },
+      child: Row(
+        children: [
+          Icon(Icons.search, color: AppColors.text.darkgrey),
+          Spacing.w15,
+          Expanded(
+            child: TextField(
+              decoration: const InputDecoration(
+                enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                hintText: 'Search...',
+                hintStyle: TextStyle(fontSize: FontSize.textSize, height: 1),
               ),
+              controller: searchTED,
+              onChanged: (query) {
+                _stream = _filterStream(query);
+                setState(() {});
+              },
             ),
-            if (logic.controller.searchTED.text != '')
-              InkWell(
-                onTap: () {
-                  logic.controller.searchTED.text = '';
-                  setState(() {});
-                },
-                highlightColor: Colors.grey,
-                splashColor: Colors.red,
-                radius: 30,
-                child: Icon(Icons.close, color: AppColors.text.darkgrey).paddingAll(5),
-              ),
-          ],
-        ),
-      ),
+          ),
+          if (searchTED.text != '')
+            InkWell(
+              onTap: () {
+                searchTED.text = '';
+                _stream = _filterStream('');
+                setState(() {});
+              },
+              highlightColor: Colors.grey,
+              splashColor: Colors.red,
+              radius: 30,
+              child: Icon(Icons.close, color: AppColors.text.darkgrey).paddingAll(5),
+            ),
+        ],
+      ).paddingSymmetric(horizontal: 15),
     );
   }
 }

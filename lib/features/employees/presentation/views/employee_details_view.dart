@@ -1,204 +1,166 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
-
 import '../../../../core/constants/constants.dart';
+import '../../../../core/util/alignment_extensions.dart';
+import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/access_levels.dart';
+import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/back_navigation_icon.dart';
 import '../../../logs/models/log_model.dart';
 import '../../../logs/presentation/views/log_view.dart';
-import '../../controllers/add_employee_controller.dart';
 import '../../model/employee.dart';
 import 'add_employee_view.dart';
 
-class EmployeeDetailsView extends StatelessWidget {
+class EmployeeDetailsView extends StatefulWidget {
   final Employee employeeArgument;
-  final AddEmployeeLogic logic = AddEmployeeLogic();
 
-  EmployeeDetailsView({Key? key, required this.employeeArgument}) : super(key: key);
+  const EmployeeDetailsView({Key? key, required this.employeeArgument}) : super(key: key);
 
   static Route route(Employee employeeArgument) => MaterialPageRoute(
         builder: (context) => EmployeeDetailsView(employeeArgument: employeeArgument),
       );
 
   @override
+  State<EmployeeDetailsView> createState() => _EmployeeDetailsViewState();
+}
+
+class _EmployeeDetailsViewState extends State<EmployeeDetailsView> {
+  @override
   Widget build(BuildContext context) {
-    final DateTime date = employeeArgument.shiftTiming!;
-    final DateFormat formatter = DateFormat('HH:mm');
-    final String shiftTiming = formatter.format(date);
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: AppColors.background.lightBlue,
-        elevation: 0,
-        leading: const BackNavigationIcon(),
-      ),
+      appBar: const AppBarWidget(heading: '', color: Colors.transparent),
       backgroundColor: AppColors.background.lightBlue,
       body: SafeArea(
         child: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.all(20.0),
-            child: Column(
-              children: [
-                Center(
-                  child: buildUserProfile(),
+          child: Column(
+            children: [
+              buildUserProfile().center,
+              Spacing.h20,
+              Text(
+                widget.employeeArgument.name,
+                style: TextStyle(
+                  color: AppColors.text.black,
+                  fontWeight: FontWeight.w700,
+                  fontSize: FontSize.textSize,
                 ),
-                const SizedBox(height: 20),
-                Text(
-                  employeeArgument.name,
-                  style: TextStyle(
-                    color: AppColors.text.black,
-                    fontWeight: FontWeight.w700,
-                    fontSize: FontSize.textSize,
+              ),
+              Spacing.h20,
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  buildIcons(
+                    Icons.call_rounded,
+                    () {
+                      makingPhoneCall(
+                        widget.employeeArgument.phoneNumber!,
+                        widget.employeeArgument.countryCode!,
+                      );
+                    },
                   ),
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    buildIcons(
-                      Icons.call_rounded,
+                  EmployeeAccess(
+                    access: AccessRights.editEmployees,
+                    child: buildIcons(Icons.edit, () async {
+                      Navigator.push(context, AddEmployeeView.route(widget.employeeArgument));
+                    }),
+                  ),
+                  EmployeeAccess(
+                    access: AccessRights.editEmployees,
+                    child: buildIcons(
+                      Icons.delete,
                       () {
-                        makingPhoneCall(
-                          employeeArgument.phoneNumber!,
-                          employeeArgument.countryCode!,
+                        Get.defaultDialog(
+                          contentPadding: const EdgeInsets.only(
+                            left: 30,
+                            right: 30,
+                            top: 20,
+                            bottom: 30,
+                          ),
+                          title: '\nAre You Sure ? ',
+                          middleText: 'Account will Be Deleted Permanently.',
+                          backgroundColor: Colors.white,
+                          titleStyle: TextStyle(
+                            color: AppColors.text.black,
+                            fontFamily: AppFonts.nunito,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                          middleTextStyle: TextStyle(
+                            color: AppColors.text.black,
+                            fontFamily: AppFonts.nunito,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
+                          confirm: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              AppButton.miniText(
+                                text: 'Cancel',
+                                onTap: () {
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              AppButton.miniFlat(
+                                text: 'OK',
+                                onTap: () {
+                                  FirebaseFirestore.instance
+                                      .collection('employees')
+                                      .doc(widget.employeeArgument.id)
+                                      .delete();
+                                  LogModel logModel = LogModel(
+                                    type: LogType.deleteEmployee,
+                                    employeeName: widget.employeeArgument.name,
+                                  );
+                                  FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
+                                  Navigator.pop(context);
+                                  Navigator.pop(context);
+                                },
+                              ),
+                            ],
+                          ),
+                          barrierDismissible: false,
+                          radius: 10,
                         );
                       },
                     ),
-                    EmployeeAccess(
-                      access: AccessRights.editEmployees,
-                      child: buildIcons(Icons.edit, () async {
-                        if (await checkFirebase()) {
-                          await Future.delayed(const Duration(milliseconds: 300));
-                          if (context.mounted) {
-                            Navigator.push(context, AddEmployeeView.route(true));
-                          }
-                        }
-                      }),
-                    ),
-                    EmployeeAccess(
-                      access: AccessRights.editEmployees,
-                      child: buildIcons(
-                        Icons.delete,
-                        () {
-                          Get.defaultDialog(
-                            contentPadding: const EdgeInsets.only(
-                              left: 30,
-                              right: 30,
-                              top: 20,
-                              bottom: 30,
-                            ),
-                            title: '\nAre You Sure ? ',
-                            middleText: 'Account will Be Deleted Permanently.',
-                            backgroundColor: Colors.white,
-                            titleStyle: TextStyle(
-                              color: AppColors.text.black,
-                              fontFamily: AppFonts.nunito,
-                              fontSize: 16,
-                              fontWeight: FontWeight.bold,
-                            ),
-                            middleTextStyle: TextStyle(
-                              color: AppColors.text.black,
-                              fontFamily: AppFonts.nunito,
-                              fontSize: 15,
-                              fontWeight: FontWeight.w500,
-                            ),
-                            confirm: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                AppButton.miniText(
-                                  text: 'Cancel',
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                AppButton.miniFlat(
-                                  text: 'OK',
-                                  onTap: () {
-                                    FirebaseFirestore.instance
-                                        .collection('employees')
-                                        .doc(employeeArgument.id)
-                                        .delete();
-                                    LogModel logModel = LogModel(
-                                      type: LogType.deleteEmployee,
-                                      employeeName: employeeArgument.name,
-                                    );
-                                    FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
-                                    Navigator.pop(context);
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                              ],
-                            ),
-                            barrierDismissible: false,
-                            radius: 10,
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                const Divider(),
-                const SizedBox(height: 20),
-                buildTitle('Employee Details'),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      buildEmployeeInfo(
-                        subHeading: 'Name',
-                        text: employeeArgument.name,
-                      ),
-                      buildEmployeeInfo(
-                        subHeading: 'Employee ID',
-                        text: employeeArgument.id,
-                      ),
-                      buildEmployeeInfo(
-                        subHeading: 'Padi No',
-                        text: employeeArgument.agencyId,
-                      ),
-                      buildEmployeeInfo(
-                        subHeading: 'Phone Number',
-                        text: employeeArgument.countryCode! + employeeArgument.phoneNumber!,
-                      ),
-                      buildEmployeeInfo(
-                        subHeading: 'ShiftTiming',
-                        text: shiftTiming,
-                      ),
-                      buildEmployeeInfo(
-                        subHeading: 'Role',
-                        text: employeeArgument.role!,
-                      ),
-                    ],
                   ),
-                ),
-                const SizedBox(height: 20),
-                buildTitle('Login Details'),
-                Padding(
-                  padding: const EdgeInsets.only(left: 15, right: 15, top: 15),
-                  child: Column(
-                    children: [
-                      buildEmployeeInfo(
-                        subHeading: 'Login Time',
-                        text: DateFormat('hh:mm a').format(employeeArgument.shiftTiming!),
-                      ),
-                      buildEmployeeInfo(
-                        subHeading: 'Login Location',
-                        text: 'Pondicherry',
-                      ),
-                      const SizedBox(height: 10),
-                    ],
+                ],
+              ),
+              Spacing.h20,
+              const Divider(),
+              Spacing.h20,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  buildTitle('Employee Details').left,
+                  Spacing.h15,
+                  buildEmployeeInfo(
+                    subHeading: 'Name',
+                    text: widget.employeeArgument.name,
                   ),
-                ),
-              ],
-            ),
-          ),
+                  buildEmployeeInfo(
+                    subHeading: 'Employee ID',
+                    text: widget.employeeArgument.id,
+                  ),
+                  buildEmployeeInfo(
+                    subHeading: 'Padi No',
+                    text: widget.employeeArgument.agencyId,
+                  ),
+                  buildEmployeeInfo(
+                    subHeading: 'Phone Number',
+                    text: '${widget.employeeArgument.countryCode!} ${widget.employeeArgument.phoneNumber!}',
+                  ),
+                  buildEmployeeInfo(
+                    subHeading: 'Role',
+                    text: widget.employeeArgument.role!,
+                  ),
+                ],
+              ).paddingSymmetric(horizontal: 15),
+              Spacing.h20,
+            ],
+          ).paddingAll(20),
         ),
       ),
     );
@@ -207,17 +169,13 @@ class EmployeeDetailsView extends StatelessWidget {
   ///================UI================///
 
   Widget buildTitle(String text) {
-    return Container(
-      padding: const EdgeInsets.only(left: 20, right: 20),
-      alignment: Alignment.centerLeft,
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 16,
-          color: AppColors.text.skyBlue,
-          fontWeight: FontWeight.w700,
-          fontFamily: AppFonts.nunito,
-        ),
+    return Text(
+      text,
+      style: TextStyle(
+        fontSize: 16,
+        color: AppColors.text.skyBlue,
+        fontWeight: FontWeight.w700,
+        fontFamily: AppFonts.nunito,
       ),
     );
   }
@@ -226,41 +184,38 @@ class EmployeeDetailsView extends StatelessWidget {
     required String subHeading,
     required String? text,
   }) {
-    return Padding(
-      padding: const EdgeInsets.all(5.0),
-      child: SizedBox(
-        width: Screen.width,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Expanded(
-              child: SizedBox(
-                width: Screen.width,
-                child: Text(
-                  subHeading,
-                  style: TextStyle(
-                    color: AppColors.text.black,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-            SizedBox(
-              width: 150,
+    return SizedBox(
+      width: Screen.width,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Expanded(
+            child: SizedBox(
+              width: Screen.width,
               child: Text(
-                (text != null && text.isNotEmpty) ? text : '-',
+                subHeading,
                 style: TextStyle(
                   color: AppColors.text.black,
-                  fontSize: 12,
-                  fontWeight: FontWeight.w500,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
             ),
-          ],
-        ),
+          ),
+          SizedBox(
+            width: 150,
+            child: Text(
+              (text != null && text.isNotEmpty) ? text : '-',
+              style: TextStyle(
+                color: AppColors.text.black,
+                fontSize: 12,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
       ),
-    );
+    ).paddingAll(5);
   }
 
   makingPhoneCall(String phoneNumber, String code) async {
@@ -305,47 +260,5 @@ class EmployeeDetailsView extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  checkFirebase() async {
-    var info = await FirebaseFirestore.instance.collection('employees').doc(employeeArgument.id).get();
-    if (info.data() != null) {
-      Employee employee = Employee.fromMap(info.data()!);
-      final DateTime date = employee.shiftTiming!;
-      final DateFormat formatter = DateFormat('HH:mm');
-      final String shiftTiming = formatter.format(date);
-      logic.controller.pickedTime = employee.shiftTiming;
-      logic.controller.employeeIdTED.text = employee.id;
-      logic.controller.firstNameTED.text = employee.firstName ?? '';
-      logic.controller.lastNameTED.text = employee.lastName ?? '';
-      logic.controller.nickNameTED.text = employee.nickName ?? '';
-      logic.controller.shiftTimeTED.text = shiftTiming;
-      logic.controller.phoneNumberTED.text = employee.phoneNumber ?? '';
-      logic.controller.countryCodeTED.text = employee.countryCode ?? '';
-      logic.controller.countryISoCOde = employee.countryIsoCode;
-      logic.controller.genderTED.text = employee.gender ?? '';
-      logic.controller.roleTED.text = employee.role ?? '';
-      logic.controller.agencyIdTED.text = employee.agencyId ?? '';
-      logic.controller.viewBookings = employee.accessLevels?.viewBookings ?? false;
-      logic.controller.createBookings = employee.accessLevels?.createBookings ?? false;
-      logic.controller.editBookings = employee.accessLevels?.editBookings ?? false;
-      logic.controller.viewEmployees = employee.accessLevels?.viewEmployees ?? false;
-      logic.controller.createEmployees = employee.accessLevels?.createEmployees ?? false;
-      logic.controller.editEmployees = employee.accessLevels?.editEmployees ?? false;
-      logic.controller.notifications = employee.accessLevels?.notifications ?? false;
-      logic.controller.boatPlan = employee.accessLevels?.boatPlan ?? false;
-      logic.controller.personalProfileEdit = employee.accessLevels?.personalProfileEdit ?? false;
-      logic.controller.personalAttendanceReport = employee.accessLevels?.personalAttendanceReport ?? false;
-      logic.controller.attendanceReport = employee.accessLevels?.attendanceReport ?? false;
-      logic.controller.weatherReport = employee.accessLevels?.weatherReport ?? false;
-      logic.controller.editActivityPrices = employee.accessLevels?.editActivityPrices ?? false;
-      logic.controller.addActivity = employee.accessLevels?.addActivity ?? false;
-      logic.controller.marketingGallery = employee.accessLevels?.marketingGallery ?? false;
-      logic.controller.offers = employee.accessLevels?.offers ?? false;
-      logic.controller.processCertificate = employee.accessLevels?.processCertificate ?? false;
-
-      return true;
-    }
-    return false;
   }
 }

@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -50,7 +49,6 @@ class _AddNewActivityViewState extends State<AddNewActivityView> {
   @override
   void initState() {
     super.initState();
-    log(isEditMode.toString());
 
     nameTED = TextEditingController(text: widget.activity?.name);
     shortNameTED = TextEditingController(text: widget.activity?.shortName);
@@ -70,7 +68,7 @@ class _AddNewActivityViewState extends State<AddNewActivityView> {
         ],
       ),
       body: PopScope(
-        onPopInvoked: (_) async {
+        onPopInvoked: (_) {
           reset();
         },
         child: SafeArea(

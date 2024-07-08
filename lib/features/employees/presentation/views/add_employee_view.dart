@@ -1,139 +1,226 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/counter_model.dart';
+import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/phone_number/intl_phone_field.dart';
 import '../../../bookings/presentation/widgets/app_text_fields.dart';
-import '../../controllers/add_employee_controller.dart';
+import '../../../logs/models/log_model.dart';
+import '../../../logs/presentation/views/log_view.dart';
+import '../../model/employee.dart';
 
-class AddEmployeeView extends StatelessWidget {
-  final AddEmployeeLogic logic = AddEmployeeLogic();
-  final bool isEdit;
+class AddEmployeeView extends StatefulWidget {
+  final Employee? employeeArgument;
 
-  AddEmployeeView({Key? key, required this.isEdit}) : super(key: key);
+  const AddEmployeeView({Key? key, this.employeeArgument}) : super(key: key);
 
-  static Route route(bool isEdit) => MaterialPageRoute(
-        builder: (context) => AddEmployeeView(isEdit: isEdit),
+  static Route route(Employee? employeeArgument) => MaterialPageRoute(
+        builder: (context) => AddEmployeeView(employeeArgument: employeeArgument),
       );
 
   @override
+  State<AddEmployeeView> createState() => _AddEmployeeViewState();
+}
+
+class _AddEmployeeViewState extends State<AddEmployeeView> {
+  bool get isEditMode => widget.employeeArgument != null;
+
+  late TextEditingController firstNameTED;
+  late TextEditingController nickNameTED;
+  late TextEditingController lastNameTED;
+  late TextEditingController phoneNumberTED;
+  late TextEditingController countryCodeTED;
+  late TextEditingController agencyIdTED;
+  late TextEditingController roleTED;
+  late TextEditingController genderTED;
+  late TextEditingController employeeIdTED;
+  late String? countryIsoCode;
+  late bool? viewBookings;
+  late bool? weatherReport;
+  late bool? createBookings;
+  late bool? editBookings;
+  late bool? personalAttendanceReport;
+  late bool? editActivityPrices;
+  late bool? addActivity;
+  late bool? editEmployees;
+  late bool? personalProfileEdit;
+  late bool? attendanceReport;
+  late bool? createEmployees;
+  late bool? viewEmployees;
+  late bool? notifications;
+  late bool? boatPlan;
+  late bool? marketingGallery;
+  late bool? offers;
+  late bool? processCertificate;
+
+  List<String> gender = ['Male', 'Female'];
+
+  List<String> roles = [
+    'Office Staff',
+    'Admin Team',
+    'Dive Team',
+    'Accounts Team',
+    'Front Desk Team',
+    'Marketing Team',
+    'Captain Team',
+    'Bookings Team',
+    'Social Media',
+    'Freelance Team',
+    'Intern',
+  ];
+
+  bool showLoading = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    firstNameTED = TextEditingController(text: widget.employeeArgument?.firstName);
+    lastNameTED = TextEditingController(text: widget.employeeArgument?.lastName);
+    nickNameTED = TextEditingController(text: widget.employeeArgument?.nickName);
+    phoneNumberTED = TextEditingController(text: widget.employeeArgument?.phoneNumber);
+    countryCodeTED = TextEditingController(text: widget.employeeArgument?.countryCode);
+    agencyIdTED = TextEditingController(text: widget.employeeArgument?.agencyId);
+    roleTED = TextEditingController(text: widget.employeeArgument?.role);
+    genderTED = TextEditingController(text: widget.employeeArgument?.gender);
+    employeeIdTED = TextEditingController(text: widget.employeeArgument?.id);
+    countryIsoCode = widget.employeeArgument?.countryIsoCode ?? 'IN';
+
+    viewBookings = widget.employeeArgument?.accessLevels?.viewBookings ?? false;
+    weatherReport = widget.employeeArgument?.accessLevels?.weatherReport ?? false;
+    createBookings = widget.employeeArgument?.accessLevels?.createBookings ?? false;
+    editBookings = widget.employeeArgument?.accessLevels?.editBookings ?? false;
+    personalAttendanceReport = widget.employeeArgument?.accessLevels?.personalAttendanceReport ?? false;
+    editActivityPrices = widget.employeeArgument?.accessLevels?.editActivityPrices ?? false;
+    addActivity = widget.employeeArgument?.accessLevels?.addActivity ?? false;
+    editEmployees = widget.employeeArgument?.accessLevels?.editEmployees ?? false;
+    personalProfileEdit = widget.employeeArgument?.accessLevels?.personalProfileEdit ?? false;
+    attendanceReport = widget.employeeArgument?.accessLevels?.attendanceReport ?? false;
+    createEmployees = widget.employeeArgument?.accessLevels?.createEmployees ?? false;
+    viewEmployees = widget.employeeArgument?.accessLevels?.viewEmployees ?? false;
+    notifications = widget.employeeArgument?.accessLevels?.notifications ?? false;
+    boatPlan = widget.employeeArgument?.accessLevels?.boatPlan ?? false;
+    marketingGallery = widget.employeeArgument?.accessLevels?.marketingGallery ?? false;
+    offers = widget.employeeArgument?.accessLevels?.offers ?? false;
+    processCertificate = widget.employeeArgument?.accessLevels?.processCertificate ?? false;
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        logic.controller.reset();
-        return true;
+    return PopScope(
+      onPopInvoked: (_) {
+        reset();
       },
       child: Scaffold(
         appBar: const AppBarWidget(heading: 'Employee Details'),
         backgroundColor: AppColors.background.lightBlue,
         body: SafeArea(
           child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                const SizedBox(height: 10),
-                Padding(
-                  padding: const EdgeInsets.only(left: 20, right: 20),
-                  child: Column(
+            child: (showLoading)
+                ? SizedBox(
+                    height: Screen.height,
+                    child: const CircularProgressIndicator(
+                      strokeWidth: 3,
+                      backgroundColor: Colors.grey,
+                      color: Colors.black,
+                    ).center,
+                  )
+                : Column(
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       Spacing.h10,
-                      Text(
-                        'Last Employee ID : ${counterModel!.employee.toString()}',
-                        style: const TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      buildEmployeeID(),
-                      Row(
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Expanded(
-                            flex: 1,
-                            child: buildFirstName(),
-                          ),
-                          Expanded(
-                            flex: 1,
-                            child: buildLastName(),
-                          ),
-                        ],
-                      ),
-                      buildNickName(),
-                      buildUniqueAgencyId(),
-                      buildShiftTimePicker(context),
-                      IntlPhoneField(
-                        autoValidate: true,
-                        focusNode: logic.controller.phoneNumberNode,
-                        initialCountryCode: logic.controller.countryISoCOde,
-                        showCountryFlag: false,
-                        controller: logic.controller.phoneNumberTED,
-                        inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-                        decoration: const InputDecoration(
-                          labelText: 'Phone Number',
-                          labelStyle: TextStyle(
-                            fontSize: FontSize.small,
-                            fontFamily: AppFonts.nunito,
-                          ),
-                        ),
-                        style: const TextStyle(
-                          fontFamily: AppFonts.nunito,
-                          fontWeight: FontWeight.normal,
-                          fontSize: 14,
-                        ),
-                        searchText: 'Search',
-                        onSubmitted: (_) {
-                          logic.controller.roleNode.requestFocus();
-                        },
-                        onChanged: (phone) {
-                          logic.controller.countryCodeTED.text = phone.countryCode;
-                          logic.controller.countryISoCOde = phone.countryISOCode;
-                        },
-                      ),
-                      buildSubtitle('Role *'),
-                      buildRolesList(),
-                      buildSubtitle('Gender *'),
-                      buildGender(),
-                      Padding(
-                        padding: const EdgeInsets.only(
-                          left: 10,
-                          top: 30,
-                          bottom: 20,
-                        ),
-                        child: SizedBox(
-                          width: Screen.width,
-                          child: const Text(
-                            'Access Levels',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontFamily: AppFonts.nunito,
+                          Spacing.h10,
+                          Text(
+                            'Last Employee ID : ${counterModel!.employee.toString()}',
+                            style: const TextStyle(
                               fontSize: 16,
-                              fontWeight: FontWeight.normal,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                        ),
+                          buildEmployeeID(),
+                          Row(
+                            children: [
+                              Expanded(
+                                child: buildFirstName(),
+                              ),
+                              Spacing.w10,
+                              Expanded(
+                                child: buildLastName(),
+                              ),
+                            ],
+                          ),
+                          buildNickName(),
+                          buildUniqueAgencyId(),
+                          IntlPhoneField(
+                            autoValidate: true,
+                            initialCountryCode: countryIsoCode,
+                            showCountryFlag: false,
+                            controller: phoneNumberTED,
+                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            decoration: const InputDecoration(
+                              labelText: 'Phone Number',
+                              labelStyle: TextStyle(
+                                fontSize: FontSize.small,
+                                fontFamily: AppFonts.nunito,
+                              ),
+                            ),
+                            style: const TextStyle(
+                              fontFamily: AppFonts.nunito,
+                              fontWeight: FontWeight.normal,
+                              fontSize: 14,
+                            ),
+                            searchText: 'Search',
+                            onSubmitted: (_) {},
+                            onChanged: (phone) {
+                              countryCodeTED.text = phone.countryCode;
+                              countryIsoCode = phone.countryISOCode;
+                            },
+                          ),
+                          buildSubtitle('Role *'),
+                          buildRolesList(),
+                          Spacing.h10,
+                          buildSubtitle('Gender *'),
+                          buildGender(),
+                          Spacing.h30,
+                          SizedBox(
+                            width: Screen.width,
+                            child: const Text(
+                              'Access Levels',
+                              style: TextStyle(
+                                color: Colors.black,
+                                fontFamily: AppFonts.nunito,
+                                fontSize: 16,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                          Spacing.h20,
+                          buildAccessLevels(),
+                        ],
+                      ).paddingSymmetric(horizontal: 30),
+                      Spacing.h30,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          buildCancelButton(),
+                          buildSubmitButton(),
+                        ],
                       ),
-                      buildAccessLevels(),
+                      Spacing.h30,
                     ],
                   ),
-                ),
-                const SizedBox(height: 30),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    buildCancelButton(context),
-                    buildSubmitButton(context),
-                  ],
-                ),
-                const SizedBox(height: 30),
-              ],
-            ),
           ),
         ),
       ),
@@ -142,133 +229,157 @@ class AddEmployeeView extends StatelessWidget {
 
   ///===============UI==============///
 
+  reset() {
+    firstNameTED.text = '';
+    lastNameTED.text = '';
+    nickNameTED.text = '';
+    phoneNumberTED.text = '';
+    countryCodeTED.text = '';
+    roleTED.text = '';
+    genderTED.text = '';
+    agencyIdTED.text = '';
+    viewBookings = false;
+    createBookings = false;
+    editBookings = false;
+    viewEmployees = false;
+    createEmployees = false;
+    editEmployees = false;
+    personalProfileEdit = false;
+    personalAttendanceReport = false;
+    attendanceReport = false;
+    weatherReport = false;
+    editActivityPrices = false;
+    addActivity = false;
+    notifications = false;
+    marketingGallery = false;
+    offers = false;
+    boatPlan = false;
+    processCertificate = false;
+  }
+
   Widget buildAccessLevels() {
-    return GetBuilder<AddAnEmployeeController>(
-      builder: (controller) {
-        return Column(
-          children: [
-            buildSwitch(
-              text: 'View Bookings',
-              switchValue: controller.viewBookings!,
-              onChanged: (value) {
-                controller.viewBookings = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Create Bookings',
-              switchValue: controller.createBookings!,
-              onChanged: (value) {
-                controller.createBookings = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Edit Bookings',
-              switchValue: controller.editBookings!,
-              onChanged: (value) {
-                controller.editBookings = value;
-              },
-            ),
-            buildSwitch(
-              text: 'View Employees',
-              switchValue: controller.viewEmployees!,
-              onChanged: (value) {
-                controller.viewEmployees = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Create Employees',
-              switchValue: controller.createEmployees!,
-              onChanged: (value) {
-                controller.createEmployees = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Edit Employees',
-              switchValue: controller.editEmployees!,
-              onChanged: (value) {
-                controller.editEmployees = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Personal Profile Edit',
-              switchValue: controller.personalProfileEdit!,
-              onChanged: (value) {
-                controller.personalProfileEdit = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Personal Attendance Report',
-              switchValue: controller.personalAttendanceReport!,
-              onChanged: (value) {
-                controller.personalAttendanceReport = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Attendance Report',
-              switchValue: controller.attendanceReport!,
-              onChanged: (value) {
-                controller.attendanceReport = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Weather Report',
-              switchValue: controller.weatherReport!,
-              onChanged: (value) {
-                controller.weatherReport = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Edit Activity Prices',
-              switchValue: controller.editActivityPrices!,
-              onChanged: (value) {
-                controller.editActivityPrices = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Add Activity',
-              switchValue: controller.addActivity!,
-              onChanged: (value) {
-                controller.addActivity = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Boat Plan',
-              switchValue: controller.boatPlan!,
-              onChanged: (value) {
-                controller.boatPlan = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Marketing Gallery',
-              switchValue: controller.marketingGallery!,
-              onChanged: (value) {
-                controller.marketingGallery = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Offers',
-              switchValue: controller.offers!,
-              onChanged: (value) {
-                controller.offers = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Process Certificate',
-              switchValue: controller.processCertificate!,
-              onChanged: (value) {
-                controller.processCertificate = value;
-              },
-            ),
-            buildSwitch(
-              text: 'Subscribe Notifications',
-              switchValue: controller.notifications!,
-              onChanged: (value) {
-                controller.notifications = value;
-              },
-            ),
-          ],
-        );
-      },
+    return Column(
+      children: [
+        buildSwitch(
+          text: 'View Bookings',
+          switchValue: viewBookings!,
+          onChanged: (value) {
+            viewBookings = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Create Bookings',
+          switchValue: createBookings!,
+          onChanged: (value) {
+            createBookings = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Edit Bookings',
+          switchValue: editBookings!,
+          onChanged: (value) {
+            editBookings = value;
+          },
+        ),
+        buildSwitch(
+          text: 'View Employees',
+          switchValue: viewEmployees!,
+          onChanged: (value) {
+            viewEmployees = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Create Employees',
+          switchValue: createEmployees!,
+          onChanged: (value) {
+            createEmployees = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Edit Employees',
+          switchValue: editEmployees!,
+          onChanged: (value) {
+            editEmployees = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Personal Profile Edit',
+          switchValue: personalProfileEdit!,
+          onChanged: (value) {
+            personalProfileEdit = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Personal Attendance Report',
+          switchValue: personalAttendanceReport!,
+          onChanged: (value) {
+            personalAttendanceReport = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Attendance Report',
+          switchValue: attendanceReport!,
+          onChanged: (value) {
+            attendanceReport = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Weather Report',
+          switchValue: weatherReport!,
+          onChanged: (value) {
+            weatherReport = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Edit Activity Prices',
+          switchValue: editActivityPrices!,
+          onChanged: (value) {
+            editActivityPrices = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Add Activity',
+          switchValue: addActivity!,
+          onChanged: (value) {
+            addActivity = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Boat Plan',
+          switchValue: boatPlan!,
+          onChanged: (value) {
+            boatPlan = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Marketing Gallery',
+          switchValue: marketingGallery!,
+          onChanged: (value) {
+            marketingGallery = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Offers',
+          switchValue: offers!,
+          onChanged: (value) {
+            offers = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Process Certificate',
+          switchValue: processCertificate!,
+          onChanged: (value) {
+            processCertificate = value;
+          },
+        ),
+        buildSwitch(
+          text: 'Subscribe Notifications',
+          switchValue: notifications!,
+          onChanged: (value) {
+            notifications = value;
+          },
+        ),
+      ],
     );
   }
 
@@ -277,35 +388,31 @@ class AddEmployeeView extends StatelessWidget {
     Function? onChanged,
     required bool switchValue,
   }) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
-      child: Row(
-        children: [
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: FontSize.small,
-                color: AppColors.text.darkgrey,
-              ),
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontSize: FontSize.small,
+              color: AppColors.text.darkgrey,
             ),
           ),
-          Switch(
-            value: switchValue,
-            onChanged: onChanged as void Function(bool)?,
-            activeColor: AppColors.text.black,
-            inactiveThumbColor: AppColors.text.grey,
-          ),
-        ],
-      ),
+        ),
+        Switch(
+          value: switchValue,
+          onChanged: onChanged as void Function(bool)?,
+          activeColor: AppColors.text.black,
+          inactiveThumbColor: AppColors.text.grey,
+        ),
+      ],
     );
   }
 
   Widget buildPhoneNumber() {
     return IntlPhoneField(
       autoValidate: true,
-      focusNode: logic.controller.phoneNumberNode,
-      initialCountryCode: logic.controller.countryISoCOde,
+      initialCountryCode: countryIsoCode,
       showCountryFlag: false,
       inputFormatters: [FilteringTextInputFormatter.digitsOnly],
       decoration: const InputDecoration(
@@ -321,64 +428,27 @@ class AddEmployeeView extends StatelessWidget {
         fontSize: 14,
       ),
       searchText: 'Search',
-      onSubmitted: (_) {
-        logic.controller.roleNode.requestFocus();
-      },
+      onSubmitted: (_) {},
       onChanged: (phone) {
-        logic.controller.phoneNumberTED.text = phone.number!;
-        logic.controller.countryCodeTED.text = phone.countryCode;
-        logic.controller.countryISoCOde = phone.countryISOCode;
-        //print(phone.number);
-        //print(phone.countryISOCode);
-        //print(phone.countryCode);
+        phoneNumberTED.text = phone.number!;
+        countryCodeTED.text = phone.countryCode;
+        countryIsoCode = phone.countryISOCode;
       },
-    );
-  }
-
-  Widget buildShiftTimePicker(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        logic.timePicker(context);
-      },
-      child: AbsorbPointer(
-        child: Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: AppTextField(
-            width: 320,
-            hintText: 'Shift Time',
-            controller: logic.controller.shiftTimeTED,
-            focusNode: logic.controller.shiftTimeNode,
-            nextFocusNode: logic.controller.genderNode,
-            required: true,
-            errorValidator: () {
-              return null;
-            },
-            validator: (_) {
-              return null;
-            },
-          ),
-        ),
-      ),
     );
   }
 
   Widget buildFirstName() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
-      child: AppTextField(
-        width: Screen.width / 3,
-        hintText: 'First Name',
-        controller: logic.controller.firstNameTED,
-        focusNode: logic.controller.firstNameNode,
-        nextFocusNode: logic.controller.lastNameNode,
-        required: true,
-        errorValidator: () {
-          return null;
-        },
-        validator: (firstName) {
-          return null;
-        },
-      ),
+    return AppTextField(
+      width: Screen.width,
+      hintText: 'First Name',
+      controller: firstNameTED,
+      required: true,
+      errorValidator: () {
+        return null;
+      },
+      validator: (firstName) {
+        return null;
+      },
     );
   }
 
@@ -386,147 +456,114 @@ class AddEmployeeView extends StatelessWidget {
     return AppTextField(
       width: Screen.width,
       hintText: 'Nick Name',
-      controller: logic.controller.nickNameTED,
-      focusNode: logic.controller.nickNameNode,
+      controller: nickNameTED,
       errorValidator: () {
         return null;
       },
       validator: (firstName) {
         return null;
       },
-    ).paddingSymmetric(horizontal: 10);
+    );
   }
 
   Widget buildUniqueAgencyId() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
-      child: AppTextField(
-        width: Screen.width,
-        hintText: 'Padi No',
-        controller: logic.controller.agencyIdTED,
-        focusNode: logic.controller.agencyIdNode,
-        required: false,
-        errorValidator: () {
-          return null;
-        },
-        validator: (firstName) {
-          return null;
-        },
-      ),
+    return AppTextField(
+      width: Screen.width,
+      hintText: 'Padi No',
+      controller: agencyIdTED,
+      required: false,
+      errorValidator: () {
+        return null;
+      },
+      validator: (firstName) {
+        return null;
+      },
     );
   }
 
   Widget buildLastName() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
-      child: AppTextField(
-        width: Screen.width / 3,
-        hintText: 'Last Name',
-        controller: logic.controller.lastNameTED,
-        focusNode: logic.controller.lastNameNode,
-        required: false,
-        errorValidator: () {
-          return null;
-        },
-        validator: (firstName) {
-          return null;
-        },
-      ),
+    return AppTextField(
+      width: Screen.width,
+      hintText: 'Last Name',
+      controller: lastNameTED,
+      required: false,
+      errorValidator: () {
+        return null;
+      },
+      validator: (firstName) {
+        return null;
+      },
     );
   }
 
   Widget buildEmployeeID() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10),
-      child: AppTextField(
-        width: 320,
-        hintText: 'EmployeeID',
-        controller: logic.controller.employeeIdTED,
-        focusNode: logic.controller.employeeIdNode,
-        nextFocusNode: logic.controller.firstNameNode,
-        keyboardType: TextInputType.number,
-        required: true,
-        errorValidator: () {
-          return null;
-        },
-        validator: (firstName) {
-          return null;
-        },
-      ),
+    return AppTextField(
+      width: 320,
+      hintText: 'EmployeeID',
+      controller: employeeIdTED,
+      keyboardType: TextInputType.number,
+      required: true,
+      errorValidator: () {
+        return null;
+      },
+      validator: (firstName) {
+        return null;
+      },
     );
   }
 
   Widget buildSubtitle(String name) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, top: 30),
-      child: SizedBox(
-        width: Screen.width,
-        child: Text(
-          name,
-          style: const TextStyle(
-            color: Colors.black54,
-            fontFamily: AppFonts.nunito,
-            fontSize: 12,
-            fontWeight: FontWeight.normal,
-          ),
+    return SizedBox(
+      width: Screen.width,
+      child: Text(
+        name,
+        style: const TextStyle(
+          color: Colors.black54,
+          fontFamily: AppFonts.nunito,
+          fontSize: 12,
+          fontWeight: FontWeight.normal,
         ),
       ),
     );
   }
 
   Widget buildRolesList() {
-    return GetBuilder<AddAnEmployeeController>(
-      builder: (controller) {
-        return Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: DropdownButton(
-            focusNode: controller.roleNode,
-            underline: Container(height: 1, color: Colors.grey),
-            isExpanded: true,
-            value: controller.roleTED.text.isNotEmpty ? controller.roleTED.text : null,
-            onChanged: (dynamic newRole) {
-              controller.roleTED.text = newRole;
-              controller.update();
-            },
-            items: controller.roles.map((role) {
-              return DropdownMenuItem(
-                value: role,
-                child: Text(role),
-              );
-            }).toList(),
-          ),
-        );
+    return DropdownButton(
+      underline: Container(height: 1, color: Colors.grey),
+      isExpanded: true,
+      value: roleTED.text.isNotEmpty ? roleTED.text : null,
+      onChanged: (dynamic newRole) {
+        roleTED.text = newRole;
+        setState(() {});
       },
+      items: roles.map((role) {
+        return DropdownMenuItem(
+          value: role,
+          child: Text(role),
+        );
+      }).toList(),
     );
   }
 
   Widget buildGender() {
-    return GetBuilder<AddAnEmployeeController>(
-      builder: (controller) {
-        return Padding(
-          padding: const EdgeInsets.only(left: 10, right: 10),
-          child: DropdownButton(
-            focusNode: controller.genderNode,
-            underline: Container(height: 1, color: Colors.grey),
-            isExpanded: true,
-            value: controller.genderTED.text.isNotEmpty ? controller.genderTED.text : null,
-            onChanged: (dynamic newGender) {
-              controller.genderTED.text = newGender;
-              controller.update();
-            },
-            items: controller.gender.map((gender) {
-              return DropdownMenuItem(
-                value: gender,
-                child: Text(gender),
-              );
-            }).toList(),
-          ),
-        );
+    return DropdownButton(
+      underline: Container(height: 1, color: Colors.grey),
+      isExpanded: true,
+      value: genderTED.text.isNotEmpty ? genderTED.text : null,
+      onChanged: (dynamic newGender) {
+        genderTED.text = newGender;
+        setState(() {});
       },
+      items: gender.map((gender) {
+        return DropdownMenuItem(
+          value: gender,
+          child: Text(gender),
+        );
+      }).toList(),
     );
   }
 
-  Widget buildCancelButton(BuildContext context) {
+  Widget buildCancelButton() {
     return Center(
       child: AppButton.flat(
         text: 'Cancel',
@@ -534,26 +571,99 @@ class AddEmployeeView extends StatelessWidget {
         color: AppColors.background.white,
         onTap: () {
           Navigator.pop(context);
-          logic.controller.reset();
+          reset();
         },
       ),
     );
   }
 
-  Widget buildSubmitButton(BuildContext context) {
+  Widget buildSubmitButton() {
     return Center(
       child: AppButton.flat(
-        text: 'Submit',
+        text: (isEditMode) ? 'Update' : 'Submit',
         textColor: AppColors.text.white,
         color: AppColors.background.black,
         onTap: () {
-          if (isEdit) {
-            logic.updateEmployee(context);
-          } else {
-            logic.createEmployee(context);
-          }
+          onSubmitPressed();
         },
       ),
     );
+  }
+
+  onSubmitPressed() async {
+    if (firstNameTED.text.trim().isNotEmpty &&
+        employeeIdTED.text.trim().isNotEmpty &&
+        phoneNumberTED.text.trim().isNotEmpty &&
+        countryCodeTED.text.trim().isNotEmpty &&
+        roleTED.text.trim().isNotEmpty) {
+      setState(() {
+        showLoading = true;
+      });
+
+      String employeeId;
+      if (isEditMode) {
+        employeeId = employeeIdTED.text;
+      } else {
+        var data = await FirebaseFirestore.instance.collection('counter').doc('count').get();
+        CounterModel counterModel = CounterModel.fromMap(data.data() ?? {});
+        employeeId = (counterModel.employee! + 1).toString();
+        if (int.parse(employeeIdTED.text) < 900) {
+          counterModel = counterModel.copyWith(employee: int.tryParse(employeeId) ?? 0);
+          await FirebaseFirestore.instance.collection('counter').doc('count').set(counterModel.toMap());
+        }
+      }
+
+      Employee employee = Employee(
+        firstName: firstNameTED.text.trim().capitalizeFirst,
+        lastName: lastNameTED.text.trim().capitalizeFirst,
+        nickName: nickNameTED.text.trim().capitalizeFirst,
+        id: employeeId,
+        phoneNumber: phoneNumberTED.text,
+        countryCode: countryCodeTED.text,
+        role: roleTED.text,
+        gender: genderTED.text,
+        countryIsoCode: countryIsoCode,
+        agencyId: agencyIdTED.text,
+        accessLevels: AccessLevels(
+          viewBookings: viewBookings,
+          createBookings: createBookings,
+          editBookings: editBookings,
+          viewEmployees: viewEmployees,
+          createEmployees: createEmployees,
+          editEmployees: editEmployees,
+          personalProfileEdit: personalProfileEdit,
+          personalAttendanceReport: personalAttendanceReport,
+          attendanceReport: attendanceReport,
+          weatherReport: weatherReport,
+          editActivityPrices: editActivityPrices,
+          addActivity: addActivity,
+          notifications: notifications,
+          boatPlan: boatPlan,
+          marketingGallery: marketingGallery,
+          offers: offers,
+          processCertificate: processCertificate,
+        ),
+      );
+      await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
+
+      LogModel logModel = LogModel(type: LogType.addEmployee, employeeName: employee.name);
+      await FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
+
+      Fluttertoast.showToast(msg: (isEditMode) ? 'Updated' : 'Saved');
+
+      setState(() {
+        showLoading = false;
+      });
+
+      disposeKeyboard();
+      if (mounted) {
+        Navigator.pop(context);
+        if (isEditMode) Navigator.pop(context);
+      }
+
+      reset();
+    } else {
+      Fluttertoast.showToast(msg: 'Invalid Input');
+    }
   }
 }

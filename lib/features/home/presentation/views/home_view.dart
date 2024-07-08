@@ -63,8 +63,10 @@ class _HomeViewState extends State<HomeView> {
                             onTap: () {
                               Navigator.push(context, AllEmployeesView.route());
                             },
-                          ).paddingOnly(bottom: 20),
-                        buildCheckLists().paddingOnly(bottom: 10),
+                          ),
+                        Spacing.h20,
+                        buildCheckLists(),
+                        Spacing.h20,
                         if (currentEmployee?.role == 'Intern')
                           Text(
                             'My Dives',
@@ -119,7 +121,6 @@ class _HomeViewState extends State<HomeView> {
 
   Widget buildMenuAndLogOut() {
     return Container(
-      margin: const EdgeInsets.only(top: 10),
       width: Screen.width,
       alignment: Alignment.centerLeft,
       child: Row(
@@ -139,7 +140,7 @@ class _HomeViewState extends State<HomeView> {
             icon: const Icon(Icons.logout),
           ),
         ],
-      ),
+      ).paddingOnly(top: 20),
     );
   }
 
@@ -398,16 +399,5 @@ class _HomeViewState extends State<HomeView> {
         ),
       ],
     ).width(Screen.width - 80);
-  }
-
-  getFirstName(String d) {
-    d = d.trim();
-    return d.split(' ').first.trim();
-  }
-
-  getLastName(String d) {
-    d = d.trim();
-
-    return d.replaceAll(getFirstName(d), '').trim();
   }
 }
