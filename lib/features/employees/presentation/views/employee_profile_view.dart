@@ -48,14 +48,26 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
     countryCodeTED = TextEditingController();
     firstNameTED = TextEditingController();
     lastNameTED = TextEditingController();
+    startDate = null;
+    endDate == null;
 
-    employee = currentEmployee!;
+    getEmployee();
+  }
 
+  getEmployee() async {
+    showLoading = true;
+    setState(() {});
+
+    var data = await FirebaseFirestore.instance.collection('employees').doc(currentEmployee?.id).get();
+
+    employee = Employee.fromMap(data.data() ?? {});
     isoCode = employee.countryIsoCode ?? 'IN';
     if (employee.leaves?.length == 2) {
       startDate = employee.leaves?.first.toDate();
       endDate = employee.leaves?.last.toDate();
     }
+    showLoading = false;
+    setState(() {});
   }
 
   @override
@@ -81,42 +93,43 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
                     height: Screen.height,
                     color: Colors.grey.shade300,
                     child: const CircularProgressIndicator().center,
-                  ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    buildUserProfile(),
-                    Spacing.h20,
-                    const Divider(),
-                    Spacing.h20,
-                    Text(
-                      (isEditMode) ? 'Edit Details' : 'Employee Details',
-                      style: TextStyle(
-                        fontSize: 16,
-                        color: AppColors.text.skyBlue,
-                        fontWeight: FontWeight.w700,
-                        fontFamily: AppFonts.nunito,
-                      ),
-                    ).left,
-                    Spacing.h20,
-                    if (isEditMode) ...[
-                      buildNameTED(),
-                      buildPhoneNumber(),
+                  )
+                else
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      buildUserProfile(),
                       Spacing.h20,
-                      buildButtons(),
+                      const Divider(),
                       Spacing.h20,
-                    ] else ...[
-                      buildEmployeeInfo(subHeading: 'Name', text: employee.name),
-                      buildEmployeeInfo(
-                        subHeading: 'Phone Number',
-                        text: '${employee.countryCode!} ${employee.phoneNumber!}',
-                      ),
-                      buildEmployeeInfo(subHeading: 'Role', text: employee.role),
+                      Text(
+                        (isEditMode) ? 'Edit Details' : 'Employee Details',
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: AppColors.text.skyBlue,
+                          fontWeight: FontWeight.w700,
+                          fontFamily: AppFonts.nunito,
+                        ),
+                      ).left,
                       Spacing.h20,
-                      buildApplyLeaves(),
+                      if (isEditMode) ...[
+                        buildNameTED(),
+                        buildPhoneNumber(),
+                        Spacing.h20,
+                        buildButtons(),
+                        Spacing.h20,
+                      ] else ...[
+                        buildEmployeeInfo(subHeading: 'Name', text: employee.name),
+                        buildEmployeeInfo(
+                          subHeading: 'Phone Number',
+                          text: '${employee.countryCode!} ${employee.phoneNumber!}',
+                        ),
+                        buildEmployeeInfo(subHeading: 'Role', text: employee.role),
+                        Spacing.h20,
+                        buildApplyLeaves(),
+                      ],
                     ],
-                  ],
-                ).paddingAll(20),
+                  ).paddingAll(20),
               ],
             ),
           ),

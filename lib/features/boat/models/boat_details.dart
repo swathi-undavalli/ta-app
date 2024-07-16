@@ -8,15 +8,12 @@ class BoatDetails {
   final List<Instructor>? instructors;
   final List<Instructor>? diveBuddies;
   Map<String, dynamic>? boat;
-
-  // Map<String, dynamic>? instructorTanks;
   Map<String, dynamic>? status;
 
   BoatDetails({
     this.bookingStatus,
     this.status,
     this.boat,
-    // this.instructorTanks,
     this.employeeNotes,
     this.instructors,
     this.diveBuddies,
@@ -24,7 +21,6 @@ class BoatDetails {
 
   BoatDetails copyWith({
     Map<String, dynamic>? boatId,
-    // Map<String, dynamic>? instructorTank,
     Map<String, dynamic>? status,
     String? employeeNotes,
     int? bookingStatus,
@@ -34,7 +30,6 @@ class BoatDetails {
       BoatDetails(
         boat: boatId ?? boat,
         status: status ?? this.status,
-        // instructorTanks: instructorTank ?? instructorTanks,
         employeeNotes: employeeNotes ?? this.employeeNotes,
         bookingStatus: bookingStatus ?? this.bookingStatus,
         instructors: instructors ?? this.instructors,
@@ -86,7 +81,6 @@ class BoatDetails {
 
     return BoatDetails(
       boat: json['boat'] ?? {},
-      // instructorTanks: json['instructorTanks'] ?? {},
       status: json['status'] ?? {},
       employeeNotes: json['employeeNotes'],
       bookingStatus: json['bookingStatus'],
@@ -102,7 +96,6 @@ class BoatDetails {
 
   Map<String, dynamic> toMap() => {
         'boat': boat,
-        // 'instructorTanks': instructorTanks,
         'bookingStatus': bookingStatus,
         'employeeNotes': employeeNotes,
         'status': status,
