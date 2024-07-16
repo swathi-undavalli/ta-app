@@ -156,6 +156,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
                 initialSelectedInstructors: employees,
                 instructorLimit: employeeLimit,
                 employeeType: employeeType,
+                selectedDate: null,
               )) ??
               [];
           log(employees[0].phone.toString());
@@ -199,6 +200,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
                       initialSelectedInstructors: employees,
                       instructorLimit: employeeLimit,
                       employeeType: employeeType,
+                      selectedDate: null,
                     )) ??
                     [];
                 setState(() {});

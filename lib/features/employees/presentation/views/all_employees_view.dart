@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/access_levels.dart';
@@ -49,7 +50,7 @@ class _AllEmployeesViewState extends State<AllEmployeesView> {
         backgroundColor: AppColors.background.lightBlue,
         floatingActionButton: buildFloatingActionButton(),
         floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
-        appBar:  AppBarWidget(heading: 'All Employees'),
+        appBar: const AppBarWidget(heading: 'All Employees'),
         body: RefreshIndicator(
           color: AppColors.iconColor.black,
           onRefresh: () async {

@@ -1,9 +1,11 @@
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/models/item_model.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -17,17 +19,26 @@ class CertificationBottomSheet extends StatefulWidget {
   const CertificationBottomSheet({
     Key? key,
     required this.itemModel,
+    required this.selectedDate,
   }) : super(key: key);
 
   final ItemModel itemModel;
+  final DateTime? selectedDate;
 
-  static void show(BuildContext context, {required ItemModel itemModel}) async {
+  static void show(
+    BuildContext context, {
+    required ItemModel itemModel,
+    required DateTime? selectedDate,
+  }) async {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       isDismissible: false,
       builder: (BuildContext context) {
-        return CertificationBottomSheet(itemModel: itemModel);
+        return CertificationBottomSheet(
+          itemModel: itemModel,
+          selectedDate: selectedDate,
+        );
       },
     );
   }
@@ -124,6 +135,7 @@ class _CertificationBottomSheetState extends State<CertificationBottomSheet> {
                         setState(() {});
                       },
                       isCertificationDetailsView: false,
+                      selectedDate: widget.selectedDate,
                     ),
                   Spacing.h20,
                   PickPhotosWidget(
@@ -174,8 +186,6 @@ class _CertificationBottomSheetState extends State<CertificationBottomSheet> {
         await storageReference.putFile(selectedImage);
 
         downloadURL = await storageReference.getDownloadURL();
-
-        print('Image  uploaded. Download URL: $downloadURL');
       } catch (error) {
         print('Error uploading image : $error');
       }

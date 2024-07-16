@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
@@ -17,6 +18,7 @@ class EmpSelectorBottomSheet extends StatefulWidget {
   final int instructorLimit;
   final EmployeeType employeeType;
   final bool isTanksRequired;
+  final DateTime? selectedDate;
 
   const EmpSelectorBottomSheet({
     Key? key,
@@ -24,6 +26,7 @@ class EmpSelectorBottomSheet extends StatefulWidget {
     required this.instructorLimit,
     required this.employeeType,
     required this.isTanksRequired,
+    required this.selectedDate,
   }) : super(key: key);
 
   static Future<List<Instructor>?> getSelectedInstructors(
@@ -31,6 +34,7 @@ class EmpSelectorBottomSheet extends StatefulWidget {
     required List<Instructor> initialSelectedInstructors,
     required int instructorLimit,
     required EmployeeType employeeType,
+    required DateTime? selectedDate,
     bool tanksRequired = false,
   }) async {
     var data = await showModalBottomSheet(
@@ -43,6 +47,7 @@ class EmpSelectorBottomSheet extends StatefulWidget {
           instructorLimit: instructorLimit,
           employeeType: employeeType,
           isTanksRequired: tanksRequired,
+          selectedDate: selectedDate,
         );
       },
     );
@@ -255,6 +260,9 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
 
               Widget employeeTile = InkWell(
                 onTap: () {
+                  if (widget.selectedDate != null) {
+                    instructor.date = DateFormat('dd-MM-yyyy').format(widget.selectedDate!);
+                  }
                   if (selectedInstructors.contains(instructor)) {
                     selectedInstructors.remove(instructor);
                   } else {

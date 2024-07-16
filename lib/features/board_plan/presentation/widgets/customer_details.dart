@@ -31,10 +31,12 @@ List<String> dsdStatus = [
 ];
 
 class CustomerList extends StatefulWidget {
-  const CustomerList({Key? key, required this.bookings, required this.boat}) : super(key: key);
+  const CustomerList({Key? key, required this.bookings, required this.boat, required this.selectedDate})
+      : super(key: key);
 
   final List<Booking> bookings;
   final Boat boat;
+  final DateTime selectedDate;
 
   @override
   State<CustomerList> createState() => CustomerListState();
@@ -67,7 +69,8 @@ class CustomerListState extends State<CustomerList> {
     Map<String?, List<Booking>> groupedStudents = {};
     groupedStudents['others'] = [];
     for (var booking in getBookings) {
-      String? id = booking.instructor?.id;
+      String? id = booking.getInstructor(widget.selectedDate)?.id;
+
       if (id == null) {
         groupedStudents['others']!.add(booking);
         continue;
@@ -101,10 +104,7 @@ class CustomerListState extends State<CustomerList> {
 
           return buildCustomersList(bookings, items.indexOf(id) + 1);
         }),
-        const Divider(
-          color: Colors.black,
-          height: 1,
-        ),
+        const Divider(color: Colors.black, height: 1),
         if (widget.boat.dsdInstructors != null)
           ...(widget.boat.dsdInstructors ?? []).map(
             (e) => Row(
@@ -316,14 +316,14 @@ class CustomerListState extends State<CustomerList> {
     int nitroxTotal = 0;
 
     for (var booking in bookings) {
-      int air = booking.getInstructorTanks(selectedDate)?.air ?? 0;
-      int nitrox = booking.getInstructorTanks(selectedDate)?.nitrox ?? 0;
+      int air = booking.getInstructor(selectedDate)?.air ?? 0;
+      int nitrox = booking.getInstructor(selectedDate)?.nitrox ?? 0;
 
       airTotal += air;
       nitroxTotal += nitrox;
     }
 
-    if (bookings[0].instructor == null) {
+    if (bookings[0].getInstructor(widget.selectedDate) == null) {
       List<Booking> dsds = [];
       List<Booking> otherBookings = [];
 
@@ -370,7 +370,7 @@ class CustomerListState extends State<CustomerList> {
                 top: 3,
               ),
               Text(
-                bookings[0].instructor?.name ?? '-',
+                (bookings[0].getInstructor(widget.selectedDate)?.name) ?? '-',
                 style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.red),
               )
                   .paddingOnly(
@@ -892,9 +892,9 @@ int getTotalInstructorsAirCount(List<Booking> bookings, Boat boat, [bool isNitro
 
     if (boatInfo?.id == boat.id) {
       if (isNitrox) {
-        total += booking.getInstructorTanks(selectedDate)?.nitrox ?? 0;
+        total += booking.getInstructor(selectedDate)?.nitrox ?? 0;
       } else {
-        total += booking.getInstructorTanks(selectedDate)?.air ?? 0;
+        total += booking.getInstructor(selectedDate)?.air ?? 0;
       }
     }
   }
@@ -944,8 +944,8 @@ int getTotalInstructorCount(
   for (var booking in bookings) {
     BoatInfo? boatInfo = booking.getBoatInfo(selectedDate);
     if (boatInfo?.id == boat.id) {
-      if (booking.instructor != null) {
-        instructorIDs.add(booking.instructor!.id);
+      if (booking.getInstructor(selectedDate) != null) {
+        instructorIDs.add(booking.getInstructor(selectedDate)!.id);
       }
     }
   }

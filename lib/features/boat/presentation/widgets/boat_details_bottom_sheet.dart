@@ -594,6 +594,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 instructorLimit: employeeLimit,
                 employeeType: employeeType,
                 tanksRequired: isTanksRequired,
+                selectedDate: widget.selectedDate,
               ) ??
               [];
 
@@ -629,6 +630,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                         instructorLimit: employeeLimit,
                         employeeType: employeeType,
                         tanksRequired: isTanksRequired,
+                        selectedDate: widget.selectedDate,
                       )) ??
                       [];
 

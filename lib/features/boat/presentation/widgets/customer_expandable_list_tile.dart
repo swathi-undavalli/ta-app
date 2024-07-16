@@ -112,7 +112,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                             ),
                           ),
                           Spacing.w10,
-                          if ((bookingModel.boatDetails?.instructors ?? []).isNotEmpty)
+                          if ((bookingModel.getInstructor(widget.selectedDate) != null))
                             const Icon(
                               Icons.scuba_diving,
                               size: 13,
@@ -397,7 +397,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
               SizedBox(
                 width: Screen.width - 170,
                 child: const Text(
-                  'Instructor :',
+                  'Instructor  (N - A):',
                   style: TextStyle(
                     fontSize: FontSize.textSize,
                     fontWeight: FontWeight.w600,
@@ -406,17 +406,34 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
               ),
               InkWell(
                 onTap: () async {
+                  Instructor? currentInstructor = bookingModel.getInstructor(widget.selectedDate);
+
                   List<Instructor>? instructors = await EmpSelectorBottomSheet.getSelectedInstructors(
                     context,
-                    initialSelectedInstructors: bookingItemModel.bookingModel?.boatDetails?.instructors ?? [],
+                    initialSelectedInstructors: [if (currentInstructor != null) currentInstructor],
                     instructorLimit: 1,
                     employeeType: EmployeeType.showFreelancersDivers,
+                    tanksRequired: true,
+                    selectedDate: widget.selectedDate,
                   );
 
-                  log('tap instructors $instructors');
+                  if (instructors == null) return;
+
+                  List<Instructor> oldInstructors = bookingModel.boatDetails?.instructors ?? [];
+
+                  Instructor? newSelectedInstructor = instructors.firstOrNull;
+
+                  if (newSelectedInstructor != null) {
+                    oldInstructors.remove(currentInstructor);
+                    oldInstructors.add(newSelectedInstructor);
+                  }
+
+                  if (newSelectedInstructor == null && currentInstructor != null) {
+                    oldInstructors.remove(currentInstructor);
+                  }
 
                   await updateBoatDetails(
-                    instructors: instructors,
+                    instructors: oldInstructors,
                     bookingModel: bookingModel,
                     selectedDate: widget.selectedDate,
                   );
@@ -444,75 +461,11 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
             ],
           ),
           const SizedBox(height: 10),
-          if (bookingItemModel.bookingModel?.boatDetails?.instructors != null)
-            ...?bookingItemModel.bookingModel!.boatDetails?.instructors?.map(
-              (e) {
-                return _buildDiverName(
-                  e.name,
-                  bookingItemModel.bookingModel!.boatDetails!.instructors!.indexOf(e),
-                ).paddingOnly(bottom: 6);
-              },
-            ),
+          if (bookingModel.getInstructor(widget.selectedDate) != null)
+            _buildDiverName(
+              '${bookingModel.getInstructor(widget.selectedDate)?.name} (${bookingModel.getInstructor(widget.selectedDate)?.nitrox ?? 0} - ${bookingModel.getInstructor(widget.selectedDate)?.air ?? 0})',
+            ).paddingOnly(bottom: 6),
           const SizedBox(height: 10),
-          buildInstructorTanks(bookingModel, bookingItemModel),
-          const SizedBox(height: 20),
-        ],
-      );
-    }
-    return const SizedBox();
-  }
-
-  Widget buildInstructorTanks(
-    Booking bookingModel,
-    ItemModel bookingItemModel,
-  ) {
-    if (bookingItemModel.bookingModel?.boatDetails?.instructors?.isNotEmpty ?? false) {
-      return Row(
-        children: [
-          Column(
-            children: [
-              const Text(
-                'Nitrox',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ).paddingOnly(bottom: 10),
-              CounterWidget(
-                onChanged: (int val) {
-                  updateBoatDetails(
-                    bookingModel: bookingModel,
-                    selectedDate: widget.selectedDate,
-                    instructorNitrox: val,
-                  );
-                },
-                initialValue: bookingModel.getInstructorTanks(widget.selectedDate)?.nitrox ?? 0,
-              ),
-            ],
-          ),
-          Column(
-            children: [
-              const Text(
-                'Air',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-              ).paddingOnly(bottom: 10),
-              CounterWidget(
-                onChanged: (int val) {
-                  updateBoatDetails(
-                    bookingModel: bookingModel,
-                    selectedDate: widget.selectedDate,
-                    instructorAir: val,
-                  );
-                },
-                initialValue: bookingModel.getInstructorTanks(widget.selectedDate)?.air ?? 0,
-              ),
-            ],
-          ),
         ],
       );
     }
@@ -542,14 +495,16 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
             ),
             InkWell(
               onTap: () async {
-                List<Instructor> diveBuddies = (await EmpSelectorBottomSheet.getSelectedInstructors(
-                      context,
-                      initialSelectedInstructors: bookingItemModel.bookingModel?.boatDetails?.diveBuddies ?? [],
-                      instructorLimit: -1,
-                      employeeType: EmployeeType.showAllDiveTeam,
-                      tanksRequired: true,
-                    )) ??
-                    [];
+                List<Instructor>? diveBuddies = (await EmpSelectorBottomSheet.getSelectedInstructors(
+                  context,
+                  initialSelectedInstructors: bookingItemModel.bookingModel?.boatDetails?.diveBuddies ?? [],
+                  instructorLimit: -1,
+                  employeeType: EmployeeType.showAllDiveTeam,
+                  tanksRequired: true,
+                  selectedDate: widget.selectedDate,
+                ));
+
+                log(diveBuddies.toString());
 
                 await updateBoatDetails(
                   bookingModel: bookingModel,
@@ -585,7 +540,6 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
             (e) {
               return _buildDiverName(
                 '${e.name} (${e.nitrox ?? 0} - ${e.air ?? 0})',
-                bookingItemModel.bookingModel!.boatDetails!.diveBuddies!.indexOf(e),
               ).paddingOnly(bottom: 6);
             },
           ),
@@ -594,27 +548,10 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
     );
   }
 
-  Widget _buildDiverName(String text, int index) {
-    return RichText(
-      text: TextSpan(
-        text: (index + 1).toString(),
-        style: TextStyle(
-          color: Colors.grey[700],
-          fontFamily: 'Nunito',
-          fontSize: 13,
-          letterSpacing: 0.3,
-          fontWeight: FontWeight.w600,
-          height: 1.3,
-        ),
-        children: <TextSpan>[
-          TextSpan(
-            text: '   $text',
-            style: const TextStyle(
-              color: Colors.black,
-            ),
-          ),
-        ],
-      ),
+  Widget _buildDiverName(String text) {
+    return Text(
+      text,
+      style: const TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600),
     );
   }
 
@@ -702,24 +639,6 @@ Future<void> updateBoatDetails({
     bookingModel.setBoatInfo(
       selectedDate,
       boatInfo,
-    );
-  } else if (instructorAir != null || instructorNitrox != null) {
-    InstructorTanks? instructorTanks = bookingModel.getInstructorTanks(selectedDate);
-    if (instructorTanks == null) {
-      instructorTanks = InstructorTanks(
-        air: instructorAir ?? 0,
-        nitrox: instructorNitrox ?? 0,
-      );
-    } else {
-      instructorTanks = instructorTanks.copyWith(
-        air: instructorAir,
-        nitrox: instructorNitrox,
-      );
-    }
-
-    bookingModel.setInstructorTanks(
-      selectedDate,
-      instructorTanks,
     );
   }
 

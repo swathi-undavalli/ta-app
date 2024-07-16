@@ -525,6 +525,7 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
                 initialSelectedInstructors: employees,
                 instructorLimit: employeeLimit,
                 employeeType: employeeType,
+                selectedDate: null,
               )) ??
               [];
           setState(() {});
@@ -567,6 +568,7 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
                       initialSelectedInstructors: employees,
                       instructorLimit: employeeLimit,
                       employeeType: employeeType,
+                      selectedDate: null,
                     )) ??
                     [];
                 setState(() {});

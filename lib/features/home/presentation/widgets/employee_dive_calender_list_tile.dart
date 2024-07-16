@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
@@ -154,8 +153,6 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                           'Remarks',
                           widget.itemModel.remarks.toString(),
                         ),
-                  // _buildKeyValuePairs(
-                  //     'Status', getStatus(widget.itemModel.bookingModel!)),
                   _buildKeyValuePairs('Boat', selectedBoat?.name ?? '-'),
                   _buildKeyValuePairs(
                       'Customer Tanks',
@@ -185,7 +182,11 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                       const Spacer(),
                       AppButton.miniFlat(
                         onTap: () {
-                          CertificationBottomSheet.show(context, itemModel: widget.itemModel);
+                          CertificationBottomSheet.show(
+                            context,
+                            itemModel: widget.itemModel,
+                            selectedDate: widget.selectedDate,
+                          );
                         },
                         text: 'Manage Certs',
                       ),
@@ -205,7 +206,6 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                     },
                     isDSD: (colorsData!.blue.contains(widget.itemModel.activity)),
                   ),
-
                   Spacing.h10,
                   const Divider(thickness: 1, color: Colors.black).paddingOnly(right: 20),
                 ],
@@ -277,14 +277,13 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
             ),
           ),
         ),
-        Wrap(
-          children: [
-            if (interns.isEmpty) const Text('-'),
-            ...interns.map(
-              (e) => SizedBox(
-                width: Screen.width - 210,
-                child: Text(
-                  "${e.name}${"(${e.nitrox ?? 0} - ${e.air ?? 0})"}, ",
+        Expanded(
+          child: Wrap(
+            children: [
+              if (interns.isEmpty) const Text('-'),
+              ...interns.map(
+                (e) => Text(
+                  "${e.name}${"(${e.nitrox ?? 0} - ${e.air ?? 0})"} ",
                   style: const TextStyle(
                     color: Colors.black,
                     fontSize: 13,
@@ -293,8 +292,8 @@ class EmployeeDiveCalenderListTileState extends State<EmployeeDiveCalenderListTi
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     ).paddingOnly(bottom: 6);

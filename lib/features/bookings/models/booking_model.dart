@@ -186,7 +186,7 @@ class Booking {
       diveDate: List<DateTime>.from(json['diveDate'].map((x) => parseDateOrNull(x))),
       cancelBooking: json['cancelBooking'],
       cancellationReason: json['cancellationReason'],
-      boatDetails: BoatDetails.fromMap(json['boatDetails']),
+      boatDetails: BoatDetails.fromMap(json['boatDetails'], List<String>.from(json['bookingDate'].map((x) => x))),
       certificationStatuses: List<int>.from(json['certificationStatuses'] ?? [].map((x) => x)),
     );
   }
@@ -303,10 +303,10 @@ class Booking {
     return val;
   }
 
-  Instructor? get instructor {
-    if (boatDetails?.instructors?.isEmpty ?? false) return null;
-    return boatDetails?.instructors?[0];
-  }
+  // Instructor? get instructor {
+  //   if (boatDetails?.instructors?.isEmpty ?? false) return null;
+  //   return boatDetails?.instructors?[0];
+  // }
 
   BoatInfo? getBoatInfo(DateTime date) {
     String d = DateFormat('dd-MM-yyyy').format(date);
@@ -320,10 +320,14 @@ class Booking {
     boatDetails?.boat?[d] = boatInfo?.toMap();
   }
 
-  InstructorTanks? getInstructorTanks(DateTime date) {
+  Instructor? getInstructor(DateTime date) {
     String d = DateFormat('dd-MM-yyyy').format(date);
-    if (boatDetails?.instructorTanks?[d] == null) return null;
-    return InstructorTanks.fromMap(boatDetails?.instructorTanks?[d]);
+    for (Instructor instructor in boatDetails?.instructors ?? []) {
+      if (instructor.date == d) {
+        return instructor;
+      }
+    }
+    return null;
   }
 
   int? getStatus(DateTime date) {
@@ -332,10 +336,16 @@ class Booking {
     return boatDetails?.status?[d];
   }
 
-  void setInstructorTanks(DateTime date, InstructorTanks instructorTanks) {
+  List<Instructor>? setInstructor(DateTime date, Instructor newInstructor) {
     String d = DateFormat('dd-MM-yyyy').format(date);
-    boatDetails?.instructorTanks ??= {};
-    boatDetails?.instructorTanks?[d] = instructorTanks.toMap();
+    for (Instructor instructor in boatDetails?.instructors ?? []) {
+      if (instructor.date == d) {
+        boatDetails?.instructors?.remove(instructor);
+        boatDetails?.instructors?.add(newInstructor);
+        return boatDetails?.instructors;
+      }
+    }
+    return null;
   }
 
   void setStatus(DateTime date, int status) {

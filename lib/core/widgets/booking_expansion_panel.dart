@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,6 +13,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
 import '../../features/activities/model/colors_data.dart';
 import '../../features/bookings/controller/edit_payments_controller.dart';
 import '../../features/bookings/models/booking_model.dart';
@@ -675,37 +677,11 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                     if (itemModel.colorCode != 'Blue' && (!itemModel.bookingModel!.isQuickBooking))
                                       Row(
                                         children: [
-//                                           AppButton.miniFlat(
-//                                             text: 'Process Cert',
-//                                             onTap: () async {
-//                                               String message = """
-//
-// *${itemModel.name!.trim().toLowerCase().capitalizeFirst! + itemModel.bookingModel!.pax![0]["last-name"]} 's* ${itemModel.activity}
-//
-// *Certification details:*
-//
-// Name : *${itemModel.name!.trim().toLowerCase().capitalizeFirst!}  ${(itemModel.bookingModel!.pax![0]["last-name"] != "" && itemModel.bookingModel!.pax![0]["last-name"] != null) ? itemModel.bookingModel!.pax![0]["last-name"] : ""}*
-// Email : *${itemModel.email}*
-// Date of Birth : *${(itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.pax![0]["dob"] as Timestamp).toDate()) : "-"}*
-// Certification : *${itemModel.activity}*
-// Course Completion Date : *${intl.DateFormat("dd-MM-yyy").format(DateTime.now())}*
-// Balance : *${getBalance(itemModel.bookingModel!.payments!, double.parse(itemModel.paid).roundToDouble(), double.parse(itemModel.cost).roundToDouble())} /-*
-// Completed instructor : *${itemModel.bookingModel?.boatDetails!.instructors?[0].name.trim()}*
-// Instructor No : *${(currentEmployee?.agencyId != null && currentEmployee?.agencyId != '') ? currentEmployee?.agencyId : "-"}*
-// Invoice No : *${(itemModel.bookingModel?.receiptNo != null && itemModel.bookingModel?.receiptNo != '') ? itemModel.bookingModel?.receiptNo : '-'}*
-// Course / Equipment Upsell :     *${"-"}*
-//
-// Regards,
-// *${currentEmployee!.name.trim()}*
-//                                           """;
-//                                               await Clipboard.setData(ClipboardData(text: message));
-//                                               Fluttertoast.showToast(msg: 'Message copied to Clipboard');
-//                                             },
-//                                           ).paddingOnly(right: 15),
                                           if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
                                             AppButton.miniFlat(
                                               onTap: () {
-                                                CertificationBottomSheet.show(context, itemModel: itemModel);
+                                                CertificationBottomSheet.show(context,
+                                                    itemModel: itemModel, selectedDate: selectedDate);
                                               },
                                               text: 'Manage Certs',
                                             ),

@@ -8,14 +8,15 @@ class BoatDetails {
   final List<Instructor>? instructors;
   final List<Instructor>? diveBuddies;
   Map<String, dynamic>? boat;
-  Map<String, dynamic>? instructorTanks;
+
+  // Map<String, dynamic>? instructorTanks;
   Map<String, dynamic>? status;
 
   BoatDetails({
     this.bookingStatus,
     this.status,
     this.boat,
-    this.instructorTanks,
+    // this.instructorTanks,
     this.employeeNotes,
     this.instructors,
     this.diveBuddies,
@@ -23,7 +24,7 @@ class BoatDetails {
 
   BoatDetails copyWith({
     Map<String, dynamic>? boatId,
-    Map<String, dynamic>? instructorTank,
+    // Map<String, dynamic>? instructorTank,
     Map<String, dynamic>? status,
     String? employeeNotes,
     int? bookingStatus,
@@ -33,28 +34,66 @@ class BoatDetails {
       BoatDetails(
         boat: boatId ?? boat,
         status: status ?? this.status,
-        instructorTanks: instructorTank ?? instructorTanks,
+        // instructorTanks: instructorTank ?? instructorTanks,
         employeeNotes: employeeNotes ?? this.employeeNotes,
         bookingStatus: bookingStatus ?? this.bookingStatus,
         instructors: instructors ?? this.instructors,
         diveBuddies: diveBuddies ?? this.diveBuddies,
       );
 
-  factory BoatDetails.fromRawJson(String str) => BoatDetails.fromMap(json.decode(str));
+  factory BoatDetails.fromRawJson(String str, List<String>? bookingDate) =>
+      BoatDetails.fromMap(json.decode(str), bookingDate);
 
   String toRawJson() => json.encode(toMap());
 
-  factory BoatDetails.fromMap(Map<String, dynamic>? json) {
+  factory BoatDetails.fromMap(Map<String, dynamic>? json, List<String?>? bookingDate) {
     if (json == null) return BoatDetails();
+
+    List<Instructor>? instructors;
+
+    if ((json['instructors'] as List? ?? []).length == 1) {
+      Instructor ins = Instructor.fromMap(json['instructors'][0]);
+
+      if (json['instructorTanks'] != null) {
+        (json['instructorTanks'] as Map<String, dynamic>).forEach((date, tankInfo) {
+          instructors ??= [];
+          var i = ins.copyWith(
+            date: date,
+            air: tankInfo['air'] ?? 0,
+            nitrox: tankInfo['nitrox'] ?? 0,
+          );
+
+          instructors?.add(i);
+        });
+      }
+
+      // instructorTanks and date in the instructor model is null
+
+      else if ((json['instructorTanks'] == null && ins.date == null) ||
+          ((json['instructorTanks'] ?? {}).isEmpty && ins.date == null)) {
+        for (var date in (bookingDate ?? [])) {
+          instructors ??= [];
+          var i = ins.copyWith(
+            date: date,
+            air: ins.air ?? 0,
+            nitrox: ins.nitrox ?? 0,
+          );
+
+          instructors.add(i);
+        }
+      }
+    }
+
     return BoatDetails(
       boat: json['boat'] ?? {},
-      instructorTanks: json['instructorTanks'] ?? {},
+      // instructorTanks: json['instructorTanks'] ?? {},
       status: json['status'] ?? {},
       employeeNotes: json['employeeNotes'],
       bookingStatus: json['bookingStatus'],
-      instructors: List<Instructor>.from(
-        (json['instructors'] ?? []).map((x) => Instructor.fromMap(x)),
-      ),
+      instructors: instructors ??
+          List<Instructor>.from(
+            (json['instructors'] ?? []).map((x) => Instructor.fromMap(x)),
+          ),
       diveBuddies: List<Instructor>.from(
         (json['diveBuddies'] ?? []).map((x) => Instructor.fromMap(x)),
       ),
@@ -63,7 +102,7 @@ class BoatDetails {
 
   Map<String, dynamic> toMap() => {
         'boat': boat,
-        'instructorTanks': instructorTanks,
+        // 'instructorTanks': instructorTanks,
         'bookingStatus': bookingStatus,
         'employeeNotes': employeeNotes,
         'status': status,
@@ -75,6 +114,7 @@ class BoatDetails {
 class Instructor {
   final String id;
   final String name;
+  String? date;
   int? air;
   int? nitrox;
   String? phone;
@@ -83,6 +123,7 @@ class Instructor {
   Instructor({
     required this.id,
     required this.name,
+    this.date,
     this.air,
     this.nitrox,
     this.gender,
@@ -95,13 +136,15 @@ class Instructor {
     int? air,
     int? nitrox,
     String? phone,
+    String? date,
   }) =>
       Instructor(
         id: id ?? this.id,
         name: name ?? this.name,
-        air: this.air,
-        nitrox: this.nitrox,
-        phone: this.phone,
+        air: air ?? this.air,
+        nitrox: nitrox ?? this.nitrox,
+        phone: phone ?? this.phone,
+        date: date ?? this.date,
       );
 
   factory Instructor.fromRawJson(String str) => Instructor.fromMap(json.decode(str));
@@ -114,6 +157,7 @@ class Instructor {
         air: json['air'],
         nitrox: json['nitrox'],
         phone: json['phone'],
+        date: json['date'],
       );
 
   Map<String, dynamic> toJson() => {
@@ -121,6 +165,7 @@ class Instructor {
         'name': name,
         'nitrox': nitrox,
         'air': air,
+        'date': date,
       };
 
   Map<String, dynamic> toMiniJson() => {
@@ -190,39 +235,6 @@ class BoatInfo {
 
   Map<String, dynamic> toMap() => {
         'id': id,
-        'air': air,
-        'nitrox': nitrox,
-      };
-}
-
-class InstructorTanks {
-  final int air;
-  final int nitrox;
-
-  InstructorTanks({
-    required this.air,
-    required this.nitrox,
-  });
-
-  InstructorTanks copyWith({
-    int? air,
-    int? nitrox,
-  }) =>
-      InstructorTanks(
-        air: air ?? this.air,
-        nitrox: nitrox ?? this.nitrox,
-      );
-
-  factory InstructorTanks.fromJson(String str) => InstructorTanks.fromMap(json.decode(str));
-
-  String toJson() => json.encode(toMap());
-
-  factory InstructorTanks.fromMap(Map<String, dynamic> json) => InstructorTanks(
-        air: json['air'],
-        nitrox: json['nitrox'],
-      );
-
-  Map<String, dynamic> toMap() => {
         'air': air,
         'nitrox': nitrox,
       };

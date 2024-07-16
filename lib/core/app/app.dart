@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
-import 'package:provider/provider.dart';
+
 import '../../features/dashboard/controller/dashboard_controller.dart';
 import '../../features/splash/view/splash_view.dart';
 import '../constants/constants.dart';
-import 'package:temple_adventures/core/app/providers.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

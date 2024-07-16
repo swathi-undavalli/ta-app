@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -213,7 +214,7 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
                     ),
                     Spacing.h5,
                     Text(
-                      'Instructor: ${itemModel.bookingModel?.boatDetails!.instructors?[0].name}',
+                      'Instructor: ${itemModel.bookingModel?.getInstructor(DateFormat("dd-MM-yyyy").parse(itemModel.bookingModel!.bookingDate!.last))?.name}',
                       style: TextStyle(
                         color: AppColors.text.darkgrey,
                         fontSize: 12,

@@ -99,9 +99,9 @@ class _DiveLogViewState extends State<DiveLogView> {
     if (boatId != null) {
       fetchBoatDetails(boatId);
     }
-    if (logic.controller.booking?.instructor != null) {
+    if (logic.controller.booking?.getInstructor(logic.controller.selectedDate) != null) {
       logic.controller.instructor = [
-        logic.controller.booking!.instructor!,
+        logic.controller.booking!.getInstructor(logic.controller.selectedDate)!,
       ];
     }
     isAirOrNitrox();
@@ -274,6 +274,7 @@ class _DiveLogViewState extends State<DiveLogView> {
                     instructorLimit: 1,
                     employeeType: EmployeeType.showAllDiveTeam,
                     tanksRequired: false,
+                    selectedDate: null,
                   ) ??
                   [];
               logic.controller.update();
@@ -304,6 +305,7 @@ class _DiveLogViewState extends State<DiveLogView> {
                   instructorLimit: 1,
                   employeeType: EmployeeType.showAllDiveTeam,
                   tanksRequired: false,
+                  selectedDate: null,
                 )) ??
                 [];
             logic.controller.update();

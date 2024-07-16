@@ -30,10 +30,7 @@ class HomeLogic {
       ItemModel item = ItemModel.fromBooking(booking);
 
       /// Get  bookings where i'm instructor
-      if (booking.boatDetails?.instructors?.firstWhereOrNull(
-            (element) => (element.id == currentEmployee?.id),
-          ) !=
-          null) {
+      if (booking.getInstructor(controller.selectedDate)?.id == currentEmployee?.id) {
         controller.bookings.add(item);
       }
 

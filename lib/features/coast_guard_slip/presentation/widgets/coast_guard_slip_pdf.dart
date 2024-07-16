@@ -42,7 +42,7 @@ class CoastGuardSlip {
           ...boats.map(
             (boat) {
               if (boat.isBoat ?? false) {
-                return buildBoat(boat, bookings[boat] ?? []);
+                return buildBoat(boat, bookings[boat] ?? [], selectedDate);
               } else {
                 return pw.SizedBox();
               }
@@ -94,8 +94,8 @@ class CoastGuardSlip {
     );
   }
 
-  static pw.Widget buildBoat(Boat boat, List<Booking> bookings) {
-    List<Instructor> instructors = getInstructors(bookings);
+  static pw.Widget buildBoat(Boat boat, List<Booking> bookings, DateTime selectedDate) {
+    List<Instructor> instructors = getInstructors(bookings, selectedDate);
     List<Customer> customers = getCustomers(bookings);
     List<Instructor> diveBuddies = getDiveBuddies(bookings);
     List<Instructor> dsdInstructors = (boat.dsdInstructors ?? []).map((instructor) {
@@ -152,7 +152,7 @@ class CoastGuardSlip {
           ),
         ),
         pw.SizedBox(height: 20),
-        getDSDPAXCount(bookings, boat),
+        getDSDPAXCount(bookings, boat, selectedDate),
         pw.SizedBox(height: 20),
         buildDarkLine(),
         pw.SizedBox(height: 20),
@@ -353,10 +353,10 @@ class CoastGuardSlip {
     );
   }
 
-  static pw.Widget getDSDPAXCount(List<Booking>? bookings, Boat boat) {
+  static pw.Widget getDSDPAXCount(List<Booking>? bookings, Boat boat, DateTime selectedDate) {
     Iterable<Customer> totalCustomers = getCustomers(bookings ?? []);
     Iterable<Customer> dsdCustomers = totalCustomers.where((customer) => customer.course == 'DSD').toList();
-    List<Instructor> staff = getInstructors(bookings ?? []);
+    List<Instructor> staff = getInstructors(bookings ?? [], selectedDate);
     List<Instructor> diveBuddies = getDiveBuddies(bookings ?? []);
 
     pw.Widget buildText(String text) => pw.Text(
@@ -391,16 +391,16 @@ class CoastGuardSlip {
   }
 }
 
-List<Instructor> getInstructors(List<Booking> bookings) {
+List<Instructor> getInstructors(List<Booking> bookings, DateTime selectedDate) {
   List<Instructor> instructors = [];
   try {
     for (var booking in bookings) {
-      if (booking.instructor?.id != null) {
-        Employee? employee = getEmployee(booking.instructor?.id);
+      if ((booking.getInstructor(selectedDate)?.id != null)) {
+        Employee? employee = getEmployee((booking.getInstructor(selectedDate)?.id));
         if (employee != null) {
           instructors.add(Instructor.fromEmployee(employee));
         } else {
-          instructors.add(booking.instructor!);
+          instructors.add((booking.getInstructor(selectedDate)!));
         }
       }
     }

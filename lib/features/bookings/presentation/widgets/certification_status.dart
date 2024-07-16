@@ -14,11 +14,14 @@ class CertificationStatus extends StatefulWidget {
     required this.itemModel,
     required this.isCertificationDetailsView,
     required this.paxIndex,
+    required this.selectedDate,
   }) : super(key: key);
+
   final ItemModel itemModel;
   final Function(int status) onChanged;
   final bool isCertificationDetailsView;
   final int paxIndex;
+  final DateTime? selectedDate;
 
   @override
   State<CertificationStatus> createState() => _CertificationStatusState();
@@ -47,7 +50,8 @@ class _CertificationStatusState extends State<CertificationStatus> {
               onTap: () {
                 if (status > 0 && status <= checkPoint) {
                   if (status == 1 &&
-                      widget.itemModel.bookingModel?.boatDetails!.instructors?[0].id == currentEmployee?.id &&
+                      widget.selectedDate != null &&
+                      widget.itemModel.bookingModel?.getInstructor(widget.selectedDate!)?.id == currentEmployee?.id &&
                       !widget.isCertificationDetailsView) {
                     status -= 1;
                   } else if (status == 2 && AccessRights.processCertificate && widget.isCertificationDetailsView) {
@@ -92,7 +96,8 @@ class _CertificationStatusState extends State<CertificationStatus> {
               onTap: () {
                 if (status < checkPoint) {
                   if (status == 0 &&
-                      (widget.itemModel.bookingModel?.boatDetails!.instructors?[0].id) == currentEmployee?.id &&
+                      widget.selectedDate != null &&
+                      (widget.itemModel.bookingModel?.getInstructor(widget.selectedDate!)?.id) == currentEmployee?.id &&
                       !widget.isCertificationDetailsView) {
                     status += 1;
                   } else if (status == 1 && AccessRights.processCertificate && widget.isCertificationDetailsView) {
@@ -123,7 +128,7 @@ class _CertificationStatusState extends State<CertificationStatus> {
         Spacing.h5,
         Text(
           ((widget.itemModel.bookingModel!.pax?[widget.paxIndex]['certificateStatus'] ?? 0) < 1)
-              ? 'Only the assigned instructor ${widget.itemModel.bookingModel?.boatDetails!.instructors?[0].name} can update the status.'
+              ? 'Only the assigned instructor ${widget.itemModel.bookingModel?.getInstructor(widget.selectedDate!)?.name} can update the status.'
               : 'Only the shop instructor is authorized to update the status once certification has been processed.',
           style: TextStyle(
             fontSize: 10,

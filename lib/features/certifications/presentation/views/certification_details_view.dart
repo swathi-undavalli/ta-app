@@ -6,6 +6,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_gallery_saver/image_gallery_saver.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
@@ -19,7 +20,6 @@ import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../bookings/models/booking_model.dart';
 import '../../../bookings/presentation/widgets/certification_status.dart';
-import 'package:http/http.dart' as http;
 
 class CertificationDetailsView extends StatefulWidget {
   const CertificationDetailsView({super.key, required this.itemModel, required this.customer});
@@ -81,7 +81,10 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
             ),
             buildKeyValuePairs(
               key: 'Completed instructor',
-              value: widget.itemModel.bookingModel?.boatDetails!.instructors?[0].name ?? '-',
+              value: widget.itemModel.bookingModel
+                      ?.getInstructor(DateFormat('dd-MM-yyyy').parse(widget.itemModel.bookingModel!.bookingDate!.last))
+                      ?.name ??
+                  '-',
             ),
             buildKeyValuePairs(key: 'Instructor No', value: '-'),
             buildKeyValuePairs(key: 'Invoice No', value: widget.itemModel.bookingModel?.receiptNo ?? '-'),
@@ -102,6 +105,7 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
               itemModel: widget.itemModel,
               isCertificationDetailsView: true,
               paxIndex: widget.itemModel.bookingModel!.pax!.indexOf(widget.customer),
+              selectedDate: null,
             ),
             Spacing.h30,
             if (widget.customer['photo'] != null)

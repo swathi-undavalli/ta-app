@@ -133,6 +133,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                               child: CustomerList(
                                 bookings: bookings,
                                 boat: selectedBoat!,
+                                selectedDate: selectedDate,
                               ),
                             ).paddingOnly(bottom: 1000),
                           );
