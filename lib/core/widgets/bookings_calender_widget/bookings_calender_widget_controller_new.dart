@@ -14,7 +14,6 @@ class BookingsCalenderWidgetLogicNew {
   BookingsCalenderWidgetControllerNew controller = Get.put(BookingsCalenderWidgetControllerNew());
 
   Future<void> getBookings(DateTime date) async {
-    log("BookingsCalenderWidgetLogicNew : getBookings ${DateFormat("dd-MM-yyyy").format(date)}");
     controller.bookingTimings = [];
     controller.bookings = [];
     controller.showLoading = true;
@@ -40,6 +39,8 @@ class BookingsCalenderWidgetLogicNew {
       }
 
       controller.bookings.add(booking);
+
+      log(controller.bookings.length.toString());
 
       List<ItemModel> newItemsList = [];
       controller.theoryCount = 0;
@@ -218,7 +219,6 @@ class BookingsCalenderWidgetLogicNew {
   }
 
   onDateSelected(DateTime date) {
-    // controller.lastDateIndex = index;
     controller.expansionItemModels = [];
     resetCounts();
     controller.selectedDate = date;

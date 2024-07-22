@@ -4,9 +4,10 @@ import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/access_levels.dart';
-import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
+import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_new.dart';
 import '../../controller/booking_controller.dart';
 import 'add_customer_details_view.dart';
 
@@ -49,7 +50,6 @@ class BookingView extends StatelessWidget {
           body: RefreshIndicator(
             color: AppColors.iconColor.black,
             onRefresh: () async {
-              // calenderLogic.controller.lastSelectedIndex ??= 50;
               bookingsCalenderWidget.scrollToIndex(50);
               await calenderLogic.onDateSelected(DateTime.now());
             },
@@ -57,36 +57,27 @@ class BookingView extends StatelessWidget {
               child: SingleChildScrollView(
                 controller: scrollController,
                 physics: const BouncingScrollPhysics(),
-                child: Padding(
-                  padding: const EdgeInsets.only(
-                    left: 20,
-                    right: 20,
-                    top: 40,
-                    bottom: 50,
-                  ),
-                  child: Column(
-                    children: [
-                      GetBuilder<BookingsCalenderWidgetControllerNew>(
-                        builder: (controller) {
-                          DateTime date = controller.selectedDate;
-                          String formattedDate = DateFormat('dd-MMM-yyyy').format(date);
-                          return Row(
-                            children: [
-                              buildTitle('Calendar'),
-                              const Spacer(),
-                              Text(formattedDate),
-                              buildCalendarIcon(context, controller),
-                            ],
-                          );
-                        },
-                      ),
-                      bookingsCalenderWidget,
-                      const SizedBox(
-                        height: 200,
-                      ),
-                    ],
-                  ),
-                ),
+                child: Column(
+                  children: [
+                    GetBuilder<BookingsCalenderWidgetControllerNew>(
+                      builder: (controller) {
+                        DateTime date = controller.selectedDate;
+                        String formattedDate = DateFormat('dd-MMM-yyyy').format(date);
+                        return Row(
+                          children: [
+                            buildTitle('Calendar'),
+                            const Spacer(),
+                            Text(formattedDate),
+                            buildCalendarIcon(context, controller),
+                          ],
+                        );
+                      },
+                    ),
+                    bookingsCalenderWidget,
+                    Spacing.h100,
+                    Spacing.h100,
+                  ],
+                ).paddingSymmetric(horizontal: 20, vertical: 40),
               ),
             ),
           ),

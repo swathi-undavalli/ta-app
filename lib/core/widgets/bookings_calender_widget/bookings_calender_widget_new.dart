@@ -71,8 +71,6 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   Future<void> scrollToSelectedDate() async {
     await Future.delayed(const Duration(microseconds: 500));
     int index = startDate!.difference(logic.controller.selectedDate).inDays;
-    // int index = startDate;
-    //log("index === ${index.abs()}");
     scrollToIndex(index.abs());
   }
 

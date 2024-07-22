@@ -213,15 +213,7 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
                       ),
                     ),
                     Spacing.h5,
-                    Text(
-                      'Instructor: ${itemModel.bookingModel?.getInstructor(DateFormat("dd-MM-yyyy").parse(itemModel.bookingModel!.bookingDate!.last))?.name}',
-                      style: TextStyle(
-                        color: AppColors.text.darkgrey,
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: AppFonts.nunito,
-                      ),
-                    ),
+                    buildText(itemModel),
                   ],
                 ),
               ),
@@ -238,6 +230,18 @@ class _CertificationLogsViewState extends State<CertificationLogsView> {
             color: AppColors.text.grey,
           ).paddingSymmetric(horizontal: 15, vertical: 20),
         ],
+      ),
+    );
+  }
+
+  Text buildText(ItemModel itemModel) {
+    return Text(
+      'Instructor: ${itemModel.bookingModel?.getInstructor(DateFormat("dd-MM-yyyy").parse(itemModel.bookingModel!.bookingDate!.last))?.name}',
+      style: TextStyle(
+        color: AppColors.text.darkgrey,
+        fontSize: 12,
+        fontWeight: FontWeight.w600,
+        fontFamily: AppFonts.nunito,
       ),
     );
   }

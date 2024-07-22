@@ -303,11 +303,6 @@ class Booking {
     return val;
   }
 
-  // Instructor? get instructor {
-  //   if (boatDetails?.instructors?.isEmpty ?? false) return null;
-  //   return boatDetails?.instructors?[0];
-  // }
-
   BoatInfo? getBoatInfo(DateTime date) {
     String d = DateFormat('dd-MM-yyyy').format(date);
     if (boatDetails?.boat?[d] == null) return null;

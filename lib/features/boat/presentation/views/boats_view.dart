@@ -5,8 +5,8 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/access_levels.dart';
-import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget.dart';
 import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
+import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_new.dart';
 import '../../controller/manage_boats_controller.dart';
 
 // ignore: must_be_immutable

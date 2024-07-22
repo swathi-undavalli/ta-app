@@ -46,10 +46,10 @@ class BoatDetails {
 
     List<Instructor>? instructors;
 
-    if ((json['instructors'] as List? ?? []).length == 1) {
+    if (((json['instructors'] as List?) ?? []).length == 1) {
       Instructor ins = Instructor.fromMap(json['instructors'][0]);
 
-      if (json['instructorTanks'] != null) {
+      if (((json['instructorTanks'] ?? {}) as Map).isNotEmpty) {
         (json['instructorTanks'] as Map<String, dynamic>).forEach((date, tankInfo) {
           instructors ??= [];
           var i = ins.copyWith(
@@ -63,9 +63,7 @@ class BoatDetails {
       }
 
       // instructorTanks and date in the instructor model is null
-
-      else if ((json['instructorTanks'] == null && ins.date == null) ||
-          ((json['instructorTanks'] ?? {}).isEmpty && ins.date == null)) {
+      else if (((json['instructorTanks'] ?? {}) as Map).isEmpty && ins.date == null) {
         for (var date in (bookingDate ?? [])) {
           instructors ??= [];
           var i = ins.copyWith(
