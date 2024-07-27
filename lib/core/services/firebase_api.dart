@@ -37,6 +37,7 @@ class FirebaseApi {
       DocumentReference bookingRef = FirebaseFirestore.instance.collection('bookings').doc(newBookingID.toString());
 
       booking.id = newBookingID.toString();
+      booking.createdAt = DateTime.now();
       transaction.set(bookingRef, booking.toMap());
       transaction.update(counterRef, {'booking': newBookingID});
 

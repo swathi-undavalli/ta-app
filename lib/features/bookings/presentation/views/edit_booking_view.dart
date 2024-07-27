@@ -239,6 +239,7 @@ class _EditBookingViewState extends State<EditBookingView> {
                     .collection('bookings')
                     .doc(controller.bookingModel!.id)
                     .set(controller.bookingModel!.toMap());
+
                 LogModel logModel = LogModel(
                   type: LogType.bookingEdited,
                   bookingId: controller.bookingModel!.id,
