@@ -543,7 +543,6 @@ class NewBookingLogic {
     controller.bookingModel.bookingDate = [];
     if (controller.bookingModel.theoryDate != null && controller.bookingModel.theoryDate!.isNotEmpty) {
       for (var element in controller.bookingModel.theoryDate!) {
-        log(element.toString());
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       }
     }
