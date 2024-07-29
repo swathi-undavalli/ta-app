@@ -44,45 +44,46 @@ class BoatDetails {
   factory BoatDetails.fromMap(Map<String, dynamic>? json, List<String?>? bookingDate) {
     if (json == null) return BoatDetails();
 
-    List<Instructor>? instructors;
+    // List<Instructor>? instructors;
 
-    if (((json['instructors'] as List?) ?? []).length == 1) {
-      Instructor ins = Instructor.fromMap(json['instructors'][0]);
-
-      if (((json['instructorTanks'] ?? {}) as Map).isNotEmpty) {
-        (json['instructorTanks'] as Map<String, dynamic>).forEach((date, tankInfo) {
-          instructors ??= [];
-          var i = ins.copyWith(
-            date: date,
-            air: tankInfo['air'] ?? 0,
-            nitrox: tankInfo['nitrox'] ?? 0,
-          );
-
-          instructors?.add(i);
-        });
-      }
-
-      // instructorTanks and date in the instructor model is null
-      else if (((json['instructorTanks'] ?? {}) as Map).isEmpty && ins.date == null) {
-        for (var date in (bookingDate ?? [])) {
-          instructors ??= [];
-          var i = ins.copyWith(
-            date: date,
-            air: ins.air ?? 0,
-            nitrox: ins.nitrox ?? 0,
-          );
-
-          instructors.add(i);
-        }
-      }
-    }
+    // if (((json['instructors'] as List?) ?? []).length == 1) {
+    //   Instructor ins = Instructor.fromMap(json['instructors'][0]);
+    //
+    //   if (((json['instructorTanks'] ?? {}) as Map).isNotEmpty) {
+    //     (json['instructorTanks'] as Map<String, dynamic>).forEach((date, tankInfo) {
+    //       instructors ??= [];
+    //       var i = ins.copyWith(
+    //         date: date,
+    //         air: tankInfo['air'] ?? 0,
+    //         nitrox: tankInfo['nitrox'] ?? 0,
+    //       );
+    //
+    //       instructors?.add(i);
+    //     });
+    //   }
+    //
+    //   // instructorTanks and date in the instructor model is null
+    //   else if (((json['instructorTanks'] ?? {}) as Map).isEmpty && ins.date == null) {
+    //     for (var date in (bookingDate ?? [])) {
+    //       instructors ??= [];
+    //       var i = ins.copyWith(
+    //         date: date,
+    //         air: ins.air ?? 0,
+    //         nitrox: ins.nitrox ?? 0,
+    //       );
+    //
+    //       instructors.add(i);
+    //     }
+    //   }
+    // }
 
     return BoatDetails(
       boat: json['boat'] ?? {},
       status: json['status'] ?? {},
       employeeNotes: json['employeeNotes'],
       bookingStatus: json['bookingStatus'],
-      instructors: instructors ??
+      instructors:
+      // instructors ??
           List<Instructor>.from(
             (json['instructors'] ?? []).map((x) => Instructor.fromMap(x)),
           ),
