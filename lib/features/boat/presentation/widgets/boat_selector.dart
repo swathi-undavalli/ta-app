@@ -9,11 +9,11 @@ import 'boat_details_bottom_sheet.dart';
 
 class BoatSelector extends StatefulWidget {
   const BoatSelector({
-    Key? key,
+    super.key,
     required this.selectedDate,
     required this.selectedBoatId,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   final String selectedBoatId;
   final DateTime selectedDate;

@@ -24,7 +24,7 @@ class NavDrawer extends StatelessWidget {
   static const String id = 'sideMenuWidget';
   final AutoUpdateLogic logic = AutoUpdateLogic();
 
-  NavDrawer({Key? key}) : super(key: key);
+  NavDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {

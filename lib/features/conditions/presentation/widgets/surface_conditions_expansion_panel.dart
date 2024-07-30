@@ -14,8 +14,8 @@ class SurfaceConditionsExpansionWidget extends StatefulWidget {
     required this.selectedReef,
     required this.onChanged,
     required this.disableTouches,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final List<SurfaceCondition> surfaceConditions;
   final String selectedReef;

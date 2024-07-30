@@ -15,12 +15,12 @@ class CustomersExpansionPanel extends StatefulWidget {
   final DateTime selectedDate;
 
   const CustomersExpansionPanel({
-    Key? key,
+    super.key,
     this.items,
     this.onSearchTap,
     this.showSearchBar = true,
     required this.selectedDate,
-  }) : super(key: key);
+  });
 
   @override
   State<CustomersExpansionPanel> createState() => _CustomersExpansionPanelState();

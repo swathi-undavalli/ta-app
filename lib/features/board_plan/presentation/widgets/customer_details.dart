@@ -14,25 +14,23 @@ import '../../../bookings/models/booking_model.dart';
 
 List<String> coursesStatus = [
   'Booked In',
-  'Paperwork ongoing',
-  'Paperwork done',
+  'Pw ongoing',
+  'Pw done',
   'Dive center',
   'Harbour',
 ];
 
 List<String> dsdStatus = [
   'Booked In',
-  'Paperwork ongoing',
-  'Paperwork done',
+  'Pw ongoing',
+  'Pw done',
   'Pool ongoing',
   'Pool completed',
   'Dive center',
-  'Harbour',
 ];
 
 class CustomerList extends StatefulWidget {
-  const CustomerList({Key? key, required this.bookings, required this.boat, required this.selectedDate})
-      : super(key: key);
+  const CustomerList({super.key, required this.bookings, required this.boat, required this.selectedDate});
 
   final List<Booking> bookings;
   final Boat boat;
@@ -546,8 +544,7 @@ class CustomerListState extends State<CustomerList> {
                         diveBuddy.name.capitalizeFirst ?? '-',
                         style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),
                       ),
-                    )
-                    .toList(),
+                ),
             ],
           ),
         ),
@@ -578,8 +575,7 @@ class CustomerListState extends State<CustomerList> {
                           ),
                         ],
                       ),
-                    )
-                    .toList(),
+                ),
             ],
           ),
         ),

@@ -5,8 +5,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
+import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
@@ -22,11 +24,9 @@ import '../../../../core/widgets/ta_image.dart';
 import '../../../employees/model/employee.dart';
 import '../../models/category.dart';
 import '../../models/offer.dart';
-import 'package:http/http.dart' as http;
-import 'package:path/path.dart' as path;
 
 class AddOffersView extends StatefulWidget {
-  const AddOffersView({Key? key, required this.offer, required this.categories}) : super(key: key);
+  const AddOffersView({super.key, required this.offer, required this.categories});
   final Offer? offer;
   final List<Categories> categories;
 

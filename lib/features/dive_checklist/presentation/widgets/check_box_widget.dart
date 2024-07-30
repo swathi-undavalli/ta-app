@@ -8,8 +8,7 @@ import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/widgets/app_icon_button.dart';
 
 class CheckBoxWidget extends StatefulWidget {
-  const CheckBoxWidget({Key? key, required this.onChanged, required this.text, required this.initialValue})
-      : super(key: key);
+  const CheckBoxWidget({super.key, required this.onChanged, required this.text, required this.initialValue});
 
   final Function(bool) onChanged;
   final String text;

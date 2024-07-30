@@ -15,7 +15,7 @@ import '../../../bookings/presentation/widgets/app_text_fields.dart';
 import '../../model/employee.dart';
 
 class EmployeeProfileView extends StatefulWidget {
-  const EmployeeProfileView({Key? key}) : super(key: key);
+  const EmployeeProfileView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const EmployeeProfileView(),

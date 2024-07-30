@@ -11,7 +11,7 @@ import '../../../../core/widgets/app_button.dart';
 import '../../controllers/new_checklist_controller.dart';
 
 class NewChecklistView extends StatefulWidget {
-  const NewChecklistView({Key? key, required this.checkListElement, required this.templateType}) : super(key: key);
+  const NewChecklistView({super.key, required this.checkListElement, required this.templateType});
 
   final ChecklistElement checkListElement;
   final TemplateType templateType;

@@ -21,7 +21,7 @@ import '../../../bookings/models/booking_model.dart';
 import '../widgets/customer_details.dart';
 
 class BoardPlanView extends StatefulWidget {
-  const BoardPlanView({Key? key}) : super(key: key);
+  const BoardPlanView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const BoardPlanView(),
@@ -430,7 +430,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
 }
 
 class GeneralInfoData extends StatelessWidget {
-  const GeneralInfoData({Key? key}) : super(key: key);
+  const GeneralInfoData({super.key});
 
   @override
   Widget build(BuildContext context) {

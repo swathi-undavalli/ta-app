@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:temple_ui_tools/styling/spacing_widgets.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 extension WidgetAlignment on Widget {
   Align get left => Align(

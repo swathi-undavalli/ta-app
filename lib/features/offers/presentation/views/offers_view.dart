@@ -19,7 +19,7 @@ import '../widgets/view_images_bottomsheet.dart';
 import 'add_offers_view.dart';
 
 class OffersView extends StatefulWidget {
-  const OffersView({Key? key}) : super(key: key);
+  const OffersView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const OffersView(),
@@ -136,7 +136,7 @@ class _OffersViewState extends State<OffersView> {
                         } catch (e) {
                           return const SizedBox();
                         }
-                      }).toList(),
+                      }),
                       Spacing.h100,
                     ],
                   ),

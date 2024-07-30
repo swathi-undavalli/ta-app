@@ -21,7 +21,7 @@ import 'book_date_time_view.dart';
 class AddCustomerDetailsView extends StatelessWidget {
   final NewBookingLogic logic = NewBookingLogic();
 
-  AddCustomerDetailsView({Key? key}) : super(key: key);
+  AddCustomerDetailsView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => AddCustomerDetailsView(),

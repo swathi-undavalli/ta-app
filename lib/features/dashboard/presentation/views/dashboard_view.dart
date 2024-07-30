@@ -18,7 +18,7 @@ late DashBoardScreenLogic dashboardLogic;
 
 // ignore: must_be_immutable
 class DashBoardView extends StatefulWidget {
-  DashBoardView({Key? key}) : super(key: key) {
+  DashBoardView({super.key}) {
     dashboardLogic = DashBoardScreenLogic();
   }
 

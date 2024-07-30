@@ -11,7 +11,7 @@ import '../widgets/app_text_fields.dart';
 class PaymentDetailsView extends StatelessWidget {
   final NewBookingLogic logic = NewBookingLogic();
 
-  PaymentDetailsView({Key? key}) : super(key: key);
+  PaymentDetailsView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => PaymentDetailsView(),

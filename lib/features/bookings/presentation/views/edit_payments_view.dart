@@ -18,7 +18,7 @@ import '../widgets/app_text_fields.dart';
 class EditPaymentsView extends StatelessWidget {
   EditPaymentsLogic logic = EditPaymentsLogic();
 
-  EditPaymentsView({Key? key}) : super(key: key);
+  EditPaymentsView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => EditPaymentsView(),

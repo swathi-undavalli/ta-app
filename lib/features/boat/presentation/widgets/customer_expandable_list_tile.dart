@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
@@ -22,12 +23,12 @@ import 'employee_selector_bottom_sheet.dart';
 
 class CustomerExpandableListTile extends StatefulWidget {
   const CustomerExpandableListTile({
-    Key? key,
+    super.key,
     required this.title,
     required this.color,
     required this.itemModel,
     required this.selectedDate,
-  }) : super(key: key);
+  });
 
   final String title;
   final ItemModel itemModel;
@@ -35,21 +36,17 @@ class CustomerExpandableListTile extends StatefulWidget {
   final Color color;
 
   @override
-  State<CustomerExpandableListTile> createState() =>
-      _CustomerExpandableListTileState();
+  State<CustomerExpandableListTile> createState() => _CustomerExpandableListTileState();
 }
 
-class _CustomerExpandableListTileState
-    extends State<CustomerExpandableListTile> {
+class _CustomerExpandableListTileState extends State<CustomerExpandableListTile> {
   bool isExpanded = false;
 
   ItemModel get itemModel => widget.itemModel;
 
   @override
   Widget build(BuildContext context) {
-    final DocumentReference bookingDoc = FirebaseFirestore.instance
-        .collection('bookings')
-        .doc(itemModel.bookingID);
+    final DocumentReference bookingDoc = FirebaseFirestore.instance.collection('bookings').doc(itemModel.bookingID);
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
@@ -77,8 +74,7 @@ class _CustomerExpandableListTileState
                 BuildContext context,
                 AsyncSnapshot<DocumentSnapshot> snapshot,
               ) {
-                if (snapshot.hasError ||
-                    snapshot.connectionState == ConnectionState.waiting) {
+                if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
                   return const SizedBox(
                     height: 15,
                     width: 15,
@@ -98,8 +94,7 @@ class _CustomerExpandableListTileState
                   );
                 }
 
-                Booking bookingModel =
-                    Booking.fromMap(data as Map<String, dynamic>);
+                Booking bookingModel = Booking.fromMap(data as Map<String, dynamic>);
 
                 return Row(
                   children: [
@@ -118,19 +113,13 @@ class _CustomerExpandableListTileState
                             ),
                           ),
                           Spacing.w10,
-                          if ((bookingModel
-                                  .getInstructor(widget.selectedDate) !=
-                              null))
+                          if ((bookingModel.getInstructor(widget.selectedDate) != null))
                             const Icon(
                               Icons.scuba_diving,
                               size: 13,
                             ),
                           Spacing.w10,
-                          if ((bookingModel
-                                      .getBoatInfo(widget.selectedDate)
-                                      ?.id ??
-                                  '')
-                              .isNotEmpty)
+                          if ((bookingModel.getBoatInfo(widget.selectedDate)?.id ?? '').isNotEmpty)
                             const Icon(
                               Icons.directions_boat,
                               size: 13,
@@ -149,9 +138,7 @@ class _CustomerExpandableListTileState
                     IconButton(
                       splashRadius: 20,
                       icon: Icon(
-                        isExpanded
-                            ? Icons.keyboard_arrow_up_rounded
-                            : Icons.keyboard_arrow_down_rounded,
+                        isExpanded ? Icons.keyboard_arrow_up_rounded : Icons.keyboard_arrow_down_rounded,
                       ),
                       onPressed: () {
                         setState(() {
@@ -195,8 +182,7 @@ class _CustomerExpandableListTileState
                               _buildKeyValuePairs(
                                 'Registered',
                                 '${itemModel.bookingModel!.registeredUsers.length} / ${itemModel.bookingModel!.noOfPersons}',
-                                isDanger: ((itemModel.bookingModel!
-                                        .registeredUsers.length) !=
+                                isDanger: ((itemModel.bookingModel!.registeredUsers.length) !=
                                     (itemModel.bookingModel!.noOfPersons)),
                               ),
                             (itemModel.remarks == '')
@@ -215,8 +201,7 @@ class _CustomerExpandableListTileState
                                   return Text('Error: ${snapshot.error}');
                                 }
 
-                                if (snapshot.connectionState ==
-                                    ConnectionState.waiting) {
+                                if (snapshot.connectionState == ConnectionState.waiting) {
                                   return const Text('Loading...');
                                 }
                                 final data = snapshot.data?.data();
@@ -228,14 +213,10 @@ class _CustomerExpandableListTileState
                                 Booking bookingModel = Booking.fromMap(
                                   data as Map<String, dynamic>,
                                 );
-                                ItemModel bookingItemModel =
-                                    ItemModel.fromBooking(bookingModel);
+                                ItemModel bookingItemModel = ItemModel.fromBooking(bookingModel);
 
-                                TextEditingController employeeNotesTED =
-                                    TextEditingController(
-                                  text: bookingItemModel.bookingModel!
-                                          .boatDetails?.employeeNotes ??
-                                      '',
+                                TextEditingController employeeNotesTED = TextEditingController(
+                                  text: bookingItemModel.bookingModel!.boatDetails?.employeeNotes ?? '',
                                 );
 
                                 return Column(
@@ -276,8 +257,7 @@ class _CustomerExpandableListTileState
                                         onTap: () {
                                           updateBoatDetails(
                                             bookingModel: bookingModel,
-                                            employeeNotes:
-                                                employeeNotesTED.text,
+                                            employeeNotes: employeeNotesTED.text,
                                             selectedDate: widget.selectedDate,
                                           );
                                         },
@@ -321,8 +301,7 @@ class _CustomerExpandableListTileState
         const Spacer(),
         BoatSelector(
           key: UniqueKey(),
-          selectedBoatId:
-              bookingModel.getBoatInfo(widget.selectedDate)?.id ?? '',
+          selectedBoatId: bookingModel.getBoatInfo(widget.selectedDate)?.id ?? '',
           onChanged: (Boat? boat) async {
             if (boat != null) {
               await updateBoatDetails(
@@ -370,9 +349,7 @@ class _CustomerExpandableListTileState
                         nitrox: val,
                       );
                     },
-                    initialValue:
-                        bookingModel.getBoatInfo(widget.selectedDate)?.nitrox ??
-                            0,
+                    initialValue: bookingModel.getBoatInfo(widget.selectedDate)?.nitrox ?? 0,
                   ),
                 ],
               ),
@@ -394,8 +371,7 @@ class _CustomerExpandableListTileState
                         air: val,
                       );
                     },
-                    initialValue:
-                        bookingModel.getBoatInfo(widget.selectedDate)?.air ?? 0,
+                    initialValue: bookingModel.getBoatInfo(widget.selectedDate)?.air ?? 0,
                   ),
                 ],
               ),
@@ -431,11 +407,9 @@ class _CustomerExpandableListTileState
               ),
               InkWell(
                 onTap: () async {
-                  Instructor? currentInstructor =
-                      bookingModel.getInstructor(widget.selectedDate);
+                  Instructor? currentInstructor = bookingModel.getInstructor(widget.selectedDate);
 
-                  List<Instructor>? instructors =
-                      await EmpSelectorBottomSheet.getSelectedInstructors(
+                  List<Instructor>? instructors = await EmpSelectorBottomSheet.getSelectedInstructors(
                     context,
                     initialSelectedInstructors: [
                       if (currentInstructor != null) currentInstructor,
@@ -448,8 +422,7 @@ class _CustomerExpandableListTileState
 
                   if (instructors == null) return;
 
-                  List<Instructor> oldInstructors =
-                      bookingModel.boatDetails?.instructors ?? [];
+                  List<Instructor> oldInstructors = bookingModel.boatDetails?.instructors ?? [];
 
                   Instructor? newSelectedInstructor = instructors.firstOrNull;
 
@@ -464,14 +437,15 @@ class _CustomerExpandableListTileState
 
                         oldInstructors.add(i);
                       }
-                    } else {
+                    } else if (newSelectedInstructor.date == DateFormat('dd-MM-yyyy').format(widget.selectedDate)) {
                       oldInstructors.remove(currentInstructor);
+                      oldInstructors.add(newSelectedInstructor);
+                    } else {
                       oldInstructors.add(newSelectedInstructor);
                     }
                   }
 
-                  if (newSelectedInstructor == null &&
-                      currentInstructor != null) {
+                  if (newSelectedInstructor == null && currentInstructor != null) {
                     oldInstructors.remove(currentInstructor);
                   }
 
@@ -538,12 +512,9 @@ class _CustomerExpandableListTileState
             ),
             InkWell(
               onTap: () async {
-                List<Instructor>? diveBuddies =
-                    (await EmpSelectorBottomSheet.getSelectedInstructors(
+                List<Instructor>? diveBuddies = (await EmpSelectorBottomSheet.getSelectedInstructors(
                   context,
-                  initialSelectedInstructors:
-                      bookingItemModel.bookingModel?.boatDetails?.diveBuddies ??
-                          [],
+                  initialSelectedInstructors: bookingItemModel.bookingModel?.boatDetails?.diveBuddies ?? [],
                   instructorLimit: -1,
                   employeeType: EmployeeType.showAllDiveTeam,
                   tanksRequired: true,
@@ -597,8 +568,7 @@ class _CustomerExpandableListTileState
   Widget _buildDiverName(String text) {
     return Text(
       text,
-      style: const TextStyle(
-          color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600),
+      style: const TextStyle(color: Colors.black, fontSize: 13, fontWeight: FontWeight.w600),
     );
   }
 
@@ -696,10 +666,7 @@ Future<void> updateBoatDetails({
     diveBuddies: diveBuddies,
   );
 
-  await FirebaseFirestore.instance
-      .collection('bookings')
-      .doc(bookingModel.id)
-      .set(
+  await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(
         bookingModel.toMap(),
       );
 }

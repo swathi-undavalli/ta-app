@@ -12,7 +12,7 @@ import 'add_employee_view.dart';
 import 'employee_details_view.dart';
 
 class AllEmployeesView extends StatefulWidget {
-  const AllEmployeesView({Key? key}) : super(key: key);
+  const AllEmployeesView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const AllEmployeesView(),

@@ -20,12 +20,12 @@ import '../widgets/app_text_fields.dart';
 
 class DiveLogView extends StatefulWidget {
   const DiveLogView({
-    Key? key,
+    super.key,
     required this.email,
     required this.booking,
     this.date,
     this.diveLog,
-  }) : super(key: key);
+  });
 
   final Booking? booking;
   final String email;

@@ -9,13 +9,13 @@ import '../../../employees/model/employee.dart';
 
 class CertificationStatus extends StatefulWidget {
   const CertificationStatus({
-    Key? key,
+    super.key,
     required this.onChanged,
     required this.itemModel,
     required this.isCertificationDetailsView,
     required this.paxIndex,
     required this.selectedDate,
-  }) : super(key: key);
+  });
 
   final ItemModel itemModel;
   final Function(int status) onChanged;

@@ -15,7 +15,7 @@ import '../../login/presentation/views/login_view.dart';
 String lastLoginTime = 'lastLoginTime';
 
 class SplashView extends StatefulWidget {
-  const SplashView({Key? key}) : super(key: key);
+  const SplashView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const SplashView(),

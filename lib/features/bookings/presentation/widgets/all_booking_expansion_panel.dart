@@ -20,7 +20,7 @@ import '../views/edit_booking_view.dart';
 class AllBookingsExpansionPanel extends StatefulWidget {
   Booking booking;
 
-  AllBookingsExpansionPanel({Key? key, required this.booking}) : super(key: key);
+  AllBookingsExpansionPanel({super.key, required this.booking});
 
   @override
   State<AllBookingsExpansionPanel> createState() => _AllBookingsExpansionPanelState();

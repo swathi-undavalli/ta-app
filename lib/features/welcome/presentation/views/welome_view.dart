@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:temple_ui_tools/styling/spacing_widgets.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../dashboard/presentation/views/dashboard_view.dart';
 import '../../../employees/model/employee.dart';
 
 class WelcomeView extends StatelessWidget {
-  const WelcomeView({Key? key}) : super(key: key);
+  const WelcomeView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const WelcomeView(),

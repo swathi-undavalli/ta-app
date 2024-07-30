@@ -9,9 +9,9 @@ import '../../../../core/widgets/app_button.dart';
 
 class FiltersBottomSheet extends StatefulWidget {
   const FiltersBottomSheet({
-    Key? key,
+    super.key,
     required this.result,
-  }) : super(key: key);
+  });
   final FiltersResult result;
 
   static Future<FiltersResult?> show(

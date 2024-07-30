@@ -14,7 +14,7 @@ import '../../models/event_model.dart';
 import '../widgets/event_entry_bottom_sheet.dart';
 
 class EventsView extends StatefulWidget {
-  const EventsView({Key? key}) : super(key: key);
+  const EventsView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const EventsView(),

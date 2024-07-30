@@ -12,7 +12,7 @@ import '../../models/booking_model.dart';
 class ShareBookingWidget extends StatelessWidget {
   Booking booking;
 
-  ShareBookingWidget(this.booking, {Key? key}) : super(key: key);
+  ShareBookingWidget(this.booking, {super.key});
 
   @override
   Widget build(BuildContext context) {

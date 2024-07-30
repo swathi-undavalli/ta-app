@@ -15,10 +15,10 @@ class MarketingContentEntryBottomSheet extends StatefulWidget {
   final int? index;
 
   const MarketingContentEntryBottomSheet({
-    Key? key,
+    super.key,
     this.marketingElement,
     this.index,
-  }) : super(key: key);
+  });
 
   static Future show(
     BuildContext context, {

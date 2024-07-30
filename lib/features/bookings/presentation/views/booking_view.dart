@@ -20,7 +20,7 @@ class BookingView extends StatelessWidget {
   ScrollController scrollController = ScrollController();
   late BookingsCalenderWidgetNew bookingsCalenderWidget;
 
-  BookingView({Key? key}) : super(key: key);
+  BookingView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => BookingView(),

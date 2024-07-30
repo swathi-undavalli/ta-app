@@ -22,11 +22,11 @@ import 'employee_selector_bottom_sheet.dart';
 
 class BoatDetailsBottomSheet extends StatefulWidget {
   const BoatDetailsBottomSheet({
-    Key? key,
+    super.key,
     required this.selectedDate,
     required this.isBoatEdit,
     this.boat,
-  }) : super(key: key);
+  });
 
   final DateTime selectedDate;
   final Boat? boat;

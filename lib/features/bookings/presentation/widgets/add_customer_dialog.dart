@@ -17,9 +17,9 @@ import 'app_text_fields.dart';
 
 class AddCustomerDialog extends StatefulWidget {
   const AddCustomerDialog({
-    Key? key,
+    super.key,
     required this.bookingModel,
-  }) : super(key: key);
+  });
 
   final Booking bookingModel;
 

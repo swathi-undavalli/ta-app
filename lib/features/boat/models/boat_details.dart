@@ -83,10 +83,10 @@ class BoatDetails {
       employeeNotes: json['employeeNotes'],
       bookingStatus: json['bookingStatus'],
       instructors:
-      // instructors ??
+          // instructors ??
           List<Instructor>.from(
-            (json['instructors'] ?? []).map((x) => Instructor.fromMap(x)),
-          ),
+        (json['instructors'] ?? []).map((x) => Instructor.fromMap(x)),
+      ),
       diveBuddies: List<Instructor>.from(
         (json['diveBuddies'] ?? []).map((x) => Instructor.fromMap(x)),
       ),
@@ -183,7 +183,7 @@ class Instructor {
   bool operator ==(Object other) {
     if ((other is Employee || other is Instructor)) {
       if (other is Instructor) {
-        return id == other.id;
+        return id == other.id && date == other.date;
       }
       if (other is Employee) {
         return id == other.id;

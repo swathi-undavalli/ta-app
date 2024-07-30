@@ -21,13 +21,13 @@ class EmpSelectorBottomSheet extends StatefulWidget {
   final DateTime? selectedDate;
 
   const EmpSelectorBottomSheet({
-    Key? key,
+    super.key,
     required this.initialSelectedInstructors,
     required this.instructorLimit,
     required this.employeeType,
     required this.isTanksRequired,
     required this.selectedDate,
-  }) : super(key: key);
+  });
 
   static Future<List<Instructor>?> getSelectedInstructors(
     BuildContext context, {

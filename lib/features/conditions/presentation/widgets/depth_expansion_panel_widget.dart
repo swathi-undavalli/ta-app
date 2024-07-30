@@ -8,11 +8,11 @@ import '../../models/conditions_model.dart';
 // ignore: must_be_immutable
 class DepthExpansionPanelWidget extends StatefulWidget {
   DepthExpansionPanelWidget({
-    Key? key,
+    super.key,
     required this.level,
     required this.onDeletePressed,
     required this.onChanged,
-  }) : super(key: key);
+  });
 
   Level level;
   Function onDeletePressed;

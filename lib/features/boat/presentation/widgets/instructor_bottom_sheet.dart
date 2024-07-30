@@ -10,11 +10,11 @@ class InstructorTanksBottomSheet extends StatefulWidget {
   final List<int> nitrox;
 
   const InstructorTanksBottomSheet({
-    Key? key,
+    super.key,
     required this.instructors,
     required this.air,
     required this.nitrox,
-  }) : super(key: key);
+  });
 
   static Future<List<List<int>>?> show(
     BuildContext context, {

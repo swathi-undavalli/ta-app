@@ -12,7 +12,7 @@ import '../widgets/depth_expansion_panel_widget.dart';
 import '../widgets/surface_conditions_expansion_panel.dart';
 
 class ConditionsView extends StatefulWidget {
-  const ConditionsView({Key? key}) : super(key: key);
+  const ConditionsView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const ConditionsView(),

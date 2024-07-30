@@ -21,7 +21,7 @@ import '../widgets/app_text_fields.dart';
 import '../widgets/customer_logs_pdf.dart';
 
 class CustomerLogsView extends StatefulWidget {
-  const CustomerLogsView({Key? key}) : super(key: key);
+  const CustomerLogsView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const CustomerLogsView(),

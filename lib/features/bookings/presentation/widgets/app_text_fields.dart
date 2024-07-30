@@ -29,7 +29,7 @@ class AppTextField extends StatefulWidget {
   List<TextInputFormatter>? inputFormatter;
 
   AppTextField({
-    Key? key,
+    super.key,
     this.maxLimit,
     this.isStrictNumber = false,
     this.labelText,
@@ -52,7 +52,7 @@ class AppTextField extends StatefulWidget {
     this.keyboardType = TextInputType.text,
     this.textInputAction = TextInputAction.go,
     this.inputFormatter,
-  }) : super(key: key);
+  });
 
   @override
   // ignore: library_private_types_in_public_api

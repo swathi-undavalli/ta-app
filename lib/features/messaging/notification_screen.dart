@@ -17,7 +17,7 @@ class NotificationsScreen extends StatelessWidget {
 
   final RemoteMessage? message;
 
-  NotificationsScreen({Key? key, this.message}) : super(key: key) {
+  NotificationsScreen({super.key, this.message}) {
     checkFireBase();
   }
 

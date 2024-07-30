@@ -21,7 +21,7 @@ import '../widgets/nav_drawer.dart';
 import '../widgets/template_bottomsheet.dart';
 
 class HomeView extends StatefulWidget {
-  const HomeView({Key? key}) : super(key: key);
+  const HomeView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const HomeView(),

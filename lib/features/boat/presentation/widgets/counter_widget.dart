@@ -7,11 +7,11 @@ import '../../../../core/util/spacing_widgets.dart';
 
 class CounterWidget extends StatefulWidget {
   const CounterWidget({
-    Key? key,
+    super.key,
     required this.onChanged,
     this.label,
     required this.initialValue,
-  }) : super(key: key);
+  });
 
   final Function(int count) onChanged;
   final String? label;

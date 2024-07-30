@@ -8,9 +8,9 @@ class CaptainSelectorBottomSheet extends StatefulWidget {
   final Employee? initialCaptain;
 
   const CaptainSelectorBottomSheet({
-    Key? key,
+    super.key,
     required this.initialCaptain,
-  }) : super(key: key);
+  });
 
   static Future<Employee?> show(
     BuildContext context, {

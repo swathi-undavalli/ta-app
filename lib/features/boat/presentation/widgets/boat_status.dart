@@ -5,10 +5,10 @@ import '../../../../core/constants/constants.dart';
 
 class BoatStatus extends StatefulWidget {
   const BoatStatus({
-    Key? key,
+    super.key,
     required this.initialStatus,
     required this.onChanged,
-  }) : super(key: key);
+  });
   final int initialStatus;
   final Function(int status) onChanged;
 

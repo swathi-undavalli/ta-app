@@ -20,7 +20,7 @@ import '../widgets/check_box_widget.dart';
 import 'new_checklist_view.dart';
 
 class DiveChecklistView extends StatefulWidget {
-  const DiveChecklistView({Key? key, required this.checkListElement, required this.checklist}) : super(key: key);
+  const DiveChecklistView({super.key, required this.checkListElement, required this.checklist});
   final ChecklistElement checkListElement;
   final Checklist checklist;
 

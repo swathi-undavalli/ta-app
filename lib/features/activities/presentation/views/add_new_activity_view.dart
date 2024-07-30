@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/counter_model.dart';
 import '../../../../core/util/alignment_extensions.dart';
@@ -19,7 +20,7 @@ import '../../../logs/presentation/views/log_view.dart';
 import '../../model/colors_data.dart';
 
 class AddNewActivityView extends StatefulWidget {
-  const AddNewActivityView({Key? key, required this.activity}) : super(key: key);
+  const AddNewActivityView({super.key, required this.activity});
 
   static Route route(Activity? activity) => MaterialPageRoute(
         builder: (context) => AddNewActivityView(activity: activity),

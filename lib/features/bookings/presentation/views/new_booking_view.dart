@@ -12,7 +12,7 @@ import '../widgets/app_text_fields.dart';
 class NewBookingView extends StatelessWidget {
   final NewBookingLogic logic = NewBookingLogic();
 
-  NewBookingView({Key? key}) : super(key: key);
+  NewBookingView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => NewBookingView(),

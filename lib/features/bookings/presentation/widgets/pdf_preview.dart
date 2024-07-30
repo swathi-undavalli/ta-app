@@ -5,7 +5,7 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 class PDFViewerPage extends StatelessWidget {
   final String pdfPath;
 
-  const PDFViewerPage({Key? key, required this.pdfPath}) : super(key: key);
+  const PDFViewerPage({super.key, required this.pdfPath});
 
   static const String id = 'PDFViewerPage';
 

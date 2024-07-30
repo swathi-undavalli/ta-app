@@ -12,7 +12,7 @@ import '../../../bookings/models/booking_model.dart';
 class NotificationView extends StatefulWidget {
   final Booking booking;
 
-  const NotificationView({Key? key, required this.booking}) : super(key: key);
+  const NotificationView({super.key, required this.booking});
 
   static Route route(Booking booking) => MaterialPageRoute(
         builder: (context) => NotificationView(booking: booking),

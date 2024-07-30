@@ -20,10 +20,10 @@ class ViewPhotosBottomSheet extends StatefulWidget {
   final String offerTitle;
 
   const ViewPhotosBottomSheet({
-    Key? key,
+    super.key,
     required this.images,
     required this.offerTitle,
-  }) : super(key: key);
+  });
 
   static Future<void> getImages(
     BuildContext context, {

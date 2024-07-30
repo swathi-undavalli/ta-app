@@ -12,7 +12,7 @@ import '../../models/log_model.dart';
 import 'notification_view.dart';
 
 class LogView extends StatelessWidget {
-  const LogView({Key? key}) : super(key: key);
+  const LogView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const LogView(),
@@ -307,4 +307,3 @@ enum LogType {
   addEmployee,
   deleteEmployee,
 }
-

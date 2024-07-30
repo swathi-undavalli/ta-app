@@ -13,7 +13,7 @@ import '../../models/activity_model.dart';
 class BookDateTimeView extends StatelessWidget {
   final NewBookingLogic logic = NewBookingLogic();
 
-  BookDateTimeView({Key? key}) : super(key: key);
+  BookDateTimeView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => BookDateTimeView(),

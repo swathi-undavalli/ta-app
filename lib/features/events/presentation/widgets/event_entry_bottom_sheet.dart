@@ -21,9 +21,9 @@ class EventEntryBottomSheet extends StatefulWidget {
   final Event? event;
 
   const EventEntryBottomSheet({
-    Key? key,
+    super.key,
     this.event,
-  }) : super(key: key);
+  });
 
   static Future show(
     BuildContext context, {

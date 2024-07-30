@@ -10,7 +10,7 @@ import '../../../../core/widgets/phone_number/intl_phone_field.dart';
 import '../../controller/login_controller.dart';
 
 class LoginView extends StatefulWidget {
-  const LoginView({Key? key}) : super(key: key);
+  const LoginView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const LoginView(),

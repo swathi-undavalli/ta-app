@@ -16,7 +16,7 @@ import '../../../boat/presentation/widgets/employee_selector_bottom_sheet.dart';
 import '../../../bookings/presentation/widgets/app_text_fields.dart';
 
 class GeneralInfoView extends StatefulWidget {
-  const GeneralInfoView({Key? key}) : super(key: key);
+  const GeneralInfoView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const GeneralInfoView(),

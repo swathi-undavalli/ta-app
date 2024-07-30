@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:lottie/lottie.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
 import '../../../core/util/alignment_extensions.dart';
@@ -16,7 +17,7 @@ import '../models/marketing.dart';
 import '../widgets/marketing_content_entry_bottom_sheet.dart';
 
 class MarketingView extends StatefulWidget {
-  const MarketingView({Key? key}) : super(key: key);
+  const MarketingView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const MarketingView(),

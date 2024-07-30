@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_ui_tools/styling/spacing_widgets.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/widgets/access_levels.dart';
@@ -10,7 +12,7 @@ import '../../../bookings/models/activity_model.dart';
 import 'add_new_activity_view.dart';
 
 class AllActivitiesView extends StatefulWidget {
-  const AllActivitiesView({Key? key}) : super(key: key);
+  const AllActivitiesView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const AllActivitiesView(),
@@ -75,7 +77,7 @@ class _AllActivitiesViewState extends State<AllActivitiesView> {
                             } catch (e) {
                               return const SizedBox();
                             }
-                          }).toList(),
+                          }),
                           Spacing.h100,
                         ],
                       ),

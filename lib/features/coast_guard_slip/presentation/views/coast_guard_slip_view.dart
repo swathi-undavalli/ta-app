@@ -1,10 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -16,7 +18,7 @@ import '../../../employees/model/employee.dart';
 import '../widgets/coast_guard_slip_pdf.dart';
 
 class CoastGuardSlipView extends StatefulWidget {
-  const CoastGuardSlipView({Key? key}) : super(key: key);
+  const CoastGuardSlipView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const CoastGuardSlipView(),

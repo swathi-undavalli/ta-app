@@ -2,14 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/util/alignment_extensions.dart';
 
 class BookingStatus extends StatefulWidget {
   const BookingStatus({
-    Key? key,
+    super.key,
     required this.initialStatus,
     required this.onChanged,
     required this.isDSD,
-  }) : super(key: key);
+  });
   final int initialStatus;
   final bool isDSD;
   final Function(int status) onChanged;
@@ -30,8 +31,7 @@ class _BookingStatusState extends State<BookingStatus> {
 
   @override
   Widget build(BuildContext context) {
-    int checkPoint =
-        (widget.isDSD ? dsdStatus.length : coursesStatus.length) - 1;
+    int checkPoint = (widget.isDSD ? dsdStatus.length : coursesStatus.length) - 1;
 
     return Row(
       children: [
@@ -48,9 +48,7 @@ class _BookingStatusState extends State<BookingStatus> {
             height: 33,
             width: 27,
             decoration: BoxDecoration(
-              color: widget.isDSD
-                  ? getDSDProgressColor(status)
-                  : getCourseProgressColor(status),
+              color: widget.isDSD ? getDSDProgressColor(status) : getCourseProgressColor(status),
               borderRadius: const BorderRadius.only(
                 topLeft: Radius.circular(4),
                 bottomLeft: Radius.circular(4),
@@ -65,10 +63,9 @@ class _BookingStatusState extends State<BookingStatus> {
         const SizedBox(width: 2),
         Container(
           height: 33,
+          width: 100,
           decoration: BoxDecoration(
-            color: widget.isDSD
-                ? getDSDProgressColor(status)
-                : getCourseProgressColor(status),
+            color: widget.isDSD ? getDSDProgressColor(status) : getCourseProgressColor(status),
           ),
           child: Text(
             widget.isDSD ? dsdStatus[status] : coursesStatus[status],
@@ -76,7 +73,7 @@ class _BookingStatusState extends State<BookingStatus> {
               fontSize: FontSize.small,
               fontWeight: FontWeight.w600,
             ),
-          ).paddingOnly(left: 15, right: 15, top: 8),
+          ).paddingSymmetric(horizontal: 15).center,
         ),
         const SizedBox(width: 2),
         GestureDetector(
@@ -91,9 +88,7 @@ class _BookingStatusState extends State<BookingStatus> {
             height: 33,
             width: 27,
             decoration: BoxDecoration(
-              color: widget.isDSD
-                  ? getDSDProgressColor(status)
-                  : getCourseProgressColor(status),
+              color: widget.isDSD ? getDSDProgressColor(status) : getCourseProgressColor(status),
               borderRadius: const BorderRadius.only(
                 topRight: Radius.circular(4),
                 bottomRight: Radius.circular(4),
@@ -147,16 +142,16 @@ class _BookingStatusState extends State<BookingStatus> {
 
   List<String> coursesStatus = [
     'Booked In',
-    'Paperwork ongoing',
-    'Paperwork done',
+    'Pw ongoing',
+    'Pw done',
     'Dive center',
     'Harbour',
   ];
 
   List<String> dsdStatus = [
     'Booked In',
-    'Paperwork ongoing',
-    'Paperwork done',
+    'Pw ongoing',
+    'Pw done',
     'Pool ongoing',
     'Pool completed',
     'Dive center',

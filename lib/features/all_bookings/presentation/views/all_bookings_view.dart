@@ -7,7 +7,7 @@ import '../../../bookings/models/booking_model.dart';
 import '../../../bookings/presentation/widgets/all_booking_expansion_panel.dart';
 
 class AllBookingsView extends StatefulWidget {
-  const AllBookingsView({Key? key}) : super(key: key);
+  const AllBookingsView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => const AllBookingsView(),

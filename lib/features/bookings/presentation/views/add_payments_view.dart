@@ -14,7 +14,7 @@ class AddPaymentsView extends StatelessWidget {
 
   final Booking? booking;
 
-  AddPaymentsView({Key? key, required this.booking}) : super(key: key);
+  AddPaymentsView({super.key, required this.booking});
 
   static Route route(Booking booking) => MaterialPageRoute(
         builder: (context) => AddPaymentsView(

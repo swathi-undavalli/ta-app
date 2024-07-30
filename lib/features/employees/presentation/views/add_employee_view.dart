@@ -21,7 +21,7 @@ import '../../model/employee.dart';
 class AddEmployeeView extends StatefulWidget {
   final Employee? employeeArgument;
 
-  const AddEmployeeView({Key? key, this.employeeArgument}) : super(key: key);
+  const AddEmployeeView({super.key, this.employeeArgument});
 
   static Route route(Employee? employeeArgument) => MaterialPageRoute(
         builder: (context) => AddEmployeeView(employeeArgument: employeeArgument),

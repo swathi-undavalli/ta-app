@@ -8,8 +8,8 @@ import '../../../dive_checklist/presentation/views/new_checklist_view.dart';
 
 class TemplateBottomSheet extends StatefulWidget {
   const TemplateBottomSheet({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   static Future<Checklist?> show(BuildContext context) async {
     var data = await showModalBottomSheet(

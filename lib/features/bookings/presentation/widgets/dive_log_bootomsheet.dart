@@ -18,10 +18,10 @@ import 'copy_dives_bottomsheet.dart';
 
 class DiveLogBottomSheet extends StatefulWidget {
   const DiveLogBottomSheet({
-    Key? key,
+    super.key,
     required this.bookingModel,
     required this.selectedDate,
-  }) : super(key: key);
+  });
 
   final Booking bookingModel;
   final DateTime selectedDate;

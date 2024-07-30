@@ -22,10 +22,10 @@ import '../../controllers/home_controller.dart';
 
 class EmployeeDiveCalenderListTile extends StatefulWidget {
   EmployeeDiveCalenderListTile({
-    Key? key,
+    super.key,
     required this.itemModel,
     required this.selectedDate,
-  }) : super(key: key);
+  });
 
   final ItemModel itemModel;
   final DateTime selectedDate;

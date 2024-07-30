@@ -18,7 +18,7 @@ class BoatsView extends StatelessWidget {
   ScrollController scrollController = ScrollController();
   late BookingsCalenderWidgetNew bookingsCalenderWidget;
 
-  BoatsView({Key? key}) : super(key: key);
+  BoatsView({super.key});
 
   static Route route() => MaterialPageRoute(
         builder: (context) => BoatsView(),

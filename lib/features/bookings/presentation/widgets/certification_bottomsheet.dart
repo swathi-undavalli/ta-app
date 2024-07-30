@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,10 +18,10 @@ import 'certification_status.dart';
 
 class CertificationBottomSheet extends StatefulWidget {
   const CertificationBottomSheet({
-    Key? key,
+    super.key,
     required this.itemModel,
     required this.selectedDate,
-  }) : super(key: key);
+  });
 
   final ItemModel itemModel;
   final DateTime? selectedDate;
@@ -158,7 +159,7 @@ class _CertificationBottomSheetState extends State<CertificationBottomSheet> {
                   Spacing.h15,
                 ],
               );
-            }).toList(),
+            }),
             Spacing.h20,
             buildAddCustomerButton(),
           ],
@@ -187,7 +188,7 @@ class _CertificationBottomSheetState extends State<CertificationBottomSheet> {
 
         downloadURL = await storageReference.getDownloadURL();
       } catch (error) {
-        print('Error uploading image : $error');
+        log('Error uploading image : $error');
       }
     }
 

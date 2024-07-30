@@ -25,7 +25,7 @@ import 'book_date_time_view.dart';
 class EditBookingView extends StatefulWidget {
   final Booking? booking;
 
-  const EditBookingView({Key? key, required this.booking}) : super(key: key);
+  const EditBookingView({super.key, required this.booking});
 
   static Route route(Booking booking) => MaterialPageRoute(
         builder: (context) => EditBookingView(

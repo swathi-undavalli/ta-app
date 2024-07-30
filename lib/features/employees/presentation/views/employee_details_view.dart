@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -17,7 +18,7 @@ import 'add_employee_view.dart';
 class EmployeeDetailsView extends StatefulWidget {
   final Employee employeeArgument;
 
-  const EmployeeDetailsView({Key? key, required this.employeeArgument}) : super(key: key);
+  const EmployeeDetailsView({super.key, required this.employeeArgument});
 
   static Route route(Employee employeeArgument) => MaterialPageRoute(
         builder: (context) => EmployeeDetailsView(employeeArgument: employeeArgument),

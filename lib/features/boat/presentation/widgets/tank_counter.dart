@@ -4,12 +4,12 @@ import '../../../../core/constants/constants.dart';
 
 class TankCounter extends StatefulWidget {
   const TankCounter({
-    Key? key,
+    super.key,
     required this.onChanged,
     required this.nitrox,
     required this.air,
     this.titleColor,
-  }) : super(key: key);
+  });
 
   final Function(int nitrox, int air) onChanged;
   final int nitrox;
