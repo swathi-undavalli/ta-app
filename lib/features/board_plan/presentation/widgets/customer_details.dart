@@ -27,6 +27,7 @@ List<String> dsdStatus = [
   'Pool ongoing',
   'Pool completed',
   'Dive center',
+  'Harbour',
 ];
 
 class CustomerList extends StatefulWidget {
@@ -66,6 +67,7 @@ class CustomerListState extends State<CustomerList> {
   Map<String?, List<Booking>> groupBookingByInstructorId() {
     Map<String?, List<Booking>> groupedStudents = {};
     groupedStudents['others'] = [];
+
     for (var booking in getBookings) {
       String? id = booking.getInstructor(widget.selectedDate)?.id;
 
@@ -109,7 +111,7 @@ class CustomerListState extends State<CustomerList> {
               children: [
                 const Text(
                   ' - ',
-                  style: TextStyle(fontWeight: FontWeight.normal, color: Colors.red),
+                  style: TextStyle(fontWeight: FontWeight.normal, color: Colors.red, fontSize: 7),
                 ).width(10),
                 Text(
                   e.name,
@@ -327,11 +329,14 @@ class CustomerListState extends State<CustomerList> {
 
       for (var booking in bookings) {
         if (booking.activity![0]!.id == '11') {
+          print(booking.boatDetails?.status ?? '-');
+
           dsds.add(booking);
         } else {
           otherBookings.add(booking);
         }
       }
+      print(dsds.length);
       return Column(
         children: [
           ...List.generate(
@@ -538,12 +543,11 @@ class CustomerListState extends State<CustomerList> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               if ((bookings[index].boatDetails?.diveBuddies ?? []).isNotEmpty)
-                ...(bookings[index].boatDetails?.diveBuddies ?? [])
-                    .map(
-                      (diveBuddy) => Text(
-                        diveBuddy.name.capitalizeFirst ?? '-',
-                        style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),
-                      ),
+                ...(bookings[index].boatDetails?.diveBuddies ?? []).map(
+                  (diveBuddy) => Text(
+                    diveBuddy.name.capitalizeFirst ?? '-',
+                    style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),
+                  ),
                 ),
             ],
           ),
@@ -553,28 +557,27 @@ class CustomerListState extends State<CustomerList> {
           child: Column(
             children: [
               if ((bookings[index].boatDetails?.diveBuddies ?? []).isNotEmpty)
-                ...(bookings[index].boatDetails?.diveBuddies ?? [])
-                    .map(
-                      (diveBuddy) => Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            '${diveBuddy.air ?? 0}',
-                            style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue),
-                          ),
-                          const Text(
-                            ' - ',
-                            style: TextStyle(
-                              fontFamily: AppFonts.nunito,
-                              fontSize: 7.0,
-                            ),
-                          ),
-                          Text(
-                            '${diveBuddy.nitrox ?? 0}',
-                            style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),
-                          ),
-                        ],
+                ...(bookings[index].boatDetails?.diveBuddies ?? []).map(
+                  (diveBuddy) => Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        '${diveBuddy.air ?? 0}',
+                        style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.blue),
                       ),
+                      const Text(
+                        ' - ',
+                        style: TextStyle(
+                          fontFamily: AppFonts.nunito,
+                          fontSize: 7.0,
+                        ),
+                      ),
+                      Text(
+                        '${diveBuddy.nitrox ?? 0}',
+                        style: const TextStyle(fontFamily: AppFonts.nunito, fontSize: 7.0, color: Colors.green),
+                      ),
+                    ],
+                  ),
                 ),
             ],
           ),
