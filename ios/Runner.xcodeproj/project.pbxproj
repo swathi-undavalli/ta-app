@@ -144,6 +144,7 @@
 				9705A1C41CF9048500538489 /* Embed Frameworks */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				02DDB2891DBDC6811C4D5F8B /* [CP] Embed Pods Frameworks */,
+				C919D5B26A5BD3162DC57AA3 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -250,6 +251,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build";
+		};
+		C919D5B26A5BD3162DC57AA3 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
+			showEnvVarsInLog = 0;
 		};
 		FFC5189490269946EF4AB429 /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -360,11 +378,11 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = A5DYUGZ2QY;
 				ENABLE_BITCODE = NO;
 				FLUTTER_BUILD_NAME = 1.1.3;
-				FLUTTER_BUILD_NUMBER = 17;
+				FLUTTER_BUILD_NUMBER = 20;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ta_app;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -501,11 +519,11 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = A5DYUGZ2QY;
 				ENABLE_BITCODE = NO;
 				FLUTTER_BUILD_NAME = 1.1.3;
-				FLUTTER_BUILD_NUMBER = 17;
+				FLUTTER_BUILD_NUMBER = 20;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ta_app;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
@@ -534,11 +552,11 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 17;
+				CURRENT_PROJECT_VERSION = 20;
 				DEVELOPMENT_TEAM = A5DYUGZ2QY;
 				ENABLE_BITCODE = NO;
 				FLUTTER_BUILD_NAME = 1.1.3;
-				FLUTTER_BUILD_NUMBER = 17;
+				FLUTTER_BUILD_NUMBER = 20;
 				INFOPLIST_FILE = Runner/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = ta_app;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
