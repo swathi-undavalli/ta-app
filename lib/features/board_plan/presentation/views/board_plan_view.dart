@@ -16,8 +16,10 @@ import 'package:temple_ui_tools/utils/utils.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
+import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
+import '../../../employees/model/employee.dart';
 import '../widgets/customer_details.dart';
 
 class BoardPlanView extends StatefulWidget {
@@ -35,10 +37,9 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   bool showLoading = true;
   bool isGeneralInfoSelected = false;
   Boat? selectedBoat;
+  List<Instructor> longLeavesEmployeesList = [];
 
   List<Boat> boats = [];
-
-  List<Booking> bookings = [];
 
   final GlobalKey widgetKey = GlobalKey();
 
@@ -46,6 +47,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   void initState() {
     selectedDate = DateTime.now();
     init(selectedDate).whenComplete(() => setState(() {}));
+    getEmployees(selectedDate);
     super.initState();
   }
 
@@ -53,7 +55,8 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      floatingActionButton: (boats.isNotEmpty) ? buildFloatingActionButton() : const SizedBox(),
+      floatingActionButton:
+          (boats.isNotEmpty) ? buildFloatingActionButton() : const SizedBox(),
       body: SafeArea(
         child: (showLoading)
             ? Container(
@@ -82,7 +85,9 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                             selectedBoat = null;
                             setState(() {});
                           },
-                          color: (isGeneralInfoSelected) ? AppColors.text.lightSkyBlue : Colors.white,
+                          color: (isGeneralInfoSelected)
+                              ? AppColors.text.lightSkyBlue
+                              : Colors.white,
                           title: 'General Info',
                         ),
                         ...boats.map(
@@ -92,7 +97,9 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                               isGeneralInfoSelected = false;
                               setState(() {});
                             },
-                            color: (boat.id == selectedBoat?.id) ? AppColors.text.lightSkyBlue : Colors.white,
+                            color: (boat.id == selectedBoat?.id)
+                                ? AppColors.text.lightSkyBlue
+                                : Colors.white,
                             title: boat.name,
                           ),
                         ),
@@ -104,12 +111,15 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                         stream: FirebaseFirestore.instance
                             .collection('bookings')
                             .where(
-                              'bookingDate',
-                              arrayContains: DateFormat('dd-MM-yyyy').format(selectedDate),
+                          'bookingDate',
+                              arrayContains:
+                                  DateFormat('dd-MM-yyyy').format(selectedDate),
                             )
                             .snapshots(),
                         builder: (context, snapshot) {
-                          if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+                          if (snapshot.hasError ||
+                              snapshot.connectionState ==
+                                  ConnectionState.waiting) {
                             return const SizedBox(
                               height: 15,
                               width: 15,
@@ -145,7 +155,8 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                         alignment: Alignment.topLeft,
                         child: RepaintBoundary(
                           key: widgetKey,
-                          child: const GeneralInfoData(),
+                          child: GeneralInfoData(
+                              longLeavesEmployeesList: longLeavesEmployeesList),
                         ),
                       ),
                   ],
@@ -162,13 +173,32 @@ class _BoardPlanViewState extends State<BoardPlanView> {
     setState(() {});
   }
 
+  Future<void> getEmployees(DateTime date) async {
+    var data = await FirebaseFirestore.instance.collection('employees').get();
+    var docs = data.docs;
+    longLeavesEmployeesList = [];
+    for (var doc in (docs)) {
+      if ((doc.data()).isNotEmpty) {
+        Employee employee = Employee.fromMap(doc.data());
+        bool hasLongLeave = employee.isOnLeave(date);
+        if (hasLongLeave) {
+          Instructor instructor =
+              Instructor(id: employee.id, name: employee.name);
+          longLeavesEmployeesList.add(instructor);
+        }
+      }
+    }
+  }
+
   Future<void> getAllBoats(DateTime date) async {
     boats = [];
     selectedBoat = null;
     isGeneralInfoSelected = false;
 
-    var data =
-        await FirebaseFirestore.instance.collection('dailyBoats').doc(DateFormat('dd-MM-yyyy').format(date)).get();
+    var data = await FirebaseFirestore.instance
+        .collection('dailyBoats')
+        .doc(DateFormat('dd-MM-yyyy').format(date))
+        .get();
 
     BoatsModel boatsModel = BoatsModel.fromMap(data.data());
     boats.addAll(boatsModel.boats as Iterable<Boat>);
@@ -185,6 +215,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
     setState(() {});
 
     await init(selectedDate);
+    await getEmployees(selectedDate);
     showLoading = false;
     setState(() {});
   }
@@ -283,9 +314,11 @@ class _BoardPlanViewState extends State<BoardPlanView> {
 
   Future<void> _captureAndShare() async {
     try {
-      RenderRepaintBoundary boundary = widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary =
+          widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 10);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
       final tempDir = await getTemporaryDirectory();
       final tempPath = '${tempDir.path}/screenshot.png';
@@ -306,12 +339,15 @@ class _BoardPlanViewState extends State<BoardPlanView> {
 
   Future<String?> captureImage() async {
     try {
-      RenderRepaintBoundary boundary = widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary =
+          widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 10);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
       final tempDir = await getTemporaryDirectory();
-      final tempPath = '${tempDir.path}/screenshot${DateTime.now().toIso8601String()}.png';
+      final tempPath =
+          '${tempDir.path}/screenshot${DateTime.now().toIso8601String()}.png';
       File(tempPath).writeAsBytesSync(pngBytes);
       return tempPath;
     } catch (e) {
@@ -430,7 +466,9 @@ class _BoardPlanViewState extends State<BoardPlanView> {
 }
 
 class GeneralInfoData extends StatelessWidget {
-  const GeneralInfoData({super.key});
+  const GeneralInfoData({super.key, required this.longLeavesEmployeesList});
+
+  final List<Instructor> longLeavesEmployeesList;
 
   @override
   Widget build(BuildContext context) {
@@ -439,8 +477,10 @@ class GeneralInfoData extends StatelessWidget {
           .collection('dailyBoats')
           .doc(DateFormat('dd-MM-yyyy').format(selectedDate))
           .snapshots(),
-      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError ||
+            snapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox(
             height: 15,
             width: 15,
@@ -450,7 +490,8 @@ class GeneralInfoData extends StatelessWidget {
             ),
           );
         }
-        Map<String, dynamic>? data = snapshot.data?.data() as Map<String, dynamic>?;
+        Map<String, dynamic>? data =
+            snapshot.data?.data() as Map<String, dynamic>?;
         if (data == null) {
           return const Text('No data added');
         }
@@ -761,6 +802,20 @@ class GeneralInfoData extends StatelessWidget {
                         getNames(boatsModel.dsd?.leaves, true),
                         style: const TextStyle(fontSize: 11),
                       ),
+                      Spacing.h3,
+                      const Text(
+                        'Long leaves',
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 11,
+                        ),
+                      ),
+                      Spacing.h3,
+                      Text(
+                        getNames(longLeavesEmployeesList, true),
+                        style: const TextStyle(fontSize: 11),
+                      ),
+                      Spacing.h3,
                       const Text(
                         'General Notes',
                         style: TextStyle(
@@ -772,7 +827,8 @@ class GeneralInfoData extends StatelessWidget {
                       SizedBox(
                         width: 90,
                         child: Text(
-                          (boatsModel.dsd?.generalNotes != null && boatsModel.dsd?.generalNotes != '')
+                          (boatsModel.dsd?.generalNotes != null &&
+                                  boatsModel.dsd?.generalNotes != '')
                               ? boatsModel.dsd!.generalNotes!
                               : '-',
                           style: const TextStyle(fontSize: 11),
@@ -800,7 +856,8 @@ class GeneralInfoData extends StatelessWidget {
           )
           .snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.hasError ||
+            snapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox(
             height: 15,
             width: 15,

@@ -140,6 +140,19 @@ class Employee {
       agencyId: agencyId,
     );
   }
+
+  bool isOnLeave(DateTime now) {
+    if ((leaves ?? []).isEmpty) {
+      return false;
+    }
+
+    DateTime startDate = (leaves![0].toDate());
+    DateTime endDate = (leaves![1].toDate()).add(const Duration(days: 1));
+
+    return now.isAfter(startDate) && now.isBefore(endDate) ||
+        now.isAtSameMomentAs(startDate) ||
+        now.isAtSameMomentAs(endDate);
+  }
 }
 
 class AccessLevels {

@@ -24,7 +24,8 @@ class AddEmployeeView extends StatefulWidget {
   const AddEmployeeView({super.key, this.employeeArgument});
 
   static Route route(Employee? employeeArgument) => MaterialPageRoute(
-        builder: (context) => AddEmployeeView(employeeArgument: employeeArgument),
+        builder: (context) =>
+            AddEmployeeView(employeeArgument: employeeArgument),
       );
 
   @override
@@ -84,34 +85,53 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
   void initState() {
     super.initState();
 
-    firstNameTED = TextEditingController(text: widget.employeeArgument?.firstName);
-    lastNameTED = TextEditingController(text: widget.employeeArgument?.lastName);
-    nickNameTED = TextEditingController(text: widget.employeeArgument?.nickName);
-    phoneNumberTED = TextEditingController(text: widget.employeeArgument?.phoneNumber);
-    countryCodeTED = TextEditingController(text: widget.employeeArgument?.countryCode);
-    agencyIdTED = TextEditingController(text: widget.employeeArgument?.agencyId);
+    firstNameTED =
+        TextEditingController(text: widget.employeeArgument?.firstName);
+    lastNameTED =
+        TextEditingController(text: widget.employeeArgument?.lastName);
+    nickNameTED =
+        TextEditingController(text: widget.employeeArgument?.nickName);
+    phoneNumberTED =
+        TextEditingController(text: widget.employeeArgument?.phoneNumber);
+    countryCodeTED =
+        TextEditingController(text: widget.employeeArgument?.countryCode);
+    agencyIdTED =
+        TextEditingController(text: widget.employeeArgument?.agencyId);
     roleTED = TextEditingController(text: widget.employeeArgument?.role);
     genderTED = TextEditingController(text: widget.employeeArgument?.gender);
     employeeIdTED = TextEditingController(text: widget.employeeArgument?.id);
     countryIsoCode = widget.employeeArgument?.countryIsoCode ?? 'IN';
 
     viewBookings = widget.employeeArgument?.accessLevels?.viewBookings ?? false;
-    weatherReport = widget.employeeArgument?.accessLevels?.weatherReport ?? false;
-    createBookings = widget.employeeArgument?.accessLevels?.createBookings ?? false;
+    weatherReport =
+        widget.employeeArgument?.accessLevels?.weatherReport ?? false;
+    createBookings =
+        widget.employeeArgument?.accessLevels?.createBookings ?? false;
     editBookings = widget.employeeArgument?.accessLevels?.editBookings ?? false;
-    personalAttendanceReport = widget.employeeArgument?.accessLevels?.personalAttendanceReport ?? false;
-    editActivityPrices = widget.employeeArgument?.accessLevels?.editActivityPrices ?? false;
+    personalAttendanceReport =
+        widget.employeeArgument?.accessLevels?.personalAttendanceReport ??
+            false;
+    editActivityPrices =
+        widget.employeeArgument?.accessLevels?.editActivityPrices ?? false;
     addActivity = widget.employeeArgument?.accessLevels?.addActivity ?? false;
-    editEmployees = widget.employeeArgument?.accessLevels?.editEmployees ?? false;
-    personalProfileEdit = widget.employeeArgument?.accessLevels?.personalProfileEdit ?? false;
-    attendanceReport = widget.employeeArgument?.accessLevels?.attendanceReport ?? false;
-    createEmployees = widget.employeeArgument?.accessLevels?.createEmployees ?? false;
-    viewEmployees = widget.employeeArgument?.accessLevels?.viewEmployees ?? false;
-    notifications = widget.employeeArgument?.accessLevels?.notifications ?? false;
+    editEmployees =
+        widget.employeeArgument?.accessLevels?.editEmployees ?? false;
+    personalProfileEdit =
+        widget.employeeArgument?.accessLevels?.personalProfileEdit ?? false;
+    attendanceReport =
+        widget.employeeArgument?.accessLevels?.attendanceReport ?? false;
+    createEmployees =
+        widget.employeeArgument?.accessLevels?.createEmployees ?? false;
+    viewEmployees =
+        widget.employeeArgument?.accessLevels?.viewEmployees ?? false;
+    notifications =
+        widget.employeeArgument?.accessLevels?.notifications ?? false;
     boatPlan = widget.employeeArgument?.accessLevels?.boatPlan ?? false;
-    marketingGallery = widget.employeeArgument?.accessLevels?.marketingGallery ?? false;
+    marketingGallery =
+        widget.employeeArgument?.accessLevels?.marketingGallery ?? false;
     offers = widget.employeeArgument?.accessLevels?.offers ?? false;
-    processCertificate = widget.employeeArgument?.accessLevels?.processCertificate ?? false;
+    processCertificate =
+        widget.employeeArgument?.accessLevels?.processCertificate ?? false;
   }
 
   @override
@@ -168,7 +188,9 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
                             initialCountryCode: countryIsoCode,
                             showCountryFlag: false,
                             controller: phoneNumberTED,
-                            inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly
+                            ],
                             decoration: const InputDecoration(
                               labelText: 'Phone Number',
                               labelStyle: TextStyle(
@@ -265,6 +287,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: viewBookings!,
           onChanged: (value) {
             viewBookings = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -272,6 +295,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: createBookings!,
           onChanged: (value) {
             createBookings = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -279,6 +303,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: editBookings!,
           onChanged: (value) {
             editBookings = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -286,6 +311,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: viewEmployees!,
           onChanged: (value) {
             viewEmployees = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -293,6 +319,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: createEmployees!,
           onChanged: (value) {
             createEmployees = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -300,6 +327,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: editEmployees!,
           onChanged: (value) {
             editEmployees = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -307,6 +335,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: personalProfileEdit!,
           onChanged: (value) {
             personalProfileEdit = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -314,6 +343,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: personalAttendanceReport!,
           onChanged: (value) {
             personalAttendanceReport = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -321,6 +351,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: attendanceReport!,
           onChanged: (value) {
             attendanceReport = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -328,6 +359,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: weatherReport!,
           onChanged: (value) {
             weatherReport = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -335,6 +367,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: editActivityPrices!,
           onChanged: (value) {
             editActivityPrices = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -342,6 +375,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: addActivity!,
           onChanged: (value) {
             addActivity = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -349,6 +383,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: boatPlan!,
           onChanged: (value) {
             boatPlan = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -356,6 +391,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: marketingGallery!,
           onChanged: (value) {
             marketingGallery = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -363,6 +399,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: offers!,
           onChanged: (value) {
             offers = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -370,6 +407,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: processCertificate!,
           onChanged: (value) {
             processCertificate = value;
+            setState(() {});
           },
         ),
         buildSwitch(
@@ -377,6 +415,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: notifications!,
           onChanged: (value) {
             notifications = value;
+            setState(() {});
           },
         ),
       ],
@@ -600,16 +639,19 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
         showLoading = true;
       });
 
-      String employeeId;
-      if (isEditMode) {
-        employeeId = employeeIdTED.text;
-      } else {
-        var data = await FirebaseFirestore.instance.collection('counter').doc('count').get();
+      if (isEditMode == false) {
+        var data = await FirebaseFirestore.instance
+            .collection('counter')
+            .doc('count')
+            .get();
         CounterModel counterModel = CounterModel.fromMap(data.data() ?? {});
-        employeeId = (counterModel.employee! + 1).toString();
         if (int.parse(employeeIdTED.text) < 900) {
-          counterModel = counterModel.copyWith(employee: int.tryParse(employeeId) ?? 0);
-          await FirebaseFirestore.instance.collection('counter').doc('count').set(counterModel.toMap());
+          counterModel = counterModel.copyWith(
+              employee: (counterModel.employee! + 1) ?? 0);
+          await FirebaseFirestore.instance
+              .collection('counter')
+              .doc('count')
+              .set(counterModel.toMap());
         }
       }
 
@@ -617,7 +659,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
         firstName: firstNameTED.text.trim().capitalizeFirst,
         lastName: lastNameTED.text.trim().capitalizeFirst,
         nickName: nickNameTED.text.trim().capitalizeFirst,
-        id: employeeId,
+        id: employeeIdTED.text,
         phoneNumber: phoneNumberTED.text,
         countryCode: countryCodeTED.text,
         role: roleTED.text,
@@ -644,10 +686,17 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           processCertificate: processCertificate,
         ),
       );
-      await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
+      await FirebaseFirestore.instance
+          .collection('employees')
+          .doc(employee.id)
+          .set(employee.toMap());
 
-      LogModel logModel = LogModel(type: LogType.addEmployee, employeeName: employee.name);
-      await FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
+      LogModel logModel =
+          LogModel(type: LogType.addEmployee, employeeName: employee.name);
+      await FirebaseFirestore.instance
+          .collection('logs')
+          .doc()
+          .set(logModel.toMap());
 
       Fluttertoast.showToast(msg: (isEditMode) ? 'Updated' : 'Saved');
 

@@ -1,11 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
-import '../../controller/roaster_controller.dart';
+import '../../../boat/models/boats.dart';
+import '../../../bookings/models/booking_model.dart';
+import 'roaster_details_view.dart';
 
 class RoasterView extends StatefulWidget {
   const RoasterView({super.key});
@@ -19,7 +23,18 @@ class RoasterView extends StatefulWidget {
 }
 
 class _RoasterViewState extends State<RoasterView> {
-  final RoasterLogic logic = RoasterLogic();
+  DateTime selectedDate = DateTime.now();
+  bool showLoading = false;
+  Boat? selectedBoat;
+
+  List<Boat> boats = [];
+
+  @override
+  void initState() {
+    selectedDate = DateTime.now();
+    init(selectedDate).whenComplete(() => setState(() {}));
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,64 +42,268 @@ class _RoasterViewState extends State<RoasterView> {
       backgroundColor: AppColors.background.lightBlue,
       appBar: const AppBarWidget(heading: 'Roaster'),
       body: SafeArea(
-        child: GetBuilder<RoasterController>(
-          builder: (controller) {
-            return Column(
-              children: [
-                Spacing.h20,
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    buildButton(
-                      onTap: () {
-                        logic.onDateChanged(
-                          controller.selectedDate.subtract(const Duration(days: 1)),
-                        );
-                      },
-                      icon: Icons.arrow_back_ios_rounded,
-                    ),
-                    Spacing.w20,
-                    Text(
-                      DateFormat('dd-MMM-yyyy').format(controller.selectedDate),
-                      style: const TextStyle(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    Spacing.w20,
-                    buildButton(
-                      onTap: () {
-                        logic.onDateChanged(
-                          controller.selectedDate.add(const Duration(days: 1)),
-                        );
-                      },
-                      icon: Icons.arrow_forward_ios_rounded,
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      splashRadius: 20,
-                      onPressed: () {
-                        selectDate(context);
-                      },
-                      icon: const Icon(
-                        Icons.calendar_today_outlined,
-                        size: 17,
-                      ),
-                    ),
-                  ],
+        child: (showLoading)
+            ? Container(
+                color: Colors.transparent,
+                width: Screen.width,
+                height: Screen.height,
+                child: const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.black,
+                  ),
                 ),
-              ],
-            ).paddingSymmetric(horizontal: 20);
-          },
-        ),
+              )
+            : Column(
+                children: [
+                  Spacing.h20,
+                  buildCalenderWidget(),
+                  Spacing.h20,
+                  buildAllBoats(),
+                  Spacing.h30,
+                  buildCustomers(),
+                ],
+              ),
       ),
     );
+  }
+
+  Widget buildCustomers() {
+    if (selectedBoat != null) {
+      return StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+        stream: FirebaseFirestore.instance
+            .collection('bookings')
+            .where(
+              'bookingDate',
+              arrayContains: DateFormat('dd-MM-yyyy').format(selectedDate),
+            )
+            .snapshots(),
+        builder: (context, snapshot) {
+          if (snapshot.hasError ||
+              snapshot.connectionState == ConnectionState.waiting) {
+            return const SizedBox(
+              height: 15,
+              width: 15,
+              child: CircularProgressIndicator(
+                strokeWidth: 2,
+                color: Colors.black,
+              ),
+            );
+          }
+          final data = snapshot.data?.docs;
+          List<Booking> bookings = [];
+          data?.forEach((element) {
+            Booking booking = Booking.fromMap(element.data());
+            if (booking.isDSD) {
+              bookings.add(booking);
+            }
+          });
+          List<Booking> filteredBookings = bookings.where((Booking booking) {
+            return (booking.getBoatInfo(selectedDate)?.id == selectedBoat?.id);
+          }).toList();
+
+          return Expanded(
+            child: ListView.builder(
+              itemCount: filteredBookings.length,
+              itemBuilder: (context, index) {
+                Booking booking = filteredBookings[index];
+
+                return Column(
+                  children: booking.pax!.map((p) {
+                    return InkWell(
+                      onTap: () {
+                        Navigator.push(context, RoasterDetailsView.route());
+                      },
+                      child: Column(
+                        children: [
+                          Row(
+                            children: [
+                              Spacing.w15,
+                              Container(
+                                height: 40,
+                                width: 40,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: AppColors.text.skyBlue),
+                                child: Center(
+                                  child: Text(
+                                    booking.id ?? '',
+                                    style: TextStyle(
+                                      color: AppColors.text.white,
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: AppFonts.nunito,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Spacing.w20,
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      '${p['first-name']}'
+                                      ' ${p['last-name']}',
+                                      style: TextStyle(
+                                        color: AppColors.text.black,
+                                        fontSize: 13,
+                                        fontFamily: AppFonts.nunito,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ).paddingSymmetric(horizontal: 20),
+                          Container(
+                            height: 1,
+                            width: Screen.width,
+                            color: AppColors.text.grey,
+                          ).paddingSymmetric(
+                            horizontal: 15,
+                            vertical: 20,
+                          ),
+                        ],
+                      ),
+                    );
+                  }).toList(),
+                );
+              },
+            ),
+          );
+        },
+      );
+    }
+    return const SizedBox();
+  }
+
+  Widget buildAllBoats() {
+    return Wrap(
+      runSpacing: 15,
+      spacing: 15,
+      children: [
+        ...boats.map(
+          (boat) => buildChip(
+            onTap: () {
+              selectedBoat = boat;
+              setState(() {});
+            },
+            color: (boat.id == selectedBoat?.id)
+                ? AppColors.text.lightSkyBlue
+                : Colors.white,
+            title: boat.name,
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget buildChip({
+    required Function onTap,
+    required Color color,
+    required String title,
+  }) {
+    return GestureDetector(
+      onTap: () {
+        onTap();
+      },
+      child: Container(
+        height: 35,
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          title,
+          style: const TextStyle(color: Colors.black, fontSize: 12),
+          textAlign: TextAlign.center,
+        ).paddingSymmetric(horizontal: 10, vertical: 7),
+      ),
+    );
+  }
+
+  Widget buildCalenderWidget() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        buildButton(
+          onTap: () {
+            onDateChanged(
+              selectedDate.subtract(const Duration(days: 1)),
+            );
+          },
+          icon: Icons.arrow_back_ios_rounded,
+        ),
+        Spacing.w20,
+        Text(
+          DateFormat('dd-MMM-yyyy').format(selectedDate),
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+        Spacing.w20,
+        buildButton(
+          onTap: () {
+            onDateChanged(
+              selectedDate.add(const Duration(days: 1)),
+            );
+          },
+          icon: Icons.arrow_forward_ios_rounded,
+        ),
+        const Spacer(),
+        IconButton(
+          splashRadius: 20,
+          onPressed: () {
+            selectDate(context);
+          },
+          icon: const Icon(
+            Icons.calendar_today_outlined,
+            size: 17,
+          ),
+        ),
+      ],
+    ).paddingSymmetric(horizontal: 20);
+  }
+
+  Future<void> init(DateTime date) async {
+    showLoading = true;
+    await getAllBoats(date);
+    showLoading = false;
+    setState(() {});
+  }
+
+  Future<void> getAllBoats(DateTime date) async {
+    boats = [];
+    selectedBoat = null;
+
+    var data = await FirebaseFirestore.instance
+        .collection('dailyBoats')
+        .doc(DateFormat('dd-MM-yyyy').format(date))
+        .get();
+
+    BoatsModel boatsModel = BoatsModel.fromMap(data.data());
+
+    boats.addAll(boatsModel.boats as Iterable<Boat>);
+    if (boats.isNotEmpty) {
+      selectedBoat = boats[0];
+    }
+  }
+
+  Future<void> onDateChanged(DateTime date) async {
+    selectedDate = date;
+    showLoading = true;
+    setState(() {});
+
+    await init(selectedDate);
+    showLoading = false;
+    setState(() {});
   }
 
   selectDate(BuildContext context) async {
     DateTime? date = await showDatePicker(
       context: context,
-      initialDate: logic.controller.selectedDate,
+      initialDate: selectedDate,
       firstDate: DateTime(2010),
       lastDate: DateTime(2090),
       builder: (context, child) {
@@ -98,7 +317,9 @@ class _RoasterViewState extends State<RoasterView> {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.text.black,
-                textStyle: const TextStyle(fontWeight: FontWeight.w500), // button text color
+                textStyle: const TextStyle(
+                  fontWeight: FontWeight.w500,
+                ), // button text color
               ),
             ),
           ),
@@ -108,7 +329,7 @@ class _RoasterViewState extends State<RoasterView> {
     );
 
     if (date != null) {
-      logic.onDateChanged(date);
+      onDateChanged(date);
     }
   }
 

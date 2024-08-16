@@ -201,24 +201,23 @@ class AddPaymentsView extends StatelessWidget {
           ),
           child: GetBuilder<AddPaymentsController>(
             builder: (controller) {
-              return Padding(
-                padding: const EdgeInsets.only(left: 10, right: 10),
-                child: DropdownButton(
-                  underline: const SizedBox(),
-                  isExpanded: true,
-                  value: controller.paymentModeTED.text.isNotEmpty ? controller.paymentModeTED.text : null,
-                  onChanged: (dynamic mode) {
-                    controller.paymentModeTED.text = mode;
-                    controller.update();
-                  },
-                  items: controller.paymentOptions.map((newMode) {
-                    return DropdownMenuItem(
-                      value: newMode,
-                      child: Text(newMode),
-                    );
-                  }).toList(),
-                ),
-              );
+              return DropdownButton(
+                underline: const SizedBox(),
+                isExpanded: true,
+                value: controller.paymentModeTED.text.isNotEmpty
+                    ? controller.paymentModeTED.text
+                    : null,
+                onChanged: (dynamic mode) {
+                  controller.paymentModeTED.text = mode;
+                  controller.update();
+                },
+                items: controller.paymentOptions.map((newMode) {
+                  return DropdownMenuItem(
+                    value: newMode,
+                    child: Text(newMode),
+                  );
+                }).toList(),
+              ).paddingSymmetric(horizontal: 10);
             },
           ),
         ),

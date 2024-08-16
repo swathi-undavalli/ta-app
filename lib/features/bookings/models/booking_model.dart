@@ -128,7 +128,8 @@ class Booking {
         boatDetails: boatDetails ?? this.boatDetails,
         parentBookingId: parentBookingId ?? this.parentBookingId,
         isQuickBooking: isQuickBooking ?? this.isQuickBooking,
-        certificationStatuses: certificationStatuses ?? this.certificationStatuses,
+        certificationStatuses:
+            certificationStatuses ?? this.certificationStatuses,
       );
 
   factory Booking.fromMap(Map<String, dynamic> json) {
@@ -150,8 +151,12 @@ class Booking {
 
     List<dynamic>? pax = json['PAX'];
 
-    List<String> allEmails =
-        pax?.map((data) => data['email']).where((email) => email != null).cast<String>().toList() ?? [];
+    List<String> allEmails = pax
+            ?.map((data) => data['email'])
+            .where((email) => email != null)
+            .cast<String>()
+            .toList() ??
+        [];
     allEmails = allEmails.map((e) => e.toLowerCase()).toList();
 
     if (getExistingIndex(allEmails) != null) {
@@ -161,8 +166,10 @@ class Booking {
 
     return Booking(
       pax: List<Map<String, dynamic>>.from((pax ?? []).map((x) => x)),
-      activity: List<Activity>.from(json['activity'].map((x) => Activity.fromMap(x))),
-      payments: List<PaymentModel>.from((json['payments'] ?? []).map((x) => PaymentModel.fromMap(x))),
+      activity:
+          List<Activity>.from(json['activity'].map((x) => Activity.fromMap(x))),
+      payments: List<PaymentModel>.from(
+          (json['payments'] ?? []).map((x) => PaymentModel.fromMap(x))),
       noOfPersons: json['noOfPersons'],
       createdAt: parseDateOrNull(json['createdAt']),
       discount: json['discount'] * 1.0,
@@ -181,13 +188,18 @@ class Booking {
       paymentTransactionId: json['paymentTransactionId'],
       bookingDate: List<String>.from(json['bookingDate'].map((x) => x)),
       idProofs: List<String>.from(json['idProofs'] ?? [].map((x) => x)),
-      theoryDate: List<DateTime>.from(json['theoryDate'].map((x) => parseDateOrNull(x))),
-      poolDate: List<DateTime>.from(json['poolDate'].map((x) => parseDateOrNull(x))),
-      diveDate: List<DateTime>.from(json['diveDate'].map((x) => parseDateOrNull(x))),
+      theoryDate: List<DateTime>.from(
+          json['theoryDate'].map((x) => parseDateOrNull(x))),
+      poolDate:
+          List<DateTime>.from(json['poolDate'].map((x) => parseDateOrNull(x))),
+      diveDate:
+          List<DateTime>.from(json['diveDate'].map((x) => parseDateOrNull(x))),
       cancelBooking: json['cancelBooking'],
       cancellationReason: json['cancellationReason'],
-      boatDetails: BoatDetails.fromMap(json['boatDetails'], List<String>.from(json['bookingDate'].map((x) => x))),
-      certificationStatuses: List<int>.from(json['certificationStatuses'] ?? [].map((x) => x)),
+      boatDetails: BoatDetails.fromMap(json['boatDetails'],
+          List<String>.from(json['bookingDate'].map((x) => x))),
+      certificationStatuses:
+          List<int>.from(json['certificationStatuses'] ?? [].map((x) => x)),
     );
   }
 
@@ -199,7 +211,9 @@ class Booking {
     return pax?[index]['activity_id'] != null;
   }
 
-  bool get isDSD => activity?[0]?.name?.toLowerCase() == 'Discover scuba diving'.toLowerCase();
+  bool get isDSD =>
+      activity?[0]?.name?.toLowerCase() ==
+      'Discover scuba diving'.toLowerCase();
 
   Map<String, dynamic> toMap() {
     return {
@@ -223,14 +237,18 @@ class Booking {
       'idProofs': List<String>.from((idProofs ?? []).map((x) => x)),
       'location': location,
       'paymentTransactionId': paymentTransactionId,
-      'theoryDate': List<String>.from((theoryDate ?? []).map((x) => toDateOrNull(x))),
-      'poolDate': List<String>.from((poolDate ?? []).map((x) => toDateOrNull(x))),
-      'diveDate': List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
+      'theoryDate':
+          List<String>.from((theoryDate ?? []).map((x) => toDateOrNull(x))),
+      'poolDate':
+          List<String>.from((poolDate ?? []).map((x) => toDateOrNull(x))),
+      'diveDate':
+          List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
       'cancelBooking': cancelBooking,
       'parentBookingId': parentBookingId,
       'cancellationReason': cancellationReason,
       'boatDetails': boatDetails?.toMap(),
-      'certificationStatuses': List<int>.from((certificationStatuses ?? []).map((x) => x)),
+      'certificationStatuses':
+          List<int>.from((certificationStatuses ?? []).map((x) => x)),
       'instructorName': boatDetails?.instructors?.firstOrNull?.name,
     };
   }
