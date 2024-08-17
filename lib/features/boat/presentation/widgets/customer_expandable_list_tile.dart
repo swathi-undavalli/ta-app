@@ -418,6 +418,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                     employeeType: EmployeeType.showFreelancersDivers,
                     tanksRequired: true,
                     selectedDate: widget.selectedDate,
+                    showAssignmentStatus: true,
                   );
 
                   if (instructors == null) return;

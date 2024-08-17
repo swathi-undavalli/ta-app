@@ -9,8 +9,10 @@ import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import '../../../employees/model/employee.dart';
 import '../../models/boat_details.dart';
+import '../../models/boats.dart';
 import 'counter_widget.dart';
 
 class EmpSelectorBottomSheet extends StatefulWidget {
@@ -19,6 +21,7 @@ class EmpSelectorBottomSheet extends StatefulWidget {
   final EmployeeType employeeType;
   final bool isTanksRequired;
   final DateTime? selectedDate;
+  final bool showAssignmentStatus;
 
   const EmpSelectorBottomSheet({
     super.key,
@@ -27,6 +30,7 @@ class EmpSelectorBottomSheet extends StatefulWidget {
     required this.employeeType,
     required this.isTanksRequired,
     required this.selectedDate,
+    this.showAssignmentStatus = false,
   });
 
   static Future<List<Instructor>?> getSelectedInstructors(
@@ -35,6 +39,7 @@ class EmpSelectorBottomSheet extends StatefulWidget {
     required int instructorLimit,
     required EmployeeType employeeType,
     required DateTime? selectedDate,
+    bool showAssignmentStatus = false,
     bool tanksRequired = false,
   }) async {
     var data = await showModalBottomSheet(
@@ -48,6 +53,7 @@ class EmpSelectorBottomSheet extends StatefulWidget {
           employeeType: employeeType,
           isTanksRequired: tanksRequired,
           selectedDate: selectedDate,
+          showAssignmentStatus: showAssignmentStatus,
         );
       },
     );
@@ -66,16 +72,27 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
   late Stream<QuerySnapshot> _stream; // Declare the stream
   late TextEditingController searchTED;
 
+  List<Instructor> dayOffs = [];
+  List<Instructor> leaves = [];
+  bool showLoading = false;
+
   @override
   void initState() {
     selectedInstructors = widget.initialSelectedInstructors;
     _stream = employeesCollection.snapshots(); // Initialize the stream
     searchTED = TextEditingController();
+    getDSD(widget.selectedDate);
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (showLoading) {
+      return SizedBox(
+        height: Screen.height * 0.65,
+        child: const CircularProgressIndicator().center,
+      );
+    }
     return Container(
       height: 700,
       decoration: BoxDecoration(
@@ -121,60 +138,60 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                     children: selectedInstructors
                         .map(
                           (instructor) => InkWell(
-                            onTap: () {
-                              if (!widget.isTanksRequired) selectedInstructors.remove(instructor);
-                              setState(() {});
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(20),
-                                color: Colors.white,
-                                border: Border.all(
-                                  color: Colors.grey,
-                                  width: 2.0,
-                                ),
-                              ),
-                              child: (widget.isTanksRequired)
-                                  ? Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Text(
-                                              instructor.name,
-                                              style: const TextStyle(fontSize: 16),
-                                            ),
-                                            AppButton.miniFlat(
-                                              onTap: () {
-                                                selectedInstructors.remove(instructor);
-                                                setState(() {});
-                                              },
-                                              text: 'Remove',
-                                            ),
-                                          ],
-                                        ),
-                                        Spacing.h10,
-                                        if (selectedInstructors.contains(instructor)) buildTanks(instructor),
-                                      ],
-                                    ).paddingSymmetric(horizontal: 10, vertical: 10)
-                                  : Row(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        Text(
-                                          instructor.name,
-                                          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
-                                        ),
-                                        Spacing.w5,
-                                        const Icon(
-                                          Icons.close,
-                                          size: 16,
-                                        ),
-                                      ],
-                                    ),
-                            ).paddingOnly(bottom: 10),
+                        onTap: () {
+                          if (!widget.isTanksRequired) selectedInstructors.remove(instructor);
+                          setState(() {});
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Colors.white,
+                            border: Border.all(
+                              color: Colors.grey,
+                              width: 2.0,
+                            ),
                           ),
-                        )
+                          child: (widget.isTanksRequired)
+                              ? Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    instructor.name,
+                                    style: const TextStyle(fontSize: 16),
+                                  ),
+                                  AppButton.miniFlat(
+                                    onTap: () {
+                                      selectedInstructors.remove(instructor);
+                                      setState(() {});
+                                    },
+                                    text: 'Remove',
+                                  ),
+                                ],
+                              ),
+                              Spacing.h10,
+                              if (selectedInstructors.contains(instructor)) buildTanks(instructor),
+                            ],
+                          ).paddingSymmetric(horizontal: 10, vertical: 10)
+                              : Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                instructor.name,
+                                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w600),
+                              ),
+                              Spacing.w5,
+                              const Icon(
+                                Icons.close,
+                                size: 16,
+                              ),
+                            ],
+                          ),
+                        ).paddingOnly(bottom: 10),
+                      ),
+                    )
                         .toList(),
                   ).paddingSymmetric(horizontal: 20, vertical: 20).scrollable,
                 Spacing.h5,
@@ -258,6 +275,21 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
 
               Instructor instructor = Instructor.fromEmployee(employee);
 
+              var assignedEmployeeList = [];
+
+              if (widget.showAssignmentStatus) {
+                var controller = Get.find<BookingsCalenderWidgetControllerNew>();
+                for (var booking in controller.bookings) {
+                  for (Instructor ins in (booking.boatDetails?.instructors ?? [])) {
+                    if (ins.id.isNotEmpty) assignedEmployeeList.add(ins.id);
+                  }
+                  for (Instructor ins in (booking.boatDetails?.diveBuddies ?? [])) {
+                    if (ins.id.isNotEmpty) assignedEmployeeList.add(ins.id);
+                  }
+                }
+                assignedEmployeeList = assignedEmployeeList.toSet().toList();
+              }
+
               Widget employeeTile = InkWell(
                 onTap: () {
                   if (widget.selectedDate != null) {
@@ -276,24 +308,58 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                   }
                   setState(() {});
                 },
-                child: Row(
-                  children: [
-                    Container(
-                      child: Text(
+                child: Container(
+                  decoration: (selectedInstructors.contains(employee))
+                      ? BoxDecoration(
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(
+                            color: Colors.black,
+                          ),
+                        )
+                      : null,
+                  child: Row(
+                    children: [
+                      Text(
                         employee.name,
                         style: const TextStyle(fontSize: 16),
                       ).paddingOnly(left: 25, top: 10, bottom: 10),
-                    ),
-                    const Spacer(),
-                    // ignore: iterable_contains_unrelated_type
-                    if (selectedInstructors.contains(employee))
-                      const Icon(
-                        Icons.check_circle,
-                        color: Colors.green,
-                      ),
-                    Spacing.w30,
-                  ],
-                ),
+                      const Spacer(),
+
+                      if (widget.showAssignmentStatus) ...[
+                        //Assigned
+                        if (!assignedEmployeeList.contains(employee.id))
+                          buildStatusTab(
+                            'Assigned',
+                            Colors.lightGreenAccent,
+                          ).paddingOnly(right: 10),
+
+                        //Leave
+                        if (leaves.contains(employee))
+                          buildStatusTab(
+                            'On Leave',
+                            Colors.red,
+                            Colors.white,
+                          ).paddingOnly(right: 10),
+
+                        //Day off
+                        if (dayOffs.contains(employee))
+                          buildStatusTab(
+                            'Day Off',
+                            Colors.red,
+                            Colors.white,
+                          ).paddingOnly(right: 10),
+                      ],
+
+                      //Selected
+                      if (selectedInstructors.contains(employee))
+                        buildStatusTab(
+                          'Selected',
+                          Colors.black,
+                          Colors.white,
+                        ).paddingOnly(right: 10),
+                    ],
+                  ),
+                ).paddingOnly(bottom: 10, left: 10, right: 10),
               );
 
               if (widget.employeeType == EmployeeType.showAllEmployees) {
@@ -316,6 +382,22 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
           }).toList(),
         );
       },
+    );
+  }
+
+  Container buildStatusTab(String text, Color color, [Color? textColor]) {
+    return Container(
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(3),
+      ),
+      height: 20,
+      width: 60,
+      child: Text(
+        text,
+        style: TextStyle(fontSize: 10, color: textColor),
+        textAlign: TextAlign.center,
+      ).center,
     );
   }
 
@@ -371,6 +453,22 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
     }
 
     return employeesCollection.where('firstName', isGreaterThanOrEqualTo: query.capitalizeFirst).snapshots();
+  }
+
+  getDSD(DateTime? selectedDate) async {
+    if (selectedDate == null) return;
+    showLoading = true;
+    var d = await FirebaseFirestore.instance
+        .collection('dailyBoats')
+        .doc(DateFormat('dd-MM-yyyy').format(selectedDate))
+        .get();
+
+    Map<String, dynamic>? data = d.data();
+    BoatsModel? boatsModel = BoatsModel.fromMap(data);
+    dayOffs = boatsModel.dsd?.dayOffs ?? [];
+    dayOffs = boatsModel.dsd?.leaves ?? [];
+    showLoading = false;
+    setState(() {});
   }
 }
 
