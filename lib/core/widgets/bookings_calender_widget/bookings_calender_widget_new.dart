@@ -31,7 +31,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   final AutoScrollController autoScrollController;
 
   BookingsCalenderWidgetNew({
-    Key? key,
+    super.key,
     required this.onDateTimeSelected,
     this.onSearchTap,
     this.isDiveSession = false,
@@ -41,7 +41,7 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     this.calenderType,
     required this.autoScrollController,
     required this.isBookingScreen,
-  }) : super(key: key) {
+  }) {
     startDate ??= DateTime.now();
     startDate = startDate?.subtract(const Duration(days: 1));
     logic.controller.startDate = startDate;

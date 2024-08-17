@@ -42,7 +42,7 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
   @override
   void initState() {
     selectedDate = DateTime.now();
-    init().whenComplete(() => setState(() {}));
+    init();
     super.initState();
     generalNotesTED = TextEditingController();
     wavesTED = TextEditingController();

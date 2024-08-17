@@ -55,8 +55,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      floatingActionButton:
-          (boats.isNotEmpty) ? buildFloatingActionButton() : const SizedBox(),
+      floatingActionButton: (boats.isNotEmpty) ? buildFloatingActionButton() : const SizedBox(),
       body: SafeArea(
         child: (showLoading)
             ? Container(
@@ -85,9 +84,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                             selectedBoat = null;
                             setState(() {});
                           },
-                          color: (isGeneralInfoSelected)
-                              ? AppColors.text.lightSkyBlue
-                              : Colors.white,
+                          color: (isGeneralInfoSelected) ? AppColors.text.lightSkyBlue : Colors.white,
                           title: 'General Info',
                         ),
                         ...boats.map(
@@ -97,9 +94,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                               isGeneralInfoSelected = false;
                               setState(() {});
                             },
-                            color: (boat.id == selectedBoat?.id)
-                                ? AppColors.text.lightSkyBlue
-                                : Colors.white,
+                            color: (boat.id == selectedBoat?.id) ? AppColors.text.lightSkyBlue : Colors.white,
                             title: boat.name,
                           ),
                         ),
@@ -111,15 +106,12 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                         stream: FirebaseFirestore.instance
                             .collection('bookings')
                             .where(
-                          'bookingDate',
-                              arrayContains:
-                                  DateFormat('dd-MM-yyyy').format(selectedDate),
+                              'bookingDate',
+                              arrayContains: DateFormat('dd-MM-yyyy').format(selectedDate),
                             )
                             .snapshots(),
                         builder: (context, snapshot) {
-                          if (snapshot.hasError ||
-                              snapshot.connectionState ==
-                                  ConnectionState.waiting) {
+                          if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
                             return const SizedBox(
                               height: 15,
                               width: 15,
@@ -155,8 +147,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
                         alignment: Alignment.topLeft,
                         child: RepaintBoundary(
                           key: widgetKey,
-                          child: GeneralInfoData(
-                              longLeavesEmployeesList: longLeavesEmployeesList),
+                          child: GeneralInfoData(longLeavesEmployeesList: longLeavesEmployeesList),
                         ),
                       ),
                   ],
@@ -182,8 +173,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
         Employee employee = Employee.fromMap(doc.data());
         bool hasLongLeave = employee.isOnLeave(date);
         if (hasLongLeave) {
-          Instructor instructor =
-              Instructor(id: employee.id, name: employee.name);
+          Instructor instructor = Instructor(id: employee.id, name: employee.name);
           longLeavesEmployeesList.add(instructor);
         }
       }
@@ -195,10 +185,8 @@ class _BoardPlanViewState extends State<BoardPlanView> {
     selectedBoat = null;
     isGeneralInfoSelected = false;
 
-    var data = await FirebaseFirestore.instance
-        .collection('dailyBoats')
-        .doc(DateFormat('dd-MM-yyyy').format(date))
-        .get();
+    var data =
+        await FirebaseFirestore.instance.collection('dailyBoats').doc(DateFormat('dd-MM-yyyy').format(date)).get();
 
     BoatsModel boatsModel = BoatsModel.fromMap(data.data());
     boats.addAll(boatsModel.boats as Iterable<Boat>);
@@ -314,11 +302,9 @@ class _BoardPlanViewState extends State<BoardPlanView> {
 
   Future<void> _captureAndShare() async {
     try {
-      RenderRepaintBoundary boundary =
-          widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary = widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 10);
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
       final tempDir = await getTemporaryDirectory();
       final tempPath = '${tempDir.path}/screenshot.png';
@@ -339,15 +325,12 @@ class _BoardPlanViewState extends State<BoardPlanView> {
 
   Future<String?> captureImage() async {
     try {
-      RenderRepaintBoundary boundary =
-          widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary = widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 10);
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
       final tempDir = await getTemporaryDirectory();
-      final tempPath =
-          '${tempDir.path}/screenshot${DateTime.now().toIso8601String()}.png';
+      final tempPath = '${tempDir.path}/screenshot${DateTime.now().toIso8601String()}.png';
       File(tempPath).writeAsBytesSync(pngBytes);
       return tempPath;
     } catch (e) {
@@ -477,10 +460,8 @@ class GeneralInfoData extends StatelessWidget {
           .collection('dailyBoats')
           .doc(DateFormat('dd-MM-yyyy').format(selectedDate))
           .snapshots(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError ||
-            snapshot.connectionState == ConnectionState.waiting) {
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox(
             height: 15,
             width: 15,
@@ -490,8 +471,7 @@ class GeneralInfoData extends StatelessWidget {
             ),
           );
         }
-        Map<String, dynamic>? data =
-            snapshot.data?.data() as Map<String, dynamic>?;
+        Map<String, dynamic>? data = snapshot.data?.data() as Map<String, dynamic>?;
         if (data == null) {
           return const Text('No data added');
         }
@@ -827,8 +807,7 @@ class GeneralInfoData extends StatelessWidget {
                       SizedBox(
                         width: 90,
                         child: Text(
-                          (boatsModel.dsd?.generalNotes != null &&
-                                  boatsModel.dsd?.generalNotes != '')
+                          (boatsModel.dsd?.generalNotes != null && boatsModel.dsd?.generalNotes != '')
                               ? boatsModel.dsd!.generalNotes!
                               : '-',
                           style: const TextStyle(fontSize: 11),
@@ -856,8 +835,7 @@ class GeneralInfoData extends StatelessWidget {
           )
           .snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.hasError ||
-            snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox(
             height: 15,
             width: 15,
