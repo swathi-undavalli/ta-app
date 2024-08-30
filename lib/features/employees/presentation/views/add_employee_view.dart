@@ -189,7 +189,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
                             showCountryFlag: false,
                             controller: phoneNumberTED,
                             inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly
+                              FilteringTextInputFormatter.digitsOnly,
                             ],
                             decoration: const InputDecoration(
                               labelText: 'Phone Number',
@@ -646,8 +646,8 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
             .get();
         CounterModel counterModel = CounterModel.fromMap(data.data() ?? {});
         if (int.parse(employeeIdTED.text) < 900) {
-          counterModel = counterModel.copyWith(
-              employee: (counterModel.employee! + 1) ?? 0);
+          counterModel =
+              counterModel.copyWith(employee: (counterModel.employee! + 1));
           await FirebaseFirestore.instance
               .collection('counter')
               .doc('count')
