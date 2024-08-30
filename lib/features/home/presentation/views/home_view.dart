@@ -67,16 +67,6 @@ class _HomeViewState extends State<HomeView> {
                         Spacing.h20,
                         buildCheckLists(),
                         Spacing.h20,
-                        if (currentEmployee?.role == 'Intern')
-                          Text(
-                            'My Dives',
-                            style: TextStyle(
-                              fontFamily: AppFonts.nunito,
-                              color: AppColors.text.black,
-                              fontWeight: FontWeight.w600,
-                              fontSize: 20,
-                            ),
-                          ).paddingOnly(bottom: 20),
                         buildEmployeeDiveCalender(),
                         Spacing.h50,
                       ],
@@ -295,88 +285,85 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Widget buildCheckLists() {
-    if (currentEmployee?.role != 'Intern') {
-      return Container(
-        width: Screen.width,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(12),
-          color: Colors.white,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'CheckLists',
-              style: TextStyle(
-                fontFamily: AppFonts.nunito,
-                color: AppColors.text.black,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
+    return Container(
+      width: Screen.width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(12),
+        color: Colors.white,
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'CheckLists',
+            style: TextStyle(
+              fontFamily: AppFonts.nunito,
+              color: AppColors.text.black,
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
             ),
-            Spacing.h10,
-            StreamBuilder(
-              stream: FirebaseFirestore.instance
-                  .collection('employeeChecklists')
-                  .doc(currentEmployee!.id)
-                  .snapshots(),
-              builder: (
-                BuildContext context,
-                AsyncSnapshot<DocumentSnapshot> snapshot,
-              ) {
-                if (snapshot.hasError ||
-                    snapshot.connectionState == ConnectionState.waiting) {
-                  return const SizedBox(
-                    height: 15,
-                    width: 15,
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: Colors.black,
-                    ),
-                  );
-                }
-                final data = snapshot.data?.data();
-
-                if (data == null) {
-                  return const SizedBox();
-                }
-
-                Checklist? checklist =
-                    Checklist.fromMap(data as Map<String, dynamic>);
-
-                if ((checklist.checklistElement ?? []).isEmpty) {
-                  return const SizedBox();
-                }
-                return Column(
-                  children: [
-                    ...(checklist.checklistElement ?? []).map(
-                      (checklistElement) => buildChecklistTiles(
-                        text: checklistElement.title,
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              DiveChecklistView.route(
-                                  checklistElement, checklist));
-                        },
-                      ).paddingOnly(bottom: 5),
-                    ),
-                  ],
+          ),
+          Spacing.h10,
+          StreamBuilder(
+            stream: FirebaseFirestore.instance
+                .collection('employeeChecklists')
+                .doc(currentEmployee!.id)
+                .snapshots(),
+            builder: (
+              BuildContext context,
+              AsyncSnapshot<DocumentSnapshot> snapshot,
+            ) {
+              if (snapshot.hasError ||
+                  snapshot.connectionState == ConnectionState.waiting) {
+                return const SizedBox(
+                  height: 15,
+                  width: 15,
+                  child: CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: Colors.black,
+                  ),
                 );
-              },
-            ),
-            buildChecklistTiles(
-              text: 'Select Template',
-              isAddButton: true,
-              onTap: () {
-                TemplateBottomSheet.show(context);
-              },
-            ).paddingOnly(bottom: 5),
-          ],
-        ).paddingSymmetric(horizontal: 15, vertical: 15),
-      );
-    }
-    return const SizedBox();
+              }
+              final data = snapshot.data?.data();
+
+              if (data == null) {
+                return const SizedBox();
+              }
+
+              Checklist? checklist =
+                  Checklist.fromMap(data as Map<String, dynamic>);
+
+              if ((checklist.checklistElement ?? []).isEmpty) {
+                return const SizedBox();
+              }
+              return Column(
+                children: [
+                  ...(checklist.checklistElement ?? []).map(
+                    (checklistElement) => buildChecklistTiles(
+                      text: checklistElement.title,
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            DiveChecklistView.route(
+                                checklistElement, checklist));
+                      },
+                    ).paddingOnly(bottom: 5),
+                  ),
+                ],
+              );
+            },
+          ),
+          buildChecklistTiles(
+            text: 'Select Template',
+            isAddButton: true,
+            onTap: () {
+              TemplateBottomSheet.show(context);
+            },
+          ).paddingOnly(bottom: 5),
+        ],
+      ).paddingSymmetric(horizontal: 15, vertical: 15),
+    );
   }
 
   Widget buildChecklistTiles({

@@ -89,7 +89,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     isBoat = ((widget.boat?.isBoat)) ?? isBoat;
     log('start ${hideBoat.toString()}');
     if (widget.boat?.time != null) {
-      selectedTime = TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
+      selectedTime =
+          TimePicker.getDateTime(widget.boat?.time ?? '') ?? DateTime.now();
     } else {
       selectedTime = DateTime.now();
     }
@@ -108,27 +109,31 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     if (widget.boat?.dsdInstructors != null) {
       log(widget.boat!.dsdInstructors.toString());
 
-      selectedDsdInstructors.addAll(widget.boat!.dsdInstructors as Iterable<Instructor>);
+      selectedDsdInstructors
+          .addAll(widget.boat!.dsdInstructors as Iterable<Instructor>);
       log(selectedDsdInstructors.toString());
     }
 
     if (widget.boat?.photographer != null) {
       log(widget.boat!.photographer.toString());
 
-      selectedPhotographer.addAll(widget.boat!.photographer as Iterable<Instructor>);
+      selectedPhotographer
+          .addAll(widget.boat!.photographer as Iterable<Instructor>);
       log(selectedPhotographer.toString());
     }
 
     if (widget.boat?.surfaceSupport != null) {
       log(widget.boat!.surfaceSupport.toString());
 
-      surfaceSupport.addAll(widget.boat!.surfaceSupport as Iterable<Instructor>);
+      surfaceSupport
+          .addAll(widget.boat!.surfaceSupport as Iterable<Instructor>);
       log(surfaceSupport.toString());
     }
     if (widget.boat?.internPhotoVideo != null) {
       log(widget.boat!.internPhotoVideo.toString());
 
-      internsPhotoVideo.addAll(widget.boat!.internPhotoVideo as Iterable<Instructor>);
+      internsPhotoVideo
+          .addAll(widget.boat!.internPhotoVideo as Iterable<Instructor>);
       log(internsPhotoVideo.toString());
     }
     if (mounted) setState(() {});
@@ -326,7 +331,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                       ),
                       child: Center(
                         child: Text(
-                          TimePicker.getFormattedTime(selectedTime) ?? 'No time selected',
+                          TimePicker.getFormattedTime(selectedTime) ??
+                              'No time selected',
                           style: const TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.bold,
@@ -345,6 +351,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                   employeeLimit: 2,
                   isTanksRequired: false,
                   employeeType: EmployeeType.showCaptains,
+                  showAssignmentStatus: false,
                 ),
               Spacing.h20,
               buildEmployeeSelector(
@@ -353,6 +360,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 employeeLimit: -1,
                 isTanksRequired: true,
                 employeeType: EmployeeType.showFreelancersDivers,
+                showAssignmentStatus: true,
               ),
               Spacing.h20,
               buildEmployeeSelector(
@@ -361,6 +369,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 employeeLimit: 2,
                 isTanksRequired: true,
                 employeeType: EmployeeType.showFreelancersDivers,
+                showAssignmentStatus: true,
               ),
               Spacing.h20,
               buildEmployeeSelector(
@@ -369,6 +378,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 employeeLimit: 2,
                 employeeType: EmployeeType.showInterns,
                 isTanksRequired: true,
+                showAssignmentStatus: false,
               ),
               Spacing.h20,
               buildEmployeeSelector(
@@ -377,6 +387,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 employeeLimit: -1,
                 employeeType: EmployeeType.showAllEmployees,
                 isTanksRequired: false,
+                showAssignmentStatus: true,
               ),
               AppTextField(
                 hintText: 'Notes',
@@ -497,7 +508,10 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 // un-assign
                 for (Booking booking in bookings) {
                   booking.setBoatInfo(widget.selectedDate, null);
-                  await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
+                  await FirebaseFirestore.instance
+                      .collection('bookings')
+                      .doc(booking.id)
+                      .set(booking.toMap());
                 }
 
                 //delete boat
@@ -509,7 +523,8 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 Map<String, dynamic>? data = d.data();
                 BoatsModel? boatsModel = BoatsModel.fromMap(data);
 
-                (boatsModel.boats ?? []).removeWhere((boat) => boat.id == widget.boat?.id);
+                (boatsModel.boats ?? [])
+                    .removeWhere((boat) => boat.id == widget.boat?.id);
 
                 await FirebaseFirestore.instance
                     .collection('dailyBoats')
@@ -583,6 +598,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     required int employeeLimit,
     required EmployeeType employeeType,
     required bool isTanksRequired,
+    required bool showAssignmentStatus,
   }) {
     if (employees.isEmpty) {
       return AppButton.miniFlat(
@@ -595,6 +611,7 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
                 employeeType: employeeType,
                 tanksRequired: isTanksRequired,
                 selectedDate: widget.selectedDate,
+                showAssignmentStatus: showAssignmentStatus,
               ) ??
               [];
 
@@ -624,15 +641,16 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
               width: 60,
               child: GestureDetector(
                 onTap: () async {
-                  employees = (await EmpSelectorBottomSheet.getSelectedInstructors(
-                        context,
-                        initialSelectedInstructors: employees,
-                        instructorLimit: employeeLimit,
-                        employeeType: employeeType,
-                        tanksRequired: isTanksRequired,
-                        selectedDate: widget.selectedDate,
-                      )) ??
-                      [];
+                  employees =
+                      (await EmpSelectorBottomSheet.getSelectedInstructors(
+                            context,
+                            initialSelectedInstructors: employees,
+                            instructorLimit: employeeLimit,
+                            employeeType: employeeType,
+                            tanksRequired: isTanksRequired,
+                            selectedDate: widget.selectedDate,
+                          )) ??
+                          [];
 
                   setState(() {});
                 },
@@ -696,8 +714,9 @@ class _BoatDetailsBottomSheetState extends State<BoatDetailsBottomSheet> {
     });
 
     String boatId;
-    DocumentReference boatRef =
-        FirebaseFirestore.instance.collection('dailyBoats').doc(DateFormat('dd-MM-yyyy').format(widget.selectedDate));
+    DocumentReference boatRef = FirebaseFirestore.instance
+        .collection('dailyBoats')
+        .doc(DateFormat('dd-MM-yyyy').format(widget.selectedDate));
 
     BoatsModel? boatsModel;
 
