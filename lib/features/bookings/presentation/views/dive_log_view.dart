@@ -274,7 +274,7 @@ class _DiveLogViewState extends State<DiveLogView> {
                     instructorLimit: 1,
                     employeeType: EmployeeType.showAllDiveTeam,
                     tanksRequired: false,
-                    selectedDate: null,
+                    selectedDate: logic.controller.selectedDate,
                   ) ??
                   [];
               logic.controller.update();

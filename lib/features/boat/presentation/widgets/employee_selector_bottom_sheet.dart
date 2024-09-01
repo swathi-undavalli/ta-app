@@ -269,7 +269,10 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
     return StreamBuilder(
       stream: FirebaseFirestore.instance
           .collection('dailyBoats')
-          .doc(DateFormat('dd-MM-yyyy').format(widget.selectedDate!))
+          .doc(
+            DateFormat('dd-MM-yyyy')
+                .format(widget.selectedDate ?? DateTime.now()),
+          )
           .snapshots(),
       builder:
           (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {

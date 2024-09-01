@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -55,7 +54,8 @@ class _AddNewActivityViewState extends State<AddNewActivityView> {
     shortNameTED = TextEditingController(text: widget.activity?.shortName);
     priceTED = TextEditingController(text: widget.activity?.price.toString());
     colorTED = TextEditingController(text: widget.activity?.color);
-    priorityTED = TextEditingController(text: widget.activity?.priority.toString());
+    priorityTED =
+        TextEditingController(text: widget.activity?.priority.toString());
   }
 
   @override
@@ -124,7 +124,10 @@ class _AddNewActivityViewState extends State<AddNewActivityView> {
           content: 'Activity will Be Deleted Permanently.',
         );
         if (delete) {
-          FirebaseFirestore.instance.collection('catalogue').doc(widget.activity!.id).delete();
+          FirebaseFirestore.instance
+              .collection('catalogue')
+              .doc(widget.activity!.id)
+              .delete();
           if (mounted) Navigator.pop(context);
         }
       },
@@ -243,11 +246,18 @@ class _AddNewActivityViewState extends State<AddNewActivityView> {
       if (isEditMode) {
         activityId = widget.activity!.id!;
       } else {
-        var data = await FirebaseFirestore.instance.collection('counter').doc('count').get();
+        var data = await FirebaseFirestore.instance
+            .collection('counter')
+            .doc('count')
+            .get();
         CounterModel counterModel = CounterModel.fromMap(data.data() ?? {});
         activityId = (counterModel.activity + 1).toString();
-        counterModel = counterModel.copyWith(activity: int.tryParse(activityId) ?? 0);
-        await FirebaseFirestore.instance.collection('counter').doc('count').set(counterModel.toMap());
+        counterModel =
+            counterModel.copyWith(activity: int.tryParse(activityId) ?? 0);
+        await FirebaseFirestore.instance
+            .collection('counter')
+            .doc('count')
+            .set(counterModel.toMap());
       }
 
       Activity activity = Activity(
@@ -259,15 +269,20 @@ class _AddNewActivityViewState extends State<AddNewActivityView> {
         id: activityId,
       );
 
-      await FirebaseFirestore.instance.collection('catalogue').doc(activityId).set(activity.toMap());
+      await FirebaseFirestore.instance
+          .collection('catalogue')
+          .doc(activityId)
+          .set(activity.toMap());
 
-      if (isEditMode) {
-        await updateColorsDocument();
-      }
+      await updateColorsDocument();
 
-      LogModel logModel =
-          LogModel(type: (isEditMode) ? LogType.editActivity : LogType.addActivity, activityName: activity.name);
-      await FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
+      LogModel logModel = LogModel(
+          type: (isEditMode) ? LogType.editActivity : LogType.addActivity,
+          activityName: activity.name);
+      await FirebaseFirestore.instance
+          .collection('logs')
+          .doc()
+          .set(logModel.toMap());
 
       Fluttertoast.showToast(msg: (isEditMode) ? 'Updated' : 'Saved');
       disposeKeyboard();
@@ -299,7 +314,10 @@ class _AddNewActivityViewState extends State<AddNewActivityView> {
       map[color]!.add(name);
     }
 
-    await FirebaseFirestore.instance.collection('catalogue').doc('colors').set(map);
+    await FirebaseFirestore.instance
+        .collection('catalogue')
+        .doc('colors')
+        .set(map);
 
     colorsData = ColorsDataModel.fromMap(map);
   }

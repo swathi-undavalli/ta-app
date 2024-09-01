@@ -211,7 +211,9 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
                             child: AppTextField(
                               controller: powerNotesTED,
                               hintText: 'Power Notes',
-                              keyboardType: const TextInputType.numberWithOptions(signed: true),
+                              keyboardType:
+                                  const TextInputType.numberWithOptions(
+                                      signed: true),
                               errorValidator: () {
                                 return null;
                               },
@@ -356,7 +358,8 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
                         controller: wavesTED,
                         hintText: 'Waves',
                         suffixText: 'm',
-                        keyboardType: const TextInputType.numberWithOptions(signed: true),
+                        keyboardType:
+                            const TextInputType.numberWithOptions(signed: true),
                         errorValidator: () {
                           return null;
                         },
@@ -367,7 +370,8 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
                       AppTextField(
                         controller: windsTED,
                         hintText: 'Winds',
-                        keyboardType: const TextInputType.numberWithOptions(signed: true),
+                        keyboardType:
+                            const TextInputType.numberWithOptions(signed: true),
                         suffixText: 'km/hr',
                         errorValidator: () {
                           return null;
@@ -430,8 +434,10 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
     } else {
       currentDsd = boatsModel.dsd!;
 
-      highTideTime = TimePicker.getDateTime(currentDsd.highTides) ?? DateTime.now();
-      lowTideTime = TimePicker.getDateTime(currentDsd.lowTides) ?? DateTime.now();
+      highTideTime =
+          TimePicker.getDateTime(currentDsd.highTides) ?? DateTime.now();
+      lowTideTime =
+          TimePicker.getDateTime(currentDsd.lowTides) ?? DateTime.now();
       generalNotesTED.text = currentDsd.generalNotes ?? '';
       windsTED.text = currentDsd.winds ?? '';
       wavesTED.text = currentDsd.waves ?? '';
@@ -525,7 +531,7 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
                 initialSelectedInstructors: employees,
                 instructorLimit: employeeLimit,
                 employeeType: employeeType,
-                selectedDate: null,
+                selectedDate: selectedDate,
               )) ??
               [];
           setState(() {});
@@ -563,14 +569,15 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
             ),
             GestureDetector(
               onTap: () async {
-                employees = (await EmpSelectorBottomSheet.getSelectedInstructors(
-                      context,
-                      initialSelectedInstructors: employees,
-                      instructorLimit: employeeLimit,
-                      employeeType: employeeType,
-                      selectedDate: null,
-                    )) ??
-                    [];
+                employees =
+                    (await EmpSelectorBottomSheet.getSelectedInstructors(
+                          context,
+                          initialSelectedInstructors: employees,
+                          instructorLimit: employeeLimit,
+                          employeeType: employeeType,
+                          selectedDate: null,
+                        )) ??
+                        [];
                 setState(() {});
               },
               child: const Text(
@@ -616,7 +623,8 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
             child: Center(
               child: Text(
                 TimePicker.getFormattedTime(time) ?? 'No time selected',
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -642,7 +650,8 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.text.black,
-                textStyle: const TextStyle(fontWeight: FontWeight.w500), // button text color
+                textStyle: const TextStyle(
+                    fontWeight: FontWeight.w500), // button text color
               ),
             ),
           ),

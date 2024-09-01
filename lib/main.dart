@@ -12,7 +12,7 @@ import 'core/services/locator/locator.dart';
 import 'core/services/notification_service.dart';
 import 'features/messaging/firebase_messaging_controller.dart';
 
-String currentIosVersion = '1.1.3+21';
+String currentIosVersion = '1.1.3+23';
 
 bool get isIos => Platform.isIOS;
 

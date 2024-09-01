@@ -16,7 +16,8 @@ class BookingView extends StatelessWidget {
   final BookingScreenLogic logic = BookingScreenLogic();
   final AutoScrollController autoScrollController = AutoScrollController();
   var bookings = [DateTime.now()];
-  BookingsCalenderWidgetLogicNew calenderLogic = BookingsCalenderWidgetLogicNew();
+  BookingsCalenderWidgetLogicNew calenderLogic =
+      BookingsCalenderWidgetLogicNew();
   ScrollController scrollController = ScrollController();
   late BookingsCalenderWidgetNew bookingsCalenderWidget;
 
@@ -62,7 +63,8 @@ class BookingView extends StatelessWidget {
                     GetBuilder<BookingsCalenderWidgetControllerNew>(
                       builder: (controller) {
                         DateTime date = controller.selectedDate;
-                        String formattedDate = DateFormat('dd-MMM-yyyy').format(date);
+                        String formattedDate =
+                            DateFormat('dd-MMM-yyyy').format(date);
                         return Row(
                           children: [
                             buildTitle('Calendar'),
@@ -154,7 +156,8 @@ class BookingView extends StatelessWidget {
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.text.black,
-                textStyle: const TextStyle(fontWeight: FontWeight.w500), // button text color
+                textStyle: const TextStyle(
+                    fontWeight: FontWeight.w500), // button text color
               ),
             ),
           ),
