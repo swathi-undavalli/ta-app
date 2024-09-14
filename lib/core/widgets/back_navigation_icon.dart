@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../constants/constants.dart';
 
 class BackNavigationIcon extends StatelessWidget {
-  const BackNavigationIcon({Key? key}) : super(key: key);
+  const BackNavigationIcon({super.key});
 
   @override
   Widget build(BuildContext context) {

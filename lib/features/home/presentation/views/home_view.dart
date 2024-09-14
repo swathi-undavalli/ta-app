@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -66,6 +68,13 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         Spacing.h20,
                         buildCheckLists(),
+                        // Spacing.h20,
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     deleteEmptyDocuments();
+                        //   },
+                        //   child: const Text('Do'),
+                        // ),
                         Spacing.h20,
                         buildEmployeeDiveCalender(),
                         Spacing.h50,
@@ -88,6 +97,23 @@ class _HomeViewState extends State<HomeView> {
         ).scrollable,
       ),
     );
+  }
+
+  Future<void> deleteEmptyDocuments() async {
+    CollectionReference pdfCron =
+        FirebaseFirestore.instance.collection('pdfCron');
+
+    // Fetch all documents in the "pdfCron" collection
+    QuerySnapshot querySnapshot = await pdfCron.get();
+
+    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
+      // Check if the document contains no data
+      if (doc.data() == null || (doc.data() as Map<String, dynamic>).isEmpty) {
+        // Delete the document if it has no data
+        await pdfCron.doc(doc.id).delete();
+        log('Deleted document: ${doc.id}');
+      }
+    }
   }
 
   Widget buildButton({required Function onTap, required IconData icon}) {
@@ -344,9 +370,12 @@ class _HomeViewState extends State<HomeView> {
                       text: checklistElement.title,
                       onTap: () {
                         Navigator.push(
-                            context,
-                            DiveChecklistView.route(
-                                checklistElement, checklist));
+                          context,
+                          DiveChecklistView.route(
+                            checklistElement,
+                            checklist,
+                          ),
+                        );
                       },
                     ).paddingOnly(bottom: 5),
                   ),

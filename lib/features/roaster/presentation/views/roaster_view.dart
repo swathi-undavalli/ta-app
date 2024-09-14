@@ -2,13 +2,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'roaster_chart_view.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
-import 'roaster_details_view.dart';
+import 'add_edit_roaster_details_view.dart';
 
 class RoasterView extends StatefulWidget {
   const RoasterView({super.key});
@@ -100,75 +101,96 @@ class _RoasterViewState extends State<RoasterView> {
             return (booking.getBoatInfo(selectedDate)?.id == selectedBoat?.id);
           }).toList();
 
-          return Expanded(
-            child: ListView.builder(
-              itemCount: filteredBookings.length,
-              itemBuilder: (context, index) {
-                Booking booking = filteredBookings[index];
+          if (filteredBookings.isNotEmpty) {
+            return Expanded(
+              child: ListView.builder(
+                itemCount: filteredBookings.length,
+                itemBuilder: (context, index) {
+                  Booking booking = filteredBookings[index];
 
-                return Column(
-                  children: booking.pax!.map((p) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(context, RoasterDetailsView.route());
-                      },
-                      child: Column(
-                        children: [
-                          Row(
-                            children: [
-                              Spacing.w15,
-                              Container(
-                                height: 40,
-                                width: 40,
-                                decoration: BoxDecoration(
+                  return Column(
+                    children: booking.pax!.map((p) {
+                      return InkWell(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            AddEditRoasterDetailsView.route(
+                              booking: booking,
+                              paxIndex: booking.pax?.indexOf(p),
+                              boat: selectedBoat,
+                            ),
+                          );
+                        },
+                        child: Column(
+                          children: [
+                            Row(
+                              children: [
+                                Spacing.w15,
+                                Container(
+                                  height: 40,
+                                  width: 40,
+                                  decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: AppColors.text.skyBlue),
-                                child: Center(
-                                  child: Text(
-                                    booking.id ?? '',
-                                    style: TextStyle(
-                                      color: AppColors.text.white,
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: AppFonts.nunito,
-                                    ),
+                                    color: AppColors.text.skyBlue,
                                   ),
-                                ),
-                              ),
-                              Spacing.w20,
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      '${p['first-name']}'
-                                      ' ${p['last-name']}',
+                                  child: Center(
+                                    child: Text(
+                                      booking.id ?? '',
                                       style: TextStyle(
-                                        color: AppColors.text.black,
-                                        fontSize: 13,
+                                        color: AppColors.text.white,
+                                        fontSize: 15,
+                                        fontWeight: FontWeight.w600,
                                         fontFamily: AppFonts.nunito,
                                       ),
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              ),
-                            ],
-                          ).paddingSymmetric(horizontal: 20),
-                          Container(
-                            height: 1,
-                            width: Screen.width,
-                            color: AppColors.text.grey,
-                          ).paddingSymmetric(
-                            horizontal: 15,
-                            vertical: 20,
-                          ),
-                        ],
-                      ),
-                    );
-                  }).toList(),
-                );
-              },
-            ),
+                                Spacing.w20,
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${p['first-name']}'
+                                        ' ${p['last-name']}',
+                                        style: TextStyle(
+                                          color: AppColors.text.black,
+                                          fontSize: 13,
+                                          fontFamily: AppFonts.nunito,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                if (p['roaster'] != null)
+                                  const Icon(
+                                    Icons.check_circle,
+                                    color: Colors.green,
+                                    size: 20,
+                                  ),
+                              ],
+                            ).paddingSymmetric(horizontal: 20),
+                            Container(
+                              height: 1,
+                              width: Screen.width,
+                              color: AppColors.text.grey,
+                            ).paddingSymmetric(
+                              horizontal: 15,
+                              vertical: 20,
+                            ),
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  );
+                },
+              ),
+            );
+          }
+          return const Text(
+            "No Dsd's found",
+            style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           );
         },
       );
@@ -181,6 +203,19 @@ class _RoasterViewState extends State<RoasterView> {
       runSpacing: 15,
       spacing: 15,
       children: [
+        Container(
+          decoration:
+              const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+          child: InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                RoasterChartView.route(selectedDate),
+              );
+            },
+            child: const Icon(Icons.insert_chart),
+          ).paddingAll(5),
+        ).paddingOnly(left: 10),
         ...boats.map(
           (boat) => buildChip(
             onTap: () {
@@ -194,7 +229,7 @@ class _RoasterViewState extends State<RoasterView> {
           ),
         ),
       ],
-    );
+    ).paddingSymmetric(horizontal: 10);
   }
 
   Widget buildChip({

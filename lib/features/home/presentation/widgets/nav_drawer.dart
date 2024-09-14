@@ -120,13 +120,13 @@ class NavDrawer extends StatelessWidget {
                 Navigator.push(context, CoastGuardSlipView.route());
               },
             ),
-            // buildMenuItem(
-            //   icon: Icons.add_card_rounded,
-            //   text: 'Roaster',
-            //   onTap: () {
-            //     Navigator.push(context, RoasterView.route());
-            //   },
-            // ),
+            buildMenuItem(
+              icon: Icons.add_card_rounded,
+              text: 'Roaster',
+              onTap: () {
+                Navigator.push(context, RoasterView.route());
+              },
+            ),
             buildMenuItem(
               icon: Icons.book_rounded,
               text: 'Logs',

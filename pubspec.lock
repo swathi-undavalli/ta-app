@@ -470,6 +470,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.5.1"
+  flutter_emoji_feedback:
+    dependency: "direct main"
+    description:
+      name: flutter_emoji_feedback
+      sha256: "5a4a580eaf4a44014889a65d4445267d8a98fe0baa0085658a5f61bafb3de4f4"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.4.0"
   flutter_lints:
     dependency: "direct main"
     description:

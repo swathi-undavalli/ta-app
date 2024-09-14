@@ -169,7 +169,8 @@ class Booking {
       activity:
           List<Activity>.from(json['activity'].map((x) => Activity.fromMap(x))),
       payments: List<PaymentModel>.from(
-          (json['payments'] ?? []).map((x) => PaymentModel.fromMap(x))),
+        (json['payments'] ?? []).map((x) => PaymentModel.fromMap(x)),
+      ),
       noOfPersons: json['noOfPersons'],
       createdAt: parseDateOrNull(json['createdAt']),
       discount: json['discount'] * 1.0,
@@ -189,15 +190,18 @@ class Booking {
       bookingDate: List<String>.from(json['bookingDate'].map((x) => x)),
       idProofs: List<String>.from(json['idProofs'] ?? [].map((x) => x)),
       theoryDate: List<DateTime>.from(
-          json['theoryDate'].map((x) => parseDateOrNull(x))),
+        json['theoryDate'].map((x) => parseDateOrNull(x)),
+      ),
       poolDate:
           List<DateTime>.from(json['poolDate'].map((x) => parseDateOrNull(x))),
       diveDate:
           List<DateTime>.from(json['diveDate'].map((x) => parseDateOrNull(x))),
       cancelBooking: json['cancelBooking'],
       cancellationReason: json['cancellationReason'],
-      boatDetails: BoatDetails.fromMap(json['boatDetails'],
-          List<String>.from(json['bookingDate'].map((x) => x))),
+      boatDetails: BoatDetails.fromMap(
+        json['boatDetails'],
+        List<String>.from(json['bookingDate'].map((x) => x)),
+      ),
       certificationStatuses:
           List<int>.from(json['certificationStatuses'] ?? [].map((x) => x)),
     );
@@ -419,3 +423,4 @@ class PaymentModel {
         'paymentMode': paymentMode,
       };
 }
+

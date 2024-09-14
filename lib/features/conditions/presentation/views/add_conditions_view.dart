@@ -42,7 +42,8 @@ class _AddConditionsViewState extends State<AddConditionsView> {
           children: [
             WillPopScope(
               onWillPop: () async {
-                if (logic.controller.conditions != null && logic.controller.conditions!.levels.isNotEmpty) {
+                if (logic.controller.conditions != null &&
+                    logic.controller.conditions!.levels.isNotEmpty) {
                   _showAlert(
                     context: context,
                     content: 'All your changes will be discarded.',
@@ -74,7 +75,8 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                             SizedBox(
                               width: 103,
                               child: Text(
-                                DateFormat('dd-MMM-yyyy').format(DateTime.now()),
+                                DateFormat('dd-MMM-yyyy')
+                                    .format(DateTime.now()),
                                 style: const TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
@@ -99,9 +101,11 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                             ),
                             const SizedBox(height: 30),
                             if (controller.conditions != null)
-                              buildSurfaceConditionsExpansionWidget(controller).paddingSymmetric(horizontal: 27),
+                              buildSurfaceConditionsExpansionWidget(controller)
+                                  .paddingSymmetric(horizontal: 27),
                             const SizedBox(height: 30),
-                            if (controller.conditions != null && controller.conditions!.levels.isNotEmpty)
+                            if (controller.conditions != null &&
+                                controller.conditions!.levels.isNotEmpty)
                               const Text(
                                 'Water Conditions : ',
                                 style: TextStyle(
@@ -129,19 +133,27 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                                       ),
                                     ),
                                   ),
-                                if (controller.conditions != null && controller.conditions!.levels.isNotEmpty)
-                                  ...controller.conditions!.levels.asMap().entries.map(
+                                if (controller.conditions != null &&
+                                    controller.conditions!.levels.isNotEmpty)
+                                  ...controller.conditions!.levels
+                                      .asMap()
+                                      .entries
+                                      .map(
                                     (l) {
-                                      if (l.value.reef == controller.selectedReef) {
+                                      if (l.value.reef ==
+                                          controller.selectedReef) {
                                         return buildDepthExpansionPanel(
                                           level: l.value,
                                           onDeletePressed: () {
                                             _showAlert(
                                               context: context,
-                                              title: 'Are you you want to delete ?',
-                                              content: 'Added information will be completely removed.',
+                                              title:
+                                                  'Are you you want to delete ?',
+                                              content:
+                                                  'Added information will be completely removed.',
                                               onOkayPressed: () {
-                                                controller.conditions!.levels.removeAt(l.key);
+                                                controller.conditions!.levels
+                                                    .removeAt(l.key);
                                                 Navigator.pop(context);
                                                 controller.update();
                                               },
@@ -152,16 +164,15 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                                             double visibility,
                                             double currents,
                                           ) {
-                                            controller.conditions!.levels[l.key] =
-                                                controller.conditions!.levels[l.key].copyWith(
+                                            controller
+                                                    .conditions!.levels[l.key] =
+                                                controller
+                                                    .conditions!.levels[l.key]
+                                                    .copyWith(
                                               fish: fish.toInt(),
                                               visibility: visibility.toInt(),
                                               currents: currents.toInt(),
                                             );
-
-                                            // log("$fish");
-                                            // log("$visibility");
-                                            // log("$currents");
                                           },
                                         ).paddingOnly(
                                           bottom: 12,
@@ -209,7 +220,8 @@ class _AddConditionsViewState extends State<AddConditionsView> {
       key: UniqueKey(),
       surfaceConditions: controller.conditions!.surfaceConditions,
       onChanged: (List<SurfaceCondition> surfaceConditions) {
-        controller.conditions = controller.conditions!.copyWith(surfaceConditions: surfaceConditions);
+        controller.conditions = controller.conditions!
+            .copyWith(surfaceConditions: surfaceConditions);
       },
       selectedReef: controller.selectedReef,
       disableTouches: false,
@@ -219,7 +231,8 @@ class _AddConditionsViewState extends State<AddConditionsView> {
   Widget buildDepthExpansionPanel({
     required Level level,
     required Function onDeletePressed,
-    required Function(double fish, double visibility, double currents) onChanged,
+    required Function(double fish, double visibility, double currents)
+        onChanged,
   }) {
     return DepthExpansionPanelWidget(
       level: level,
@@ -237,12 +250,16 @@ class _AddConditionsViewState extends State<AddConditionsView> {
         height: 27,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          color: logic.controller.selectedReef == reefName ? AppColors.text.skyBlue : AppColors.text.white,
+          color: logic.controller.selectedReef == reefName
+              ? AppColors.text.skyBlue
+              : AppColors.text.white,
         ),
         child: Text(
           reefName,
           style: TextStyle(
-            color: logic.controller.selectedReef == reefName ? AppColors.text.white : AppColors.text.black,
+            color: logic.controller.selectedReef == reefName
+                ? AppColors.text.white
+                : AppColors.text.black,
             fontSize: FontSize.small,
           ),
         ).paddingSymmetric(horizontal: 9, vertical: 5),
@@ -286,7 +303,8 @@ class _AddConditionsViewState extends State<AddConditionsView> {
               child: const Center(
                 child: Text(
                   'Save',
-                  style: TextStyle(fontSize: FontSize.small, color: Colors.white),
+                  style:
+                      TextStyle(fontSize: FontSize.small, color: Colors.white),
                 ),
               ),
             ).paddingOnly(right: 30),
@@ -367,7 +385,8 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                   children: [
                     const Text(
                       'Add Depth',
-                      style: TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 17, fontWeight: FontWeight.bold),
                     ),
                     const SizedBox(height: 10),
                     AppTextField(

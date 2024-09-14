@@ -25,7 +25,7 @@ class DepthExpansionPanelWidget extends StatefulWidget {
 class _DepthExpansionPanelWidgetState extends State<DepthExpansionPanelWidget> {
   bool isExpanded = false;
 
-  late double fishLife = (widget.level.fish) * 1.0;
+  late double  fishLife = (widget.level.fish) * 1.0;
   late double visibility = (widget.level.visibility) * 1.0;
   late double currents = (widget.level.currents) * 1.0;
 
