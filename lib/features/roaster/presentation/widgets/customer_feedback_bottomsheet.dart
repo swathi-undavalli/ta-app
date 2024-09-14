@@ -1,0 +1,266 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
+import 'package:get/get.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+import '../../../../core/constants/constants.dart';
+import '../../../../core/util/alignment_extensions.dart';
+import '../../../../core/util/spacing_widgets.dart';
+import '../../../../core/widgets/app_button.dart';
+import '../../../bookings/models/booking_model.dart';
+import '../../../bookings/presentation/widgets/app_text_fields.dart';
+
+class CustomerFeedbackBottomSheet extends StatefulWidget {
+  const CustomerFeedbackBottomSheet({
+    super.key,
+    required this.bookingModel,
+  });
+
+  final Booking bookingModel;
+
+  static void show(
+    BuildContext context, {
+    required Booking bookingModel,
+  }) async {
+    await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      useRootNavigator: true,
+      builder: (context) {
+        return CustomerFeedbackBottomSheet(
+          bookingModel: bookingModel,
+        );
+      },
+    );
+  }
+
+  @override
+  State<CustomerFeedbackBottomSheet> createState() =>
+      _CustomerFeedbackBottomSheetState();
+}
+
+class _CustomerFeedbackBottomSheetState
+    extends State<CustomerFeedbackBottomSheet> {
+  TextEditingController reviewTED = TextEditingController();
+  bool showLoading = false;
+  bool knowSwimming = false;
+  bool interestedOwc = false;
+  int instructorRating = 3;
+  int equipmentRating = 3;
+  int experienceRating = 3;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: Screen.height,
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+        top: 30,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(30),
+        color: AppColors.background.lightBlue,
+      ),
+      child: (!showLoading)
+          ? Column(
+              children: [
+                buildHeader(),
+                Spacing.h15,
+                buildSwitch(
+                  text: 'Knows Swimming',
+                  switchValue: knowSwimming,
+                  onChanged: (value) {
+                    knowSwimming = value;
+                    setState(() {});
+                  },
+                ),
+                Spacing.h15,
+                buildSwitch(
+                  text: 'Interested in OWC',
+                  switchValue: interestedOwc,
+                  onChanged: (value) {
+                    interestedOwc = value;
+                    setState(() {});
+                  },
+                ),
+                Spacing.h20,
+                buildEmojiFeedback(
+                  title: 'Instructor Feedback',
+                  rating: instructorRating,
+                  onChanged: (value) {
+                    instructorRating = value;
+                    setState(() {});
+                  },
+                ),
+                Spacing.h20,
+                buildEmojiFeedback(
+                  title: 'Equipment Feedback',
+                  rating: equipmentRating,
+                  onChanged: (value) {
+                    equipmentRating = value;
+                    setState(() {});
+                  },
+                ),
+                Spacing.h20,
+                buildEmojiFeedback(
+                  title: 'Experience Feedback',
+                  rating: experienceRating,
+                  onChanged: (value) {
+                    experienceRating = value;
+                    setState(() {});
+                  },
+                ),
+                AppTextField(
+                  hintText: 'Feedback',
+                  controller: reviewTED,
+                  maxLines: 3,
+                  validator: (name) {
+                    return name;
+                  },
+                ),
+                Spacing.h30,
+                Row(
+                  children: [
+                    AppButton.miniText(
+                      text: 'Cancel',
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
+                    ),
+                    const Spacer(),
+                    AppButton.miniFlat(
+                      text: 'Okay',
+                      onTap: () async {
+                        setState(() {
+                          showLoading = true;
+                        });
+
+                        await FirebaseFirestore.instance
+                            .collection('bookings')
+                            .doc(widget.bookingModel.id)
+                            .set(widget.bookingModel.toMap());
+                        setState(() {
+                          showLoading = false;
+                        });
+                        if (context.mounted) {
+                          Navigator.pop(context, widget.bookingModel);
+                        }
+                      },
+                    ),
+                  ],
+                ).paddingSymmetric(horizontal: 20),
+                Spacing.h30,
+              ],
+            ).scrollable
+          : Container(
+              height: Screen.height / 2,
+              color: Colors.white,
+              child: const CircularProgressIndicator(
+                color: Colors.black,
+                backgroundColor: Colors.grey,
+              ).center,
+            ),
+    );
+  }
+
+  Widget buildEmojiFeedback({
+    required String title,
+    required int? rating,
+    required Function onChanged,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 12),
+        ),
+        Spacing.h15,
+        EmojiFeedback(
+          animDuration: const Duration(milliseconds: 300),
+          emojiPreset: [
+            classicEmojiPreset.first,
+            classicEmojiPreset[2],
+            classicEmojiPreset.last,
+          ],
+          curve: Curves.bounceIn,
+          inactiveElementScale: .5,
+          elementSize: 70,
+          showLabel: false,
+          rating: rating,
+          onChanged: (value) {
+            onChanged(value);
+          },
+        ),
+      ],
+    ).paddingSymmetric(horizontal: 20);
+  }
+
+  Widget buildSwitch({
+    required String text,
+    Function? onChanged,
+    required bool switchValue,
+  }) {
+    return Row(
+      children: [
+        Expanded(
+          child: Text(
+            text,
+            style: const TextStyle(
+              fontSize: 12,
+              color: Colors.black,
+            ),
+          ),
+        ),
+        Switch(
+          value: switchValue,
+          onChanged: onChanged as void Function(bool)?,
+          activeColor: AppColors.text.skyBlue,
+          inactiveThumbColor: AppColors.text.grey,
+        ),
+      ],
+    ).paddingSymmetric(horizontal: 20);
+  }
+
+  Widget buildHeader() {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: [
+        const Text(
+          'Feedback',
+          style: TextStyle(
+            fontWeight: FontWeight.w600,
+            fontSize: 20,
+          ),
+        ).paddingOnly(top: 8),
+        const Spacer(),
+        IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: () async {
+            Navigator.pop(context);
+          },
+        ),
+      ],
+    ).paddingSymmetric(horizontal: 20);
+  }
+
+  Widget buildShowLoading() {
+    if (showLoading) {
+      return Material(
+        color: Colors.transparent,
+        child: Container(
+          color: Colors.black54,
+          height: Screen.height,
+          width: Screen.width,
+          child: const Center(
+            child: CircularProgressIndicator(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
+}
