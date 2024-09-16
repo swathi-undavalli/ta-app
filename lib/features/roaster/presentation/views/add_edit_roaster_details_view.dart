@@ -12,6 +12,7 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
+import '../../models/customer_feedback.dart';
 import '../../models/roaster.dart';
 import '../widgets/customer_feedback_bottomsheet.dart';
 import '../widgets/roaster_time_editor_bs.dart';
@@ -25,12 +26,12 @@ class AddEditRoasterDetailsView extends StatefulWidget {
   });
 
   final Booking booking;
-  final int? paxIndex;
+  final int paxIndex;
   final Boat? boat;
 
   static Route route({
     required Booking booking,
-    required int? paxIndex,
+    required int paxIndex,
     required Boat? boat,
   }) =>
       MaterialPageRoute(
@@ -42,39 +43,36 @@ class AddEditRoasterDetailsView extends StatefulWidget {
       );
 
   @override
-  State<AddEditRoasterDetailsView> createState() =>
-      _AddEditRoasterDetailsViewState();
+  State<AddEditRoasterDetailsView> createState() => _AddEditRoasterDetailsViewState();
 }
 
 class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
   Instructor? assignedInstructor;
-  late TextEditingController customerRemarks;
+  CustomerFeedback? customerFeedback;
   List<Instructor> dsdInstructors = [];
   DateTime? timeIn;
   DateTime? timeOut;
   bool showLoading = false;
   late Booking booking;
+  Map<String, dynamic>? paxData;
+  Roaster? existingRoaster;
 
   @override
   void initState() {
     super.initState();
-    customerRemarks = TextEditingController();
     dsdInstructors = widget.boat?.dsdInstructors ?? [];
 
     booking = widget.booking;
 
-    if ((widget.paxIndex != null)) {
-      var pax = booking.pax?[widget.paxIndex!];
-      var roasterData = pax?['roaster'] as Map<String, dynamic>?;
+    paxData = booking.pax?[widget.paxIndex];
 
-      if (roasterData != null) {
-        Roaster roaster = Roaster.fromJson(roasterData);
+    if (paxData?['roaster'] != null) {
+      existingRoaster = Roaster.fromJson(paxData?['roaster']);
 
-        assignedInstructor = roaster.instructor;
-        customerRemarks.text = roaster.remarks ?? '';
-        timeIn = roaster.timeIn;
-        timeOut = roaster.timeOut;
-      }
+      assignedInstructor = existingRoaster?.instructor;
+      customerFeedback = existingRoaster?.customerFeedback;
+      timeIn = existingRoaster?.timeIn;
+      timeOut = existingRoaster?.timeOut;
     }
   }
 
@@ -85,30 +83,6 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
       appBar: AppBarWidget(
         heading: '',
         color: AppColors.background.lightBlue,
-        actions: [
-          IconButton(
-            onPressed: () async {
-              if (widget.paxIndex != null) {
-                setState(() {
-                  showLoading = true;
-                });
-                var pax = booking.pax![widget.paxIndex!];
-                pax['roaster'] = null;
-
-                await FirebaseFirestore.instance
-                    .collection('bookings')
-                    .doc(booking.id)
-                    .set(booking.toMap());
-
-                setState(() {
-                  showLoading = false;
-                });
-                Get.back();
-              }
-            },
-            icon: const Icon(Icons.refresh),
-          ).paddingOnly(right: 10),
-        ],
       ),
       body: SafeArea(
         child: (showLoading)
@@ -135,7 +109,7 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                   ),
                   Spacing.h15,
                   Text(
-                    '${booking.pax?[widget.paxIndex!]['first-name']} ${booking.pax?[widget.paxIndex!]['last-name']}',
+                    '${booking.pax?[widget.paxIndex]['first-name']} ${booking.pax?[widget.paxIndex]['last-name']}',
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black,
@@ -154,9 +128,7 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                           setState(() {});
                           log(timeIn.toString());
                         },
-                        color: (timeIn != null)
-                            ? AppColors.text.lightSkyBlue
-                            : Colors.white,
+                        color: (timeIn != null) ? AppColors.text.lightSkyBlue : Colors.white,
                       ),
                       Spacing.w20,
                       buildTimeButtons(
@@ -166,9 +138,7 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                           setState(() {});
                           log(timeOut.toString());
                         },
-                        color: (timeOut != null)
-                            ? AppColors.text.lightSkyBlue
-                            : Colors.white,
+                        color: (timeOut != null) ? AppColors.text.lightSkyBlue : Colors.white,
                       ),
                     ],
                   ),
@@ -180,7 +150,7 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                           child: Text(
                             'In water time : ${DateFormat('hh:mm a').format(timeIn!)}',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 10),
+                            style: const TextStyle(fontSize: 10),
                           ),
                         ),
                       Spacing.w20,
@@ -189,55 +159,64 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                           child: Text(
                             'Out water time : ${DateFormat('hh:mm a').format(timeOut!)}',
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 10),
+                            style: const TextStyle(fontSize: 10),
                           ),
                         ),
                     ],
                   ),
                   Spacing.h10,
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const Text(
-                        'Change In the water and out the water timings ',
-                        style: TextStyle(fontSize: 10),
-                      ),
-                      InkWell(
-                        onTap: () {
-                          RoasterTimeEditorBs.show(context);
-                        },
-                        child: const Text(
-                          ' here',
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.blue,
-                            decoration: TextDecoration.underline,
+                  if (timeIn != null || timeOut != null)
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const Text(
+                          'Change, In the water and out the water timings ',
+                          style: TextStyle(fontSize: 10),
+                        ),
+                        InkWell(
+                          onTap: () async {
+                            List<DateTime?> times = await RoasterTimeEditorBs.show(context, timeIn, timeOut);
+
+                            log(times.toString());
+
+                            if (times.isNotEmpty) {
+                              timeIn = times[0];
+                              timeOut = times[1];
+                              setState(() {});
+                            }
+                          },
+                          child: const Text(
+                            ' here',
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.blue,
+                              decoration: TextDecoration.underline,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                  Spacing.h20,
+                      ],
+                    ).paddingOnly(bottom: 20),
                   Row(
                     children: [
-                      const Text('Customer Review'),
+                      const Text('Customer FeedBack'),
                       const Spacer(),
                       AppButton.miniFlat(
-                        text: 'Submit',
-                        onTap: () {
-                          CustomerFeedbackBottomSheet.show(
+                        text: (customerFeedback == null) ? 'Submit' : 'Update',
+                        onTap: () async {
+                          customerFeedback = await CustomerFeedbackBottomSheet.show(
                             context,
                             bookingModel: booking,
+                            paxIndex: widget.paxIndex,
+                            customerFeedback: customerFeedback,
                           );
+                          setState(() {});
                         },
                       ),
                     ],
                   ),
                   Spacing.h100,
                   AppButton.flat(
-                    text: (booking.pax?[widget.paxIndex!]['roaster'] == null)
-                        ? 'Submit'
-                        : 'Update',
+                    text: (booking.pax?[widget.paxIndex]['roaster'] == null) ? 'Submit' : 'Update',
                     onTap: () async {
                       showLoading = true;
                       setState(() {});
@@ -246,29 +225,12 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                         instructor: assignedInstructor,
                         timeIn: timeIn,
                         timeOut: timeOut,
-                        knowsSwimming: null,
-                        interestedOwc: null,
-                        remarks: customerRemarks.text,
+                        customerFeedback: customerFeedback,
                       );
 
-                      if (widget.paxIndex != null) {
-                        var pax = booking.pax![widget.paxIndex!];
+                      booking.pax?[widget.paxIndex]['roaster'] = roaster.toJson();
 
-                        if (pax['roaster'] != null &&
-                            pax['roaster'] is Map<String, dynamic>) {
-                          // Update existing `roaster` map
-                          (pax['roaster'] as Map<String, dynamic>)
-                              .addAll(roaster.toJson());
-                        } else {
-                          // Assign a new map if `roaster` doesn't exist
-                          pax['roaster'] = roaster.toJson();
-                        }
-                      }
-
-                      await FirebaseFirestore.instance
-                          .collection('bookings')
-                          .doc(booking.id)
-                          .set(booking.toMap());
+                      await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
                       showLoading = false;
                       setState(() {});
 

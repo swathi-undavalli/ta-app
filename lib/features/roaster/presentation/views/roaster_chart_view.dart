@@ -88,8 +88,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
           )
           .snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.hasError ||
-            snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox(
             height: 15,
             width: 15,
@@ -113,10 +112,8 @@ class _RoasterChartViewState extends State<RoasterChartView> {
               .collection('dailyBoats')
               .doc(DateFormat('dd-MM-yyyy').format(widget.selectedDate))
               .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.hasError ||
-                snapshot.connectionState == ConnectionState.waiting) {
+          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
                 height: 15,
                 width: 15,
@@ -126,12 +123,13 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                 ),
               );
             }
-            Map<String, dynamic>? data =
-                snapshot.data?.data() as Map<String, dynamic>?;
+            Map<String, dynamic>? data = snapshot.data?.data() as Map<String, dynamic>?;
             if (data == null) {
               return const Text('No data added');
             }
             BoatsModel boatsModel = BoatsModel.fromMap(data);
+
+            Duration? difference;
 
             return Expanded(
               child: ListView.builder(
@@ -140,8 +138,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                   Booking booking = bookings[index];
                   Boat? boat;
                   boatsModel.boats?.forEach((element) {
-                    if (element.id ==
-                        booking.getBoatInfo(widget.selectedDate)?.id) {
+                    if (element.id == booking.getBoatInfo(widget.selectedDate)?.id) {
                       boat = element;
                     }
                   });
@@ -152,6 +149,13 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                         (p) {
                           if (p['roaster'] != null) {
                             Roaster roaster = Roaster.fromJson(p['roaster']);
+
+                            if (roaster.timeIn != null && roaster.timeOut != null) {
+                              DateTime startTime = roaster.timeIn!;
+                              DateTime endTime = roaster.timeOut!;
+
+                              difference = endTime.difference(startTime);
+                            }
                             return Row(
                               children: [
                                 buildText(text: boat?.name ?? '-'),
@@ -159,22 +163,37 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                                   text: booking.id ?? '',
                                 ),
                                 buildText(
-                                  text:
-                                      '${p['first-name']}' '${p['last-name']}',
+                                  text: '${p['first-name']}' '${p['last-name']}',
                                 ),
                                 buildText(text: p['gender']),
                                 buildText(
                                   text: roaster.instructor?.name ?? '-',
                                 ),
-                                // buildText(
-                                //   text: DateFormat('hh:mm a')
-                                //       .format(roaster.timeIn),
-                                // ),
-                                // buildText(
-                                //   text: DateFormat('hh:mm a')
-                                //       .format(roaster.timeOut),
-                                // ),
-                                buildText(text: roaster.remarks ?? '-'),
+                                buildText(
+                                  text: (roaster.timeIn != null) ? DateFormat('hh:mm a').format(roaster.timeIn!) : '-',
+                                ),
+                                buildText(
+                                  text:
+                                      (roaster.timeOut != null) ? DateFormat('hh:mm a').format(roaster.timeOut!) : '-',
+                                ),
+                                buildText(
+                                  text: (difference != null && difference!.inMinutes >= 10) ? 'Yes' : 'No',
+                                ),
+                                buildText(
+                                  text: (roaster.customerFeedback != null && roaster.customerFeedback!.knowsSwimming!)
+                                      ? 'Yes'
+                                      : 'No',
+                                ),
+                                buildText(
+                                  text: (roaster.customerFeedback != null && roaster.customerFeedback!.interestedOwc!)
+                                      ? 'Yes'
+                                      : 'No',
+                                ),
+                                buildText(
+                                    text: (roaster.customerFeedback != null &&
+                                            roaster.customerFeedback!.feedback!.isNotEmpty)
+                                        ? roaster.customerFeedback!.feedback!
+                                        : '-'),
                               ],
                             ).paddingSymmetric(horizontal: 10, vertical: 5);
                           }

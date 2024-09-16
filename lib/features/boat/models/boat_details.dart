@@ -47,7 +47,7 @@ class BoatDetails {
     List<Instructor>? instructors;
 
     if (((json['instructors'] as List?) ?? []).length == 1) {
-      Instructor ins = Instructor.fromMap(json['instructors'][0]);
+      Instructor ins = Instructor.fromJson(json['instructors'][0]);
 
       if (((json['instructorTanks'] ?? {}) as Map).isNotEmpty) {
         (json['instructorTanks'] as Map<String, dynamic>).forEach((date, tankInfo) {
@@ -84,10 +84,10 @@ class BoatDetails {
       bookingStatus: json['bookingStatus'],
       instructors: instructors ??
           List<Instructor>.from(
-            (json['instructors'] ?? []).map((x) => Instructor.fromMap(x)),
+            (json['instructors'] ?? []).map((x) => Instructor.fromJson(x)),
           ),
       diveBuddies: List<Instructor>.from(
-        (json['diveBuddies'] ?? []).map((x) => Instructor.fromMap(x)),
+        (json['diveBuddies'] ?? []).map((x) => Instructor.fromJson(x)),
       ),
     );
   }
@@ -138,11 +138,11 @@ class Instructor {
         date: date ?? this.date,
       );
 
-  factory Instructor.fromRawJson(String str) => Instructor.fromMap(json.decode(str));
+  factory Instructor.fromRawJson(String str) => Instructor.fromJson(json.decode(str));
 
   String toRawJson() => json.encode(toJson());
 
-  factory Instructor.fromMap(Map<String, dynamic> json) => Instructor(
+  factory Instructor.fromJson(Map<String, dynamic> json) => Instructor(
         id: json['id'],
         name: json['name'],
         air: json['air'],

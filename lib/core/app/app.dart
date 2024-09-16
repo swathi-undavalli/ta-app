@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
       ),
     );
 
-    return GetMaterialApp(
+    return  GetMaterialApp(
       debugShowCheckedModeBanner: false,
       home: const SplashView(),
       theme: ThemeData(

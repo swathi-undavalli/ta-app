@@ -136,25 +136,25 @@ class Dsd {
         powerMask: json['powerMask'],
         weights: Weights.fromJson((json['weights']) ?? {}),
         dayOffs: List<Instructor>.from(
-          ((json['dayOffs']) ?? []).map((x) => Instructor.fromMap(x)),
+          ((json['dayOffs']) ?? []).map((x) => Instructor.fromJson(x)),
         ),
         leaves: List<Instructor>.from(
-          ((json['leaves']) ?? []).map((x) => Instructor.fromMap(x)),
+          ((json['leaves']) ?? []).map((x) => Instructor.fromJson(x)),
         ),
         dsdPool: List<Instructor>.from(
-          ((json['dsdPool']) ?? []).map((x) => Instructor.fromMap(x)),
+          ((json['dsdPool']) ?? []).map((x) => Instructor.fromJson(x)),
         ),
         centerStaff: List<Instructor>.from(
-          ((json['centerStaff']) ?? []).map((x) => Instructor.fromMap(x)),
+          ((json['centerStaff']) ?? []).map((x) => Instructor.fromJson(x)),
         ),
         courseCenter: List<Instructor>.from(
-          ((json['courseCenter']) ?? []).map((x) => Instructor.fromMap(x)),
+          ((json['courseCenter']) ?? []).map((x) => Instructor.fromJson(x)),
         ),
         dsdOceanHead: List<Instructor>.from(
-          ((json['dsdOceanHead']) ?? []).map((x) => Instructor.fromMap(x)),
+          ((json['dsdOceanHead']) ?? []).map((x) => Instructor.fromJson(x)),
         ),
         harboursStaff: List<Instructor>.from(
-          ((json['harboursStaff']) ?? []).map((x) => Instructor.fromMap(x)),
+          ((json['harboursStaff']) ?? []).map((x) => Instructor.fromJson(x)),
         ),
         generalNotes: json['generalNotes'],
         highTides: json['highTides'],
@@ -386,13 +386,13 @@ class Boat {
 
   factory Boat.fromJson(Map<String, dynamic> json) => Boat(
         captains: List<Instructor>.from(
-          (json['captains'] ?? []).map((x) => Instructor.fromMap(x)),
+          (json['captains'] ?? []).map((x) => Instructor.fromJson(x)),
         ),
         dsdInstructors: List<Instructor>.from(
-          (json['dsdInstructors'] ?? []).map((x) => Instructor.fromMap(x)),
+          (json['dsdInstructors'] ?? []).map((x) => Instructor.fromJson(x)),
         ),
         photographer: List<Instructor>.from(
-          (json['photographer'] ?? []).map((x) => Instructor.fromMap(x)),
+          (json['photographer'] ?? []).map((x) => Instructor.fromJson(x)),
         ),
         id: json['id'],
         time: json['time'],
@@ -402,10 +402,10 @@ class Boat {
         hideBoat: json['hideBoat'],
         isBoat: json['isBoat'],
         surfaceSupport: List<Instructor>.from(
-          (json['surfaceSupport'] ?? []).map((x) => Instructor.fromMap(x)),
+          (json['surfaceSupport'] ?? []).map((x) => Instructor.fromJson(x)),
         ),
         internPhotoVideo: List<Instructor>.from(
-          (json['internPhotoVideo'] ?? []).map((x) => Instructor.fromMap(x)),
+          (json['internPhotoVideo'] ?? []).map((x) => Instructor.fromJson(x)),
         ),
         diveSite: json['diveSite'],
         name: json['name'],

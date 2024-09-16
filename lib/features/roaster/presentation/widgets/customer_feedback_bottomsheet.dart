@@ -9,45 +9,72 @@ import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../bookings/models/booking_model.dart';
 import '../../../bookings/presentation/widgets/app_text_fields.dart';
+import '../../models/customer_feedback.dart';
+import '../../models/roaster.dart';
 
 class CustomerFeedbackBottomSheet extends StatefulWidget {
   const CustomerFeedbackBottomSheet({
     super.key,
     required this.bookingModel,
+    required this.paxIndex,
+    required this.customerFeedback,
   });
 
   final Booking bookingModel;
+  final int paxIndex;
+  final CustomerFeedback? customerFeedback;
 
-  static void show(
+  static show(
     BuildContext context, {
     required Booking bookingModel,
+    required int paxIndex,
+    required CustomerFeedback? customerFeedback,
   }) async {
-    await showModalBottomSheet(
+    CustomerFeedback? data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       useRootNavigator: true,
       builder: (context) {
         return CustomerFeedbackBottomSheet(
           bookingModel: bookingModel,
+          paxIndex: paxIndex,
+          customerFeedback: customerFeedback,
         );
       },
     );
+    return data;
   }
 
   @override
-  State<CustomerFeedbackBottomSheet> createState() =>
-      _CustomerFeedbackBottomSheetState();
+  State<CustomerFeedbackBottomSheet> createState() => _CustomerFeedbackBottomSheetState();
 }
 
-class _CustomerFeedbackBottomSheetState
-    extends State<CustomerFeedbackBottomSheet> {
+class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomSheet> {
   TextEditingController reviewTED = TextEditingController();
   bool showLoading = false;
-  bool knowSwimming = false;
+  bool knowsSwimming = false;
   bool interestedOwc = false;
   int instructorRating = 3;
   int equipmentRating = 3;
   int experienceRating = 3;
+  late Booking booking;
+  CustomerFeedback? customerFeedback;
+
+  @override
+  void initState() {
+    super.initState();
+    booking = widget.bookingModel;
+
+    customerFeedback = widget.customerFeedback;
+    if (customerFeedback != null) {
+      knowsSwimming = customerFeedback!.knowsSwimming!;
+      interestedOwc = customerFeedback!.interestedOwc!;
+      instructorRating = customerFeedback!.instructorFeedback!;
+      equipmentRating = customerFeedback!.equipmentFeedback!;
+      experienceRating = customerFeedback!.experienceFeedback!;
+      reviewTED.text = customerFeedback!.feedback!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,13 +91,14 @@ class _CustomerFeedbackBottomSheetState
       child: (!showLoading)
           ? Column(
               children: [
+                Spacing.h20,
                 buildHeader(),
                 Spacing.h15,
                 buildSwitch(
                   text: 'Knows Swimming',
-                  switchValue: knowSwimming,
+                  switchValue: knowsSwimming,
                   onChanged: (value) {
-                    knowSwimming = value;
+                    knowsSwimming = value;
                     setState(() {});
                   },
                 ),
@@ -124,32 +152,47 @@ class _CustomerFeedbackBottomSheetState
                     AppButton.miniText(
                       text: 'Cancel',
                       onTap: () {
-                        Navigator.pop(context);
+                        Navigator.pop(context, widget.customerFeedback);
                       },
                     ),
                     const Spacer(),
                     AppButton.miniFlat(
-                      text: 'Okay',
+                      text: 'Submit',
                       onTap: () async {
                         setState(() {
                           showLoading = true;
                         });
+                        var pax = booking.pax![widget.paxIndex];
 
-                        await FirebaseFirestore.instance
-                            .collection('bookings')
-                            .doc(widget.bookingModel.id)
-                            .set(widget.bookingModel.toMap());
+                        Roaster roaster = Roaster.fromJson(pax['roaster']);
+
+                        customerFeedback = CustomerFeedback(
+                          knowsSwimming: knowsSwimming,
+                          interestedOwc: interestedOwc,
+                          instructorFeedback: instructorRating,
+                          equipmentFeedback: equipmentRating,
+                          experienceFeedback: experienceRating,
+                          feedback: reviewTED.text,
+                        );
+
+                        roaster = roaster.copyWith(
+                          customerFeedback: customerFeedback,
+                        );
+
+                        pax['roaster'] = roaster.toJson();
+
+                        await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
                         setState(() {
                           showLoading = false;
                         });
                         if (context.mounted) {
-                          Navigator.pop(context, widget.bookingModel);
+                          Navigator.pop(context, customerFeedback);
                         }
                       },
                     ),
                   ],
                 ).paddingSymmetric(horizontal: 20),
-                Spacing.h30,
+                Spacing.h50,
               ],
             ).scrollable
           : Container(
@@ -227,7 +270,7 @@ class _CustomerFeedbackBottomSheetState
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const Text(
-          'Feedback',
+          "How's is your dive",
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 20,
@@ -237,7 +280,7 @@ class _CustomerFeedbackBottomSheetState
         IconButton(
           icon: const Icon(Icons.close),
           onPressed: () async {
-            Navigator.pop(context);
+            Navigator.pop(context, widget.customerFeedback);
           },
         ),
       ],

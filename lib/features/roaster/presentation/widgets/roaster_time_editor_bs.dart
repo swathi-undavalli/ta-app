@@ -1,23 +1,32 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
 import 'package:get/get.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/time_picker.dart';
 
 class RoasterTimeEditorBs extends StatefulWidget {
-  const RoasterTimeEditorBs({super.key, x});
+  const RoasterTimeEditorBs({super.key, this.selectedTimeIn, this.selectedTmeOut});
 
-  static void show(BuildContext context) async {
-    await showModalBottomSheet(
+  final DateTime? selectedTimeIn;
+  final DateTime? selectedTmeOut;
+
+  static show(BuildContext context, DateTime? selectedTmeIn, DateTime? selectedTmeOut) async {
+    List<DateTime?>? data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       useRootNavigator: true,
       builder: (context) {
-        return const RoasterTimeEditorBs();
+        return RoasterTimeEditorBs(
+          selectedTimeIn: selectedTmeIn,
+          selectedTmeOut: selectedTmeOut,
+        );
       },
     );
+    return data ?? [];
   }
 
   @override
@@ -25,6 +34,20 @@ class RoasterTimeEditorBs extends StatefulWidget {
 }
 
 class _RoasterTimeEditorBsState extends State<RoasterTimeEditorBs> {
+  DateTime? timeIn;
+  DateTime? timeOut;
+
+  @override
+  void initState() {
+    timeIn = widget.selectedTimeIn;
+    timeOut = widget.selectedTmeOut;
+
+    log(timeIn.toString());
+    log(timeOut.toString());
+
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,7 +62,36 @@ class _RoasterTimeEditorBsState extends State<RoasterTimeEditorBs> {
       child: Column(
         children: [
           buildHeader(),
-          Spacing.h15,
+          Spacing.h30,
+          if (timeIn != null)
+            buildTimes(
+              time: timeIn!,
+              title: 'Time In',
+              onTap: () {
+                selectTimeIn(context);
+              },
+            ),
+          Spacing.h20,
+          if (timeOut != null)
+            buildTimes(
+              time: timeOut!,
+              title: 'Time Out',
+              onTap: () {
+                selectTimeOut(context);
+              },
+            ),
+          Spacing.h30,
+          AppButton.miniFlat(
+            text: 'Reset',
+            onTap: () {
+              timeIn = null;
+              timeOut = null;
+              if (context.mounted) {
+                Navigator.pop(context, [timeIn, timeOut]);
+              }
+            },
+          ).left,
+          Spacing.h30,
           Row(
             children: [
               AppButton.miniText(
@@ -52,78 +104,86 @@ class _RoasterTimeEditorBsState extends State<RoasterTimeEditorBs> {
               AppButton.miniFlat(
                 text: 'Okay',
                 onTap: () async {
-                  setState(() {});
-
                   if (context.mounted) {
-                    Navigator.pop(context);
+                    Navigator.pop(context, [timeIn, timeOut]);
                   }
                 },
               ),
             ],
-          ).paddingSymmetric(horizontal: 20),
-          Spacing.h30,
+          ),
+          Spacing.h50,
         ],
-      ).scrollable,
+      ).paddingSymmetric(horizontal: 20).scrollable,
     );
   }
 
-  Widget buildEmojiFeedback({
+  Widget buildTimes({
+    required DateTime time,
     required String title,
-    required int? rating,
-    required Function onChanged,
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(fontSize: 12),
-        ),
-        Spacing.h15,
-        EmojiFeedback(
-          animDuration: const Duration(milliseconds: 300),
-          emojiPreset: [
-            classicEmojiPreset.first,
-            classicEmojiPreset[2],
-            classicEmojiPreset.last,
-          ],
-          curve: Curves.bounceIn,
-          inactiveElementScale: .5,
-          elementSize: 70,
-          showLabel: false,
-          rating: rating,
-          onChanged: (value) {
-            onChanged(value);
-          },
-        ),
-      ],
-    ).paddingSymmetric(horizontal: 20);
-  }
-
-  Widget buildSwitch({
-    required String text,
-    Function? onChanged,
-    required bool switchValue,
+    required Function onTap,
   }) {
     return Row(
       children: [
-        Expanded(
-          child: Text(
-            text,
-            style: const TextStyle(
-              fontSize: 12,
-              color: Colors.black,
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14,
+            color: AppColors.text.black,
+            fontFamily: AppFonts.nunito,
+          ),
+        ),
+        const Spacer(),
+        GestureDetector(
+          onTap: () {
+            onTap();
+          },
+          child: Container(
+            height: 30,
+            width: 120,
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.black),
+              borderRadius: BorderRadius.circular(5),
+            ),
+            child: Center(
+              child: Text(
+                TimePicker.getFormattedTime(time) ?? 'No time selected',
+                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+              ),
             ),
           ),
         ),
-        Switch(
-          value: switchValue,
-          onChanged: onChanged as void Function(bool)?,
-          activeColor: AppColors.text.skyBlue,
-          inactiveThumbColor: AppColors.text.grey,
-        ),
       ],
-    ).paddingSymmetric(horizontal: 20);
+    );
+  }
+
+  Future<void> selectTimeIn(
+    BuildContext context,
+  ) async {
+    final DateTime? pickedTime = await TimePicker.show(
+      context,
+      initialTime: timeIn!,
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        timeIn = pickedTime;
+      });
+    }
+  }
+
+  Future<void> selectTimeOut(
+    BuildContext context,
+  ) async {
+    final DateTime? pickedTime = await TimePicker.show(
+      context,
+      initialTime: timeOut!,
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        timeOut = pickedTime;
+      });
+    }
   }
 
   Widget buildHeader() {
@@ -141,10 +201,10 @@ class _RoasterTimeEditorBsState extends State<RoasterTimeEditorBs> {
         IconButton(
           icon: const Icon(Icons.close),
           onPressed: () async {
-            Navigator.pop(context);
+            Navigator.pop(context, [widget.selectedTimeIn, widget.selectedTmeOut  ]);
           },
         ),
       ],
-    ).paddingSymmetric(horizontal: 20);
+    );
   }
 }

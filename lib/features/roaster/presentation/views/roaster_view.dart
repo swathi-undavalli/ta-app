@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import '../../models/roaster.dart';
 import 'roaster_chart_view.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 import '../../../../core/constants/constants.dart';
@@ -78,8 +79,7 @@ class _RoasterViewState extends State<RoasterView> {
             )
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.hasError ||
-              snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
             return const SizedBox(
               height: 15,
               width: 15,
@@ -91,6 +91,7 @@ class _RoasterViewState extends State<RoasterView> {
           }
           final data = snapshot.data?.docs;
           List<Booking> bookings = [];
+          Roaster? roaster;
           data?.forEach((element) {
             Booking booking = Booking.fromMap(element.data());
             if (booking.isDSD) {
@@ -110,13 +111,16 @@ class _RoasterViewState extends State<RoasterView> {
 
                   return Column(
                     children: booking.pax!.map((p) {
+                      if (p['roaster'] != null) {
+                        roaster = Roaster.fromJson(p['roaster']);
+                      }
                       return InkWell(
                         onTap: () {
                           Navigator.push(
                             context,
                             AddEditRoasterDetailsView.route(
                               booking: booking,
-                              paxIndex: booking.pax?.indexOf(p),
+                              paxIndex: booking.pax!.indexOf(p),
                               boat: selectedBoat,
                             ),
                           );
@@ -148,8 +152,7 @@ class _RoasterViewState extends State<RoasterView> {
                                 Spacing.w20,
                                 Expanded(
                                   child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Text(
                                         '${p['first-name']}'
@@ -163,7 +166,11 @@ class _RoasterViewState extends State<RoasterView> {
                                     ],
                                   ),
                                 ),
-                                if (p['roaster'] != null)
+                                if (roaster != null &&
+                                    roaster?.instructor != null &&
+                                    roaster?.timeIn != null &&
+                                    roaster?.timeOut != null &&
+                                    roaster?.customerFeedback != null)
                                   const Icon(
                                     Icons.check_circle,
                                     color: Colors.green,
@@ -204,8 +211,7 @@ class _RoasterViewState extends State<RoasterView> {
       spacing: 15,
       children: [
         Container(
-          decoration:
-              const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
+          decoration: const BoxDecoration(color: Colors.white, shape: BoxShape.circle),
           child: InkWell(
             onTap: () {
               Navigator.push(
@@ -222,9 +228,7 @@ class _RoasterViewState extends State<RoasterView> {
               selectedBoat = boat;
               setState(() {});
             },
-            color: (boat.id == selectedBoat?.id)
-                ? AppColors.text.lightSkyBlue
-                : Colors.white,
+            color: (boat.id == selectedBoat?.id) ? AppColors.text.lightSkyBlue : Colors.white,
             title: boat.name,
           ),
         ),
@@ -311,10 +315,8 @@ class _RoasterViewState extends State<RoasterView> {
     boats = [];
     selectedBoat = null;
 
-    var data = await FirebaseFirestore.instance
-        .collection('dailyBoats')
-        .doc(DateFormat('dd-MM-yyyy').format(date))
-        .get();
+    var data =
+        await FirebaseFirestore.instance.collection('dailyBoats').doc(DateFormat('dd-MM-yyyy').format(date)).get();
 
     BoatsModel boatsModel = BoatsModel.fromMap(data.data());
 
