@@ -81,6 +81,8 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
   @override
   void initState() {
     selectedInstructors = widget.initialSelectedInstructors;
+    log('selected instructors');
+
     _stream = employeesCollection.snapshots(); // Initialize the stream
     searchTED = TextEditingController();
     getDSD(widget.selectedDate);
@@ -163,18 +165,15 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                                   ? Column(
                                       children: [
                                         Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
                                               instructor.name,
-                                              style:
-                                                  const TextStyle(fontSize: 16),
+                                              style: const TextStyle(fontSize: 16),
                                             ),
                                             AppButton.miniFlat(
                                               onTap: () {
-                                                selectedInstructors
-                                                    .remove(instructor);
+                                                selectedInstructors.remove(instructor);
                                                 setState(() {});
                                               },
                                               text: 'Remove',
@@ -182,9 +181,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                                           ],
                                         ),
                                         Spacing.h10,
-                                        if (selectedInstructors
-                                            .contains(instructor))
-                                          buildTanks(instructor),
+                                        if (selectedInstructors.contains(instructor)) buildTanks(instructor),
                                       ],
                                     ).paddingSymmetric(
                                       horizontal: 10,
@@ -277,14 +274,11 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
       stream: FirebaseFirestore.instance
           .collection('dailyBoats')
           .doc(
-            DateFormat('dd-MM-yyyy')
-                .format(widget.selectedDate ?? DateTime.now()),
+            DateFormat('dd-MM-yyyy').format(widget.selectedDate ?? DateTime.now()),
           )
           .snapshots(),
-      builder:
-          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-        if (snapshot.hasError ||
-            snapshot.connectionState == ConnectionState.waiting) {
+      builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
           return SizedBox(
             height: 15,
             width: 15,
@@ -294,59 +288,27 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
             ).center,
           );
         }
-        Map<String, dynamic>? data =
-            snapshot.data?.data() as Map<String, dynamic>?;
+        Map<String, dynamic>? data = snapshot.data?.data() as Map<String, dynamic>?;
         BoatsModel boatsModel = BoatsModel.fromMap(data);
 
         if (widget.showAssignmentStatus) {
           for (Boat boat in (boatsModel.boats ?? [])) {
-            if ((boat.captains ?? []).isNotEmpty) {
-              assignedEmployeeList
-                  .addAll((boat.captains ?? []).map((e) => e.id));
-            }
-            if ((boat.dsdInstructors ?? []).isNotEmpty) {
-              assignedEmployeeList
-                  .addAll((boat.dsdInstructors ?? []).map((e) => e.id));
-            }
-            if ((boat.photographer ?? []).isNotEmpty) {
-              assignedEmployeeList
-                  .addAll((boat.photographer ?? []).map((e) => e.id));
-            }
-            if ((boat.internPhotoVideo ?? []).isNotEmpty) {
-              assignedEmployeeList
-                  .addAll((boat.internPhotoVideo ?? []).map((e) => e.id));
-            }
-            if ((boat.surfaceSupport ?? []).isNotEmpty) {
-              assignedEmployeeList
-                  .addAll((boat.surfaceSupport ?? []).map((e) => e.id));
-            }
+            assignedEmployeeList.addAll((boat.captains ?? []).map((e) => e.id));
+            assignedEmployeeList.addAll((boat.dsdInstructors ?? []).map((e) => e.id));
+            assignedEmployeeList.addAll((boat.internPhotoVideo ?? []).map((e) => e.id));
+            assignedEmployeeList.addAll((boat.surfaceSupport ?? []).map((e) => e.id));
+            assignedEmployeeList.addAll((boat.photographer ?? []).map((e) => e.id));
           }
-          if ((boatsModel.dsd?.dsdPool ?? []).isNotEmpty) {
-            assignedEmployeeList
-                .addAll((boatsModel.dsd?.dsdPool ?? []).map((e) => e.id));
-          }
-          if ((boatsModel.dsd?.dsdOceanHead ?? []).isNotEmpty) {
-            assignedEmployeeList
-                .addAll((boatsModel.dsd?.dsdOceanHead ?? []).map((e) => e.id));
-          }
-          if ((boatsModel.dsd?.centerStaff ?? []).isNotEmpty) {
-            assignedEmployeeList
-                .addAll((boatsModel.dsd?.centerStaff ?? []).map((e) => e.id));
-          }
-          if ((boatsModel.dsd?.courseCenter ?? []).isNotEmpty) {
-            assignedEmployeeList
-                .addAll((boatsModel.dsd?.courseCenter ?? []).map((e) => e.id));
-          }
-          if ((boatsModel.dsd?.harboursStaff ?? []).isNotEmpty) {
-            assignedEmployeeList
-                .addAll((boatsModel.dsd?.harboursStaff ?? []).map((e) => e.id));
-          }
+          assignedEmployeeList.addAll((boatsModel.dsd?.dsdPool ?? []).map((e) => e.id));
+          assignedEmployeeList.addAll((boatsModel.dsd?.dsdOceanHead ?? []).map((e) => e.id));
+          assignedEmployeeList.addAll((boatsModel.dsd?.centerStaff ?? []).map((e) => e.id));
+          assignedEmployeeList.addAll((boatsModel.dsd?.courseCenter ?? []).map((e) => e.id));
+          assignedEmployeeList.addAll((boatsModel.dsd?.harboursStaff ?? []).map((e) => e.id));
         }
 
         return StreamBuilder<QuerySnapshot>(
           stream: _stream,
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError) {
               return Text('Error: ${snapshot.error}');
             }
@@ -365,32 +327,38 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
 
             snapshot.data?.docs.forEach((doc) {
               try {
-                Employee employee =
-                    Employee.fromMap(doc.data() as Map<String, dynamic>);
+                Employee employee = Employee.fromMap(doc.data() as Map<String, dynamic>);
                 allEmployees.add(employee);
 
                 Instructor instructor = Instructor.fromEmployee(employee);
 
-                if (leaves.contains(instructor) ||
-                    employee.isOnLeave(widget.selectedDate!)) {
+                if (leaves.map((e) => e.id).contains(instructor.id) || employee.isOnLeave(widget.selectedDate!)) {
                   employeesOnLeave.add(employee);
                 }
 
-                if (dayOffs.contains(instructor)) {
+                if (dayOffs.map((e) => e.id).contains(instructor.id)) {
                   employeesOnDayOff.add(employee);
                 }
 
                 if (widget.showAssignmentStatus) {
-                  var controller =
-                      Get.find<BookingsCalenderWidgetControllerNew>();
+                  var controller = Get.find<BookingsCalenderWidgetControllerNew>();
                   for (var booking in controller.bookings) {
-                    for (Instructor ins
-                        in (booking.boatDetails?.instructors ?? [])) {
-                      if (ins.id.isNotEmpty) assignedEmployeeList.add(ins.id);
+                    for (Instructor ins in (booking.boatDetails?.instructors ?? [])) {
+                      if (ins.date != null && widget.selectedDate != null) {
+                        DateTime date = DateFormat('dd-MM-yyyy').parse(ins.date!);
+                        if (ins.id.isNotEmpty &&
+                            ((date.year == widget.selectedDate?.year &&
+                                date.month == widget.selectedDate?.month &&
+                                date.day == widget.selectedDate?.day))) {
+                          assignedEmployeeList.add(ins.id);
+                        }
+                      }
                     }
-                    for (Instructor ins
-                        in (booking.boatDetails?.diveBuddies ?? [])) {
-                      if (ins.id.isNotEmpty) assignedEmployeeList.add(ins.id);
+
+                    for (Instructor ins in (booking.boatDetails?.diveBuddies ?? [])) {
+                      if (ins.id.isNotEmpty) {
+                        assignedEmployeeList.add(ins.id);
+                      }
                     }
                   }
 
@@ -428,8 +396,8 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                   Instructor instructor = Instructor.fromEmployee(emp);
                   return buildEmployee(
                     instructor: instructor,
-                    titleStatus: '',
-                    statusColor: null,
+                    titleStatus: 'Assigned',
+                    statusColor: Colors.white,
                     employee: emp,
                   );
                 }),
@@ -453,136 +421,6 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                     employee: e,
                   );
                 }),
-                // ...snapshot.data!.docs.map((DocumentSnapshot document) {
-                //   return const SizedBox();
-                //   try {
-                //     Employee employee = Employee.fromMap(
-                //         document.data() as Map<String, dynamic>);
-                //
-                //     Instructor instructor = Instructor.fromEmployee(employee);
-                //
-                //     if (widget.showAssignmentStatus) {
-                //       var controller =
-                //           Get.find<BookingsCalenderWidgetControllerNew>();
-                //       for (var booking in controller.bookings) {
-                //         for (Instructor ins
-                //             in (booking.boatDetails?.instructors ?? [])) {
-                //           if (ins.id.isNotEmpty)
-                //             assignedEmployeeList.add(ins.id);
-                //         }
-                //         for (Instructor ins
-                //             in (booking.boatDetails?.diveBuddies ?? [])) {
-                //           if (ins.id.isNotEmpty)
-                //             assignedEmployeeList.add(ins.id);
-                //         }
-                //       }
-                //
-                //       assignedEmployeeList =
-                //           assignedEmployeeList.toSet().toList();
-                //     }
-                //
-                //     Widget employeeTile = InkWell(
-                //       onTap: () {
-                //         if (widget.selectedDate != null) {
-                //           instructor.date = DateFormat('dd-MM-yyyy')
-                //               .format(widget.selectedDate!);
-                //         }
-                //         if (selectedInstructors.contains(instructor)) {
-                //           selectedInstructors.remove(instructor);
-                //         } else {
-                //           if (widget.instructorLimit == -1) {
-                //             selectedInstructors.add(instructor);
-                //           } else if (selectedInstructors.length <
-                //               widget.instructorLimit) {
-                //             selectedInstructors.add(instructor);
-                //           } else {
-                //             showToast('Limit exceeded');
-                //           }
-                //         }
-                //         setState(() {});
-                //       },
-                //       child: Container(
-                //         decoration: (selectedInstructors.contains(employee))
-                //             ? BoxDecoration(
-                //                 borderRadius: BorderRadius.circular(8),
-                //                 border: Border.all(
-                //                   color: Colors.black,
-                //                 ),
-                //               )
-                //             : null,
-                //         child: Row(
-                //           children: [
-                //             Text(
-                //               employee.name,
-                //               style: const TextStyle(fontSize: 16),
-                //             ).paddingOnly(left: 25, top: 10, bottom: 10),
-                //             const Spacer(),
-                //
-                //             if (widget.showAssignmentStatus) ...[
-                //               //Un Assigned
-                //               if (!assignedEmployeeList.contains(employee.id))
-                //                 buildStatusTab(
-                //                   'Un Assigned',
-                //                   Colors.lightGreenAccent,
-                //                 ).paddingOnly(right: 10),
-                //
-                //               //Leave
-                //               if (leaves.contains(employee) ||
-                //                   employee.isOnLeave(widget.selectedDate!))
-                //                 buildStatusTab(
-                //                   'On Leave',
-                //                   Colors.red,
-                //                   Colors.white,
-                //                 ).paddingOnly(right: 10),
-                //
-                //               //Day off
-                //               if (dayOffs.contains(employee))
-                //                 buildStatusTab(
-                //                   'Day Off',
-                //                   Colors.red,
-                //                   Colors.white,
-                //                 ).paddingOnly(right: 10),
-                //             ],
-                //
-                //             //Selected
-                //             if (selectedInstructors.contains(employee))
-                //               buildStatusTab(
-                //                 'Selected',
-                //                 Colors.black,
-                //                 Colors.white,
-                //               ).paddingOnly(right: 10),
-                //           ],
-                //         ),
-                //       ).paddingOnly(bottom: 10, left: 10, right: 10),
-                //     );
-                //
-                //     if (widget.employeeType == EmployeeType.showAllEmployees) {
-                //       return employeeTile;
-                //     } else if ((widget.employeeType ==
-                //             EmployeeType.showCaptains) &&
-                //         (employee.role == 'Captain Team')) {
-                //       return employeeTile;
-                //     } else if ((widget.employeeType ==
-                //             EmployeeType.showFreelancersDivers) &&
-                //         (employee.role == 'Dive Team' ||
-                //             employee.role == 'Freelance Team')) {
-                //       return employeeTile;
-                //     } else if ((widget.employeeType ==
-                //             EmployeeType.showAllDiveTeam) &&
-                //         (employee.role == 'Dive Team' ||
-                //             employee.role == 'Freelance Team' ||
-                //             employee.role == 'Intern')) {
-                //       return employeeTile;
-                //     } else if ((widget.employeeType ==
-                //             EmployeeType.showInterns) &&
-                //         (employee.role == 'Intern')) {
-                //       return employeeTile;
-                //     }
-                //     return const SizedBox();
-                //   } catch (e) {
-                //     return const SizedBox();
-                //   }
-                // }),
               ],
             );
           },
@@ -595,15 +433,13 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
     required Instructor instructor,
     required Employee employee,
     required String titleStatus,
-    required Color? statusColor,
+    required Color statusColor,
   }) {
-    log(selectedInstructors.toString());
-
+    bool isSelectedInstructor = (selectedInstructors.map((e) => e.id).contains(instructor.id));
     Widget employeeTile = InkWell(
       onTap: () {
         if (widget.selectedDate != null) {
-          instructor.date =
-              DateFormat('dd-MM-yyyy').format(widget.selectedDate!);
+          instructor.date = DateFormat('dd-MM-yyyy').format(widget.selectedDate!);
         }
         if (selectedInstructors.contains(instructor)) {
           selectedInstructors.remove(instructor);
@@ -619,7 +455,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
         setState(() {});
       },
       child: Container(
-        decoration: (selectedInstructors.contains(instructor))
+        decoration: isSelectedInstructor
             ? BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
                 border: Border.all(
@@ -634,29 +470,23 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
               style: const TextStyle(fontSize: 16),
             ).paddingOnly(left: 25, top: 10, bottom: 10),
             const Spacer(),
-            if (selectedInstructors.contains(instructor))
-              buildStatusTab('Selected', Colors.black).paddingOnly(right: 10),
-            if (statusColor != null)
-              buildStatusTab(titleStatus, statusColor).paddingOnly(right: 10),
+            if (isSelectedInstructor) buildStatusTab('Selected', Colors.black, Colors.white).paddingOnly(right: 10),
+            if (widget.showAssignmentStatus) buildStatusTab(titleStatus, statusColor).paddingOnly(right: 10),
           ],
         ),
       ).paddingOnly(bottom: 10, left: 10, right: 10),
     );
     if (widget.employeeType == EmployeeType.showAllEmployees) {
       return employeeTile;
-    } else if ((widget.employeeType == EmployeeType.showCaptains) &&
-        (employee.role == 'Captain Team')) {
+    } else if ((widget.employeeType == EmployeeType.showCaptains) && (employee.role == 'Captain Team')) {
       return employeeTile;
     } else if ((widget.employeeType == EmployeeType.showFreelancersDivers) &&
         (employee.role == 'Dive Team' || employee.role == 'Freelance Team')) {
       return employeeTile;
     } else if ((widget.employeeType == EmployeeType.showAllDiveTeam) &&
-        (employee.role == 'Dive Team' ||
-            employee.role == 'Freelance Team' ||
-            employee.role == 'Intern')) {
+        (employee.role == 'Dive Team' || employee.role == 'Freelance Team' || employee.role == 'Intern')) {
       return employeeTile;
-    } else if ((widget.employeeType == EmployeeType.showInterns) &&
-        (employee.role == 'Intern')) {
+    } else if ((widget.employeeType == EmployeeType.showInterns) && (employee.role == 'Intern')) {
       return employeeTile;
     }
     return const SizedBox();
@@ -697,12 +527,9 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
               width: Screen.width - 150,
               child: TextField(
                 decoration: const InputDecoration(
-                  enabledBorder:
-                      OutlineInputBorder(borderSide: BorderSide.none),
-                  focusedBorder:
-                      OutlineInputBorder(borderSide: BorderSide.none),
-                  disabledBorder:
-                      OutlineInputBorder(borderSide: BorderSide.none),
+                  enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                  focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
+                  disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
                   hintText: 'Search...',
                   hintStyle: TextStyle(fontSize: FontSize.textSize, height: 1),
                 ),
@@ -722,8 +549,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
                 highlightColor: Colors.grey,
                 splashColor: Colors.red,
                 radius: 30,
-                child: Icon(Icons.close, color: AppColors.text.darkgrey)
-                    .paddingAll(5),
+                child: Icon(Icons.close, color: AppColors.text.darkgrey).paddingAll(5),
               ),
           ],
         ),
@@ -736,9 +562,7 @@ class _EmpSelectorBottomSheetState extends State<EmpSelectorBottomSheet> {
       return employeesCollection.snapshots();
     }
 
-    return employeesCollection
-        .where('firstName', isGreaterThanOrEqualTo: query.capitalizeFirst)
-        .snapshots();
+    return employeesCollection.where('firstName', isGreaterThanOrEqualTo: query.capitalizeFirst).snapshots();
   }
 
   getDSD(DateTime? selectedDate) async {
