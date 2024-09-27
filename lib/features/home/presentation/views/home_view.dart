@@ -9,6 +9,7 @@ import 'package:temple_ui_tools/utils/utils.dart';
 import '../../../../core/authentication/firebase_authentication.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
+import '../../../../core/services/offline_data_updater.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
@@ -68,13 +69,36 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         Spacing.h20,
                         buildCheckLists(),
-                        // Spacing.h20,
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     deleteEmptyDocuments();
-                        //   },
-                        //   child: const Text('Do'),
-                        // ),
+                        // TODO : Remove from here
+                        ElevatedButton(
+                          onPressed: () {
+                            init();
+                          },
+                          child: const Text('init'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            for (var data in updateQueue) {
+                              print(data.updatedAt);
+                            }
+                          },
+                          child: const Text('do'),
+                        ),
+                        Text('Sync required : ${isSyncPending()}'),
+                        ElevatedButton(
+                          onPressed: () {
+                            updateData(
+                              DataModel(
+                                data: {'name': 'kamesh'},
+                                updatedAt: null,
+                                firebasePath: '/offlineTestCollection/testPath7',
+                                createdAt: DateTime.now(),
+                              ),
+                            );
+                          },
+                          child: const Text('add data'),
+                        ),
+                        // TODO : Remove till here before publishing.
                         Spacing.h20,
                         buildEmployeeDiveCalender(),
                         Spacing.h50,
@@ -100,8 +124,7 @@ class _HomeViewState extends State<HomeView> {
   }
 
   Future<void> deleteEmptyDocuments() async {
-    CollectionReference pdfCron =
-        FirebaseFirestore.instance.collection('pdfCron');
+    CollectionReference pdfCron = FirebaseFirestore.instance.collection('pdfCron');
 
     // Fetch all documents in the "pdfCron" collection
     QuerySnapshot querySnapshot = await pdfCron.get();
@@ -212,8 +235,7 @@ class _HomeViewState extends State<HomeView> {
                   buildButton(
                     onTap: () {
                       logic.onDateChanged(
-                        controller.selectedDate
-                            .subtract(const Duration(days: 1)),
+                        controller.selectedDate.subtract(const Duration(days: 1)),
                       );
                     },
                     icon: Icons.arrow_back_ios_rounded,
@@ -244,9 +266,7 @@ class _HomeViewState extends State<HomeView> {
               Spacing.h5,
               const Divider(thickness: 2, color: Colors.black),
               Spacing.h10,
-              if (controller.bookings.isEmpty &&
-                  controller.diveBuddies.isEmpty &&
-                  controller.generalStaffList.isEmpty)
+              if (controller.bookings.isEmpty && controller.diveBuddies.isEmpty && controller.generalStaffList.isEmpty)
                 const Text('No tasks assigned').center,
               ...controller.bookings.map(
                 (booking) => EmployeeDiveCalenderListTile(
@@ -263,8 +283,7 @@ class _HomeViewState extends State<HomeView> {
               ...controller.currentList.map(
                 (e) => buildListTile(
                   title: e['role'].toString(),
-                  value:
-                      "${e["boat_details"]?.name}@ ${e["boat_details"]?.time}",
+                  value: "${e["boat_details"]?.name}@ ${e["boat_details"]?.time}",
                 ),
               ),
               ...controller.generalStaffList.map(
@@ -332,16 +351,12 @@ class _HomeViewState extends State<HomeView> {
           ),
           Spacing.h10,
           StreamBuilder(
-            stream: FirebaseFirestore.instance
-                .collection('employeeChecklists')
-                .doc(currentEmployee!.id)
-                .snapshots(),
+            stream: FirebaseFirestore.instance.collection('employeeChecklists').doc(currentEmployee!.id).snapshots(),
             builder: (
               BuildContext context,
               AsyncSnapshot<DocumentSnapshot> snapshot,
             ) {
-              if (snapshot.hasError ||
-                  snapshot.connectionState == ConnectionState.waiting) {
+              if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
                 return const SizedBox(
                   height: 15,
                   width: 15,
@@ -357,8 +372,7 @@ class _HomeViewState extends State<HomeView> {
                 return const SizedBox();
               }
 
-              Checklist? checklist =
-                  Checklist.fromMap(data as Map<String, dynamic>);
+              Checklist? checklist = Checklist.fromMap(data as Map<String, dynamic>);
 
               if ((checklist.checklistElement ?? []).isEmpty) {
                 return const SizedBox();
@@ -419,9 +433,7 @@ class _HomeViewState extends State<HomeView> {
             onTap();
           },
           icon: Icon(
-            (isAddButton)
-                ? Icons.add_circle_outline
-                : Icons.arrow_forward_rounded,
+            (isAddButton) ? Icons.add_circle_outline : Icons.arrow_forward_rounded,
             color: (isAddButton) ? Colors.black : AppColors.text.skyBlue,
             size: 20,
           ),

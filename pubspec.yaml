@@ -61,6 +61,9 @@ dependencies:
   freezed_annotation: ^2.4.4
   json_annotation: ^4.8.1
 
+  # Offline structure
+  internet_connection_checker_plus: ^2.5.2
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
