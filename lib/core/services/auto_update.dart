@@ -15,7 +15,7 @@ import '../widgets/app_button.dart';
 class AutoUpdateView extends StatelessWidget {
   bool firstRun = true;
 
-  AutoUpdateView({Key? key}) : super(key: key);
+  AutoUpdateView({super.key});
 
   final AutoUpdateLogic logic = AutoUpdateLogic();
 

@@ -9,6 +9,7 @@ import 'package:temple_ui_tools/utils/utils.dart';
 import '../../../../core/authentication/firebase_authentication.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
+import '../../../../core/schemas/data_model.dart';
 import '../../../../core/services/offline_data_updater.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -72,7 +73,7 @@ class _HomeViewState extends State<HomeView> {
                         // TODO : Remove from here
                         ElevatedButton(
                           onPressed: () {
-                            init();
+                            checkInternetConnection();
                           },
                           child: const Text('init'),
                         ),
@@ -89,7 +90,7 @@ class _HomeViewState extends State<HomeView> {
                           onPressed: () {
                             updateData(
                               DataModel(
-                                data: {'name': 'kamesh'},
+                                data: "'name': 'kamesh'",
                                 updatedAt: null,
                                 firebasePath: '/offlineTestCollection/testPath7',
                                 createdAt: DateTime.now(),
