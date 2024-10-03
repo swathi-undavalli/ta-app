@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_ui_tools/styling/spacing_widgets.dart';
+
 import '../../../../core/widgets/back_navigation_icon.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
@@ -190,10 +191,11 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                                       : 'No',
                                 ),
                                 buildText(
-                                    text: (roaster.customerFeedback != null &&
-                                            roaster.customerFeedback!.feedback!.isNotEmpty)
-                                        ? roaster.customerFeedback!.feedback!
-                                        : '-'),
+                                  text: (roaster.customerFeedback != null &&
+                                          roaster.customerFeedback!.feedback!.isNotEmpty)
+                                      ? roaster.customerFeedback!.feedback!
+                                      : '-',
+                                ),
                               ],
                             ).paddingSymmetric(horizontal: 10, vertical: 5);
                           }

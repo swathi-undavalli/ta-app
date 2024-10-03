@@ -2,15 +2,16 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import '../../models/roaster.dart';
-import 'roaster_chart_view.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
+import '../../models/roaster.dart';
 import 'add_edit_roaster_details_view.dart';
+import 'roaster_chart_view.dart';
 
 class RoasterView extends StatefulWidget {
   const RoasterView({super.key});
@@ -111,9 +112,16 @@ class _RoasterViewState extends State<RoasterView> {
 
                   return Column(
                     children: booking.pax!.map((p) {
+                      if (p['activity_id'] == null) {
+                        return const SizedBox();
+                      }
+
+                      roaster = null;
+
                       if (p['roaster'] != null) {
                         roaster = Roaster.fromJson(p['roaster']);
                       }
+
                       return InkWell(
                         onTap: () {
                           Navigator.push(

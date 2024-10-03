@@ -9,8 +9,6 @@ import 'package:temple_ui_tools/utils/utils.dart';
 import '../../../../core/authentication/firebase_authentication.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
-import '../../../../core/schemas/data_model.dart';
-import '../../../../core/services/offline_data_updater.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
@@ -70,36 +68,42 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         Spacing.h20,
                         buildCheckLists(),
-                        // TODO : Remove from here
-                        ElevatedButton(
-                          onPressed: () {
-                            checkInternetConnection();
-                          },
-                          child: const Text('init'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            for (var data in updateQueue) {
-                              print(data.updatedAt);
-                            }
-                          },
-                          child: const Text('do'),
-                        ),
-                        Text('Sync required : ${isSyncPending()}'),
-                        ElevatedButton(
-                          onPressed: () {
-                            updateData(
-                              DataModel(
-                                data: "'name': 'kamesh'",
-                                updatedAt: null,
-                                firebasePath: '/offlineTestCollection/testPath7',
-                                createdAt: DateTime.now(),
-                              ),
-                            );
-                          },
-                          child: const Text('add data'),
-                        ),
-                        // TODO : Remove till here before publishing.
+                        // // TODO : Remove from here
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     checkInternetConnection();
+                        //   },
+                        //   child: const Text('init'),
+                        // ),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     for (var data in updateQueue) {
+                        //       print(data.updatedAt);
+                        //     }
+                        //   },
+                        //   child: const Text('do'),
+                        // ),
+                        // Text('Sync required : ${isSyncPending()}'),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     updateData(
+                        //       DataModel(
+                        //         data: "'name': 'kamesh'",
+                        //         updatedAt: null,
+                        //         firebasePath: '/offlineTestCollection/testPath7',
+                        //         createdAt: DateTime.now(),
+                        //       ),
+                        //     );
+                        //   },
+                        //   child: const Text('add data'),
+                        // ),
+                        // ElevatedButton(
+                        //   onPressed: () {
+                        //     Navigator.push(context, Dummy.route());
+                        //   },
+                        //   child: const Text('get data'),
+                        // ),
+                        // // TODO : Remove till here before publishing.
                         Spacing.h20,
                         buildEmployeeDiveCalender(),
                         Spacing.h50,

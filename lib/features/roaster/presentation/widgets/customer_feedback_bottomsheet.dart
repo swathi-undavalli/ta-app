@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_emoji_feedback/flutter_emoji_feedback.dart';
 import 'package:get/get.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/util/spacing_widgets.dart';
@@ -164,7 +165,7 @@ class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomShee
                         });
                         var pax = booking.pax![widget.paxIndex];
 
-                        Roaster roaster = Roaster.fromJson(pax['roaster']);
+                        Roaster? roaster = Roaster.fromJson(pax['roaster'] ?? {});
 
                         customerFeedback = CustomerFeedback(
                           knowsSwimming: knowsSwimming,
