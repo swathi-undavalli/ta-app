@@ -19,8 +19,6 @@ class Employee {
       createEmployees: false,
       editEmployees: false,
       personalProfileEdit: false,
-      personalAttendanceReport: false,
-      attendanceReport: false,
       weatherReport: false,
       editActivityPrices: false,
       addActivity: false,
@@ -164,8 +162,6 @@ class AccessLevels {
     required this.createEmployees,
     required this.editEmployees,
     required this.personalProfileEdit,
-    required this.personalAttendanceReport,
-    required this.attendanceReport,
     required this.weatherReport,
     required this.editActivityPrices,
     required this.addActivity,
@@ -183,8 +179,6 @@ class AccessLevels {
   final bool? createEmployees;
   final bool? editEmployees;
   final bool? personalProfileEdit;
-  final bool? personalAttendanceReport;
-  final bool? attendanceReport;
   final bool? weatherReport;
   final bool? editActivityPrices;
   final bool? addActivity;
@@ -203,8 +197,6 @@ class AccessLevels {
         createEmployees: json['createEmployees'],
         editEmployees: json['editEmployees'],
         personalProfileEdit: json['personalProfileEdit'],
-        personalAttendanceReport: json['personalAttendanceReport'],
-        attendanceReport: json['attendanceReport'],
         weatherReport: json['weatherReport'],
         editActivityPrices: json['editActivityPrices'],
         addActivity: json['addActivity'],
@@ -223,8 +215,6 @@ class AccessLevels {
         'createEmployees': createEmployees,
         'editEmployees': editEmployees,
         'personalProfileEdit': personalProfileEdit,
-        'personalAttendanceReport': personalAttendanceReport,
-        'attendanceReport': attendanceReport,
         'weatherReport': weatherReport,
         'editActivityPrices': editActivityPrices,
         'addActivity': addActivity,

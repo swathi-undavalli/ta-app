@@ -1,11 +1,8 @@
 const functions = require('firebase-functions');
 const momenttz = require('moment-timezone');
 const moment = require('moment');
-<<<<<<< HEAD
 const admin = require("firebase-admin");
-=======
 const admin = require('firebase-admin');
->>>>>>> kamesh/attendance
 
 const accountSid = "ACb839390b5db07ab831317c8fde96b2e1";
 const authToken = "c55be15ad66ceda34be06d8d672ab881";
@@ -23,7 +20,6 @@ exports.addAttendanceLog = functions.https.onRequest(async (req, res) => {
         //res.send(req.body)
 
             var logTimeJS=new Date(req.body.RealTime.PunchLog.LogTime);
-<<<<<<< HEAD
             console.log(logTimeJS)
             var logTime=moment(logTimeJS);
              console.log(logTime)
@@ -45,7 +41,6 @@ exports.addAttendanceLog = functions.https.onRequest(async (req, res) => {
             "AuthToken": req.body.RealTime.AuthToken,
             "Time": req.body.RealTime.Time,
             "checkInLocation":"Temple Adventures Pondicherry",
-=======
             var logTime=moment(logTimeJS);
             logTime.tz("Asia/Kolkata").format();
 
@@ -61,7 +56,6 @@ exports.addAttendanceLog = functions.https.onRequest(async (req, res) => {
             "LogTime": logTime,
        //     "AuthToken": req.body.RealTime.AuthToken,
             "Time": req.body.RealTime.Time,
->>>>>>> kamesh/attendance
             "date":logDate
         }
 
@@ -74,17 +68,13 @@ exports.addAttendanceLog = functions.https.onRequest(async (req, res) => {
 
                 data.checkOutTime=data.LogTime;
                 data.checkOutInput="TA-Biometric";
-<<<<<<< HEAD
-=======
                 data.checkOutLocation="Temple Adventures Pondicherry";
->>>>>>> kamesh/attendance
                 var logTimeOld = new Date(attendanceLogData.data().LogTime).getTime();
                 var currentLogTime = new Date(data.LogTime).getTime();
                 var diff = currentLogTime-logTimeOld;
 
                 if(diff>600000){
 
-<<<<<<< HEAD
                 await db.collection('employees')
                 .doc(data.UserId)
                 .collection('attendance')
@@ -104,7 +94,6 @@ exports.addAttendanceLog = functions.https.onRequest(async (req, res) => {
                    data.checkInInput="TA-Biometric";
 
                    await db.collection('employees').doc(data.UserId).
-=======
                 console.log("Old attendance is old. Updating ");
                 await db.collection('employees')
                 .doc(data.UserId)
@@ -124,7 +113,6 @@ exports.addAttendanceLog = functions.https.onRequest(async (req, res) => {
                     data.checkOutLocation=null;
 
                     await db.collection('employees').doc(data.UserId).
->>>>>>> kamesh/attendance
                                  collection('attendance').doc(logDate).set(data, {
                                merge: true
                            });
@@ -147,7 +135,6 @@ exports.addAttendanceLog = functions.https.onRequest(async (req, res) => {
                     punctual="Late";
 
 
-<<<<<<< HEAD
 client.messages
   .create({
      body: 'Hi '+ employeeShiftData.data()
@@ -180,7 +167,6 @@ return null;
                    .set(dailyData, {
                    merge: true
                    });
-=======
                     client.messages
                     .create({
                                 body: 'Hi '+ employeeShiftData.data()
@@ -225,8 +211,6 @@ return null;
                    .set(dailyData,{
                                    merge: true
                                   });
->>>>>>> kamesh/attendance
-
                 }
 
         res.send({
@@ -236,9 +220,7 @@ return null;
         res.send(e)
     }
 
-<<<<<<< HEAD
 })
-=======
 });
 
 //exports.scheduledFunction = functions.pubsub.schedule('2 12 * * *')
@@ -267,7 +249,6 @@ exports.scheduledFunction = functions.pubsub.schedule('3 0 * * *')
 });
 
 
->>>>>>> kamesh/attendance
 
 exports.getAttendanceLog = functions.https.onRequest(async (req, res) => {
     try {
@@ -290,11 +271,8 @@ exports.getAttendanceLog = functions.https.onRequest(async (req, res) => {
         res.send(e)
     }
 
-<<<<<<< HEAD
 })
-=======
 });
->>>>>>> kamesh/attendance
 // // Create and Deploy Your First Cloud Functions
 // // https://firebase.google.com/docs/functions/write-firebase-functions
 //

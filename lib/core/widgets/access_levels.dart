@@ -8,7 +8,7 @@ class EmployeeAccess extends StatelessWidget {
   final bool access;
   final bool? showMessage;
 
-  const EmployeeAccess({Key? key, required this.child, required this.access, this.showMessage}) : super(key: key);
+  const EmployeeAccess({super.key, required this.child, required this.access, this.showMessage});
 
   @override
   Widget build(BuildContext context) {
@@ -51,10 +51,6 @@ class AccessRights {
   static bool get editEmployees => accessLevel?.editEmployees ?? false;
 
   static bool get personalProfileEdit => accessLevel?.personalProfileEdit ?? false;
-
-  static bool get personalAttendanceReport => accessLevel?.personalAttendanceReport ?? false;
-
-  static bool get attendanceReport => accessLevel?.attendanceReport ?? false;
 
   static bool get weatherReport => accessLevel?.weatherReport ?? false;
 

@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:intl/intl.dart';
-
 import '../../features/bookings/models/booking_model.dart';
 import '../../features/employees/model/employee.dart';
 
@@ -11,18 +9,6 @@ class FirebaseApi {
 
   static Future<void> updateEmployeeFullInformation(Employee employee) async {
     return await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
-  }
-
-  static Future<DocumentSnapshot<Map<String, dynamic>>> getAttendance(
-    DateTime dateTime,
-  ) async {
-    var date = DateFormat('dd-M-yyyy').format(dateTime);
-    return await FirebaseFirestore.instance
-        .collection('employees')
-        .doc(currentEmployee!.id)
-        .collection('attendance')
-        .doc(date)
-        .get();
   }
 
   static addNewBooking(Booking booking) async {
