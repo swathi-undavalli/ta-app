@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class QRImage extends StatefulWidget {
-  QRImage({this.height, this.width, this.data, Key? key}) : super(key: key);
+  QRImage({this.height, this.width, this.data, super.key});
 
   double? height;
   double? width;

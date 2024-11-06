@@ -11,19 +11,19 @@ import 'package:intl/intl.dart';
 import 'package:path/path.dart' as path;
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/constants.dart';
-import '../../../../core/firebase/api.dart';
-import '../../../../core/util/alignment_extensions.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/ta_image.dart';
 import '../../../employees/model/employee.dart';
 import '../../models/category.dart';
 import '../../models/offer.dart';
+import '../../repository/offer_repo.dart';
 
 class AddOffersView extends StatefulWidget {
   const AddOffersView({super.key, required this.offer, required this.categories});
@@ -602,7 +602,7 @@ class _AddOffersViewState extends State<AddOffersView> {
       createdBy: currentEmployee?.name ?? '',
     );
 
-    await firebaseApi.updateOffer(newOffer);
+    await OfferRepo.updateOffer(newOffer);
 
     showLoading = false;
     setState(() {});

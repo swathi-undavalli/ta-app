@@ -9,7 +9,6 @@ import 'package:scroll_to_index/scroll_to_index.dart';
 
 import '../../../core/constants/constants.dart';
 import '../../../core/constants/enums.dart';
-import '../../../core/services/firebase_api.dart';
 import '../../../core/util/utils.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../../core/widgets/booking_calender_widget_old/booking_calender_old.dart';
@@ -25,6 +24,7 @@ import '../models/customer_model.dart';
 import '../presentation/views/book_date_time_view.dart';
 import '../presentation/views/new_booking_view.dart';
 import '../presentation/views/payment_details_view.dart';
+import '../repository/booking_repo.dart';
 
 class NewBookingLogic {
   NewBookingLogic() {
@@ -523,7 +523,7 @@ class NewBookingLogic {
           price: ((controller.quickSelectedActivity?.price ?? 0) * 1.0) * int.parse(controller.paxTED.text),
         );
 
-        controller.bookingId = await FirebaseApi.addNewBooking(bookingModel);
+        controller.bookingId = await BookingRepo.addNewBooking(bookingModel);
         LogModel logModel = LogModel(type: LogType.quickBookingCreated, bookingId: controller.bookingId);
         FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
         controller.showLoading = false;
@@ -558,7 +558,7 @@ class NewBookingLogic {
     }
     createCustomer();
 
-    controller.bookingId = await FirebaseApi.addNewBooking(controller.bookingModel);
+    controller.bookingId = await BookingRepo.addNewBooking(controller.bookingModel);
     LogModel logModel = LogModel(type: LogType.bookingCreated, bookingId: controller.bookingId);
     FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
     controller.update();

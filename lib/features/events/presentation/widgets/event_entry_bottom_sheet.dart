@@ -3,12 +3,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/firebase/api.dart';
-import '../../../../core/util/alignment_extensions.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/time_picker.dart';
@@ -16,6 +15,7 @@ import '../../../boat/models/boat_details.dart';
 import '../../../boat/presentation/widgets/employee_selector_bottom_sheet.dart';
 import '../../../employees/model/employee.dart';
 import '../../models/event_model.dart';
+import '../../repository/events_repo.dart';
 
 class EventEntryBottomSheet extends StatefulWidget {
   final Event? event;
@@ -322,7 +322,7 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
           createdBy: currentEmployee?.firstName,
         );
 
-        await firebaseApi.updateEvent(event);
+        await EventsRepo.updateEvent(event);
 
         setState(() {
           showLoading = false;

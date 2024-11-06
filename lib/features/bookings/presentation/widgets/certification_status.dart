@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/item_model.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/access_levels.dart';
 import '../../../employees/model/employee.dart';
 

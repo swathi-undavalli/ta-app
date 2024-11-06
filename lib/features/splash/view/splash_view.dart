@@ -7,9 +7,9 @@ import 'package:temple_ui_tools/utils/utils.dart';
 import '../../../core/authentication/firebase_authentication.dart';
 import '../../../core/constants/assets.dart';
 import '../../../core/constants/constants.dart';
-import '../../../core/repository/employee_repo.dart';
 import '../../../core/services/auto_update.dart';
 import '../../dashboard/presentation/views/dashboard_view.dart';
+import '../../employees/repository/employee_repo.dart';
 import '../../login/presentation/views/login_view.dart';
 
 String lastLoginTime = 'lastLoginTime';

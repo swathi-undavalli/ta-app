@@ -37,7 +37,7 @@ class Validator {
   static String? validatePhoneNumber(String number) {
     try {
       if (number.isEmpty) return null;
-      if(number.length < 10) return 'Invalid PhoneNumber';
+      if (number.length < 10) return 'Invalid PhoneNumber';
       if (number.length > 10) return 'Limit exceeded';
       return null;
     } catch (e) {
@@ -53,17 +53,14 @@ class Validator {
 
   static String? validateEmail(String email) {
     if (email.isEmpty) return null;
-    bool isEmailValid =
-        RegularExpressions.emailRegularExpression.hasMatch(email);
+    bool isEmailValid = RegularExpressions.emailRegularExpression.hasMatch(email);
     return isEmailValid ? null : 'Invalid email';
   }
 
   static String? validatePassword(String password) {
     if (password.isEmpty) return null;
     if (password.length < 8) return 'Should be more than 8';
-    bool isPasswordValid =
-        RegularExpressions.passwordRegularExpression.hasMatch(password);
-    // //print(isPasswordValid);
+    bool isPasswordValid = RegularExpressions.passwordRegularExpression.hasMatch(password);
     return isPasswordValid ? null : 'Missing uppercase / number';
   }
 

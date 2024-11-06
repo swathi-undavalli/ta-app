@@ -4,16 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/util/alignment_extensions.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../models/booking_model.dart';
-import '../../models/dive_log_model.dart';
-import 'app_text_fields.dart';
+import '../../../bookings/models/booking_model.dart';
+import '../../../bookings/models/dive_log_model.dart';
+import '../../../bookings/presentation/widgets/app_text_fields.dart';
 
 class CopyDivesBottomSheet extends StatefulWidget {
   const CopyDivesBottomSheet({super.key, required this.bookingModel});

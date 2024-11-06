@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/access_levels.dart';
 import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_new.dart';
@@ -16,8 +16,7 @@ class BookingView extends StatelessWidget {
   final BookingScreenLogic logic = BookingScreenLogic();
   final AutoScrollController autoScrollController = AutoScrollController();
   var bookings = [DateTime.now()];
-  BookingsCalenderWidgetLogicNew calenderLogic =
-      BookingsCalenderWidgetLogicNew();
+  BookingsCalenderWidgetLogicNew calenderLogic = BookingsCalenderWidgetLogicNew();
   ScrollController scrollController = ScrollController();
   late BookingsCalenderWidgetNew bookingsCalenderWidget;
 
@@ -63,8 +62,7 @@ class BookingView extends StatelessWidget {
                     GetBuilder<BookingsCalenderWidgetControllerNew>(
                       builder: (controller) {
                         DateTime date = controller.selectedDate;
-                        String formattedDate =
-                            DateFormat('dd-MMM-yyyy').format(date);
+                        String formattedDate = DateFormat('dd-MMM-yyyy').format(date);
                         return Row(
                           children: [
                             buildTitle('Calendar'),
@@ -157,7 +155,8 @@ class BookingView extends StatelessWidget {
               style: TextButton.styleFrom(
                 foregroundColor: AppColors.text.black,
                 textStyle: const TextStyle(
-                    fontWeight: FontWeight.w500), // button text color
+                  fontWeight: FontWeight.w500,
+                ), // button text color
               ),
             ),
           ),

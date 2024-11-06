@@ -1,8 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../../features/bookings/models/booking_model.dart';
-import '../../features/employees/model/employee.dart';
 
-class FirebaseApi {
+import '../../employees/model/employee.dart';
+import '../models/booking_model.dart';
+
+class BookingRepo {
   static Future<DocumentSnapshot<Map<String, dynamic>>> getEmployeeFullInformation(String? employeeID) async {
     return await FirebaseFirestore.instance.collection('employees').doc(employeeID).get();
   }
@@ -33,31 +34,17 @@ class FirebaseApi {
     return bookingId.toString();
   }
 
-  static getDifferenceInSeconds(DateTime shiftTime) {
-    int shiftHour = shiftTime.hour;
-    int shiftMin = shiftTime.minute;
-    int shiftSec = shiftTime.second;
+  static Future<void> removeBoat({
+    required Booking bookingModel,
+    required DateTime selectedDate,
+  }) async {
+    bookingModel.setBoatInfo(
+      selectedDate,
+      null,
+    );
 
-    var now = DateTime.now();
-    int nowHour = now.hour;
-    int nowMin = now.minute;
-    int nowSec = now.second;
-
-    ///convert to seconds:
-    int shiftSeconds = (shiftHour * 60 * 60) + (shiftMin * 60) + shiftSec;
-    //print(shiftSeconds);
-
-    int nowSeconds = (nowHour * 60 * 60) + (nowMin * 60) + nowSec;
-    //print(nowSeconds);
-
-    int diffInSeconds = shiftSeconds - nowSeconds;
-    if (diffInSeconds < 0) {
-      //print("Late");
-    } else if (diffInSeconds == 0) {
-      //print("On Time");
-    } else {
-      //print("Early");
-    }
-    return diffInSeconds;
+    await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(
+          bookingModel.toMap(),
+        );
   }
 }

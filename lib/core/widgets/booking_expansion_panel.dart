@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart' as intl;
 import 'package:share_plus/share_plus.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -22,8 +23,9 @@ import '../../features/bookings/presentation/views/edit_booking_view.dart';
 import '../../features/bookings/presentation/views/edit_payments_view.dart';
 import '../../features/bookings/presentation/widgets/app_text_fields.dart';
 import '../../features/bookings/presentation/widgets/certification_bottomsheet.dart';
-import '../../features/bookings/presentation/widgets/dive_log_bootomsheet.dart';
 import '../../features/bookings/presentation/widgets/share_booking_details_widget.dart';
+import '../../features/bookings/repository/booking_repo.dart';
+import '../../features/dive_logs/presentation/widgets/dive_log_bootomsheet.dart';
 import '../../features/employees/model/employee.dart';
 import '../../features/logs/models/log_model.dart';
 import '../../features/logs/presentation/views/log_view.dart';
@@ -31,7 +33,6 @@ import '../constants/assets.dart';
 import '../constants/constants.dart';
 import '../constants/enums.dart';
 import '../models/item_model.dart';
-import '../util/spacing_widgets.dart';
 import '../util/utils.dart';
 import 'access_levels.dart';
 import 'app_button.dart';
@@ -676,8 +677,11 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         if (itemModel.colorCode != 'Blue' && itemModel.isCustomerBooking)
                                           AppButton.miniFlat(
                                             onTap: () {
-                                              CertificationBottomSheet.show(context,
-                                                  itemModel: itemModel, selectedDate: selectedDate);
+                                              CertificationBottomSheet.show(
+                                                context,
+                                                itemModel: itemModel,
+                                                selectedDate: selectedDate,
+                                              );
                                             },
                                             text: 'Manage Certs',
                                           ),
@@ -1028,7 +1032,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                     /// do delete.
                     //remove assigned boats
                     if (itemModel.bookingModel?.boatDetails?.boat != null) {
-                      await removeBoat(
+                      await BookingRepo.removeBoat(
                         bookingModel: itemModel.bookingModel!,
                         selectedDate: bookingCalenderLogicNew.controller.selectedDate,
                       );

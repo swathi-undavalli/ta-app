@@ -4,22 +4,22 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/util/alignment_extensions.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../boat/models/boats.dart';
 import '../../../boat/presentation/widgets/employee_selector_bottom_sheet.dart';
-import '../../controller/dive_log_controller.dart';
-import '../../models/booking_model.dart';
-import '../../models/dive_log_model.dart';
-import '../widgets/app_text_fields.dart';
+import '../../../bookings/models/booking_model.dart';
+import '../../../bookings/models/dive_log_model.dart';
+import '../../../bookings/presentation/widgets/app_text_fields.dart';
+import '../../controllers/dive_log_controller.dart';
 
-class DiveLogView extends StatefulWidget {
-  const DiveLogView({
+class AddEditDiveLogView extends StatefulWidget {
+  const AddEditDiveLogView({
     super.key,
     required this.email,
     required this.booking,
@@ -38,7 +38,7 @@ class DiveLogView extends StatefulWidget {
     DateTime date,
   ) {
     return MaterialPageRoute(
-      builder: (_) => DiveLogView(
+      builder: (_) => AddEditDiveLogView(
         booking: booking,
         email: email,
         date: date,
@@ -52,7 +52,7 @@ class DiveLogView extends StatefulWidget {
     DiveLogModel log,
   ) {
     return MaterialPageRoute(
-      builder: (_) => DiveLogView(
+      builder: (_) => AddEditDiveLogView(
         email: email,
         booking: booking,
         diveLog: log,
@@ -61,10 +61,10 @@ class DiveLogView extends StatefulWidget {
   }
 
   @override
-  State<DiveLogView> createState() => _DiveLogViewState();
+  State<AddEditDiveLogView> createState() => _AddEditDiveLogViewState();
 }
 
-class _DiveLogViewState extends State<DiveLogView> {
+class _AddEditDiveLogViewState extends State<AddEditDiveLogView> {
   final DiveLogLogic logic = DiveLogLogic();
 
   @override

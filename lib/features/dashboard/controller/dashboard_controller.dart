@@ -2,9 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 
 import '../../../core/models/counter_model.dart';
-import '../../../core/repository/employee_repo.dart';
 import '../../activities/model/colors_data.dart';
 import '../../employees/model/employee.dart';
+import '../../employees/repository/employee_repo.dart';
 
 class DashBoardScreenLogic {
   DashBoardScreenController controller = Get.find();

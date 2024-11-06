@@ -2,11 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../../../core/firebase/api.dart';
 import '../../../core/util/utils.dart';
 import '../../boat/models/boat_details.dart';
-import '../models/booking_model.dart';
-import '../models/dive_log_model.dart';
+import '../../bookings/models/booking_model.dart';
+import '../../bookings/models/dive_log_model.dart';
+import '../repository/dive_log_repo.dart';
 
 class DiveLogLogic {
   DiveLogController controller = Get.put(DiveLogController());
@@ -41,7 +41,7 @@ class DiveLogLogic {
       tankType: controller.tankTypeTED.text.capitalizeFirst,
     );
 
-    await firebaseApi.updateDiveLog(diveLogModel, controller.email);
+    await DiveLogRepo.updateDiveLog(diveLogModel, controller.email);
 
     controller.showLoading = false;
     controller.update();

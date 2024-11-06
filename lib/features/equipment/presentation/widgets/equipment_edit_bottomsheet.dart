@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:temple_ui_tools/temple_ui_tools.dart';
 
-import '../models/equipmentCategoryModel.dart';
+import '../../models/equipment_category_model.dart';
 
 class EquipmentSelectorBottomSheet extends StatefulWidget {
   const EquipmentSelectorBottomSheet({
@@ -34,7 +34,7 @@ class _EquipmentSelectorBottomSheetState extends State<EquipmentSelectorBottomSh
   }
 
   Future<void> loadCategories() async {
-    categories = await fetchCategories();
+    // categories = await fetchCategories();
     setState(() {});
   }
 
@@ -109,7 +109,7 @@ class _EquipmentSelectorBottomSheetState extends State<EquipmentSelectorBottomSh
                   context,
                   initialCategory: category.categoryName,
                   onSave: (updatedCategoryName) async {
-                    await editCategory(category.id, updatedCategoryName);
+                    // await editCategory(category.id, updatedCategoryName);
                     await loadCategories();
                   },
                 );
@@ -137,7 +137,7 @@ class _EquipmentSelectorBottomSheetState extends State<EquipmentSelectorBottomSh
         _showCategoryDialog(
           context,
           onSave: (newCategoryName) async {
-            await addCategory(newCategoryName);
+            // await addCategory(newCategoryName);
             await loadCategories();
           },
         );

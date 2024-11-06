@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/counter_model.dart';
-import '../../../../core/util/alignment_extensions.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';

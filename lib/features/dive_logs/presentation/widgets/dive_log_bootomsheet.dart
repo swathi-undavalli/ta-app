@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
-import '../../../../core/firebase/api.dart';
-import '../../../../core/util/alignment_extensions.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../models/booking_model.dart';
-import '../../models/dive_log_model.dart';
-import '../views/dive_log_view.dart';
-import 'add_customer_dialog.dart';
+import '../../../bookings/models/booking_model.dart';
+import '../../../bookings/models/dive_log_model.dart';
+import '../../../bookings/presentation/widgets/add_customer_dialog.dart';
+import '../../repository/dive_log_repo.dart';
+import '../views/add_edit_dive_log_view.dart';
 import 'copy_dives_bottomsheet.dart';
 
 class DiveLogBottomSheet extends StatefulWidget {
@@ -104,7 +105,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
                 onTap: () {
                   Navigator.push(
                     context,
-                    DiveLogView.addLogRoute(
+                    AddEditDiveLogView.addLogRoute(
                       widget.bookingModel.pax?[index]['email'],
                       widget.bookingModel,
                       widget.selectedDate,
@@ -249,7 +250,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
           onTap: () {
             Navigator.push(
               context,
-              DiveLogView.editLogRoute(
+              AddEditDiveLogView.editLogRoute(
                 widget.bookingModel.pax?[index]['email'],
                 widget.bookingModel,
                 diveLogModel,
@@ -298,7 +299,7 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
             AppButton.miniFlat(
               text: 'Okay',
               onTap: () {
-                firebaseApi.deleteDiveLog(
+                DiveLogRepo.deleteDiveLog(
                   id,
                   widget.bookingModel.pax?[index]['email'],
                 );

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
 
 import '../constants/constants.dart';
-import '../util/alignment_extensions.dart';
 import 'ta_image.dart';
 
 // ignore: must_be_immutable
@@ -10,12 +10,12 @@ class AppIconButton extends StatelessWidget {
   AppIconButton(
     this.icon, {
     required this.onTap,
-    Key? key,
+    super.key,
     this.iconSize = 24,
     this.text = '',
     this.color,
     this.bgColor,
-  }) : super(key: key);
+  });
   Function onTap;
   String icon;
   double iconSize;

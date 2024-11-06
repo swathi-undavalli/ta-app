@@ -4,17 +4,17 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/firebase/api.dart';
-import '../../../../core/util/alignment_extensions.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/ta_image.dart';
 import '../../models/category.dart';
 import '../../models/offer.dart';
+import '../../repository/offer_repo.dart';
 import '../widgets/view_images_bottomsheet.dart';
 import 'add_offers_view.dart';
 
@@ -50,7 +50,7 @@ class _OffersViewState extends State<OffersView> {
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(
         child: StreamBuilder(
-          stream: firebaseApi.getAllOffers,
+          stream: FirebaseFirestore.instance.collection('templeOffers').snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
@@ -403,7 +403,7 @@ class _OffersViewState extends State<OffersView> {
             AppButton.miniFlat(
               text: 'Okay',
               onTap: () {
-                firebaseApi.deleteOffer(offer.id);
+                OfferRepo.deleteOffer(offer.id);
                 Navigator.pop(context);
               },
             ),

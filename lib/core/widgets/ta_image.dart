@@ -13,14 +13,14 @@ class TAImage extends StatelessWidget {
   final double? borderRadius;
   const TAImage(
       this.image, {
-        Key? key,
-        this.height,
+    super.key,
+    this.height,
         this.width,
         this.borderRadius,
         this.semanticsLabel,
         this.color,
         this.fit = BoxFit.contain,
-      }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,6 @@ class TAImage extends StatelessWidget {
         image,
         height: height,
         width: width,
-        color: color,
         fit: fit,
         semanticsLabel: semanticsLabel,
       );
@@ -45,7 +44,6 @@ class TAImage extends StatelessWidget {
         image,
         height: height,
         width: width,
-        color: color,
         fit: fit,
         semanticsLabel: semanticsLabel,
       );

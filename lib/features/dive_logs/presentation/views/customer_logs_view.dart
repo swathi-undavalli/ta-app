@@ -6,19 +6,19 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/util/alignment_extensions.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/util/utils.dart';
 import '../../../../core/util/validator.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../models/customer_model.dart';
-import '../../models/dive_log_model.dart';
-import '../widgets/app_text_fields.dart';
-import '../widgets/customer_logs_pdf.dart';
+import '../../../bookings/models/customer_model.dart';
+import '../../../bookings/models/dive_log_model.dart';
+import '../../../bookings/presentation/widgets/app_text_fields.dart';
+import '../../../bookings/presentation/widgets/customer_logs_pdf.dart';
 
 class CustomerLogsView extends StatefulWidget {
   const CustomerLogsView({super.key});

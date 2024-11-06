@@ -4,14 +4,14 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/authentication/firebase_authentication.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/models/checklist_model.dart';
-import '../../../../core/util/alignment_extensions.dart';
-import '../../../../core/util/spacing_widgets.dart';
-import '../../../../core/widgets/add_employee_widget/add_employee_widget.dart';
+import '../../../../core/widgets/access_levels.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../dive_checklist/presentation/views/dive_checklist_view.dart';
 import '../../../employees/model/employee.dart';
@@ -409,5 +409,70 @@ class _HomeViewState extends State<HomeView> {
         ),
       ],
     ).width(Screen.width - 80);
+  }
+}
+
+class AddEmployeeWidget extends StatelessWidget {
+  String text;
+  String subText;
+  Function onTap;
+
+  AddEmployeeWidget({super.key, required this.text, required this.subText, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return EmployeeAccess(
+      access: AccessRights.viewEmployees,
+      child: Container(
+        width: Screen.width,
+        height: 80,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          color: Colors.white,
+        ),
+        child: Padding(
+          padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    text,
+                    style: TextStyle(
+                      fontFamily: AppFonts.nunito,
+                      color: AppColors.text.black,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  ),
+                  Text(
+                    subText,
+                    style: TextStyle(
+                      fontFamily: AppFonts.nunito,
+                      color: AppColors.text.darkgrey,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 12,
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Padding(
+                padding: const EdgeInsets.only(bottom: 20),
+                child: AppButton.miniFlat(
+                  onTap: onTap,
+                  // Get.toNamed(AllEmployeesScreen.id);
+                  text: 'VIEW',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 }

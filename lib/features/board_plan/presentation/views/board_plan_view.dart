@@ -11,11 +11,11 @@ import 'package:intl/intl.dart';
 // ignore: depend_on_referenced_packages
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/util/alignment_extensions.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';

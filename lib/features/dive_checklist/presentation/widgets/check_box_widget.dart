@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/assets.dart';
 import '../../../../core/constants/constants.dart';
-import '../../../../core/util/alignment_extensions.dart';
 import '../../../../core/widgets/app_icon_button.dart';
 
 class CheckBoxWidget extends StatefulWidget {

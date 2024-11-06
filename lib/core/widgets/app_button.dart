@@ -15,7 +15,7 @@ class AppButton extends StatelessWidget {
   final bool enable;
 
   const AppButton({
-    Key? key,
+    super.key,
     required this.text,
     required this.onTap,
     required this.bgColor,
@@ -26,7 +26,7 @@ class AppButton extends StatelessWidget {
     this.borderRadius = 20,
     this.fontSize = 12,
     this.enable = true,
-  }) : super(key: key);
+  });
 
   factory AppButton.miniText({
     String? text,
@@ -86,14 +86,14 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        overlayColor: MaterialStateProperty.all(splashColor),
-        backgroundColor: MaterialStateProperty.all<Color?>(enable ? bgColor : bgColor!.withOpacity(0.5)),
-        shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+        overlayColor: WidgetStateProperty.all(splashColor),
+        backgroundColor: WidgetStateProperty.all<Color?>(enable ? bgColor : bgColor!.withOpacity(0.5)),
+        shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
         ),
-        minimumSize: MaterialStateProperty.all<Size>(Size(width, height)),
+        minimumSize: WidgetStateProperty.all<Size>(Size(width, height)),
       ),
       onPressed: () {
         if (enable) onTap!();

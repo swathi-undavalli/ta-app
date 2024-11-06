@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
@@ -99,7 +101,9 @@ class BookingsCalenderWidgetLogic {
         }
         controller.expansionItemModels = newItemsList;
       }
-    } catch (e) {}
+    } catch (e) {
+      log(e.toString());
+    }
 
     controller.showLoading = false;
     controller.update();

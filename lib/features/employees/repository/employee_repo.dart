@@ -2,9 +2,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../features/employees/model/employee.dart';
-import '../services/firebase_api.dart';
-import '../util/utils.dart';
+import '../../../core/util/utils.dart';
+import '../../bookings/repository/booking_repo.dart';
+import '../model/employee.dart';
 
 class EmployeeRepo {
   static String? employeeID;
@@ -17,12 +17,12 @@ class EmployeeRepo {
   }
 
   static getEmployee(String employeeID) async {
-    var data = await FirebaseApi.getEmployeeFullInformation(employeeID);
+    var data = await BookingRepo.getEmployeeFullInformation(employeeID);
     return Employee.fromMap(data.data()!);
   }
 
   static updateEmployee(Employee employee) async {
-    await FirebaseApi.getEmployeeFullInformation(employeeID);
+    await BookingRepo.getEmployeeFullInformation(employeeID);
   }
 
   /// Get user information form local data persistence.

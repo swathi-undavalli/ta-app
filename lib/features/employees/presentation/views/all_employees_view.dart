@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/access_levels.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../model/employee.dart';

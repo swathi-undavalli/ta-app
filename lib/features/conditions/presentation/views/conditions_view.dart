@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/util/alignment_extensions.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../controller/conditions_controller.dart';
 import '../../models/conditions_model.dart';
 import '../widgets/depth_expansion_panel_widget.dart';
@@ -63,8 +63,7 @@ class _ConditionsViewState extends State<ConditionsView> {
                             buildButton(
                               onTap: () {
                                 logic.onDateChanged(
-                                  controller.selectedDate
-                                      .subtract(const Duration(days: 1)),
+                                  controller.selectedDate.subtract(const Duration(days: 1)),
                                 );
                               },
                               icon: Icons.arrow_back_ios_rounded,
@@ -73,17 +72,17 @@ class _ConditionsViewState extends State<ConditionsView> {
                             SizedBox(
                               width: 103,
                               child: Text(
-                                DateFormat('dd-MMM-yyyy')
-                                    .format(controller.selectedDate),
+                                DateFormat('dd-MMM-yyyy').format(controller.selectedDate),
                                 style: const TextStyle(
-                                    fontSize: 16, fontWeight: FontWeight.w600),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                             Spacing.w20,
                             buildButton(
                               onTap: () {
-                                logic.onDateChanged(controller.selectedDate
-                                    .add(const Duration(days: 1)));
+                                logic.onDateChanged(controller.selectedDate.add(const Duration(days: 1)));
                               },
                               icon: Icons.arrow_forward_ios_rounded,
                             ),
@@ -129,11 +128,9 @@ class _ConditionsViewState extends State<ConditionsView> {
                               SurfaceConditionsExpansionWidget(
                                 key: UniqueKey(),
                                 disableTouches: true,
-                                surfaceConditions:
-                                    controller.conditions!.surfaceConditions,
+                                surfaceConditions: controller.conditions!.surfaceConditions,
                                 selectedReef: controller.selectedReef,
-                                onChanged: (List<SurfaceCondition>
-                                    surfaceConditions) {},
+                                onChanged: (List<SurfaceCondition> surfaceConditions) {},
                               ).paddingSymmetric(horizontal: 27),
                             const SizedBox(height: 25),
                             Container(
@@ -142,8 +139,7 @@ class _ConditionsViewState extends State<ConditionsView> {
                                 borderRadius: BorderRadius.circular(12),
                                 color: Colors.white,
                               ),
-                              child:
-                                  buildGraph().paddingSymmetric(vertical: 20),
+                              child: buildGraph().paddingSymmetric(vertical: 20),
                             ).paddingSymmetric(horizontal: 20),
                             const SizedBox(height: 22),
                           ],
@@ -218,9 +214,7 @@ class _ConditionsViewState extends State<ConditionsView> {
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                textStyle: TextStyle(
-                    fontWeight: FontWeight.w500,
-                    color: AppColors.text.black), // button text color
+                textStyle: TextStyle(fontWeight: FontWeight.w500, color: AppColors.text.black), // button text color
               ),
             ),
           ),
@@ -236,9 +230,7 @@ class _ConditionsViewState extends State<ConditionsView> {
 
   Widget buildGraph() {
     if (logic.getLevels.isEmpty) {
-      return const SizedBox(
-          height: 100,
-          child: Center(child: Text('No entries found in selected reef')));
+      return const SizedBox(height: 100, child: Center(child: Text('No entries found in selected reef')));
     }
 
     return Column(
@@ -307,11 +299,8 @@ class _ConditionsViewState extends State<ConditionsView> {
                 ),
                 children: <TextSpan>[
                   TextSpan(
-                    style: TextStyle(
-                        color: AppColors.text.darkgrey,
-                        fontWeight: FontWeight.w600),
-                    text:
-                        " (${DateFormat("hh : mm a").format(level.updatedAt)})",
+                    style: TextStyle(color: AppColors.text.darkgrey, fontWeight: FontWeight.w600),
+                    text: " (${DateFormat("hh : mm a").format(level.updatedAt)})",
                   ),
                 ],
               ),
@@ -406,16 +395,12 @@ class _ConditionsViewState extends State<ConditionsView> {
         height: 27,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(18),
-          color: logic.controller.selectedReef == reefName
-              ? AppColors.text.skyBlue
-              : AppColors.text.white,
+          color: logic.controller.selectedReef == reefName ? AppColors.text.skyBlue : AppColors.text.white,
         ),
         child: Text(
           reefName,
           style: TextStyle(
-            color: logic.controller.selectedReef == reefName
-                ? AppColors.text.white
-                : AppColors.text.black,
+            color: logic.controller.selectedReef == reefName ? AppColors.text.white : AppColors.text.black,
             fontSize: FontSize.small,
           ),
         ).paddingSymmetric(horizontal: 9, vertical: 5),

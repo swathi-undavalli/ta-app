@@ -5,10 +5,10 @@ import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../core/constants/constants.dart';
-import '../../../core/repository/employee_repo.dart';
 import '../../../core/util/utils.dart';
 import '../../../core/widgets/app_button.dart';
 import '../../employees/model/employee.dart';
+import '../../employees/repository/employee_repo.dart';
 import '../../splash/view/splash_view.dart';
 import '../../welcome/presentation/views/welome_view.dart';
 

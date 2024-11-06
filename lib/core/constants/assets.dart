@@ -1,11 +1,11 @@
 class AppImages {
-  static const _IconImages icons = _IconImages();
-  static const _IllustrationImages illustrations = _IllustrationImages();
-  static const _LottieImages lottie = _LottieImages();
+  static const IconImages icons = IconImages();
+  static const IllustrationImages illustrations = IllustrationImages();
+  static const LottieImages lottie = LottieImages();
 }
 
-class _IconImages {
-  const _IconImages();
+class IconImages {
+  const IconImages();
 
   String get video => 'images/video.png';
 
@@ -26,12 +26,12 @@ class _IconImages {
   String get box => 'images/box.svg';
 }
 
-class _LottieImages {
-  const _LottieImages();
+class LottieImages {
+  const LottieImages();
 
   String get fireFlame => 'assets/lotties/93361-fireflame.json';
 }
 
-class _IllustrationImages {
-  const _IllustrationImages();
+class IllustrationImages {
+  const IllustrationImages();
 }

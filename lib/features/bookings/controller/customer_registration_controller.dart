@@ -7,7 +7,7 @@
 // import 'package:image_picker/image_picker.dart';
 // import 'package:intl/intl.dart';
 // import 'package:temple_adventures/core/constants/constants.dart';
-// import 'package:temple_adventures/core/services/firebase_api.dart';
+// import 'package:temple_adventures/core/services/booking_repo.dart';
 // import 'package:temple_adventures/core/util/utils.dart';
 // import 'package:temple_adventures/features/bookings/models/customer_model.dart';
 // import 'package:temple_adventures/features/bookings/presentation/views/customer-registration-screen.dart';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get_utils/src/extensions/widget_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/util/spacing_widgets.dart';
 
 class CounterWidget extends StatefulWidget {
   const CounterWidget({

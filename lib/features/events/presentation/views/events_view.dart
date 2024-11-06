@@ -2,15 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/firebase/api.dart';
-import '../../../../core/util/alignment_extensions.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../models/event_model.dart';
+import '../../repository/events_repo.dart';
 import '../widgets/event_entry_bottom_sheet.dart';
 
 class EventsView extends StatefulWidget {
@@ -33,7 +33,7 @@ class _EventsViewState extends State<EventsView> {
       floatingActionButton: buildFloatingActionButton(context),
       body: SafeArea(
         child: StreamBuilder(
-          stream: firebaseApi.getAllEvents,
+          stream: FirebaseFirestore.instance.collection('templeEvents').snapshots(),
           builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
             if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
@@ -220,7 +220,7 @@ class _EventsViewState extends State<EventsView> {
             AppButton.miniFlat(
               text: 'Okay',
               onTap: () {
-                firebaseApi.deleteEvent(event.id);
+                EventsRepo.deleteEvent(event.id);
                 Navigator.pop(context);
               },
             ),

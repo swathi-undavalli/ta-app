@@ -5,10 +5,10 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/assets.dart';
-import '../../../../core/util/spacing_widgets.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/ta_image.dart';
 

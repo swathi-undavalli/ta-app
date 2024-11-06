@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/export.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../../../core/util/alignment_extensions.dart';
 
 class BookingStatus extends StatefulWidget {
   const BookingStatus({

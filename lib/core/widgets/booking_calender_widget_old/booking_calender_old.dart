@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../constants/constants.dart';
 import '../../constants/enums.dart';
-import '../../util/alignment_extensions.dart';
 import '../../util/utils.dart';
 import '../access_levels.dart';
 import 'bookings_calender_widget_controller_old.dart';
@@ -23,7 +23,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
   final AutoScrollController? autoScrollController;
 
   BookingsCalenderWidgetOld({
-    Key? key,
+    super.key,
     required this.onDateTimeSelected,
     this.onSearchTap,
     this.isDiveSession = false,
@@ -32,7 +32,7 @@ class BookingsCalenderWidgetOld extends StatelessWidget {
     this.highlightInvalidTime = false,
     this.calenderType,
     required this.autoScrollController,
-  }) : super(key: key) {
+  }) {
     startDate = startDate.subtract(const Duration(days: 1));
     logic.controller.startDate = startDate;
     logic.controller.showDetails = showDetails;
