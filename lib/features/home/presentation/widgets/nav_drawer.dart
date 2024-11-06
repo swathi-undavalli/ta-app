@@ -14,6 +14,7 @@ import '../../../certifications/presentation/views/certification_logs_view.dart'
 import '../../../coast_guard_slip/presentation/views/coast_guard_slip_view.dart';
 import '../../../employees/model/employee.dart';
 import '../../../employees/presentation/views/employee_profile_view.dart';
+import '../../../equipment/presentation/views/all_equipment_view.dart';
 import '../../../events/presentation/views/events_view.dart';
 import '../../../general_info/presentation/views/general_info_view.dart';
 import '../../../logs/presentation/views/log_view.dart';
@@ -128,6 +129,13 @@ class NavDrawer extends StatelessWidget {
               },
             ),
             buildMenuItem(
+              icon: Icons.branding_watermark,
+              text: 'Manage Equipment',
+              onTap: () {
+                Navigator.push(context, AllEquipmentView.route());
+              },
+            ),
+            buildMenuItem(
               icon: Icons.book_rounded,
               text: 'Logs',
               onTap: () {
@@ -152,11 +160,9 @@ class NavDrawer extends StatelessWidget {
               },
             ),
             buildLine(),
-            (logic.controller.version != null &&
-                    logic.controller.buildNumber != null)
+            (logic.controller.version != null && logic.controller.buildNumber != null)
                 ? buildMiniMenuItem(
-                    text:
-                        "Version : ${"${logic.controller.version!}+${logic.controller.buildNumber!}"}",
+                    text: "Version : ${"${logic.controller.version!}+${logic.controller.buildNumber!}"}",
                   )
                 : buildMiniMenuItem(text: 'Loading version number...'),
             buildMiniMenuItem(text: 'templeadventures.com'),
@@ -185,8 +191,7 @@ class NavDrawer extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(
           text,
-          style:
-              const TextStyle(color: Colors.black45, fontSize: FontSize.small),
+          style: const TextStyle(color: Colors.black45, fontSize: FontSize.small),
         ),
       ),
     );
@@ -205,10 +210,7 @@ class NavDrawer extends StatelessWidget {
         contentPadding: const EdgeInsets.only(left: 30),
         title: Text(
           text,
-          style: const TextStyle(
-              fontSize: 16,
-              color: Color(0xff605B5B),
-              fontWeight: FontWeight.w500),
+          style: const TextStyle(fontSize: 16, color: Color(0xff605B5B), fontWeight: FontWeight.w500),
         ),
         leading: Icon(
           icon,

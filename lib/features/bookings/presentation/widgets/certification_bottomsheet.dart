@@ -1,8 +1,6 @@
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
@@ -49,7 +47,6 @@ class CertificationBottomSheet extends StatefulWidget {
 }
 
 class _CertificationBottomSheetState extends State<CertificationBottomSheet> {
-  File? pickedImage;
   bool showLoading = false;
   late ItemModel itemModel;
   late Booking booking;
@@ -146,7 +143,7 @@ class _CertificationBottomSheetState extends State<CertificationBottomSheet> {
                         setState(() {
                           showLoading = true;
                         });
-                        booking.pax?[index]['photo'] = await uploadImage(image);
+                        booking.pax?[index]['photo'] = await uploadImage(image, 'Images');
                         await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
                         setState(() {
                           showLoading = false;
@@ -175,25 +172,6 @@ class _CertificationBottomSheetState extends State<CertificationBottomSheet> {
     );
   }
 
-  Future<String> uploadImage(File? selectedImage) async {
-    String downloadURL = '';
-
-    if (selectedImage != null) {
-      try {
-        String fileName = '${DateTime.now().millisecondsSinceEpoch}';
-
-        Reference storageReference = FirebaseStorage.instance.ref().child('Images/$fileName.jpg');
-
-        await storageReference.putFile(selectedImage);
-
-        downloadURL = await storageReference.getDownloadURL();
-      } catch (error) {
-        log('Error uploading image : $error');
-      }
-    }
-
-    return downloadURL;
-  }
 
   Widget buildTitleAndClose() {
     return Row(

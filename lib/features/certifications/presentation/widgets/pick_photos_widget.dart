@@ -1,5 +1,7 @@
+import 'dart:developer';
 import 'dart:io';
 
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -122,4 +124,24 @@ class _PickPhotosWidgetState extends State<PickPhotosWidget> {
       }
     }
   }
+}
+
+Future<String> uploadImage(File? selectedImage, String storagePath) async {
+  String downloadURL = '';
+
+  if (selectedImage != null) {
+    try {
+      String fileName = '${DateTime.now().millisecondsSinceEpoch}';
+
+      Reference storageReference = FirebaseStorage.instance.ref().child('$storagePath/$fileName.jpg');
+
+      await storageReference.putFile(selectedImage);
+
+      downloadURL = await storageReference.getDownloadURL();
+    } catch (error) {
+      log('Error uploading image : $error');
+    }
+  }
+
+  return downloadURL;
 }

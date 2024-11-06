@@ -68,42 +68,6 @@ class _HomeViewState extends State<HomeView> {
                           ),
                         Spacing.h20,
                         buildCheckLists(),
-                        // // TODO : Remove from here
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     checkInternetConnection();
-                        //   },
-                        //   child: const Text('init'),
-                        // ),
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     for (var data in updateQueue) {
-                        //       print(data.updatedAt);
-                        //     }
-                        //   },
-                        //   child: const Text('do'),
-                        // ),
-                        // Text('Sync required : ${isSyncPending()}'),
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     updateData(
-                        //       DataModel(
-                        //         data: "'name': 'kamesh'",
-                        //         updatedAt: null,
-                        //         firebasePath: '/offlineTestCollection/testPath7',
-                        //         createdAt: DateTime.now(),
-                        //       ),
-                        //     );
-                        //   },
-                        //   child: const Text('add data'),
-                        // ),
-                        // ElevatedButton(
-                        //   onPressed: () {
-                        //     Navigator.push(context, Dummy.route());
-                        //   },
-                        //   child: const Text('get data'),
-                        // ),
-                        // // TODO : Remove till here before publishing.
                         Spacing.h20,
                         buildEmployeeDiveCalender(),
                         Spacing.h50,
