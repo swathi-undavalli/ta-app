@@ -701,12 +701,10 @@ class _EditBookingViewState extends State<EditBookingView> {
                   return Padding(
                     padding: const EdgeInsets.only(left: 13),
                     child: DropdownButton(
-                      // focusNode: controller.locationNode,
                       underline: Container(height: 1, color: Colors.black45),
                       isExpanded: true,
                       value: controller.bookingModel!.activity![0],
                       onChanged: (dynamic activity) {
-                        //print(activity.name);
                         controller.bookingModel!.activity![0] = activity;
                         controller.priceTED.text = activity.price.toString();
                         controller.bookingModel!.price = activity.price * 1.0;

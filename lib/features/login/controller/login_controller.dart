@@ -12,7 +12,7 @@ import '../../employees/repository/employee_repo.dart';
 import '../../splash/view/splash_view.dart';
 import '../../welcome/presentation/views/welome_view.dart';
 
-LoginScreenLogic logic = LoginScreenLogic();
+// LoginScreenLogic logic = LoginScreenLogic();
 
 class LoginScreenLogic {
   LoginScreenController controller = Get.put(LoginScreenController());

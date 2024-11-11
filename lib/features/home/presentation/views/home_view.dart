@@ -413,11 +413,11 @@ class _HomeViewState extends State<HomeView> {
 }
 
 class AddEmployeeWidget extends StatelessWidget {
-  String text;
-  String subText;
-  Function onTap;
+  final String text;
+  final String subText;
+  final Function onTap;
 
-  AddEmployeeWidget({super.key, required this.text, required this.subText, required this.onTap});
+  const AddEmployeeWidget({super.key, required this.text, required this.subText, required this.onTap});
 
   @override
   Widget build(BuildContext context) {

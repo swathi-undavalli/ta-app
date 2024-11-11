@@ -1,41 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:temple_ui_tools/temple_ui_tools.dart';
 
-import '../../models/equipment_category_model.dart';
+import '../../Repository/equipment_repo.dart';
+import '../../models/equipment_model.dart';
 
-class EquipmentSelectorBottomSheet extends StatefulWidget {
-  const EquipmentSelectorBottomSheet({
+class CategorySelectorBottomSheet extends StatefulWidget {
+  const CategorySelectorBottomSheet({
     super.key,
+    required this.categories,
   });
 
-  static void show(BuildContext context) async {
-    await showModalBottomSheet(
+  final List<EquipmentCategory> categories;
+
+  static Future<List<EquipmentCategory>> show(
+    BuildContext context,
+    List<EquipmentCategory> equipmentCategoryModel,
+  ) async {
+    List<EquipmentCategory> data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
-      isDismissible: true,
+      isDismissible: false,
+      enableDrag: false,
       builder: (BuildContext context) {
-        return const EquipmentSelectorBottomSheet();
+        return CategorySelectorBottomSheet(categories: equipmentCategoryModel);
       },
     );
+    return data;
   }
 
   @override
-  State<EquipmentSelectorBottomSheet> createState() => _EquipmentSelectorBottomSheetState();
+  State<CategorySelectorBottomSheet> createState() => _CategorySelectorBottomSheetState();
 }
 
-class _EquipmentSelectorBottomSheetState extends State<EquipmentSelectorBottomSheet> {
-  List<EquipmentCategoryModel> categories = [];
+class _CategorySelectorBottomSheetState extends State<CategorySelectorBottomSheet> {
+  List<EquipmentCategory> categories = [];
   bool showLoading = false;
 
   @override
   void initState() {
     super.initState();
-    loadCategories();
-  }
-
-  Future<void> loadCategories() async {
-    // categories = await fetchCategories();
-    setState(() {});
+    categories = widget.categories;
   }
 
   @override
@@ -52,14 +56,18 @@ class _EquipmentSelectorBottomSheetState extends State<EquipmentSelectorBottomSh
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          buildTitleAndClose().paddingSymmetric(horizontal: 20),
-          Spacing.h20,
-          buildCategoryList(),
-          Spacing.h20,
-          buildAddCategoryButton(),
-          Spacing.h20,
-        ],
+        children: (showLoading == true)
+            ? [
+                const CircularProgressIndicator(color: Colors.black).paddingOnly(top: 100).center,
+              ]
+            : [
+                buildTitleAndClose().paddingSymmetric(horizontal: 20),
+                Spacing.h20,
+                buildCategoryList(),
+                Spacing.h20,
+                buildAddCategoryButton(),
+                Spacing.h20,
+              ],
       ),
     );
   }
@@ -69,7 +77,7 @@ class _EquipmentSelectorBottomSheetState extends State<EquipmentSelectorBottomSh
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         const Text(
-          'Manage Equipment',
+          'Manage Categories',
           style: TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 20,
@@ -80,7 +88,7 @@ class _EquipmentSelectorBottomSheetState extends State<EquipmentSelectorBottomSh
           icon: const Icon(Icons.close),
           onPressed: () {
             if (!showLoading) {
-              Navigator.pop(context);
+              Navigator.pop(context, categories);
             }
           },
         ),
@@ -93,10 +101,10 @@ class _EquipmentSelectorBottomSheetState extends State<EquipmentSelectorBottomSh
       child: ListView.builder(
         itemCount: categories.length,
         itemBuilder: (context, index) {
-          final category = categories[index];
+          EquipmentCategory category = categories[index];
           return ListTile(
             title: Text(
-              category.categoryName,
+              category.name,
               style: const TextStyle(
                 fontWeight: FontWeight.w600,
                 fontSize: 14,
@@ -107,10 +115,20 @@ class _EquipmentSelectorBottomSheetState extends State<EquipmentSelectorBottomSh
               onPressed: () {
                 _showCategoryDialog(
                   context,
-                  initialCategory: category.categoryName,
+                  initialCategory: category,
                   onSave: (updatedCategoryName) async {
-                    // await editCategory(category.id, updatedCategoryName);
-                    await loadCategories();
+                    showLoading = true;
+                    setState(() {});
+
+                    EquipmentCategory equipmentCategoryModel =
+                        EquipmentCategory(name: updatedCategoryName, id: category.id);
+
+                    await EquipmentRepo.editCategory(equipmentCategoryModel);
+
+                    categories[index] = categories[index].copyWith(name: updatedCategoryName);
+
+                    showLoading = false;
+                    setState(() {});
                   },
                 );
               },
@@ -137,16 +155,26 @@ class _EquipmentSelectorBottomSheetState extends State<EquipmentSelectorBottomSh
         _showCategoryDialog(
           context,
           onSave: (newCategoryName) async {
-            // await addCategory(newCategoryName);
-            await loadCategories();
+            showLoading = true;
+            setState(() {});
+
+            EquipmentCategory newCategory = await EquipmentRepo.addCategory(newCategoryName);
+            categories.add(newCategory);
+
+            showLoading = false;
+            setState(() {});
           },
         );
       },
     );
   }
 
-  void _showCategoryDialog(BuildContext context, {String? initialCategory, required Function(String) onSave}) {
-    TextEditingController controller = TextEditingController(text: initialCategory ?? '');
+  void _showCategoryDialog(
+    BuildContext context, {
+    EquipmentCategory? initialCategory,
+    required Function(String) onSave,
+  }) {
+    TextEditingController controller = TextEditingController(text: initialCategory?.name ?? '');
 
     showDialog(
       context: context,
@@ -170,7 +198,17 @@ class _EquipmentSelectorBottomSheetState extends State<EquipmentSelectorBottomSh
             ),
             if (initialCategory != null)
               TextButton(
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () async {
+                  showLoading = true;
+                  setState(() {});
+                  await EquipmentRepo.deleteCategory(initialCategory.id);
+
+                  if (context.mounted) {
+                    Navigator.of(context).pop();
+                  }
+                  showLoading = false;
+                  setState(() {});
+                },
                 child: const Text(
                   'Delete',
                   style: TextStyle(color: Colors.black),
