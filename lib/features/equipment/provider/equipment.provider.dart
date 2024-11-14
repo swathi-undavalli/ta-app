@@ -1,0 +1,198 @@
+import 'dart:developer';
+import 'dart:math' as math;
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+
+import '../../employees/model/employee.dart';
+import '../Repository/equipment.repository.dart';
+import '../models/equipment_model.dart';
+import '../models/otp_validation_model.dart';
+
+enum EquipmentStatus { loaded, loading, error }
+
+class EquipmentProvider extends ChangeNotifier {
+  final EquipmentRepository repository;
+
+  EquipmentProvider(this.repository);
+
+  List<EquipmentItem> items = [];
+  List<EquipmentItem> selectedItems = [];
+  List<EquipmentPiece> selectedPieces = [];
+  List<EquipmentCategory> categories = [];
+
+  String? error;
+  String? firebaseTrackingId;
+  EquipmentStatus _status = EquipmentStatus.loading;
+
+  EquipmentStatus get status => _status;
+
+  set status(EquipmentStatus value) {
+    _status = value;
+    notifyListeners();
+  }
+
+  // Fetching Equipment Items
+  void fetchEquipmentItems() async {
+    if (items.isNotEmpty) return;
+
+    try {
+      status = EquipmentStatus.loading;
+      items = await repository.getEquipmentItems();
+      status = EquipmentStatus.loaded;
+    } catch (e) {
+      _handleError(e);
+    }
+  }
+
+  // Fetching Categories
+  void fetchCategories() async {
+    if (categories.isNotEmpty) return;
+
+    try {
+      status = EquipmentStatus.loading;
+      categories = await repository.getCategories();
+      status = EquipmentStatus.loaded;
+    } catch (e) {
+      _handleError(e);
+    }
+  }
+
+  void toggleItemSelection(EquipmentItem item) {
+    selectedItems.contains(item) ? selectedItems.remove(item) : selectedItems.add(item);
+    notifyListeners();
+  }
+
+  void togglePieceSelection(EquipmentPiece piece) {
+    selectedPieces.contains(piece) ? selectedPieces.remove(piece) : selectedPieces.add(piece);
+    notifyListeners();
+  }
+
+  // Adding New Equipment
+  Future<void> addEquipment(
+    EquipmentCategory category,
+    String name,
+    List<String> assignedIDs,
+    String photoURL,
+  ) async {
+    try {
+      status = EquipmentStatus.loading;
+      final equipmentItem = await repository.addNewEquipment(
+        category: category,
+        name: name,
+        photoURL: photoURL,
+        assignedIDs: assignedIDs,
+      );
+      items.add(equipmentItem);
+      status = EquipmentStatus.loaded;
+    } catch (e) {
+      _handleError(e);
+    }
+  }
+
+  // OTP Verification
+  Future<void> verifyOTP(String otp) async {
+    // look for all docs with OTP.
+    // if employee found show details of employee,
+    status = EquipmentStatus.loading;
+    try {
+      final query = await FirebaseFirestore.instance
+          .collection('otpValidation')
+          .where('otp', isEqualTo: otp)
+          .where('approve', isEqualTo: false)
+          .limit(1)
+          .get();
+
+      if (query.docs.isEmpty) return;
+
+      OtpValidation validation = OtpValidationMapper.fromMap(query.docs.first.data());
+      validation = validation.copyWith(
+        pieces: selectedPieces,
+        renterID: currentEmployee?.id,
+      );
+      firebaseTrackingId = query.docs.first.id;
+      notifyListeners();
+      await _updateFirebaseValidation(validation);
+    } catch (e) {
+      _handleError(e);
+    }
+  }
+
+  // OTP Generation
+  Future<void> generateOTP() async {
+    try {
+      var query = await FirebaseFirestore.instance.collection('otpValidation').where('approve', isEqualTo: false).get();
+      final existingCodes = query.docs.map((doc) => doc.data()['otp'] as String).toList();
+
+      final code = _generateUniqueOTP(existingCodes);
+      OtpValidation validation = OtpValidation(
+        approverID: currentEmployee!.id,
+        renterID: null,
+        otp: code,
+        approve: false,
+        pieces: const [],
+      );
+      var doc = await FirebaseFirestore.instance.collection('otpValidation').add(validation.toMap());
+      firebaseTrackingId = doc.id;
+      notifyListeners();
+    } catch (e) {
+      _handleError(e);
+    }
+  }
+
+  // Approving Rental and Adding Log
+  Future<void> approveRentalAndAddLog(OtpValidation validation) async {
+    if (firebaseTrackingId == null) throw Exception('firebaseTrackingId is null');
+
+    try {
+      final approvedValidation = validation.copyWith(approve: true);
+      await _updateFirebaseValidation(approvedValidation);
+
+      // Update renter and lastRented information in pieces
+      for (var piece in validation.pieces) {
+        piece = piece.copyWith(currentRental: validation.renterID, lastRented: Timestamp.now());
+        FirebaseFirestore.instance.collection('equipmentPieces').doc(piece.id).set(piece.toMap());
+      }
+
+      //TODO: implement notes for each log.
+      await repository.addEquipmentLog(validation, 'implement this');
+      notifyListeners();
+    } catch (e) {
+      _handleError(e);
+    }
+  }
+
+  // Reset Selections
+  void resetSelections() {
+    selectedPieces.clear();
+    selectedItems.clear();
+    firebaseTrackingId = null;
+    notifyListeners();
+  }
+
+  // Remove Item and Assigned Pieces
+  void removeItemAndPieces(EquipmentItem item) {
+    selectedItems.remove(item);
+    selectedPieces.removeWhere((piece) => piece.equipmentItemID == item.id);
+    notifyListeners();
+  }
+
+  String _generateUniqueOTP(List<String> existingCodes) {
+    final random = math.Random();
+    String code;
+    do {
+      code = (random.nextInt(9000) + 1000).toString();
+    } while (existingCodes.contains(code));
+    return code;
+  }
+
+  Future<void> _updateFirebaseValidation(OtpValidation validation) async {
+    await FirebaseFirestore.instance.collection('otpValidation').doc(firebaseTrackingId).set(validation.toMap());
+  }
+
+  void _handleError(Object error) {
+    log('Error: $error');
+    this.error = error.toString();
+    status = EquipmentStatus.error;
+  }
+}

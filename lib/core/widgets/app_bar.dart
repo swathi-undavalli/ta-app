@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import '../constants/constants.dart';
 import 'back_navigation_icon.dart';
 
@@ -8,11 +9,13 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     required this.heading,
     this.actions,
     this.color,
+    this.centerTitle = true,
   });
 
   final String heading;
   final List<Widget>? actions;
   final Color? color;
+  final bool centerTitle;
 
   @override
   Size get preferredSize => const Size.fromHeight(70);
@@ -21,7 +24,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       toolbarHeight: 70,
-      centerTitle: true,
+      centerTitle: centerTitle,
       title: Text(
         heading,
         style: TextStyle(

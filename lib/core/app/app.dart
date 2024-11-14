@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:provider/provider.dart';
 
 import '../../features/dashboard/controller/dashboard_controller.dart';
+import '../../features/equipment/Repository/equipment.repository.dart';
+import '../../features/equipment/provider/equipment.provider.dart';
 import '../../features/splash/view/splash_view.dart';
 import '../constants/constants.dart';
 
@@ -22,24 +25,31 @@ class MyApp extends StatelessWidget {
       ),
     );
 
-    return  GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: const SplashView(),
-      theme: ThemeData(
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(fontFamily: AppFonts.nunito),
-          displayMedium: TextStyle(fontFamily: AppFonts.nunito),
-          displaySmall: TextStyle(fontFamily: AppFonts.nunito),
-          headlineMedium: TextStyle(fontFamily: AppFonts.nunito),
-          headlineSmall: TextStyle(fontFamily: AppFonts.nunito),
-          titleLarge: TextStyle(fontFamily: AppFonts.nunito),
-          titleMedium: TextStyle(fontFamily: AppFonts.nunito),
-          titleSmall: TextStyle(fontFamily: AppFonts.nunito),
-          bodyLarge: TextStyle(fontFamily: AppFonts.nunito),
-          bodyMedium: TextStyle(fontFamily: AppFonts.nunito),
-          bodySmall: TextStyle(fontFamily: AppFonts.nunito),
-          labelLarge: TextStyle(fontFamily: AppFonts.nunito),
-          labelSmall: TextStyle(fontFamily: AppFonts.nunito),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => EquipmentProvider(EquipmentRepository())),
+      ],
+      child: GetMaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: const SplashView(),
+        theme: ThemeData(
+          useMaterial3: false,
+          brightness: Brightness.light,
+          textTheme: const TextTheme(
+            displayLarge: TextStyle(fontFamily: AppFonts.nunito),
+            displayMedium: TextStyle(fontFamily: AppFonts.nunito),
+            displaySmall: TextStyle(fontFamily: AppFonts.nunito),
+            headlineMedium: TextStyle(fontFamily: AppFonts.nunito),
+            headlineSmall: TextStyle(fontFamily: AppFonts.nunito),
+            titleLarge: TextStyle(fontFamily: AppFonts.nunito),
+            titleMedium: TextStyle(fontFamily: AppFonts.nunito),
+            titleSmall: TextStyle(fontFamily: AppFonts.nunito),
+            bodyLarge: TextStyle(fontFamily: AppFonts.nunito),
+            bodyMedium: TextStyle(fontFamily: AppFonts.nunito),
+            bodySmall: TextStyle(fontFamily: AppFonts.nunito),
+            labelLarge: TextStyle(fontFamily: AppFonts.nunito),
+            labelSmall: TextStyle(fontFamily: AppFonts.nunito),
+          ),
         ),
       ),
     );

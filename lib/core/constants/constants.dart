@@ -71,3 +71,22 @@ class RegularExpressions {
       RegExp(r'^(19|20)\d\d([- /.])(0[1-9]|1[012])\2(0[1-9]|[12][0-9]|3[01])$');
   static RegExp findingLongNumbersRegularExpression = RegExp(r'^(\d\d\d\d)$');
 }
+
+const String placeHolderImage =
+    'https://media.istockphoto.com/id/1147544807/vector/thumbnail-image-vector-graphic.jpg?s=612x612&w=0&k=20&c=rnCKVbdxqkjlcs3xH87-9gocETqpspHFXu5dIGB4wuM=';
+
+const bannerTextStyle = TextStyle(
+  fontWeight: FontWeight.bold,
+  fontFamily: 'Nunito', // Replace with AppFonts.nunito if available
+  fontSize: 12,
+);
+
+final bannerContainerDecoration = BoxDecoration(
+  color: Colors.black,
+  borderRadius: BorderRadius.circular(8),
+);
+
+const bannerButtonStyle = TextStyle(
+  color: Colors.white,
+  fontWeight: FontWeight.bold,
+);

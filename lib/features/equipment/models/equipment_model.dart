@@ -10,7 +10,7 @@ class EquipmentItem with EquipmentItemMappable {
   final EquipmentCategory category;
   final String name;
   final String id;
-  final String photo;
+  final String? photo;
 
   EquipmentItem({
     required this.category,
@@ -36,15 +36,15 @@ class EquipmentCategory with EquipmentCategoryMappable {
 @MappableClass()
 class EquipmentPiece with EquipmentPieceMappable {
   final String id;
-  final String equipmentName;
-  final String equipmentId;
+  final String assignedID;
+  final String equipmentItemID;
   final String? currentRental;
   final Timestamp? lastRented;
 
   const EquipmentPiece({
     required this.id,
-    required this.equipmentName,
-    required this.equipmentId,
+    required this.assignedID,
+    required this.equipmentItemID,
     required this.currentRental,
     required this.lastRented,
   });
