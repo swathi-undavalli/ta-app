@@ -7,12 +7,14 @@ class EquipmentAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final String description;
   final Widget? action;
+  final bool hideBackButton;
 
   const EquipmentAppBar({
     super.key,
     required this.title,
     required this.description,
     this.action,
+    this.hideBackButton = false,
   });
 
   @override
@@ -47,6 +49,8 @@ class EquipmentAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [if (action != null) action!.paddingOnly(top: 16)],
       titleSpacing: 0,
       elevation: 0,
+      leadingWidth: hideBackButton ? 40 : 50,
+      leading: hideBackButton ? const SizedBox() : null,
     );
   }
 }

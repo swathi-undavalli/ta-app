@@ -27,11 +27,6 @@ class EquipmentSummaryView extends StatefulWidget {
 
 class _EquipmentSummaryViewState extends State<EquipmentSummaryView> {
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.black,
@@ -68,6 +63,8 @@ class _EquipmentCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.read<EquipmentProvider>();
+
     return Container(
       decoration: BoxDecoration(
         border: Border.all(color: Colors.grey.withOpacity(0.2)),
@@ -152,7 +149,7 @@ class _EquipmentCard extends StatelessWidget {
               const Spacer(),
               IconButton(
                 onPressed: () {
-                  context.read<EquipmentProvider>().removeItemAndPieces(item);
+                  provider.removeItemAndPieces(item);
                 },
                 icon: const Icon(Icons.close),
               ).center.height(70),
@@ -254,6 +251,7 @@ class _VerifyWithOTPBanner extends StatelessWidget {
                 const Spacer(),
                 TextButton(
                   onPressed: () {
+                    // TODO: Ask for confirmation before going there
                     Navigator.push(context, VerifyOTPView.route());
                   },
                   child: Text(

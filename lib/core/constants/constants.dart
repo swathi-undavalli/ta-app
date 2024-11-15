@@ -90,3 +90,11 @@ const bannerButtonStyle = TextStyle(
   color: Colors.white,
   fontWeight: FontWeight.bold,
 );
+
+const itemsFontStyle = TextStyle(
+  fontFamily: AppFonts.nunito,
+  fontWeight: FontWeight.normal,
+  fontSize: 14,
+);
+
+const appBlue = Color(0xff00D7FF);

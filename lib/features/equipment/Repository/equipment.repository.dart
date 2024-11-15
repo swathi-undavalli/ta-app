@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../employees/model/employee.dart';
 import '../models/equipment_log_model.dart';
 import '../models/equipment_model.dart';
 import '../models/otp_validation_model.dart';
@@ -8,12 +9,11 @@ class EquipmentRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   CollectionReference<Map<String, dynamic>> get _equipmentItemsRef => _firestore.collection('equipmentItems');
-
   CollectionReference<Map<String, dynamic>> get _equipmentCategoriesRef => _firestore.collection('equipmentCategories');
-
   CollectionReference<Map<String, dynamic>> get _equipmentPiecesRef => _firestore.collection('equipmentPieces');
-
   CollectionReference<Map<String, dynamic>> get _equipmentLogsRef => _firestore.collection('equipmentLogs');
+
+  CollectionReference<Map<String, dynamic>> get _employeesRef => _firestore.collection('employees');
 
   Future<List<EquipmentItem>> getEquipmentItems() async {
     final querySnapshot = await _equipmentItemsRef.get();
@@ -30,6 +30,20 @@ class EquipmentRepository {
     final itemWithId = item.copyWith(id: newDoc.id);
     await newDoc.set(itemWithId.toMap());
     return itemWithId;
+  }
+
+  Future<List<Employee>> getEmployees() async {
+    final querySnapshot = await _employeesRef.get();
+    List<Employee> employees = [];
+
+    for (final doc in querySnapshot.docs) {
+      try {
+        employees.add(Employee.fromMap(doc.data()));
+      } catch (e) {
+        print('Error mapping ${doc.id} to Employee: $e');
+      }
+    }
+    return employees;
   }
 
   Future<EquipmentLog> addEquipmentLog(OtpValidation validation, String notes) async {
@@ -95,10 +109,20 @@ class EquipmentRepository {
           equipmentItemID: equipmentItem.id,
           currentRental: null,
           lastRented: null,
+          equipmentItemName: equipmentItem.name,
         )),
       ),
     );
 
     return equipmentItem;
+  }
+
+  Future<void> deleteItems() async {
+    // final querySnapshot = await _equipmentItemsRef.get();
+    final querySnapshot = await _equipmentLogsRef.get();
+
+    for (var doc in querySnapshot.docs) {
+      await doc.reference.delete();
+    }
   }
 }

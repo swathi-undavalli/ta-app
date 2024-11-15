@@ -38,6 +38,7 @@ class EquipmentPiece with EquipmentPieceMappable {
   final String id;
   final String assignedID;
   final String equipmentItemID;
+  final String equipmentItemName;
   final String? currentRental;
   final Timestamp? lastRented;
 
@@ -45,6 +46,7 @@ class EquipmentPiece with EquipmentPieceMappable {
     required this.id,
     required this.assignedID,
     required this.equipmentItemID,
+    required this.equipmentItemName,
     required this.currentRental,
     required this.lastRented,
   });

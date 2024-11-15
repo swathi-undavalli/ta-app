@@ -13,23 +13,34 @@ enum EquipmentStatus { loaded, loading, error }
 
 class EquipmentProvider extends ChangeNotifier {
   final EquipmentRepository repository;
-
   EquipmentProvider(this.repository);
 
   List<EquipmentItem> items = [];
   List<EquipmentItem> selectedItems = [];
   List<EquipmentPiece> selectedPieces = [];
   List<EquipmentCategory> categories = [];
+  List<Employee> employees = [];
 
+  // State variables
   String? error;
   String? firebaseTrackingId;
+  String? otp;
   EquipmentStatus _status = EquipmentStatus.loading;
+  Stream<DocumentSnapshot<Map<String, dynamic>>>? _otpStream;
 
+  // Getter & Setters
   EquipmentStatus get status => _status;
 
   set status(EquipmentStatus value) {
     _status = value;
     notifyListeners();
+  }
+
+  Stream<DocumentSnapshot<Map<String, dynamic>>> get otpStream {
+    if (_otpStream == null && firebaseTrackingId != null) {
+      _otpStream = FirebaseFirestore.instance.collection('otpValidation').doc(firebaseTrackingId).snapshots();
+    }
+    return _otpStream!;
   }
 
   // Fetching Equipment Items
@@ -52,6 +63,19 @@ class EquipmentProvider extends ChangeNotifier {
     try {
       status = EquipmentStatus.loading;
       categories = await repository.getCategories();
+      status = EquipmentStatus.loaded;
+    } catch (e) {
+      _handleError(e);
+    }
+  }
+
+  // Fetching Employees
+  void fetchEmployees() async {
+    if (employees.isNotEmpty) return;
+
+    try {
+      status = EquipmentStatus.loading;
+      employees = await repository.getEmployees();
       status = EquipmentStatus.loaded;
     } catch (e) {
       _handleError(e);
@@ -91,6 +115,13 @@ class EquipmentProvider extends ChangeNotifier {
   }
 
   // OTP Verification
+  Future<void> onOTPChange(String pin) async {
+    otp = pin;
+    error = null;
+    notifyListeners();
+  }
+
+  // OTP Verification
   Future<void> verifyOTP(String otp) async {
     // look for all docs with OTP.
     // if employee found show details of employee,
@@ -103,17 +134,18 @@ class EquipmentProvider extends ChangeNotifier {
           .limit(1)
           .get();
 
-      if (query.docs.isEmpty) return;
+      if (query.docs.isEmpty) throw Exception('OTP not found');
 
-      OtpValidation validation = OtpValidationMapper.fromMap(query.docs.first.data());
-      validation = validation.copyWith(
+      final validation = OtpValidationMapper.fromMap(query.docs.first.data()).copyWith(
         pieces: selectedPieces,
         renterID: currentEmployee?.id,
       );
       firebaseTrackingId = query.docs.first.id;
       notifyListeners();
       await _updateFirebaseValidation(validation);
+      status = EquipmentStatus.loaded;
     } catch (e) {
+      firebaseTrackingId = null;
       _handleError(e);
     }
   }
@@ -125,7 +157,7 @@ class EquipmentProvider extends ChangeNotifier {
       final existingCodes = query.docs.map((doc) => doc.data()['otp'] as String).toList();
 
       final code = _generateUniqueOTP(existingCodes);
-      OtpValidation validation = OtpValidation(
+      final validation = OtpValidation(
         approverID: currentEmployee!.id,
         renterID: null,
         otp: code,
@@ -167,6 +199,7 @@ class EquipmentProvider extends ChangeNotifier {
     selectedPieces.clear();
     selectedItems.clear();
     firebaseTrackingId = null;
+    otp = null;
     notifyListeners();
   }
 
