@@ -42,20 +42,32 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
   String? _nameError;
   String? _assignedIDsError;
   String? _pickedImageError;
+  List<EquipmentPiece> _pieces = [];
 
   @override
   void initState() {
     super.initState();
     _equipmentNameTED = TextEditingController(text: widget.equipmentItem?.name);
+    _selectedCategory = widget.equipmentItem?.category;
+    if (_isEditMode) {
+      context.read<EquipmentProvider>().repository.getEquipmentPieces(widget.equipmentItem!.id).then((pieces) {
+        _pieces = pieces;
+        _assignedIds = pieces.map((piece) {
+          return piece.assignedID;
+        }).toList();
+        setState(() {});
+      });
+    }
   }
 
+  bool get _isEditMode => widget.equipmentItem != null;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.black,
-      appBar: const EquipmentAppBar(
-        title: 'Add Equipment',
-        description: 'Add new equipment so divers can rent :)',
+      appBar: EquipmentAppBar(
+        title: _isEditMode ? 'Edit Equipment' : 'Add Equipment',
+        description: 'Update ${widget.equipmentItem?.name}',
       ),
       body: EquipmentBody(
         child: Stack(
@@ -88,34 +100,35 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
                 ),
                 _FieldError(_assignedIDsError),
                 Spacing.h20,
-                Row(
-                  children: [
-                    PickPhotosWidget(
-                      pickedImage: _pickedImage,
-                      onChanged: (File? image) async {
-                        if (image != null) {
-                          setState(() {
-                            _showImageUploadingLoading = true;
-                          });
-                          _pickedImage = await uploadImage(image, 'Images');
-                          setState(() {
-                            _showImageUploadingLoading = false;
-                          });
-                        }
-                      },
-                    ),
-                    _FieldError(_pickedImageError),
-                    if (_showImageUploadingLoading)
-                      const CircularProgressIndicator(
-                        color: Colors.black,
-                        strokeWidth: 2,
-                      ).size(15, 15),
-                  ],
-                ),
+                if (!_isEditMode)
+                  Row(
+                    children: [
+                      PickPhotosWidget(
+                        pickedImage: _pickedImage,
+                        onChanged: (File? image) async {
+                          if (image != null) {
+                            setState(() {
+                              _showImageUploadingLoading = true;
+                            });
+                            _pickedImage = await uploadImage(image, 'Images');
+                            setState(() {
+                              _showImageUploadingLoading = false;
+                            });
+                          }
+                        },
+                      ),
+                      _FieldError(_pickedImageError),
+                      if (_showImageUploadingLoading)
+                        const CircularProgressIndicator(
+                          color: Colors.black,
+                          strokeWidth: 2,
+                        ).size(15, 15),
+                    ],
+                  ),
                 Spacing.h100,
                 AppButton.flat(
                   text: (widget.equipmentItem == null) ? 'Submit' : 'Update',
-                  onTap: onSave,
+                  onTap: onSaveOrUpdate,
                   color: Colors.black,
                   textColor: Colors.white,
                 ).center,
@@ -128,7 +141,25 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
     );
   }
 
-  Future<void> onSave() async {
+  Future<void> onSaveOrUpdate() async {
+    if (_isEditMode) {
+      EquipmentItem updatedItem = widget.equipmentItem!.copyWith(
+        category: _selectedCategory,
+        name: _equipmentNameTED.text,
+      );
+      await context.read<EquipmentProvider>().updateEquipmentItemAndPieces(
+            updatedItem,
+            _assignedIds,
+            _pieces,
+          );
+
+      context.read<EquipmentProvider>().fetchEquipmentItems(true);
+
+      if (mounted) Navigator.pop(context);
+
+      return;
+    }
+
     if (_validateFields()) {
       await context.read<EquipmentProvider>().addEquipment(
             _selectedCategory!,
@@ -173,7 +204,7 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
 }
 
 class _LoadingAnimation extends StatelessWidget {
-  const _LoadingAnimation({super.key});
+  const _LoadingAnimation();
 
   @override
   Widget build(BuildContext context) {

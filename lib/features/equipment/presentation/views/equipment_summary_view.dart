@@ -65,101 +65,106 @@ class _EquipmentCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final provider = context.read<EquipmentProvider>();
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey.withOpacity(0.2)),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      width: Screen.width,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                height: 70,
-                width: 70,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(color: const Color(0xffB3B3B3), width: 0.5),
-                  color: Colors.white,
-                  image: DecorationImage(
-                    image: CachedNetworkImageProvider(item.photo ?? placeHolderImage),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              ),
-              Spacing.w16,
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    item.name,
-                    style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                  ),
-                  Text(
-                    item.category.name,
-                    style: TextStyle(
-                      fontSize: 14,
-                      color: const Color(0xff6B6868).withOpacity(0.8),
+    return InkWell(
+      onTap: () {
+        ManagePiecesBottomSheet.show(context, item);
+      },
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey.withOpacity(0.2)),
+          borderRadius: BorderRadius.circular(8),
+        ),
+        width: Screen.width,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  height: 70,
+                  width: 70,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: const Color(0xffB3B3B3), width: 0.5),
+                    color: Colors.white,
+                    image: DecorationImage(
+                      image: CachedNetworkImageProvider(item.photo ?? placeHolderImage),
+                      fit: BoxFit.cover,
                     ),
                   ),
-                  Consumer<EquipmentProvider>(
-                    builder: (context, provider, child) {
-                      int itemsCount = provider.selectedPieces.where((e) => (e.equipmentItemID == item.id)).length;
-                      if (itemsCount == 0) {
-                        return InkWell(
-                          onTap: () {
-                            ManagePiecesBottomSheet.show(context, item);
-                          },
-                          child: Text(
-                            'Add',
+                ),
+                Spacing.w16,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.name,
+                      style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                    ),
+                    Text(
+                      item.category.name,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: const Color(0xff6B6868).withOpacity(0.8),
+                      ),
+                    ),
+                    Consumer<EquipmentProvider>(
+                      builder: (context, provider, child) {
+                        int itemsCount = provider.selectedPieces.where((e) => (e.equipmentItemID == item.id)).length;
+                        if (itemsCount == 0) {
+                          return InkWell(
+                            onTap: () {
+                              ManagePiecesBottomSheet.show(context, item);
+                            },
+                            child: Text(
+                              'Add',
+                              style: TextStyle(
+                                color: AppColors.text.skyBlue,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                              ),
+                            ).paddingAll(8),
+                          );
+                        }
+
+                        return RichText(
+                          text: TextSpan(
+                            text: 'Total items : ',
                             style: TextStyle(
-                              color: AppColors.text.skyBlue,
-                              fontWeight: FontWeight.bold,
                               fontSize: 14,
+                              color: const Color(0xff6B6868).withOpacity(0.8),
+                              fontFamily: AppFonts.nunito,
                             ),
+                            children: <TextSpan>[
+                              TextSpan(
+                                text: itemsCount.toString(),
+                                style: const TextStyle(fontWeight: FontWeight.bold),
+                              ),
+                            ],
                           ),
                         );
-                      }
-
-                      return RichText(
-                        text: TextSpan(
-                          text: 'Total items : ',
-                          style: TextStyle(
-                            fontSize: 14,
-                            color: const Color(0xff6B6868).withOpacity(0.8),
-                            fontFamily: AppFonts.nunito,
-                          ),
-                          children: <TextSpan>[
-                            TextSpan(
-                              text: itemsCount.toString(),
-                              style: const TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
-              ),
-              const Spacer(),
-              IconButton(
-                onPressed: () {
-                  provider.removeItemAndPieces(item);
-                  if (provider.selectedItems.isEmpty) Navigator.pop(context);
-                },
-                icon: const Icon(Icons.close),
-              ).center.height(70),
-            ],
-          ),
-          _EquipmentPieces(item),
-        ],
-      ).paddingAll(8),
-    ).paddingOnly(bottom: 16);
+                      },
+                    ),
+                  ],
+                ),
+                const Spacer(),
+                IconButton(
+                  onPressed: () {
+                    provider.removeItemAndPieces(item);
+                    if (provider.selectedItems.isEmpty) Navigator.pop(context);
+                  },
+                  icon: const Icon(Icons.close),
+                ).center.height(70),
+              ],
+            ),
+            _EquipmentPieces(item),
+          ],
+        ).paddingAll(8),
+      ).paddingOnly(bottom: 16),
+    );
   }
 }
 
@@ -209,7 +214,7 @@ class _EquipmentPieces extends StatelessWidget {
               ).paddingOnly(right: 10),
             ],
           ),
-        ).paddingOnly(top: 8);
+        ).paddingOnly(top: 16);
       },
     );
   }

@@ -297,13 +297,13 @@ class _GeneralInfoViewState extends State<GeneralInfoView> {
                         employeeLimit: -1,
                       ),
                       Spacing.h10,
-                      buildEmployeeSelector(
-                        employees: currentDsd.courseCenter ?? [],
-                        title: 'Courses Center',
-                        employeeType: EmployeeType.showFreelancersDivers,
-                        employeeLimit: -1,
-                      ),
-                      Spacing.h10,
+                      // buildEmployeeSelector(
+                      //   employees: currentDsd.courseCenter ?? [],
+                      //   title: 'Courses Center',
+                      //   employeeType: EmployeeType.showFreelancersDivers,
+                      //   employeeLimit: -1,
+                      // ),
+                      // Spacing.h10,
                       buildEmployeeSelector(
                         employees: currentDsd.harboursStaff ?? [],
                         title: 'Harbour Staff',

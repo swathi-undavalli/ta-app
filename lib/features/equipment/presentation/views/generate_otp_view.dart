@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:provider/provider.dart';
+import 'package:temple_adventures/features/equipment/presentation/views/submission_bottom_sheet.dart';
 import 'package:temple_ui_tools/temple_ui_tools.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
@@ -27,7 +28,6 @@ class GenerateOTPView extends StatefulWidget {
 }
 
 class _GenerateOTPViewState extends State<GenerateOTPView> {
-
   @override
   void initState() {
     super.initState();
@@ -192,13 +192,16 @@ class _ApproveBanner extends StatelessWidget {
                   return InkWell(
                     onTap: () async {
                       if (validation.pieces.isEmpty) return;
-                      provider.status = EquipmentStatus.loading;
-                      await provider.approveRentalAndAddLog(validation);
-                      if (context.mounted) {
-                        provider.firebaseTrackingId = null;
-                        Navigator.pop(context);
-                      }
-                      provider.status = EquipmentStatus.loaded;
+                      SubmissionBottomSheet.show(context, validation.pieces, () async {
+                        provider.status = EquipmentStatus.loading;
+                        await provider.approveRentalAndAddLog(validation);
+                        if (context.mounted) {
+                          provider.firebaseTrackingId = null;
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        }
+                        provider.status = EquipmentStatus.loaded;
+                      });
                     },
                     child: Text(
                       'Log & Approve',

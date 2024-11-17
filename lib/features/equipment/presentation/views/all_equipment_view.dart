@@ -40,59 +40,67 @@ class _AllEquipmentViewState extends State<AllEquipmentView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background.black,
-      appBar: EquipmentAppBar(
-        title: 'All Equipment',
-        description: 'All the available equipment for renting',
-        action: IconButton(
-          onPressed: () {
-            Navigator.push(context, AddEquipmentView.route(null));
-          },
-          icon: const Icon(Icons.add_circle_outline_rounded),
+    return WillPopScope(
+      onWillPop: () async {
+        provider.selectedItems.clear();
+        provider.selectedPieces.clear();
+        return true;
+      },
+      child: Scaffold(
+        backgroundColor: AppColors.background.black,
+        appBar: EquipmentAppBar(
+          title: 'All Equipment',
+          description: 'All the available equipment for renting',
+          action: IconButton(
+            onPressed: () {
+              Navigator.push(context, AddEquipmentView.route(null));
+            },
+            icon: const Icon(Icons.add_circle_outline_rounded),
+          ),
         ),
-      ),
-      body: Stack(
-        children: [
-          EquipmentBody(
-            child: Consumer<EquipmentProvider>(
-              builder: (context, provider, child) {
-                if (provider.status == EquipmentStatus.loading) {
-                  return const CircularProgressIndicator(
-                    color: Colors.black,
-                  ).center;
-                }
-
-                if (provider.status == EquipmentStatus.error) {
-                  return Text('Error: ${provider.error}');
-                }
-
-                if (provider.status == EquipmentStatus.loaded) {
-                  if (provider.items.isEmpty) {
-                    return const Text(
-                      'No equipments found please add few',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+        body: Stack(
+          children: [
+            EquipmentBody(
+              child: Consumer<EquipmentProvider>(
+                builder: (context, provider, child) {
+                  if (provider.status == EquipmentStatus.loading) {
+                    return const CircularProgressIndicator(
+                      color: Colors.black,
                     ).center;
                   }
 
-                  return Wrap(
-                    spacing: 16,
-                    runSpacing: 16,
-                    children: [
-                      const _GenerateOTPBanner(),
-                      ...provider.items.map((EquipmentItem item) {
-                        return _EquipmentItemTile(item: item);
-                      }),
-                    ],
-                  ).paddingOnly(top: 16).center.scrollable;
-                }
+                  if (provider.status == EquipmentStatus.error) {
+                    return Text('Error: ${provider.error}');
+                  }
 
-                return const SizedBox();
-              },
+                  if (provider.status == EquipmentStatus.loaded) {
+                    if (provider.items.isEmpty) {
+                      return const Text(
+                        'No equipments found please add few',
+                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
+                      ).center;
+                    }
+
+                    return Wrap(
+                      spacing: 16,
+                      runSpacing: 16,
+                      alignment: WrapAlignment.center,
+                      children: [
+                        const _GenerateOTPBanner().paddingOnly(bottom: 8),
+                        ...provider.items.map((EquipmentItem item) {
+                          return _EquipmentItemTile(item: item);
+                        }),
+                      ],
+                    ).paddingOnly(top: 16).center.scrollable;
+                  }
+
+                  return const SizedBox();
+                },
+              ),
             ),
-          ),
-          const _RentNowBanner(),
-        ],
+            const _RentNowBanner(),
+          ],
+        ),
       ),
     );
   }
@@ -118,6 +126,7 @@ class _EquipmentItemTile extends StatelessWidget {
           },
           onLongPress: () {
             // TODO : Enable editing feature in next version.
+            Navigator.push(context, AddEquipmentView.route(item));
           },
           child: Column(
             children: [
@@ -153,30 +162,57 @@ class _GenerateOTPBanner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BannerContainer(
+    return Container(
+      width: Screen.width,
+      decoration: BoxDecoration(
+        color: appBlue.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(8),
+      ),
       child: Row(
         children: [
-          RichText(
-            text: const TextSpan(
-              text: 'Share ',
-              style: TextStyle(
-                fontFamily: 'Nunito',
-                fontSize: 12,
-              ),
-              children: <TextSpan>[
-                TextSpan(text: 'OTP', style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: ' for verification', style: TextStyle(fontWeight: FontWeight.bold)),
+          Spacing.w8,
+          Flexible(
+            child: Column(
+              children: [
+                Spacing.h8,
+                Spacing.h8,
+                const Text(
+                  'Generate OTP',
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ).left,
+                Spacing.h8,
+                RichText(
+                  text: const TextSpan(
+                    text: 'Share',
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 12,
+                      color: Colors.black,
+                    ),
+                    children: <TextSpan>[
+                      TextSpan(text: ' OTP ', style: TextStyle(fontWeight: FontWeight.bold)),
+                      TextSpan(text: 'with your dive buddy for equipment '),
+                      TextSpan(text: 'verification.', style: TextStyle(fontWeight: FontWeight.bold)),
+                    ],
+                  ),
+                ),
+                Spacing.h8,
+                Spacing.h8,
               ],
-            ),
+            ).paddingSymmetric(horizontal: 16),
           ),
-          const Spacer(),
           _MiniButton(
             text: 'Generate',
             onTap: () => Navigator.push(context, GenerateOTPView.route()),
           ),
+          Spacing.w8,
         ],
-      ).paddingSymmetric(horizontal: 16),
-    );
+      ),
+    ).paddingHorizontal(16);
   }
 }
 

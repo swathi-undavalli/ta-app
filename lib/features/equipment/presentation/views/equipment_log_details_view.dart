@@ -163,7 +163,13 @@ class _SubmissionButton extends StatelessWidget {
         height: 45,
         child: InkWell(
           onTap: () {
-            SubmissionBottomSheet.show(context, log);
+            SubmissionBottomSheet.show(context, log.pieces, () {
+              context.read<EquipmentProvider>().completeSubmission(log).whenComplete(() {
+                if (!context.mounted) return;
+                Navigator.pop(context);
+                Navigator.pop(context);
+              });
+            });
           },
           child: Text(
             'Start submission',

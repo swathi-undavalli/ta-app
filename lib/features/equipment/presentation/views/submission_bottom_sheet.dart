@@ -4,23 +4,30 @@ import 'package:temple_ui_tools/temple_ui_tools.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
-import '../../models/equipment_log_model.dart';
 import '../../models/equipment_model.dart';
 import '../../provider/equipment.provider.dart';
 import '../widgets/banner_container.dart';
 
 class SubmissionBottomSheet extends StatefulWidget {
-  final EquipmentLog log;
+  final List<EquipmentPiece> pieces;
+  final Function onSuccess;
 
-  const SubmissionBottomSheet({super.key, required this.log});
+  const SubmissionBottomSheet({
+    super.key,
+    required this.onSuccess,
+    required this.pieces,
+  });
 
-  static Future<void> show(BuildContext context, EquipmentLog log) async {
+  static Future<void> show(BuildContext context, List<EquipmentPiece> pieces, Function onSuccess) async {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       useRootNavigator: true,
       builder: (context) {
-        return SubmissionBottomSheet(log: log);
+        return SubmissionBottomSheet(
+          pieces: pieces,
+          onSuccess: onSuccess,
+        );
       },
     );
   }
@@ -64,7 +71,7 @@ class _SubmissionBottomSheetState extends State<SubmissionBottomSheet> {
             color: Colors.grey,
           ).paddingHorizontal(8),
           Spacing.h12,
-          ...(widget.log.pieces).map(
+          ...(widget.pieces).map(
             (piece) {
               bool isVerified = selectedPieces.contains(piece.id);
 
@@ -85,19 +92,14 @@ class _SubmissionBottomSheetState extends State<SubmissionBottomSheet> {
           Selector<EquipmentProvider, bool>(
             selector: (context, provider) => provider.status == EquipmentStatus.loading,
             builder: (context, isLoading, child) {
-              bool enable = selectedPieces.length == widget.log.pieces.length;
+              bool enable = selectedPieces.length == widget.pieces.length;
               return BannerContainer(
                 height: 45,
                 child: InkWell(
                   onTap: () {
                     if (isLoading) return;
                     if (enable == false) return;
-
-                    context.read<EquipmentProvider>().completeSubmission(widget.log).whenComplete(() {
-                      if (!context.mounted) return;
-                      Navigator.pop(context);
-                      Navigator.pop(context);
-                    });
+                    widget.onSuccess();
                   },
                   child: isLoading
                       ? const CircularProgressIndicator(
@@ -105,7 +107,7 @@ class _SubmissionBottomSheetState extends State<SubmissionBottomSheet> {
                           strokeWidth: 2,
                         ).size(15, 15).center
                       : Text(
-                          'Start submission',
+                          'Verified',
                           style: TextStyle(
                             color: Colors.white.withOpacity(
                               enable ? 1 : 0.5,

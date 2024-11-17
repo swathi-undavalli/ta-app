@@ -39,6 +39,18 @@ class EquipmentRepository {
     return itemWithId;
   }
 
+  Future<void> updateEquipmentItem(EquipmentItem item) async {
+    await _equipmentItemsRef.doc(item.id).set(item.toMap());
+  }
+
+  Future<void> updateEquipmentPiece(EquipmentPiece piece) async {
+    await _equipmentPiecesRef.doc(piece.id).set(piece.toMap());
+  }
+
+  Future<void> deleteEquipmentPiece(String pieceID) async {
+    await _equipmentPiecesRef.doc(pieceID).delete();
+  }
+
   Future<List<Employee>> getEmployees() async {
     final querySnapshot = await _employeesRef.get();
     List<Employee> employees = [];
@@ -151,5 +163,10 @@ class EquipmentRepository {
     await _equipmentLogsRef.doc(logWithSubmissionDetails.id).set(logWithSubmissionDetails.toMap());
     updateEquipmentPieces(log.pieces, null, null);
     return logWithSubmissionDetails;
+  }
+
+  Future<List<EquipmentPiece>> getEquipmentPieces(String id) async {
+    final querySnapshot = await _equipmentPiecesRef.where('equipmentItemID', isEqualTo: id).get();
+    return querySnapshot.docs.map((doc) => EquipmentPieceMapper.fromMap(doc.data())).toList();
   }
 }

@@ -39,8 +39,8 @@ class EquipmentProvider extends ChangeNotifier {
   }
 
   // Fetching Equipment Items
-  void fetchEquipmentItems() async {
-    if (items.isNotEmpty) return;
+  void fetchEquipmentItems([bool force = false]) async {
+    if (force == false && items.isNotEmpty) return;
 
     try {
       status = EquipmentStatus.loading;
@@ -238,6 +238,44 @@ class EquipmentProvider extends ChangeNotifier {
     try {
       status = EquipmentStatus.loading;
       await repository.completeSubmission(ulog);
+      status = EquipmentStatus.loaded;
+    } catch (e) {
+      _handleError(e);
+    }
+  }
+
+  Future<void> updateEquipmentItemAndPieces(
+    EquipmentItem updatedItem,
+    List<String> updatedIDs,
+    List<EquipmentPiece> oldPieces,
+  ) async {
+    try {
+      status = EquipmentStatus.loading;
+      await repository.updateEquipmentItem(updatedItem);
+      var oldAssignedIds = oldPieces.map((piece) => piece.assignedID);
+      for (final piece in oldPieces) {
+        await repository.updateEquipmentPiece(piece.copyWith(equipmentItemName: updatedItem.name));
+      }
+
+      for (final id in updatedIDs) {
+        if (oldAssignedIds.contains(id) == false) {
+          EquipmentPiece piece = EquipmentPiece(
+            id: '',
+            assignedID: id,
+            equipmentItemID: updatedItem.id,
+            equipmentItemName: updatedItem.name,
+            currentRental: null,
+            lastRented: null,
+          );
+          repository.addEquipmentPiece(piece);
+        }
+      }
+
+      for (final piece in oldPieces) {
+        if (updatedIDs.contains(piece.assignedID) == false) {
+          repository.deleteEquipmentPiece(piece.id);
+        }
+      }
       status = EquipmentStatus.loaded;
     } catch (e) {
       _handleError(e);

@@ -244,7 +244,7 @@ class _VerifyWithOTPBanner extends StatelessWidget {
                                 Navigator.pop(context);
                               },
                               child: const Text(
-                                'Log & Close',
+                                'Close',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,

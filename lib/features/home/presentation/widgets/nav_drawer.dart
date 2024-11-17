@@ -78,6 +78,51 @@ class NavDrawer extends StatelessWidget {
                 Navigator.push(context, GeneralInfoView.route());
               },
             ),
+            buildMenuItem(
+              icon: Icons.dataset_rounded,
+              text: 'Equipment',
+              onTap: () {
+                Navigator.push(context, AllEquipmentView.route());
+              },
+            ),
+            buildMenuItem(
+              icon: Icons.list_alt_outlined,
+              text: 'Equipment Logs',
+              onTap: () {
+                Navigator.push(context, EquipmentLogsView.route());
+              },
+            ),
+            buildMenuItem(
+              icon: Icons.add_card_rounded,
+              text: 'Roaster',
+              onTap: () {
+                Navigator.push(context, RoasterView.route());
+              },
+            ),
+            buildMenuItem(
+              icon: Icons.book_rounded,
+              text: 'Logs',
+              onTap: () {
+                Navigator.push(context, LogView.route());
+              },
+            ),
+            EmployeeAccess(
+              access: AccessRights.offers,
+              child: buildMenuItem(
+                icon: Icons.collections_bookmark_rounded,
+                text: 'Customer Dive Logs',
+                onTap: () {
+                  Navigator.push(context, CustomerLogsView.route());
+                },
+              ),
+            ),
+            buildMenuItem(
+              icon: Icons.card_membership_outlined,
+              text: 'Certifications',
+              onTap: () {
+                Navigator.push(context, CertificationLogsView.route());
+              },
+            ),
             EmployeeAccess(
               access: AccessRights.marketingGallery,
               child: buildMenuItem(
@@ -122,51 +167,6 @@ class NavDrawer extends StatelessWidget {
                 Navigator.push(context, CoastGuardSlipView.route());
               },
             ),
-            buildMenuItem(
-              icon: Icons.add_card_rounded,
-              text: 'Roaster',
-              onTap: () {
-                Navigator.push(context, RoasterView.route());
-              },
-            ),
-            buildMenuItem(
-              icon: Icons.dataset_rounded,
-              text: 'All Equipment',
-              onTap: () {
-                Navigator.push(context, AllEquipmentView.route());
-              },
-            ),
-            buildMenuItem(
-              icon: Icons.dehaze_rounded,
-              text: 'Equipment Logs',
-              onTap: () {
-                Navigator.push(context, EquipmentLogsView.route());
-              },
-            ),
-            buildMenuItem(
-              icon: Icons.book_rounded,
-              text: 'Logs',
-              onTap: () {
-                Navigator.push(context, LogView.route());
-              },
-            ),
-            EmployeeAccess(
-              access: AccessRights.offers,
-              child: buildMenuItem(
-                icon: Icons.collections_bookmark_rounded,
-                text: 'Customer Dive Logs',
-                onTap: () {
-                  Navigator.push(context, CustomerLogsView.route());
-                },
-              ),
-            ),
-            buildMenuItem(
-              icon: Icons.card_membership_outlined,
-              text: 'Certifications',
-              onTap: () {
-                Navigator.push(context, CertificationLogsView.route());
-              },
-            ),
             buildLine(),
             (logic.controller.version != null && logic.controller.buildNumber != null)
                 ? buildMiniMenuItem(
@@ -184,10 +184,12 @@ class NavDrawer extends StatelessWidget {
   ///================Business logic==================///
 
   Widget buildUserProfile() {
-    return const SizedBox(
-      height: 50,
-      child: CircleAvatar(
-        backgroundImage: AssetImage('images/AppLogoPondy.png'),
+    return Container(
+      height: 80,
+      decoration: const BoxDecoration(
+        image: DecorationImage(
+          image: AssetImage('images/AppLogoPondy.png'),
+        ),
       ),
     );
   }
@@ -234,7 +236,7 @@ class NavDrawer extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         const Text(
-          'hello,',
+          'Hello,',
           style: TextStyle(
             color: Colors.black45,
             fontSize: FontSize.textSize,
