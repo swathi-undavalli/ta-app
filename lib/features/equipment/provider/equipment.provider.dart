@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 
 import '../../employees/model/employee.dart';
 import '../Repository/equipment.repository.dart';
+import '../models/equipment_log_model.dart';
 import '../models/equipment_model.dart';
 import '../models/otp_validation_model.dart';
 
@@ -16,6 +17,7 @@ class EquipmentProvider extends ChangeNotifier {
   EquipmentProvider(this.repository);
 
   List<EquipmentItem> items = [];
+  List<EquipmentLog> logs = [];
   List<EquipmentItem> selectedItems = [];
   List<EquipmentPiece> selectedPieces = [];
   List<EquipmentCategory> categories = [];
@@ -36,13 +38,6 @@ class EquipmentProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Stream<DocumentSnapshot<Map<String, dynamic>>> get otpStream {
-    if (_otpStream == null && firebaseTrackingId != null) {
-      _otpStream = FirebaseFirestore.instance.collection('otpValidation').doc(firebaseTrackingId).snapshots();
-    }
-    return _otpStream!;
-  }
-
   // Fetching Equipment Items
   void fetchEquipmentItems() async {
     if (items.isNotEmpty) return;
@@ -50,6 +45,17 @@ class EquipmentProvider extends ChangeNotifier {
     try {
       status = EquipmentStatus.loading;
       items = await repository.getEquipmentItems();
+      status = EquipmentStatus.loaded;
+    } catch (e) {
+      _handleError(e);
+    }
+  }
+
+  // Fetching Equipment Logs
+  void fetchEquipmentLogs() async {
+    try {
+      status = EquipmentStatus.loading;
+      logs = await repository.getEquipmentLogs();
       status = EquipmentStatus.loaded;
     } catch (e) {
       _handleError(e);
@@ -153,6 +159,8 @@ class EquipmentProvider extends ChangeNotifier {
   // OTP Generation
   Future<void> generateOTP() async {
     try {
+      firebaseTrackingId = null;
+      notifyListeners();
       var query = await FirebaseFirestore.instance.collection('otpValidation').where('approve', isEqualTo: false).get();
       final existingCodes = query.docs.map((doc) => doc.data()['otp'] as String).toList();
 
@@ -181,10 +189,7 @@ class EquipmentProvider extends ChangeNotifier {
       await _updateFirebaseValidation(approvedValidation);
 
       // Update renter and lastRented information in pieces
-      for (var piece in validation.pieces) {
-        piece = piece.copyWith(currentRental: validation.renterID, lastRented: Timestamp.now());
-        FirebaseFirestore.instance.collection('equipmentPieces').doc(piece.id).set(piece.toMap());
-      }
+      repository.updateEquipmentPieces(validation.pieces, validation.renterID, Timestamp.now());
 
       //TODO: implement notes for each log.
       await repository.addEquipmentLog(validation, 'implement this');
@@ -227,5 +232,15 @@ class EquipmentProvider extends ChangeNotifier {
     log('Error: $error');
     this.error = error.toString();
     status = EquipmentStatus.error;
+  }
+
+  Future<void> completeSubmission(EquipmentLog ulog) async {
+    try {
+      status = EquipmentStatus.loading;
+      await repository.completeSubmission(ulog);
+      status = EquipmentStatus.loaded;
+    } catch (e) {
+      _handleError(e);
+    }
   }
 }

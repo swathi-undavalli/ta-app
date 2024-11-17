@@ -15,6 +15,7 @@ import '../../../dive_logs/presentation/views/customer_logs_view.dart';
 import '../../../employees/model/employee.dart';
 import '../../../employees/presentation/views/employee_profile_view.dart';
 import '../../../equipment/presentation/views/all_equipment_view.dart';
+import '../../../equipment/presentation/views/equipment_logs_view.dart';
 import '../../../events/presentation/views/events_view.dart';
 import '../../../general_info/presentation/views/general_info_view.dart';
 import '../../../logs/presentation/views/log_view.dart';
@@ -129,10 +130,17 @@ class NavDrawer extends StatelessWidget {
               },
             ),
             buildMenuItem(
-              icon: Icons.branding_watermark,
-              text: 'Manage Equipment',
+              icon: Icons.dataset_rounded,
+              text: 'All Equipment',
               onTap: () {
                 Navigator.push(context, AllEquipmentView.route());
+              },
+            ),
+            buildMenuItem(
+              icon: Icons.dehaze_rounded,
+              text: 'Equipment Logs',
+              onTap: () {
+                Navigator.push(context, EquipmentLogsView.route());
               },
             ),
             buildMenuItem(

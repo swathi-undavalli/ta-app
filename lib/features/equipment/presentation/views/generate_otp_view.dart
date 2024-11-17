@@ -12,7 +12,7 @@ import '../../provider/equipment.provider.dart';
 import '../widgets/banner_container.dart';
 import '../widgets/equipment_app_bar.dart';
 import '../widgets/equipment_body.dart';
-import '../widgets/renting_equipment_summary_table.dart';
+import '../widgets/equipment_pieces_summary_table.dart';
 
 class GenerateOTPView extends StatefulWidget {
   const GenerateOTPView({super.key});
@@ -72,7 +72,10 @@ class _GenerateOTPViewState extends State<GenerateOTPView> {
                   );
                 }
                 return StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                  stream: provider.otpStream,
+                  stream: FirebaseFirestore.instance
+                      .collection('otpValidation')
+                      .doc(provider.firebaseTrackingId)
+                      .snapshots(),
                   builder: (context, snapshot) {
                     var data = snapshot.data?.data();
                     if (data == null) {
@@ -144,7 +147,7 @@ class _GenerateOTPViewState extends State<GenerateOTPView> {
                             textAlign: TextAlign.center,
                           ),
                           Spacing.h40,
-                          RentingEquipmentSummaryTable(validation.pieces),
+                          EquipmentPiecesSummaryTable(validation.pieces),
                         ],
                       ],
                     );
@@ -173,7 +176,8 @@ class _ApproveBanner extends StatelessWidget {
           return BannerContainer(
             height: 45,
             child: StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-              stream: provider.otpStream,
+              stream:
+                  FirebaseFirestore.instance.collection('otpValidation').doc(provider.firebaseTrackingId).snapshots(),
               builder: (context, snapshot) {
                 if (provider.status == EquipmentStatus.loading) {
                   return const CircularProgressIndicator(

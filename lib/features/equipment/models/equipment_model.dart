@@ -51,25 +51,3 @@ class EquipmentPiece with EquipmentPieceMappable {
     required this.lastRented,
   });
 }
-
-@immutable
-@MappableClass()
-class EquipmentRentals with EquipmentRentalsMappable {
-  final String id;
-  final String equipmentId;
-  final String rentedBy;
-  final String issuedBy;
-  final Timestamp dateOut;
-  final Timestamp? dateIn;
-  final String dayCourses;
-
-  const EquipmentRentals({
-    required this.id,
-    required this.equipmentId,
-    required this.rentedBy,
-    required this.issuedBy,
-    required this.dateOut,
-    required this.dateIn,
-    required this.dayCourses,
-  });
-}

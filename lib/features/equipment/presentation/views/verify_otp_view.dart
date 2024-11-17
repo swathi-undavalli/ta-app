@@ -13,7 +13,7 @@ import '../../provider/equipment.provider.dart';
 import '../widgets/banner_container.dart';
 import '../widgets/equipment_app_bar.dart';
 import '../widgets/equipment_body.dart';
-import '../widgets/renting_equipment_summary_table.dart';
+import '../widgets/equipment_pieces_summary_table.dart';
 
 //#region Constants
 final _defaultPinTheme = PinTheme(
@@ -82,7 +82,7 @@ class _VerifyOTPViewState extends State<VerifyOTPView> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      RentingEquipmentSummaryTable(provider.selectedPieces),
+                      EquipmentPiecesSummaryTable(provider.selectedPieces),
                       Spacing.h36,
                       RichText(
                         text: TextSpan(
@@ -112,7 +112,10 @@ class _VerifyOTPViewState extends State<VerifyOTPView> {
                         ).paddingOnly(top: 16),
                       if (provider.firebaseTrackingId != null)
                         StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                          stream: provider.otpStream,
+                          stream: FirebaseFirestore.instance
+                              .collection('otpValidation')
+                              .doc(provider.firebaseTrackingId)
+                              .snapshots(),
                           builder: (context, snapshot) {
                             if (snapshot.hasData) {
                               var d = snapshot.data?.data();
@@ -224,7 +227,10 @@ class _VerifyWithOTPBanner extends StatelessWidget {
                       ),
                     ).center
                   : StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
-                      stream: provider.otpStream,
+                      stream: FirebaseFirestore.instance
+                          .collection('otpValidation')
+                          .doc(provider.firebaseTrackingId)
+                          .snapshots(),
                       builder: (context, snapshot) {
                         if (snapshot.hasData) {
                           var d = snapshot.data?.data();

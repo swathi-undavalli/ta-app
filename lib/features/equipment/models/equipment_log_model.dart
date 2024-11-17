@@ -9,37 +9,23 @@ part 'equipment_log_model.mapper.dart';
 @immutable
 @MappableClass()
 class EquipmentLog with EquipmentLogMappable {
-  final String renterID;
   final String id;
   final String approverID;
+  final String renterID;
+  final String? collectorID;
   final String notes;
   final List<EquipmentPiece> pieces;
   final Timestamp time;
+  final Timestamp collectedTime;
 
-  const EquipmentLog({
+  EquipmentLog({
     required this.renterID,
     required this.approverID,
+    this.collectorID,
     required this.id,
     required this.pieces,
     required this.notes,
     required this.time,
+    required this.collectedTime,
   });
-}
-
-// Added handle firebase objects safely.
-class TimestampMapper extends SimpleMapper<Timestamp> {
-  @override
-  dynamic encode(Timestamp self) => self; // Return Timestamp directly
-
-  @override
-  Timestamp decode(dynamic value) {
-    if (value is Timestamp) {
-      return value; // If it's already a Timestamp, return it
-    } else if (value is int) {
-      // Optionally, handle integer-based timestamp (e.g., milliseconds since epoch)
-      return Timestamp.fromMillisecondsSinceEpoch(value);
-    } else {
-      throw Exception('Cannot decode $value to Timestamp');
-    }
-  }
 }

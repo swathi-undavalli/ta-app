@@ -80,7 +80,6 @@ class _AllEquipmentViewState extends State<AllEquipmentView> {
                     runSpacing: 16,
                     children: [
                       const _GenerateOTPBanner(),
-                      const _ManageEquipmentBanner(),
                       ...provider.items.map((EquipmentItem item) {
                         return _EquipmentItemTile(item: item);
                       }),
@@ -108,78 +107,43 @@ class _EquipmentItemTile extends StatelessWidget {
   Widget build(BuildContext context) {
     double size = (Screen.width / 3) - 15 * 2;
 
-    return InkWell(
-      onTap: () {},
-      onLongPress: () {
-        // TODO : Enable editing feature in next version
-      },
-      child: Selector<EquipmentProvider, List<EquipmentItem>>(
-        selector: (context, provider) => provider.selectedItems,
-        builder: (context, selectedItems, child) {
-          bool isSelected = selectedItems.contains(item);
+    return Selector<EquipmentProvider, List<EquipmentItem>>(
+      selector: (context, provider) => provider.selectedItems,
+      builder: (context, selectedItems, child) {
+        bool isSelected = selectedItems.contains(item);
 
-          return GestureDetector(
-            onTap: () {
-              context.read<EquipmentProvider>().toggleItemSelection(item);
-            },
-            child: Column(
-              children: [
-                Container(
-                  height: size,
-                  width: size,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                      color: isSelected ? AppColors.background.skyBlue : const Color(0xffB3B3B3),
-                      width: isSelected ? 2 : 0.5,
-                    ),
-                    image: DecorationImage(
-                      image: CachedNetworkImageProvider(item.photo ?? placeHolderImage),
-                      fit: BoxFit.cover,
-                    ),
+        return InkWell(
+          onTap: () {
+            context.read<EquipmentProvider>().toggleItemSelection(item);
+          },
+          onLongPress: () {
+            // TODO : Enable editing feature in next version.
+          },
+          child: Column(
+            children: [
+              Container(
+                height: size,
+                width: size,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: isSelected ? AppColors.background.skyBlue : const Color(0xffB3B3B3),
+                    width: isSelected ? 2 : 0.5,
+                  ),
+                  image: DecorationImage(
+                    image: CachedNetworkImageProvider(item.photo ?? placeHolderImage),
+                    fit: BoxFit.cover,
                   ),
                 ),
-                Spacing.h4,
-                Text(
-                  item.name,
-                ),
-              ],
-            ),
-          );
-        },
-      ),
-    );
-  }
-}
-
-class _ManageEquipmentBanner extends StatelessWidget {
-  const _ManageEquipmentBanner();
-
-  @override
-  Widget build(BuildContext context) {
-    return BannerContainer(
-      child: Row(
-        children: [
-          RichText(
-            text: const TextSpan(
-              text: 'You have already rented ',
-              style: TextStyle(
-                fontFamily: 'Nunito',
-                fontSize: 12,
               ),
-              children: <TextSpan>[
-                TextSpan(text: '3 ', style: TextStyle(fontWeight: FontWeight.bold)),
-                TextSpan(text: 'items'),
-              ],
-            ),
+              Spacing.h4,
+              Text(
+                item.name,
+              ),
+            ],
           ),
-          const Spacer(),
-          _MiniButton(
-            text: 'Manage',
-            onTap: () => Navigator.push(context, EquipmentSummaryView.route()),
-          ),
-        ],
-      ).paddingSymmetric(horizontal: 16),
+        );
+      },
     );
   }
 }

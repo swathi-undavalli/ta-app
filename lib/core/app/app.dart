@@ -1,3 +1,4 @@
+import 'package:dart_mappable/dart_mappable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -5,6 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../features/dashboard/controller/dashboard_controller.dart';
 import '../../features/equipment/Repository/equipment.repository.dart';
+import '../../features/equipment/models/timestamp_mapper.dart';
 import '../../features/equipment/provider/equipment.provider.dart';
 import '../../features/splash/view/splash_view.dart';
 import '../constants/constants.dart';
@@ -25,6 +27,8 @@ class MyApp extends StatelessWidget {
       ),
     );
 
+    //For firebase Timestamp.
+    MapperContainer.globals.use(TimestampMapper());
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => EquipmentProvider(EquipmentRepository())),

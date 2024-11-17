@@ -6,10 +6,11 @@ import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import '../../../../core/constants/constants.dart';
 import '../../models/equipment_model.dart';
 
-class RentingEquipmentSummaryTable extends StatelessWidget {
+class EquipmentPiecesSummaryTable extends StatelessWidget {
   final List<EquipmentPiece> selectedPieces;
+  final String? title;
 
-  const RentingEquipmentSummaryTable(this.selectedPieces, {super.key});
+  const EquipmentPiecesSummaryTable(this.selectedPieces, {super.key, this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -20,10 +21,10 @@ class RentingEquipmentSummaryTable extends StatelessWidget {
 
     return Column(
       children: [
-        const Text(
-          'Equipment renting : ',
+        Text(
+          title ?? 'Equipment renting : ',
           textAlign: TextAlign.center,
-          style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
         ).paddingOnly(left: 13).left,
         Spacing.h8,
         for (var entry in equipmentMap.entries)

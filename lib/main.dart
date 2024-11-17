@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:dart_mappable/dart_mappable.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +9,6 @@ import 'package:get_storage/get_storage.dart';
 
 import 'core/app/app.dart';
 import 'core/services/notification_service.dart';
-import 'features/equipment/models/equipment_log_model.dart';
 import 'features/messaging/firebase_messaging_controller.dart';
 
 String currentIosVersion = '1.1.3+24';
@@ -54,9 +52,6 @@ void main() async {
   await GetStorage.init();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   FirebaseMessagingLogic();
-
-  //For firebase Timestamp.
-  MapperContainer.globals.use(TimestampMapper());
 
   runApp(const MyApp());
 }

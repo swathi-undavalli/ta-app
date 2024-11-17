@@ -150,6 +150,7 @@ class _EquipmentCard extends StatelessWidget {
               IconButton(
                 onPressed: () {
                   provider.removeItemAndPieces(item);
+                  if (provider.selectedItems.isEmpty) Navigator.pop(context);
                 },
                 icon: const Icon(Icons.close),
               ).center.height(70),

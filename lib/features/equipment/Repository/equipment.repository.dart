@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../core/models/counter_model.dart';
 import '../../employees/model/employee.dart';
 import '../models/equipment_log_model.dart';
 import '../models/equipment_model.dart';
@@ -12,12 +13,18 @@ class EquipmentRepository {
   CollectionReference<Map<String, dynamic>> get _equipmentCategoriesRef => _firestore.collection('equipmentCategories');
   CollectionReference<Map<String, dynamic>> get _equipmentPiecesRef => _firestore.collection('equipmentPieces');
   CollectionReference<Map<String, dynamic>> get _equipmentLogsRef => _firestore.collection('equipmentLogs');
-
   CollectionReference<Map<String, dynamic>> get _employeesRef => _firestore.collection('employees');
+
+  DocumentReference<Map<String, dynamic>> get _counterRef => _firestore.collection('counter').doc('count');
 
   Future<List<EquipmentItem>> getEquipmentItems() async {
     final querySnapshot = await _equipmentItemsRef.get();
     return querySnapshot.docs.map((doc) => EquipmentItemMapper.fromMap(doc.data())).toList();
+  }
+
+  Future<List<EquipmentLog>> getEquipmentLogs() async {
+    final querySnapshot = await _equipmentLogsRef.get();
+    return querySnapshot.docs.map((doc) => EquipmentLogMapper.fromMap(doc.data())).toList();
   }
 
   Future<List<EquipmentCategory>> getCategories() async {
@@ -46,17 +53,29 @@ class EquipmentRepository {
     return employees;
   }
 
+  void updateEquipmentPieces(List<EquipmentPiece> pieces, String? renterID, Timestamp? lastRented) {
+    // Update renter and lastRented information in pieces
+    for (var piece in pieces) {
+      piece = piece.copyWith(currentRental: renterID, lastRented: lastRented);
+      FirebaseFirestore.instance.collection('equipmentPieces').doc(piece.id).set(piece.toMap());
+    }
+  }
+
   Future<EquipmentLog> addEquipmentLog(OtpValidation validation, String notes) async {
-    final newDoc = _equipmentLogsRef.doc();
+    final querySnapshot = await _counterRef.get();
+    final counter = CounterModel.fromMap(querySnapshot.data() ?? {});
+    int currentID = (counter.equipmentLog ?? 0) + 1;
     EquipmentLog log = EquipmentLog(
-      id: newDoc.id,
+      id: currentID.toString(),
       renterID: validation.renterID!,
       approverID: validation.approverID!,
       pieces: validation.pieces,
       notes: 'implement this',
       time: Timestamp.now(),
+      collectedTime: Timestamp.now(),
     );
-    await newDoc.set(log.toMap());
+    await _counterRef.set(counter.copyWith(equipmentLog: currentID).toMap());
+    await _equipmentLogsRef.doc(currentID.toString()).set(log.toMap());
     return log;
   }
 
@@ -118,11 +137,19 @@ class EquipmentRepository {
   }
 
   Future<void> deleteItems() async {
+    final querySnapshot = await _equipmentPiecesRef.get();
     // final querySnapshot = await _equipmentItemsRef.get();
-    final querySnapshot = await _equipmentLogsRef.get();
+    // final querySnapshot = await _equipmentLogsRef.get();
 
     for (var doc in querySnapshot.docs) {
       await doc.reference.delete();
     }
+  }
+
+  Future<EquipmentLog> completeSubmission(EquipmentLog log) async {
+    final logWithSubmissionDetails = log.copyWith(collectedTime: Timestamp.now(), collectorID: currentEmployee?.id);
+    await _equipmentLogsRef.doc(logWithSubmissionDetails.id).set(logWithSubmissionDetails.toMap());
+    updateEquipmentPieces(log.pieces, null, null);
+    return logWithSubmissionDetails;
   }
 }
