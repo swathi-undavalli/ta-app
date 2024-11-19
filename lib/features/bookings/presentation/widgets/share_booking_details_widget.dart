@@ -55,7 +55,7 @@ class ShareBookingDetails {
           pw.SizedBox(height: 25),
           pw.Center(
             child: pw.Text(
-              "${booking.pax![0]["first-name"] + " " + booking.pax![0]["last-name"]}'s".capitalizeFirst!,
+              "${"${booking.details!.firstName} ${booking.details!.lastName}"}'s".capitalizeFirst!,
               style: const pw.TextStyle(
                 fontSize: 20,
                 color: PdfColors.black,
@@ -81,7 +81,7 @@ class ShareBookingDetails {
               buildBookingDetails(title: 'Booking ID', text: booking.id),
               buildBookingDetails(
                 title: 'Name',
-                text: booking.pax![0]['first-name'] + ' ' + booking.pax![0]['last-name'],
+                text: '${booking.details!.firstName} ${booking.details!.lastName}',
               ),
               buildBookingDetails(
                 title: 'Pax',
@@ -89,7 +89,7 @@ class ShareBookingDetails {
               ),
               buildBookingDetails(
                 title: 'Email ID',
-                text: booking.pax![0]['email'],
+                text: booking.details!.email,
               ),
               buildBookingDetails(
                 title: 'Activity',

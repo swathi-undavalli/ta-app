@@ -74,11 +74,11 @@ class NotificationsScreen extends StatelessWidget {
                             buildBookingDetails(title: 'Booking ID', text: controller.bookingModel?.id ?? ''),
                             buildBookingDetails(
                               title: 'Name',
-                              text: "${controller.bookingModel?.pax?[0]["first-name"] ?? ""} "
-                                  "${controller.bookingModel?.pax?[0]["last-name"] ?? ""}",
+                              text: "${controller.bookingModel?.details?.firstName ?? ""} "
+                                  "${controller.bookingModel?.details?.lastName ?? ""}",
                             ),
                             buildBookingDetails(title: 'Pax', text: controller.bookingModel?.noOfPersons.toString()),
-                            buildBookingDetails(title: 'Email ID', text: controller.bookingModel?.pax![0]['email']),
+                            buildBookingDetails(title: 'Email ID', text: controller.bookingModel?.details?.email),
                             buildBookingDetails(
                               title: 'Total Amount',
                               text: '${controller.bookingModel?.totalCost.toStringAsFixed(0) ?? '-'}/-',

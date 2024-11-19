@@ -58,19 +58,19 @@ class _EditBookingViewState extends State<EditBookingView> {
     logic.controller.paxTED.text = widget.booking!.noOfPersons.toString();
     logic.controller.remarksTED.text = widget.booking!.remarks ?? '';
     logic.controller.invoiceTED.text = widget.booking!.receiptNo ?? '';
-    logic.controller.countryCodeTED.text = widget.booking!.pax![0]['countryCode'] ?? '';
-    logic.controller.phoneTED.text = widget.booking!.pax![0]['phoneNumber'] ?? '';
-    logic.controller.emailTED.text = widget.booking!.pax![0]['email'] ?? '';
-    logic.controller.firstNameTED.text = widget.booking!.pax![0]['first-name'];
-    logic.controller.lastNameTED.text = widget.booking!.pax![0]['last-name'] ?? '';
-    logic.controller.isoCode = widget.booking!.pax![0]['isoCode'] ?? '';
+    logic.controller.countryCodeTED.text = widget.booking?.details?.countryCode ?? '';
+    logic.controller.phoneTED.text = widget.booking?.details?.phoneNumber ?? '';
+    logic.controller.emailTED.text = widget.booking?.details?.email ?? '';
+    logic.controller.firstNameTED.text = widget.booking?.details?.firstName ?? '';
+    logic.controller.lastNameTED.text = widget.booking?.details?.lastName ?? '';
+    logic.controller.isoCode = widget.booking?.details?.isoCode ?? '';
     logic.controller.discountTED.text = widget.booking!.discount?.toString() ?? '0';
     logic.controller.taxable = widget.booking!.tax != 0;
     logic.controller.discountSwitch = widget.booking!.discountType == '%';
 
-    if (widget.booking!.pax![0]['dob'] != null) {
+    if (widget.booking!.details?.dob != null) {
       try {
-        logic.controller.dob = (widget.booking!.pax![0]['dob'] as Timestamp).toDate();
+        logic.controller.dob = (widget.booking!.details?.dob as Timestamp).toDate();
       } catch (e) {
         showToast(widget.booking!.id!);
         logic.controller.dob = DateTime.now();
@@ -758,9 +758,11 @@ class _EditBookingViewState extends State<EditBookingView> {
           searchText: 'Search',
           onSubmitted: (_) {},
           onChanged: (phone) {
-            controller.bookingModel!.pax![0]['isoCode'] = phone.countryISOCode;
-            controller.bookingModel!.pax![0]['phoneNumber'] = phone.number;
-            controller.bookingModel!.pax![0]['countryCode'] = phone.countryCode;
+            controller.bookingModel!.details = controller.bookingModel!.details?.copyWith(
+              phoneNumber: phone.number,
+              countryCode: phone.countryCode,
+              isoCode: phone.countryISOCode,
+            );
           },
         );
       },
@@ -775,7 +777,9 @@ class _EditBookingViewState extends State<EditBookingView> {
       focus: controller.emailNode,
       nextFocus: controller.phoneNode,
       onChangedCallBack: (email) {
-        controller.bookingModel!.pax![0]['email'] = email;
+        controller.bookingModel!.details = controller.bookingModel!.details?.copyWith(
+          email: email,
+        );
       },
     );
   }
@@ -786,8 +790,8 @@ class _EditBookingViewState extends State<EditBookingView> {
       textEditingController: controller.remarksTED,
       focus: controller.remarksNode,
       nextFocus: controller.emailNode,
-      onChangedCallBack: (email) {
-        controller.bookingModel!.remarks = email;
+      onChangedCallBack: (remarks) {
+        controller.bookingModel!.remarks = remarks;
       },
     );
   }
@@ -1064,7 +1068,7 @@ class _EditBookingViewState extends State<EditBookingView> {
       focus: controller.firstNameNode,
       nextFocus: controller.lastNameNode,
       onChangedCallBack: (newName) {
-        controller.bookingModel!.pax![0]['first-name'] = newName;
+        controller.bookingModel!.details = controller.bookingModel!.details?.copyWith(firstName: newName);
       },
     );
   }
@@ -1075,7 +1079,7 @@ class _EditBookingViewState extends State<EditBookingView> {
       textEditingController: controller.lastNameTED,
       focus: controller.lastNameNode,
       onChangedCallBack: (newName) {
-        controller.bookingModel!.pax![0]['last-name'] = newName;
+        controller.bookingModel!.details = controller.bookingModel!.details?.copyWith(lastName: newName);
       },
     );
   }

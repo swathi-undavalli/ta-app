@@ -1,9 +1,14 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dart_mappable/dart_mappable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 
 import '../../boat/models/boat_details.dart';
 import 'activity_model.dart';
+
+part 'booking_model.mapper.dart';
 
 Booking bookingModelFromMap(String str) => Booking.fromMap(json.decode(str));
 
@@ -39,6 +44,7 @@ class Booking {
     this.parentBookingId,
     this.isQuickBooking = false,
     this.certificationStatuses,
+    this.details,
   });
 
   List<Activity?>? activity;
@@ -69,6 +75,7 @@ class Booking {
   bool isQuickBooking;
   String? parentBookingId;
   List<int>? certificationStatuses;
+  BookingDetails? details;
 
   Booking copyWith({
     List<Activity?>? activity,
@@ -99,6 +106,7 @@ class Booking {
     bool? isQuickBooking,
     String? parentBookingId,
     List<int>? certificationStatuses,
+    BookingDetails? details,
   }) =>
       Booking(
         activity: activity ?? this.activity,
@@ -128,8 +136,8 @@ class Booking {
         boatDetails: boatDetails ?? this.boatDetails,
         parentBookingId: parentBookingId ?? this.parentBookingId,
         isQuickBooking: isQuickBooking ?? this.isQuickBooking,
-        certificationStatuses:
-            certificationStatuses ?? this.certificationStatuses,
+        certificationStatuses: certificationStatuses ?? this.certificationStatuses,
+        details: details ?? this.details,
       );
 
   factory Booking.fromMap(Map<String, dynamic> json) {
@@ -138,6 +146,7 @@ class Booking {
       return DateTime.parse(date);
     }
 
+    //#region For old bookings replacing the index zero pax with main user paperwork data.
     int? getExistingIndex(List<String> list) {
       Set<String> seen = {};
       for (int i = 0; i < list.length; i++) {
@@ -152,22 +161,27 @@ class Booking {
     List<dynamic>? pax = json['PAX'];
 
     List<String> allEmails = pax
-            ?.map((data) => data['email'])
+            ?.map((data) => (data['email'] as String?)?.toLowerCase())
             .where((email) => email != null)
             .cast<String>()
             .toList() ??
         [];
-    allEmails = allEmails.map((e) => e.toLowerCase()).toList();
 
     if (getExistingIndex(allEmails) != null) {
       pax?[0] = pax[getExistingIndex(allEmails)!];
       pax?.removeAt(getExistingIndex(allEmails)!);
     }
+    //#rendegion
+
+    Map<String, dynamic>? initialPax = pax?.firstOrNull;
+    if (initialPax != null) {
+      initialPax['firstName'] = initialPax['first-name'];
+      initialPax['lastName'] = initialPax['last-name'];
+    }
 
     return Booking(
       pax: List<Map<String, dynamic>>.from((pax ?? []).map((x) => x)),
-      activity:
-          List<Activity>.from(json['activity'].map((x) => Activity.fromMap(x))),
+      activity: List<Activity>.from(json['activity'].map((x) => Activity.fromMap(x))),
       payments: List<PaymentModel>.from(
         (json['payments'] ?? []).map((x) => PaymentModel.fromMap(x)),
       ),
@@ -192,18 +206,16 @@ class Booking {
       theoryDate: List<DateTime>.from(
         json['theoryDate'].map((x) => parseDateOrNull(x)),
       ),
-      poolDate:
-          List<DateTime>.from(json['poolDate'].map((x) => parseDateOrNull(x))),
-      diveDate:
-          List<DateTime>.from(json['diveDate'].map((x) => parseDateOrNull(x))),
+      poolDate: List<DateTime>.from(json['poolDate'].map((x) => parseDateOrNull(x))),
+      diveDate: List<DateTime>.from(json['diveDate'].map((x) => parseDateOrNull(x))),
       cancelBooking: json['cancelBooking'],
       cancellationReason: json['cancellationReason'],
       boatDetails: BoatDetails.fromMap(
         json['boatDetails'],
         List<String>.from(json['bookingDate'].map((x) => x)),
       ),
-      certificationStatuses:
-          List<int>.from(json['certificationStatuses'] ?? [].map((x) => x)),
+      certificationStatuses: List<int>.from(json['certificationStatuses'] ?? [].map((x) => x)),
+      details: BookingDetailsMapper.fromMap(json['details'] ?? initialPax),
     );
   }
 
@@ -215,9 +227,7 @@ class Booking {
     return pax?[index]['activity_id'] != null;
   }
 
-  bool get isDSD =>
-      activity?[0]?.name?.toLowerCase() ==
-      'Discover scuba diving'.toLowerCase();
+  bool get isDSD => activity?[0]?.name?.toLowerCase() == 'Discover scuba diving'.toLowerCase();
 
   Map<String, dynamic> toMap() {
     return {
@@ -241,19 +251,16 @@ class Booking {
       'idProofs': List<String>.from((idProofs ?? []).map((x) => x)),
       'location': location,
       'paymentTransactionId': paymentTransactionId,
-      'theoryDate':
-          List<String>.from((theoryDate ?? []).map((x) => toDateOrNull(x))),
-      'poolDate':
-          List<String>.from((poolDate ?? []).map((x) => toDateOrNull(x))),
-      'diveDate':
-          List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
+      'theoryDate': List<String>.from((theoryDate ?? []).map((x) => toDateOrNull(x))),
+      'poolDate': List<String>.from((poolDate ?? []).map((x) => toDateOrNull(x))),
+      'diveDate': List<String>.from((diveDate ?? []).map((x) => toDateOrNull(x))),
       'cancelBooking': cancelBooking,
       'parentBookingId': parentBookingId,
       'cancellationReason': cancellationReason,
       'boatDetails': boatDetails?.toMap(),
-      'certificationStatuses':
-          List<int>.from((certificationStatuses ?? []).map((x) => x)),
+      'certificationStatuses': List<int>.from((certificationStatuses ?? []).map((x) => x)),
       'instructorName': boatDetails?.instructors?.firstOrNull?.name,
+      'details': details?.toMap(),
     };
   }
 
@@ -372,6 +379,30 @@ class Booking {
   }
 }
 
+@immutable
+@MappableClass()
+class BookingDetails with BookingDetailsMappable {
+  final String firstName;
+  final String lastName;
+  final String email;
+  final String? gender;
+  final Timestamp dob;
+  final String isoCode;
+  final String countryCode;
+  final String phoneNumber;
+
+  const BookingDetails({
+    required this.countryCode,
+    required this.dob,
+    required this.email,
+    required this.firstName,
+    required this.lastName,
+    required this.gender,
+    required this.isoCode,
+    required this.phoneNumber,
+  });
+}
+
 class PaymentModel {
   PaymentModel({
     this.amount,
@@ -423,4 +454,3 @@ class PaymentModel {
         'paymentMode': paymentMode,
       };
 }
-

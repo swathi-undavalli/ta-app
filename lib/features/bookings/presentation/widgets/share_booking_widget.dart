@@ -26,7 +26,7 @@ class ShareBookingWidget extends StatelessWidget {
           children: [
             const SizedBox(height: 20),
             Text(
-              "${booking.pax![0]["first-name"] + " " + booking.pax![0]["last-name"]} 's".capitalizeFirst!,
+              "${"${booking.details!.firstName} ${booking.details!.lastName}"} 's".capitalizeFirst!,
               style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black,
@@ -56,7 +56,7 @@ class ShareBookingWidget extends StatelessWidget {
                 buildBookingDetails(title: 'Booking ID', text: booking.id),
                 buildBookingDetails(
                   title: 'Name',
-                  text: booking.pax![0]['first-name'] + ' ' + booking.pax![0]['last-name'],
+                  text: '${booking.details!.firstName} ${booking.details!.lastName}',
                 ),
                 buildBookingDetails(
                   title: 'Pax',
@@ -64,7 +64,7 @@ class ShareBookingWidget extends StatelessWidget {
                 ),
                 buildBookingDetails(
                   title: 'Email ID',
-                  text: booking.pax![0]['email'],
+                  text: booking.details!.email,
                 ),
                 buildBookingDetails(
                   title: 'Activity',

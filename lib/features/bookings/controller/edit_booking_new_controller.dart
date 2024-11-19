@@ -35,7 +35,7 @@ class EditBookingNewLogic {
       onChanged: (date) {
         controller.dob = date;
         controller.dobTED.text = DateFormat('dd MMM, yyyy').format(date);
-        controller.bookingModel!.pax![0]['dob'] = date;
+        controller.bookingModel!.details = controller.bookingModel!.details?.copyWith(dob: Timestamp.fromDate(date));
       },
       onConfirm: (date) {
         controller.dob = date;

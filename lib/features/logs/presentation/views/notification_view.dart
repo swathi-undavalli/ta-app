@@ -85,9 +85,8 @@ class _NotificationViewState extends State<NotificationView> {
                       ),
                       buildBookingDetails(
                         title: 'Name',
-                        text: controller.bookingModel.pax![0]['first-name'] +
-                            ' ' +
-                            controller.bookingModel.pax![0]['last-name'],
+                        text:
+                            '${controller.bookingModel.details!.firstName} ${controller.bookingModel.details!.lastName}',
                       ),
                       buildBookingDetails(
                         title: 'Pax',
@@ -95,7 +94,7 @@ class _NotificationViewState extends State<NotificationView> {
                       ),
                       buildBookingDetails(
                         title: 'Email ID',
-                        text: controller.bookingModel.pax![0]['email'],
+                        text: controller.bookingModel.details!.email,
                       ),
                       buildBookingDetails(
                         title: 'Total Amount',

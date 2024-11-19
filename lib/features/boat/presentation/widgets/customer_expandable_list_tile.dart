@@ -39,6 +39,7 @@ class CustomerExpandableListTile extends StatefulWidget {
 
 class _CustomerExpandableListTileState extends State<CustomerExpandableListTile> {
   bool isExpanded = false;
+  bool showLoading = false;
 
   ItemModel get itemModel => widget.itemModel;
 
@@ -253,7 +254,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                                       child: AppButton.miniFlat(
                                         text: 'Update Notes',
                                         onTap: () {
-                                          updateBoatDetails(
+                                          _updateBoatDetails(
                                             bookingModel: bookingModel,
                                             employeeNotes: employeeNotesTED.text,
                                             selectedDate: widget.selectedDate,
@@ -288,7 +289,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
               ? bookingModel.boatDetails?.bookingStatus ?? 0
               : bookingModel.getStatus(widget.selectedDate) ?? 0,
           onChanged: (int status) async {
-            await updateBoatDetails(
+            await _updateBoatDetails(
               bookingModel: bookingModel,
               bookingStatus: status,
               selectedDate: widget.selectedDate,
@@ -302,7 +303,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
           selectedBoatId: bookingModel.getBoatInfo(widget.selectedDate)?.id ?? '',
           onChanged: (Boat? boat) async {
             if (boat != null) {
-              await updateBoatDetails(
+              await _updateBoatDetails(
                 bookingModel: bookingModel,
                 boatId: boat.id,
                 selectedDate: widget.selectedDate,
@@ -341,7 +342,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                   ).paddingOnly(bottom: 10),
                   CounterWidget(
                     onChanged: (int val) {
-                      updateBoatDetails(
+                      _updateBoatDetails(
                         bookingModel: bookingModel,
                         selectedDate: widget.selectedDate,
                         nitrox: val,
@@ -363,7 +364,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                   ).paddingOnly(bottom: 10),
                   CounterWidget(
                     onChanged: (int val) {
-                      updateBoatDetails(
+                      _updateBoatDetails(
                         bookingModel: bookingModel,
                         selectedDate: widget.selectedDate,
                         air: val,
@@ -448,7 +449,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                     oldInstructors.remove(currentInstructor);
                   }
 
-                  await updateBoatDetails(
+                  await _updateBoatDetails(
                     instructors: oldInstructors,
                     bookingModel: bookingModel,
                     selectedDate: widget.selectedDate,
@@ -521,7 +522,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                   showAssignmentStatus: true,
                 ));
 
-                await updateBoatDetails(
+                await _updateBoatDetails(
                   bookingModel: bookingModel,
                   selectedDate: widget.selectedDate,
                   diveBuddies: diveBuddies,
@@ -617,6 +618,36 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
         ),
       ],
     ).paddingOnly(bottom: 6);
+  }
+
+  Future<void> _updateBoatDetails({
+    required Booking bookingModel,
+    required DateTime selectedDate,
+    String? boatId,
+    String? boatName,
+    int? bookingStatus,
+    int? nitrox,
+    int? air,
+    int? instructorNitrox,
+    int? instructorAir,
+    String? employeeNotes,
+    List<Instructor>? instructors,
+    List<Instructor>? diveBuddies,
+  }) async {
+    await updateBoatDetails(
+      bookingModel: bookingModel,
+      selectedDate: selectedDate,
+      boatId: boatId,
+      boatName: boatName,
+      bookingStatus: bookingStatus,
+      nitrox: nitrox,
+      air: air,
+      instructorNitrox: instructorNitrox,
+      instructorAir: instructorAir,
+      employeeNotes: employeeNotes,
+      instructors: instructors,
+      diveBuddies: diveBuddies,
+    );
   }
 }
 

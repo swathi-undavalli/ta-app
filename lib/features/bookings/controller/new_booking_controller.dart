@@ -493,21 +493,19 @@ class NewBookingLogic {
         }
 
         Booking bookingModel = Booking(
+          id: '',
+          details: BookingDetails(
+            firstName: controller.fNameTED.text,
+            lastName: controller.lNameTED.text,
+            dob: Timestamp.fromDate(DateTime.now()),
+            email: 'quickBooking@temple.com',
+            gender: controller.genderTED.text,
+            countryCode: '+91',
+            isoCode: 'IN',
+            phoneNumber: '9876543210',
+          ),
           activity: [controller.quickSelectedActivity!],
           noOfPersons: int.parse(controller.paxTED.text),
-          id: '',
-          pax: [
-            {
-              'first-name': controller.fNameTED.text,
-              'last-name': controller.lNameTED.text,
-              'email': 'quickBooking@temple.com',
-              'countryCode': '+91',
-              'phoneNumber': '9876543210',
-              'isoCode': 'IN',
-              'dob': DateTime.now(),
-              'gender': controller.genderTED.text,
-            }
-          ],
           diveDate: controller.quickDiveDates,
           bookingDate: bookingDates,
           employeeName: currentEmployee?.name ?? 'quick',
@@ -581,17 +579,16 @@ class NewBookingLogic {
 
   void onCheckPressed(BuildContext context) {
     if (isValid()) {
-      controller.bookingModel.pax = [];
-      controller.bookingModel.pax!.add({
-        'email': controller.emailTED.text,
-        'first-name': controller.fNameTED.text,
-        'last-name': controller.lNameTED.text,
-        'countryCode': controller.countryCodeTED.text,
-        'phoneNumber': controller.phoneNumberTED.text,
-        'isoCode': controller.isoCode,
-        'dob': controller.dob,
-        'gender': controller.genderTED.text,
-      });
+      controller.bookingModel.details = BookingDetails(
+        firstName: controller.fNameTED.text,
+        lastName: controller.lNameTED.text,
+        dob: Timestamp.fromDate(DateTime.now()),
+        email: 'quickBooking@temple.com',
+        gender: controller.genderTED.text,
+        countryCode: '+91',
+        isoCode: 'IN',
+        phoneNumber: '9876543210',
+      );
       controller.bookingModel.noOfPersons = getInt(controller.paxTED.text);
       disposeKeyboard();
       Navigator.push(context, BookDateTimeView.route());

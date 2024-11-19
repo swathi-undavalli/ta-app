@@ -693,12 +693,12 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
         *E-Learning request details:* 
         
         First Name : *${itemModel.name!.trim().toLowerCase().capitalizeFirst}* 
-        Last Name : *${(itemModel.bookingModel!.pax![0]["last-name"] != "") ? itemModel.bookingModel!.pax![0]["last-name"] : "-"}* 
+        Last Name : *${(itemModel.bookingModel!.details!.lastName != "") ? itemModel.bookingModel!.details!.lastName : "-"}* 
         Email : *${itemModel.email}* 
-        Date of Birth : *${(itemModel.bookingModel!.pax![0]["dob"] != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.pax![0]["dob"] as Timestamp).toDate()) : "-"}* 
+        Date of Birth : *${(itemModel.bookingModel!.details!.dob != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.details!.dob as Timestamp).toDate()) : "-"}* 
         Course Name : *${itemModel.activity}* 
         Invoice No : *${(itemModel.bookingModel?.receiptNo != null && itemModel.bookingModel?.receiptNo != '') ? itemModel.bookingModel?.receiptNo : '-'}* 
-        Phone Number : *${itemModel.bookingModel!.pax![0]["phoneNumber"]}* 
+        Phone Number : *${itemModel.bookingModel!.details!.phoneNumber}* 
          
         Regards,
         *${currentEmployee!.name.trim()}*
@@ -951,14 +951,12 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                                               ),
                                                               IconButton(
                                                                 onPressed: () {
-                                                                  if (index != 0) {
-                                                                    onDeletePaxPressed(context, bookingModel, index);
-                                                                  }
+                                                                  onDeletePaxPressed(context, bookingModel, index);
                                                                 },
-                                                                icon: Icon(
+                                                                icon: const Icon(
                                                                   Icons.delete,
                                                                   size: 20,
-                                                                  color: (index == 0) ? Colors.grey : Colors.black,
+                                                                  color: Colors.black,
                                                                 ),
                                                               ),
                                                             ],

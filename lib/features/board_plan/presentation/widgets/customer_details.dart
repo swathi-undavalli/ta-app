@@ -446,7 +446,7 @@ class CustomerListState extends State<CustomerList> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "${bookings[index].pax?[0]['first-name']} x ${bookings[index].noOfPersons}",
+                      '${bookings[index].details?.firstName} x ${bookings[index].noOfPersons}',
                       style: const TextStyle(
                         fontFamily: AppFonts.nunito,
                         fontSize: 7.0,

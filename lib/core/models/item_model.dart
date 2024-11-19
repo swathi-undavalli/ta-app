@@ -73,7 +73,7 @@ class ItemModel {
     }
 
     return ItemModel(
-      phone: bookingModel.pax![0]['countryCode'] + bookingModel.pax![0]['phoneNumber'],
+      phone: bookingModel.details!.countryCode + bookingModel.details!.phoneNumber,
       bookingID: bookingModel.id,
       activity: bookingModel.activity![0]!.name.toString(),
       price: bookingModel.activity![0]!.price.toString(),
@@ -84,10 +84,10 @@ class ItemModel {
       balance: bookingModel.balance.toString(),
       registration: true,
       receiptNo: bookingModel.receiptNo,
-      name: bookingModel.pax![0]['first-name'],
-      lastName: bookingModel.pax![0]['last-name'],
+      name: bookingModel.details!.firstName,
+      lastName: bookingModel.details!.lastName,
       pax: bookingModel.noOfPersons,
-      email: bookingModel.pax![0]['email'],
+      email: bookingModel.details!.email,
       remarks: bookingModel.remarks,
       time: getTime(),
       session: getSessions(),
@@ -96,10 +96,10 @@ class ItemModel {
     );
   }
 
-   bool get isCustomerBooking{
-    if(email == 'quickBooking@temple.com'){
+  bool get isCustomerBooking {
+    if (email == 'quickBooking@temple.com') {
       return false;
-  }
+    }
     return true;
-}
+  }
 }
