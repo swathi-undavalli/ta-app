@@ -121,27 +121,31 @@ class EquipmentRepository {
   Future<EquipmentItem> addNewEquipment({
     required EquipmentCategory category,
     required String name,
-    required List<String> assignedIDs,
+    required List<Tag> assignedTags,
     required String photoURL,
   }) async {
-    final equipmentItem = await addEquipmentItem(EquipmentItem(
-      category: category,
-      name: name,
-      id: '', // Placeholder for ID to be set by Firestore
-      photo: photoURL,
-    ));
+    final equipmentItem = await addEquipmentItem(
+      EquipmentItem(
+        id: '', // Placeholder for ID to be set by Firestore
+        category: category,
+        name: name,
+        photo: photoURL,
+      ),
+    );
 
     Future.wait(
-      assignedIDs.map(
-        (id) => addEquipmentPiece(EquipmentPiece(
-          id: '',
-          // Placeholder for ID to be set by Firestore
-          assignedID: id,
-          equipmentItemID: equipmentItem.id,
-          currentRental: null,
-          lastRented: null,
-          equipmentItemName: equipmentItem.name,
-        )),
+      assignedTags.map(
+        (tag) => addEquipmentPiece(
+          EquipmentPiece(
+            id: '',
+            // Placeholder for ID to be set by Firestore
+            tag: tag,
+            equipmentItemID: equipmentItem.id,
+            currentRental: null,
+            lastRented: null,
+            equipmentItemName: equipmentItem.name,
+          ),
+        ),
       ),
     );
 
@@ -149,9 +153,9 @@ class EquipmentRepository {
   }
 
   Future<void> deleteItems() async {
-    final querySnapshot = await _equipmentPiecesRef.get();
+    // final querySnapshot = await _equipmentPiecesRef.get();
     // final querySnapshot = await _equipmentItemsRef.get();
-    // final querySnapshot = await _equipmentLogsRef.get();
+    final querySnapshot = await _equipmentLogsRef.get();
 
     for (var doc in querySnapshot.docs) {
       await doc.reference.delete();

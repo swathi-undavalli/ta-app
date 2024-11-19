@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -11,8 +12,10 @@ import '../../../bookings/presentation/widgets/app_text_fields.dart';
 import '../../../certifications/presentation/widgets/pick_photos_widget.dart';
 import '../../models/equipment_model.dart';
 import '../../provider/equipment.provider.dart';
+import '../widgets/category_edit_bottomsheet.dart';
 import '../widgets/equipment_app_bar.dart';
 import '../widgets/equipment_body.dart';
+import 'manage_assigned_ids_bottom_sheet.dart';
 
 //TODO : Check/Verify AppTextField
 //TODO : Implement edit feature
@@ -35,7 +38,7 @@ class AddEquipmentView extends StatefulWidget {
 class _AddEquipmentViewState extends State<AddEquipmentView> {
   EquipmentCategory? _selectedCategory;
   late TextEditingController _equipmentNameTED;
-  List<String> _assignedIds = [];
+  List<Tag> _assignedTags = [];
   String? _pickedImage;
   bool _showImageUploadingLoading = false;
   String? _selectCategoryError;
@@ -52,8 +55,8 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
     if (_isEditMode) {
       context.read<EquipmentProvider>().repository.getEquipmentPieces(widget.equipmentItem!.id).then((pieces) {
         _pieces = pieces;
-        _assignedIds = pieces.map((piece) {
-          return piece.assignedID;
+        _assignedTags = pieces.map((piece) {
+          return piece.tag;
         }).toList();
         setState(() {});
       });
@@ -67,7 +70,7 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
       backgroundColor: AppColors.background.black,
       appBar: EquipmentAppBar(
         title: _isEditMode ? 'Edit Equipment' : 'Add Equipment',
-        description: 'Update ${widget.equipmentItem?.name}',
+        description: _isEditMode ? 'Update ${widget.equipmentItem?.name}' : 'Add new equipment',
       ),
       body: EquipmentBody(
         child: Stack(
@@ -76,7 +79,14 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _EquipmentCategorySelector(
-                  onChanged: (EquipmentCategory? category) {
+                  onChanged: (EquipmentCategory? category) async {
+                    if (category?.name == 'Add / Edit') {
+                      List<EquipmentCategory> updatedCategories =
+                          await CategorySelectorBottomSheet.show(context, context.read<EquipmentProvider>().categories);
+                      if (!context.mounted) return;
+                      context.read<EquipmentProvider>().categories = updatedCategories;
+                      return;
+                    }
                     setState(() {
                       _selectedCategory = category;
                     });
@@ -88,13 +98,14 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
                   hintText: 'Equipment Name',
                   controller: _equipmentNameTED,
                   validator: (_) => _nameError,
+                  textCapitalization: TextCapitalization.words,
                   required: true,
                 ),
-                _AssignedIdsFiled(
-                  ids: _assignedIds,
-                  onChanged: (updatedIds) {
+                _AssignedTags(
+                  tags: _assignedTags,
+                  onChanged: (updatedTags) {
                     setState(() {
-                      _assignedIds = updatedIds;
+                      _assignedTags = updatedTags;
                     });
                   },
                 ),
@@ -149,7 +160,7 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
       );
       await context.read<EquipmentProvider>().updateEquipmentItemAndPieces(
             updatedItem,
-            _assignedIds,
+            _assignedTags,
             _pieces,
           );
 
@@ -164,7 +175,7 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
       await context.read<EquipmentProvider>().addEquipment(
             _selectedCategory!,
             _equipmentNameTED.text,
-            _assignedIds,
+            _assignedTags,
             _pickedImage!,
           );
 
@@ -191,7 +202,7 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
       isValid = false;
       _nameError = 'Required';
     }
-    if (_assignedIds.isEmpty) {
+    if (_assignedTags.isEmpty) {
       isValid = false;
       _assignedIDsError = 'Add atleast one equipment id';
     }
@@ -225,75 +236,120 @@ class _LoadingAnimation extends StatelessWidget {
   }
 }
 
-class _AssignedIdsFiled extends StatelessWidget {
-  final List<String> ids;
-  final Function(List<String> updatedIds) onChanged;
+class _AssignedTags extends StatelessWidget {
+  final List<Tag> tags;
+  final Function(List<Tag> updatedTags) onChanged;
 
-  const _AssignedIdsFiled({super.key, required this.ids, required this.onChanged});
+  const _AssignedTags({required this.tags, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
-    final controller = TextEditingController();
     return Column(
       children: [
-        if (ids.isNotEmpty)
-          Wrap(
-            spacing: 10,
+        Spacing.h24,
+        Row(
+          children: [
+            const Text(
+              'Tags',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ).left,
+            const Spacer(),
+            AppButton.miniFlat(
+              text: 'Add Tag',
+              onTap: () async {
+                var newTags = await AddTagBottomSheet.show(context, null);
+                onChanged([
+                  ...tags,
+                  ...newTags as List<Tag>,
+                ]);
+              },
+            )
+          ],
+        ),
+        Spacing.h16,
+        if (tags.isNotEmpty)
+          Column(
             children: [
-              ...ids.map((id) {
-                return InkWell(
-                  onTap: () {
-                    List<String> updatedList = List.of(ids);
-                    updatedList.remove(id);
-                    onChanged(updatedList);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(color: Colors.black, width: 1.2),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(id),
-                        Spacing.w7,
-                        const Icon(
-                          Icons.close,
-                          size: 15,
-                        ),
-                        Spacing.w5,
-                      ],
-                    ).paddingAll(5),
-                  ),
-                );
-              }),
+              for (int i = 0; i < tags.length; i++) buildTag(context, i),
             ],
           ).paddingOnly(top: 10),
-        AppTextField(
-          controller: controller,
-          hintText: 'Equipment No',
-          required: true,
-          onChangedCallBack: (String value) {
-            //TODO: Add logic to auto add item when "," is pressed.
-          },
-          suffixIcon: TextButton(
+      ],
+    );
+  }
+
+  Widget buildTag(BuildContext context, int index) {
+    final currentTag = tags[index];
+    return Container(
+      width: Screen.width,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        color: appBlue.withOpacity(0.05),
+      ),
+      child: Row(
+        children: [
+          Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                currentTag.id,
+                style: const TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
+                ),
+              ),
+              if (currentTag.serialNumber != null)
+                Text(
+                  'Sl. No: ${currentTag.serialNumber!}',
+                  style: _subTextStyle,
+                ),
+              if (currentTag.remarks != null)
+                Text(
+                  'Remarks: ${currentTag.remarks!}',
+                  style: _subTextStyle,
+                ),
+            ],
+          ).paddingSymmetric(horizontal: 16, vertical: 5),
+          const Spacer(),
+          IconButton(
             onPressed: () {
-              String id = controller.text;
-              if (id.isNotEmpty) {
-                List<String> updatedList = List.of(ids);
-                if (!updatedList.contains(id)) {
-                  updatedList.add(id);
-                  onChanged(updatedList);
-                }
-              }
+              List<Tag> updatedList = List.of(tags);
+              updatedList.removeAt(index);
+              onChanged(updatedList);
             },
-            child: const Text(
-              'Add',
-              style: TextStyle(fontWeight: FontWeight.w600),
+            icon: const Icon(
+              Icons.delete,
+              size: 18,
             ),
           ),
-        ),
-      ],
+          IconButton(
+            onPressed: () async {
+              var newTags = await AddTagBottomSheet.show(context, currentTag);
+              log(newTags.toString());
+              if ((newTags ?? []).isEmpty) return;
+              List<Tag> updatedList = List.of(tags);
+              updatedList[index] = newTags!.first;
+              onChanged(updatedList);
+            },
+            icon: const Icon(
+              Icons.edit,
+              size: 18,
+            ),
+          ),
+        ],
+      ),
+    ).paddingOnly(bottom: 8);
+  }
+
+  TextStyle get _subTextStyle {
+    return const TextStyle(
+      color: Colors.grey,
+      fontSize: 12,
     );
   }
 }
@@ -302,7 +358,7 @@ class _EquipmentCategorySelector extends StatefulWidget {
   final Function(EquipmentCategory? category) onChanged;
   final EquipmentCategory? selectedCategory;
 
-  const _EquipmentCategorySelector({super.key, required this.onChanged, required this.selectedCategory});
+  const _EquipmentCategorySelector({required this.onChanged, required this.selectedCategory});
 
   @override
   State<_EquipmentCategorySelector> createState() => _EquipmentCategorySelectorState();
@@ -332,21 +388,6 @@ class _EquipmentCategorySelectorState extends State<_EquipmentCategorySelector> 
             isExpanded: true,
             value: widget.selectedCategory,
             onChanged: widget.onChanged,
-            // onChanged: (EquipmentCategory? category) {
-            //
-            //   // if (type.name == 'Add / Edit') {
-            //   //
-            //   //   List<EquipmentCategory> updatedCategories = await CategorySelectorBottomSheet.show(context, categories);
-            //   //   setState(() {
-            //   //     categories = updatedCategories;
-            //   //   });
-            //   // }
-            //   // else {
-            //   //   setState(() {
-            //   //     selectedCategory = type;
-            //   //   });
-            //   // }
-            // },
             hint: isLoading
                 ? const CircularProgressIndicator(
                     color: Colors.black,
@@ -364,7 +405,7 @@ class _EquipmentCategorySelectorState extends State<_EquipmentCategorySelector> 
             dropdownColor: Colors.white,
             items: [
               ...context.read<EquipmentProvider>().categories,
-              // const EquipmentCategory(name: 'Add / Edit', id: 'id'),
+              const EquipmentCategory(name: 'Add / Edit', id: 'id'),
             ].map((value) {
               return DropdownMenuItem(
                 value: value,

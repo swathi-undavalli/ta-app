@@ -8,28 +8,29 @@ class Roaster {
   final DateTime? timeIn;
   final DateTime? timeOut;
   final CustomerFeedback? customerFeedback;
+  final bool? isDived;
 
   Roaster({
     required this.instructor,
     required this.timeIn,
     required this.timeOut,
     required this.customerFeedback,
+    required this.isDived,
   });
 
   Roaster copyWith({
     Instructor? instructor,
     DateTime? timeIn,
     DateTime? timeOut,
-    bool? knowsSwimming,
-    bool? interestedOwc,
-    String? remarks,
     CustomerFeedback? customerFeedback,
+    bool? isDived,
   }) =>
       Roaster(
         instructor: instructor ?? this.instructor,
         timeIn: timeIn ?? this.timeIn,
         timeOut: timeOut ?? this.timeOut,
         customerFeedback: customerFeedback ?? this.customerFeedback,
+        isDived: isDived,
       );
 
   factory Roaster.fromRawJson(String str) => Roaster.fromJson(json.decode(str));
@@ -48,6 +49,7 @@ class Roaster {
       timeOut: parseDateOrNull(json['time_out']),
       customerFeedback:
           (json['customer_feedback'] != null) ? CustomerFeedback.fromJson(json['customer_feedback']) : null,
+      isDived: json['isDived'],
     );
   }
 
@@ -56,5 +58,6 @@ class Roaster {
         'time_in': timeIn?.toIso8601String(),
         'time_out': timeOut?.toIso8601String(),
         'customer_feedback': customerFeedback?.toJson(),
+        'isDived': isDived,
       };
 }

@@ -27,6 +27,7 @@ class AppTextField extends StatefulWidget {
   String? labelText;
   bool isStrictNumber;
   List<TextInputFormatter>? inputFormatter;
+  TextCapitalization textCapitalization;
 
   AppTextField({
     super.key,
@@ -45,6 +46,7 @@ class AppTextField extends StatefulWidget {
     this.finalSubmit,
     this.validator,
     this.errorValidator,
+    this.textCapitalization = TextCapitalization.none,
     this.onChangedCallBack,
     this.width = 320,
     this.suffixIcon,
@@ -75,6 +77,7 @@ class _AppTextFieldsState extends State<AppTextField> {
           minLines: widget.minLines,
           maxLines: widget.maxLines,
           controller: widget.controller,
+          textCapitalization: widget.textCapitalization,
           focusNode: widget.focusNode,
           keyboardType: widget.isStrictNumber ? TextInputType.number : widget.keyboardType,
           textInputAction: (widget.finalSubmit == null) ? widget.textInputAction : TextInputAction.done,

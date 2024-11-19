@@ -78,23 +78,29 @@ class NavDrawer extends StatelessWidget {
                 Navigator.push(context, GeneralInfoView.route());
               },
             ),
-            buildMenuItem(
-              icon: Icons.dataset_rounded,
-              text: 'Equipment',
-              onTap: () {
-                Navigator.push(context, AllEquipmentView.route());
-              },
+            EmployeeAccess(
+              access: AccessRights.viewEquipment,
+              child: buildMenuItem(
+                icon: Icons.dataset_rounded,
+                text: 'Equipment',
+                onTap: () {
+                  Navigator.push(context, AllEquipmentView.route());
+                },
+              ),
             ),
-            buildMenuItem(
-              icon: Icons.list_alt_outlined,
-              text: 'Equipment Logs',
-              onTap: () {
-                Navigator.push(context, EquipmentLogsView.route());
-              },
+            EmployeeAccess(
+              access: AccessRights.viewEquipment,
+              child: buildMenuItem(
+                icon: Icons.list_alt_outlined,
+                text: 'Equipment Logs',
+                onTap: () {
+                  Navigator.push(context, EquipmentLogsView.route());
+                },
+              ),
             ),
             buildMenuItem(
               icon: Icons.add_card_rounded,
-              text: 'Roaster',
+              text: 'Roster',
               onTap: () {
                 Navigator.push(context, RoasterView.route());
               },

@@ -36,7 +36,7 @@ class EquipmentCategory with EquipmentCategoryMappable {
 @MappableClass()
 class EquipmentPiece with EquipmentPieceMappable {
   final String id;
-  final String assignedID;
+  final Tag tag;
   final String equipmentItemID;
   final String equipmentItemName;
   final String? currentRental;
@@ -44,10 +44,24 @@ class EquipmentPiece with EquipmentPieceMappable {
 
   const EquipmentPiece({
     required this.id,
-    required this.assignedID,
+    required this.tag,
     required this.equipmentItemID,
     required this.equipmentItemName,
     required this.currentRental,
     required this.lastRented,
+  });
+}
+
+@immutable
+@MappableClass()
+class Tag with TagMappable {
+  final String id;
+  final String? serialNumber;
+  final String? remarks;
+
+  const Tag({
+    required this.id,
+    required this.serialNumber,
+    required this.remarks,
   });
 }

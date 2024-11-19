@@ -42,7 +42,7 @@ class _RoasterViewState extends State<RoasterView> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
-      appBar: const AppBarWidget(heading: 'Roaster'),
+      appBar: const AppBarWidget(heading: 'Roster'),
       body: SafeArea(
         child: (showLoading)
             ? Container(
@@ -135,6 +135,7 @@ class _RoasterViewState extends State<RoasterView> {
                         },
                         child: Column(
                           children: [
+                            Spacing.h10,
                             Row(
                               children: [
                                 Spacing.w15,
@@ -174,26 +175,15 @@ class _RoasterViewState extends State<RoasterView> {
                                     ],
                                   ),
                                 ),
-                                if (roaster != null &&
-                                    roaster?.instructor != null &&
-                                    roaster?.timeIn != null &&
-                                    roaster?.timeOut != null &&
-                                    roaster?.customerFeedback != null)
-                                  const Icon(
-                                    Icons.check_circle,
-                                    color: Colors.green,
-                                    size: 20,
-                                  ),
+                                buildIcon(roaster),
                               ],
                             ).paddingSymmetric(horizontal: 20),
+                            Spacing.h10,
                             Container(
                               height: 1,
                               width: Screen.width,
                               color: AppColors.text.grey,
-                            ).paddingSymmetric(
-                              horizontal: 15,
-                              vertical: 20,
-                            ),
+                            ).paddingSymmetric(horizontal: 15),
                           ],
                         ),
                       );
@@ -394,5 +384,36 @@ class _RoasterViewState extends State<RoasterView> {
         ),
       ),
     );
+  }
+
+  Widget buildIcon(Roaster? roaster) {
+    if (roaster == null) return const SizedBox();
+
+    if (roaster.instructor != null &&
+        roaster.timeIn != null &&
+        roaster.timeOut != null &&
+        roaster.customerFeedback != null) {
+      return const Icon(
+        Icons.check_circle,
+        color: Colors.green,
+        size: 20,
+      );
+    }
+
+    if (roaster.timeIn != null && roaster.timeOut != null) {
+      return const Icon(
+        Icons.directions_boat,
+        color: appBlue,
+        size: 20,
+      );
+    }
+    if (roaster.timeIn != null) {
+      return const Icon(
+        Icons.scuba_diving_rounded,
+        color: Colors.orange,
+        size: 20,
+      );
+    }
+    return const SizedBox();
   }
 }

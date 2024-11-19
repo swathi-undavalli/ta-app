@@ -178,7 +178,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                                       (roaster.timeOut != null) ? DateFormat('hh:mm a').format(roaster.timeOut!) : '-',
                                 ),
                                 buildText(
-                                  text: (difference != null && difference!.inMinutes >= 10) ? 'Yes' : 'No',
+                                  text: (roaster.isDived != null && roaster.isDived! == true) ? 'Yes' : 'No',
                                 ),
                                 buildText(
                                   text: (roaster.customerFeedback != null && roaster.customerFeedback!.knowsSwimming!)
