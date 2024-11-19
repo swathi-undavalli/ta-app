@@ -380,8 +380,7 @@ class CoastGuardSlip {
             children: [
               if (totalCustomers.isNotEmpty) buildText('Total Customers : ${totalCustomers.length}'),
               if (dsdCustomers.isNotEmpty) buildText('Total DSD : ${dsdCustomers.length}'),
-              if (boat.dsdInstructors != null && boat.dsdInstructors!.isNotEmpty)
-                buildText('DSD Instructors : ${boat.dsdInstructors?.length}'),
+              if ((boat.dsdInstructors ?? []).isNotEmpty) buildText('DSD Instructors : ${boat.dsdInstructors?.length}'),
               if (staff.isNotEmpty) buildText('Total Staff : ${staff.length + diveBuddies.length}'),
             ],
           ),
@@ -427,17 +426,15 @@ List<Customer> getCustomers(List<Booking> bookings) {
   List<Customer> customers = [];
 
   for (var booking in bookings) {
-    if ((booking.pax?.length ?? 0) > 1) {
-      booking.pax?.sublist(1).forEach((person) {
-        Customer customer = Customer(
-          name: (person['first-name'] ?? '') + (person['last-name'] ?? ''),
-          gender: person['gender'],
-          country: person['country'],
-          course: booking.activity?.firstOrNull?.shortName,
-        );
-        customers.add(customer);
-      });
-    }
+    booking.pax?.forEach((person) {
+      Customer customer = Customer(
+        name: (person['first-name'] ?? '') + (person['last-name'] ?? ''),
+        gender: person['gender'],
+        country: person['country'],
+        course: booking.activity?.firstOrNull?.shortName,
+      );
+      customers.add(customer);
+    });
   }
 
   return customers.toSet().toList();

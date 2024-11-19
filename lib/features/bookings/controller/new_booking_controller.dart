@@ -401,9 +401,11 @@ class NewBookingLogic {
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
                   onTap: () {
-                    controller.quickDiveDates ??= [];
-                    controller.quickDiveDates!.add(selectedDiveDate);
-                    controller.quickDiveDates = controller.quickDiveDates!.toSet().toList();
+                    if (selectedDiveDate != null) {
+                      controller.quickDiveDates ??= [];
+                      controller.quickDiveDates!.add(selectedDiveDate);
+                      controller.quickDiveDates = controller.quickDiveDates!.toSet().toList();
+                    }
                     controller.update();
                     Navigator.pop(context);
                   },
@@ -486,10 +488,8 @@ class NewBookingLogic {
     if (controller.isQuickBooking) {
       if (isValid()) {
         controller.showLoading = true;
-        if (controller.quickDiveDates != null && controller.quickDiveDates!.isNotEmpty) {
-          for (var element in controller.quickDiveDates!) {
-            bookingDates.add(getStringDate(element!));
-          }
+        for (var element in controller.quickDiveDates!) {
+          bookingDates.add(getStringDate(element!));
         }
 
         Booking bookingModel = Booking(
@@ -505,6 +505,7 @@ class NewBookingLogic {
               'phoneNumber': '9876543210',
               'isoCode': 'IN',
               'dob': DateTime.now(),
+              'gender': controller.genderTED.text,
             }
           ],
           diveDate: controller.quickDiveDates,
@@ -606,17 +607,14 @@ class NewBookingLogic {
     controller.genderError = null;
     controller.dobError = null;
     controller.paxError = null;
+    controller.quickDiveDateError = null;
+    controller.quickActivityError = null;
     controller.update();
   }
 
   bool isValid() {
     bool isValid = true;
-    controller.nameError = null;
-    controller.emailError = null;
-    controller.phoneError = null;
-    controller.genderError = null;
-    controller.dobError = null;
-    controller.paxError = null;
+    clear();
 
     if (controller.isQuickBooking) {
       if (controller.fNameTED.text.isEmpty) {
@@ -630,13 +628,21 @@ class NewBookingLogic {
         controller.update();
       }
       if (controller.quickSelectedActivity == null) {
+        controller.quickActivityError = 'Required';
         isValid = false;
         controller.update();
       }
-      if (controller.quickDiveDates == null && controller.quickDiveDates!.isEmpty) {
+      if ((controller.quickDiveDates ?? []).isEmpty) {
+        controller.quickDiveDateError = 'Required';
         isValid = false;
         controller.update();
       }
+      if (controller.genderTED.text.isEmpty) {
+        controller.genderError = 'Required';
+        isValid = false;
+        controller.update();
+      }
+
       return isValid;
     } else {
       if (controller.fNameTED.text.isEmpty) {
@@ -719,6 +725,8 @@ class NewBookingController extends GetxController {
   String? genderError;
   String? dobError;
   String? paxError;
+  String? quickDiveDateError;
+  String? quickActivityError;
 
   FocusNode emailNode = FocusNode();
   FocusNode priceNode = FocusNode();
@@ -863,6 +871,14 @@ class NewBookingController extends GetxController {
     quickDiveDates = [];
     quickSelectedActivity = null;
     genderTED.text = '';
+    nameError = null;
+    paxError = null;
+    dobError = null;
+    phoneError = null;
+    genderError = null;
+    emailError = null;
+    quickDiveDateError = null;
+    quickActivityError = null;
   }
 
   bool _showLoading = true;

@@ -34,9 +34,10 @@ class AddCustomerDetailsView extends StatelessWidget {
       floatingActionButton: buildFloatingActionButton(context),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       backgroundColor: AppColors.background.lightBlue,
-      body: PopScope(
-        onPopInvoked: (_) {
+      body: WillPopScope(
+        onWillPop: () async {
           logic.controller.reset();
+          return true;
         },
         child: SafeArea(
           child: SingleChildScrollView(
@@ -97,8 +98,14 @@ class AddCustomerDetailsView extends StatelessWidget {
 
                       if (controller.isQuickBooking) ...[
                         buildActivityDropDown(),
+                        if (controller.quickActivityError != null)
+                          Text('Required', style: TextStyle(color: Colors.red.shade800, fontSize: 12)).left,
                         Spacing.h20,
                         buildQuickDiveSession(context),
+                        if (controller.quickDiveDateError != null)
+                          Text('Required', style: TextStyle(color: Colors.red.shade800, fontSize: 12)).left,
+                        Spacing.h20,
+                        buildGender(),
                         Spacing.h50,
                         AppButton.flat(
                           text: 'Create Booking',
@@ -181,6 +188,8 @@ class AddCustomerDetailsView extends StatelessWidget {
                   text: 'ADD',
                   onTap: () {
                     logic.addQuickDiveSessionDateTime(context);
+                    log('controller.quickDiveDates.toString()');
+                    log(controller.quickDiveDates.toString());
                   },
                   bgColor: AppColors.background.black,
                   textColor: AppColors.text.white,
