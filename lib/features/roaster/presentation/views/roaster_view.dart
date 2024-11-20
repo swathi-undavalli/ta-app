@@ -95,7 +95,7 @@ class _RoasterViewState extends State<RoasterView> {
           Roaster? roaster;
           data?.forEach((element) {
             Booking booking = Booking.fromMap(element.data());
-            if (booking.isDSD) {
+            if (booking.isDSD && booking.cancelBooking != true) {
               bookings.add(booking);
             }
           });
@@ -112,9 +112,9 @@ class _RoasterViewState extends State<RoasterView> {
 
                   return Column(
                     children: booking.pax!.map((p) {
-                      if (p['activity_id'] == null) {
-                        return const SizedBox();
-                      }
+                      // if (p['activity_id'] == null) {
+                      //   return const SizedBox();
+                      // }
 
                       roaster = null;
 

@@ -108,6 +108,10 @@ class _RoasterChartViewState extends State<RoasterChartView> {
           }
         });
 
+        List<Booking> filteredBookings = bookings.where((Booking booking) {
+          return (booking.getBoatInfo(widget.selectedDate)?.id != null);
+        }).toList();
+
         return StreamBuilder(
           stream: FirebaseFirestore.instance
               .collection('dailyBoats')
@@ -134,7 +138,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
 
             return Expanded(
               child: ListView.builder(
-                itemCount: bookings.length,
+                itemCount: filteredBookings.length,
                 itemBuilder: (context, index) {
                   Booking booking = bookings[index];
                   Boat? boat;

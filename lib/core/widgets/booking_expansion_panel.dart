@@ -21,6 +21,7 @@ import '../../features/bookings/models/booking_model.dart';
 import '../../features/bookings/presentation/views/add_payments_view.dart';
 import '../../features/bookings/presentation/views/edit_booking_view.dart';
 import '../../features/bookings/presentation/views/edit_payments_view.dart';
+import '../../features/bookings/presentation/widgets/add_customer_dialog.dart';
 import '../../features/bookings/presentation/widgets/app_text_fields.dart';
 import '../../features/bookings/presentation/widgets/certification_bottomsheet.dart';
 import '../../features/bookings/presentation/widgets/share_booking_details_widget.dart';
@@ -599,7 +600,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         ...itemModel.bookingModel!.payments!,
                                       ],
                                     ),
-                                  const SizedBox(height: 10),
+                                  Spacing.h10,
                                   if ((!itemModel.bookingModel!.isQuickBooking))
                                     Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -695,7 +696,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
         First Name : *${itemModel.name!.trim().toLowerCase().capitalizeFirst}* 
         Last Name : *${(itemModel.bookingModel!.details!.lastName != "") ? itemModel.bookingModel!.details!.lastName : "-"}* 
         Email : *${itemModel.email}* 
-        Date of Birth : *${(itemModel.bookingModel!.details!.dob != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.details!.dob as Timestamp).toDate()) : "-"}* 
+        Date of Birth : *${(itemModel.bookingModel!.details!.dob != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.details!.dob).toDate()) : "-"}* 
         Course Name : *${itemModel.activity}* 
         Invoice No : *${(itemModel.bookingModel?.receiptNo != null && itemModel.bookingModel?.receiptNo != '') ? itemModel.bookingModel?.receiptNo : '-'}* 
         Phone Number : *${itemModel.bookingModel!.details!.phoneNumber}* 
@@ -842,7 +843,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         ).paddingOnly(right: 15),
                                     ],
                                   ),
-                                  const SizedBox(height: 20),
+                                  Spacing.h20,
                                   Row(
                                     children: [
                                       if (itemModel.employeeName != null)
@@ -870,109 +871,109 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                           ),
                                         ),
                                       const Spacer(),
-                                      if (!itemModel.bookingModel!.isQuickBooking)
-                                        AppButton.miniFlat(
-                                          text: 'Manage PAX',
-                                          onTap: () async {
-                                            Booking? bookingModel = itemModel.bookingModel;
-                                            showModalBottomSheet(
-                                              backgroundColor: Colors.transparent,
-                                              isScrollControlled: true,
-                                              context: context,
-                                              useRootNavigator: true,
-                                              builder: (context) {
-                                                return Container(
-                                                  padding: EdgeInsets.only(
-                                                    bottom: MediaQuery.of(context).viewInsets.bottom,
-                                                    top: 30,
-                                                    left: 30,
-                                                    right: 30,
+                                      AppButton.miniFlat(
+                                        text: 'Manage PAX',
+                                        onTap: () async {
+                                          Booking? bookingModel = itemModel.bookingModel;
+                                          showModalBottomSheet(
+                                            backgroundColor: Colors.transparent,
+                                            isScrollControlled: true,
+                                            context: context,
+                                            useRootNavigator: true,
+                                            builder: (context) {
+                                              return Container(
+                                                padding: EdgeInsets.only(
+                                                  bottom: MediaQuery.of(context).viewInsets.bottom,
+                                                  top: 30,
+                                                  left: 30,
+                                                  right: 30,
+                                                ),
+                                                constraints: const BoxConstraints(minHeight: 300),
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.only(
+                                                    topLeft: Radius.circular(15),
+                                                    topRight: Radius.circular(15),
                                                   ),
-                                                  constraints: const BoxConstraints(minHeight: 300),
-                                                  decoration: const BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius: BorderRadius.only(
-                                                      topLeft: Radius.circular(15),
-                                                      topRight: Radius.circular(15),
+                                                ),
+                                                child: Column(
+                                                  mainAxisSize: MainAxisSize.min,
+                                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        SizedBox(
+                                                          width: 150,
+                                                          child: Text(
+                                                            '${itemModel.name!.capitalizeFirst!} X ${itemModel.pax}',
+                                                            style: const TextStyle(
+                                                              fontWeight: FontWeight.w600,
+                                                              fontSize: FontSize.textSize,
+                                                            ),
+                                                            overflow: TextOverflow.ellipsis,
+                                                          ),
+                                                        ),
+                                                        const Spacer(),
+                                                        Material(
+                                                          color: Colors.transparent,
+                                                          child: InkWell(
+                                                            highlightColor: Colors.blue.withOpacity(0.2),
+                                                            splashColor: Colors.grey.withOpacity(0.3),
+                                                            borderRadius: BorderRadius.circular(20),
+                                                            radius: 100,
+                                                            onTap: () {
+                                                              Navigator.pop(context);
+                                                            },
+                                                            child: const Icon(Icons.close),
+                                                          ),
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ),
-                                                  child: Column(
-                                                    mainAxisSize: MainAxisSize.min,
-                                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                                    children: [
-                                                      Row(
-                                                        children: [
-                                                          SizedBox(
-                                                            width: 150,
-                                                            child: Text(
-                                                              '${itemModel.name!.capitalizeFirst!} X ${itemModel.pax}',
-                                                              style: const TextStyle(
-                                                                fontWeight: FontWeight.w600,
-                                                                fontSize: FontSize.textSize,
-                                                              ),
-                                                              overflow: TextOverflow.ellipsis,
+                                                    Spacing.h20,
+                                                    ...bookingModel!.pax!.asMap().entries.map(
+                                                      (e) {
+                                                        int index = e.key;
+                                                        String? email = e.value['email'];
+                                                        return Row(
+                                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                          children: [
+                                                            Column(
+                                                              mainAxisAlignment: MainAxisAlignment.start,
+                                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                                              children: [
+                                                                Text(email!),
+                                                                if (bookingModel.isPaperworkDone(index))
+                                                                  const Text(
+                                                                    'Paperwork completed',
+                                                                    style: TextStyle(fontSize: 10),
+                                                                  ),
+                                                              ],
                                                             ),
-                                                          ),
-                                                          const Spacer(),
-                                                          Material(
-                                                            color: Colors.transparent,
-                                                            child: InkWell(
-                                                              highlightColor: Colors.blue.withOpacity(0.2),
-                                                              splashColor: Colors.grey.withOpacity(0.3),
-                                                              borderRadius: BorderRadius.circular(20),
-                                                              radius: 100,
-                                                              onTap: () {
-                                                                Navigator.pop(context);
+                                                            IconButton(
+                                                              onPressed: () {
+                                                                onDeletePaxPressed(context, bookingModel, index);
                                                               },
-                                                              child: const Icon(Icons.close),
+                                                              icon: const Icon(
+                                                                Icons.delete,
+                                                                size: 20,
+                                                                color: Colors.black,
+                                                              ),
                                                             ),
-                                                          ),
-                                                        ],
-                                                      ),
-                                                      const SizedBox(height: 20),
-                                                      ...bookingModel!.pax!.asMap().entries.map(
-                                                        (e) {
-                                                          int index = e.key;
-                                                          String? email = e.value['email'];
-                                                          return Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                            children: [
-                                                              Column(
-                                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                                children: [
-                                                                  Text(email!),
-                                                                  if (bookingModel.isPaperworkDone(index))
-                                                                    const Text(
-                                                                      'Paperwork completed',
-                                                                      style: TextStyle(fontSize: 10),
-                                                                    ),
-                                                                ],
-                                                              ),
-                                                              IconButton(
-                                                                onPressed: () {
-                                                                  onDeletePaxPressed(context, bookingModel, index);
-                                                                },
-                                                                icon: const Icon(
-                                                                  Icons.delete,
-                                                                  size: 20,
-                                                                  color: Colors.black,
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          );
-                                                        },
-                                                      ),
-                                                    ],
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                          },
-                                        ).paddingOnly(right: 15),
+                                                          ],
+                                                        );
+                                                      },
+                                                    ),
+                                                    buildAddCustomerButton(context, bookingModel),
+                                                  ],
+                                                ),
+                                              );
+                                            },
+                                          );
+                                        },
+                                      ).paddingOnly(right: 15),
                                     ],
                                   ),
-                                  const SizedBox(height: 20),
+                                  Spacing.h20,
                                 ],
                               );
                             }
@@ -987,6 +988,21 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
         ).paddingOnly(bottom: 15);
       },
     );
+  }
+
+  Widget buildAddCustomerButton(context, Booking bookingModel) {
+    if (bookingModel.pax!.length < bookingModel.noOfPersons!) {
+      return AppButton.miniFlat(
+        text: 'Add Customer',
+        onTap: () {
+          AddCustomerDialog.show(
+            context,
+            bookingModel: bookingModel,
+          );
+        },
+      ).paddingSymmetric(horizontal: 20);
+    }
+    return const SizedBox();
   }
 
   Future<void> _bookingCancellationDialog(BuildContext context, ItemModel itemModel) async {
