@@ -97,7 +97,7 @@ class _EquipmentLogsViewState extends State<EquipmentLogsView> {
               child: Selector<EquipmentProvider, List<Employee>>(
                 selector: (context, provider) => provider.employees,
                 builder: (context, value, child) {
-                  var query = FirebaseFirestore.instance.collection('equipmentLogs').orderBy('time', descending: true);
+                  var query = FirebaseFirestore.instance.collection('equipmentLogs').orderBy('collectorID');
 
                   if (_searchController.text.isNotEmpty) {
                     query = query.where('id', isGreaterThanOrEqualTo: _searchController.text);
@@ -161,6 +161,19 @@ class _EquipmentLog extends StatelessWidget {
     Employee? approver =
         context.read<EquipmentProvider>().employees.firstWhereOrNull((emp) => emp.id == log.approverID);
 
+    bool delayedReturn = false;
+    int dueDays = 0;
+
+    if (log.collectorID == null) {
+      DateTime takeTime = log.time.toDate();
+      DateTime now = DateTime.now();
+      Duration diff = now.difference(takeTime);
+      if (diff.inDays > 1) {
+        delayedReturn = true;
+        dueDays = diff.inDays;
+      }
+    }
+
     return InkWell(
       onTap: () {
         Navigator.push(context, EquipmentLogDetailsView.route(log));
@@ -177,6 +190,12 @@ class _EquipmentLog extends StatelessWidget {
                       ? Colors.green.withOpacity(0.34)
                       : const Color(0xffD1F8FF).withOpacity(0.34),
                   borderRadius: BorderRadius.circular(16),
+                  border: delayedReturn
+                      ? Border.all(
+                          color: Colors.red.shade700,
+                          width: 3,
+                        )
+                      : null,
                 ),
                 child: Text(
                   log.id,
@@ -229,6 +248,25 @@ class _EquipmentLog extends StatelessWidget {
                         ],
                       ),
                     ),
+                    if (delayedReturn)
+                      RichText(
+                        text: TextSpan(
+                          text: 'Not returned for ',
+                          style: TextStyle(
+                            fontFamily: 'Nunito',
+                            color: Colors.red.shade700,
+                            fontSize: 14,
+                            // fontWeight: FontWeight.bold,
+                          ),
+                          children: <TextSpan>[
+                            TextSpan(
+                              text: '$dueDays ',
+                              style: const TextStyle(fontWeight: FontWeight.bold),
+                            ),
+                            const TextSpan(text: 'days'),
+                          ],
+                        ),
+                      ),
                     if (log.collectorID != null) ...[
                       Spacing.h4,
                       RichText(
@@ -241,7 +279,8 @@ class _EquipmentLog extends StatelessWidget {
                             fontSize: 12,
                           ),
                           children: <TextSpan>[
-                            const TextSpan(text: ' verified on ', style: TextStyle(fontWeight: FontWeight.normal)),
+                            const TextSpan(
+                                text: ' verified return on ', style: TextStyle(fontWeight: FontWeight.normal)),
                             TextSpan(text: DateFormat('MMM dd, yyyy hh:mm a').format(log.collectedTime.toDate())),
                           ],
                         ),
@@ -259,6 +298,7 @@ class _EquipmentLog extends StatelessWidget {
   }
 
   String? _getName(Employee? employee) {
+    if (employee?.id == currentEmployee?.id) return 'You';
     if (employee?.nickName?.trim().isNotEmpty ?? false) {
       return employee?.nickName;
     }

@@ -71,7 +71,7 @@ class _ListItem extends StatelessWidget {
       children: [
         Spacing.w16,
         Text(
-          '${index + 1}. ${currentPieces.first.equipmentItemName} ( ${currentPieces.map((p) => p.assignedID).join(', ')} )',
+          '${index + 1}. ${currentPieces.first.equipmentItemName} ( ${currentPieces.map((p) => p.tag.id).join(', ')} )',
           style: itemsFontStyle,
         ),
         const Spacer(),

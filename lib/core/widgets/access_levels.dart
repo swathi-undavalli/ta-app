@@ -65,4 +65,8 @@ class AccessRights {
   static bool get offers => accessLevel?.offers ?? false;
 
   static bool get processCertificate => accessLevel?.processCertificate ?? false;
+
+  static bool get addEquipment => accessLevel?.addEquipment ?? false;
+
+  static bool get viewEquipment => accessLevel?.viewEquipment ?? false;
 }

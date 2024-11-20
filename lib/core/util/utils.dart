@@ -53,3 +53,10 @@ Color getBookingColor(ItemModel itemModel) {
     }
   }
 }
+
+extension StringX on String {
+  String? get stringOrNull {
+    if (trim().isEmpty) return null;
+    return this;
+  }
+}

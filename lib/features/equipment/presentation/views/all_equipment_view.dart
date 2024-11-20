@@ -5,6 +5,7 @@ import 'package:temple_ui_tools/temple_ui_tools.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/access_levels.dart';
 import '../../models/equipment_model.dart';
 import '../../provider/equipment.provider.dart';
 import '../widgets/banner_container.dart';
@@ -51,11 +52,14 @@ class _AllEquipmentViewState extends State<AllEquipmentView> {
         appBar: EquipmentAppBar(
           title: 'All Equipment',
           description: 'All the available equipment for renting',
-          action: IconButton(
-            onPressed: () {
-              Navigator.push(context, AddEquipmentView.route(null));
-            },
-            icon: const Icon(Icons.add_circle_outline_rounded),
+          action: EmployeeAccess(
+            access: AccessRights.addEquipment,
+            child: IconButton(
+              onPressed: () {
+                Navigator.push(context, AddEquipmentView.route(null));
+              },
+              icon: const Icon(Icons.add_circle_outline_rounded),
+            ),
           ),
         ),
         body: Stack(
@@ -125,8 +129,9 @@ class _EquipmentItemTile extends StatelessWidget {
             context.read<EquipmentProvider>().toggleItemSelection(item);
           },
           onLongPress: () {
-            // TODO : Enable editing feature in next version.
-            Navigator.push(context, AddEquipmentView.route(item));
+            if (AccessRights.addEquipment) {
+              Navigator.push(context, AddEquipmentView.route(item));
+            }
           },
           child: Column(
             children: [

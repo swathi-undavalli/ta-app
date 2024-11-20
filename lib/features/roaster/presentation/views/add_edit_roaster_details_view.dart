@@ -58,6 +58,7 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
   late Booking booking;
   Map<String, dynamic>? paxData;
   Roaster? existingRoaster;
+  bool isDived = true;
 
   @override
   void initState() {
@@ -75,6 +76,7 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
       customerFeedback = existingRoaster?.customerFeedback;
       timeIn = existingRoaster?.timeIn;
       timeOut = existingRoaster?.timeOut;
+      isDived = existingRoaster?.isDived ?? true;
     }
   }
 
@@ -200,6 +202,25 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                     ).paddingOnly(bottom: 20),
                   Row(
                     children: [
+                      Text(
+                        'Is Dived',
+                        style: TextStyle(
+                          fontSize: 14,
+                          color: AppColors.text.black,
+                        ),
+                      ),
+                      Spacing.w20,
+                      Switch(
+                          value: isDived,
+                          activeColor: appBlue,
+                          onChanged: (bool value) {
+                            isDived = value;
+                            setState(() {});
+                          }),
+                    ],
+                  ),
+                  Row(
+                    children: [
                       const Text('Customer FeedBack'),
                       const Spacer(),
                       AppButton.miniFlat(
@@ -228,6 +249,7 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                         timeIn: timeIn,
                         timeOut: timeOut,
                         customerFeedback: customerFeedback,
+                        isDived: isDived,
                       );
 
                       booking.pax?[widget.paxIndex]['roaster'] = roaster.toJson();

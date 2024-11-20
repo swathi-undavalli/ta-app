@@ -174,9 +174,7 @@ class _SubmissionButton extends StatelessWidget {
           child: Text(
             'Start submission',
             style: TextStyle(
-              color: Colors.white.withOpacity(
-                true ? 1 : 0.5,
-              ),
+              color: Colors.white.withOpacity(1),
               fontWeight: FontWeight.bold,
             ),
           ).center,

@@ -158,7 +158,7 @@ class _EquipmentPieceTile extends StatelessWidget {
                   ),
                   children: <TextSpan>[
                     TextSpan(
-                      text: ' ${piece.assignedID}',
+                      text: ' ${piece.tag.id}',
                       style: const TextStyle(
                         color: Color(0xff727272),
                         fontWeight: FontWeight.bold,

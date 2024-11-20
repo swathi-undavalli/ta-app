@@ -59,6 +59,8 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
   late bool? marketingGallery;
   late bool? offers;
   late bool? processCertificate;
+  late bool? addEquipment;
+  late bool? viewEquipment;
 
   List<String> gender = ['Male', 'Female'];
 
@@ -108,6 +110,8 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
     marketingGallery = widget.employeeArgument?.accessLevels?.marketingGallery ?? false;
     offers = widget.employeeArgument?.accessLevels?.offers ?? false;
     processCertificate = widget.employeeArgument?.accessLevels?.processCertificate ?? false;
+    addEquipment = widget.employeeArgument?.accessLevels?.addEquipment ?? false;
+    viewEquipment = widget.employeeArgument?.accessLevels?.viewEquipment ?? false;
   }
 
   @override
@@ -365,6 +369,22 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: processCertificate!,
           onChanged: (value) {
             processCertificate = value;
+            setState(() {});
+          },
+        ),
+        buildSwitch(
+          text: 'View equipment',
+          switchValue: viewEquipment!,
+          onChanged: (value) {
+            viewEquipment = value;
+            setState(() {});
+          },
+        ),
+        buildSwitch(
+          text: 'Add equipment',
+          switchValue: addEquipment!,
+          onChanged: (value) {
+            addEquipment = value;
             setState(() {});
           },
         ),
@@ -633,6 +653,8 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           marketingGallery: marketingGallery,
           offers: offers,
           processCertificate: processCertificate,
+          addEquipment: addEquipment,
+          viewEquipment: viewEquipment,
         ),
       );
       await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());

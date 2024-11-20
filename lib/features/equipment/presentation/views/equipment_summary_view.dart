@@ -178,7 +178,7 @@ class _EquipmentPieces extends StatelessWidget {
     return Consumer<EquipmentProvider>(
       builder: (context, provider, child) {
         Iterable<String> selectedPieces =
-            provider.selectedPieces.where((piece) => piece.equipmentItemID == item.id).map((p) => p.assignedID);
+            provider.selectedPieces.where((piece) => piece.equipmentItemID == item.id).map((p) => p.tag.id);
 
         if (selectedPieces.isEmpty) return const SizedBox();
 

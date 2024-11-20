@@ -111,7 +111,11 @@ class _CategorySelectorBottomSheetState extends State<CategorySelectorBottomShee
               ),
             ),
             trailing: IconButton(
-              icon: const Icon(Icons.edit, size: 20),
+              icon: const Icon(
+                Icons.edit,
+                size: 20,
+                color: Colors.black,
+              ),
               onPressed: () {
                 _showCategoryDialog(
                   context,

@@ -28,7 +28,6 @@ class EquipmentProvider extends ChangeNotifier {
   String? firebaseTrackingId;
   String? otp;
   EquipmentStatus _status = EquipmentStatus.loading;
-  Stream<DocumentSnapshot<Map<String, dynamic>>>? _otpStream;
 
   // Getter & Setters
   EquipmentStatus get status => _status;
@@ -102,7 +101,7 @@ class EquipmentProvider extends ChangeNotifier {
   Future<void> addEquipment(
     EquipmentCategory category,
     String name,
-    List<String> assignedIDs,
+    List<Tag> assignedTags,
     String photoURL,
   ) async {
     try {
@@ -111,7 +110,7 @@ class EquipmentProvider extends ChangeNotifier {
         category: category,
         name: name,
         photoURL: photoURL,
-        assignedIDs: assignedIDs,
+        assignedTags: assignedTags,
       );
       items.add(equipmentItem);
       status = EquipmentStatus.loaded;
@@ -246,22 +245,22 @@ class EquipmentProvider extends ChangeNotifier {
 
   Future<void> updateEquipmentItemAndPieces(
     EquipmentItem updatedItem,
-    List<String> updatedIDs,
+    List<Tag> updatedTags,
     List<EquipmentPiece> oldPieces,
   ) async {
     try {
       status = EquipmentStatus.loading;
       await repository.updateEquipmentItem(updatedItem);
-      var oldAssignedIds = oldPieces.map((piece) => piece.assignedID);
+      var oldAssignedTags = oldPieces.map((piece) => piece.tag);
       for (final piece in oldPieces) {
         await repository.updateEquipmentPiece(piece.copyWith(equipmentItemName: updatedItem.name));
       }
 
-      for (final id in updatedIDs) {
-        if (oldAssignedIds.contains(id) == false) {
+      for (final tag in updatedTags) {
+        if (oldAssignedTags.contains(tag) == false) {
           EquipmentPiece piece = EquipmentPiece(
             id: '',
-            assignedID: id,
+            tag: tag,
             equipmentItemID: updatedItem.id,
             equipmentItemName: updatedItem.name,
             currentRental: null,
@@ -272,7 +271,7 @@ class EquipmentProvider extends ChangeNotifier {
       }
 
       for (final piece in oldPieces) {
-        if (updatedIDs.contains(piece.assignedID) == false) {
+        if (updatedTags.contains(piece.tag) == false) {
           repository.deleteEquipmentPiece(piece.id);
         }
       }
