@@ -134,8 +134,6 @@ class _RoasterChartViewState extends State<RoasterChartView> {
             }
             BoatsModel boatsModel = BoatsModel.fromMap(data);
 
-            Duration? difference;
-
             return Expanded(
               child: ListView.builder(
                 itemCount: filteredBookings.length,
@@ -155,12 +153,6 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                           if (p['roaster'] != null) {
                             Roaster roaster = Roaster.fromJson(p['roaster']);
 
-                            if (roaster.timeIn != null && roaster.timeOut != null) {
-                              DateTime startTime = roaster.timeIn!;
-                              DateTime endTime = roaster.timeOut!;
-
-                              difference = endTime.difference(startTime);
-                            }
                             return Row(
                               children: [
                                 buildText(text: boat?.name ?? '-'),
