@@ -1,5 +1,4 @@
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,18 +7,14 @@ import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/image_uploader.dart';
 import '../../../bookings/presentation/widgets/app_text_fields.dart';
-import '../../../certifications/presentation/widgets/pick_photos_widget.dart';
 import '../../models/equipment_model.dart';
 import '../../provider/equipment.provider.dart';
 import '../widgets/category_edit_bottomsheet.dart';
 import '../widgets/equipment_app_bar.dart';
 import '../widgets/equipment_body.dart';
 import 'manage_assigned_ids_bottom_sheet.dart';
-
-//TODO : Check/Verify AppTextField
-//TODO : Implement edit feature
-//TODO : Add smoother animations
 
 class AddEquipmentView extends StatefulWidget {
   final EquipmentItem? equipmentItem;
@@ -39,8 +34,7 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
   EquipmentCategory? _selectedCategory;
   late TextEditingController _equipmentNameTED;
   List<Tag> _assignedTags = [];
-  String? _pickedImage;
-  bool _showImageUploadingLoading = false;
+  String? _uploadedImage;
   String? _selectCategoryError;
   String? _nameError;
   String? _assignedIDsError;
@@ -64,6 +58,7 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
   }
 
   bool get _isEditMode => widget.equipmentItem != null;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -71,6 +66,16 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
       appBar: EquipmentAppBar(
         title: _isEditMode ? 'Edit Equipment' : 'Add Equipment',
         description: _isEditMode ? 'Update ${widget.equipmentItem?.name}' : 'Add new equipment',
+        action: _isEditMode
+            ? IconButton(
+                onPressed: () async {
+                  await context.read<EquipmentProvider>().deleteEquipmentItem(widget.equipmentItem!);
+                  if (!context.mounted) return;
+                  Navigator.pop(context);
+                },
+                icon: const Icon(Icons.delete_forever),
+              ).paddingOnly(right: 20)
+            : null,
       ),
       body: EquipmentBody(
         child: Stack(
@@ -111,31 +116,40 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
                 ),
                 _FieldError(_assignedIDsError),
                 Spacing.h20,
-                if (!_isEditMode)
-                  Row(
-                    children: [
-                      PickPhotosWidget(
-                        pickedImage: _pickedImage,
-                        onChanged: (File? image) async {
-                          if (image != null) {
-                            setState(() {
-                              _showImageUploadingLoading = true;
-                            });
-                            _pickedImage = await uploadImage(image, 'Images');
-                            setState(() {
-                              _showImageUploadingLoading = false;
-                            });
-                          }
-                        },
-                      ),
-                      _FieldError(_pickedImageError),
-                      if (_showImageUploadingLoading)
-                        const CircularProgressIndicator(
-                          color: Colors.black,
-                          strokeWidth: 2,
-                        ).size(15, 15),
-                    ],
-                  ),
+                Column(
+                  children: [
+                    Row(
+                      children: [
+                        const Text(
+                          'Photo : ',
+                          style: TextStyle(
+                            fontSize: 16,
+                            color: Colors.black,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        Spacing.w8,
+                        const Text(
+                          'upload new or replace old photo',
+                          style: TextStyle(
+                            fontSize: 14,
+                            color: Colors.grey,
+                          ),
+                        ).left,
+                      ],
+                    ),
+                    Spacing.h8,
+                    Row(
+                      children: [
+                        ImageUploader(
+                          initialImage: widget.equipmentItem?.photo,
+                          onImageUploaded: (String imageUrl) => _uploadedImage = imageUrl,
+                        ),
+                        _FieldError(_pickedImageError),
+                      ],
+                    ),
+                  ],
+                ),
                 Spacing.h100,
                 AppButton.flat(
                   text: (widget.equipmentItem == null) ? 'Submit' : 'Update',
@@ -157,17 +171,16 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
       EquipmentItem updatedItem = widget.equipmentItem!.copyWith(
         category: _selectedCategory,
         name: _equipmentNameTED.text,
+        photo: _uploadedImage,
       );
       await context.read<EquipmentProvider>().updateEquipmentItemAndPieces(
             updatedItem,
             _assignedTags,
             _pieces,
           );
-
+      if (!mounted) return;
       context.read<EquipmentProvider>().fetchEquipmentItems(true);
-
-      if (mounted) Navigator.pop(context);
-
+      Navigator.pop(context);
       return;
     }
 
@@ -176,7 +189,7 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
             _selectedCategory!,
             _equipmentNameTED.text,
             _assignedTags,
-            _pickedImage!,
+            _uploadedImage!,
           );
 
       if (mounted) {
@@ -204,11 +217,11 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
     }
     if (_assignedTags.isEmpty) {
       isValid = false;
-      _assignedIDsError = 'Add atleast one equipment id';
+      _assignedIDsError = 'Add at least one equipment id';
     }
-    if (_pickedImage == null) {
+    if (_uploadedImage == null) {
       isValid = false;
-      _pickedImageError = 'Photo Required';
+      _pickedImageError = 'Photo Required / wait until loading finishes';
     }
     return isValid;
   }

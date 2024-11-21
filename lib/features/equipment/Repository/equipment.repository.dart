@@ -173,4 +173,14 @@ class EquipmentRepository {
     final querySnapshot = await _equipmentPiecesRef.where('equipmentItemID', isEqualTo: id).get();
     return querySnapshot.docs.map((doc) => EquipmentPieceMapper.fromMap(doc.data())).toList();
   }
+
+  Future<void> deleteEquipmentItem(EquipmentItem equipmentItem) async {
+    await _equipmentItemsRef.doc(equipmentItem.id).delete();
+
+    final querySnapshot = await _equipmentPiecesRef.where('equipmentItemID', isEqualTo: equipmentItem.id).get();
+
+    for (var doc in querySnapshot.docs) {
+      await doc.reference.delete();
+    }
+  }
 }

@@ -253,7 +253,9 @@ class EquipmentProvider extends ChangeNotifier {
       await repository.updateEquipmentItem(updatedItem);
       var oldAssignedTags = oldPieces.map((piece) => piece.tag);
       for (final piece in oldPieces) {
-        await repository.updateEquipmentPiece(piece.copyWith(equipmentItemName: updatedItem.name));
+        await repository.updateEquipmentPiece(piece.copyWith(
+          equipmentItemName: updatedItem.name,
+        ));
       }
 
       for (final tag in updatedTags) {
@@ -279,5 +281,14 @@ class EquipmentProvider extends ChangeNotifier {
     } catch (e) {
       _handleError(e);
     }
+  }
+
+  Future<void> deleteEquipmentItem(EquipmentItem equipmentItem) async {
+    status = EquipmentStatus.loading;
+    selectedPieces.clear();
+    selectedItems.clear();
+    items.remove(equipmentItem);
+    await repository.deleteEquipmentItem(equipmentItem);
+    status = EquipmentStatus.loaded;
   }
 }
