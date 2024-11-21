@@ -30,7 +30,7 @@ class Roaster {
         timeIn: timeIn ?? this.timeIn,
         timeOut: timeOut ?? this.timeOut,
         customerFeedback: customerFeedback ?? this.customerFeedback,
-        isDived: isDived,
+        isDived: isDived ?? this.isDived,
       );
 
   factory Roaster.fromRawJson(String str) => Roaster.fromJson(json.decode(str));
@@ -45,19 +45,18 @@ class Roaster {
 
     return Roaster(
       instructor: (json['instructor'] != null) ? Instructor.fromJson(json['instructor']) : null,
-      timeIn: parseDateOrNull(json['time_in']),
-      timeOut: parseDateOrNull(json['time_out']),
-      customerFeedback:
-          (json['customer_feedback'] != null) ? CustomerFeedback.fromJson(json['customer_feedback']) : null,
+      timeIn: parseDateOrNull(json['timeIn']),
+      timeOut: parseDateOrNull(json['timeOut']),
+      customerFeedback: (json['customerFeedback'] != null) ? CustomerFeedback.fromJson(json['customerFeedback']) : null,
       isDived: json['isDived'],
     );
   }
 
   Map<String, dynamic> toJson() => {
         'instructor': instructor?.toJson(),
-        'time_in': timeIn?.toIso8601String(),
-        'time_out': timeOut?.toIso8601String(),
-        'customer_feedback': customerFeedback?.toJson(),
+        'timeIn': timeIn?.toIso8601String(),
+        'timeOut': timeOut?.toIso8601String(),
+        'customerFeedback': customerFeedback?.toJson(),
         'isDived': isDived,
       };
 }

@@ -41,7 +41,7 @@ class CoastGuardSlip {
           pw.SizedBox(height: 20),
           ...boats.map(
             (boat) {
-              if (boat.isBoat ?? false) {
+              if ((boat.isBoat ?? false) && ((bookings[boat] ?? []).isNotEmpty)) {
                 return buildBoat(boat, bookings[boat] ?? [], selectedDate);
               } else {
                 return pw.SizedBox();

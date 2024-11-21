@@ -696,7 +696,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
         First Name : *${itemModel.name!.trim().toLowerCase().capitalizeFirst}* 
         Last Name : *${(itemModel.bookingModel!.details!.lastName != "") ? itemModel.bookingModel!.details!.lastName : "-"}* 
         Email : *${itemModel.email}* 
-        Date of Birth : *${(itemModel.bookingModel!.details!.dob != null) ? intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.details!.dob).toDate()) : "-"}* 
+        Date of Birth : *${intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.details!.dob).toDate())}* 
         Course Name : *${itemModel.activity}* 
         Invoice No : *${(itemModel.bookingModel?.receiptNo != null && itemModel.bookingModel?.receiptNo != '') ? itemModel.bookingModel?.receiptNo : '-'}* 
         Phone Number : *${itemModel.bookingModel!.details!.phoneNumber}* 

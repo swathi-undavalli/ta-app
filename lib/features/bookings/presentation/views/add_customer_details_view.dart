@@ -69,7 +69,6 @@ class AddCustomerDetailsView extends StatelessWidget {
                       ),
 
                       //fill all details
-
                       if (controller.isQuickBooking == false) ...[
                         buildEmailID(),
                         if (controller.getDetailsPressed == false)

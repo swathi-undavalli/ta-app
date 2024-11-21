@@ -57,7 +57,7 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
             else
               AppButton.flat(
                 onTap: generateCoastGuardSlip,
-                text: 'Generate',
+                text: 'Generate slip',
                 color: Colors.black,
                 textColor: Colors.white,
               ).center,

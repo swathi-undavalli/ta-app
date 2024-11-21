@@ -1,9 +1,17 @@
+import 'dart:developer';
+import 'dart:io';
+import 'dart:ui' as ui;
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:temple_ui_tools/styling/spacing_widgets.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/widgets/back_navigation_icon.dart';
 import '../../../boat/models/boats.dart';
@@ -27,7 +35,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
   @override
   void initState() {
     super.initState();
-    // Lock the orientation to portrait only
+    // Lock the orientation to landscape only
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.landscapeRight,
     ]);
@@ -45,38 +53,83 @@ class _RoasterChartViewState extends State<RoasterChartView> {
     super.dispose();
   }
 
+  final GlobalKey _repaintBoundaryKey = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.black,
+        onPressed: () {
+          _captureAndShareScreenshot();
+        },
+        child: const Icon(Icons.share),
+      ),
       body: SafeArea(
-        child: Column(
-          children: [
-            Spacing.h20,
-            Row(
-              children: [
-                const BackNavigationIcon(),
-                Expanded(
-                  child: Text(
-                    DateFormat('dd-MM-yyyy').format(widget.selectedDate),
-                    textAlign: TextAlign.center,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      decoration: TextDecoration.underline,
+        child: SizedBox(
+          height: Screen.height,
+          child: SingleChildScrollView(
+            child: RepaintBoundary(
+              key: _repaintBoundaryKey,
+              child: Container(
+                color: Colors.white,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Spacing.h20,
+                    Row(
+                      children: [
+                        const BackNavigationIcon(),
+                        const Spacer(),
+                        Text(
+                          DateFormat('dd-MM-yyyy').format(widget.selectedDate),
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                        const Spacer(),
+                      ],
                     ),
-                  ),
+                    Spacing.h20,
+                    buildHeadings(),
+                    Spacing.h10,
+                    buildCustomers(),
+                    Spacing.h70,
+                  ],
                 ),
-                Spacing.w95,
-              ],
+              ),
             ),
-            Spacing.h20,
-            buildHeadings(),
-            Spacing.h15,
-            buildCustomers(),
-          ],
+          ),
         ),
       ),
     );
+  }
+
+  Future<void> _captureAndShareScreenshot() async {
+    try {
+      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      ui.Image image = await boundary.toImage(pixelRatio: 10);
+      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      final tempDir = await getTemporaryDirectory();
+      final tempPath = '${tempDir.path}/screenshot.png';
+      File(tempPath).writeAsBytesSync(pngBytes);
+      shareImages([tempPath]);
+    } catch (e) {
+      print('Error capturing screenshot: $e');
+    }
+  }
+
+  Future<void> shareImages(List<String> images) async {
+    try {
+      Share.shareXFiles(images.map((e) => XFile(e)).toList());
+    } catch (e) {
+      log('Error while sharing images $e');
+    }
   }
 
   Widget buildCustomers() {
@@ -134,78 +187,73 @@ class _RoasterChartViewState extends State<RoasterChartView> {
             }
             BoatsModel boatsModel = BoatsModel.fromMap(data);
 
-            return Expanded(
-              child: ListView.builder(
-                itemCount: filteredBookings.length,
-                itemBuilder: (context, index) {
-                  Booking booking = bookings[index];
-                  Boat? boat;
-                  boatsModel.boats?.forEach((element) {
-                    if (element.id == booking.getBoatInfo(widget.selectedDate)?.id) {
-                      boat = element;
-                    }
-                  });
-
-                  return Column(
-                    children: [
-                      ...(booking.pax ?? []).map(
-                        (p) {
-                          if (p['roaster'] != null) {
-                            Roaster roaster = Roaster.fromJson(p['roaster']);
-
-                            return Row(
-                              children: [
-                                buildText(text: boat?.name ?? '-'),
-                                buildText(
-                                  text: booking.id ?? '',
-                                ),
-                                buildText(
-                                  text: '${p['first-name']}' '${p['last-name']}',
-                                ),
-                                buildText(text: p['gender']),
-                                buildText(
-                                  text: roaster.instructor?.name ?? '-',
-                                ),
-                                buildText(
-                                  text: (roaster.timeIn != null) ? DateFormat('hh:mm a').format(roaster.timeIn!) : '-',
-                                ),
-                                buildText(
-                                  text:
-                                      (roaster.timeOut != null) ? DateFormat('hh:mm a').format(roaster.timeOut!) : '-',
-                                ),
-                                buildText(
-                                  text: (roaster.isDived != null && roaster.isDived! == true) ? 'Yes' : 'No',
-                                ),
-                                buildText(
-                                  text: (roaster.customerFeedback != null && roaster.customerFeedback!.knowsSwimming!)
-                                      ? 'Yes'
-                                      : 'No',
-                                ),
-                                buildText(
-                                  text: (roaster.customerFeedback != null && roaster.customerFeedback!.interestedOwc!)
-                                      ? 'Yes'
-                                      : 'No',
-                                ),
-                                buildText(
-                                  text: (roaster.customerFeedback != null &&
-                                          roaster.customerFeedback!.feedback!.isNotEmpty)
-                                      ? roaster.customerFeedback!.feedback!
-                                      : '-',
-                                ),
-                              ],
-                            ).paddingSymmetric(horizontal: 10, vertical: 5);
-                          }
-                          return const SizedBox();
-                        },
-                      ),
-                    ],
-                  );
-                },
-              ),
+            return Column(
+              children: [
+                for (int i = 0; i < filteredBookings.length; i++) buildCustomerInfo(bookings, i, boatsModel),
+              ],
             );
           },
         );
       },
+    );
+  }
+
+  Widget buildCustomerInfo(List<Booking> bookings, int index, BoatsModel boatsModel) {
+    Booking booking = bookings[index];
+    Boat? boat;
+    boatsModel.boats?.forEach((element) {
+      if (element.id == booking.getBoatInfo(widget.selectedDate)?.id) {
+        boat = element;
+      }
+    });
+
+    return Column(
+      children: [
+        ...(booking.pax ?? []).map(
+          (p) {
+            if (p['roaster'] != null) {
+              Roaster roaster = Roaster.fromJson(p['roaster']);
+
+              return Row(
+                children: [
+                  buildText(text: boat?.name ?? '-'),
+                  buildText(
+                    text: booking.id ?? '',
+                  ),
+                  buildText(
+                    text: '${p['first-name']}' '${p['last-name']}',
+                  ),
+                  buildText(text: p['gender']),
+                  buildText(
+                    text: roaster.instructor?.name ?? '-',
+                  ),
+                  buildText(
+                    text: (roaster.timeIn != null) ? DateFormat('hh:mm a').format(roaster.timeIn!) : '-',
+                  ),
+                  buildText(
+                    text: (roaster.timeOut != null) ? DateFormat('hh:mm a').format(roaster.timeOut!) : '-',
+                  ),
+                  buildText(
+                    text: (roaster.isDived != null && roaster.isDived! == true) ? 'Yes' : 'No',
+                  ),
+                  buildText(
+                    text: (roaster.customerFeedback != null && roaster.customerFeedback!.knowsSwimming!) ? 'Yes' : 'No',
+                  ),
+                  buildText(
+                    text: (roaster.customerFeedback != null && roaster.customerFeedback!.interestedOwc!) ? 'Yes' : 'No',
+                  ),
+                  buildText(
+                    text: (roaster.customerFeedback != null && roaster.customerFeedback!.feedback!.isNotEmpty)
+                        ? roaster.customerFeedback!.feedback!
+                        : '-',
+                  ),
+                ],
+              ).paddingSymmetric(horizontal: 10, vertical: 5);
+            }
+            return const SizedBox();
+          },
+        ),
+      ],
     );
   }
 

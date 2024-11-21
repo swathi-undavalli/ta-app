@@ -39,20 +39,20 @@ class CustomerFeedback {
   String toRawJson() => json.encode(toJson());
 
   factory CustomerFeedback.fromJson(Map<String, dynamic> json) => CustomerFeedback(
-        knowsSwimming: json['knows_swimming'],
-        interestedOwc: json['interested_owc'],
-        instructorFeedback: json['instructor_feedback'],
-        equipmentFeedback: json['equipment_feedback'],
-        experienceFeedback: json['experience_feedback'],
+        knowsSwimming: json['knowsSwimming'],
+        interestedOwc: json['interestedOwc'],
+        instructorFeedback: json['instructorFeedback'],
+        equipmentFeedback: json['equipmentFeedback'],
+        experienceFeedback: json['experienceFeedback'],
         feedback: json['feedback'],
       );
 
   Map<String, dynamic> toJson() => {
-        'knows_swimming': knowsSwimming,
-        'interested_owc': interestedOwc,
-        'instructor_feedback': instructorFeedback,
-        'equipment_feedback': equipmentFeedback,
-        'experience_feedback': experienceFeedback,
+        'knowsSwimming': knowsSwimming,
+        'interestedOwc': interestedOwc,
+        'instructorFeedback': instructorFeedback,
+        'equipmentFeedback': equipmentFeedback,
+        'experienceFeedback': experienceFeedback,
         'feedback': feedback,
       };
 }

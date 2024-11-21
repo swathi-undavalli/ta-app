@@ -11,6 +11,7 @@ import 'package:temple_ui_tools/utils/utils.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/continue_dialog.dart';
 import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
@@ -226,12 +227,20 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                       AppButton.miniFlat(
                         text: (customerFeedback == null) ? 'Submit' : 'Update',
                         onTap: () async {
-                          customerFeedback = await CustomerFeedbackBottomSheet.show(
+                          bool openCustomerBs = await ContinueDialog.show(
                             context,
-                            bookingModel: booking,
-                            paxIndex: widget.paxIndex,
-                            customerFeedback: customerFeedback,
+                            title: 'Are You Sure ? ',
+                            content: 'Please submit the information before getting into customer feedback',
                           );
+
+                          if (openCustomerBs) {
+                            customerFeedback = await CustomerFeedbackBottomSheet.show(
+                              context,
+                              bookingModel: booking,
+                              paxIndex: widget.paxIndex,
+                              customerFeedback: customerFeedback,
+                            );
+                          }
                           setState(() {});
                         },
                       ),

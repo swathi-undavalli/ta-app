@@ -187,7 +187,8 @@ class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomShee
                           showLoading = false;
                         });
                         if (context.mounted) {
-                          Navigator.pop(context, customerFeedback);
+                          Navigator.pop(context);
+                          Navigator.pop(context);
                         }
                       },
                     ),
