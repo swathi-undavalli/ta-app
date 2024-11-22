@@ -54,13 +54,21 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
                 color: Colors.white,
                 backgroundColor: Colors.black,
               ).center
-            else
+            else ...[
               AppButton.flat(
                 onTap: generateCoastGuardSlip,
                 text: 'Generate slip',
                 color: Colors.black,
                 textColor: Colors.white,
               ).center,
+              Spacing.h30,
+              AppButton.flat(
+                onTap: generateIDProofs,
+                text: 'Generate ID proofs',
+                color: Colors.black,
+                textColor: Colors.white,
+              ).center,
+            ]
           ],
         ).paddingSymmetric(horizontal: 20, vertical: 20),
       ),
@@ -197,6 +205,30 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
       selectedDate: selectedDate,
       bookings: cachedBookings,
       employees: allEmployees,
+    );
+    Share.shareXFiles([XFile(pdfFile.path)]);
+
+    setState(() {
+      showLoading = false;
+    });
+  }
+
+  Future<void> generateIDProofs() async {
+    setState(() {
+      showLoading = true;
+    });
+
+    List<Boat> boats = await getAllBoats(selectedDate);
+
+    Map<Boat, List<Booking>> cachedBookings = {};
+    for (var boat in boats) {
+      List<Booking> bookings = await getBookings(selectedDate, boat);
+      cachedBookings[boat] = bookings;
+    }
+
+    File pdfFile = await CoastGuardSlip.generateIDProofs(
+      selectedDate: selectedDate,
+      bookings: cachedBookings,
     );
     Share.shareXFiles([XFile(pdfFile.path)]);
 

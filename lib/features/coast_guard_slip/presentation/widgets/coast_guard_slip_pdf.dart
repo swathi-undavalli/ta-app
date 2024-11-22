@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:printing/printing.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/widgets/time_picker.dart';
@@ -55,6 +56,60 @@ class CoastGuardSlip {
       ),
     );
     return ShareBookingDetails.saveDocument(name: 'coatGuardSlip.pdf', pdf: pdf);
+  }
+
+  static Map<String, pw.ImageProvider> idProofs = {};
+
+  static Future<File> generateIDProofs({
+    required DateTime selectedDate,
+    required Map<Boat, List<Booking>> bookings,
+  }) async {
+    final pdf = pw.Document();
+
+    List<Boat> boats = bookings.keys.toList();
+    boats.sort((a, b) {
+      return (TimePicker.getDateTime(a.time) ?? DateTime.now())
+          .compareTo(TimePicker.getDateTime(b.time) ?? DateTime.now());
+    });
+
+    for (final bookingsList in bookings.values) {
+      final customers = getCustomers(bookingsList).where((customer) => customer.idProof.isNotEmpty);
+
+      for (var customer in customers) {
+        for (final id in customer.idProof) {
+          if (idProofs.containsKey(id)) continue;
+          final netImage = await networkImage(id);
+          idProofs[id] = netImage;
+        }
+      }
+    }
+
+    pdf.addPage(
+      pw.MultiPage(
+        pageTheme: const pw.PageTheme(
+          pageFormat: PdfPageFormat.a4,
+        ),
+        build: (context) => <pw.Widget>[
+          buildCompanyDetails(selectedDate),
+          pw.SizedBox(height: 15),
+          buildDarkLine(),
+          pw.SizedBox(height: 20),
+          ...boats.map(
+            (boat) {
+              if ((boat.isBoat ?? false) && ((bookings[boat] ?? []).isNotEmpty)) {
+                return _buildIDProofs(boat, bookings[boat] ?? [], selectedDate);
+              } else {
+                return pw.SizedBox();
+              }
+            },
+          ),
+          pw.SizedBox(height: 15),
+          buildSubTitle(title: 'InCharge  :', text: 'Azharudheen ( 8098629070 )\n'),
+          buildSubTitle(title: 'OverAll InCharges  :  ', text: 'Rob ( 9789270958 )\nSanthosh ( 8508854778 )'),
+        ],
+      ),
+    );
+    return ShareBookingDetails.saveDocument(name: 'id_proofs.pdf', pdf: pdf);
   }
 
   static pw.Widget buildCompanyDetails(DateTime selectedDate) {
@@ -149,6 +204,32 @@ class CoastGuardSlip {
             gender: customers[index].gender ?? '-',
             category: customers[index].course ?? '-',
             country: customers[index].country ?? 'India',
+          ),
+        ),
+        pw.SizedBox(height: 20),
+        getDSDPAXCount(bookings, boat, selectedDate),
+        pw.SizedBox(height: 20),
+        buildDarkLine(),
+        pw.SizedBox(height: 20),
+      ],
+    );
+  }
+
+  static pw.Widget _buildIDProofs(Boat boat, List<Booking> bookings, DateTime selectedDate) {
+    List<Customer> customers = getCustomers(bookings);
+
+    return pw.Column(
+      mainAxisAlignment: pw.MainAxisAlignment.start,
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        buildBoatDetails(boat),
+        buildLine(),
+        pw.SizedBox(height: 15),
+        ...List.generate(
+          customers.length,
+          (index) => _buildIDProofPhoto(
+            index: index + 1,
+            urls: customers[index].idProof,
           ),
         ),
         pw.SizedBox(height: 20),
@@ -353,6 +434,36 @@ class CoastGuardSlip {
     );
   }
 
+  static pw.Widget _buildIDProofPhoto({
+    required int index,
+    required List<String> urls,
+  }) {
+    return pw.SizedBox(
+      height: 120,
+      child: pw.Padding(
+        padding: const pw.EdgeInsets.only(
+          top: 5,
+          bottom: 5,
+        ),
+        child: pw.Row(
+          children: [
+            pw.SizedBox(
+              width: 40,
+              child: buildText('$index'),
+            ),
+            for (final url in urls)
+              pw.Padding(
+                padding: const pw.EdgeInsets.only(right: 10),
+                child: pw.Image(
+                  idProofs[url]!,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+
   static pw.Widget getDSDPAXCount(List<Booking>? bookings, Boat boat, DateTime selectedDate) {
     Iterable<Customer> totalCustomers = getCustomers(bookings ?? []);
     Iterable<Customer> dsdCustomers = totalCustomers.where((customer) => customer.course == 'DSD').toList();
@@ -427,11 +538,14 @@ List<Customer> getCustomers(List<Booking> bookings) {
 
   for (var booking in bookings) {
     booking.pax?.forEach((person) {
+      final id = (person['idProof'] as String?) ?? '';
+
       Customer customer = Customer(
         name: (person['first-name'] ?? '') + (person['last-name'] ?? ''),
         gender: person['gender'],
         country: person['country'],
         course: booking.activity?.firstOrNull?.shortName,
+        idProof: id.split(','),
       );
       customers.add(customer);
     });
@@ -454,11 +568,13 @@ class Customer {
   String? gender;
   String? country;
   String? course;
+  List<String> idProof;
 
   Customer({
     required this.name,
     required this.gender,
     required this.country,
+    required this.idProof,
     required this.course,
   });
 
