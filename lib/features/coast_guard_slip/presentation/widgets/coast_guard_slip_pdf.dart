@@ -1,6 +1,7 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -78,8 +79,12 @@ class CoastGuardSlip {
       for (var customer in customers) {
         for (final id in customer.idProof) {
           if (idProofs.containsKey(id)) continue;
-          final netImage = await networkImage(id);
-          idProofs[id] = netImage;
+          try {
+            final netImage = await networkImage(id);
+            idProofs[id] = netImage;
+          } catch (e) {
+            log(e.toString());
+          }
         }
       }
     }
@@ -103,9 +108,6 @@ class CoastGuardSlip {
               }
             },
           ),
-          pw.SizedBox(height: 15),
-          buildSubTitle(title: 'InCharge  :', text: 'Azharudheen ( 8098629070 )\n'),
-          buildSubTitle(title: 'OverAll InCharges  :  ', text: 'Rob ( 9789270958 )\nSanthosh ( 8508854778 )'),
         ],
       ),
     );
@@ -129,7 +131,7 @@ class CoastGuardSlip {
         ),
         pw.SizedBox(height: 15),
         pw.Text(
-          'EAST COAST WATERSPORTS PVT LTD,#6A, Gandhi st., Colas Nagar,Opposite to Indira Gandhi Stadium Pondicherry, India Contact : +91 9940219449 / 6385686600',
+          'EAST COAST WATERSPOUTS PVT LTD,#6A, Gandhi st., Colas Nagar,Opposite to Indira Gandhi Stadium Pondicherry, India Contact : +91 9940219449 / 6385686600',
           style: pw.TextStyle(
             color: const PdfColor.fromInt(0xff263238),
             font: pw.Font.times(),
@@ -204,6 +206,7 @@ class CoastGuardSlip {
             gender: customers[index].gender ?? '-',
             category: customers[index].course ?? '-',
             country: customers[index].country ?? 'India',
+            bookingId: customers[index].bookingId,
           ),
         ),
         pw.SizedBox(height: 20),
@@ -227,15 +230,8 @@ class CoastGuardSlip {
         pw.SizedBox(height: 15),
         ...List.generate(
           customers.length,
-          (index) => _buildIDProofPhoto(
-            index: index + 1,
-            urls: customers[index].idProof,
-          ),
+          (index) => _buildIDProofPhoto(customer: customers[index]),
         ),
-        pw.SizedBox(height: 20),
-        getDSDPAXCount(bookings, boat, selectedDate),
-        pw.SizedBox(height: 20),
-        buildDarkLine(),
         pw.SizedBox(height: 20),
       ],
     );
@@ -377,6 +373,10 @@ class CoastGuardSlip {
             width: 40,
             child: buildText('SI.No'),
           ),
+          // pw.SizedBox(
+          //   width: 40,
+          //   child: buildText('Id'),
+          // ),
           pw.SizedBox(
             width: 150,
             child: buildText('Diver Names'),
@@ -404,6 +404,7 @@ class CoastGuardSlip {
     required String gender,
     required String category,
     required String country,
+    String? bookingId,
   }) {
     return pw.Padding(
       padding: const pw.EdgeInsets.only(top: 5, bottom: 5),
@@ -413,6 +414,10 @@ class CoastGuardSlip {
             width: 40,
             child: buildText('$index'),
           ),
+          // pw.SizedBox(
+          //   width: 40,
+          //   child: buildText((bookingId != null) ? bookingId : '-'),
+          // ),
           pw.SizedBox(
             width: 150,
             child: buildText(name),
@@ -435,33 +440,54 @@ class CoastGuardSlip {
   }
 
   static pw.Widget _buildIDProofPhoto({
-    required int index,
-    required List<String> urls,
+    required Customer customer,
   }) {
-    return pw.SizedBox(
-      height: 120,
-      child: pw.Padding(
-        padding: const pw.EdgeInsets.only(
-          top: 5,
-          bottom: 5,
-        ),
-        child: pw.Row(
-          children: [
-            pw.SizedBox(
-              width: 40,
-              child: buildText('$index'),
-            ),
-            for (final url in urls)
-              pw.Padding(
-                padding: const pw.EdgeInsets.only(right: 10),
-                child: pw.Image(
-                  idProofs[url]!,
+    List<String> urls = customer.idProof;
+    final validUrls = urls.where((url) => url.trim().isNotEmpty).toList();
+    log(validUrls.toString());
+    if (validUrls.isNotEmpty) {
+      return pw.SizedBox(
+        height: 300,
+        child: pw.Padding(
+          padding: const pw.EdgeInsets.only(
+            top: 5,
+            bottom: 5,
+          ),
+          child: pw.Column(
+            mainAxisAlignment: pw.MainAxisAlignment.start,
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              buildText('${customer.name!.capitalizeFirst} :- ${customer.bookingId}'),
+              pw.SizedBox(height: 20),
+              pw.SizedBox(
+                height: 250,
+                width: 250,
+                child: pw.Row(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  mainAxisAlignment: pw.MainAxisAlignment.start,
+                  children: [
+                    for (final url in validUrls)
+                      if (idProofs.containsKey(url))
+                        pw.Padding(
+                          padding: const pw.EdgeInsets.only(right: 10),
+                          child: pw.Image(
+                            idProofs[url]!,
+                            height: 250,
+                            width: 250,
+                            fit: pw.BoxFit.fitHeight,
+                          ),
+                        ),
+                  ],
                 ),
               ),
-          ],
+              pw.SizedBox(height: 20),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    } else {
+      return pw.SizedBox();
+    }
   }
 
   static pw.Widget getDSDPAXCount(List<Booking>? bookings, Boat boat, DateTime selectedDate) {
@@ -528,9 +554,13 @@ List<Instructor> getDiveBuddies(List<Booking> bookings) {
     diveBuddies.addAll(booking.boatDetails?.diveBuddies ?? []);
   }
 
-  return diveBuddies.map((instructor) {
-    return Instructor.fromEmployee(getEmployee(instructor.id)!);
-  }).toList();
+  if (diveBuddies.isNotEmpty) {
+    return diveBuddies.map((instructor) {
+      return Instructor.fromEmployee(getEmployee(instructor.id)!);
+    }).toList();
+  } else {
+    return [];
+  }
 }
 
 List<Customer> getCustomers(List<Booking> bookings) {
@@ -546,6 +576,8 @@ List<Customer> getCustomers(List<Booking> bookings) {
         country: person['country'],
         course: booking.activity?.firstOrNull?.shortName,
         idProof: id.split(','),
+        bookingId: booking.id!,
+        noOfPersons: booking.noOfPersons!,
       );
       customers.add(customer);
     });
@@ -568,6 +600,8 @@ class Customer {
   String? gender;
   String? country;
   String? course;
+  String bookingId;
+  int noOfPersons;
   List<String> idProof;
 
   Customer({
@@ -576,6 +610,8 @@ class Customer {
     required this.country,
     required this.idProof,
     required this.course,
+    required this.bookingId,
+    required this.noOfPersons,
   });
 
   @override
