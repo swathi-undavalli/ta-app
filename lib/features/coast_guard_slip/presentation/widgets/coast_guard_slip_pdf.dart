@@ -152,11 +152,13 @@ class CoastGuardSlip {
   }
 
   static pw.Widget buildBoat(Boat boat, List<Booking> bookings, DateTime selectedDate) {
-    // TODO : Show intern photo/video and instructor photo/video.
     List<Instructor> instructors = getInstructors(bookings, selectedDate);
     List<Customer> customers = getCustomers(bookings);
     List<Instructor> diveBuddies = getDiveBuddies(bookings);
     List<Instructor> dsdInstructors = (boat.dsdInstructors ?? []).map((instructor) {
+      return Instructor.fromEmployee(getEmployee(instructor.id)!);
+    }).toList();
+    List<Instructor> photoVideoStaff = [...?boat.internPhotoVideo, ...?boat.photographer].map((instructor) {
       return Instructor.fromEmployee(getEmployee(instructor.id)!);
     }).toList();
 
@@ -195,6 +197,16 @@ class CoastGuardSlip {
             index: instructors.length + diveBuddies.length + index + 1,
             name: dsdInstructors[index].name,
             gender: dsdInstructors[index].gender ?? '-',
+            category: 'Staff',
+            country: 'India',
+          ),
+        ),
+        ...List.generate(
+          photoVideoStaff.length,
+          (index) => buildCustomerDetails(
+            index: instructors.length + diveBuddies.length + photoVideoStaff.length + index + 1,
+            name: photoVideoStaff[index].name,
+            gender: photoVideoStaff[index].gender ?? '-',
             category: 'Staff',
             country: 'India',
           ),
@@ -496,6 +508,9 @@ class CoastGuardSlip {
     Iterable<Customer> dsdCustomers = totalCustomers.where((customer) => customer.course == 'DSD').toList();
     List<Instructor> staff = getInstructors(bookings ?? [], selectedDate);
     List<Instructor> diveBuddies = getDiveBuddies(bookings ?? []);
+    List<Instructor> photoVideoStaff = [...?boat.internPhotoVideo, ...?boat.photographer].map((instructor) {
+      return Instructor.fromEmployee(getEmployee(instructor.id)!);
+    }).toList();
 
     pw.Widget buildText(String text) => pw.Text(
           text,
@@ -519,7 +534,9 @@ class CoastGuardSlip {
               if (totalCustomers.isNotEmpty) buildText('Total Customers : ${totalCustomers.length}'),
               if (dsdCustomers.isNotEmpty) buildText('Total DSD : ${dsdCustomers.length}'),
               if ((boat.dsdInstructors ?? []).isNotEmpty) buildText('DSD Instructors : ${boat.dsdInstructors?.length}'),
-              if (staff.isNotEmpty) buildText('Total Staff : ${staff.length + diveBuddies.length}'),
+              if (staff.isNotEmpty)
+                buildText(
+                    'Total Staff : ${staff.length + diveBuddies.length + photoVideoStaff.length + (boat.dsdInstructors?.length ?? 0)}'),
             ],
           ),
         ],
