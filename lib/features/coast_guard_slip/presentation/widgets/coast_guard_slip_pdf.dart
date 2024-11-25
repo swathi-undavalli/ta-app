@@ -152,6 +152,7 @@ class CoastGuardSlip {
   }
 
   static pw.Widget buildBoat(Boat boat, List<Booking> bookings, DateTime selectedDate) {
+    // TODO : Show intern photo/video and instructor photo/video.
     List<Instructor> instructors = getInstructors(bookings, selectedDate);
     List<Customer> customers = getCustomers(bookings);
     List<Instructor> diveBuddies = getDiveBuddies(bookings);
