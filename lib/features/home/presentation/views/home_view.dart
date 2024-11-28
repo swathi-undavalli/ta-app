@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -58,14 +56,13 @@ class _HomeViewState extends State<HomeView> {
                   children: [
                     Column(
                       children: [
-                        if (currentEmployee?.role != 'Intern')
-                          AddEmployeeWidget(
-                            text: 'Add Employees',
-                            subText: 'Only admins can modify',
-                            onTap: () {
-                              Navigator.push(context, AllEmployeesView.route());
-                            },
-                          ),
+                        AddEmployeeWidget(
+                          text: 'Add Employees',
+                          subText: 'Only admins can modify',
+                          onTap: () {
+                            Navigator.push(context, AllEmployeesView.route());
+                          },
+                        ),
                         Spacing.h20,
                         buildCheckLists(),
                         Spacing.h20,
@@ -90,22 +87,6 @@ class _HomeViewState extends State<HomeView> {
         ).scrollable,
       ),
     );
-  }
-
-  Future<void> deleteEmptyDocuments() async {
-    CollectionReference pdfCron = FirebaseFirestore.instance.collection('pdfCron');
-
-    // Fetch all documents in the "pdfCron" collection
-    QuerySnapshot querySnapshot = await pdfCron.get();
-
-    for (QueryDocumentSnapshot doc in querySnapshot.docs) {
-      // Check if the document contains no data
-      if (doc.data() == null || (doc.data() as Map<String, dynamic>).isEmpty) {
-        // Delete the document if it has no data
-        await pdfCron.doc(doc.id).delete();
-        log('Deleted document: ${doc.id}');
-      }
-    }
   }
 
   Widget buildButton({required Function onTap, required IconData icon}) {
@@ -133,13 +114,12 @@ class _HomeViewState extends State<HomeView> {
       alignment: Alignment.centerLeft,
       child: Row(
         children: [
-          if (currentEmployee?.role != 'Intern')
-            IconButton(
-              onPressed: () {
-                Scaffold.of(context).openDrawer();
-              },
-              icon: const Icon(Icons.menu_rounded),
-            ),
+          IconButton(
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            icon: const Icon(Icons.menu_rounded),
+          ),
           const Spacer(),
           IconButton(
             onPressed: () {

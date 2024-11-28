@@ -696,7 +696,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
         First Name : *${itemModel.name!.trim().toLowerCase().capitalizeFirst}* 
         Last Name : *${(itemModel.bookingModel!.details!.lastName != "") ? itemModel.bookingModel!.details!.lastName : "-"}* 
         Email : *${itemModel.email}* 
-        Date of Birth : *${intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.details!.dob).toDate())}* 
+        Date of Birth : *${intl.DateFormat("dd-MM-yyy").format((itemModel.bookingModel!.details?.dob)?.toDate() ?? DateTime.now())}* 
         Course Name : *${itemModel.activity}* 
         Invoice No : *${(itemModel.bookingModel?.receiptNo != null && itemModel.bookingModel?.receiptNo != '') ? itemModel.bookingModel?.receiptNo : '-'}* 
         Phone Number : *${itemModel.bookingModel!.details!.phoneNumber}* 
@@ -885,8 +885,8 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                                 padding: EdgeInsets.only(
                                                   bottom: MediaQuery.of(context).viewInsets.bottom,
                                                   top: 30,
-                                                  left: 30,
-                                                  right: 30,
+                                                  left: 20,
+                                                  right: 20,
                                                 ),
                                                 constraints: const BoxConstraints(minHeight: 300),
                                                 decoration: const BoxDecoration(

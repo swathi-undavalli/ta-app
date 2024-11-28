@@ -7,6 +7,7 @@ import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/field_error.dart';
 import '../../../../core/widgets/image_uploader.dart';
 import '../../../bookings/presentation/widgets/app_text_fields.dart';
 import '../../models/equipment_model.dart';
@@ -98,7 +99,7 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
                   },
                   selectedCategory: _selectedCategory,
                 ),
-                _FieldError(_selectCategoryError),
+                FieldError(_selectCategoryError),
                 AppTextField(
                   hintText: 'Equipment Name',
                   controller: _equipmentNameTED,
@@ -114,7 +115,7 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
                     });
                   },
                 ),
-                _FieldError(_assignedIDsError),
+                FieldError(_assignedIDsError),
                 Spacing.h20,
                 Column(
                   children: [
@@ -145,7 +146,7 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
                           initialImage: widget.equipmentItem?.photo,
                           onImageUploaded: (String imageUrl) => _uploadedImage = imageUrl,
                         ),
-                        _FieldError(_pickedImageError),
+                        FieldError(_pickedImageError),
                       ],
                     ),
                   ],
@@ -439,17 +440,3 @@ class _EquipmentCategorySelectorState extends State<_EquipmentCategorySelector> 
   }
 }
 
-class _FieldError extends StatelessWidget {
-  final String? error;
-
-  const _FieldError(this.error);
-
-  @override
-  Widget build(BuildContext context) {
-    if (error == null) return const SizedBox();
-    return Text(
-      error!,
-      style: TextStyle(color: Colors.red.shade800, fontSize: 12),
-    );
-  }
-}

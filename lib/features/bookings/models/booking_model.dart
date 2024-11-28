@@ -386,7 +386,7 @@ class BookingDetails with BookingDetailsMappable {
   final String lastName;
   final String email;
   final String? gender;
-  final Timestamp dob;
+  final Timestamp? dob;
   final String isoCode;
   final String countryCode;
   final String phoneNumber;

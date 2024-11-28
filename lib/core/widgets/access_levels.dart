@@ -69,4 +69,14 @@ class AccessRights {
   static bool get addEquipment => accessLevel?.addEquipment ?? false;
 
   static bool get viewEquipment => accessLevel?.viewEquipment ?? false;
+
+  static bool get generalInfo => accessLevel?.generalInfo ?? false;
+
+  static bool get roster => accessLevel?.roster ?? false;
+
+  static bool get logs => accessLevel?.logs ?? false;
+
+  static bool get upcomingEvents => accessLevel?.upcomingEvents ?? false;
+
+  static bool get coastGuardSlip => accessLevel?.coastGuardSlip ?? false;
 }

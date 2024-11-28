@@ -29,6 +29,11 @@ class Employee {
       processCertificate: false,
       addEquipment: false,
       viewEquipment: false,
+      generalInfo: false,
+      roster: false,
+      logs: false,
+      upcomingEvents: false,
+      coastGuardSlip: false,
     ),
     this.firstName,
     this.lastName,
@@ -174,6 +179,11 @@ class AccessLevels {
     required this.processCertificate,
     required this.addEquipment,
     required this.viewEquipment,
+    required this.generalInfo,
+    required this.roster,
+    required this.logs,
+    required this.upcomingEvents,
+    required this.coastGuardSlip,
   });
 
   final bool? viewBookings;
@@ -193,6 +203,11 @@ class AccessLevels {
   final bool? processCertificate;
   final bool? addEquipment;
   final bool? viewEquipment;
+  final bool? generalInfo;
+  final bool? roster;
+  final bool? logs;
+  final bool? upcomingEvents;
+  final bool? coastGuardSlip;
 
   factory AccessLevels.fromMap(Map<String, dynamic> json) => AccessLevels(
         viewBookings: json['viewBookings'],
@@ -212,6 +227,11 @@ class AccessLevels {
         processCertificate: json['processCertificate'],
         addEquipment: json['addEquipment'],
         viewEquipment: json['viewEquipment'],
+        generalInfo: json['generalInfo'],
+        roster: json['roster'],
+        logs: json['logs'],
+        upcomingEvents: json['upcomingEvents'],
+        coastGuardSlip: json['coastGuardSlip'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -232,5 +252,10 @@ class AccessLevels {
         'processCertificate': processCertificate,
         'viewEquipment': viewEquipment,
         'addEquipment': addEquipment,
+        'generalInfo': generalInfo,
+        'roster': roster,
+        'logs': logs,
+        'upcomingEvents': upcomingEvents,
+        'coastGuardSlip': coastGuardSlip,
       };
 }

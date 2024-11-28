@@ -9,7 +9,6 @@ import '../../../../core/widgets/access_levels.dart';
 import '../../../activities/presentation/views/all_activities_view.dart';
 import '../../../all_bookings/presentation/views/all_bookings_view.dart';
 import '../../../board_plan/presentation/views/board_plan_view.dart';
-import '../../../certifications/presentation/views/certification_logs_view.dart';
 import '../../../coast_guard_slip/presentation/views/coast_guard_slip_view.dart';
 import '../../../dive_logs/presentation/views/customer_logs_view.dart';
 import '../../../employees/model/employee.dart';
@@ -31,10 +30,6 @@ class NavDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (currentEmployee?.role == 'Intern') {
-      return const SizedBox();
-    }
-
     return Drawer(
       backgroundColor: Colors.white,
       child: SingleChildScrollView(
@@ -71,12 +66,15 @@ class NavDrawer extends StatelessWidget {
                 Navigator.push(context, BoardPlanView.route());
               },
             ),
-            buildMenuItem(
-              icon: Icons.scuba_diving_rounded,
-              text: 'General Info',
-              onTap: () {
-                Navigator.push(context, GeneralInfoView.route());
-              },
+            EmployeeAccess(
+              access: AccessRights.generalInfo,
+              child: buildMenuItem(
+                icon: Icons.scuba_diving_rounded,
+                text: 'General Info',
+                onTap: () {
+                  Navigator.push(context, GeneralInfoView.route());
+                },
+              ),
             ),
             EmployeeAccess(
               access: AccessRights.viewEquipment,
@@ -98,20 +96,27 @@ class NavDrawer extends StatelessWidget {
                 },
               ),
             ),
-            buildMenuItem(
-              icon: Icons.add_card_rounded,
-              text: 'Roster',
-              onTap: () {
-                Navigator.push(context, RoasterView.route());
-              },
+            EmployeeAccess(
+              access: AccessRights.roster,
+              child: buildMenuItem(
+                icon: Icons.add_card_rounded,
+                text: 'Roster',
+                onTap: () {
+                  Navigator.push(context, RoasterView.route());
+                },
+              ),
             ),
-            buildMenuItem(
-              icon: Icons.book_rounded,
-              text: 'Logs',
-              onTap: () {
-                Navigator.push(context, LogView.route());
-              },
+            EmployeeAccess(
+              access: AccessRights.coastGuardSlip,
+              child: buildMenuItem(
+                icon: Icons.directions_boat,
+                text: 'Coast Guard Slip',
+                onTap: () {
+                  Navigator.push(context, CoastGuardSlipView.route());
+                },
+              ),
             ),
+
             EmployeeAccess(
               access: AccessRights.offers,
               child: buildMenuItem(
@@ -122,12 +127,33 @@ class NavDrawer extends StatelessWidget {
                 },
               ),
             ),
-            buildMenuItem(
-              icon: Icons.card_membership_outlined,
-              text: 'Certifications',
-              onTap: () {
-                Navigator.push(context, CertificationLogsView.route());
-              },
+            // buildMenuItem(
+            //   icon: Icons.card_membership_outlined,
+            //   text: 'Certifications',
+            //   onTap: () {
+            //     Navigator.push(context, CertificationLogsView.route());
+            //   },
+            // ),
+            EmployeeAccess(
+              access: AccessRights.offers,
+              child: buildMenuItem(
+                icon: Icons.percent,
+                text: 'Offers',
+                onTap: () {
+                  Navigator.push(context, OffersView.route());
+                },
+              ),
+            ),
+
+            EmployeeAccess(
+              access: AccessRights.upcomingEvents,
+              child: buildMenuItem(
+                icon: Icons.event_rounded,
+                text: 'Upcoming Events',
+                onTap: () {
+                  Navigator.push(context, EventsView.route());
+                },
+              ),
             ),
             EmployeeAccess(
               access: AccessRights.marketingGallery,
@@ -139,23 +165,7 @@ class NavDrawer extends StatelessWidget {
                 },
               ),
             ),
-            buildMenuItem(
-              icon: Icons.event_rounded,
-              text: 'Upcoming Events',
-              onTap: () {
-                Navigator.push(context, EventsView.route());
-              },
-            ),
-            EmployeeAccess(
-              access: AccessRights.offers,
-              child: buildMenuItem(
-                icon: Icons.percent,
-                text: 'Offers',
-                onTap: () {
-                  Navigator.push(context, OffersView.route());
-                },
-              ),
-            ),
+
             EmployeeAccess(
               access: AccessRights.editActivityPrices,
               child: buildMenuItem(
@@ -166,13 +176,17 @@ class NavDrawer extends StatelessWidget {
                 },
               ),
             ),
-            buildMenuItem(
-              icon: Icons.directions_boat,
-              text: 'Coast Guard Slip',
-              onTap: () {
-                Navigator.push(context, CoastGuardSlipView.route());
-              },
+            EmployeeAccess(
+              access: AccessRights.logs,
+              child: buildMenuItem(
+                icon: Icons.book_rounded,
+                text: 'Logs',
+                onTap: () {
+                  Navigator.push(context, LogView.route());
+                },
+              ),
             ),
+
             buildLine(),
             (logic.controller.version != null && logic.controller.buildNumber != null)
                 ? buildMiniMenuItem(

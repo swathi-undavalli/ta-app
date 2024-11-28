@@ -61,6 +61,11 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
   late bool? processCertificate;
   late bool? addEquipment;
   late bool? viewEquipment;
+  late bool? generalInfo;
+  late bool? roster;
+  late bool? logs;
+  late bool? upcomingEvents;
+  late bool? coastGuardSlip;
 
   List<String> gender = ['Male', 'Female'];
 
@@ -112,6 +117,11 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
     processCertificate = widget.employeeArgument?.accessLevels?.processCertificate ?? false;
     addEquipment = widget.employeeArgument?.accessLevels?.addEquipment ?? false;
     viewEquipment = widget.employeeArgument?.accessLevels?.viewEquipment ?? false;
+    generalInfo = widget.employeeArgument?.accessLevels?.generalInfo ?? false;
+    roster = widget.employeeArgument?.accessLevels?.roster ?? false;
+    logs = widget.employeeArgument?.accessLevels?.logs ?? false;
+    upcomingEvents = widget.employeeArgument?.accessLevels?.upcomingEvents ?? false;
+    coastGuardSlip = widget.employeeArgument?.accessLevels?.coastGuardSlip ?? false;
   }
 
   @override
@@ -255,6 +265,11 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
     offers = false;
     boatPlan = false;
     processCertificate = false;
+    generalInfo = false;
+    roster = false;
+    logs = false;
+    upcomingEvents = false;
+    coastGuardSlip = false;
   }
 
   Widget buildAccessLevels() {
@@ -385,6 +400,46 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: addEquipment!,
           onChanged: (value) {
             addEquipment = value;
+            setState(() {});
+          },
+        ),
+        buildSwitch(
+          text: 'General Info',
+          switchValue: generalInfo!,
+          onChanged: (value) {
+            generalInfo = value;
+            setState(() {});
+          },
+        ),
+        buildSwitch(
+          text: 'Roster',
+          switchValue: roster!,
+          onChanged: (value) {
+            roster = value;
+            setState(() {});
+          },
+        ),
+        buildSwitch(
+          text: 'Logs',
+          switchValue: logs!,
+          onChanged: (value) {
+            logs = value;
+            setState(() {});
+          },
+        ),
+        buildSwitch(
+          text: 'Upcoming Events',
+          switchValue: upcomingEvents!,
+          onChanged: (value) {
+            upcomingEvents = value;
+            setState(() {});
+          },
+        ),
+        buildSwitch(
+          text: 'Coast Guard Slip',
+          switchValue: coastGuardSlip!,
+          onChanged: (value) {
+            coastGuardSlip = value;
             setState(() {});
           },
         ),
@@ -655,6 +710,11 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           processCertificate: processCertificate,
           addEquipment: addEquipment,
           viewEquipment: viewEquipment,
+          generalInfo: generalInfo,
+          roster: roster,
+          logs: logs,
+          upcomingEvents: upcomingEvents,
+          coastGuardSlip: coastGuardSlip,
         ),
       );
       await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());

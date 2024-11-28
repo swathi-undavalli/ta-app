@@ -9,6 +9,8 @@ import 'package:temple_ui_tools/utils/utils.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/util/validator.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/field_error.dart';
+import '../../../../core/widgets/image_uploader.dart';
 import '../../../../core/widgets/phone_number/intl_phone_field.dart';
 import '../../models/booking_model.dart';
 import '../../models/customer_model.dart';
@@ -43,19 +45,27 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
   String? phoneNumber;
   String? countryCode;
   String? isoCode = 'IN';
-  TextEditingController nameTED = TextEditingController();
-  TextEditingController emailTED = TextEditingController();
-  TextEditingController genderTED = TextEditingController();
-  TextEditingController dobTED = TextEditingController();
+  late TextEditingController nameTED;
+  late TextEditingController emailTED;
+  late TextEditingController genderTED;
+  late TextEditingController dobTED;
   bool showLoading = false;
   String? nameError;
   String? emailError;
   String? phoneError;
   String? genderError;
   String? dobError;
-  CustomerModel? customerModel;
   List<String> gender = ['Male', 'Female'];
   DateTime? dob = DateTime.now();
+  String? _uploadedImage;
+  String? _pickedImageError;
+  late Booking bookingModel;
+
+  @override
+  void initState() {
+    super.initState();
+    bookingModel = widget.bookingModel;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,6 +111,8 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                   buildPhoneNumber(),
                   buildDOB(),
                   buildGender(),
+                  Spacing.h5,
+                  buildIdProof(),
                 ],
               ).scrollable,
             )
@@ -129,7 +141,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
               if (await isCustomerExists() == false) {
                 await createCustomer();
               }
-              widget.bookingModel.pax?.add({
+              bookingModel.pax?.add({
                 'first-name': nameTED.text,
                 'email': emailTED.text,
                 'last-name': '',
@@ -138,20 +150,54 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                 'isoCode': isoCode,
                 'dob': dob,
                 'gender': genderTED.text,
+                'idProof': _uploadedImage,
               });
-              await FirebaseFirestore.instance
-                  .collection('bookings')
-                  .doc(widget.bookingModel.id)
-                  .set(widget.bookingModel.toMap());
+              await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(bookingModel.toMap());
               setState(() {
                 showLoading = false;
               });
               clear();
               if (context.mounted) {
-                Navigator.pop(context, widget.bookingModel);
+                Navigator.pop(context, bookingModel);
               }
             }
           },
+        ),
+      ],
+    );
+  }
+
+  Widget buildIdProof() {
+    return Column(
+      children: [
+        Row(
+          children: [
+            const Text(
+              'Photo : ',
+              style: TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Spacing.w8,
+            const Text(
+              'upload IdProof',
+              style: TextStyle(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ).left,
+          ],
+        ),
+        Spacing.h8,
+        Row(
+          children: [
+            ImageUploader(
+              onImageUploaded: (String imageUrl) => _uploadedImage = imageUrl,
+            ),
+            FieldError(_pickedImageError),
+          ],
         ),
       ],
     );
@@ -199,43 +245,41 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
   }
 
   Widget buildGender() {
-    return Padding(
-      padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text(
-            'Gender *',
-            style: TextStyle(
-              color: Colors.black54,
-              fontFamily: AppFonts.nunito,
-              fontSize: 12,
-              fontWeight: FontWeight.normal,
-            ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'Gender *',
+          style: TextStyle(
+            color: Colors.black54,
+            fontFamily: AppFonts.nunito,
+            fontSize: 12,
+            fontWeight: FontWeight.normal,
           ),
-          DropdownButton(
-            underline: Container(height: 1, color: Colors.grey),
-            isExpanded: true,
-            value: genderTED.text.isNotEmpty ? genderTED.text : null,
-            onChanged: (dynamic newGender) {
-              genderTED.text = newGender;
-              setState(() {});
-            },
-            items: gender.map((gender) {
-              return DropdownMenuItem(
-                value: gender,
-                child: Text(gender),
-              );
-            }).toList(),
-          ),
-          Spacing.h5,
+        ),
+        DropdownButton(
+          underline: Container(height: 1, color: Colors.grey),
+          isExpanded: true,
+          value: genderTED.text.isNotEmpty ? genderTED.text : null,
+          onChanged: (dynamic newGender) {
+            genderTED.text = newGender;
+            setState(() {});
+          },
+          items: gender.map((gender) {
+            return DropdownMenuItem(
+              value: gender,
+              child: Text(gender),
+            );
+          }).toList(),
+        ),
+        Spacing.h5,
+        if (genderError != null)
           Text(
             'Required',
             style: TextStyle(fontSize: 12, color: Colors.red.shade900),
           ),
-        ],
-      ),
+      ],
     );
   }
 
@@ -253,9 +297,9 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
       lastName: '',
       email: emailTED.text,
       phoneNumber: phoneNumber,
-      idProof: '',
+      idProof: _uploadedImage,
       gender: genderTED.text,
-      dob: null,
+      dob: dobTED.text,
     );
     await FirebaseFirestore.instance.collection('customers').doc(emailTED.text).set(customer.toMap());
   }
@@ -304,6 +348,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
     isoCode = 'IN';
     dobTED.text = '';
     dob = null;
+    _uploadedImage = null;
   }
 
   Widget buildShowLoading() {

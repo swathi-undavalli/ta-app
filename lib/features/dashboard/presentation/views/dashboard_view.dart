@@ -5,11 +5,9 @@ import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/services/notification_service.dart';
-import '../../../board_plan/presentation/views/board_plan_view.dart';
 import '../../../boat/presentation/views/boats_view.dart';
 import '../../../bookings/presentation/views/booking_view.dart';
 import '../../../conditions/presentation/views/conditions_view.dart';
-import '../../../employees/model/employee.dart';
 import '../../../home/presentation/views/home_view.dart';
 import '../../../home/presentation/widgets/nav_drawer.dart';
 import '../../controller/dashboard_controller.dart';
@@ -36,11 +34,6 @@ class _DashBoardViewState extends State<DashBoardView> {
     BoatsView(),
     BookingView(),
     const ConditionsView(),
-  ];
-
-  final internScreens = [
-    const HomeView(),
-    const BoardPlanView(),
   ];
 
   DateTime? currentBackPressTime;
@@ -117,8 +110,7 @@ class _DashBoardViewState extends State<DashBoardView> {
   Widget buildSelectedPage() {
     return GetBuilder<DashBoardScreenController>(
       builder: (controller) {
-        if (currentEmployee?.role != 'Intern') return screens[controller.currentIndex];
-        return internScreens[controller.currentIndex];
+        return screens[controller.currentIndex];
       },
     );
   }
@@ -149,18 +141,16 @@ class _DashBoardViewState extends State<DashBoardView> {
               activeIcon: buildActiveIcon('images/boat_black.png'),
               label: 'boat',
             ),
-            if (currentEmployee?.role != 'Intern')
-              BottomNavigationBarItem(
-                icon: const ImageIcon(AssetImage('images/taCalWhite.png')),
-                activeIcon: buildActiveIcon('images/taCalBlack.png'),
-                label: 'bookings',
-              ),
-            if (currentEmployee?.role != 'Intern')
-              BottomNavigationBarItem(
-                icon: const ImageIcon(AssetImage('images/taCloudWhite.png')),
-                activeIcon: buildActiveIcon('images/taCloudBlack.png'),
-                label: 'weather',
-              ),
+            BottomNavigationBarItem(
+              icon: const ImageIcon(AssetImage('images/taCalWhite.png')),
+              activeIcon: buildActiveIcon('images/taCalBlack.png'),
+              label: 'bookings',
+            ),
+            BottomNavigationBarItem(
+              icon: const ImageIcon(AssetImage('images/taCloudWhite.png')),
+              activeIcon: buildActiveIcon('images/taCloudBlack.png'),
+              label: 'weather',
+            ),
           ],
         );
       },

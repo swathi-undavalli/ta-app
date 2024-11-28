@@ -582,12 +582,12 @@ class NewBookingLogic {
       controller.bookingModel.details = BookingDetails(
         firstName: controller.fNameTED.text,
         lastName: controller.lNameTED.text,
-        dob: Timestamp.fromDate(DateTime.now()),
-        email: 'quickBooking@temple.com',
+        dob: controller.dob != null ? Timestamp.fromDate(controller.dob!) : null,
+        email: controller.emailTED.text,
         gender: controller.genderTED.text,
-        countryCode: '+91',
-        isoCode: 'IN',
-        phoneNumber: '9876543210',
+        countryCode: controller.countryCodeTED.text,
+        isoCode: controller.isoCode ?? 'IN',
+        phoneNumber: controller.phoneNumberTED.text,
       );
       controller.bookingModel.noOfPersons = getInt(controller.paxTED.text);
       disposeKeyboard();
