@@ -168,6 +168,15 @@ class _RoasterViewState extends State<RoasterView> {
                                           fontFamily: AppFonts.nunito,
                                         ),
                                       ),
+                                      Spacing.h5,
+                                      Text(
+                                        roaster?.instructor?.name ?? '',
+                                        style: TextStyle(
+                                          color: Colors.grey.shade600,
+                                          fontSize: 12,
+                                          fontFamily: AppFonts.nunito,
+                                        ),
+                                      ),
                                     ],
                                   ),
                                 ),
