@@ -43,6 +43,8 @@
 	<string>location is used to confirm the user login for atendance purpose</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>location is used to confirm the user login for atendance purpose</string>
+	<key>NSCameraUsageDescription</key>
+    <string>We need access to your camera to take photos.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
 	<string>We need access to save images to the photo library</string>
 	<key>NSPhotoLibraryUsageDescription</key>

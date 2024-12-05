@@ -34,6 +34,7 @@ class Employee {
       logs: false,
       upcomingEvents: false,
       coastGuardSlip: false,
+      approveEquipment: false,
     ),
     this.firstName,
     this.lastName,
@@ -179,6 +180,7 @@ class AccessLevels {
     required this.processCertificate,
     required this.addEquipment,
     required this.viewEquipment,
+    required this.approveEquipment,
     required this.generalInfo,
     required this.roster,
     required this.logs,
@@ -203,6 +205,7 @@ class AccessLevels {
   final bool? processCertificate;
   final bool? addEquipment;
   final bool? viewEquipment;
+  final bool? approveEquipment;
   final bool? generalInfo;
   final bool? roster;
   final bool? logs;
@@ -227,6 +230,7 @@ class AccessLevels {
         processCertificate: json['processCertificate'],
         addEquipment: json['addEquipment'],
         viewEquipment: json['viewEquipment'],
+        approveEquipment: json['approveEquipment'],
         generalInfo: json['generalInfo'],
         roster: json['roster'],
         logs: json['logs'],
@@ -252,6 +256,7 @@ class AccessLevels {
         'processCertificate': processCertificate,
         'viewEquipment': viewEquipment,
         'addEquipment': addEquipment,
+        'approveEquipment': approveEquipment,
         'generalInfo': generalInfo,
         'roster': roster,
         'logs': logs,

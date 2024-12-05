@@ -7,6 +7,7 @@ import 'package:temple_ui_tools/temple_ui_tools.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
+import '../../../../core/widgets/access_levels.dart';
 import '../../../employees/model/employee.dart';
 import '../../models/equipment_log_model.dart';
 import '../../provider/equipment.provider.dart';
@@ -69,7 +70,10 @@ class _EquipmentLogDetailsViewState extends State<EquipmentLogDetailsView> {
                 Spacing.h60,
               ],
             ).paddingHorizontal(16),
-            _SubmissionButton(widget.log),
+            EmployeeAccess(
+              access: AccessRights.approveEquipment,
+              child: _SubmissionButton(widget.log),
+            ),
           ],
         ),
       ),

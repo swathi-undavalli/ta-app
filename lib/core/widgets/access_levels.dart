@@ -70,6 +70,8 @@ class AccessRights {
 
   static bool get viewEquipment => accessLevel?.viewEquipment ?? false;
 
+  static bool get approveEquipment => accessLevel?.approveEquipment ?? false;
+
   static bool get generalInfo => accessLevel?.generalInfo ?? false;
 
   static bool get roster => accessLevel?.roster ?? false;

@@ -50,8 +50,8 @@ class BookingsExpansionPanel extends StatelessWidget {
   Function? onDeletePressed;
   Function? onSearchTap;
   List<Widget> expansions = [];
-  TextEditingController depositTED = TextEditingController();
   TextEditingController searchTED = TextEditingController();
+  TextEditingController invoiceTED = TextEditingController();
   final DateTime selectedDate;
 
   BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
@@ -337,6 +337,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
         ),
       ],
     );
+    invoiceTED.text = itemModel?.bookingModel?.invoiceNo ?? '';
 
     return GetBuilder<ExpansionPanelController>(
       builder: (controller) {
@@ -843,6 +844,30 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                         ).paddingOnly(right: 15),
                                     ],
                                   ),
+                                  // AppTextField(
+                                  //   controller: invoiceTED,
+                                  //   hintText: 'Invoice No',
+                                  //   minLines: 3,
+                                  //   errorValidator: () {
+                                  //     return null;
+                                  //   },
+                                  //   validator: (_) {
+                                  //     return null;
+                                  //   },
+                                  // ),
+                                  // const Text(
+                                  //   'Notes wont be saved until "Update Notes" button is pressed',
+                                  //   style: TextStyle(
+                                  //     fontSize: 10,
+                                  //   ),
+                                  // ),
+                                  // Align(
+                                  //   alignment: Alignment.centerRight,
+                                  //   child: AppButton.miniFlat(
+                                  //     text: 'Update Notes',
+                                  //     onTap: () {},
+                                  //   ),
+                                  // ).paddingOnly(right: 10),
                                   Spacing.h20,
                                   Row(
                                     children: [

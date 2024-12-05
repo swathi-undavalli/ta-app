@@ -66,6 +66,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
   late bool? logs;
   late bool? upcomingEvents;
   late bool? coastGuardSlip;
+  late bool? approveEquipment;
 
   List<String> gender = ['Male', 'Female'];
 
@@ -117,6 +118,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
     processCertificate = widget.employeeArgument?.accessLevels?.processCertificate ?? false;
     addEquipment = widget.employeeArgument?.accessLevels?.addEquipment ?? false;
     viewEquipment = widget.employeeArgument?.accessLevels?.viewEquipment ?? false;
+    approveEquipment = widget.employeeArgument?.accessLevels?.approveEquipment ?? false;
     generalInfo = widget.employeeArgument?.accessLevels?.generalInfo ?? false;
     roster = widget.employeeArgument?.accessLevels?.roster ?? false;
     logs = widget.employeeArgument?.accessLevels?.logs ?? false;
@@ -270,6 +272,9 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
     logs = false;
     upcomingEvents = false;
     coastGuardSlip = false;
+    addEquipment = false;
+    viewEquipment = false;
+    approveEquipment = false;
   }
 
   Widget buildAccessLevels() {
@@ -400,6 +405,14 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           switchValue: addEquipment!,
           onChanged: (value) {
             addEquipment = value;
+            setState(() {});
+          },
+        ),
+        buildSwitch(
+          text: 'Approve equipment',
+          switchValue: approveEquipment!,
+          onChanged: (value) {
+            approveEquipment = value;
             setState(() {});
           },
         ),
@@ -715,6 +728,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           logs: logs,
           upcomingEvents: upcomingEvents,
           coastGuardSlip: coastGuardSlip,
+          approveEquipment: approveEquipment,
         ),
       );
       await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());

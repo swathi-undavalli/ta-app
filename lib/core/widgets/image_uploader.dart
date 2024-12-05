@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:temple_ui_tools/styling/alignment_extensions.dart';
-
 import '../../../../core/constants/assets.dart';
 import '../../../../core/widgets/ta_image.dart';
 import '../../features/certifications/presentation/widgets/pick_photos_widget.dart';

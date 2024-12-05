@@ -1,10 +1,8 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:temple_ui_tools/temple_ui_tools.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/field_error.dart';
@@ -281,7 +279,7 @@ class _AssignedTags extends StatelessWidget {
                   ...newTags as List<Tag>,
                 ]);
               },
-            )
+            ),
           ],
         ),
         Spacing.h16,
@@ -439,4 +437,3 @@ class _EquipmentCategorySelectorState extends State<_EquipmentCategorySelector> 
     );
   }
 }
-

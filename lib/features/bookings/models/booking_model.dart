@@ -45,6 +45,7 @@ class Booking {
     this.isQuickBooking = false,
     this.certificationStatuses,
     this.details,
+    this.invoiceNo,
   });
 
   List<Activity?>? activity;
@@ -76,6 +77,7 @@ class Booking {
   String? parentBookingId;
   List<int>? certificationStatuses;
   BookingDetails? details;
+  String? invoiceNo;
 
   Booking copyWith({
     List<Activity?>? activity,
@@ -107,6 +109,7 @@ class Booking {
     String? parentBookingId,
     List<int>? certificationStatuses,
     BookingDetails? details,
+    String? invoiceNo,
   }) =>
       Booking(
         activity: activity ?? this.activity,
@@ -138,6 +141,7 @@ class Booking {
         isQuickBooking: isQuickBooking ?? this.isQuickBooking,
         certificationStatuses: certificationStatuses ?? this.certificationStatuses,
         details: details ?? this.details,
+        invoiceNo: invoiceNo ?? this.invoiceNo,
       );
 
   factory Booking.fromMap(Map<String, dynamic> json) {
@@ -216,6 +220,7 @@ class Booking {
       ),
       certificationStatuses: List<int>.from(json['certificationStatuses'] ?? [].map((x) => x)),
       details: BookingDetailsMapper.fromMap(json['details'] ?? initialPax),
+      invoiceNo: json['invoiceNo'],
     );
   }
 
@@ -261,6 +266,7 @@ class Booking {
       'certificationStatuses': List<int>.from((certificationStatuses ?? []).map((x) => x)),
       'instructorName': boatDetails?.instructors?.firstOrNull?.name,
       'details': details?.toMap(),
+      'invoiceNo': invoiceNo,
     };
   }
 
