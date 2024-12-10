@@ -65,6 +65,10 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
   void initState() {
     super.initState();
     bookingModel = widget.bookingModel;
+    nameTED = TextEditingController();
+    emailTED = TextEditingController();
+    genderTED = TextEditingController();
+    dobTED = TextEditingController();
   }
 
   @override

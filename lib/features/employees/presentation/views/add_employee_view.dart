@@ -67,6 +67,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
   late bool? upcomingEvents;
   late bool? coastGuardSlip;
   late bool? approveEquipment;
+  late bool? showPaymentDetails;
 
   List<String> gender = ['Male', 'Female'];
 
@@ -124,6 +125,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
     logs = widget.employeeArgument?.accessLevels?.logs ?? false;
     upcomingEvents = widget.employeeArgument?.accessLevels?.upcomingEvents ?? false;
     coastGuardSlip = widget.employeeArgument?.accessLevels?.coastGuardSlip ?? false;
+    showPaymentDetails = widget.employeeArgument?.accessLevels?.showPaymentDetails ?? false;
   }
 
   @override
@@ -457,6 +459,14 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           },
         ),
         buildSwitch(
+          text: 'Show Payment Details',
+          switchValue: showPaymentDetails!,
+          onChanged: (value) {
+            showPaymentDetails = value;
+            setState(() {});
+          },
+        ),
+        buildSwitch(
           text: 'Subscribe Notifications',
           switchValue: notifications!,
           onChanged: (value) {
@@ -729,6 +739,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           upcomingEvents: upcomingEvents,
           coastGuardSlip: coastGuardSlip,
           approveEquipment: approveEquipment,
+          showPaymentDetails: showPaymentDetails,
         ),
       );
       await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());

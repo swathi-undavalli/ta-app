@@ -35,6 +35,7 @@ class Employee {
       upcomingEvents: false,
       coastGuardSlip: false,
       approveEquipment: false,
+      showPaymentDetails: false,
     ),
     this.firstName,
     this.lastName,
@@ -186,6 +187,7 @@ class AccessLevels {
     required this.logs,
     required this.upcomingEvents,
     required this.coastGuardSlip,
+    required this.showPaymentDetails,
   });
 
   final bool? viewBookings;
@@ -211,6 +213,7 @@ class AccessLevels {
   final bool? logs;
   final bool? upcomingEvents;
   final bool? coastGuardSlip;
+  final bool? showPaymentDetails;
 
   factory AccessLevels.fromMap(Map<String, dynamic> json) => AccessLevels(
         viewBookings: json['viewBookings'],
@@ -236,6 +239,7 @@ class AccessLevels {
         logs: json['logs'],
         upcomingEvents: json['upcomingEvents'],
         coastGuardSlip: json['coastGuardSlip'],
+        showPaymentDetails: json['showPaymentDetails'],
       );
 
   Map<String, dynamic> toMap() => {
@@ -262,5 +266,6 @@ class AccessLevels {
         'logs': logs,
         'upcomingEvents': upcomingEvents,
         'coastGuardSlip': coastGuardSlip,
+        'showPaymentDetails': showPaymentDetails,
       };
 }

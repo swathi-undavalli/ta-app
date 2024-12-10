@@ -12,8 +12,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
-
-import '../../../../core/widgets/back_navigation_icon.dart';
+import '../../../../core/widgets/access_levels.dart';
+import '../../../../core/widgets/app_bar.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
 import '../../models/roaster.dart';
@@ -54,6 +54,8 @@ class _RoasterChartViewState extends State<RoasterChartView> {
   }
 
   final GlobalKey _repaintBoundaryKey = GlobalKey();
+  bool isRoaster = true;
+  bool showLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -62,9 +64,36 @@ class _RoasterChartViewState extends State<RoasterChartView> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.black,
         onPressed: () {
+          showLoading = true;
+          setState(() {});
           _captureAndShareScreenshot();
+          showLoading = false;
+          setState(() {});
         },
         child: const Icon(Icons.share),
+      ),
+      appBar: AppBarWidget(
+        heading: (isRoaster) ? 'Roster' : 'Payment Details',
+        actions: [
+          EmployeeAccess(
+            access: AccessRights.showPaymentDetails,
+            child: Row(
+              children: [
+                Text(
+                  (isRoaster) ? 'Roster' : 'Payment',
+                  style: const TextStyle(color: Colors.black),
+                ),
+                Switch(
+                  value: isRoaster,
+                  onChanged: (value) {
+                    isRoaster = value;
+                    setState(() {});
+                  },
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
         child: SizedBox(
@@ -80,7 +109,6 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                     Spacing.h20,
                     Row(
                       children: [
-                        const BackNavigationIcon(),
                         const Spacer(),
                         Text(
                           DateFormat('dd-MM-yyyy').format(widget.selectedDate),
@@ -189,7 +217,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
 
             return Column(
               children: [
-                for (int i = 0; i < filteredBookings.length; i++) buildCustomerInfo(bookings, i, boatsModel),
+                for (int i = 0; i < filteredBookings.length; i++) buildCustomerInfo(filteredBookings, i, boatsModel),
               ],
             );
           },
@@ -207,72 +235,131 @@ class _RoasterChartViewState extends State<RoasterChartView> {
       }
     });
 
-    return Column(
-      children: [
-        ...(booking.pax ?? []).map(
-          (p) {
-            if (p['roaster'] != null) {
-              Roaster roaster = Roaster.fromJson(p['roaster']);
+    if (isRoaster) {
+      return Column(
+        children: [
+          ...(booking.pax ?? []).map(
+            (p) {
+              if (p['roaster'] != null) {
+                Roaster roaster = Roaster.fromJson(p['roaster']);
 
-              return Row(
-                children: [
-                  buildText(text: boat?.name ?? '-'),
-                  buildText(
-                    text: booking.id ?? '',
-                  ),
-                  buildText(
-                    text: '${p['first-name']}' '${p['last-name']}',
-                  ),
-                  buildText(text: p['gender']),
-                  buildText(
-                    text: roaster.instructor?.name ?? '-',
-                  ),
-                  buildText(
-                    text: (roaster.timeIn != null) ? DateFormat('hh:mm a').format(roaster.timeIn!) : '-',
-                  ),
-                  buildText(
-                    text: (roaster.timeOut != null) ? DateFormat('hh:mm a').format(roaster.timeOut!) : '-',
-                  ),
-                  buildText(
-                    text: (roaster.isDived != null && roaster.isDived! == true) ? 'Yes' : 'No',
-                  ),
-                  buildText(
-                    text: (roaster.customerFeedback != null && roaster.customerFeedback!.knowsSwimming!) ? 'Yes' : 'No',
-                  ),
-                  buildText(
-                    text: (roaster.customerFeedback != null && roaster.customerFeedback!.interestedOwc!) ? 'Yes' : 'No',
-                  ),
-                  buildText(
-                    text: (roaster.customerFeedback != null && roaster.customerFeedback!.feedback!.isNotEmpty)
-                        ? roaster.customerFeedback!.feedback!
-                        : '-',
-                  ),
-                ],
-              ).paddingSymmetric(horizontal: 10, vertical: 5);
-            }
-            return const SizedBox();
-          },
-        ),
-      ],
-    );
+                return Row(
+                  children: [
+                    buildText(text: boat?.name ?? '-'),
+                    buildText(
+                      text: booking.id ?? '',
+                    ),
+                    buildText(
+                      text: '${p['first-name']}' '${p['last-name']}',
+                    ),
+                    buildText(text: p['gender']),
+                    buildText(
+                      text: roaster.instructor?.name ?? '-',
+                    ),
+                    buildText(
+                      text: (roaster.timeIn != null) ? DateFormat('hh:mm a').format(roaster.timeIn!) : '-',
+                    ),
+                    buildText(
+                      text: (roaster.timeOut != null) ? DateFormat('hh:mm a').format(roaster.timeOut!) : '-',
+                    ),
+                    buildText(
+                      text: (roaster.isDived != null && roaster.isDived! == true) ? 'Yes' : 'No',
+                    ),
+                    buildText(
+                      text:
+                          (roaster.customerFeedback != null && roaster.customerFeedback!.knowsSwimming!) ? 'Yes' : 'No',
+                    ),
+                    buildText(
+                      text:
+                          (roaster.customerFeedback != null && roaster.customerFeedback!.interestedOwc!) ? 'Yes' : 'No',
+                    ),
+                    buildText(
+                      text: (roaster.customerFeedback != null && roaster.customerFeedback!.feedback!.isNotEmpty)
+                          ? roaster.customerFeedback!.feedback!
+                          : '-',
+                    ),
+                  ],
+                ).paddingSymmetric(horizontal: 10, vertical: 5);
+              }
+              return const SizedBox();
+            },
+          ),
+        ],
+      );
+    } else {
+      return Column(
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start, // Aligns items properly
+            children: [
+              buildText(text: boat?.name ?? '-'),
+              buildText(text: booking.id ?? '-'),
+              ((booking.pax ?? []).isEmpty)
+                  ? buildText(
+                      text: '${booking.details?.firstName.capitalizeFirst} ${booking.details?.lastName}',
+                    )
+                  : IntrinsicHeight(
+                      child: Container(
+                        width: 100,
+                        alignment: Alignment.center,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min, // Avoid unnecessary expansion
+                          children: [
+                            ...(booking.pax ?? []).map((p) {
+                              return buildText(
+                                text: '${p['first-name']} ${p['last-name']}',
+                              );
+                            }), // `.toList()` ensures the map results are converted to a list
+                          ],
+                        ),
+                      ),
+                    ),
+              buildText(text: booking.noOfPersons.toString()),
+              buildText(text: booking.details?.gender ?? '-'),
+              buildText(
+                text: '${booking.details?.firstName.capitalizeFirst} ${booking.details?.lastName}',
+              ),
+              buildText(text: booking.invoiceNo ?? '-'),
+              buildText(text: booking.employeeName ?? '-'),
+            ],
+          ).paddingSymmetric(horizontal: 10, vertical: 5),
+        ],
+      );
+    }
   }
 
   Widget buildHeadings() {
-    return Row(
-      children: [
-        buildText(text: 'Boat'),
-        buildText(text: 'Id'),
-        buildText(text: 'Diver'),
-        buildText(text: 'Gender'),
-        buildText(text: 'Staff'),
-        buildText(text: 'Time in'),
-        buildText(text: 'Time out'),
-        buildText(text: 'Dive done / Not done'),
-        buildText(text: 'Knows swimming'),
-        buildText(text: 'Interested OWC'),
-        buildText(text: 'Remarks'),
-      ],
-    ).paddingSymmetric(horizontal: 10);
+    if (isRoaster) {
+      return Row(
+        children: [
+          buildText(text: 'Boat'),
+          buildText(text: 'Id'),
+          buildText(text: 'Diver'),
+          buildText(text: 'Gender'),
+          buildText(text: 'Staff'),
+          buildText(text: 'Time in'),
+          buildText(text: 'Time out'),
+          buildText(text: 'Dive done / Not done'),
+          buildText(text: 'Knows swimming'),
+          buildText(text: 'Interested OWC'),
+          buildText(text: 'Remarks'),
+        ],
+      ).paddingSymmetric(horizontal: 10);
+    } else {
+      return Row(
+        children: [
+          buildText(text: 'Boat'),
+          buildText(text: 'Id'),
+          buildText(text: 'Diver Names'),
+          buildText(text: 'DSD Count'),
+          buildText(text: 'Gender'),
+          buildText(text: 'Group Name'),
+          buildText(text: 'Conformed SO# / INV#'),
+          buildText(text: 'Booking Channel'),
+        ],
+      ).paddingSymmetric(horizontal: 10);
+    }
   }
 
   Widget buildText({

@@ -81,4 +81,6 @@ class AccessRights {
   static bool get upcomingEvents => accessLevel?.upcomingEvents ?? false;
 
   static bool get coastGuardSlip => accessLevel?.coastGuardSlip ?? false;
+
+  static bool get showPaymentDetails => accessLevel?.showPaymentDetails ?? false;
 }

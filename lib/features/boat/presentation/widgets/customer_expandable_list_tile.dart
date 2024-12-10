@@ -39,7 +39,6 @@ class CustomerExpandableListTile extends StatefulWidget {
 
 class _CustomerExpandableListTileState extends State<CustomerExpandableListTile> {
   bool isExpanded = false;
-  bool showLoading = false;
 
   ItemModel get itemModel => widget.itemModel;
 
