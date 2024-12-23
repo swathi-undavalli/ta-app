@@ -47,7 +47,7 @@ class BoatDetails {
     List<Instructor>? instructors;
 
     if (((json['instructors'] as List?) ?? []).length == 1) {
-      Instructor ins = Instructor.fromJson(json['instructors'][0]);
+      Instructor ins = Instructor.fromMap(json['instructors'][0]);
 
       if (((json['instructorTanks'] ?? {}) as Map).isNotEmpty) {
         (json['instructorTanks'] as Map<String, dynamic>).forEach((date, tankInfo) {
@@ -84,10 +84,10 @@ class BoatDetails {
       bookingStatus: json['bookingStatus'],
       instructors: instructors ??
           List<Instructor>.from(
-            (json['instructors'] ?? []).map((x) => Instructor.fromJson(x)),
+            (json['instructors'] ?? []).map((x) => Instructor.fromMap(x)),
           ),
       diveBuddies: List<Instructor>.from(
-        (json['diveBuddies'] ?? []).map((x) => Instructor.fromJson(x)),
+        (json['diveBuddies'] ?? []).map((x) => Instructor.fromMap(x)),
       ),
     );
   }
@@ -97,8 +97,8 @@ class BoatDetails {
         'bookingStatus': bookingStatus,
         'employeeNotes': employeeNotes,
         'status': status,
-        'instructors': List<dynamic>.from((instructors ?? []).map((x) => x.toJson())),
-        'diveBuddies': List<dynamic>.from((diveBuddies ?? []).map((x) => x.toJson())),
+        'instructors': List<dynamic>.from((instructors ?? []).map((x) => x.toMap())),
+        'diveBuddies': List<dynamic>.from((diveBuddies ?? []).map((x) => x.toMap())),
       };
 }
 
@@ -138,11 +138,11 @@ class Instructor {
         date: date ?? this.date,
       );
 
-  factory Instructor.fromRawJson(String str) => Instructor.fromJson(json.decode(str));
+  factory Instructor.fromRawJson(String str) => Instructor.fromMap(json.decode(str));
 
-  String toRawJson() => json.encode(toJson());
+  String toRawJson() => json.encode(toMap());
 
-  factory Instructor.fromJson(Map<String, dynamic> json) => Instructor(
+  factory Instructor.fromMap(Map<String, dynamic> json) => Instructor(
         id: json['id'],
         name: json['name'],
         air: json['air'],
@@ -151,7 +151,7 @@ class Instructor {
         date: json['date'],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         'id': id,
         'name': name,
         'nitrox': nitrox,

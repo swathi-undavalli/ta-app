@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart' as intl;
 import 'package:share_plus/share_plus.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
 import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -932,6 +933,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                                   mainAxisSize: MainAxisSize.min,
                                                   crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
+                                                    Spacing.h10,
                                                     Row(
                                                       children: [
                                                         SizedBox(
@@ -956,7 +958,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                                             onTap: () {
                                                               Navigator.pop(context);
                                                             },
-                                                            child: const Icon(Icons.close),
+                                                            child: const Icon(Icons.close).paddingAll(5),
                                                           ),
                                                         ),
                                                       ],
@@ -997,7 +999,7 @@ we need *all the divers to complete* the *paperwork process*. Please share this 
                                                     ),
                                                     buildAddCustomerButton(context, bookingModel),
                                                   ],
-                                                ),
+                                                ).scrollable,
                                               );
                                             },
                                           );

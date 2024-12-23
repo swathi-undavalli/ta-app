@@ -64,7 +64,7 @@ class DiveLogModel {
 
   factory DiveLogModel.fromMap(Map<String, dynamic>? map) => DiveLogModel(
         timeIn: map?['timeIn'],
-        instructor: Instructor.fromJson(map?['instructor']),
+        instructor: Instructor.fromMap(map?['instructor']),
         course: map?['course'],
         diveSite: map?['diveSite'],
         tankNo: map?['tankNo'],

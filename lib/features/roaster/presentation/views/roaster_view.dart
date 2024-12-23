@@ -7,6 +7,7 @@ import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_bar.dart';
+import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
 import '../../models/roaster.dart';
@@ -28,6 +29,7 @@ class _RoasterViewState extends State<RoasterView> {
   DateTime selectedDate = DateTime.now();
   bool showLoading = false;
   Boat? selectedBoat;
+  List<Instructor> dsdInstructors = [];
 
   List<Boat> boats = [];
 
@@ -115,7 +117,7 @@ class _RoasterViewState extends State<RoasterView> {
                       roaster = null;
 
                       if (p['roaster'] != null) {
-                        roaster = Roaster.fromJson(p['roaster']);
+                        roaster = Roaster.fromMap(p['roaster']);
                       }
 
                       return InkWell(
@@ -126,6 +128,7 @@ class _RoasterViewState extends State<RoasterView> {
                               booking: booking,
                               paxIndex: booking.pax!.indexOf(p),
                               boat: selectedBoat,
+                              dsdInstructors: dsdInstructors,
                             ),
                           );
                         },
@@ -226,14 +229,16 @@ class _RoasterViewState extends State<RoasterView> {
           ).paddingAll(5),
         ).paddingOnly(left: 10),
         ...boats.map(
-          (boat) => buildChip(
-            onTap: () {
-              selectedBoat = boat;
-              setState(() {});
-            },
-            color: (boat.id == selectedBoat?.id) ? AppColors.text.lightSkyBlue : Colors.white,
-            title: boat.name,
-          ),
+          (boat) {
+            return buildChip(
+              onTap: () {
+                selectedBoat = boat;
+                setState(() {});
+              },
+              color: (boat.id == selectedBoat?.id) ? AppColors.text.lightSkyBlue : Colors.white,
+              title: boat.name,
+            );
+          },
         ),
       ],
     ).paddingSymmetric(horizontal: 10);
@@ -316,6 +321,7 @@ class _RoasterViewState extends State<RoasterView> {
 
   Future<void> getAllBoats(DateTime date) async {
     boats = [];
+    dsdInstructors = [];
     selectedBoat = null;
 
     var data =
@@ -324,6 +330,13 @@ class _RoasterViewState extends State<RoasterView> {
     BoatsModel boatsModel = BoatsModel.fromMap(data.data());
 
     boats.addAll(boatsModel.boats as Iterable<Boat>);
+
+    for (var boat in boats) {
+      boat.dsdInstructors?.forEach((e) {
+        dsdInstructors.add(e);
+      });
+    }
+
     if (boats.isNotEmpty) {
       selectedBoat = boats[0];
     }

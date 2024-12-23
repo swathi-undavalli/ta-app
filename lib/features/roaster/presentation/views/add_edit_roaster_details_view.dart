@@ -14,6 +14,7 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/continue_dialog.dart';
 import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
+import '../../../boat/presentation/widgets/employee_selector_bottom_sheet.dart';
 import '../../../bookings/models/booking_model.dart';
 import '../../models/customer_feedback.dart';
 import '../../models/roaster.dart';
@@ -26,22 +27,26 @@ class AddEditRoasterDetailsView extends StatefulWidget {
     required this.booking,
     required this.paxIndex,
     required this.boat,
+    required this.dsdInstructors,
   });
 
   final Booking booking;
   final int paxIndex;
   final Boat? boat;
+  final List<Instructor> dsdInstructors;
 
   static Route route({
     required Booking booking,
     required int paxIndex,
     required Boat? boat,
+    required List<Instructor> dsdInstructors,
   }) =>
       MaterialPageRoute(
         builder: (context) => AddEditRoasterDetailsView(
           booking: booking,
           paxIndex: paxIndex,
           boat: boat,
+          dsdInstructors: dsdInstructors,
         ),
       );
 
@@ -49,8 +54,10 @@ class AddEditRoasterDetailsView extends StatefulWidget {
   State<AddEditRoasterDetailsView> createState() => _AddEditRoasterDetailsViewState();
 }
 
+//TODO: Private build widgets
 class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
   Instructor? assignedInstructor;
+  Instructor? staffInstructor;
   CustomerFeedback? customerFeedback;
   List<Instructor> dsdInstructors = [];
   DateTime? timeIn;
@@ -59,25 +66,26 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
   late Booking booking;
   Map<String, dynamic>? paxData;
   Roaster? existingRoaster;
-  bool isDived = true;
+  bool isDived = false;
 
   @override
   void initState() {
     super.initState();
-    dsdInstructors = widget.boat?.dsdInstructors ?? [];
+    dsdInstructors = widget.dsdInstructors;
 
     booking = widget.booking;
 
     paxData = booking.pax?[widget.paxIndex];
 
     if (paxData?['roaster'] != null) {
-      existingRoaster = Roaster.fromJson(paxData?['roaster']);
+      existingRoaster = Roaster.fromMap(paxData?['roaster']);
 
       assignedInstructor = existingRoaster?.instructor;
+      staffInstructor = existingRoaster?.staffInstructor;
       customerFeedback = existingRoaster?.customerFeedback;
       timeIn = existingRoaster?.timeIn;
       timeOut = existingRoaster?.timeOut;
-      isDived = existingRoaster?.isDived ?? true;
+      isDived = existingRoaster?.isDived ?? false;
     }
   }
 
@@ -123,6 +131,8 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                   ),
                   Spacing.h40,
                   buildInstructor(),
+                  Spacing.h30,
+                  buildStaffInstructor(),
                   Spacing.h30,
                   Row(
                     children: [
@@ -201,81 +211,122 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                         ),
                       ],
                     ).paddingOnly(bottom: 20),
-                  Row(
-                    children: [
-                      Text(
-                        'Is Dived',
-                        style: TextStyle(
-                          fontSize: 14,
-                          color: AppColors.text.black,
-                        ),
-                      ),
-                      Spacing.w20,
-                      Switch(
-                          value: isDived,
-                          activeColor: appBlue,
-                          onChanged: (bool value) {
-                            isDived = value;
-                            setState(() {});
-                          }),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      const Text('Customer FeedBack'),
-                      const Spacer(),
-                      AppButton.miniFlat(
-                        text: (customerFeedback == null) ? 'Submit' : 'Update',
-                        onTap: () async {
-                          bool openCustomerBs = await ContinueDialog.show(
-                            context,
-                            title: 'Are You Sure ? ',
-                            content: 'Please submit the information before getting into customer feedback',
-                          );
-
-                          if (openCustomerBs) {
-                            customerFeedback = await CustomerFeedbackBottomSheet.show(
-                              context,
-                              bookingModel: booking,
-                              paxIndex: widget.paxIndex,
-                              customerFeedback: customerFeedback,
-                            );
-                          }
-                          setState(() {});
-                        },
-                      ),
-                    ],
-                  ),
+                  buildIsDived(),
+                  buildCustomerFeedback(),
                   Spacing.h100,
-                  AppButton.flat(
-                    text: (booking.pax?[widget.paxIndex]['roaster'] == null) ? 'Submit' : 'Update',
-                    onTap: () async {
-                      showLoading = true;
-                      setState(() {});
-
-                      Roaster roaster = Roaster(
-                        instructor: assignedInstructor,
-                        timeIn: timeIn,
-                        timeOut: timeOut,
-                        customerFeedback: customerFeedback,
-                        isDived: isDived,
-                      );
-
-                      booking.pax?[widget.paxIndex]['roaster'] = roaster.toJson();
-
-                      await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
-                      showLoading = false;
-                      setState(() {});
-
-                      Get.back();
-                    },
-                    color: Colors.black,
-                    textColor: Colors.white,
-                  ),
+                  buildSubmitButton(),
                   Spacing.h40,
                 ],
               ).paddingSymmetric(horizontal: 20).scrollable,
       ),
+    );
+  }
+
+  Widget buildStaffInstructor() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            const Text('Staff Instructor'),
+            const Spacer(),
+            AppButton.miniFlat(
+              text: (staffInstructor != null) ? 'Manage Instructor' : 'Add Instructor',
+              onTap: () async {
+                staffInstructor = await EmpSelectorBottomSheet.show(
+                  context,
+                  selectedInstructor: staffInstructor,
+                  employeeType: EmployeeType.showAllDiveTeam,
+                  tanksRequired: false,
+                  selectedDate: DateTime.now(),
+                );
+                setState(() {});
+              },
+            ),
+          ],
+        ),
+        if (staffInstructor != null) Text(staffInstructor!.name).paddingOnly(top: 10),
+      ],
+    );
+  }
+
+  Widget buildIsDived() {
+    return Row(
+      children: [
+        Text(
+          'Is Dived',
+          style: TextStyle(
+            fontSize: 14,
+            color: AppColors.text.black,
+          ),
+        ),
+        Spacing.w20,
+        Switch(
+            value: isDived,
+            activeColor: appBlue,
+            onChanged: (bool value) {
+              isDived = value;
+              setState(() {});
+            }),
+      ],
+    );
+  }
+
+  Widget buildCustomerFeedback() {
+    return Row(
+      children: [
+        const Text('Customer FeedBack'),
+        const Spacer(),
+        AppButton.miniFlat(
+          text: (customerFeedback == null) ? 'Submit' : 'Update',
+          onTap: () async {
+            bool openCustomerBs = await ContinueDialog.show(
+              context,
+              title: 'Are You Sure ? ',
+              content: 'Please submit the information before getting into customer feedback',
+            );
+
+            if (openCustomerBs && mounted) {
+              customerFeedback = await CustomerFeedbackBottomSheet.show(
+                context,
+                bookingModel: booking,
+                paxIndex: widget.paxIndex,
+                customerFeedback: customerFeedback,
+              );
+            }
+            setState(() {});
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget buildSubmitButton() {
+    return AppButton.flat(
+      text: (booking.pax?[widget.paxIndex]['roaster'] == null) ? 'Submit' : 'Update',
+      onTap: () async {
+        showLoading = true;
+        setState(() {});
+
+        Roaster roaster = Roaster(
+          instructor: assignedInstructor,
+          staffInstructor: staffInstructor,
+          timeIn: timeIn,
+          timeOut: timeOut,
+          customerFeedback: customerFeedback,
+          isDived: isDived,
+        );
+
+        booking.pax?[widget.paxIndex]['roaster'] = roaster.toMap();
+
+        await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
+        showLoading = false;
+        setState(() {});
+
+        Get.back();
+      },
+      color: Colors.black,
+      textColor: Colors.white,
     );
   }
 

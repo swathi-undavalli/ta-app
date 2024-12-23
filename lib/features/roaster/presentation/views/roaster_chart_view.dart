@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/access_levels.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../boat/models/boats.dart';
@@ -148,7 +149,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
       File(tempPath).writeAsBytesSync(pngBytes);
       shareImages([tempPath]);
     } catch (e) {
-      print('Error capturing screenshot: $e');
+      log('Error capturing screenshot: $e');
     }
   }
 
@@ -241,7 +242,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
           ...(booking.pax ?? []).map(
             (p) {
               if (p['roaster'] != null) {
-                Roaster roaster = Roaster.fromJson(p['roaster']);
+                Roaster roaster = Roaster.fromMap(p['roaster']);
 
                 return Row(
                   children: [
@@ -249,35 +250,15 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                     buildText(
                       text: booking.id ?? '',
                     ),
-                    buildText(
-                      text: '${p['first-name']}' '${p['last-name']}',
-                    ),
+                    buildText(text: '${p['first-name']}' '${p['last-name']}'),
                     buildText(text: p['gender']),
-                    buildText(
-                      text: roaster.instructor?.name ?? '-',
-                    ),
-                    buildText(
-                      text: (roaster.timeIn != null) ? DateFormat('hh:mm a').format(roaster.timeIn!) : '-',
-                    ),
-                    buildText(
-                      text: (roaster.timeOut != null) ? DateFormat('hh:mm a').format(roaster.timeOut!) : '-',
-                    ),
-                    buildText(
-                      text: (roaster.isDived != null && roaster.isDived! == true) ? 'Yes' : 'No',
-                    ),
-                    buildText(
-                      text:
-                          (roaster.customerFeedback != null && roaster.customerFeedback!.knowsSwimming!) ? 'Yes' : 'No',
-                    ),
-                    buildText(
-                      text:
-                          (roaster.customerFeedback != null && roaster.customerFeedback!.interestedOwc!) ? 'Yes' : 'No',
-                    ),
-                    buildText(
-                      text: (roaster.customerFeedback != null && roaster.customerFeedback!.feedback!.isNotEmpty)
-                          ? roaster.customerFeedback!.feedback!
-                          : '-',
-                    ),
+                    buildText(text: roaster.staffInstructor?.name ?? roaster.instructor?.name ?? '-'),
+                    buildText(text: (roaster.timeIn != null) ? DateFormat('hh:mm a').format(roaster.timeIn!) : '-'),
+                    buildText(text: (roaster.timeOut != null) ? DateFormat('hh:mm a').format(roaster.timeOut!) : '-'),
+                    buildText(text: (roaster.isDived == true) ? 'Yes' : 'No'),
+                    buildText(text: (roaster.customerFeedback?.knowsSwimming == true) ? 'Yes' : 'No'),
+                    buildText(text: (roaster.customerFeedback?.interestedOwc == true) ? 'Yes' : 'No'),
+                    buildText(text: roaster.customerFeedback?.feedback?.stringOrNull ?? '-'),
                   ],
                 ).paddingSymmetric(horizontal: 10, vertical: 5);
               }

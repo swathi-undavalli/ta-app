@@ -91,7 +91,7 @@ class DropdownWithSearch<T> extends StatelessWidget {
               const Icon(
                 Icons.arrow_drop_down,
                 color: Colors.black54,
-              )
+              ),
             ],
           ),
         ),

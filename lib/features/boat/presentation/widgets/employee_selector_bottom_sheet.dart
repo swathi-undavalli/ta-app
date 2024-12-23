@@ -63,6 +63,33 @@ class EmpSelectorBottomSheet extends StatefulWidget {
     return data as List<Instructor>?;
   }
 
+  static Future<Instructor?> show(
+    BuildContext context, {
+    required Instructor? selectedInstructor,
+    required EmployeeType employeeType,
+    required DateTime? selectedDate,
+    bool showAssignmentStatus = false,
+    bool tanksRequired = false,
+  }) async {
+    var data = await showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      isDismissible: false,
+      builder: (BuildContext context) {
+        return EmpSelectorBottomSheet(
+          initialSelectedInstructors: [if (selectedInstructor != null) selectedInstructor],
+          instructorLimit: 1,
+          employeeType: employeeType,
+          isTanksRequired: tanksRequired,
+          selectedDate: selectedDate,
+          showAssignmentStatus: showAssignmentStatus,
+        );
+      },
+    );
+
+    return (data as List<Instructor>?)?.firstOrNull;
+  }
+
   @override
   State<EmpSelectorBottomSheet> createState() => _EmpSelectorBottomSheetState();
 }

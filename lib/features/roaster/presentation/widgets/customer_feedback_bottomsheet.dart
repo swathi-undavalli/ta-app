@@ -165,7 +165,7 @@ class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomShee
                         });
                         var pax = booking.pax![widget.paxIndex];
 
-                        Roaster? roaster = Roaster.fromJson(pax['roaster'] ?? {});
+                        Roaster? roaster = Roaster.fromMap(pax['roaster'] ?? {});
 
                         customerFeedback = CustomerFeedback(
                           knowsSwimming: knowsSwimming,
@@ -180,7 +180,7 @@ class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomShee
                           customerFeedback: customerFeedback,
                         );
 
-                        pax['roaster'] = roaster.toJson();
+                        pax['roaster'] = roaster.toMap();
 
                         await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
                         setState(() {

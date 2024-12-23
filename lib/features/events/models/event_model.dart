@@ -50,7 +50,7 @@ class Event {
         session: json['session'],
         id: json['id'],
         employees: List<Instructor>.from(
-          (json['employees']).map((x) => Instructor.fromJson(x)),
+          (json['employees']).map((x) => Instructor.fromMap(x)),
         ),
         location: json['location'],
         dateTime: (json['dateTime'] as Timestamp).toDate(),
@@ -61,7 +61,7 @@ class Event {
   Map<String, dynamic> toJson() => {
         'session': session,
         'id': id,
-        'employees': List<dynamic>.from((employees).map((x) => x.toJson())),
+        'employees': List<dynamic>.from((employees).map((x) => x.toMap())),
         'location': location,
         'dateTime': Timestamp.fromDate(dateTime),
         'phone': phone,

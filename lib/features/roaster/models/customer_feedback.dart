@@ -34,11 +34,11 @@ class CustomerFeedback {
         feedback: feedback ?? this.feedback,
       );
 
-  factory CustomerFeedback.fromRawJson(String str) => CustomerFeedback.fromJson(json.decode(str));
+  factory CustomerFeedback.fromRawJson(String str) => CustomerFeedback.fromMap(json.decode(str));
 
-  String toRawJson() => json.encode(toJson());
+  String toRawJson() => json.encode(toMap());
 
-  factory CustomerFeedback.fromJson(Map<String, dynamic> json) => CustomerFeedback(
+  factory CustomerFeedback.fromMap(Map<String, dynamic> json) => CustomerFeedback(
         knowsSwimming: json['knowsSwimming'],
         interestedOwc: json['interestedOwc'],
         instructorFeedback: json['instructorFeedback'],
@@ -47,7 +47,7 @@ class CustomerFeedback {
         feedback: json['feedback'],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toMap() => {
         'knowsSwimming': knowsSwimming,
         'interestedOwc': interestedOwc,
         'instructorFeedback': instructorFeedback,

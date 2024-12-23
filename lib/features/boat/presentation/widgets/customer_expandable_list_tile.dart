@@ -37,6 +37,7 @@ class CustomerExpandableListTile extends StatefulWidget {
   State<CustomerExpandableListTile> createState() => _CustomerExpandableListTileState();
 }
 
+// TODO: Extract as private widget
 class _CustomerExpandableListTileState extends State<CustomerExpandableListTile> {
   bool isExpanded = false;
 
@@ -176,6 +177,7 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
                               itemModel.activity,
                             ),
                             _buildKeyValuePairs('Session', itemModel.session),
+                            _buildKeyValuePairs('Time', itemModel.time),
                             if (!itemModel.bookingModel!.isQuickBooking)
                               _buildKeyValuePairs(
                                 'Registered',
@@ -580,8 +582,8 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        if (shrinkKey)
-          Text(
+        Expanded(
+          child: Text(
             key,
             style: TextStyle(
               color: Colors.grey[700],
@@ -589,24 +591,12 @@ class _CustomerExpandableListTileState extends State<CustomerExpandableListTile>
               letterSpacing: 0.3,
               fontWeight: FontWeight.w600,
             ),
-          ).paddingOnly(right: 10)
-        else
-          Expanded(
-            child: Text(
-              key,
-              style: TextStyle(
-                color: Colors.grey[700],
-                fontSize: 13,
-                letterSpacing: 0.3,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
           ),
+        ),
         SizedBox(
           width: 170,
           child: Text(
             value,
-            // overflow: TextOverflow.ellipsis,
             style: TextStyle(
               color: isDanger ? Colors.red : Colors.black,
               fontSize: 13,
