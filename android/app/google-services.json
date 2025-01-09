@@ -7,6 +7,78 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:671883511961:android:68c90af6b3511dbab05008",
+        "android_client_info": {
+          "package_name": "com.example.temple_adventures"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "671883511961-5a2pnqspukd1g7fljfd2npai41sshnmo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8_7glLdVyRaObsje_OlaXflK8Phi2fJY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "671883511961-5a2pnqspukd1g7fljfd2npai41sshnmo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.templeadventures.scubadiving"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671883511961:android:833217744dc1c7e7b05008",
+        "android_client_info": {
+          "package_name": "com.temple.board.temple_board"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "671883511961-5a2pnqspukd1g7fljfd2npai41sshnmo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8_7glLdVyRaObsje_OlaXflK8Phi2fJY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "671883511961-5a2pnqspukd1g7fljfd2npai41sshnmo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.templeadventures.scubadiving"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:671883511961:android:c0058fab134f4f4eb05008",
         "android_client_info": {
           "package_name": "com.temple_adventures.scubadiving"
@@ -19,6 +91,14 @@
           "android_info": {
             "package_name": "com.temple_adventures.scubadiving",
             "certificate_hash": "050e68e65ebc7881fc5d84cde64e9ba8299e1acc"
+          }
+        },
+        {
+          "client_id": "671883511961-4ffq4b6nuesceknfuu28ki89vqes03k0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.temple_adventures.scubadiving",
+            "certificate_hash": "96c69677cf8784236a3e4aa0bc5298f683e8bd78"
           }
         },
         {
@@ -35,6 +115,14 @@
           "android_info": {
             "package_name": "com.temple_adventures.scubadiving",
             "certificate_hash": "8481e2c3f56789ed2962e10900a3349ed7a257d0"
+          }
+        },
+        {
+          "client_id": "671883511961-7q078gvj81qr9najbq0r7o02o0h4fbd7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.temple_adventures.scubadiving",
+            "certificate_hash": "b101f86188a85f16449fc24a32d506e7759ac763"
           }
         },
         {
@@ -68,7 +156,7 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCdRCPOJF_yuMjaYfyVXCYCXgZ6efZDVBI"
+          "current_key": "AIzaSyA8_7glLdVyRaObsje_OlaXflK8Phi2fJY"
         }
       ],
       "services": {
@@ -104,7 +192,43 @@
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyCdRCPOJF_yuMjaYfyVXCYCXgZ6efZDVBI"
+          "current_key": "AIzaSyA8_7glLdVyRaObsje_OlaXflK8Phi2fJY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "671883511961-5a2pnqspukd1g7fljfd2npai41sshnmo.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.templeadventures.scubadiving"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:671883511961:android:b22ba95a82b91a97b05008",
+        "android_client_info": {
+          "package_name": "io.carius.lars.ar_flutter_plugin_example"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "671883511961-5a2pnqspukd1g7fljfd2npai41sshnmo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA8_7glLdVyRaObsje_OlaXflK8Phi2fJY"
         }
       ],
       "services": {

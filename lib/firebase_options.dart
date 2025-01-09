@@ -50,7 +50,7 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyCdRCPOJF_yuMjaYfyVXCYCXgZ6efZDVBI',
+    apiKey: 'AIzaSyA8_7glLdVyRaObsje_OlaXflK8Phi2fJY',
     appId: '1:671883511961:android:c0058fab134f4f4eb05008',
     messagingSenderId: '671883511961',
     projectId: 'seismic-glow-283418',
