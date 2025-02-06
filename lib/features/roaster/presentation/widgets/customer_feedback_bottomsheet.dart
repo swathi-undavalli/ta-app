@@ -144,7 +144,7 @@ class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomShee
                   controller: reviewTED,
                   maxLines: 3,
                   validator: (name) {
-                    return name;
+                    return null;
                   },
                 ),
                 Spacing.h30,

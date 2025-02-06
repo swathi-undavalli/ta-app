@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/access_levels.dart';
 import '../../../../core/widgets/app_bar.dart';
@@ -250,7 +251,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                     buildText(
                       text: booking.id ?? '',
                     ),
-                    buildText(text: '${p['first-name']}' '${p['last-name']}'),
+                    buildText(text: '${p['first-name']} ${p['last-name']}'),
                     buildText(text: p['gender']),
                     buildText(text: roaster.staffInstructor?.name ?? roaster.instructor?.name ?? '-'),
                     buildText(text: (roaster.timeIn != null) ? DateFormat('hh:mm a').format(roaster.timeIn!) : '-'),
