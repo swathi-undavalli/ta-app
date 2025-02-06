@@ -40,7 +40,7 @@ dependencies:
   flutter_lints: ^4.0.0
   image_picker: ^1.1.2
   carousel_slider:
-  image_gallery_saver:
+  image_gallery_saver_plus: ^3.0.5
   flutter_pdfview:
   provider:
   get_it: ^7.6.0
@@ -55,7 +55,7 @@ dependencies:
 
   # Data storage & DB
   isar: ^3.1.0+1
-  isar_flutter_libs: ^3.1.0+1
+  #  isar_flutter_libs: ^3.1.0+1
   shared_preferences: ^2.2.3
   firebase_storage: ^12.1.1
   http: ^1.2.2

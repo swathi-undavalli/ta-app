@@ -30,6 +30,7 @@
 
     <application
         android:icon="@mipmap/ic_launcher"
+        android:requestLegacyExternalStorage="true"
         android:label="Temple adventures admin">
 
         <activity

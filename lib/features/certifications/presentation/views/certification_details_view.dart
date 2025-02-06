@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
-import 'package:image_gallery_saver/image_gallery_saver.dart';
+import 'package:image_gallery_saver_plus/image_gallery_saver_plus.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
@@ -236,7 +236,7 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
     try {
       http.Response response = await http.get(Uri.parse(imageUrl));
 
-      await ImageGallerySaver.saveImage(Uint8List.fromList(response.bodyBytes));
+      await ImageGallerySaverPlus.saveImage(Uint8List.fromList(response.bodyBytes));
     } catch (error) {
       log('Error downloading or saving image: $error');
     }
