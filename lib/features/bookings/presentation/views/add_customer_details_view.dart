@@ -12,7 +12,7 @@ import '../../../../core/constants/constants.dart';
 import '../../../../core/util/validator.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/phone_number/intl_phone_field.dart';
+import '../../../../core/widgets/phone_number_input.dart';
 import '../../controller/new_booking_controller.dart';
 import '../../models/activity_model.dart';
 import '../widgets/app_text_fields.dart';
@@ -426,31 +426,18 @@ class AddCustomerDetailsView extends StatelessWidget {
       builder: (controller) {
         return Column(
           children: [
-            IntlPhoneField(
-              autoValidate: true,
+            PhoneNumberInput(
+              controller: controller.phoneNumberTED,
               focusNode: controller.phoneNumberNode,
               initialCountryCode: controller.isoCode,
-              showCountryFlag: false,
-              initialValue: controller.phoneNumberTED.text,
-              inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-              decoration: const InputDecoration(
-                labelText: 'Phone Number  *',
-                labelStyle: TextStyle(
-                  fontSize: FontSize.small,
-                  fontFamily: AppFonts.nunito,
-                ),
-              ),
-              style: const TextStyle(
-                fontFamily: AppFonts.nunito,
-                fontWeight: FontWeight.normal,
-                fontSize: 14,
-              ),
-              searchText: 'Search',
-              onSubmitted: (_) {},
+              required: true,
               onChanged: (phone) {
                 controller.countryCodeTED.text = phone.countryCode;
-                controller.phoneNumberTED.text = phone.number!;
+                controller.phoneNumberTED.text = phone.number;
                 controller.isoCode = phone.countryISOCode;
+              },
+              onCountryChanged: (country) {
+                controller.countryCodeTED.text = country.dialCode;
               },
             ),
             if (controller.phoneError != null)

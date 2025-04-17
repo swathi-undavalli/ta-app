@@ -11,7 +11,6 @@ import 'package:temple_ui_tools/utils/utils.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/continue_dialog.dart';
 import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../boat/presentation/widgets/employee_selector_bottom_sheet.dart';
@@ -157,7 +156,7 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                       ),
                     ],
                   ),
-                  Spacing.h10,
+                  Spacing.h20,
                   Row(
                     children: [
                       if (timeIn != null)
@@ -181,44 +180,52 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                   ),
                   Spacing.h10,
                   if (timeIn != null || timeOut != null)
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const Text(
-                          'Change, In the water and out the water timings ',
-                          style: TextStyle(fontSize: 10),
-                        ),
-                        InkWell(
-                          onTap: () async {
-                            List<DateTime?> times = await RoasterTimeEditorBs.show(context, timeIn, timeOut);
+                    buildTextEditor(
+                      title: 'Change, In the water and out the water timings ',
+                      onTap: () async {
+                        List<DateTime?> times = await RoasterTimeEditorBs.show(context, timeIn, timeOut);
 
-                            log(times.toString());
-
-                            if (times.isNotEmpty) {
-                              timeIn = times[0];
-                              timeOut = times[1];
-                              setState(() {});
-                            }
-                          },
-                          child: const Text(
-                            ' here',
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.blue,
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ],
+                        if (times.isNotEmpty) {
+                          timeIn = times[0];
+                          timeOut = times[1];
+                          setState(() {});
+                        }
+                      },
                     ).paddingOnly(bottom: 20),
                   buildIsDived(),
-                  buildCustomerFeedback(),
+                  Spacing.h30,
+                  if (existingRoaster?.customerFeedback != null) buildCustomerFeedback(),
                   Spacing.h100,
                   buildSubmitButton(),
                   Spacing.h40,
                 ],
               ).paddingSymmetric(horizontal: 20).scrollable,
       ),
+    );
+  }
+
+  Widget buildTextEditor({required String title, required Function onTap}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Text(
+          title,
+          style: const TextStyle(fontSize: 10),
+        ),
+        InkWell(
+          onTap: () {
+            onTap();
+          },
+          child: const Text(
+            ' here',
+            style: TextStyle(
+              fontSize: 12,
+              color: Colors.blue,
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      ],
     );
   }
 
@@ -254,50 +261,47 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
     return Row(
       children: [
         Text(
-          'Is Dived',
+          'Is Dived Completed',
           style: TextStyle(
             fontSize: 14,
             color: AppColors.text.black,
           ),
         ),
         Spacing.w20,
-        Switch(
-            value: isDived,
-            activeColor: appBlue,
-            onChanged: (bool value) {
-              isDived = value;
-              setState(() {});
-            }),
+        buildTimeButtons(
+          title: 'Yes',
+          onTap: () {
+            setState(() {
+              isDived = true;
+            });
+          },
+          color: (isDived == true) ? AppColors.text.lightSkyBlue : Colors.white,
+        ),
+        Spacing.w10,
+        buildTimeButtons(
+          title: 'No',
+          onTap: () {
+            setState(() {
+              isDived = false;
+            });
+          },
+          color: (isDived == false) ? AppColors.text.lightSkyBlue : Colors.white,
+        ),
       ],
     );
   }
 
   Widget buildCustomerFeedback() {
-    return Row(
-      children: [
-        const Text('Customer FeedBack'),
-        const Spacer(),
-        AppButton.miniFlat(
-          text: (customerFeedback == null) ? 'Submit' : 'Update',
-          onTap: () async {
-            bool openCustomerBs = await ContinueDialog.show(
-              context,
-              title: 'Are You Sure ? ',
-              content: 'Please submit the information before getting into customer feedback',
-            );
-
-            if (openCustomerBs && mounted) {
-              customerFeedback = await CustomerFeedbackBottomSheet.show(
-                context,
-                bookingModel: booking,
-                paxIndex: widget.paxIndex,
-                customerFeedback: customerFeedback,
-              );
-            }
-            setState(() {});
-          },
-        ),
-      ],
+    return buildTextEditor(
+      title: 'Customer feedback is already submitted to fill again click ',
+      onTap: () async {
+        await CustomerFeedbackBottomSheet.show(
+          context,
+          bookingModel: booking,
+          paxIndex: widget.paxIndex,
+          customerFeedback: customerFeedback,
+        );
+      },
     );
   }
 

@@ -11,7 +11,7 @@ import '../../../../core/util/validator.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/field_error.dart';
 import '../../../../core/widgets/image_uploader.dart';
-import '../../../../core/widgets/phone_number/intl_phone_field.dart';
+import '../../../../core/widgets/phone_number_input.dart';
 import '../../models/booking_model.dart';
 import '../../models/customer_model.dart';
 import 'app_text_fields.dart';
@@ -42,10 +42,10 @@ class AddCustomerDialog extends StatefulWidget {
 }
 
 class _AddCustomerDialogState extends State<AddCustomerDialog> {
-  String? phoneNumber;
   String? countryCode;
   String? isoCode = 'IN';
   late TextEditingController nameTED;
+  late TextEditingController phoneTED;
   late TextEditingController emailTED;
   late TextEditingController genderTED;
   late TextEditingController dobTED;
@@ -66,6 +66,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
     super.initState();
     bookingModel = widget.bookingModel;
     nameTED = TextEditingController();
+    phoneTED = TextEditingController();
     emailTED = TextEditingController();
     genderTED = TextEditingController();
     dobTED = TextEditingController();
@@ -150,7 +151,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                 'email': emailTED.text,
                 'last-name': '',
                 'countryCode': countryCode,
-                'phoneNumber': phoneNumber,
+                'phoneNumber': phoneTED.text,
                 'isoCode': isoCode,
                 'dob': dob,
                 'gender': genderTED.text,
@@ -300,7 +301,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
       firstName: nameTED.text,
       lastName: '',
       email: emailTED.text,
-      phoneNumber: phoneNumber,
+      phoneNumber: phoneTED.text,
       idProof: _uploadedImage,
       gender: genderTED.text,
       dob: dobTED.text,
@@ -326,7 +327,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
       isValid = false;
       setState(() {});
     }
-    if (phoneNumber == null) {
+    if (phoneTED.text.isEmpty) {
       phoneError = 'Required';
       isValid = false;
       setState(() {});
@@ -345,7 +346,7 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
   }
 
   void clear() {
-    phoneNumber = null;
+    phoneTED.text = '';
     countryCode = null;
     nameTED.text = '';
     emailTED.text = '';
@@ -380,30 +381,17 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        IntlPhoneField(
-          autoValidate: true,
+        PhoneNumberInput(
+          controller: phoneTED,
           initialCountryCode: isoCode,
-          showCountryFlag: false,
-          initialValue: phoneNumber,
-          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-          decoration: const InputDecoration(
-            labelText: 'Phone Number  *',
-            labelStyle: TextStyle(
-              fontSize: FontSize.small,
-              fontFamily: AppFonts.nunito,
-            ),
-          ),
-          style: const TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.normal,
-            fontSize: 14,
-          ),
-          searchText: 'Search',
-          onSubmitted: (_) {},
+          required: true,
           onChanged: (phone) {
             countryCode = phone.countryCode;
-            phoneNumber = phone.number!;
+            phoneTED.text = phone.number;
             isoCode = phone.countryISOCode;
+          },
+          onCountryChanged: (country) {
+            countryCode = country.dialCode;
           },
         ),
         Text(

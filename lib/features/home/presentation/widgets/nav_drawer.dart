@@ -49,16 +49,14 @@ class NavDrawer extends StatelessWidget {
                 Navigator.push(context, EmployeeProfileView.route());
               },
             ),
-            EmployeeAccess(
-              access: AccessRights.viewBookings,
-              child: buildMenuItem(
-                icon: Icons.add_to_photos_sharp,
-                text: 'All Bookings',
-                onTap: () {
-                  Navigator.push(context, AllBookingsView.route());
-                },
-              ),
-            ),
+            // buildMenuItem(
+            //   icon: Icons.navigation_rounded,
+            //   text: 'Dive Sites Navigation',
+            //   onTap: () {
+            //     Navigator.push(context, EmployeeProfileView.route());
+            //   },
+            // ),
+
             buildMenuItem(
               icon: Icons.content_paste,
               text: 'Board Plan',
@@ -173,6 +171,16 @@ class NavDrawer extends StatelessWidget {
                 text: 'Programs List',
                 onTap: () {
                   Navigator.push(context, AllActivitiesView.route());
+                },
+              ),
+            ),
+            EmployeeAccess(
+              access: AccessRights.viewBookings,
+              child: buildMenuItem(
+                icon: Icons.add_to_photos_sharp,
+                text: 'All Bookings',
+                onTap: () {
+                  Navigator.push(context, AllBookingsView.route());
                 },
               ),
             ),

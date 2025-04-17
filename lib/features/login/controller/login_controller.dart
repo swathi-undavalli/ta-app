@@ -210,8 +210,6 @@ class LoginScreenController extends GetxController {
   bool _showLoading = false;
   bool _showResend = false;
 
-  bool _otpSent = false;
-
   reset() {
     showFab = true;
     showResend = false;
@@ -232,7 +230,6 @@ class LoginScreenController extends GetxController {
 
   bool get showLoading => _showLoading;
 
-  bool get otpSent => _otpSent;
 
   String get otpStatus => _otpStatus;
 
@@ -241,10 +238,6 @@ class LoginScreenController extends GetxController {
     update();
   }
 
-  set otpSent(bool value) {
-    _otpSent = value;
-    update();
-  }
 
   set showResend(bool value) {
     _showResend = value;

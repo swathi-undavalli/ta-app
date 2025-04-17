@@ -6,7 +6,6 @@ import 'package:temple_ui_tools/utils/utils.dart';
 
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/phone_number/intl_phone_field.dart';
 import '../../controller/login_controller.dart';
 
 class LoginView extends StatefulWidget {
@@ -51,7 +50,7 @@ class _LoginViewState extends State<LoginView> {
                   buildAppLogo(),
                   buildWelcomeMessage(),
                   buildOTPStatus(),
-                  buildPhoneNumber(),
+                  buildOtpField(),
                   buildEmployeeID(),
                   const SizedBox(height: 60),
                   buildResendButton(),
@@ -113,33 +112,6 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Widget buildPhoneNumberTextField(BuildContext context) {
-    return IntlPhoneField(
-      initialCountryCode: 'IN',
-      showCountryFlag: false,
-      decoration: const InputDecoration(
-        labelText: 'Phone Number',
-        labelStyle: TextStyle(
-          fontSize: FontSize.small,
-          fontFamily: AppFonts.nunito,
-        ),
-      ),
-      style: const TextStyle(
-        fontFamily: AppFonts.nunito,
-        fontWeight: FontWeight.bold,
-        fontSize: 14,
-      ),
-      searchText: 'Search',
-      onSubmitted: (_) {
-        logic.signInWithPhoneNumber(context);
-      },
-      onChanged: (phone) {
-        logic.controller.phoneNumberTED.text = phone.number!;
-        logic.controller.countryCodeTED.text = phone.countryCode;
-      },
-    );
-  }
-
   Widget buildResendButton() {
     return GetBuilder<LoginScreenController>(
       builder: (controller) {
@@ -158,7 +130,7 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  Widget buildPhoneNumber() {
+  Widget buildOtpField() {
     return SizedBox(
       width: 300,
       child: GetBuilder<LoginScreenController>(
@@ -229,38 +201,31 @@ class _LoginViewState extends State<LoginView> {
   }
 
   Widget buildWelcomeMessage() {
-    return GetBuilder<LoginScreenController>(
-      builder: (controller) {
-        if (controller.otpSent == false) {
-          return SizedBox(
-            width: 347,
-            child: Text.rich(
-              TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'On behalf of the whole department welcome',
-                    style: TextStyle(
-                      fontSize: FontSize.message,
-                      fontFamily: AppFonts.nunito,
-                      color: AppColors.text.black,
-                    ),
-                  ),
-                  TextSpan(
-                    text: ' aboard.',
-                    style: TextStyle(
-                      fontSize: FontSize.message,
-                      fontFamily: AppFonts.nunito,
-                      color: AppColors.text.skyBlue,
-                    ),
-                  ),
-                ],
+    return SizedBox(
+      width: 347,
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: 'On behalf of the whole department welcome',
+              style: TextStyle(
+                fontSize: FontSize.message,
+                fontFamily: AppFonts.nunito,
+                color: AppColors.text.black,
               ),
-              textAlign: TextAlign.center,
             ),
-          );
-        }
-        return const SizedBox();
-      },
+            TextSpan(
+              text: ' aboard.',
+              style: TextStyle(
+                fontSize: FontSize.message,
+                fontFamily: AppFonts.nunito,
+                color: AppColors.text.skyBlue,
+              ),
+            ),
+          ],
+        ),
+        textAlign: TextAlign.center,
+      ),
     );
   }
 

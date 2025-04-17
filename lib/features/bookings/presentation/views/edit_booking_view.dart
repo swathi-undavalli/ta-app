@@ -14,7 +14,7 @@ import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/booking_calender_widget_old/booking_calender_old.dart';
 import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
-import '../../../../core/widgets/phone_number/intl_phone_field.dart';
+import '../../../../core/widgets/phone_number_input.dart';
 import '../../../logs/models/log_model.dart';
 import '../../../logs/presentation/views/log_view.dart';
 import '../../controller/edit_booking_new_controller.dart';
@@ -737,32 +737,20 @@ class _EditBookingViewState extends State<EditBookingView> {
   Widget buildPhoneNumber() {
     return GetBuilder<EditBookingNewController>(
       builder: (controller) {
-        return IntlPhoneField(
-          autoValidate: true,
-          initialCountryCode: controller.isoCode,
-          showCountryFlag: false,
+        return PhoneNumberInput(
+          controller: controller.phoneTED,
           focusNode: controller.phoneNode,
-          initialValue: controller.phoneTED.text,
-          decoration: const InputDecoration(
-            labelText: 'Phone Number',
-            labelStyle: TextStyle(
-              fontSize: FontSize.small,
-              fontFamily: AppFonts.nunito,
-            ),
-          ),
-          style: const TextStyle(
-            fontFamily: AppFonts.nunito,
-            fontWeight: FontWeight.normal,
-            fontSize: 14,
-          ),
-          searchText: 'Search',
-          onSubmitted: (_) {},
+          required: true,
+          initialCountryCode: controller.isoCode,
           onChanged: (phone) {
             controller.bookingModel!.details = controller.bookingModel!.details?.copyWith(
               phoneNumber: phone.number,
               countryCode: phone.countryCode,
               isoCode: phone.countryISOCode,
             );
+          },
+          onCountryChanged: (country) {
+            controller.countryCodeTED.text = country.dialCode;
           },
         );
       },

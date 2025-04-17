@@ -31,7 +31,7 @@ class CustomerFeedbackBottomSheet extends StatefulWidget {
     required int paxIndex,
     required CustomerFeedback? customerFeedback,
   }) async {
-    CustomerFeedback? data = await showModalBottomSheet(
+    await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       useRootNavigator: true,
@@ -43,7 +43,6 @@ class CustomerFeedbackBottomSheet extends StatefulWidget {
         );
       },
     );
-    return data;
   }
 
   @override
@@ -60,6 +59,7 @@ class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomShee
   int experienceRating = 3;
   late Booking booking;
   CustomerFeedback? customerFeedback;
+  bool isFeedbackAlreadySubmitted = false;
 
   @override
   void initState() {
@@ -68,6 +68,7 @@ class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomShee
 
     customerFeedback = widget.customerFeedback;
     if (customerFeedback != null) {
+      isFeedbackAlreadySubmitted = true;
       knowsSwimming = customerFeedback!.knowsSwimming!;
       interestedOwc = customerFeedback!.interestedOwc!;
       instructorRating = customerFeedback!.instructorFeedback!;
@@ -188,7 +189,9 @@ class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomShee
                         });
                         if (context.mounted) {
                           Navigator.pop(context);
-                          Navigator.pop(context);
+                          if (isFeedbackAlreadySubmitted) {
+                            Navigator.pop(context);
+                          }
                         }
                       },
                     ),

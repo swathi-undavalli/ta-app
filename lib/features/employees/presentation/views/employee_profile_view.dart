@@ -10,7 +10,7 @@ import '../../../../core/constants/constants.dart';
 import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/access_levels.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/phone_number/intl_phone_field.dart';
+import '../../../../core/widgets/phone_number_input.dart';
 import '../../../bookings/presentation/widgets/app_text_fields.dart';
 import '../../model/employee.dart';
 
@@ -198,25 +198,17 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
   }
 
   Widget buildPhoneNumber() {
-    return IntlPhoneField(
-      autoValidate: true,
+    return PhoneNumberInput(
+      controller: phoneNumberTED,
       initialCountryCode: isoCode,
-      showCountryFlag: false,
-      initialValue: phoneNumberTED.text,
-      decoration: const InputDecoration(
-        labelText: 'Phone Number',
-        labelStyle: TextStyle(
-          fontSize: FontSize.small,
-          fontFamily: AppFonts.nunito,
-        ),
-      ),
-      style: const TextStyle(fontFamily: AppFonts.nunito, fontWeight: FontWeight.normal, fontSize: 14),
-      searchText: 'Search',
-      onSubmitted: (_) {},
+      required: true,
       onChanged: (phone) {
-        phoneNumberTED.text = phone.number!;
+        phoneNumberTED.text = phone.number;
         countryCodeTED.text = phone.countryCode;
-        isoCode = phone.countryISOCode!;
+        isoCode = phone.countryISOCode;
+      },
+      onCountryChanged: (country) {
+        countryCodeTED.text = country.dialCode;
       },
     );
   }

@@ -27,7 +27,7 @@ import '../../features/bookings/presentation/widgets/app_text_fields.dart';
 import '../../features/bookings/presentation/widgets/certification_bottomsheet.dart';
 import '../../features/bookings/presentation/widgets/share_booking_details_widget.dart';
 import '../../features/bookings/repository/booking_repo.dart';
-import '../../features/dive_logs/presentation/widgets/dive_log_bootomsheet.dart';
+import '../../features/dive_logs/presentation/widgets/dive_log_bottomsheet.dart';
 import '../../features/employees/model/employee.dart';
 import '../../features/logs/models/log_model.dart';
 import '../../features/logs/presentation/views/log_view.dart';

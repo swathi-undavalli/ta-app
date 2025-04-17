@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:temple_ui_tools/styling/alignment_extensions.dart';
@@ -12,7 +11,7 @@ import '../../../../core/models/counter_model.dart';
 import '../../../../core/util/utils.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
-import '../../../../core/widgets/phone_number/intl_phone_field.dart';
+import '../../../../core/widgets/phone_number_input.dart';
 import '../../../bookings/presentation/widgets/app_text_fields.dart';
 import '../../../logs/models/log_model.dart';
 import '../../../logs/presentation/views/log_view.dart';
@@ -177,31 +176,17 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
                           ),
                           buildNickName(),
                           buildUniqueAgencyId(),
-                          IntlPhoneField(
-                            autoValidate: true,
-                            initialCountryCode: countryIsoCode,
-                            showCountryFlag: false,
+                          PhoneNumberInput(
                             controller: phoneNumberTED,
-                            inputFormatters: [
-                              FilteringTextInputFormatter.digitsOnly,
-                            ],
-                            decoration: const InputDecoration(
-                              labelText: 'Phone Number',
-                              labelStyle: TextStyle(
-                                fontSize: FontSize.small,
-                                fontFamily: AppFonts.nunito,
-                              ),
-                            ),
-                            style: const TextStyle(
-                              fontFamily: AppFonts.nunito,
-                              fontWeight: FontWeight.normal,
-                              fontSize: 14,
-                            ),
-                            searchText: 'Search',
-                            onSubmitted: (_) {},
+                            initialCountryCode: countryIsoCode,
+                            required: true,
                             onChanged: (phone) {
                               countryCodeTED.text = phone.countryCode;
+                              phoneNumberTED.text = phone.number;
                               countryIsoCode = phone.countryISOCode;
+                            },
+                            onCountryChanged: (country) {
+                              countryCodeTED.text = country.dialCode;
                             },
                           ),
                           buildSubtitle('Role *'),
@@ -501,34 +486,6 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           inactiveThumbColor: AppColors.text.grey,
         ),
       ],
-    );
-  }
-
-  Widget buildPhoneNumber() {
-    return IntlPhoneField(
-      autoValidate: true,
-      initialCountryCode: countryIsoCode,
-      showCountryFlag: false,
-      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-      decoration: const InputDecoration(
-        labelText: 'Phone Number',
-        labelStyle: TextStyle(
-          fontSize: FontSize.small,
-          fontFamily: AppFonts.nunito,
-        ),
-      ),
-      style: const TextStyle(
-        fontFamily: AppFonts.nunito,
-        fontWeight: FontWeight.normal,
-        fontSize: 14,
-      ),
-      searchText: 'Search',
-      onSubmitted: (_) {},
-      onChanged: (phone) {
-        phoneNumberTED.text = phone.number!;
-        countryCodeTED.text = phone.countryCode;
-        countryIsoCode = phone.countryISOCode;
-      },
     );
   }
 

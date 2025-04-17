@@ -17,7 +17,7 @@ import '../../../boat/presentation/widgets/customer_booking_status.dart';
 import '../../../boat/presentation/widgets/customer_expandable_list_tile.dart';
 import '../../../bookings/models/booking_model.dart';
 import '../../../bookings/presentation/widgets/certification_bottomsheet.dart';
-import '../../../dive_logs/presentation/widgets/dive_log_bootomsheet.dart';
+import '../../../dive_logs/presentation/widgets/dive_log_bottomsheet.dart';
 import '../../controllers/home_controller.dart';
 
 class EmployeeDiveCalenderListTile extends StatefulWidget {

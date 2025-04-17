@@ -11,6 +11,7 @@ import '../../../boat/models/boat_details.dart';
 import '../../../boat/models/boats.dart';
 import '../../../bookings/models/booking_model.dart';
 import '../../models/roaster.dart';
+import '../widgets/customer_feedback_bottomsheet.dart';
 import 'add_edit_roaster_details_view.dart';
 import 'roaster_chart_view.dart';
 
@@ -171,19 +172,31 @@ class _RoasterViewState extends State<RoasterView> {
                                           fontFamily: AppFonts.nunito,
                                         ),
                                       ),
-                                      Spacing.h5,
-                                      Text(
-                                        roaster?.instructor?.name ?? '',
-                                        style: TextStyle(
-                                          color: Colors.grey.shade600,
-                                          fontSize: 12,
-                                          fontFamily: AppFonts.nunito,
-                                        ),
-                                      ),
+                                      if (roaster?.instructor?.name.isNotEmpty == true)
+                                        Text(
+                                          roaster?.instructor?.name ?? '',
+                                          style: TextStyle(
+                                            color: Colors.grey.shade600,
+                                            fontSize: 12,
+                                            fontFamily: AppFonts.nunito,
+                                          ),
+                                        ).paddingOnly(top: 5),
                                     ],
                                   ),
                                 ),
                                 buildIcon(roaster),
+                                if (roaster?.customerFeedback == null)
+                                  IconButton(
+                                    onPressed: () async {
+                                      await CustomerFeedbackBottomSheet.show(
+                                        context,
+                                        bookingModel: booking,
+                                        paxIndex: booking.pax!.indexOf(p),
+                                        customerFeedback: null,
+                                      );
+                                    },
+                                    icon: const Icon(Icons.assignment),
+                                  ),
                               ],
                             ).paddingSymmetric(horizontal: 20),
                             Spacing.h10,
