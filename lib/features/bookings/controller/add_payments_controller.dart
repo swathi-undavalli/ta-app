@@ -104,6 +104,8 @@ class AddPaymentsController extends GetxController {
     'Bank Transfer',
     'UPI',
     'Card',
+    'Rose',
+    'QR',
   ];
 
   DateTime get paymentDate => _paymentDate;

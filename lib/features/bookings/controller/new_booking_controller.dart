@@ -797,6 +797,8 @@ class NewBookingController extends GetxController {
     'Bank Transfer',
     'UPI',
     'Card',
+    'Rose',
+    'QR',
   ];
 
   TextEditingController locationTED = TextEditingController();

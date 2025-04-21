@@ -9,6 +9,7 @@ import 'package:temple_ui_tools/utils/utils.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
+import '../../../../core/widgets/bookings_calender_widget/bookings_calender_widget_controller_new.dart';
 import '../../../employees/model/employee.dart';
 import '../../controller/edit_payments_controller.dart';
 import '../../models/booking_model.dart';
@@ -202,9 +203,8 @@ class EditPaymentsView extends StatelessWidget {
                             AppButton.miniFlat(
                               text: 'OK',
                               onTap: () async {
-                                logic.controller.bookingModel!.payments![index!].amount = double.parse(
-                                  logic.controller.paymentTED.text,
-                                );
+                                logic.controller.bookingModel!.payments![index!].amount =
+                                    double.parse(logic.controller.paymentTED.text);
                                 logic.controller.bookingModel!.payments![index].paymentMode =
                                     logic.controller.paymentModeTED.text;
                                 logic.controller.bookingModel!.payments![index].reciptNo =
@@ -217,11 +217,13 @@ class EditPaymentsView extends StatelessWidget {
                                     .collection('bookings')
                                     .doc(logic.controller.bookingModel!.id)
                                     .set(logic.controller.bookingModel!.toMap());
-                                controller.update();
                                 if (context.mounted) {
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                 }
+                                BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
+                                    BookingsCalenderWidgetLogicNew();
+                                bookingCalenderLogicNew.onDateSelected(bookingCalenderLogicNew.controller.selectedDate);
                               },
                             ),
                           ],
@@ -240,9 +242,7 @@ class EditPaymentsView extends StatelessWidget {
               const SizedBox(width: 13),
               GestureDetector(
                 onTap: () async {
-                  log(logic.controller.bookingModel!.toMap().toString());
                   logic.controller.bookingModel!.payments!.removeAt(index!);
-                  log(logic.controller.bookingModel!.toMap().toString());
                   logic.controller.update();
                   await FirebaseFirestore.instance
                       .collection('bookings')

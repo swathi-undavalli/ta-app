@@ -59,6 +59,7 @@ class ItemModel {
     }
 
     getTime() {
+      print("getting time from ${bookingModel.id}");
       var d = '';
       if (bookingModel.theoryDate != null && bookingModel.theoryDate!.isNotEmpty) {
         d = "$d${DateFormat("hh:mm").format(bookingModel.theoryDate![0]!)}, ";
@@ -69,7 +70,10 @@ class ItemModel {
       if (bookingModel.diveDate != null && bookingModel.diveDate!.isNotEmpty) {
         d = "$d${DateFormat("hh:mm").format(bookingModel.diveDate![0]!)}, ";
       }
-      return d.substring(0, d.length - 2);
+      if (d.length > 2) {
+        return d.substring(0, d.length - 2);
+      }
+      return d;
     }
 
     return ItemModel(

@@ -21,5 +21,7 @@ class EditPaymentsController extends GetxController {
     'Bank Transfer',
     'UPI',
     'Card',
+    'Rose',
+    'QR',
   ];
 }
