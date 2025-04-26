@@ -280,12 +280,14 @@ class _EquipmentLog extends StatelessWidget {
                           ),
                           children: <TextSpan>[
                             const TextSpan(
-                                text: ' verified return on ', style: TextStyle(fontWeight: FontWeight.normal)),
+                              text: ' verified return on ',
+                              style: TextStyle(fontWeight: FontWeight.normal),
+                            ),
                             TextSpan(text: DateFormat('MMM dd, yyyy hh:mm a').format(log.collectedTime.toDate())),
                           ],
                         ),
                       ),
-                    ]
+                    ],
                   ],
                 ).width(Screen.width),
               ),

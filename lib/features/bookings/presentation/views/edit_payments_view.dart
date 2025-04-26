@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
-
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -291,6 +288,9 @@ class EditPaymentsView extends StatelessWidget {
                   isExpanded: true,
                   value: controller.paymentModeTED.text.isNotEmpty ? controller.paymentModeTED.text : null,
                   onChanged: (dynamic mode) {
+                    if (mode == 'UPI') {
+                      return;
+                    }
                     controller.paymentModeTED.text = mode;
                     controller.update();
                   },
@@ -299,7 +299,7 @@ class EditPaymentsView extends StatelessWidget {
                       value: newMode,
                       child: Text(
                         newMode,
-                        style: const TextStyle(fontSize: 10),
+                        style: TextStyle(fontSize: 10, color: (newMode == 'UPI') ? Colors.black12 : Colors.black),
                       ),
                     );
                   }).toList(),

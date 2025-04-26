@@ -536,7 +536,8 @@ class CoastGuardSlip {
               if ((boat.dsdInstructors ?? []).isNotEmpty) buildText('DSD Instructors : ${boat.dsdInstructors?.length}'),
               if (staff.isNotEmpty)
                 buildText(
-                    'Total Staff : ${staff.length + diveBuddies.length + photoVideoStaff.length + (boat.dsdInstructors?.length ?? 0)}'),
+                  'Total Staff : ${staff.length + diveBuddies.length + photoVideoStaff.length + (boat.dsdInstructors?.length ?? 0)}',
+                ),
             ],
           ),
         ],

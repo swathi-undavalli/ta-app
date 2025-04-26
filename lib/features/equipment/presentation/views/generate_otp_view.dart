@@ -120,10 +120,14 @@ class _GenerateOTPViewState extends State<GenerateOTPView> {
                                 ),
                                 const TextSpan(text: 'Share '),
                                 const TextSpan(
-                                    text: 'OTP ', style: TextStyle(fontWeight: FontWeight.bold, color: appBlue)),
+                                  text: 'OTP ',
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: appBlue),
+                                ),
                                 const TextSpan(text: 'to your diver buddy so you can '),
                                 const TextSpan(
-                                    text: 'verify', style: TextStyle(fontWeight: FontWeight.bold, color: appBlue)),
+                                  text: 'verify',
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: appBlue),
+                                ),
                                 const TextSpan(text: ' Equipment'),
                               ],
                             ),
@@ -136,11 +140,14 @@ class _GenerateOTPViewState extends State<GenerateOTPView> {
                               style: itemsFontStyle.copyWith(color: Colors.black),
                               children: [
                                 const TextSpan(
-                                    text: 'OTP ', style: TextStyle(fontWeight: FontWeight.bold, color: appBlue)),
+                                  text: 'OTP ',
+                                  style: TextStyle(fontWeight: FontWeight.bold, color: appBlue),
+                                ),
                                 const TextSpan(text: 'shared with '),
                                 TextSpan(
-                                    text: '${renter?.name},',
-                                    style: const TextStyle(fontWeight: FontWeight.bold, color: appBlue)),
+                                  text: '${renter?.name},',
+                                  style: const TextStyle(fontWeight: FontWeight.bold, color: appBlue),
+                                ),
                                 const TextSpan(text: ' Approve only after verification.'),
                               ],
                             ),

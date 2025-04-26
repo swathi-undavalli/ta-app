@@ -317,7 +317,7 @@ class _BoardPlanViewState extends State<BoardPlanView> {
 
   Future<void> shareImages(List<String> images) async {
     try {
-      Share.shareXFiles(images.map((e) => XFile(e)).toList());
+      SharePlus.instance.share(ShareParams(files: images.map((e) => XFile(e)).toList()));
     } catch (e) {
       log('Error while sharing images $e');
     }

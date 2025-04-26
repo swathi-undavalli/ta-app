@@ -31,7 +31,9 @@
     <application
         android:icon="@mipmap/ic_launcher"
         android:requestLegacyExternalStorage="true"
-        android:label="Temple adventures admin">
+        android:label="Temple adventures admin"
+        android:enableOnBackInvokedCallback="true"
+        >
 
         <activity
             android:name=".MainActivity"

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get_utils/src/extensions/internacionalization.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
-import 'package:temple_adventures/features/equipment/presentation/views/submission_bottom_sheet.dart';
+import 'submission_bottom_sheet.dart';
 import 'package:temple_ui_tools/temple_ui_tools.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
 

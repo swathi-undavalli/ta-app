@@ -132,11 +132,13 @@ class _AddTagBottomSheetState extends State<AddTagBottomSheet> {
                 fontSize: 14,
                 onTap: () {
                   if (_idTED.text.trim().isNotEmpty) {
-                    _tags.add(Tag(
-                      id: _idTED.text,
-                      serialNumber: _serialNumberTED.text.stringOrNull,
-                      remarks: _remarksTED.text.stringOrNull,
-                    ));
+                    _tags.add(
+                      Tag(
+                        id: _idTED.text,
+                        serialNumber: _serialNumberTED.text.stringOrNull,
+                        remarks: _remarksTED.text.stringOrNull,
+                      ),
+                    );
                   }
                   Navigator.pop(context, _tags);
                 },
@@ -154,11 +156,13 @@ class _AddTagBottomSheetState extends State<AddTagBottomSheet> {
                   fontSize: 14,
                   onTap: () {
                     if (_idTED.text.trim().isNotEmpty) {
-                      _tags.add(Tag(
-                        id: _idTED.text,
-                        serialNumber: _serialNumberTED.text.stringOrNull,
-                        remarks: _remarksTED.text.stringOrNull,
-                      ));
+                      _tags.add(
+                        Tag(
+                          id: _idTED.text,
+                          serialNumber: _serialNumberTED.text.stringOrNull,
+                          remarks: _remarksTED.text.stringOrNull,
+                        ),
+                      );
                       _idTED.clear();
                       _serialNumberTED.clear();
                       _remarksTED.clear();

@@ -188,8 +188,9 @@ class _VerificationText extends StatelessWidget {
         style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: appBlue, fontFamily: AppFonts.nunito),
         children: const <TextSpan>[
           TextSpan(
-              text: 'is verifying your Equipment',
-              style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black)),
+            text: 'is verifying your Equipment',
+            style: TextStyle(fontWeight: FontWeight.normal, color: Colors.black),
+          ),
         ],
       ),
       textAlign: TextAlign.center,

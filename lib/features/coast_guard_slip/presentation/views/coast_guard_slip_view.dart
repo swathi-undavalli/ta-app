@@ -68,7 +68,7 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
                 color: Colors.black,
                 textColor: Colors.white,
               ).center,
-            ]
+            ],
           ],
         ).paddingSymmetric(horizontal: 20, vertical: 20),
       ),
@@ -206,7 +206,7 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
       bookings: cachedBookings,
       employees: allEmployees,
     );
-    Share.shareXFiles([XFile(pdfFile.path)]);
+    SharePlus.instance.share(ShareParams(files: [XFile(pdfFile.path)]));
 
     setState(() {
       showLoading = false;
@@ -230,7 +230,7 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
       selectedDate: selectedDate,
       bookings: cachedBookings,
     );
-    Share.shareXFiles([XFile(pdfFile.path)]);
+    ShareParams(files: [XFile(pdfFile.path)]);
 
     setState(() {
       showLoading = false;

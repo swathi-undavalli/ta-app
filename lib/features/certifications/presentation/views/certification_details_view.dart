@@ -214,12 +214,12 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
 
         await imageFile.writeAsBytes(response.bodyBytes);
 
-        await Share.shareXFiles(
-          [XFile(imageFile.path)],
+        SharePlus.instance.share(ShareParams(
+          files: [XFile(imageFile.path)],
           text: '${widget.customer['first-name']} ${widget.customer['last-name']}',
           subject: '${widget.customer['email']}',
           sharePositionOrigin: Rect.fromCenter(center: const Offset(0, 0), width: 0, height: 0),
-        );
+        ));
       } else {
         throw Exception('Failed to load image');
       }

@@ -211,7 +211,7 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
 
     if (diveLogs.isNotEmpty) {
       File pdfFile = await CustomerLogs.generatePdf(customer, diveLogs);
-      Share.shareXFiles([XFile(pdfFile.path)]);
+      SharePlus.instance.share(ShareParams(files: [XFile(pdfFile.path)]),);
     } else {
       showToast('No logs added');
     }

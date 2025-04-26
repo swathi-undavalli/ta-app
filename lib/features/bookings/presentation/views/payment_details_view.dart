@@ -158,13 +158,19 @@ class PaymentDetailsView extends StatelessWidget {
                   isExpanded: true,
                   value: controller.paymentModeTED.text.isNotEmpty ? controller.paymentModeTED.text : null,
                   onChanged: (dynamic mode) {
+                    if (mode == 'UPI') {
+                      return;
+                    }
                     controller.paymentModeTED.text = mode;
                     controller.update();
                   },
                   items: controller.paymentOptions.map((newMode) {
                     return DropdownMenuItem(
                       value: newMode,
-                      child: Text(newMode),
+                      child: Text(
+                        newMode,
+                        style: TextStyle(color: (newMode == 'UPI') ? Colors.black12 : Colors.black),
+                      ),
                     );
                   }).toList(),
                 ),

@@ -182,7 +182,7 @@ class _EquipmentPieceTile extends StatelessWidget {
           Icon(
             isVerified ? Icons.verified : Icons.cancel,
             color: isVerified ? Colors.green : Colors.red,
-          )
+          ),
         ],
       ).paddingSymmetric(vertical: 8, horizontal: 16),
     ).paddingHorizontal(16);

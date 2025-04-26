@@ -253,9 +253,11 @@ class EquipmentProvider extends ChangeNotifier {
       await repository.updateEquipmentItem(updatedItem);
       var oldAssignedTags = oldPieces.map((piece) => piece.tag);
       for (final piece in oldPieces) {
-        await repository.updateEquipmentPiece(piece.copyWith(
-          equipmentItemName: updatedItem.name,
-        ));
+        await repository.updateEquipmentPiece(
+          piece.copyWith(
+            equipmentItemName: updatedItem.name,
+          ),
+        );
       }
 
       for (final tag in updatedTags) {
