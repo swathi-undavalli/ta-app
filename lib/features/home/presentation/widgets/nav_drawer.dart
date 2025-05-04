@@ -49,13 +49,13 @@ class NavDrawer extends StatelessWidget {
                 Navigator.push(context, EmployeeProfileView.route());
               },
             ),
-            // buildMenuItem(
-            //   icon: Icons.navigation_rounded,
-            //   text: 'Dive Sites Navigation',
-            //   onTap: () {
-            //     Navigator.push(context, EmployeeProfileView.route());
-            //   },
-            // ),
+            buildMenuItem(
+              icon: Icons.navigation_rounded,
+              text: 'Dive Sites Navigation',
+              onTap: () {
+                Navigator.push(context, EmployeeProfileView.route());
+              },
+            ),
 
             buildMenuItem(
               icon: Icons.content_paste,
