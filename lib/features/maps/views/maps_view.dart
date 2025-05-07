@@ -163,7 +163,9 @@ class MapsViewState extends State<MapsView> {
         left: 10,
         child: Container(
           decoration: BoxDecoration(
-              color: Colors.white70, borderRadius: BorderRadius.circular(20)),
+            color: Colors.white70,
+            borderRadius: BorderRadius.circular(20),
+          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
