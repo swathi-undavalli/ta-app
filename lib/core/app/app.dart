@@ -8,8 +8,11 @@ import '../../features/dashboard/controller/dashboard_controller.dart';
 import '../../features/equipment/Repository/equipment.repository.dart';
 import '../../features/equipment/models/timestamp_mapper.dart';
 import '../../features/equipment/provider/equipment.provider.dart';
+import '../../features/maps/providers/maps_provider.dart';
+import '../../features/maps/repository/maps_repo.dart';
 import '../../features/splash/view/splash_view.dart';
 import '../constants/constants.dart';
+import '../services/location_service.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -31,7 +34,15 @@ class MyApp extends StatelessWidget {
     MapperContainer.globals.use(TimestampMapper());
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => EquipmentProvider(EquipmentRepository())),
+        ChangeNotifierProvider(
+          create: (_) => EquipmentProvider(EquipmentRepository()),
+        ),
+        ChangeNotifierProvider<MapsProvider>(
+          create: (_) => MapsProvider(
+            mapsRepository: MapsRepository(),
+            locationService: LocationService(),
+          ),
+        ),
       ],
       child: GetMaterialApp(
         debugShowCheckedModeBanner: false,

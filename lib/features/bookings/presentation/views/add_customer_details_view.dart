@@ -46,7 +46,9 @@ class AddCustomerDetailsView extends StatelessWidget {
               child: GetBuilder<NewBookingController>(
                 builder: (controller) {
                   if (controller.showLoading) {
-                    return const CircularProgressIndicator().center.height(Screen.height - 100);
+                    return const CircularProgressIndicator()
+                        .center
+                        .height(Screen.height - 100);
                   }
                   return Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -98,11 +100,23 @@ class AddCustomerDetailsView extends StatelessWidget {
                       if (controller.isQuickBooking) ...[
                         buildActivityDropDown(),
                         if (controller.quickActivityError != null)
-                          Text('Required', style: TextStyle(color: Colors.red.shade800, fontSize: 12)).left,
+                          Text(
+                            'Required',
+                            style: TextStyle(
+                              color: Colors.red.shade800,
+                              fontSize: 12,
+                            ),
+                          ).left,
                         Spacing.h20,
                         buildQuickDiveSession(context),
                         if (controller.quickDiveDateError != null)
-                          Text('Required', style: TextStyle(color: Colors.red.shade800, fontSize: 12)).left,
+                          Text(
+                            'Required',
+                            style: TextStyle(
+                              color: Colors.red.shade800,
+                              fontSize: 12,
+                            ),
+                          ).left,
                         Spacing.h20,
                         buildGender(),
                         Spacing.h50,
@@ -113,8 +127,6 @@ class AddCustomerDetailsView extends StatelessWidget {
                             logic.createBooking(context);
                             log('done');
                           },
-                          color: Colors.black,
-                          textColor: Colors.white,
                         ),
                         Spacing.h50,
                       ],
@@ -150,7 +162,9 @@ class AddCustomerDetailsView extends StatelessWidget {
             DropdownButton(
               underline: Container(height: 1, color: Colors.grey),
               isExpanded: true,
-              value: controller.genderTED.text.isNotEmpty ? controller.genderTED.text : null,
+              value: controller.genderTED.text.isNotEmpty
+                  ? controller.genderTED.text
+                  : null,
               onChanged: (dynamic newGender) {
                 controller.genderTED.text = newGender;
                 controller.update();
@@ -163,7 +177,9 @@ class AddCustomerDetailsView extends StatelessWidget {
               }).toList(),
             ),
             Text(
-              (controller.genderError != null) ? '${controller.genderError}' : '',
+              (controller.genderError != null)
+                  ? '${controller.genderError}'
+                  : '',
               style: TextStyle(fontSize: 12, color: Colors.red.shade900),
             ),
           ],
@@ -190,13 +206,13 @@ class AddCustomerDetailsView extends StatelessWidget {
                     log('controller.quickDiveDates.toString()');
                     log(controller.quickDiveDates.toString());
                   },
-                  bgColor: AppColors.background.black,
-                  textColor: AppColors.text.white,
                 ),
               ],
             ),
             Wrap(
-              children: (controller.quickDiveDates ?? []).map((e) => buildTime(e, DateType.dive)).toList(),
+              children: (controller.quickDiveDates ?? [])
+                  .map((e) => buildTime(e, DateType.dive))
+                  .toList(),
             ),
           ],
         );
@@ -273,7 +289,8 @@ class AddCustomerDetailsView extends StatelessWidget {
                         logic.controller.update();
                       }
                     },
-                    items: controller.activities.toSet().toList().map((activity) {
+                    items:
+                        controller.activities.toSet().toList().map((activity) {
                       return DropdownMenuItem(
                         value: activity,
                         child: Text(

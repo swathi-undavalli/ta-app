@@ -180,7 +180,9 @@ class NewBookingView extends StatelessWidget {
               children: [
                 buildAmountSummary(
                   text: 'Price',
-                  amount: getInt(controller.priceTED.text) * controller.bookingModel.noOfPersons! * 1.0,
+                  amount: getInt(controller.priceTED.text) *
+                      controller.bookingModel.noOfPersons! *
+                      1.0,
                 ),
                 buildAmountSummary(
                   text: 'Discount',
@@ -203,7 +205,9 @@ class NewBookingView extends StatelessWidget {
   }
 
   getDiscount(NewBookingController controller) {
-    double price = getInt(controller.priceTED.text) * controller.bookingModel.noOfPersons! * 1.0;
+    double price = getInt(controller.priceTED.text) *
+        controller.bookingModel.noOfPersons! *
+        1.0;
     if (controller.bookingModel.discountType == '%') {
       return price * (controller.bookingModel.discount! / 100);
     }
@@ -309,7 +313,9 @@ class NewBookingView extends StatelessWidget {
                     '₹',
                     style: TextStyle(
                       fontSize: 17,
-                      color: !controller.discountSwitch ? AppColors.text.skyBlue : AppColors.text.grey,
+                      color: !controller.discountSwitch
+                          ? AppColors.text.skyBlue
+                          : AppColors.text.grey,
                     ),
                   ),
                   SizedBox(
@@ -332,7 +338,9 @@ class NewBookingView extends StatelessWidget {
                     '%',
                     style: TextStyle(
                       fontSize: 15,
-                      color: controller.discountSwitch ? AppColors.text.skyBlue : AppColors.text.grey,
+                      color: controller.discountSwitch
+                          ? AppColors.text.skyBlue
+                          : AppColors.text.grey,
                     ),
                   ),
                 ],
@@ -398,7 +406,8 @@ class NewBookingView extends StatelessWidget {
             },
             onChangedCallBack: (payingNow) {
               try {
-                controller.bookingModel.paid = double.parse(controller.payingNowTED.text);
+                controller.bookingModel.paid =
+                    double.parse(controller.payingNowTED.text);
               } catch (e) {
                 controller.bookingModel.paid = 0;
               }
@@ -432,8 +441,7 @@ class NewBookingView extends StatelessWidget {
     return Center(
       child: AppButton.flat(
         text: 'Cancel',
-        textColor: AppColors.text.black,
-        color: AppColors.background.grey,
+        isSecondary: true,
         onTap: () {
           Navigator.pop(context);
         },
@@ -447,8 +455,6 @@ class NewBookingView extends StatelessWidget {
         builder: (controller) {
           return AppButton.flat(
             text: 'Continue',
-            textColor: AppColors.text.white,
-            color: AppColors.background.black,
             onTap: () {
               logic.onContinuePressedBookingForm(context);
             },

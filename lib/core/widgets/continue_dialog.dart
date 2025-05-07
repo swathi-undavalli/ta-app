@@ -57,7 +57,8 @@ class _ContinueDialogState extends State<ContinueDialog> {
         ),
       ),
       actions: [
-        AppButton.miniText(
+        AppButton.miniFlat(
+          isSecondary: true,
           text: 'Cancel',
           onTap: () {
             Navigator.pop(context, false);

@@ -33,9 +33,12 @@ class _EventsViewState extends State<EventsView> {
       floatingActionButton: buildFloatingActionButton(context),
       body: SafeArea(
         child: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('templeEvents').snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+          stream:
+              FirebaseFirestore.instance.collection('templeEvents').snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError ||
+                snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
                 height: 15,
                 width: 15,
@@ -59,7 +62,8 @@ class _EventsViewState extends State<EventsView> {
             return ListView(
               children: snapshot.data!.docs.map((DocumentSnapshot document) {
                 try {
-                  Event? event = Event.fromJson(document.data() as Map<String, dynamic>);
+                  Event? event =
+                      Event.fromJson(document.data() as Map<String, dynamic>);
 
                   return Column(
                     children: [
@@ -86,15 +90,25 @@ class _EventsViewState extends State<EventsView> {
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
-          BoxShadow(offset: const Offset(1, 3), spreadRadius: 2, color: Colors.grey.shade100),
+          BoxShadow(
+            offset: const Offset(1, 3),
+            spreadRadius: 2,
+            color: Colors.grey.shade100,
+          ),
         ],
       ),
       child: Column(
         children: [
           buildContent(title: 'Session Name', value: element.session),
           buildContent(title: 'Location', value: element.location),
-          buildContent(title: 'Date & Time', value: DateFormat('dd-MM-yyyy @ hh:mm a').format(element.dateTime)),
-          buildContent(title: 'Contact Person', value: '${element.employees[0].name} ( ${element.phone} )'),
+          buildContent(
+            title: 'Date & Time',
+            value: DateFormat('dd-MM-yyyy @ hh:mm a').format(element.dateTime),
+          ),
+          buildContent(
+            title: 'Contact Person',
+            value: '${element.employees[0].name} ( ${element.phone} )',
+          ),
           Spacing.h15,
           buildDeleteEdit(eventElement: element),
           Spacing.h15,
@@ -108,7 +122,10 @@ class _EventsViewState extends State<EventsView> {
                 color: Colors.grey,
               ),
               children: <TextSpan>[
-                TextSpan(style: TextStyle(color: AppColors.text.black), text: element.createdBy ?? '-'),
+                TextSpan(
+                  style: TextStyle(color: AppColors.text.black),
+                  text: element.createdBy ?? '-',
+                ),
               ],
             ),
           ).left,
@@ -197,7 +214,10 @@ class _EventsViewState extends State<EventsView> {
     );
   }
 
-  Future<void> deleteDialog(BuildContext context, {required Event event}) async {
+  Future<void> deleteDialog(
+    BuildContext context, {
+    required Event event,
+  }) async {
     return showDialog(
       context: context,
       builder: (context) {
@@ -211,8 +231,9 @@ class _EventsViewState extends State<EventsView> {
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           actions: <Widget>[
-            AppButton.miniText(
+            AppButton.miniFlat(
               text: 'Cancel',
+              isSecondary: true,
               onTap: () {
                 Navigator.pop(context);
               },

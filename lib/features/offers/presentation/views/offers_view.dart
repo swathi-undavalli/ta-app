@@ -50,9 +50,12 @@ class _OffersViewState extends State<OffersView> {
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(
         child: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('templeOffers').snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+          stream:
+              FirebaseFirestore.instance.collection('templeOffers').snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasError ||
+                snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
                 height: 15,
                 width: 15,
@@ -194,7 +197,8 @@ class _OffersViewState extends State<OffersView> {
 
     if (startDate != null && endDate != null) {
       if (showActiveOffersOnly) {
-        if (isInFuture(DateTime.now(), startDate) || isDateInRange(DateTime.now(), startDate, endDate)) {
+        if (isInFuture(DateTime.now(), startDate) ||
+            isDateInRange(DateTime.now(), startDate, endDate)) {
           showItem = true;
         } else {
           showItem = false;
@@ -290,7 +294,8 @@ class _OffersViewState extends State<OffersView> {
             if (startDate != null && endDate != null)
               buildContent(
                 title: 'Valid Until',
-                value: '${DateFormat("dd/MM/yyyy").format(startDate)} - ${DateFormat("dd/MM/yyyy").format(endDate)}',
+                value:
+                    '${DateFormat("dd/MM/yyyy").format(startDate)} - ${DateFormat("dd/MM/yyyy").format(endDate)}',
               ),
             Spacing.h10,
             Text(
@@ -341,7 +346,11 @@ class _OffersViewState extends State<OffersView> {
     return const SizedBox();
   }
 
-  onEditPressed(BuildContext context, Offer? offer, List<Categories> categories) {
+  onEditPressed(
+    BuildContext context,
+    Offer? offer,
+    List<Categories> categories,
+  ) {
     Navigator.push(context, AddOffersView.route(offer, categories));
   }
 
@@ -394,8 +403,9 @@ class _OffersViewState extends State<OffersView> {
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           actions: <Widget>[
-            AppButton.miniText(
+            AppButton.miniFlat(
               text: 'Cancel',
+              isSecondary: true,
               onTap: () {
                 Navigator.pop(context);
               },

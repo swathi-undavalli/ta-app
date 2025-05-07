@@ -46,10 +46,12 @@ class CustomerFeedbackBottomSheet extends StatefulWidget {
   }
 
   @override
-  State<CustomerFeedbackBottomSheet> createState() => _CustomerFeedbackBottomSheetState();
+  State<CustomerFeedbackBottomSheet> createState() =>
+      _CustomerFeedbackBottomSheetState();
 }
 
-class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomSheet> {
+class _CustomerFeedbackBottomSheetState
+    extends State<CustomerFeedbackBottomSheet> {
   TextEditingController reviewTED = TextEditingController();
   bool showLoading = false;
   bool knowsSwimming = false;
@@ -151,8 +153,9 @@ class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomShee
                 Spacing.h30,
                 Row(
                   children: [
-                    AppButton.miniText(
+                    AppButton.miniFlat(
                       text: 'Cancel',
+                      isSecondary: true,
                       onTap: () {
                         Navigator.pop(context, widget.customerFeedback);
                       },
@@ -166,7 +169,8 @@ class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomShee
                         });
                         var pax = booking.pax![widget.paxIndex];
 
-                        Roaster? roaster = Roaster.fromMap(pax['roaster'] ?? {});
+                        Roaster? roaster =
+                            Roaster.fromMap(pax['roaster'] ?? {});
 
                         customerFeedback = CustomerFeedback(
                           knowsSwimming: knowsSwimming,
@@ -183,7 +187,10 @@ class _CustomerFeedbackBottomSheetState extends State<CustomerFeedbackBottomShee
 
                         pax['roaster'] = roaster.toMap();
 
-                        await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
+                        await FirebaseFirestore.instance
+                            .collection('bookings')
+                            .doc(booking.id)
+                            .set(booking.toMap());
                         setState(() {
                           showLoading = false;
                         });

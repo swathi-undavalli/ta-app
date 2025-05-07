@@ -69,7 +69,11 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
                     width: Screen.width,
                     child: Text(
                       'Select Dates',
-                      style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
+                      style: TextStyle(
+                        color: AppColors.text.black,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ),
@@ -88,7 +92,10 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
                           },
                           child: const Text(
                             'Change',
-                            style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.blue,
+                            ),
                           ),
                         ),
                 ),
@@ -121,8 +128,6 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
               AppButton.flat(
                 onTap: generateLogs,
                 text: 'Generate Logs',
-                color: Colors.black,
-                textColor: Colors.white,
               ).center,
             Spacing.h30,
           ],
@@ -184,7 +189,10 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
 
     List<DiveLogModel> diveLogs = [];
 
-    var customerData = await FirebaseFirestore.instance.collection('customers').doc(emailTED.text).get();
+    var customerData = await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(emailTED.text)
+        .get();
     CustomerModel customer = CustomerModel.fromMap(customerData.data() ?? {});
 
     var data = await FirebaseFirestore.instance
@@ -193,8 +201,10 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
         .collection('diveLogs')
         .where(
           'timeIn',
-          isGreaterThanOrEqualTo: Timestamp.fromDate(startDate!.subtract(const Duration(days: 1))),
-          isLessThanOrEqualTo: Timestamp.fromDate(endDate!.add(const Duration(days: 1))),
+          isGreaterThanOrEqualTo:
+              Timestamp.fromDate(startDate!.subtract(const Duration(days: 1))),
+          isLessThanOrEqualTo:
+              Timestamp.fromDate(endDate!.add(const Duration(days: 1))),
         )
         .get();
 
@@ -211,7 +221,9 @@ class _CustomerLogsViewState extends State<CustomerLogsView> {
 
     if (diveLogs.isNotEmpty) {
       File pdfFile = await CustomerLogs.generatePdf(customer, diveLogs);
-      SharePlus.instance.share(ShareParams(files: [XFile(pdfFile.path)]),);
+      SharePlus.instance.share(
+        ShareParams(files: [XFile(pdfFile.path)]),
+      );
     } else {
       showToast('No logs added');
     }

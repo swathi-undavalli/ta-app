@@ -32,7 +32,8 @@ class NewBookingLogic {
   }
 
   NewBookingController controller = Get.put(NewBookingController());
-  final AutoScrollController autoScrollControllerTheory = AutoScrollController();
+  final AutoScrollController autoScrollControllerTheory =
+      AutoScrollController();
   final AutoScrollController autoScrollControllerPool = AutoScrollController();
   final AutoScrollController autoScrollControllerDive = AutoScrollController();
 
@@ -44,21 +45,25 @@ class NewBookingLogic {
   }
 
   getDataFromFireBase() async {
-    QuerySnapshot<Map<String, dynamic>> catalogue = await FirebaseFirestore.instance.collection('catalogue').get();
+    QuerySnapshot<Map<String, dynamic>> catalogue =
+        await FirebaseFirestore.instance.collection('catalogue').get();
     controller.activities = [];
     for (int i = 0; i < catalogue.docs.length; i++) {
       if (catalogue.docs[i].id == 'colors') continue;
       Activity activity = Activity.fromMap(catalogue.docs[i].data());
       controller.activities.add(activity);
-      controller.activities.sort((a1, a2) => a2.priority!.compareTo(a1.priority!));
+      controller.activities
+          .sort((a1, a2) => a2.priority!.compareTo(a1.priority!));
       controller.showLoading = false;
     }
   }
 
   onContinuePressedBookingForm(BuildContext context) {
     controller.bookingModel.remarks = controller.remarksTED.text.toString();
-    controller.bookingModel.employeeName = currentEmployee!.firstName! + currentEmployee!.lastName!;
-    if (controller.payingNowTED.text == '' || int.parse(controller.payingNowTED.text) == 0) {
+    controller.bookingModel.employeeName =
+        currentEmployee!.firstName! + currentEmployee!.lastName!;
+    if (controller.payingNowTED.text == '' ||
+        int.parse(controller.payingNowTED.text) == 0) {
       createBooking(context);
       Get.defaultDialog(
         barrierDismissible: false,
@@ -86,14 +91,14 @@ class NewBookingLogic {
                   const SizedBox(height: 20),
                   AppButton.miniFlat(
                     text: 'Okay',
-                    bgColor: AppColors.background.black,
-                    textColor: AppColors.text.white,
                     onTap: () async {
                       Navigator.push(context, DashBoardView.route());
-                      DashBoardScreenLogic dashboardLogic = DashBoardScreenLogic();
+                      DashBoardScreenLogic dashboardLogic =
+                          DashBoardScreenLogic();
                       dashboardLogic.controller.currentIndex = 2;
                       controller.reset();
-                      BookingsCalenderWidgetLogic bookingCalenderLogic = BookingsCalenderWidgetLogic();
+                      BookingsCalenderWidgetLogic bookingCalenderLogic =
+                          BookingsCalenderWidgetLogic();
                       bookingCalenderLogic.onDateSelected(
                         bookingCalenderLogic.controller.lastDateIndex,
                       );
@@ -130,13 +135,17 @@ class NewBookingLogic {
       gender: controller.genderTED.text,
       dob: controller.dob.toString(),
     );
-    await FirebaseFirestore.instance.collection('customers').doc(controller.emailTED.text).set(customer.toMap());
+    await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(controller.emailTED.text)
+        .set(customer.toMap());
   }
 
   onPaymentDetailsFilled(BuildContext context) {
     if (controller.paymentModeTED.text != '') {
       controller.bookingModel.paymentMode = controller.paymentModeTED.text;
-      controller.bookingModel.paymentTransactionId = controller.paymentReferenceTED.text;
+      controller.bookingModel.paymentTransactionId =
+          controller.paymentReferenceTED.text;
       controller.bookingModel.receiptNo = controller.receiptNoTED.text;
       createBooking(context);
       Get.defaultDialog(
@@ -165,14 +174,15 @@ class NewBookingLogic {
                   const SizedBox(height: 20),
                   AppButton.miniFlat(
                     text: 'Okay',
-                    bgColor: AppColors.background.black,
-                    textColor: AppColors.text.white,
                     onTap: () async {
                       Navigator.push(context, DashBoardView.route());
                       dashboardLogic.controller.currentIndex = 2;
                       controller.reset();
-                      BookingsCalenderWidgetLogic bookingCalenderLogic = BookingsCalenderWidgetLogic();
-                      bookingCalenderLogic.onDateSelected(bookingCalenderLogic.controller.lastDateIndex);
+                      BookingsCalenderWidgetLogic bookingCalenderLogic =
+                          BookingsCalenderWidgetLogic();
+                      bookingCalenderLogic.onDateSelected(
+                        bookingCalenderLogic.controller.lastDateIndex,
+                      );
                     },
                   ),
                 ],
@@ -266,7 +276,7 @@ class NewBookingLogic {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                AppButton.miniText(
+                AppButton.miniFlat(
                   text: 'Cancel',
                   onTap: () {
                     Navigator.pop(context);
@@ -274,12 +284,11 @@ class NewBookingLogic {
                 ),
                 AppButton.miniFlat(
                   text: 'Okay',
-                  bgColor: AppColors.background.black,
-                  textColor: AppColors.text.white,
                   onTap: () {
                     controller.bookingModel.poolDate ??= [];
                     controller.bookingModel.poolDate!.add(selectedPoolDate);
-                    controller.bookingModel.poolDate = controller.bookingModel.poolDate!.toSet().toList();
+                    controller.bookingModel.poolDate =
+                        controller.bookingModel.poolDate!.toSet().toList();
                     controller.update();
                     Navigator.pop(context);
                   },
@@ -328,7 +337,7 @@ class NewBookingLogic {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                AppButton.miniText(
+                AppButton.miniFlat(
                   text: 'Cancel',
                   onTap: () {
                     Navigator.pop(context);
@@ -336,12 +345,11 @@ class NewBookingLogic {
                 ),
                 AppButton.miniFlat(
                   text: 'Okay',
-                  bgColor: AppColors.background.black,
-                  textColor: AppColors.text.white,
                   onTap: () {
                     controller.bookingModel.diveDate ??= [];
                     controller.bookingModel.diveDate!.add(selectedDiveDate);
-                    controller.bookingModel.diveDate = controller.bookingModel.diveDate!.toSet().toList();
+                    controller.bookingModel.diveDate =
+                        controller.bookingModel.diveDate!.toSet().toList();
                     controller.update();
                     Navigator.pop(context);
                   },
@@ -390,7 +398,7 @@ class NewBookingLogic {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                AppButton.miniText(
+                AppButton.miniFlat(
                   text: 'Cancel',
                   onTap: () {
                     Navigator.pop(context);
@@ -398,13 +406,12 @@ class NewBookingLogic {
                 ),
                 AppButton.miniFlat(
                   text: 'Okay',
-                  bgColor: AppColors.background.black,
-                  textColor: AppColors.text.white,
                   onTap: () {
                     if (selectedDiveDate != null) {
                       controller.quickDiveDates ??= [];
                       controller.quickDiveDates!.add(selectedDiveDate);
-                      controller.quickDiveDates = controller.quickDiveDates!.toSet().toList();
+                      controller.quickDiveDates =
+                          controller.quickDiveDates!.toSet().toList();
                     }
                     controller.update();
                     Navigator.pop(context);
@@ -455,7 +462,7 @@ class NewBookingLogic {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                AppButton.miniText(
+                AppButton.miniFlat(
                   text: 'Cancel',
                   onTap: () {
                     Navigator.pop(context);
@@ -463,12 +470,11 @@ class NewBookingLogic {
                 ),
                 AppButton.miniFlat(
                   text: 'Okay',
-                  bgColor: AppColors.background.black,
-                  textColor: AppColors.text.white,
                   onTap: () {
                     controller.bookingModel.theoryDate ??= [];
                     controller.bookingModel.theoryDate!.add(selectedTheoryDate);
-                    controller.bookingModel.theoryDate = controller.bookingModel.theoryDate!.toSet().toList();
+                    controller.bookingModel.theoryDate =
+                        controller.bookingModel.theoryDate!.toSet().toList();
                     controller.update();
                     Navigator.pop(context);
                   },
@@ -519,12 +525,19 @@ class NewBookingLogic {
           payments: [],
           createdAt: DateTime.now(),
           isQuickBooking: true,
-          price: ((controller.quickSelectedActivity?.price ?? 0) * 1.0) * int.parse(controller.paxTED.text),
+          price: ((controller.quickSelectedActivity?.price ?? 0) * 1.0) *
+              int.parse(controller.paxTED.text),
         );
 
         controller.bookingId = await BookingRepo.addNewBooking(bookingModel);
-        LogModel logModel = LogModel(type: LogType.quickBookingCreated, bookingId: controller.bookingId);
-        FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
+        LogModel logModel = LogModel(
+          type: LogType.quickBookingCreated,
+          bookingId: controller.bookingId,
+        );
+        FirebaseFirestore.instance
+            .collection('logs')
+            .doc()
+            .set(logModel.toMap());
         controller.showLoading = false;
         controller.reset();
         if (context.mounted) {
@@ -540,34 +553,42 @@ class NewBookingLogic {
     }
 
     controller.bookingModel.bookingDate = [];
-    if (controller.bookingModel.theoryDate != null && controller.bookingModel.theoryDate!.isNotEmpty) {
+    if (controller.bookingModel.theoryDate != null &&
+        controller.bookingModel.theoryDate!.isNotEmpty) {
       for (var element in controller.bookingModel.theoryDate!) {
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       }
     }
-    if (controller.bookingModel.poolDate != null && controller.bookingModel.poolDate!.isNotEmpty) {
+    if (controller.bookingModel.poolDate != null &&
+        controller.bookingModel.poolDate!.isNotEmpty) {
       for (var element in controller.bookingModel.poolDate!) {
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       }
     }
-    if (controller.bookingModel.diveDate != null && controller.bookingModel.diveDate!.isNotEmpty) {
+    if (controller.bookingModel.diveDate != null &&
+        controller.bookingModel.diveDate!.isNotEmpty) {
       for (var element in controller.bookingModel.diveDate!) {
         controller.bookingModel.bookingDate!.add(getStringDate(element!));
       }
     }
     createCustomer();
 
-    controller.bookingId = await BookingRepo.addNewBooking(controller.bookingModel);
-    LogModel logModel = LogModel(type: LogType.bookingCreated, bookingId: controller.bookingId);
+    controller.bookingId =
+        await BookingRepo.addNewBooking(controller.bookingModel);
+    LogModel logModel =
+        LogModel(type: LogType.bookingCreated, bookingId: controller.bookingId);
     FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
     controller.update();
   }
 
   onContinueChooseDatesPressed(BuildContext context) {
     if (controller.bookingModel.activity != null) {
-      if ((controller.bookingModel.theoryDate != null && controller.bookingModel.theoryDate!.isNotEmpty) ||
-          (controller.bookingModel.poolDate != null && controller.bookingModel.poolDate!.isNotEmpty) ||
-          (controller.bookingModel.diveDate != null && controller.bookingModel.diveDate!.isNotEmpty)) {
+      if ((controller.bookingModel.theoryDate != null &&
+              controller.bookingModel.theoryDate!.isNotEmpty) ||
+          (controller.bookingModel.poolDate != null &&
+              controller.bookingModel.poolDate!.isNotEmpty) ||
+          (controller.bookingModel.diveDate != null &&
+              controller.bookingModel.diveDate!.isNotEmpty)) {
         Navigator.push(context, NewBookingView.route());
       } else {
         showToast('Please select at-least one session');
@@ -582,7 +603,8 @@ class NewBookingLogic {
       controller.bookingModel.details = BookingDetails(
         firstName: controller.fNameTED.text,
         lastName: controller.lNameTED.text,
-        dob: controller.dob != null ? Timestamp.fromDate(controller.dob!) : null,
+        dob:
+            controller.dob != null ? Timestamp.fromDate(controller.dob!) : null,
         email: controller.emailTED.text,
         gender: controller.genderTED.text,
         countryCode: controller.countryCodeTED.text,
@@ -677,7 +699,10 @@ class NewBookingLogic {
   }
 
   Future<bool> isCustomerExists() async {
-    var d = await FirebaseFirestore.instance.collection('customers').doc(controller.emailTED.text).get();
+    var d = await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(controller.emailTED.text)
+        .get();
     Map<String, dynamic>? data = d.data();
     if (data == null) return false;
     controller.customerModel = CustomerModel.fromMap(data);
@@ -685,17 +710,19 @@ class NewBookingLogic {
     controller.lNameTED.text = controller.customerModel.lastName ?? '';
     controller.phoneNumberTED.text = controller.customerModel.phoneNumber ?? '';
     controller.countryCodeTED.text =
-        ((controller.customerModel.countryCode != null && controller.customerModel.countryCode!.isNotEmpty)
+        ((controller.customerModel.countryCode != null &&
+                controller.customerModel.countryCode!.isNotEmpty)
             ? controller.customerModel.countryCode!
             : '+91');
     if (controller.customerModel.dateOfBirth != null) {
       controller.dob = controller.customerModel.dateOfBirth;
-      controller.dobTED.text = DateFormat('dd MMM, yyyy').format(controller.customerModel.dateOfBirth!);
+      controller.dobTED.text = DateFormat('dd MMM, yyyy')
+          .format(controller.customerModel.dateOfBirth!);
     }
-    controller.genderTED.text =
-        ((controller.customerModel.gender != null) && (controller.customerModel.gender!.isNotEmpty))
-            ? controller.customerModel.gender!
-            : '';
+    controller.genderTED.text = ((controller.customerModel.gender != null) &&
+            (controller.customerModel.gender!.isNotEmpty))
+        ? controller.customerModel.gender!
+        : '';
     controller.update();
 
     return true;

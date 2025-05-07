@@ -26,7 +26,10 @@ class EmployeeProfileView extends StatefulWidget {
 }
 
 class _EmployeeProfileViewState extends State<EmployeeProfileView> {
-  late TextEditingController phoneNumberTED, countryCodeTED, firstNameTED, lastNameTED;
+  late TextEditingController phoneNumberTED,
+      countryCodeTED,
+      firstNameTED,
+      lastNameTED;
 
   late Employee employee;
   late String isoCode;
@@ -58,7 +61,10 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
     showLoading = true;
     setState(() {});
 
-    var data = await FirebaseFirestore.instance.collection('employees').doc(currentEmployee?.id).get();
+    var data = await FirebaseFirestore.instance
+        .collection('employees')
+        .doc(currentEmployee?.id)
+        .get();
 
     employee = Employee.fromMap(data.data() ?? {});
     isoCode = employee.countryIsoCode ?? 'IN';
@@ -119,12 +125,19 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
                         buildButtons(),
                         Spacing.h20,
                       ] else ...[
-                        buildEmployeeInfo(subHeading: 'Name', text: employee.name),
+                        buildEmployeeInfo(
+                          subHeading: 'Name',
+                          text: employee.name,
+                        ),
                         buildEmployeeInfo(
                           subHeading: 'Phone Number',
-                          text: '${employee.countryCode!} ${employee.phoneNumber!}',
+                          text:
+                              '${employee.countryCode!} ${employee.phoneNumber!}',
                         ),
-                        buildEmployeeInfo(subHeading: 'Role', text: employee.role),
+                        buildEmployeeInfo(
+                          subHeading: 'Role',
+                          text: employee.role,
+                        ),
                         Spacing.h20,
                         buildApplyLeaves(),
                       ],
@@ -225,7 +238,11 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
               Expanded(
                 child: Text(
                   'Apply Leaves',
-                  style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    color: AppColors.text.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               Expanded(
@@ -242,7 +259,10 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
                         },
                         child: const Text(
                           'Change',
-                          style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: Colors.blue,
+                          ),
                         ),
                       ),
               ),
@@ -277,9 +297,8 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
         AppButton.flat(
           height: 45,
           width: 140,
-          color: AppColors.background.grey,
           text: 'Cancel',
-          textColor: AppColors.text.black,
+          isSecondary: true,
           onTap: () {
             disposeKeyboard();
             isEditMode = !isEditMode;
@@ -289,9 +308,7 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
         AppButton.flat(
           height: 45,
           width: 140,
-          color: AppColors.background.black,
           text: 'Update',
-          textColor: AppColors.text.white,
           onTap: () async {
             if (firstNameTED.text != '' && phoneNumberTED.text != '') {
               showLoading = true;
@@ -305,7 +322,10 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
                 phoneNumber: phoneNumberTED.text,
               );
 
-              await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
+              await FirebaseFirestore.instance
+                  .collection('employees')
+                  .doc(employee.id)
+                  .set(employee.toMap());
 
               showLoading = false;
               isEditMode = !isEditMode;
@@ -365,7 +385,10 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
       Timestamp endTimestamp = Timestamp.fromDate(endDate!);
       leaves.add(endTimestamp);
       employee = employee.copyWith(leaves: leaves);
-      await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
+      await FirebaseFirestore.instance
+          .collection('employees')
+          .doc(employee.id)
+          .set(employee.toMap());
     }
     setState(() {
       showLoading = false;
@@ -416,14 +439,22 @@ class _EmployeeProfileViewState extends State<EmployeeProfileView> {
         Expanded(
           child: Text(
             subHeading!,
-            style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
+            style: TextStyle(
+              color: AppColors.text.black,
+              fontSize: 14,
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
         SizedBox(
           width: 150,
           child: Text(
             text!,
-            style: TextStyle(color: AppColors.text.black, fontSize: 12, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              color: AppColors.text.black,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
+            ),
           ),
         ),
       ],

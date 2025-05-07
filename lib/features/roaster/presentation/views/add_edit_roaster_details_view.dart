@@ -50,7 +50,8 @@ class AddEditRoasterDetailsView extends StatefulWidget {
       );
 
   @override
-  State<AddEditRoasterDetailsView> createState() => _AddEditRoasterDetailsViewState();
+  State<AddEditRoasterDetailsView> createState() =>
+      _AddEditRoasterDetailsViewState();
 }
 
 //TODO: Private build widgets
@@ -142,7 +143,9 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                           setState(() {});
                           log(timeIn.toString());
                         },
-                        color: (timeIn != null) ? AppColors.text.lightSkyBlue : Colors.white,
+                        color: (timeIn != null)
+                            ? AppColors.text.lightSkyBlue
+                            : Colors.white,
                       ),
                       Spacing.w20,
                       buildTimeButtons(
@@ -152,7 +155,9 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                           setState(() {});
                           log(timeOut.toString());
                         },
-                        color: (timeOut != null) ? AppColors.text.lightSkyBlue : Colors.white,
+                        color: (timeOut != null)
+                            ? AppColors.text.lightSkyBlue
+                            : Colors.white,
                       ),
                     ],
                   ),
@@ -183,7 +188,11 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                     buildTextEditor(
                       title: 'Change, In the water and out the water timings ',
                       onTap: () async {
-                        List<DateTime?> times = await RoasterTimeEditorBs.show(context, timeIn, timeOut);
+                        List<DateTime?> times = await RoasterTimeEditorBs.show(
+                          context,
+                          timeIn,
+                          timeOut,
+                        );
 
                         if (times.isNotEmpty) {
                           timeIn = times[0];
@@ -194,7 +203,8 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
                     ).paddingOnly(bottom: 20),
                   buildIsDived(),
                   Spacing.h30,
-                  if (existingRoaster?.customerFeedback != null) buildCustomerFeedback(),
+                  if (existingRoaster?.customerFeedback != null)
+                    buildCustomerFeedback(),
                   Spacing.h100,
                   buildSubmitButton(),
                   Spacing.h40,
@@ -238,7 +248,9 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
             const Text('Staff Instructor'),
             const Spacer(),
             AppButton.miniFlat(
-              text: (staffInstructor != null) ? 'Manage Instructor' : 'Add Instructor',
+              text: (staffInstructor != null)
+                  ? 'Manage Instructor'
+                  : 'Add Instructor',
               onTap: () async {
                 staffInstructor = await EmpSelectorBottomSheet.show(
                   context,
@@ -252,7 +264,8 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
             ),
           ],
         ),
-        if (staffInstructor != null) Text(staffInstructor!.name).paddingOnly(top: 10),
+        if (staffInstructor != null)
+          Text(staffInstructor!.name).paddingOnly(top: 10),
       ],
     );
   }
@@ -285,7 +298,8 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
               isDived = false;
             });
           },
-          color: (isDived == false) ? AppColors.text.lightSkyBlue : Colors.white,
+          color:
+              (isDived == false) ? AppColors.text.lightSkyBlue : Colors.white,
         ),
       ],
     );
@@ -307,7 +321,9 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
 
   Widget buildSubmitButton() {
     return AppButton.flat(
-      text: (booking.pax?[widget.paxIndex]['roaster'] == null) ? 'Submit' : 'Update',
+      text: (booking.pax?[widget.paxIndex]['roaster'] == null)
+          ? 'Submit'
+          : 'Update',
       onTap: () async {
         showLoading = true;
         setState(() {});
@@ -323,14 +339,15 @@ class _AddEditRoasterDetailsViewState extends State<AddEditRoasterDetailsView> {
 
         booking.pax?[widget.paxIndex]['roaster'] = roaster.toMap();
 
-        await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
+        await FirebaseFirestore.instance
+            .collection('bookings')
+            .doc(booking.id)
+            .set(booking.toMap());
         showLoading = false;
         setState(() {});
 
         Get.back();
       },
-      color: Colors.black,
-      textColor: Colors.white,
     );
   }
 

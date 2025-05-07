@@ -26,7 +26,8 @@ class AutoUpdateView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     String latestIosVersion = '${logic.controller.iosVersionNumber}';
-    String currentAndroidVersion = '${logic.controller.version}+${logic.controller.buildNumber}';
+    String currentAndroidVersion =
+        '${logic.controller.version}+${logic.controller.buildNumber}';
     String latestAndroidVersion = '${logic.controller.latestVersionNumber}';
 
     logout();
@@ -45,7 +46,6 @@ class AutoUpdateView extends StatelessWidget {
                 alignment: Alignment.topRight,
                 child: AppButton.miniFlat(
                   text: 'Skip',
-                  textColor: Colors.white,
                   onTap: () async {
                     if (currentEmployee != null) {
                       Navigator.pushReplacement(context, DashBoardView.route());
@@ -119,8 +119,6 @@ class AutoUpdateView extends StatelessWidget {
             else
               AppButton.flat(
                 text: 'Update',
-                color: Colors.black,
-                textColor: Colors.white,
                 onTap: () async {
                   logic.openLink();
                 },
@@ -136,7 +134,8 @@ class AutoUpdateView extends StatelessWidget {
       return;
     }
     firstRun = false;
-    if (logic.controller.criticalUpdate == true && logic.controller.forceLogout == true) {
+    if (logic.controller.criticalUpdate == true &&
+        logic.controller.forceLogout == true) {
       FirebaseAuthentication.logout();
     }
   }
@@ -157,7 +156,8 @@ class AutoUpdateLogic {
         titleStyle: const TextStyle(
           fontWeight: FontWeight.bold,
         ),
-        middleText: '\n\nError occurred while auto-update. Please contact developer.\n\n',
+        middleText:
+            '\n\nError occurred while auto-update. Please contact developer.\n\n',
         middleTextStyle: const TextStyle(
           color: Colors.black54,
           fontSize: 14,
@@ -168,7 +168,10 @@ class AutoUpdateLogic {
   }
 
   Future<bool> updateRequired() async {
-    var data = await FirebaseFirestore.instance.collection('ota_update').doc('version').get();
+    var data = await FirebaseFirestore.instance
+        .collection('ota_update')
+        .doc('version')
+        .get();
 
     controller.latestVersionNumber = data.data()!['number'];
     controller.downloadLink = data.data()!['downloadLink'];
@@ -186,7 +189,8 @@ class AutoUpdateLogic {
     controller.version = packageInfo.version;
     controller.buildNumber = packageInfo.buildNumber;
 
-    if (controller.latestVersionNumber != '${controller.version!}+${controller.buildNumber!}') {
+    if (controller.latestVersionNumber !=
+        '${controller.version!}+${controller.buildNumber!}') {
       return true;
     } else {
       return false;
@@ -195,7 +199,11 @@ class AutoUpdateLogic {
 }
 
 class AutoUpdateController extends GetxController {
-  String? latestVersionNumber, version, buildNumber, downloadLink, iosVersionNumber;
+  String? latestVersionNumber,
+      version,
+      buildNumber,
+      downloadLink,
+      iosVersionNumber;
 
   bool? criticalUpdate = false;
   bool? forceLogout = false;

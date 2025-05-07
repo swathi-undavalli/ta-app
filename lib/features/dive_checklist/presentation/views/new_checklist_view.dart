@@ -11,12 +11,20 @@ import '../../../../core/widgets/app_button.dart';
 import '../../controllers/new_checklist_controller.dart';
 
 class NewChecklistView extends StatefulWidget {
-  const NewChecklistView({super.key, required this.checkListElement, required this.templateType});
+  const NewChecklistView({
+    super.key,
+    required this.checkListElement,
+    required this.templateType,
+  });
 
   final ChecklistElement checkListElement;
   final TemplateType templateType;
 
-  static Route route(ChecklistElement checkListElement, TemplateType templateType) => MaterialPageRoute(
+  static Route route(
+    ChecklistElement checkListElement,
+    TemplateType templateType,
+  ) =>
+      MaterialPageRoute(
         builder: (context) => NewChecklistView(
           checkListElement: checkListElement,
           templateType: templateType,
@@ -37,12 +45,17 @@ class _NewChecklistViewState extends State<NewChecklistView> {
   void initState() {
     checkListElement = widget.checkListElement;
     templateType = widget.templateType;
-    logic.controller.checkListItems =
-        (checkListElement?.items ?? []).map((e) => TextEditingController(text: e.name)).toList();
-    logic.controller.focusNodes = (checkListElement?.items ?? []).map((e) => FocusNode()).toList();
-    logic.controller.id = (templateType == TemplateType.existingChecklist) ? checkListElement?.id : null;
+    logic.controller.checkListItems = (checkListElement?.items ?? [])
+        .map((e) => TextEditingController(text: e.name))
+        .toList();
+    logic.controller.focusNodes =
+        (checkListElement?.items ?? []).map((e) => FocusNode()).toList();
+    logic.controller.id = (templateType == TemplateType.existingChecklist)
+        ? checkListElement?.id
+        : null;
     logic.controller.titleTED.text = (checkListElement?.title ?? '');
-    logic.controller.descriptionTED.text = (checkListElement?.description ?? '');
+    logic.controller.descriptionTED.text =
+        (checkListElement?.description ?? '');
 
     super.initState();
   }
@@ -111,7 +124,9 @@ class _NewChecklistViewState extends State<NewChecklistView> {
               borderRadius: BorderRadius.circular(8),
               color: AppColors.background.skyBlue.withOpacity(0.2),
               border: Border.all(
-                color: (logic.controller.selectedIndex == index) ? Colors.black : Colors.transparent,
+                color: (logic.controller.selectedIndex == index)
+                    ? Colors.black
+                    : Colors.transparent,
               ),
             ),
             width: Screen.width,
@@ -242,7 +257,8 @@ class _NewChecklistViewState extends State<NewChecklistView> {
                         TextField(
                           controller: controller.descriptionTED,
                           decoration: const InputDecoration(
-                            hintStyle: TextStyle(color: Colors.black, fontSize: 12),
+                            hintStyle:
+                                TextStyle(color: Colors.black, fontSize: 12),
                             hintText: 'Description',
                             border: UnderlineInputBorder(),
                           ),
@@ -258,7 +274,8 @@ class _NewChecklistViewState extends State<NewChecklistView> {
                       ).center,
                     ),
               actions: <Widget>[
-                AppButton.miniText(
+                AppButton.miniFlat(
+                  isSecondary: true,
                   text: 'Cancel',
                   onTap: () {
                     if (!controller.showLoading) {

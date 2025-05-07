@@ -36,9 +36,14 @@ class _MarketingViewState extends State<MarketingView> {
       floatingActionButton: buildFloatingActionButton(),
       body: SafeArea(
         child: StreamBuilder(
-          stream: FirebaseFirestore.instance.collection('marketing').doc('marketing').snapshots(),
-          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+          stream: FirebaseFirestore.instance
+              .collection('marketing')
+              .doc('marketing')
+              .snapshots(),
+          builder:
+              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasError ||
+                snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
                 height: 15,
                 width: 15,
@@ -60,7 +65,8 @@ class _MarketingViewState extends State<MarketingView> {
               );
             }
 
-            Marketing? marketing = Marketing.fromJson(data as Map<String, dynamic>);
+            Marketing? marketing =
+                Marketing.fromJson(data as Map<String, dynamic>);
 
             if ((marketing.marketingElements ?? []).isEmpty) {
               return SizedBox(
@@ -89,14 +95,21 @@ class _MarketingViewState extends State<MarketingView> {
     );
   }
 
-  Widget buildMarketingCard({required MarketingElement element, required int index}) {
+  Widget buildMarketingCard({
+    required MarketingElement element,
+    required int index,
+  }) {
     return Container(
       width: Screen.width,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         boxShadow: [
-          BoxShadow(offset: const Offset(1, 3), spreadRadius: 2, color: Colors.grey.shade100),
+          BoxShadow(
+            offset: const Offset(1, 3),
+            spreadRadius: 2,
+            color: Colors.grey.shade100,
+          ),
         ],
       ),
       child: Row(
@@ -153,7 +166,10 @@ class _MarketingViewState extends State<MarketingView> {
                     color: Colors.grey,
                   ),
                   children: <TextSpan>[
-                    TextSpan(style: TextStyle(color: AppColors.text.black), text: element.createdBy ?? '-'),
+                    TextSpan(
+                      style: TextStyle(color: AppColors.text.black),
+                      text: element.createdBy ?? '-',
+                    ),
                   ],
                 ),
               ).left,
@@ -198,7 +214,10 @@ class _MarketingViewState extends State<MarketingView> {
     );
   }
 
-  Widget buildDeleteEditIcons({required int index, required MarketingElement marketingElement}) {
+  Widget buildDeleteEditIcons({
+    required int index,
+    required MarketingElement marketingElement,
+  }) {
     return SizedBox(
       width: 100,
       child: Row(
@@ -207,7 +226,11 @@ class _MarketingViewState extends State<MarketingView> {
           buildIcons(
             icon: Icons.delete,
             onTap: () {
-              deleteDialog(context, index: index, marketingElement: marketingElement);
+              deleteDialog(
+                context,
+                index: index,
+                marketingElement: marketingElement,
+              );
             },
           ),
           buildIcons(
@@ -243,8 +266,9 @@ class _MarketingViewState extends State<MarketingView> {
             style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           actions: <Widget>[
-            AppButton.miniText(
+            AppButton.miniFlat(
               text: 'Cancel',
+              isSecondary: true,
               onTap: () {
                 Navigator.pop(context);
               },
@@ -263,12 +287,18 @@ class _MarketingViewState extends State<MarketingView> {
   }
 
   onDeletePressed(int index) async {
-    DocumentSnapshot document = await FirebaseFirestore.instance.collection('marketing').doc('marketing').get();
+    DocumentSnapshot document = await FirebaseFirestore.instance
+        .collection('marketing')
+        .doc('marketing')
+        .get();
     Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
     Marketing marketing = Marketing.fromJson(data);
     marketing.marketingElements?.removeAt(index);
-    await FirebaseFirestore.instance.collection('marketing').doc('marketing').set(marketing.toJson());
+    await FirebaseFirestore.instance
+        .collection('marketing')
+        .doc('marketing')
+        .set(marketing.toJson());
   }
 
   Widget buildIcons({required IconData icon, required Function onTap}) {
@@ -294,7 +324,11 @@ class _MarketingViewState extends State<MarketingView> {
     );
   }
 
-  Widget buildContent({required String? value, double fontSize = 12, Color color = Colors.grey}) {
+  Widget buildContent({
+    required String? value,
+    double fontSize = 12,
+    Color color = Colors.grey,
+  }) {
     return SizedBox(
       width: Screen.width - 190,
       child: Text(

@@ -18,6 +18,7 @@ import '../../../equipment/presentation/views/equipment_logs_view.dart';
 import '../../../events/presentation/views/events_view.dart';
 import '../../../general_info/presentation/views/general_info_view.dart';
 import '../../../logs/presentation/views/log_view.dart';
+import '../../../maps/views/maps_view.dart';
 import '../../../offers/presentation/views/offers_view.dart';
 import '../../../roaster/presentation/views/roaster_view.dart';
 import '../../../screen_saver/views/marketing_view.dart';
@@ -53,7 +54,7 @@ class NavDrawer extends StatelessWidget {
               icon: Icons.navigation_rounded,
               text: 'Dive Sites Navigation',
               onTap: () {
-                Navigator.push(context, EmployeeProfileView.route());
+                Navigator.push(context, MapsView.route());
               },
             ),
 
@@ -196,9 +197,11 @@ class NavDrawer extends StatelessWidget {
             ),
 
             buildLine(),
-            (logic.controller.version != null && logic.controller.buildNumber != null)
+            (logic.controller.version != null &&
+                    logic.controller.buildNumber != null)
                 ? buildMiniMenuItem(
-                    text: "Version : ${"${logic.controller.version!}+${logic.controller.buildNumber!}"}",
+                    text:
+                        "Version : ${"${logic.controller.version!}+${logic.controller.buildNumber!}"}",
                   )
                 : buildMiniMenuItem(text: 'Loading version number...'),
             buildMiniMenuItem(text: 'templeadventures.com'),
@@ -229,7 +232,8 @@ class NavDrawer extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Text(
           text,
-          style: const TextStyle(color: Colors.black45, fontSize: FontSize.small),
+          style:
+              const TextStyle(color: Colors.black45, fontSize: FontSize.small),
         ),
       ),
     );
@@ -248,7 +252,11 @@ class NavDrawer extends StatelessWidget {
         contentPadding: const EdgeInsets.only(left: 30),
         title: Text(
           text,
-          style: const TextStyle(fontSize: 16, color: Color(0xff605B5B), fontWeight: FontWeight.w500),
+          style: const TextStyle(
+            fontSize: 16,
+            color: Color(0xff605B5B),
+            fontWeight: FontWeight.w500,
+          ),
         ),
         leading: Icon(
           icon,

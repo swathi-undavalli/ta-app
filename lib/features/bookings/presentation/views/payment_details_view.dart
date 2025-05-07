@@ -156,7 +156,9 @@ class PaymentDetailsView extends StatelessWidget {
                 child: DropdownButton(
                   underline: const SizedBox(),
                   isExpanded: true,
-                  value: controller.paymentModeTED.text.isNotEmpty ? controller.paymentModeTED.text : null,
+                  value: controller.paymentModeTED.text.isNotEmpty
+                      ? controller.paymentModeTED.text
+                      : null,
                   onChanged: (dynamic mode) {
                     if (mode == 'UPI') {
                       return;
@@ -169,7 +171,11 @@ class PaymentDetailsView extends StatelessWidget {
                       value: newMode,
                       child: Text(
                         newMode,
-                        style: TextStyle(color: (newMode == 'UPI') ? Colors.black12 : Colors.black),
+                        style: TextStyle(
+                          color: (newMode == 'UPI')
+                              ? Colors.black12
+                              : Colors.black,
+                        ),
                       ),
                     );
                   }).toList(),
@@ -200,7 +206,10 @@ class PaymentDetailsView extends StatelessWidget {
               width: 120,
               child: Text(
                 '${controller.payingNowTED.text} /-',
-                style: const TextStyle(fontSize: FontSize.textSize, color: Colors.black),
+                style: const TextStyle(
+                  fontSize: FontSize.textSize,
+                  color: Colors.black,
+                ),
               ),
             ),
           ],
@@ -213,8 +222,6 @@ class PaymentDetailsView extends StatelessWidget {
     return Center(
       child: AppButton.flat(
         text: 'Proceed',
-        textColor: AppColors.text.white,
-        color: AppColors.background.black,
         onTap: () {
           logic.onPaymentDetailsFilled(context);
         },

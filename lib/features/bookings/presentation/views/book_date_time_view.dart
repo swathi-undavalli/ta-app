@@ -137,8 +137,6 @@ class BookDateTimeView extends StatelessWidget {
                   onTap: () {
                     logic.addPoolSessionDateTime(context);
                   },
-                  bgColor: AppColors.background.black,
-                  textColor: AppColors.text.white,
                 ),
               ],
             ),
@@ -173,8 +171,6 @@ class BookDateTimeView extends StatelessWidget {
                   onTap: () {
                     logic.addDiveSessionDateTime(context);
                   },
-                  bgColor: AppColors.background.black,
-                  textColor: AppColors.text.white,
                 ),
               ],
             ),
@@ -209,8 +205,6 @@ class BookDateTimeView extends StatelessWidget {
                   onTap: () {
                     logic.addTheorySessionDateTime(context);
                   },
-                  bgColor: AppColors.background.black,
-                  textColor: AppColors.text.white,
                 ),
               ],
             ),
@@ -270,8 +264,6 @@ class BookDateTimeView extends StatelessWidget {
     return Center(
       child: AppButton.flat(
         text: 'Continue',
-        textColor: AppColors.text.white,
-        color: AppColors.background.black,
         onTap: () {
           logic.onContinueChooseDatesPressed(context);
         },

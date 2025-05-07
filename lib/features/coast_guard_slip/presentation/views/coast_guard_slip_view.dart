@@ -58,15 +58,11 @@ class _CoastGuardSlipViewState extends State<CoastGuardSlipView> {
               AppButton.flat(
                 onTap: generateCoastGuardSlip,
                 text: 'Generate slip',
-                color: Colors.black,
-                textColor: Colors.white,
               ).center,
               Spacing.h30,
               AppButton.flat(
                 onTap: generateIDProofs,
                 text: 'Generate ID proofs',
-                color: Colors.black,
-                textColor: Colors.white,
               ).center,
             ],
           ],

@@ -98,8 +98,6 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
               AppButton.flat(
                 onTap: copyLogs,
                 text: 'Copy Logs',
-                color: Colors.black,
-                textColor: Colors.white,
               ).center,
             Spacing.h20,
           ],
@@ -143,7 +141,10 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
                       },
                       child: const Text(
                         'Change',
-                        style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Colors.blue,
+                        ),
                       ),
                     ),
             ),
@@ -267,8 +268,11 @@ class _CopyDivesBottomSheetState extends State<CopyDivesBottomSheet> {
           .collection('diveLogs')
           .where(
             'timeIn',
-            isGreaterThanOrEqualTo: Timestamp.fromDate(startDate!.subtract(const Duration(days: 1))),
-            isLessThanOrEqualTo: Timestamp.fromDate(endDate!.add(const Duration(days: 1))),
+            isGreaterThanOrEqualTo: Timestamp.fromDate(
+              startDate!.subtract(const Duration(days: 1)),
+            ),
+            isLessThanOrEqualTo:
+                Timestamp.fromDate(endDate!.add(const Duration(days: 1))),
           )
           .get();
       for (var element in data.docs) {

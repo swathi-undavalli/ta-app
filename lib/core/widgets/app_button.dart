@@ -1,70 +1,54 @@
 import 'package:flutter/material.dart';
+import 'package:temple_ui_tools/styling/padding_extensions.dart';
 
 import '../constants/constants.dart';
 
 class AppButton extends StatelessWidget {
-  final String? text;
-  final Function? onTap;
-  final Color? bgColor;
-  final Color? textColor;
-  final Color splashColor;
+  final String text;
+  final VoidCallback onTap;
+  final Color? buttonColor;
   final double height;
   final double width;
   final double borderRadius;
   final double fontSize;
-  final bool enable;
+  final bool showLoading;
+  final bool isSecondary;
 
   const AppButton({
     super.key,
     required this.text,
     required this.onTap,
-    required this.bgColor,
-    required this.textColor,
-    required this.splashColor,
+    this.buttonColor,
     this.height = 31,
     this.width = 100,
     this.borderRadius = 20,
     this.fontSize = 12,
-    this.enable = true,
+    this.showLoading = false,
+    this.isSecondary = false,
   });
 
-  factory AppButton.miniText({
-    String? text,
-    Function? onTap,
-    Color? textColor,
-  }) {
-    return AppButton(
-      text: text,
-      onTap: onTap,
-      bgColor: Colors.transparent,
-      textColor: textColor ?? AppColors.text.black,
-      splashColor: Colors.black.withOpacity(0.2),
-    );
-  }
-
   factory AppButton.miniFlat({
-    String? text,
-    Function? onTap,
-    bool enable = true,
-    Color bgColor = Colors.black,
-    Color textColor = Colors.white,
+    required String text,
+    required VoidCallback onTap,
+    Color? buttonColor,
+    bool showLoading = false,
+    bool isSecondary = false,
   }) {
     return AppButton(
       text: text,
       onTap: onTap,
-      enable: enable,
-      bgColor: bgColor,
-      textColor: textColor,
-      splashColor: Colors.white.withOpacity(0.2),
+      buttonColor: buttonColor,
+      isSecondary: isSecondary,
+      showLoading: showLoading,
     );
   }
 
   factory AppButton.flat({
-    String? text,
-    Function? onTap,
-    Color? color,
-    Color? textColor,
-    bool enable = true,
+    required String text,
+    required VoidCallback onTap,
+    Color? buttonColor,
+    bool showLoading = false,
+    bool isSecondary = false,
     double height = 50,
     double width = 155,
   }) {
@@ -74,10 +58,9 @@ class AppButton extends StatelessWidget {
       height: height,
       width: width,
       fontSize: 16,
-      enable: enable,
-      bgColor: color,
-      textColor: textColor,
-      splashColor: Colors.white.withOpacity(0.2),
+      showLoading: showLoading,
+      isSecondary: isSecondary,
+      buttonColor: buttonColor,
       borderRadius: 10,
     );
   }
@@ -86,28 +69,40 @@ class AppButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextButton(
       style: ButtonStyle(
-        overlayColor: WidgetStateProperty.all(splashColor),
-        backgroundColor: WidgetStateProperty.all<Color?>(enable ? bgColor : bgColor!.withOpacity(0.5)),
+        overlayColor: WidgetStateProperty.all(Colors.white.withOpacity(0.1)),
+        backgroundColor: WidgetStateProperty.all<Color>(
+          isSecondary
+              ? AppColors.background.disabledGrey
+              : buttonColor ?? Colors.black,
+        ),
         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(borderRadius),
           ),
         ),
-        minimumSize: WidgetStateProperty.all<Size>(Size(width, height)),
-      ),
-      onPressed: () {
-        if (enable) onTap!();
-      },
-      child: Text(
-        text!,
-        style: TextStyle(
-          color: textColor,
-          fontSize: fontSize,
-          fontFamily: AppFonts.nunito,
-          fontWeight: FontWeight.w700,
-          letterSpacing: 0.60,
+        minimumSize: WidgetStateProperty.all<Size>(
+          Size(width, height),
         ),
+        padding: WidgetStateProperty.all<EdgeInsets>(EdgeInsets.zero),
       ),
+      onPressed: showLoading ? null : onTap,
+      child: showLoading
+          ? const SizedBox(
+              height: 20,
+              width: 20,
+              child: CircularProgressIndicator(
+                color: Colors.white,
+                strokeWidth: 2,
+              ),
+            )
+          : Text(
+              text,
+              style: TextStyle(
+                fontSize: fontSize,
+                fontWeight: FontWeight.w600,
+                color: Colors.white,
+              ),
+            ).paddingHorizontal(10),
     );
   }
 }

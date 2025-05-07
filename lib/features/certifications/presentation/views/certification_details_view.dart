@@ -22,12 +22,17 @@ import '../../../bookings/models/booking_model.dart';
 import '../../../bookings/presentation/widgets/certification_status.dart';
 
 class CertificationDetailsView extends StatefulWidget {
-  const CertificationDetailsView({super.key, required this.itemModel, required this.customer});
+  const CertificationDetailsView({
+    super.key,
+    required this.itemModel,
+    required this.customer,
+  });
 
   final ItemModel itemModel;
   final Map<String, dynamic> customer;
 
-  static Route route(ItemModel itemModel, Map<String, dynamic> customer) => MaterialPageRoute(
+  static Route route(ItemModel itemModel, Map<String, dynamic> customer) =>
+      MaterialPageRoute(
         builder: (context) => CertificationDetailsView(
           itemModel: itemModel,
           customer: customer,
@@ -35,7 +40,8 @@ class CertificationDetailsView extends StatefulWidget {
       );
 
   @override
-  State<CertificationDetailsView> createState() => _CertificationDetailsViewState();
+  State<CertificationDetailsView> createState() =>
+      _CertificationDetailsViewState();
 }
 
 class _CertificationDetailsViewState extends State<CertificationDetailsView> {
@@ -56,17 +62,23 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
             ),
             buildKeyValuePairs(
               key: 'Name',
-              value: '${widget.customer['first-name']} ${widget.customer['last-name']}',
+              value:
+                  '${widget.customer['first-name']} ${widget.customer['last-name']}',
             ),
             buildKeyValuePairs(key: 'Email', value: widget.customer['email']),
             buildKeyValuePairs(
               key: 'Date of Birth',
               value: widget.customer['dateOfBirth'] ??
                   ((widget.customer['dob'] != null)
-                      ? DateFormat('dd-MM-yyy').format((widget.customer['dob'] as Timestamp).toDate())
+                      ? DateFormat('dd-MM-yyy').format(
+                          (widget.customer['dob'] as Timestamp).toDate(),
+                        )
                       : '-'),
             ),
-            buildKeyValuePairs(key: 'Certification', value: widget.itemModel.activity),
+            buildKeyValuePairs(
+              key: 'Certification',
+              value: widget.itemModel.activity,
+            ),
             buildKeyValuePairs(
               key: 'Course Completion Date',
               value: widget.itemModel.bookingModel!.bookingDate?.last ?? '-',
@@ -82,29 +94,40 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
             buildKeyValuePairs(
               key: 'Completed instructor',
               value: widget.itemModel.bookingModel
-                      ?.getInstructor(DateFormat('dd-MM-yyyy').parse(widget.itemModel.bookingModel!.bookingDate!.last))
+                      ?.getInstructor(
+                        DateFormat('dd-MM-yyyy').parse(
+                          widget.itemModel.bookingModel!.bookingDate!.last,
+                        ),
+                      )
                       ?.name ??
                   '-',
             ),
             buildKeyValuePairs(key: 'Instructor No', value: '-'),
-            buildKeyValuePairs(key: 'Invoice No', value: widget.itemModel.bookingModel?.receiptNo ?? '-'),
+            buildKeyValuePairs(
+              key: 'Invoice No',
+              value: widget.itemModel.bookingModel?.receiptNo ?? '-',
+            ),
             buildKeyValuePairs(key: 'Course / Equipment Upsell', value: '-'),
             Spacing.h30,
             CertificationStatus(
               onChanged: (int status) async {
                 Booking booking = widget.itemModel.bookingModel!;
 
-                booking.pax![widget.itemModel.bookingModel!.pax!.indexOf(widget.customer)]['certificateStatus'] =
-                    status;
+                booking.pax![widget.itemModel.bookingModel!.pax!
+                    .indexOf(widget.customer)]['certificateStatus'] = status;
                 booking.certificationStatuses?.clear();
                 booking.pax?.forEach((pax) {
                   booking.certificationStatuses?.add(pax['certificateStatus']);
                 });
-                await FirebaseFirestore.instance.collection('bookings').doc(booking.id).set(booking.toMap());
+                await FirebaseFirestore.instance
+                    .collection('bookings')
+                    .doc(booking.id)
+                    .set(booking.toMap());
               },
               itemModel: widget.itemModel,
               isCertificationDetailsView: true,
-              paxIndex: widget.itemModel.bookingModel!.pax!.indexOf(widget.customer),
+              paxIndex:
+                  widget.itemModel.bookingModel!.pax!.indexOf(widget.customer),
               selectedDate: null,
             ),
             Spacing.h30,
@@ -123,7 +146,10 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
                   ).left,
                   Spacing.w20,
                   (isDownloading)
-                      ? const CircularProgressIndicator(color: Colors.black, strokeWidth: 3).size(20, 20)
+                      ? const CircularProgressIndicator(
+                          color: Colors.black,
+                          strokeWidth: 3,
+                        ).size(20, 20)
                       : IconButton(
                           onPressed: () async {
                             setState(() {
@@ -141,7 +167,10 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
                         ),
                   Spacing.w10,
                   (isSharing)
-                      ? const CircularProgressIndicator(color: Colors.black, strokeWidth: 3).size(20, 20)
+                      ? const CircularProgressIndicator(
+                          color: Colors.black,
+                          strokeWidth: 3,
+                        ).size(20, 20)
                       : IconButton(
                           onPressed: () async {
                             setState(() {
@@ -214,12 +243,19 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
 
         await imageFile.writeAsBytes(response.bodyBytes);
 
-        SharePlus.instance.share(ShareParams(
-          files: [XFile(imageFile.path)],
-          text: '${widget.customer['first-name']} ${widget.customer['last-name']}',
-          subject: '${widget.customer['email']}',
-          sharePositionOrigin: Rect.fromCenter(center: const Offset(0, 0), width: 0, height: 0),
-        ));
+        SharePlus.instance.share(
+          ShareParams(
+            files: [XFile(imageFile.path)],
+            text:
+                '${widget.customer['first-name']} ${widget.customer['last-name']}',
+            subject: '${widget.customer['email']}',
+            sharePositionOrigin: Rect.fromCenter(
+              center: const Offset(0, 0),
+              width: 0,
+              height: 0,
+            ),
+          ),
+        );
       } else {
         throw Exception('Failed to load image');
       }
@@ -236,7 +272,9 @@ class _CertificationDetailsViewState extends State<CertificationDetailsView> {
     try {
       http.Response response = await http.get(Uri.parse(imageUrl));
 
-      await ImageGallerySaverPlus.saveImage(Uint8List.fromList(response.bodyBytes));
+      await ImageGallerySaverPlus.saveImage(
+        Uint8List.fromList(response.bodyBytes),
+      );
     } catch (error) {
       log('Error downloading or saving image: $error');
     }

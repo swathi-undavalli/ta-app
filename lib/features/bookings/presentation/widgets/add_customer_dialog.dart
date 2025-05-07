@@ -24,7 +24,10 @@ class AddCustomerDialog extends StatefulWidget {
 
   final Booking bookingModel;
 
-  static Future<Booking> show(BuildContext context, {required Booking bookingModel}) async {
+  static Future<Booking> show(
+    BuildContext context, {
+    required Booking bookingModel,
+  }) async {
     var data = await showDialog(
       context: context,
       barrierDismissible: false,
@@ -92,7 +95,9 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                     keyboardType: TextInputType.emailAddress,
                     inputFormatter: [
                       TextInputFormatter.withFunction((oldValue, newValue) {
-                        return newValue.copyWith(text: newValue.text.toLowerCase());
+                        return newValue.copyWith(
+                          text: newValue.text.toLowerCase(),
+                        );
                       }),
                     ],
                     errorValidator: () {
@@ -130,7 +135,8 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
               ).center,
             ),
       actions: <Widget>[
-        AppButton.miniText(
+        AppButton.miniFlat(
+          isSecondary: true,
           text: 'Cancel',
           onTap: () {
             Navigator.pop(context);
@@ -157,7 +163,10 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
                 'gender': genderTED.text,
                 'idProof': _uploadedImage,
               });
-              await FirebaseFirestore.instance.collection('bookings').doc(bookingModel.id).set(bookingModel.toMap());
+              await FirebaseFirestore.instance
+                  .collection('bookings')
+                  .doc(bookingModel.id)
+                  .set(bookingModel.toMap());
               setState(() {
                 showLoading = false;
               });
@@ -289,7 +298,10 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
   }
 
   Future<bool> isCustomerExists() async {
-    var d = await FirebaseFirestore.instance.collection('customers').doc(emailTED.text).get();
+    var d = await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(emailTED.text)
+        .get();
     Map<String, dynamic>? data = d.data();
     if (data == null) return false;
     return true;
@@ -306,7 +318,10 @@ class _AddCustomerDialogState extends State<AddCustomerDialog> {
       gender: genderTED.text,
       dob: dobTED.text,
     );
-    await FirebaseFirestore.instance.collection('customers').doc(emailTED.text).set(customer.toMap());
+    await FirebaseFirestore.instance
+        .collection('customers')
+        .doc(emailTED.text)
+        .set(customer.toMap());
   }
 
   bool isValid() {

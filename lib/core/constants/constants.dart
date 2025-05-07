@@ -22,6 +22,7 @@ class BackgroundColors {
   Color get red => Colors.red;
   Color get datesYellow => Colors.yellow.withOpacity(0.5);
   Color get datesGreen => Colors.green.withOpacity(0.5);
+  Color get disabledGrey => Color(0xff989898);
 }
 
 class TextColors {

@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -10,7 +11,7 @@ import 'core/app/app.dart';
 import 'core/services/notification_service.dart';
 import 'features/messaging/firebase_messaging_controller.dart';
 
-String currentIosVersion = '1.1.3+36';
+String currentIosVersion = '1.1.3+37';
 
 bool get isIos => Platform.isIOS;
 
@@ -29,7 +30,8 @@ void main() async {
         apiKey: 'AIzaSyAJFHDoc1lfQtTRtEpRmCJue2kwfB5jUh8',
         appId: '1:671883511961:ios:99961ae0cf633ff7b05008',
         messagingSenderId: '671883511961',
-        iosClientId: '671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com',
+        iosClientId:
+            '671883511961-m5tbun1ohi774cfkrd2f15m2l6s4j6tg.apps.googleusercontent.com',
         projectId: 'seismic-glow-283418',
       ),
     );

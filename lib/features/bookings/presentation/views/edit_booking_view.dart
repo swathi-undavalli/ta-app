@@ -40,7 +40,8 @@ class EditBookingView extends StatefulWidget {
 class _EditBookingViewState extends State<EditBookingView> {
   final EditBookingNewLogic logic = EditBookingNewLogic();
 
-  final AutoScrollController autoScrollControllerTheory = AutoScrollController();
+  final AutoScrollController autoScrollControllerTheory =
+      AutoScrollController();
 
   final AutoScrollController autoScrollControllerPool = AutoScrollController();
 
@@ -50,32 +51,39 @@ class _EditBookingViewState extends State<EditBookingView> {
   void initState() {
     super.initState();
     logic.controller.bookingModel = widget.booking;
-    logic.controller.activityNAmeTED.text = widget.booking!.activity![0]!.name.toString();
-    logic.controller.totalAmountTED.text = ((widget.booking!.totalCost).round()).toString();
+    logic.controller.activityNAmeTED.text =
+        widget.booking!.activity![0]!.name.toString();
+    logic.controller.totalAmountTED.text =
+        ((widget.booking!.totalCost).round()).toString();
     logic.controller.priceTED.text = widget.booking!.price.toString();
     logic.controller.depositTED.text = widget.booking!.paid.toString();
     logic.controller.balanceTED.text = widget.booking!.balance.toString();
     logic.controller.paxTED.text = widget.booking!.noOfPersons.toString();
     logic.controller.remarksTED.text = widget.booking!.remarks ?? '';
     logic.controller.invoiceTED.text = widget.booking!.receiptNo ?? '';
-    logic.controller.countryCodeTED.text = widget.booking?.details?.countryCode ?? '';
+    logic.controller.countryCodeTED.text =
+        widget.booking?.details?.countryCode ?? '';
     logic.controller.phoneTED.text = widget.booking?.details?.phoneNumber ?? '';
     logic.controller.emailTED.text = widget.booking?.details?.email ?? '';
-    logic.controller.firstNameTED.text = widget.booking?.details?.firstName ?? '';
+    logic.controller.firstNameTED.text =
+        widget.booking?.details?.firstName ?? '';
     logic.controller.lastNameTED.text = widget.booking?.details?.lastName ?? '';
     logic.controller.isoCode = widget.booking?.details?.isoCode ?? '';
-    logic.controller.discountTED.text = widget.booking!.discount?.toString() ?? '0';
+    logic.controller.discountTED.text =
+        widget.booking!.discount?.toString() ?? '0';
     logic.controller.taxable = widget.booking!.tax != 0;
     logic.controller.discountSwitch = widget.booking!.discountType == '%';
 
     if (widget.booking!.details?.dob != null) {
       try {
-        logic.controller.dob = (widget.booking!.details?.dob as Timestamp).toDate();
+        logic.controller.dob =
+            (widget.booking!.details?.dob as Timestamp).toDate();
       } catch (e) {
         showToast(widget.booking!.id!);
         logic.controller.dob = DateTime.now();
       }
-      logic.controller.dobTED.text = DateFormat('dd MMM, yyyy').format(logic.controller.dob);
+      logic.controller.dobTED.text =
+          DateFormat('dd MMM, yyyy').format(logic.controller.dob);
       log('Hey Dob');
       log(logic.controller.dob.toString());
     }
@@ -91,7 +99,8 @@ class _EditBookingViewState extends State<EditBookingView> {
         child: WillPopScope(
           onWillPop: () async {
             logic.controller.reset();
-            logic.controller.startDate = logic.controller.startDate.subtract(const Duration(days: 50));
+            logic.controller.startDate =
+                logic.controller.startDate.subtract(const Duration(days: 50));
             return true;
           },
           child: SafeArea(
@@ -201,9 +210,8 @@ class _EditBookingViewState extends State<EditBookingView> {
             AppButton.flat(
               height: 45,
               width: 140,
-              color: AppColors.background.grey,
               text: 'Cancel',
-              textColor: AppColors.text.black,
+              isSecondary: true,
               onTap: () {
                 disposeKeyboard();
                 Navigator.pop(context);
@@ -213,25 +221,29 @@ class _EditBookingViewState extends State<EditBookingView> {
             AppButton.flat(
               height: 45,
               width: 140,
-              color: AppColors.background.black,
               text: 'Update',
-              textColor: AppColors.text.white,
               onTap: () async {
                 controller.bookingModel!.bookingDate = [];
 
-                if (controller.bookingModel!.poolDate != null && controller.bookingModel!.poolDate!.isNotEmpty) {
+                if (controller.bookingModel!.poolDate != null &&
+                    controller.bookingModel!.poolDate!.isNotEmpty) {
                   for (var date in controller.bookingModel!.poolDate!) {
-                    controller.bookingModel!.bookingDate!.add(getStringDate(date!));
+                    controller.bookingModel!.bookingDate!
+                        .add(getStringDate(date!));
                   }
                 }
-                if (controller.bookingModel!.theoryDate != null && controller.bookingModel!.theoryDate!.isNotEmpty) {
+                if (controller.bookingModel!.theoryDate != null &&
+                    controller.bookingModel!.theoryDate!.isNotEmpty) {
                   for (var date in controller.bookingModel!.theoryDate!) {
-                    controller.bookingModel!.bookingDate!.add(getStringDate(date!));
+                    controller.bookingModel!.bookingDate!
+                        .add(getStringDate(date!));
                   }
                 }
-                if (controller.bookingModel!.diveDate != null && controller.bookingModel!.diveDate!.isNotEmpty) {
+                if (controller.bookingModel!.diveDate != null &&
+                    controller.bookingModel!.diveDate!.isNotEmpty) {
                   for (var date in controller.bookingModel!.diveDate!) {
-                    controller.bookingModel!.bookingDate!.add(getStringDate(date!));
+                    controller.bookingModel!.bookingDate!
+                        .add(getStringDate(date!));
                   }
                 }
 
@@ -244,14 +256,20 @@ class _EditBookingViewState extends State<EditBookingView> {
                   type: LogType.bookingEdited,
                   bookingId: controller.bookingModel!.id,
                 );
-                FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
+                FirebaseFirestore.instance
+                    .collection('logs')
+                    .doc()
+                    .set(logModel.toMap());
                 if (context.mounted) {
                   Navigator.pop(context);
                 }
                 controller.reset();
 
-                BookingsCalenderWidgetLogicNew bookingCalenderLogicNew = BookingsCalenderWidgetLogicNew();
-                bookingCalenderLogicNew.onDateSelected(bookingCalenderLogicNew.controller.selectedDate);
+                BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
+                    BookingsCalenderWidgetLogicNew();
+                bookingCalenderLogicNew.onDateSelected(
+                  bookingCalenderLogicNew.controller.selectedDate,
+                );
               },
             ),
           ],
@@ -314,23 +332,25 @@ class _EditBookingViewState extends State<EditBookingView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            AppButton.miniText(
+                            AppButton.miniFlat(
                               text: 'Cancel',
+                              isSecondary: true,
                               onTap: () {
                                 Navigator.pop(context);
                               },
                             ),
                             AppButton.miniFlat(
                               text: 'Okay',
-                              bgColor: AppColors.background.black,
-                              textColor: AppColors.text.white,
                               onTap: () {
                                 if (selectedTheoryDate != null &&
                                     selectedTheoryDate?.hour != null &&
                                     selectedTheoryDate?.minute != null &&
                                     selectedTheoryDate?.day != null) {
-                                  int index = controller.bookingModel!.theoryDate!.indexOf(e);
-                                  controller.bookingModel!.theoryDate![index] = selectedTheoryDate;
+                                  int index = controller
+                                      .bookingModel!.theoryDate!
+                                      .indexOf(e);
+                                  controller.bookingModel!.theoryDate![index] =
+                                      selectedTheoryDate;
                                   controller.update();
                                   Navigator.pop(context);
                                 } else {
@@ -399,23 +419,24 @@ class _EditBookingViewState extends State<EditBookingView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            AppButton.miniText(
+                            AppButton.miniFlat(
                               text: 'Cancel',
+                              isSecondary: true,
                               onTap: () {
                                 Navigator.pop(context);
                               },
                             ),
                             AppButton.miniFlat(
                               text: 'Okay',
-                              bgColor: AppColors.background.black,
-                              textColor: AppColors.text.white,
                               onTap: () {
                                 if (selectedPoolDate != null &&
                                     selectedPoolDate?.hour != null &&
                                     selectedPoolDate?.minute != null &&
                                     selectedPoolDate?.day != null) {
-                                  int index = controller.bookingModel!.poolDate!.indexOf(e);
-                                  controller.bookingModel!.poolDate![index] = selectedPoolDate;
+                                  int index = controller.bookingModel!.poolDate!
+                                      .indexOf(e);
+                                  controller.bookingModel!.poolDate![index] =
+                                      selectedPoolDate;
                                   //print(controller.bookingModel.poolDate);
                                   controller.update();
                                   Navigator.pop(context);
@@ -485,23 +506,24 @@ class _EditBookingViewState extends State<EditBookingView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            AppButton.miniText(
+                            AppButton.miniFlat(
                               text: 'Cancel',
+                              isSecondary: true,
                               onTap: () {
                                 Navigator.pop(context);
                               },
                             ),
                             AppButton.miniFlat(
                               text: 'Okay',
-                              bgColor: AppColors.background.black,
-                              textColor: AppColors.text.white,
                               onTap: () {
                                 if (selectedDiveDate != null &&
                                     selectedDiveDate?.hour != null &&
                                     selectedDiveDate?.minute != null &&
                                     selectedDiveDate?.day != null) {
-                                  int index = controller.bookingModel!.diveDate!.indexOf(e);
-                                  controller.bookingModel!.diveDate![index] = selectedDiveDate;
+                                  int index = controller.bookingModel!.diveDate!
+                                      .indexOf(e);
+                                  controller.bookingModel!.diveDate![index] =
+                                      selectedDiveDate;
                                   controller.update();
                                   Navigator.pop(context);
                                 } else {
@@ -574,7 +596,8 @@ class _EditBookingViewState extends State<EditBookingView> {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            AppButton.miniText(
+                            AppButton.miniFlat(
+                              isSecondary: true,
                               text: 'Cancel',
                               onTap: () {
                                 Navigator.pop(context);
@@ -582,22 +605,24 @@ class _EditBookingViewState extends State<EditBookingView> {
                             ),
                             AppButton.miniFlat(
                               text: 'Okay',
-                              bgColor: AppColors.background.black,
-                              textColor: AppColors.text.white,
                               onTap: () {
                                 if (selectedDate != null &&
                                     selectedDate?.hour != null &&
                                     selectedDate?.minute != null &&
                                     selectedDate?.day != null) {
                                   if (type == DateType.theory) {
-                                    controller.bookingModel!.theoryDate!.add(selectedDate);
+                                    controller.bookingModel!.theoryDate!
+                                        .add(selectedDate);
                                   } else if (type == DateType.pool) {
-                                    controller.bookingModel!.poolDate!.add(selectedDate);
+                                    controller.bookingModel!.poolDate!
+                                        .add(selectedDate);
                                   } else if (type == DateType.dive) {
-                                    controller.bookingModel!.diveDate!.add(selectedDate);
+                                    controller.bookingModel!.diveDate!
+                                        .add(selectedDate);
                                   }
 
-                                  controller.bookingModel!.bookingDate!.add(getStringDate(selectedDate!));
+                                  controller.bookingModel!.bookingDate!
+                                      .add(getStringDate(selectedDate!));
 
                                   controller.update();
                                   Navigator.pop(context);
@@ -710,7 +735,10 @@ class _EditBookingViewState extends State<EditBookingView> {
                         controller.bookingModel!.price = activity.price * 1.0;
                         controller.update();
                       },
-                      items: controller.activities.toSet().toList().map((activity) {
+                      items: controller.activities
+                          .toSet()
+                          .toList()
+                          .map((activity) {
                         return DropdownMenuItem(
                           value: activity,
                           child: Text(
@@ -743,7 +771,8 @@ class _EditBookingViewState extends State<EditBookingView> {
           required: true,
           initialCountryCode: controller.isoCode,
           onChanged: (phone) {
-            controller.bookingModel!.details = controller.bookingModel!.details?.copyWith(
+            controller.bookingModel!.details =
+                controller.bookingModel!.details?.copyWith(
               phoneNumber: phone.number,
               countryCode: phone.countryCode,
               isoCode: phone.countryISOCode,
@@ -765,7 +794,8 @@ class _EditBookingViewState extends State<EditBookingView> {
       focus: controller.emailNode,
       nextFocus: controller.phoneNode,
       onChangedCallBack: (email) {
-        controller.bookingModel!.details = controller.bookingModel!.details?.copyWith(
+        controller.bookingModel!.details =
+            controller.bookingModel!.details?.copyWith(
           email: email,
         );
       },
@@ -896,7 +926,8 @@ class _EditBookingViewState extends State<EditBookingView> {
                   },
                   onChangedCallBack: (discount) {
                     try {
-                      controller.bookingModel!.discount = double.parse(discount);
+                      controller.bookingModel!.discount =
+                          double.parse(discount);
                     } catch (e) {
                       controller.bookingModel!.discount = 0;
                     }
@@ -914,7 +945,9 @@ class _EditBookingViewState extends State<EditBookingView> {
                     '₹',
                     style: TextStyle(
                       fontSize: 17,
-                      color: !controller.discountSwitch ? AppColors.text.skyBlue : AppColors.text.grey,
+                      color: !controller.discountSwitch
+                          ? AppColors.text.skyBlue
+                          : AppColors.text.grey,
                     ),
                   ),
                   SizedBox(
@@ -937,7 +970,9 @@ class _EditBookingViewState extends State<EditBookingView> {
                     '%',
                     style: TextStyle(
                       fontSize: 15,
-                      color: controller.discountSwitch ? AppColors.text.skyBlue : AppColors.text.grey,
+                      color: controller.discountSwitch
+                          ? AppColors.text.skyBlue
+                          : AppColors.text.grey,
                     ),
                   ),
                 ],
@@ -1056,7 +1091,8 @@ class _EditBookingViewState extends State<EditBookingView> {
       focus: controller.firstNameNode,
       nextFocus: controller.lastNameNode,
       onChangedCallBack: (newName) {
-        controller.bookingModel!.details = controller.bookingModel!.details?.copyWith(firstName: newName);
+        controller.bookingModel!.details =
+            controller.bookingModel!.details?.copyWith(firstName: newName);
       },
     );
   }
@@ -1067,7 +1103,8 @@ class _EditBookingViewState extends State<EditBookingView> {
       textEditingController: controller.lastNameTED,
       focus: controller.lastNameNode,
       onChangedCallBack: (newName) {
-        controller.bookingModel!.details = controller.bookingModel!.details?.copyWith(lastName: newName);
+        controller.bookingModel!.details =
+            controller.bookingModel!.details?.copyWith(lastName: newName);
       },
     );
   }

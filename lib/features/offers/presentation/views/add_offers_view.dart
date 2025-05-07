@@ -26,11 +26,16 @@ import '../../models/offer.dart';
 import '../../repository/offer_repo.dart';
 
 class AddOffersView extends StatefulWidget {
-  const AddOffersView({super.key, required this.offer, required this.categories});
+  const AddOffersView({
+    super.key,
+    required this.offer,
+    required this.categories,
+  });
   final Offer? offer;
   final List<Categories> categories;
 
-  static Route route(Offer? offer, List<Categories> newCategories) => MaterialPageRoute(
+  static Route route(Offer? offer, List<Categories> newCategories) =>
+      MaterialPageRoute(
         builder: (context) => AddOffersView(
           offer: offer,
           categories: newCategories,
@@ -147,8 +152,6 @@ class _AddOffersViewState extends State<AddOffersView> {
           Navigator.pop(context);
         }
       },
-      color: Colors.black,
-      textColor: Colors.white,
     );
   }
 
@@ -207,15 +210,16 @@ class _AddOffersViewState extends State<AddOffersView> {
       height: 183,
       width: Screen.width,
       decoration: BoxDecoration(
-        // color: const Color(0xffC4C4C4),
-        color: Colors.white,
         borderRadius: BorderRadius.circular(10),
         border: Border.all(color: Colors.black),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          TAImage(AppImages.icons.add, color: Colors.black, height: 30, width: 30),
+          Icon(
+            Icons.add,
+            size: 35,
+          ),
           Spacing.h33,
           const Text('Add Photos'),
         ],
@@ -326,7 +330,10 @@ class _AddOffersViewState extends State<AddOffersView> {
               child: Container(
                 height: 24,
                 width: 24,
-                decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.white),
+                decoration: const BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Colors.white,
+                ),
                 child: TAImage(
                   AppImages.icons.cancel,
                   height: 24,
@@ -421,7 +428,11 @@ class _AddOffersViewState extends State<AddOffersView> {
                 width: Screen.width,
                 child: Text(
                   'Valid Dates',
-                  style: TextStyle(color: AppColors.text.black, fontSize: 14, fontWeight: FontWeight.w600),
+                  style: TextStyle(
+                    color: AppColors.text.black,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
@@ -438,7 +449,10 @@ class _AddOffersViewState extends State<AddOffersView> {
                     },
                     child: const Text(
                       'Change',
-                      style: TextStyle(decoration: TextDecoration.underline, color: Colors.blue),
+                      style: TextStyle(
+                        decoration: TextDecoration.underline,
+                        color: Colors.blue,
+                      ),
                     ),
                   ),
           ],
@@ -510,7 +524,10 @@ class _AddOffersViewState extends State<AddOffersView> {
     final documentDirectory = await getTemporaryDirectory();
 
     final file = File(
-      path.join(documentDirectory.path, '${DateTime.now().microsecondsSinceEpoch}.png'),
+      path.join(
+        documentDirectory.path,
+        '${DateTime.now().microsecondsSinceEpoch}.png',
+      ),
     );
 
     file.writeAsBytesSync(response.bodyBytes);
@@ -570,7 +587,8 @@ class _AddOffersViewState extends State<AddOffersView> {
         try {
           String fileName = '${DateTime.now().millisecondsSinceEpoch}_$i';
 
-          Reference storageReference = FirebaseStorage.instance.ref().child('offers/$fileName.jpg');
+          Reference storageReference =
+              FirebaseStorage.instance.ref().child('offers/$fileName.jpg');
 
           await storageReference.putFile(imageFile);
 

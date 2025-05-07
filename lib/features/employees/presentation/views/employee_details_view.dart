@@ -21,7 +21,8 @@ class EmployeeDetailsView extends StatefulWidget {
   const EmployeeDetailsView({super.key, required this.employeeArgument});
 
   static Route route(Employee employeeArgument) => MaterialPageRoute(
-        builder: (context) => EmployeeDetailsView(employeeArgument: employeeArgument),
+        builder: (context) =>
+            EmployeeDetailsView(employeeArgument: employeeArgument),
       );
 
   @override
@@ -64,7 +65,10 @@ class _EmployeeDetailsViewState extends State<EmployeeDetailsView> {
                   EmployeeAccess(
                     access: AccessRights.editEmployees,
                     child: buildIcons(Icons.edit, () async {
-                      Navigator.push(context, AddEmployeeView.route(widget.employeeArgument));
+                      Navigator.push(
+                        context,
+                        AddEmployeeView.route(widget.employeeArgument),
+                      );
                     }),
                   ),
                   EmployeeAccess(
@@ -97,7 +101,8 @@ class _EmployeeDetailsViewState extends State<EmployeeDetailsView> {
                           confirm: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              AppButton.miniText(
+                              AppButton.miniFlat(
+                                isSecondary: true,
                                 text: 'Cancel',
                                 onTap: () {
                                   Navigator.pop(context);
@@ -114,7 +119,10 @@ class _EmployeeDetailsViewState extends State<EmployeeDetailsView> {
                                     type: LogType.deleteEmployee,
                                     employeeName: widget.employeeArgument.name,
                                   );
-                                  FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
+                                  FirebaseFirestore.instance
+                                      .collection('logs')
+                                      .doc()
+                                      .set(logModel.toMap());
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                 },
@@ -151,7 +159,8 @@ class _EmployeeDetailsViewState extends State<EmployeeDetailsView> {
                   ),
                   buildEmployeeInfo(
                     subHeading: 'Phone Number',
-                    text: '${widget.employeeArgument.countryCode!} ${widget.employeeArgument.phoneNumber!}',
+                    text:
+                        '${widget.employeeArgument.countryCode!} ${widget.employeeArgument.phoneNumber!}',
                   ),
                   buildEmployeeInfo(
                     subHeading: 'Role',

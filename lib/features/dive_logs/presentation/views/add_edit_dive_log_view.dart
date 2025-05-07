@@ -84,22 +84,35 @@ class _AddEditDiveLogViewState extends State<AddEditDiveLogView> {
       );
       logic.controller.instructor = [logic.controller.diveLog!.instructor];
       logic.controller.diveSiteTED.text = logic.controller.diveLog!.diveSite;
-      logic.controller.tankTypeTED.text = logic.controller.diveLog!.tankType ?? '';
-      logic.controller.tankNoTED.text = logic.controller.diveLog!.tankNo.toString();
-      logic.controller.bottomTimeTED.text = logic.controller.diveLog!.bottomTime.toString();
-      logic.controller.maxDepthTED.text = logic.controller.diveLog!.maxDepth.toString();
-      logic.controller.rentalEquipmentTED.text = logic.controller.diveLog!.rentalEquipment.toString();
+      logic.controller.tankTypeTED.text =
+          logic.controller.diveLog!.tankType ?? '';
+      logic.controller.tankNoTED.text =
+          logic.controller.diveLog!.tankNo.toString();
+      logic.controller.bottomTimeTED.text =
+          logic.controller.diveLog!.bottomTime.toString();
+      logic.controller.maxDepthTED.text =
+          logic.controller.diveLog!.maxDepth.toString();
+      logic.controller.rentalEquipmentTED.text =
+          logic.controller.diveLog!.rentalEquipment.toString();
       return;
     }
 
-    String? boatId = logic.controller.booking?.getBoatInfo(logic.controller.selectedDate)?.id;
-    logic.controller.nitrox = logic.controller.booking?.getBoatInfo(logic.controller.selectedDate)?.nitrox;
-    logic.controller.air = logic.controller.booking?.getBoatInfo(logic.controller.selectedDate)?.air;
+    String? boatId = logic.controller.booking
+        ?.getBoatInfo(logic.controller.selectedDate)
+        ?.id;
+    logic.controller.nitrox = logic.controller.booking
+        ?.getBoatInfo(logic.controller.selectedDate)
+        ?.nitrox;
+    logic.controller.air = logic.controller.booking
+        ?.getBoatInfo(logic.controller.selectedDate)
+        ?.air;
 
     if (boatId != null) {
       fetchBoatDetails(boatId);
     }
-    if (logic.controller.booking?.getInstructor(logic.controller.selectedDate) != null) {
+    if (logic.controller.booking
+            ?.getInstructor(logic.controller.selectedDate) !=
+        null) {
       logic.controller.instructor = [
         logic.controller.booking!.getInstructor(logic.controller.selectedDate)!,
       ];
@@ -154,7 +167,9 @@ class _AddEditDiveLogViewState extends State<AddEditDiveLogView> {
                 Spacing.h20,
                 buildEmployeeSelector(context),
                 Text(
-                  (controller.instructorError != null) ? 'Instructor ${controller.instructorError}' : '',
+                  (controller.instructorError != null)
+                      ? 'Instructor ${controller.instructorError}'
+                      : '',
                   style: TextStyle(fontSize: 12, color: Colors.red.shade900),
                 ),
                 AppTextField(
@@ -204,7 +219,8 @@ class _AddEditDiveLogViewState extends State<AddEditDiveLogView> {
                   hintText: 'Max Depth *',
                   controller: controller.maxDepthTED,
                   suffixText: 'm',
-                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType:
+                      const TextInputType.numberWithOptions(decimal: true),
                   errorValidator: () {
                     return controller.maxDepthError;
                   },
@@ -229,8 +245,6 @@ class _AddEditDiveLogViewState extends State<AddEditDiveLogView> {
                     logic.onSubmitPressed(context);
                   },
                   text: 'Submit',
-                  color: Colors.black,
-                  textColor: Colors.white,
                 ).center,
                 Spacing.h30,
                 Spacing.h30,
@@ -268,15 +282,16 @@ class _AddEditDiveLogViewState extends State<AddEditDiveLogView> {
           AppButton.miniFlat(
             text: 'Select',
             onTap: () async {
-              logic.controller.instructor = await EmpSelectorBottomSheet.getSelectedInstructors(
-                    context,
-                    initialSelectedInstructors: logic.controller.instructor,
-                    instructorLimit: 1,
-                    employeeType: EmployeeType.showAllDiveTeam,
-                    tanksRequired: false,
-                    selectedDate: logic.controller.selectedDate,
-                  ) ??
-                  [];
+              logic.controller.instructor =
+                  await EmpSelectorBottomSheet.getSelectedInstructors(
+                        context,
+                        initialSelectedInstructors: logic.controller.instructor,
+                        instructorLimit: 1,
+                        employeeType: EmployeeType.showAllDiveTeam,
+                        tanksRequired: false,
+                        selectedDate: logic.controller.selectedDate,
+                      ) ??
+                      [];
               logic.controller.update();
             },
           ),
@@ -299,15 +314,16 @@ class _AddEditDiveLogViewState extends State<AddEditDiveLogView> {
         ),
         InkWell(
           onTap: () async {
-            logic.controller.instructor = (await EmpSelectorBottomSheet.getSelectedInstructors(
-                  context,
-                  initialSelectedInstructors: logic.controller.instructor,
-                  instructorLimit: 1,
-                  employeeType: EmployeeType.showAllDiveTeam,
-                  tanksRequired: false,
-                  selectedDate: null,
-                )) ??
-                [];
+            logic.controller.instructor =
+                (await EmpSelectorBottomSheet.getSelectedInstructors(
+                      context,
+                      initialSelectedInstructors: logic.controller.instructor,
+                      instructorLimit: 1,
+                      employeeType: EmployeeType.showAllDiveTeam,
+                      tanksRequired: false,
+                      selectedDate: null,
+                    )) ??
+                    [];
             logic.controller.update();
           },
           child: const Text(

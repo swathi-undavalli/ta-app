@@ -337,7 +337,8 @@ class _AddConditionsViewState extends State<AddConditionsView> {
           actions: <Widget>[
             Row(
               children: [
-                AppButton.miniText(
+                AppButton.miniFlat(
+                  isSecondary: true,
                   text: 'Cancel',
                   onTap: () {
                     Navigator.pop(context);
@@ -403,7 +404,8 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                     const SizedBox(height: 20),
                     Row(
                       children: [
-                        AppButton.miniText(
+                        AppButton.miniFlat(
+                          isSecondary: true,
                           text: 'Cancel',
                           onTap: () {
                             Navigator.pop(context);
@@ -424,7 +426,6 @@ class _AddConditionsViewState extends State<AddConditionsView> {
                               showToast('Depth is already added in this site');
                             }
                           },
-                          textColor: AppColors.text.white,
                         ),
                       ],
                     ),

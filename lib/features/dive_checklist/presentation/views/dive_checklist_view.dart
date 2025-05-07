@@ -20,11 +20,16 @@ import '../widgets/check_box_widget.dart';
 import 'new_checklist_view.dart';
 
 class DiveChecklistView extends StatefulWidget {
-  const DiveChecklistView({super.key, required this.checkListElement, required this.checklist});
+  const DiveChecklistView({
+    super.key,
+    required this.checkListElement,
+    required this.checklist,
+  });
   final ChecklistElement checkListElement;
   final Checklist checklist;
 
-  static Route route(ChecklistElement checkListElement, Checklist checklist) => MaterialPageRoute(
+  static Route route(ChecklistElement checkListElement, Checklist checklist) =>
+      MaterialPageRoute(
         builder: (context) => DiveChecklistView(
           checkListElement: checkListElement,
           checklist: checklist,
@@ -112,8 +117,6 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
                       Navigator.pop(context);
                     }
                   },
-                  textColor: Colors.white,
-                  color: Colors.black,
                 ).center,
               ),
             ],
@@ -125,9 +128,11 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
 
   Future<void> _captureAndShare() async {
     try {
-      RenderRepaintBoundary boundary = widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      RenderRepaintBoundary boundary =
+          widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       ui.Image image = await boundary.toImage(pixelRatio: 10);
-      ByteData? byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      ByteData? byteData =
+          await image.toByteData(format: ui.ImageByteFormat.png);
       Uint8List pngBytes = byteData!.buffer.asUint8List();
       final tempDir = await getTemporaryDirectory();
       final tempPath = '${tempDir.path}/screenshot.png';
@@ -140,9 +145,11 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
 
   Future<void> shareImages(List<String> images) async {
     try {
-      SharePlus.instance.share(ShareParams(
-        files: images.map((e) => XFile(e)).toList(),
-      ),);
+      SharePlus.instance.share(
+        ShareParams(
+          files: images.map((e) => XFile(e)).toList(),
+        ),
+      );
     } catch (e) {
       log('Error while sharing images $e');
     }
@@ -171,7 +178,8 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
               return CheckBoxWidget(
                 key: UniqueKey(),
                 onChanged: (bool value) {
-                  checkListElement.items[checkListElement.items.indexOf(e)].isChecked = value;
+                  checkListElement.items[checkListElement.items.indexOf(e)]
+                      .isChecked = value;
                   setState(() {});
                 },
                 text: e.name,
@@ -233,7 +241,13 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
 
                 await Future.delayed(const Duration(milliseconds: 10));
                 if (context.mounted) {
-                  Navigator.push(context, NewChecklistView.route(checkListElement, TemplateType.existingChecklist));
+                  Navigator.push(
+                    context,
+                    NewChecklistView.route(
+                      checkListElement,
+                      TemplateType.existingChecklist,
+                    ),
+                  );
                 }
               },
             ),

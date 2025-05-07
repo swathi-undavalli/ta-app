@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_bar.dart';
 import '../../../../core/widgets/app_button.dart';
@@ -56,7 +57,11 @@ class EditPaymentsView extends StatelessWidget {
     );
   }
 
-  Widget buildTransactions({required BuildContext context, required PaymentModel payment, int? index}) {
+  Widget buildTransactions({
+    required BuildContext context,
+    required PaymentModel payment,
+    int? index,
+  }) {
     DateTime now = DateTime.now();
     return Stack(
       children: [
@@ -96,17 +101,20 @@ class EditPaymentsView extends StatelessWidget {
                     now.year == payment.time!.year)
                   Text(
                     "Today - ${DateFormat("hh:mm a").format(payment.time!)}",
-                    style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+                    style:
+                        TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
                   )
                 else if (payment.time != null)
                   Text(
                     DateFormat('EEE dd MMM yy - hh:mm a').format(payment.time!),
-                    style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+                    style:
+                        TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
                   )
                 else
                   Text(
                     'Initial Deposit',
-                    style: TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
+                    style:
+                        TextStyle(fontSize: 10, color: AppColors.text.darkgrey),
                   ),
               ],
             ),
@@ -118,10 +126,14 @@ class EditPaymentsView extends StatelessWidget {
             children: [
               GestureDetector(
                 onTap: () {
-                  logic.controller.paymentTED.text = payment.amount!.round().toString();
-                  logic.controller.paymentModeTED.text = payment.paymentMode.toString();
-                  logic.controller.receiptNoTED.text = payment.reciptNo.toString();
-                  logic.controller.referenceNoTED.text = payment.referenceNo.toString();
+                  logic.controller.paymentTED.text =
+                      payment.amount!.round().toString();
+                  logic.controller.paymentModeTED.text =
+                      payment.paymentMode.toString();
+                  logic.controller.receiptNoTED.text =
+                      payment.reciptNo.toString();
+                  logic.controller.referenceNoTED.text =
+                      payment.referenceNo.toString();
                   Get.defaultDialog(
                     contentPadding: const EdgeInsets.only(
                       left: 30,
@@ -191,7 +203,8 @@ class EditPaymentsView extends StatelessWidget {
                         return Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            AppButton.miniText(
+                            AppButton.miniFlat(
+                              isSecondary: true,
                               text: 'Cancel',
                               onTap: () {
                                 Navigator.pop(context);
@@ -200,27 +213,40 @@ class EditPaymentsView extends StatelessWidget {
                             AppButton.miniFlat(
                               text: 'OK',
                               onTap: () async {
-                                logic.controller.bookingModel!.payments![index!].amount =
-                                    double.parse(logic.controller.paymentTED.text);
-                                logic.controller.bookingModel!.payments![index].paymentMode =
+                                logic.controller.bookingModel!.payments![index!]
+                                    .amount = double.parse(
+                                  logic.controller.paymentTED.text,
+                                );
+                                logic.controller.bookingModel!.payments![index]
+                                        .paymentMode =
                                     logic.controller.paymentModeTED.text;
-                                logic.controller.bookingModel!.payments![index].reciptNo =
+                                logic.controller.bookingModel!.payments![index]
+                                        .reciptNo =
                                     logic.controller.receiptNoTED.text;
-                                logic.controller.bookingModel!.payments![index].referenceNo =
+                                logic.controller.bookingModel!.payments![index]
+                                        .referenceNo =
                                     logic.controller.referenceNoTED.text;
-                                logic.controller.bookingModel!.payments![index].collectedBy = currentEmployee!.name;
-                                logic.controller.bookingModel!.payments![index].time = DateTime.now();
+                                logic.controller.bookingModel!.payments![index]
+                                    .collectedBy = currentEmployee!.name;
+                                logic.controller.bookingModel!.payments![index]
+                                    .time = DateTime.now();
                                 await FirebaseFirestore.instance
                                     .collection('bookings')
                                     .doc(logic.controller.bookingModel!.id)
-                                    .set(logic.controller.bookingModel!.toMap());
+                                    .set(
+                                      logic.controller.bookingModel!.toMap(),
+                                    );
                                 if (context.mounted) {
                                   Navigator.pop(context);
                                   Navigator.pop(context);
                                 }
-                                BookingsCalenderWidgetLogicNew bookingCalenderLogicNew =
+                                BookingsCalenderWidgetLogicNew
+                                    bookingCalenderLogicNew =
                                     BookingsCalenderWidgetLogicNew();
-                                bookingCalenderLogicNew.onDateSelected(bookingCalenderLogicNew.controller.selectedDate);
+                                bookingCalenderLogicNew.onDateSelected(
+                                  bookingCalenderLogicNew
+                                      .controller.selectedDate,
+                                );
                               },
                             ),
                           ],
@@ -286,7 +312,9 @@ class EditPaymentsView extends StatelessWidget {
                 child: DropdownButton(
                   underline: const SizedBox(),
                   isExpanded: true,
-                  value: controller.paymentModeTED.text.isNotEmpty ? controller.paymentModeTED.text : null,
+                  value: controller.paymentModeTED.text.isNotEmpty
+                      ? controller.paymentModeTED.text
+                      : null,
                   onChanged: (dynamic mode) {
                     if (mode == 'UPI') {
                       return;
@@ -299,7 +327,12 @@ class EditPaymentsView extends StatelessWidget {
                       value: newMode,
                       child: Text(
                         newMode,
-                        style: TextStyle(fontSize: 10, color: (newMode == 'UPI') ? Colors.black12 : Colors.black),
+                        style: TextStyle(
+                          fontSize: 10,
+                          color: (newMode == 'UPI')
+                              ? Colors.black12
+                              : Colors.black,
+                        ),
                       ),
                     );
                   }).toList(),

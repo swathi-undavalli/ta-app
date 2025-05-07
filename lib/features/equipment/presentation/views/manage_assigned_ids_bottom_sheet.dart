@@ -73,7 +73,11 @@ class _AddTagBottomSheetState extends State<AddTagBottomSheet> {
                 children: [
                   Text(
                     _isEditMode ? 'Edit tag' : 'Add new tag',
-                    style: const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                      fontSize: 18,
+                      color: Colors.black,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const Spacer(),
                   IconButton(
@@ -109,27 +113,20 @@ class _AddTagBottomSheetState extends State<AddTagBottomSheet> {
                 controller: _remarksTED,
               ),
               Spacing.h50,
-              AppButton(
+              AppButton.flat(
                 height: 50,
-                borderRadius: 10,
                 width: Screen.width - 50,
-                textColor: Colors.white,
                 text: 'Cancel',
-                fontSize: 14,
+                isSecondary: true,
                 onTap: () {
                   Navigator.pop(context);
                 },
-                bgColor: Colors.black.withOpacity(0.4),
-                splashColor: Colors.white.withOpacity(0.1),
               ),
               Spacing.h8,
-              AppButton(
+              AppButton.flat(
                 height: 50,
-                borderRadius: 10,
                 width: Screen.width - 50,
-                textColor: Colors.white,
                 text: 'Save',
-                fontSize: 14,
                 onTap: () {
                   if (_idTED.text.trim().isNotEmpty) {
                     _tags.add(
@@ -142,18 +139,13 @@ class _AddTagBottomSheetState extends State<AddTagBottomSheet> {
                   }
                   Navigator.pop(context, _tags);
                 },
-                bgColor: Colors.black,
-                splashColor: Colors.white.withOpacity(0.1),
               ),
               Spacing.h8,
               if (!_isEditMode)
-                AppButton(
+                AppButton.flat(
                   height: 50,
-                  borderRadius: 10,
                   width: Screen.width - 50,
-                  textColor: Colors.white,
                   text: 'Save & add new tag',
-                  fontSize: 14,
                   onTap: () {
                     if (_idTED.text.trim().isNotEmpty) {
                       _tags.add(
@@ -168,8 +160,6 @@ class _AddTagBottomSheetState extends State<AddTagBottomSheet> {
                       _remarksTED.clear();
                     }
                   },
-                  bgColor: Colors.black,
-                  splashColor: Colors.white.withOpacity(0.1),
                 ),
               Spacing.h8,
             ],
@@ -182,7 +172,10 @@ class _AddTagBottomSheetState extends State<AddTagBottomSheet> {
 
 class UpperCaseTextFormatter extends TextInputFormatter {
   @override
-  TextEditingValue formatEditUpdate(TextEditingValue oldValue, TextEditingValue newValue) {
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
     return TextEditingValue(
       text: newValue.text.toUpperCase(),
       selection: newValue.selection,

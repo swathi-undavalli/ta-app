@@ -26,7 +26,11 @@ class DiveLogBottomSheet extends StatefulWidget {
   final Booking bookingModel;
   final DateTime selectedDate;
 
-  static void show(BuildContext context, {required Booking bookingModel, required DateTime date}) async {
+  static void show(
+    BuildContext context, {
+    required Booking bookingModel,
+    required DateTime date,
+  }) async {
     await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -183,7 +187,8 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
         BuildContext context,
         AsyncSnapshot<QuerySnapshot> snapshot,
       ) {
-        if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.hasError ||
+            snapshot.connectionState == ConnectionState.waiting) {
           return SizedBox(
             height: 15,
             width: 15,
@@ -210,8 +215,10 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
               buildHeadings(),
               Spacing.h5,
               ...data.map((d) {
-                DiveLogModel diveLogModel = DiveLogModel.fromMap(d.data() as Map<String, dynamic>?);
-                return buildLog(diveLogModel, index).paddingSymmetric(vertical: 10);
+                DiveLogModel diveLogModel =
+                    DiveLogModel.fromMap(d.data() as Map<String, dynamic>?);
+                return buildLog(diveLogModel, index)
+                    .paddingSymmetric(vertical: 10);
               }),
             ],
           );
@@ -234,17 +241,28 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
 
     return Row(
       children: [
-        buildText(text: DateFormat('dd-MM-yy').format(diveLogModel.timeIn.toDate()).toString(), width: 43),
+        buildText(
+          text: DateFormat('dd-MM-yy')
+              .format(diveLogModel.timeIn.toDate())
+              .toString(),
+          width: 43,
+        ),
         buildText(text: diveLogModel.instructor.name, width: 45),
         buildText(text: '  ${getCourse(diveLogModel.course)}', width: 32),
         buildText(text: diveLogModel.diveSite, width: 38),
         buildText(
-          text: '${tankType(diveLogModel.tankType)}${diveLogModel.tankNo.toString()}',
+          text:
+              '${tankType(diveLogModel.tankType)}${diveLogModel.tankNo.toString()}',
           width: 28,
         ),
         buildText(text: diveLogModel.bottomTime.toString(), width: 32),
         buildText(text: diveLogModel.maxDepth.toString(), width: 28),
-        buildText(text: DateFormat('hh:mm').format(diveLogModel.timeIn.toDate()).toString(), width: 28),
+        buildText(
+          text: DateFormat('hh:mm')
+              .format(diveLogModel.timeIn.toDate())
+              .toString(),
+          width: 28,
+        ),
         Spacing.w10,
         buildEditDeleteButtons(
           onTap: () {
@@ -290,7 +308,8 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
             style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
           ),
           actions: <Widget>[
-            AppButton.miniText(
+            AppButton.miniFlat(
+              isSecondary: true,
               text: 'Cancel',
               onTap: () {
                 Navigator.pop(context);
@@ -312,7 +331,10 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
     );
   }
 
-  Widget buildEditDeleteButtons({required Function onTap, required IconData icon}) {
+  Widget buildEditDeleteButtons({
+    required Function onTap,
+    required IconData icon,
+  }) {
     return InkWell(
       onTap: () {
         onTap();
@@ -346,7 +368,11 @@ class _DiveLogBottomSheetState extends State<DiveLogBottomSheet> {
     );
   }
 
-  Widget buildText({required String text, double width = 50, FontWeight fontWeight = FontWeight.normal}) {
+  Widget buildText({
+    required String text,
+    double width = 50,
+    FontWeight fontWeight = FontWeight.normal,
+  }) {
     return SizedBox(
       width: width,
       child: Text(

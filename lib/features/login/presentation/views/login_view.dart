@@ -32,9 +32,10 @@ class _LoginViewState extends State<LoginView> {
     return Scaffold(
       backgroundColor: AppColors.background.lightBlue,
       floatingActionButton: buildFloatingActionButton(),
-      floatingActionButtonLocation: (MediaQuery.of(context).viewInsets.bottom == 0)
-          ? (FloatingActionButtonLocation.centerFloat)
-          : (FloatingActionButtonLocation.endFloat),
+      floatingActionButtonLocation:
+          (MediaQuery.of(context).viewInsets.bottom == 0)
+              ? (FloatingActionButtonLocation.centerFloat)
+              : (FloatingActionButtonLocation.endFloat),
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.only(left: 20, right: 20),
@@ -121,8 +122,6 @@ class _LoginViewState extends State<LoginView> {
             onTap: () {
               logic.resendOTP(context);
             },
-            color: AppColors.background.black,
-            textColor: AppColors.text.white,
           );
         }
         return const SizedBox();
@@ -149,7 +148,8 @@ class _LoginViewState extends State<LoginView> {
                 activeColor: AppColors.background.lightBlue,
                 inactiveColor: const Color(0x33000000),
                 inactiveFillColor: Theme.of(context).cardColor,
-                selectedFillColor: AppColors.background.lightBlue.withOpacity(0.3),
+                selectedFillColor:
+                    AppColors.background.lightBlue.withOpacity(0.3),
               ),
               animationDuration: const Duration(milliseconds: 300),
               backgroundColor: Theme.of(context).scaffoldBackgroundColor,

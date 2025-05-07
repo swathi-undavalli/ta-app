@@ -40,10 +40,12 @@ class MarketingContentEntryBottomSheet extends StatefulWidget {
   }
 
   @override
-  State<MarketingContentEntryBottomSheet> createState() => _MarketingContentEntryBottomSheetState();
+  State<MarketingContentEntryBottomSheet> createState() =>
+      _MarketingContentEntryBottomSheetState();
 }
 
-class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntryBottomSheet> {
+class _MarketingContentEntryBottomSheetState
+    extends State<MarketingContentEntryBottomSheet> {
   late TextEditingController urlTED;
   late TextEditingController nameTED;
   late TextEditingController delayTED;
@@ -59,7 +61,9 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
     super.initState();
     urlTED = TextEditingController(text: widget.marketingElement?.url ?? '');
     delayTED = TextEditingController(
-      text: (widget.marketingElement?.duration != null) ? widget.marketingElement?.duration.toString() : '',
+      text: (widget.marketingElement?.duration != null)
+          ? widget.marketingElement?.duration.toString()
+          : '',
     );
     nameTED = TextEditingController(text: widget.marketingElement?.name);
     if (widget.marketingElement != null) {
@@ -70,7 +74,8 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(30),
       ),
@@ -123,7 +128,10 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
         if (isValid()) {
           showLoading = true;
           setState(() {});
-          DocumentSnapshot document = await FirebaseFirestore.instance.collection('marketing').doc('marketing').get();
+          DocumentSnapshot document = await FirebaseFirestore.instance
+              .collection('marketing')
+              .doc('marketing')
+              .get();
           Map<String, dynamic> data = document.data() as Map<String, dynamic>;
 
           Marketing marketing = Marketing.fromJson(data);
@@ -141,7 +149,10 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
           } else {
             marketing.marketingElements?.add(marketingElement);
           }
-          await FirebaseFirestore.instance.collection('marketing').doc('marketing').set(marketing.toJson());
+          await FirebaseFirestore.instance
+              .collection('marketing')
+              .doc('marketing')
+              .set(marketing.toJson());
 
           showLoading = false;
           setState(() {});
@@ -152,8 +163,6 @@ class _MarketingContentEntryBottomSheetState extends State<MarketingContentEntry
         setState(() {});
       },
       text: 'Submit',
-      color: Colors.black,
-      textColor: Colors.white,
     );
   }
 

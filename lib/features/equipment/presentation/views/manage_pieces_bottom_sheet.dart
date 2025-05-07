@@ -25,7 +25,8 @@ class ManagePiecesBottomSheet extends StatefulWidget {
   }
 
   @override
-  State<ManagePiecesBottomSheet> createState() => _ManagePiecesBottomSheetState();
+  State<ManagePiecesBottomSheet> createState() =>
+      _ManagePiecesBottomSheetState();
 }
 
 class _ManagePiecesBottomSheetState extends State<ManagePiecesBottomSheet> {
@@ -47,7 +48,10 @@ class _ManagePiecesBottomSheetState extends State<ManagePiecesBottomSheet> {
         children: [
           Expanded(
             child: FutureBuilder(
-              future: context.read<EquipmentProvider>().repository.fetchEquipmentPieces(
+              future: context
+                  .read<EquipmentProvider>()
+                  .repository
+                  .fetchEquipmentPieces(
                     currentRental: null,
                     equipmentItemId: widget.item.id,
                   ),
@@ -70,7 +74,11 @@ class _ManagePiecesBottomSheetState extends State<ManagePiecesBottomSheet> {
                           children: [
                             Text(
                               'Select Ids of ${widget.item.name}',
-                              style: const TextStyle(fontSize: 18, color: Colors.black, fontWeight: FontWeight.bold),
+                              style: const TextStyle(
+                                fontSize: 18,
+                                color: Colors.black,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                             const Spacer(),
                             IconButton(
@@ -88,7 +96,8 @@ class _ManagePiecesBottomSheetState extends State<ManagePiecesBottomSheet> {
                         Spacing.h12,
                         ...(snapshot.data ?? []).map(
                           (piece) {
-                            bool isSelected = provider.selectedPieces.contains(piece);
+                            bool isSelected =
+                                provider.selectedPieces.contains(piece);
 
                             return InkWell(
                               onTap: () {
@@ -99,8 +108,12 @@ class _ManagePiecesBottomSheetState extends State<ManagePiecesBottomSheet> {
                                   borderRadius: BorderRadius.circular(8),
                                   color: isSelected
                                       ? AppColors.background.lightSkyBlue
-                                      : AppColors.background.lightSkyBlue.withOpacity(0.2),
-                                  border: Border.all(color: AppColors.background.lightSkyBlue.withOpacity(0.5)),
+                                      : AppColors.background.lightSkyBlue
+                                          .withOpacity(0.2),
+                                  border: Border.all(
+                                    color: AppColors.background.lightSkyBlue
+                                        .withOpacity(0.5),
+                                  ),
                                 ),
                                 // height: 20,
                                 width: Screen.width,
@@ -109,7 +122,10 @@ class _ManagePiecesBottomSheetState extends State<ManagePiecesBottomSheet> {
                                   children: [
                                     Text(
                                       piece.tag.id,
-                                      style: const TextStyle(color: Colors.black, fontSize: 16),
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontSize: 16,
+                                      ),
                                     ).paddingHorizontal(8),
                                   ],
                                 ).paddingAll(8),
@@ -125,9 +141,7 @@ class _ManagePiecesBottomSheetState extends State<ManagePiecesBottomSheet> {
             ),
           ),
           AppButton.flat(
-            textColor: Colors.white,
             text: 'Save',
-            color: Colors.black,
             onTap: () {
               Navigator.pop(context);
             },

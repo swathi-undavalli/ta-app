@@ -10,12 +10,20 @@ import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/time_picker.dart';
 
 class RoasterTimeEditorBs extends StatefulWidget {
-  const RoasterTimeEditorBs({super.key, this.selectedTimeIn, this.selectedTmeOut});
+  const RoasterTimeEditorBs({
+    super.key,
+    this.selectedTimeIn,
+    this.selectedTmeOut,
+  });
 
   final DateTime? selectedTimeIn;
   final DateTime? selectedTmeOut;
 
-  static show(BuildContext context, DateTime? selectedTmeIn, DateTime? selectedTmeOut) async {
+  static show(
+    BuildContext context,
+    DateTime? selectedTmeIn,
+    DateTime? selectedTmeOut,
+  ) async {
     List<DateTime?>? data = await showModalBottomSheet(
       context: context,
       isScrollControlled: true,
@@ -95,8 +103,9 @@ class _RoasterTimeEditorBsState extends State<RoasterTimeEditorBs> {
           Spacing.h30,
           Row(
             children: [
-              AppButton.miniText(
+              AppButton.miniFlat(
                 text: 'Cancel',
+                isSecondary: true,
                 onTap: () {
                   Navigator.pop(context);
                 },
@@ -148,7 +157,8 @@ class _RoasterTimeEditorBsState extends State<RoasterTimeEditorBs> {
             child: Center(
               child: Text(
                 TimePicker.getFormattedTime(time) ?? 'No time selected',
-                style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
               ),
             ),
           ),
@@ -202,7 +212,10 @@ class _RoasterTimeEditorBsState extends State<RoasterTimeEditorBs> {
         IconButton(
           icon: const Icon(Icons.close),
           onPressed: () async {
-            Navigator.pop(context, [widget.selectedTimeIn, widget.selectedTmeOut  ]);
+            Navigator.pop(
+              context,
+              [widget.selectedTimeIn, widget.selectedTmeOut],
+            );
           },
         ),
       ],

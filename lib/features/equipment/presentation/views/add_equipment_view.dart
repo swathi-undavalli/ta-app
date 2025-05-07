@@ -1,8 +1,10 @@
 import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:temple_ui_tools/temple_ui_tools.dart';
 import 'package:temple_ui_tools/utils/utils.dart';
+
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/app_button.dart';
 import '../../../../core/widgets/field_error.dart';
@@ -46,7 +48,11 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
     _equipmentNameTED = TextEditingController(text: widget.equipmentItem?.name);
     _selectedCategory = widget.equipmentItem?.category;
     if (_isEditMode) {
-      context.read<EquipmentProvider>().repository.getEquipmentPieces(widget.equipmentItem!.id).then((pieces) {
+      context
+          .read<EquipmentProvider>()
+          .repository
+          .getEquipmentPieces(widget.equipmentItem!.id)
+          .then((pieces) {
         _pieces = pieces;
         _assignedTags = pieces.map((piece) {
           return piece.tag;
@@ -64,11 +70,15 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
       backgroundColor: AppColors.background.black,
       appBar: EquipmentAppBar(
         title: _isEditMode ? 'Edit Equipment' : 'Add Equipment',
-        description: _isEditMode ? 'Update ${widget.equipmentItem?.name}' : 'Add new equipment',
+        description: _isEditMode
+            ? 'Update ${widget.equipmentItem?.name}'
+            : 'Add new equipment',
         action: _isEditMode
             ? IconButton(
                 onPressed: () async {
-                  await context.read<EquipmentProvider>().deleteEquipmentItem(widget.equipmentItem!);
+                  await context
+                      .read<EquipmentProvider>()
+                      .deleteEquipmentItem(widget.equipmentItem!);
                   if (!context.mounted) return;
                   Navigator.pop(context);
                 },
@@ -86,9 +96,13 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
                   onChanged: (EquipmentCategory? category) async {
                     if (category?.name == 'Add / Edit') {
                       List<EquipmentCategory> updatedCategories =
-                          await CategorySelectorBottomSheet.show(context, context.read<EquipmentProvider>().categories);
+                          await CategorySelectorBottomSheet.show(
+                        context,
+                        context.read<EquipmentProvider>().categories,
+                      );
                       if (!context.mounted) return;
-                      context.read<EquipmentProvider>().categories = updatedCategories;
+                      context.read<EquipmentProvider>().categories =
+                          updatedCategories;
                       return;
                     }
                     setState(() {
@@ -142,7 +156,8 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
                       children: [
                         ImageUploader(
                           initialImage: widget.equipmentItem?.photo,
-                          onImageUploaded: (String imageUrl) => _uploadedImage = imageUrl,
+                          onImageUploaded: (String imageUrl) =>
+                              _uploadedImage = imageUrl,
                         ),
                         FieldError(_pickedImageError),
                       ],
@@ -153,8 +168,6 @@ class _AddEquipmentViewState extends State<AddEquipmentView> {
                 AppButton.flat(
                   text: (widget.equipmentItem == null) ? 'Submit' : 'Update',
                   onTap: onSaveOrUpdate,
-                  color: Colors.black,
-                  textColor: Colors.white,
                 ).center,
               ],
             ).paddingAll(20).scrollable,
@@ -234,7 +247,8 @@ class _LoadingAnimation extends StatelessWidget {
     return Selector<EquipmentProvider, EquipmentStatus>(
       selector: (context, provider) => provider.status,
       builder: (context, status, child) {
-        if (status == EquipmentStatus.loaded || status == EquipmentStatus.error) return const SizedBox();
+        if (status == EquipmentStatus.loaded || status == EquipmentStatus.error)
+          return const SizedBox();
         return Container(
           height: Screen.height,
           width: Screen.width,
@@ -370,13 +384,18 @@ class _EquipmentCategorySelector extends StatefulWidget {
   final Function(EquipmentCategory? category) onChanged;
   final EquipmentCategory? selectedCategory;
 
-  const _EquipmentCategorySelector({required this.onChanged, required this.selectedCategory});
+  const _EquipmentCategorySelector({
+    required this.onChanged,
+    required this.selectedCategory,
+  });
 
   @override
-  State<_EquipmentCategorySelector> createState() => _EquipmentCategorySelectorState();
+  State<_EquipmentCategorySelector> createState() =>
+      _EquipmentCategorySelectorState();
 }
 
-class _EquipmentCategorySelectorState extends State<_EquipmentCategorySelector> {
+class _EquipmentCategorySelectorState
+    extends State<_EquipmentCategorySelector> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -426,7 +445,9 @@ class _EquipmentCategorySelectorState extends State<_EquipmentCategorySelector> 
                   style: TextStyle(
                     fontSize: 14,
                     fontFamily: AppFonts.nunito,
-                    color: (value.name == 'Add / Edit') ? Colors.blue : Colors.black,
+                    color: (value.name == 'Add / Edit')
+                        ? Colors.blue
+                        : Colors.black,
                   ),
                 ),
               );

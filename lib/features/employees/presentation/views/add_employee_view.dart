@@ -23,7 +23,8 @@ class AddEmployeeView extends StatefulWidget {
   const AddEmployeeView({super.key, this.employeeArgument});
 
   static Route route(Employee? employeeArgument) => MaterialPageRoute(
-        builder: (context) => AddEmployeeView(employeeArgument: employeeArgument),
+        builder: (context) =>
+            AddEmployeeView(employeeArgument: employeeArgument),
       );
 
   @override
@@ -90,41 +91,62 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
   void initState() {
     super.initState();
 
-    firstNameTED = TextEditingController(text: widget.employeeArgument?.firstName);
-    lastNameTED = TextEditingController(text: widget.employeeArgument?.lastName);
-    nickNameTED = TextEditingController(text: widget.employeeArgument?.nickName);
-    phoneNumberTED = TextEditingController(text: widget.employeeArgument?.phoneNumber);
-    countryCodeTED = TextEditingController(text: widget.employeeArgument?.countryCode);
-    agencyIdTED = TextEditingController(text: widget.employeeArgument?.agencyId);
+    firstNameTED =
+        TextEditingController(text: widget.employeeArgument?.firstName);
+    lastNameTED =
+        TextEditingController(text: widget.employeeArgument?.lastName);
+    nickNameTED =
+        TextEditingController(text: widget.employeeArgument?.nickName);
+    phoneNumberTED =
+        TextEditingController(text: widget.employeeArgument?.phoneNumber);
+    countryCodeTED =
+        TextEditingController(text: widget.employeeArgument?.countryCode);
+    agencyIdTED =
+        TextEditingController(text: widget.employeeArgument?.agencyId);
     roleTED = TextEditingController(text: widget.employeeArgument?.role);
     genderTED = TextEditingController(text: widget.employeeArgument?.gender);
     employeeIdTED = TextEditingController(text: widget.employeeArgument?.id);
     countryIsoCode = widget.employeeArgument?.countryIsoCode ?? 'IN';
 
     viewBookings = widget.employeeArgument?.accessLevels?.viewBookings ?? false;
-    weatherReport = widget.employeeArgument?.accessLevels?.weatherReport ?? false;
-    createBookings = widget.employeeArgument?.accessLevels?.createBookings ?? false;
+    weatherReport =
+        widget.employeeArgument?.accessLevels?.weatherReport ?? false;
+    createBookings =
+        widget.employeeArgument?.accessLevels?.createBookings ?? false;
     editBookings = widget.employeeArgument?.accessLevels?.editBookings ?? false;
-    editActivityPrices = widget.employeeArgument?.accessLevels?.editActivityPrices ?? false;
+    editActivityPrices =
+        widget.employeeArgument?.accessLevels?.editActivityPrices ?? false;
     addActivity = widget.employeeArgument?.accessLevels?.addActivity ?? false;
-    editEmployees = widget.employeeArgument?.accessLevels?.editEmployees ?? false;
-    personalProfileEdit = widget.employeeArgument?.accessLevels?.personalProfileEdit ?? false;
-    createEmployees = widget.employeeArgument?.accessLevels?.createEmployees ?? false;
-    viewEmployees = widget.employeeArgument?.accessLevels?.viewEmployees ?? false;
-    notifications = widget.employeeArgument?.accessLevels?.notifications ?? false;
+    editEmployees =
+        widget.employeeArgument?.accessLevels?.editEmployees ?? false;
+    personalProfileEdit =
+        widget.employeeArgument?.accessLevels?.personalProfileEdit ?? false;
+    createEmployees =
+        widget.employeeArgument?.accessLevels?.createEmployees ?? false;
+    viewEmployees =
+        widget.employeeArgument?.accessLevels?.viewEmployees ?? false;
+    notifications =
+        widget.employeeArgument?.accessLevels?.notifications ?? false;
     boatPlan = widget.employeeArgument?.accessLevels?.boatPlan ?? false;
-    marketingGallery = widget.employeeArgument?.accessLevels?.marketingGallery ?? false;
+    marketingGallery =
+        widget.employeeArgument?.accessLevels?.marketingGallery ?? false;
     offers = widget.employeeArgument?.accessLevels?.offers ?? false;
-    processCertificate = widget.employeeArgument?.accessLevels?.processCertificate ?? false;
+    processCertificate =
+        widget.employeeArgument?.accessLevels?.processCertificate ?? false;
     addEquipment = widget.employeeArgument?.accessLevels?.addEquipment ?? false;
-    viewEquipment = widget.employeeArgument?.accessLevels?.viewEquipment ?? false;
-    approveEquipment = widget.employeeArgument?.accessLevels?.approveEquipment ?? false;
+    viewEquipment =
+        widget.employeeArgument?.accessLevels?.viewEquipment ?? false;
+    approveEquipment =
+        widget.employeeArgument?.accessLevels?.approveEquipment ?? false;
     generalInfo = widget.employeeArgument?.accessLevels?.generalInfo ?? false;
     roster = widget.employeeArgument?.accessLevels?.roster ?? false;
     logs = widget.employeeArgument?.accessLevels?.logs ?? false;
-    upcomingEvents = widget.employeeArgument?.accessLevels?.upcomingEvents ?? false;
-    coastGuardSlip = widget.employeeArgument?.accessLevels?.coastGuardSlip ?? false;
-    showPaymentDetails = widget.employeeArgument?.accessLevels?.showPaymentDetails ?? false;
+    upcomingEvents =
+        widget.employeeArgument?.accessLevels?.upcomingEvents ?? false;
+    coastGuardSlip =
+        widget.employeeArgument?.accessLevels?.coastGuardSlip ?? false;
+    showPaymentDetails =
+        widget.employeeArgument?.accessLevels?.showPaymentDetails ?? false;
   }
 
   @override
@@ -619,8 +641,7 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
     return Center(
       child: AppButton.flat(
         text: 'Cancel',
-        textColor: AppColors.text.black,
-        color: AppColors.background.white,
+        isSecondary: true,
         onTap: () {
           Navigator.pop(context);
           reset();
@@ -633,8 +654,6 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
     return Center(
       child: AppButton.flat(
         text: (isEditMode) ? 'Update' : 'Submit',
-        textColor: AppColors.text.white,
-        color: AppColors.background.black,
         onTap: () {
           onSubmitPressed();
         },
@@ -653,11 +672,18 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
       });
 
       if (isEditMode == false) {
-        var data = await FirebaseFirestore.instance.collection('counter').doc('count').get();
+        var data = await FirebaseFirestore.instance
+            .collection('counter')
+            .doc('count')
+            .get();
         CounterModel counterModel = CounterModel.fromMap(data.data() ?? {});
         if (int.parse(employeeIdTED.text) < 900) {
-          counterModel = counterModel.copyWith(employee: (counterModel.employee! + 1));
-          await FirebaseFirestore.instance.collection('counter').doc('count').set(counterModel.toMap());
+          counterModel =
+              counterModel.copyWith(employee: (counterModel.employee! + 1));
+          await FirebaseFirestore.instance
+              .collection('counter')
+              .doc('count')
+              .set(counterModel.toMap());
         }
       }
 
@@ -699,10 +725,17 @@ class _AddEmployeeViewState extends State<AddEmployeeView> {
           showPaymentDetails: showPaymentDetails,
         ),
       );
-      await FirebaseFirestore.instance.collection('employees').doc(employee.id).set(employee.toMap());
+      await FirebaseFirestore.instance
+          .collection('employees')
+          .doc(employee.id)
+          .set(employee.toMap());
 
-      LogModel logModel = LogModel(type: LogType.addEmployee, employeeName: employee.name);
-      await FirebaseFirestore.instance.collection('logs').doc().set(logModel.toMap());
+      LogModel logModel =
+          LogModel(type: LogType.addEmployee, employeeName: employee.name);
+      await FirebaseFirestore.instance
+          .collection('logs')
+          .doc()
+          .set(logModel.toMap());
 
       Fluttertoast.showToast(msg: (isEditMode) ? 'Updated' : 'Saved');
 

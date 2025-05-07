@@ -334,8 +334,6 @@ class _EventEntryBottomSheetState extends State<EventEntryBottomSheet> {
         return;
       },
       text: 'Submit',
-      color: Colors.black,
-      textColor: Colors.white,
     );
   }
 
