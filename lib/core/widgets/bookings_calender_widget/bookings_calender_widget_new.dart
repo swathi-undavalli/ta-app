@@ -50,14 +50,17 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     logic.controller.calenderType = calenderType;
     logic.getDates();
     if (showDetails) {
-      EmployeeAccess.run(function: autoCenterDaySelector, access: AccessRights.viewBookings);
+      EmployeeAccess.run(
+          function: autoCenterDaySelector, access: AccessRights.viewBookings);
     } else {
-      EmployeeAccess.run(function: scrollToSelectedDate, access: AccessRights.viewBookings);
+      EmployeeAccess.run(
+          function: scrollToSelectedDate, access: AccessRights.viewBookings);
     }
   }
 
   scrollToIndex(int index) {
-    autoScrollController.scrollToIndex(index, preferPosition: AutoScrollPosition.middle);
+    autoScrollController.scrollToIndex(index,
+        preferPosition: AutoScrollPosition.middle);
   }
 
   final BookingsCalenderWidgetLogicNew logic = BookingsCalenderWidgetLogicNew();
@@ -91,10 +94,13 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                 StreamBuilder(
                   stream: FirebaseFirestore.instance
                       .collection('dailyBoats')
-                      .doc(DateFormat('dd-MM-yyyy').format(controller.selectedDate))
+                      .doc(DateFormat('dd-MM-yyyy')
+                          .format(controller.selectedDate))
                       .snapshots(),
-                  builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-                    if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
+                  builder: (BuildContext context,
+                      AsyncSnapshot<DocumentSnapshot> snapshot) {
+                    if (snapshot.hasError ||
+                        snapshot.connectionState == ConnectionState.waiting) {
                       return const SizedBox(
                         height: 15,
                         width: 15,
@@ -112,7 +118,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                       );
                     }
 
-                    BoatsModel? boatsModel = BoatsModel.fromMap(data as Map<String, dynamic>);
+                    BoatsModel? boatsModel =
+                        BoatsModel.fromMap(data as Map<String, dynamic>);
 
                     if ((boatsModel.boats ?? []).isEmpty) {
                       return const Text(
@@ -139,7 +146,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                           .map(
                             (Boat boat) => InkWell(
                               onLongPress: () async {
-                                BoatsModel? boatsModel = await BoatDetailsBottomSheet.show(
+                                BoatsModel? boatsModel =
+                                    await BoatDetailsBottomSheet.show(
                                   context,
                                   initialBoat: boat,
                                   isBoatEdit: true,
@@ -148,7 +156,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                                 if (boatsModel != null) {
                                   await FirebaseFirestore.instance
                                       .collection('dailyBoats')
-                                      .doc(DateFormat('dd-MM-yyyy').format(controller.selectedDate))
+                                      .doc(DateFormat('dd-MM-yyyy')
+                                          .format(controller.selectedDate))
                                       .set(boatsModel.toMap());
                                 }
                               },
@@ -159,20 +168,24 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                               child: Container(
                                 height: 30,
                                 margin: const EdgeInsets.all(5),
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8, vertical: 3),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(20),
-                                  color: (boat.id == controller.selectedBoat?.id)
-                                      ? AppColors.background.skyBlue
-                                      : Colors.white,
+                                  color:
+                                      (boat.id == controller.selectedBoat?.id)
+                                          ? AppColors.background.skyBlue
+                                          : Colors.white,
                                 ),
                                 child: Text(
                                   '${boat.name} @ ${boat.time}',
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontSize: FontSize.small,
-                                    color: (boat.id == controller.selectedBoat?.id &&
-                                            boat.time == controller.selectedBoat?.time)
+                                    color: (boat.id ==
+                                                controller.selectedBoat?.id &&
+                                            boat.time ==
+                                                controller.selectedBoat?.time)
                                         ? Colors.white
                                         : Colors.black,
                                   ),
@@ -341,11 +354,14 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                padding: const EdgeInsets.only(
+                    left: 20, right: 20, top: 10, bottom: 10),
                 child: Wrap(
                   spacing: 0,
                   runSpacing: 5,
-                  children: controller.timeTable.map((date) => _buildTimings(date)).toList(),
+                  children: controller.timeTable
+                      .map((date) => _buildTimings(date))
+                      .toList(),
                 ),
               ),
               if (!controller.showLoading)
@@ -365,25 +381,30 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
   }
 
   Widget _buildErrorMessage(BookingsCalenderWidgetControllerNew controller) {
-    if (controller.selectedType == FilterType.Theory && controller.theoryCountA == 0) {
+    if (controller.selectedType == FilterType.Theory &&
+        controller.theoryCountA == 0) {
       return const Text(
         'No theory sessions found',
         style: TextStyle(fontSize: 15),
       );
     }
-    if (controller.selectedType == FilterType.Pool && controller.poolCountA == 0) {
+    if (controller.selectedType == FilterType.Pool &&
+        controller.poolCountA == 0) {
       return const Text(
         'No pool sessions found',
         style: TextStyle(fontSize: 15),
       );
     }
-    if (controller.selectedType == FilterType.Dive && controller.diveCountA == 0) {
+    if (controller.selectedType == FilterType.Dive &&
+        controller.diveCountA == 0) {
       return const Text(
         'No dive sessions found',
         style: TextStyle(fontSize: 15),
       );
     }
-    if (controller.theoryCountA == 0 && controller.poolCountA == 0 && controller.diveCountA == 0) {
+    if (controller.theoryCountA == 0 &&
+        controller.poolCountA == 0 &&
+        controller.diveCountA == 0) {
       return const Text(
         'No bookings found',
         style: TextStyle(fontSize: 15),
@@ -406,7 +427,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           bookingExpansionList = controller.expansionItemModels;
         } else if (controller.selectedType == FilterType.Theory) {
           for (var element in controller.expansionItemModels) {
-            if (element.session.contains('Theory')) bookingExpansionList.add(element);
+            if (element.session.contains('Theory'))
+              bookingExpansionList.add(element);
             var count = 0;
             for (var element in bookingExpansionList) {
               count += element.pax!;
@@ -416,7 +438,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           }
         } else if (controller.selectedType == FilterType.Pool) {
           for (var element in controller.expansionItemModels) {
-            if (element.session.contains('Pool')) bookingExpansionList.add(element);
+            if (element.session.contains('Pool'))
+              bookingExpansionList.add(element);
             var count = 0;
             for (var element in bookingExpansionList) {
               count += element.pax!;
@@ -426,7 +449,8 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           }
         } else if (controller.selectedType == FilterType.Dive) {
           for (var element in controller.expansionItemModels) {
-            if (element.session.contains('Dive')) bookingExpansionList.add(element);
+            if (element.session.contains('Dive'))
+              bookingExpansionList.add(element);
             var count = 0;
             for (var element in bookingExpansionList) {
               count += element.pax!;
@@ -450,7 +474,9 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
           List<ItemModel> boatDetailsExpansionList = [];
           if (controller.selectedBoat != null) {
             for (var itemModel in bookingExpansionList) {
-              bool isIdSame = itemModel.bookingModel?.getBoatInfo(controller.selectedDate)?.id ==
+              bool isIdSame = itemModel.bookingModel
+                      ?.getBoatInfo(controller.selectedDate)
+                      ?.id ==
                   (controller.selectedBoat?.id ?? '-');
 
               if (isIdSame) {
@@ -497,8 +523,11 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
     return GetBuilder<BookingsCalenderWidgetControllerNew>(
       builder: (controller) {
         getCircleColor(BookingsCalenderWidgetControllerNew controller) {
-          if (controller.selectedDate == date) return AppColors.background.skyBlue;
-          if (highlightInvalidTime && DateTime.now().difference(date).inSeconds > 0) return AppColors.background.grey;
+          if (controller.selectedDate == date)
+            return AppColors.background.skyBlue;
+          if (highlightInvalidTime &&
+              DateTime.now().difference(date).inSeconds > 0)
+            return AppColors.background.grey;
         }
 
         Widget? num = _getEventsCount(controller, date);
@@ -506,11 +535,11 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
         if (num == null && showDetails) return const SizedBox();
         return GestureDetector(
           onTap: () {
-            if (highlightInvalidTime && DateTime.now().difference(date).inSeconds > 0) {
+            if (highlightInvalidTime &&
+                DateTime.now().difference(date).inSeconds > 0) {
               showToast('Invalid Date');
             } else {
               controller.selectedDate = date;
-              //print("Selected Date : ${controller.selectedDate}");
               logic.filterBookingsList();
               onDateTimeSelected(controller.selectedDate);
             }
@@ -525,17 +554,25 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
                   child: Container(
                     width: 35,
                     height: 35,
-                    decoration:
-                        BoxDecoration(color: getCircleColor(controller), borderRadius: BorderRadius.circular(25)),
+                    decoration: BoxDecoration(
+                        color: getCircleColor(controller),
+                        borderRadius: BorderRadius.circular(25)),
                     child: Center(
                       child: RichText(
                         textAlign: TextAlign.center,
                         text: TextSpan(
-                          text: (date.minute == 0) ? DateFormat('hh').format(date) : DateFormat('hh:mm').format(date),
-                          style: TextStyle(color: AppColors.text.black, fontFamily: AppFonts.nunito, fontSize: 10),
+                          text: (date.minute == 0)
+                              ? DateFormat('hh').format(date)
+                              : DateFormat('hh:mm').format(date),
+                          style: TextStyle(
+                              color: AppColors.text.black,
+                              fontFamily: AppFonts.nunito,
+                              fontSize: 10),
                           children: <TextSpan>[
                             TextSpan(
-                              text: (date.minute == 0) ? DateFormat(' a').format(date) : DateFormat('\na').format(date),
+                              text: (date.minute == 0)
+                                  ? DateFormat(' a').format(date)
+                                  : DateFormat('\na').format(date),
                               style: const TextStyle(fontSize: 6),
                             ),
                           ],
@@ -561,24 +598,28 @@ class BookingsCalenderWidgetNew extends StatelessWidget {
 
   Widget _buildDaySelector() {
     getDotColor(int index, BookingsCalenderWidgetControllerNew controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index])) return Colors.green;
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
+        return Colors.green;
       return isSameDates(controller.calenderDates[index], DateTime.now())
           ? AppColors.background.skyBlue
           : AppColors.background.grey;
     }
 
     getDateColor(int index, BookingsCalenderWidgetControllerNew controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index])) return Colors.white;
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
+        return Colors.white;
       return AppColors.background.black;
     }
 
     getDayColor(int index, BookingsCalenderWidgetControllerNew controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index])) return Colors.white;
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
+        return Colors.white;
       return AppColors.background.black;
     }
 
     getBoxColor(int index, BookingsCalenderWidgetControllerNew controller) {
-      if (isSameDates(controller.selectedDate, controller.calenderDates[index])) return Colors.black;
+      if (isSameDates(controller.selectedDate, controller.calenderDates[index]))
+        return Colors.black;
       return isSameDates(controller.calenderDates[index], DateTime.now())
           ? AppColors.background.datesBlue
           : AppColors.background.white;
