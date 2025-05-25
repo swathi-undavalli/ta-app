@@ -68,7 +68,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
         onPressed: () {
           showLoading = true;
           setState(() {});
-          _captureAndShareScreenshot();
+          _captureAndShare();
           showLoading = false;
           setState(() {});
         },
@@ -139,20 +139,32 @@ class _RoasterChartViewState extends State<RoasterChartView> {
     );
   }
 
-  Future<void> _captureAndShareScreenshot() async {
+  Future<void> _captureAndShare() async {
     try {
-      RenderRepaintBoundary boundary = _repaintBoundaryKey.currentContext!
-          .findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 10);
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      final boundary = _repaintBoundaryKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) {
+        log('Render boundary is null. Make sure the widget is rendered.');
+        return;
+      }
+
+      final image = await boundary.toImage(pixelRatio: 3);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (byteData == null) {
+        log('Failed to convert image to byte data.');
+        return;
+      }
+
+      final pngBytes = byteData.buffer.asUint8List();
       final tempDir = await getTemporaryDirectory();
-      final tempPath = '${tempDir.path}/screenshot.png';
-      File(tempPath).writeAsBytesSync(pngBytes);
+      final fileName = 'screenshot_${DateTime.now().millisecondsSinceEpoch}.png';
+      final tempPath = '${tempDir.path}/$fileName';
+
+      final file = File(tempPath);
+      await file.writeAsBytes(pngBytes);
+
       shareImages([tempPath]);
-    } catch (e) {
-      log('Error capturing screenshot: $e');
+    } catch (e, stackTrace) {
+      log('Error while capturing and sharing screenshot: $e', stackTrace: stackTrace);
     }
   }
 
@@ -178,8 +190,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
           )
           .snapshots(),
       builder: (context, snapshot) {
-        if (snapshot.hasError ||
-            snapshot.connectionState == ConnectionState.waiting) {
+        if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
           return const SizedBox(
             height: 15,
             width: 15,
@@ -207,10 +218,8 @@ class _RoasterChartViewState extends State<RoasterChartView> {
               .collection('dailyBoats')
               .doc(DateFormat('dd-MM-yyyy').format(widget.selectedDate))
               .snapshots(),
-          builder:
-              (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-            if (snapshot.hasError ||
-                snapshot.connectionState == ConnectionState.waiting) {
+          builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+            if (snapshot.hasError || snapshot.connectionState == ConnectionState.waiting) {
               return const SizedBox(
                 height: 15,
                 width: 15,
@@ -220,8 +229,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                 ),
               );
             }
-            Map<String, dynamic>? data =
-                snapshot.data?.data() as Map<String, dynamic>?;
+            Map<String, dynamic>? data = snapshot.data?.data() as Map<String, dynamic>?;
             if (data == null) {
               return const Text('No data added');
             }
@@ -229,8 +237,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
 
             return Column(
               children: [
-                for (int i = 0; i < filteredBookings.length; i++)
-                  buildCustomerInfo(filteredBookings, i, boatsModel),
+                for (int i = 0; i < filteredBookings.length; i++) buildCustomerInfo(filteredBookings, i, boatsModel),
               ],
             );
           },
@@ -239,8 +246,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
     );
   }
 
-  Widget buildCustomerInfo(
-      List<Booking> bookings, int index, BoatsModel boatsModel) {
+  Widget buildCustomerInfo(List<Booking> bookings, int index, BoatsModel boatsModel) {
     Booking booking = bookings[index];
     Boat? boat;
     boatsModel.boats?.forEach((element) {
@@ -265,31 +271,13 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                     ),
                     buildText(text: '${p['first-name']} ${p['last-name']}'),
                     buildText(text: p['gender']),
-                    buildText(
-                        text: roaster.staffInstructor?.name ??
-                            roaster.instructor?.name ??
-                            '-'),
-                    buildText(
-                        text: (roaster.timeIn != null)
-                            ? DateFormat('hh:mm a').format(roaster.timeIn!)
-                            : '-'),
-                    buildText(
-                        text: (roaster.timeOut != null)
-                            ? DateFormat('hh:mm a').format(roaster.timeOut!)
-                            : '-'),
+                    buildText(text: roaster.staffInstructor?.name ?? roaster.instructor?.name ?? '-'),
+                    buildText(text: (roaster.timeIn != null) ? DateFormat('hh:mm a').format(roaster.timeIn!) : '-'),
+                    buildText(text: (roaster.timeOut != null) ? DateFormat('hh:mm a').format(roaster.timeOut!) : '-'),
                     buildText(text: (roaster.isDived == true) ? 'Yes' : 'No'),
-                    buildText(
-                        text: (roaster.customerFeedback?.knowsSwimming == true)
-                            ? 'Yes'
-                            : 'No'),
-                    buildText(
-                        text: (roaster.customerFeedback?.interestedOwc == true)
-                            ? 'Yes'
-                            : 'No'),
-                    buildText(
-                        text:
-                            roaster.customerFeedback?.feedback?.stringOrNull ??
-                                '-'),
+                    buildText(text: (roaster.customerFeedback?.knowsSwimming == true) ? 'Yes' : 'No'),
+                    buildText(text: (roaster.customerFeedback?.interestedOwc == true) ? 'Yes' : 'No'),
+                    buildText(text: roaster.customerFeedback?.feedback?.stringOrNull ?? '-'),
                   ],
                 ).paddingSymmetric(horizontal: 10, vertical: 5);
               }
@@ -302,15 +290,13 @@ class _RoasterChartViewState extends State<RoasterChartView> {
       return Column(
         children: [
           Row(
-            crossAxisAlignment:
-                CrossAxisAlignment.start, // Aligns items properly
+            crossAxisAlignment: CrossAxisAlignment.start, // Aligns items properly
             children: [
               buildText(text: boat?.name ?? '-'),
               buildText(text: booking.id ?? '-'),
               ((booking.pax ?? []).isEmpty)
                   ? buildText(
-                      text:
-                          '${booking.details?.firstName.capitalizeFirst} ${booking.details?.lastName}',
+                      text: '${booking.details?.firstName.capitalizeFirst} ${booking.details?.lastName}',
                     )
                   : IntrinsicHeight(
                       child: Container(
@@ -318,8 +304,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
                         alignment: Alignment.center,
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisSize:
-                              MainAxisSize.min, // Avoid unnecessary expansion
+                          mainAxisSize: MainAxisSize.min, // Avoid unnecessary expansion
                           children: [
                             ...(booking.pax ?? []).map((p) {
                               return buildText(
@@ -333,8 +318,7 @@ class _RoasterChartViewState extends State<RoasterChartView> {
               buildText(text: booking.noOfPersons.toString()),
               buildText(text: booking.details?.gender ?? '-'),
               buildText(
-                text:
-                    '${booking.details?.firstName.capitalizeFirst} ${booking.details?.lastName}',
+                text: '${booking.details?.firstName.capitalizeFirst} ${booking.details?.lastName}',
               ),
               buildText(text: booking.invoiceNo ?? '-'),
               buildText(text: booking.employeeName ?? '-'),

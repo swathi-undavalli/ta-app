@@ -73,8 +73,7 @@ class MapsViewState extends State<MapsView> {
                         polylines: _buildPolyLines(),
                         onCameraMove: provider.onCameraMove,
                       ),
-                      if (provider.showOverlay &&
-                          provider.currentCenterPosition != null)
+                      if (provider.showOverlay && provider.currentCenterPosition != null)
                         OverlayIconWidget(
                           onLocationTap: () {
                             LocationDetailsBottomSheet.show(context);
@@ -112,7 +111,7 @@ class MapsViewState extends State<MapsView> {
           infoWindow: InfoWindow(title: site.name),
           onTap: () {
             provider.selectedLocation = site;
-            distanceToSelectedSite;
+            // distanceToSelectedSite;
             setState(() {});
           },
         );
@@ -241,8 +240,7 @@ class MapsViewState extends State<MapsView> {
       left: 20,
       child: InkWell(
         onTap: () async {
-          final result =
-              await Navigator.push(context, AllDiveSitesView.route());
+          final result = await Navigator.push(context, AllDiveSitesView.route());
 
           await provider.fetchDiveSites();
 
@@ -252,7 +250,7 @@ class MapsViewState extends State<MapsView> {
 
           if (result != null) {
             provider.selectedLocation = result;
-            distanceToSelectedSite;
+            // distanceToSelectedSite;
           }
 
           setState(() {});

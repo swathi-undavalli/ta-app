@@ -17,7 +17,9 @@ class LocationService {
           context,
           onConfirm: () async {
             await Geolocator.openLocationSettings();
-            Navigator.pop(context);
+            if (context.mounted) {
+              Navigator.pop(context);
+            }
           },
           title: 'Permission Denied',
           content: 'Location permission is required to use this feature.',
@@ -39,8 +41,7 @@ class LocationService {
           Navigator.pop(context);
         },
         title: 'Permission Required',
-        content:
-            'This app needs location access. Please enable it in the app settings.',
+        content: 'This app needs location access. Please enable it in the app settings.',
       );
       return false;
     }

@@ -31,8 +31,7 @@ class MapsProvider extends ChangeNotifier {
     bool hasRetried = false,
   }) async {
     try {
-      bool isAllowed =
-          await locationService.checkAndRequestLocationPermission(context);
+      bool isAllowed = await locationService.checkAndRequestLocationPermission(context);
       if (!isAllowed) {
         if (!hasRetried) {
           await fetchCurrentLocation(context, hasRetried: true); // retry once

@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui' as ui;
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -28,8 +27,7 @@ class DiveChecklistView extends StatefulWidget {
   final ChecklistElement checkListElement;
   final Checklist checklist;
 
-  static Route route(ChecklistElement checkListElement, Checklist checklist) =>
-      MaterialPageRoute(
+  static Route route(ChecklistElement checkListElement, Checklist checklist) => MaterialPageRoute(
         builder: (context) => DiveChecklistView(
           checkListElement: checkListElement,
           checklist: checklist,
@@ -128,18 +126,30 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
 
   Future<void> _captureAndShare() async {
     try {
-      RenderRepaintBoundary boundary =
-          widgetKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
-      ui.Image image = await boundary.toImage(pixelRatio: 10);
-      ByteData? byteData =
-          await image.toByteData(format: ui.ImageByteFormat.png);
-      Uint8List pngBytes = byteData!.buffer.asUint8List();
+      final boundary = widgetKey.currentContext?.findRenderObject() as RenderRepaintBoundary?;
+      if (boundary == null) {
+        log('Render boundary is null. Make sure the widget is rendered.');
+        return;
+      }
+
+      final image = await boundary.toImage(pixelRatio: 3);
+      final byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+      if (byteData == null) {
+        log('Failed to convert image to byte data.');
+        return;
+      }
+
+      final pngBytes = byteData.buffer.asUint8List();
       final tempDir = await getTemporaryDirectory();
-      final tempPath = '${tempDir.path}/screenshot.png';
-      File(tempPath).writeAsBytesSync(pngBytes);
+      final fileName = 'screenshot_${DateTime.now().millisecondsSinceEpoch}.png';
+      final tempPath = '${tempDir.path}/$fileName';
+
+      final file = File(tempPath);
+      await file.writeAsBytes(pngBytes);
+
       shareImages([tempPath]);
-    } catch (e) {
-      log('Error while capturing and sharing the screenshot: $e');
+    } catch (e, stackTrace) {
+      log('Error while capturing and sharing screenshot: $e', stackTrace: stackTrace);
     }
   }
 
@@ -178,8 +188,7 @@ class _DiveChecklistViewState extends State<DiveChecklistView> {
               return CheckBoxWidget(
                 key: UniqueKey(),
                 onChanged: (bool value) {
-                  checkListElement.items[checkListElement.items.indexOf(e)]
-                      .isChecked = value;
+                  checkListElement.items[checkListElement.items.indexOf(e)].isChecked = value;
                   setState(() {});
                 },
                 text: e.name,
