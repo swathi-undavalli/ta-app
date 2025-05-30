@@ -12,7 +12,7 @@ import 'add_edit_dive_site_view.dart';
 class AllDiveSitesView extends StatefulWidget {
   const AllDiveSitesView({super.key});
 
-  static Route route() {
+  static Route<DiveSiteModel?> route() {
     return MaterialPageRoute(
       builder: (BuildContext context) {
         return const AllDiveSitesView();

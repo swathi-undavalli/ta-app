@@ -1,0 +1,271 @@
+import 'dart:async';
+import 'dart:math' show pi;
+
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:get/get.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
+import 'package:temple_ui_tools/utils/utils.dart';
+
+import '../../../core/constants/constants.dart';
+import '../../../core/util/close_region_utils.dart';
+import '../providers/maps_provider.dart';
+import '../widgets/loading_indicator.dart';
+import '../widgets/location_error.dart';
+
+class CloseRegionNavigationHelperScreen extends StatefulWidget {
+  final double targetLatitude;
+  final double targetLongitude;
+  final bool isWidget;
+
+  static Route route({
+    required double targetLatitude,
+    required double targetLongitude,
+    bool? isWidget,
+  }) =>
+      MaterialPageRoute(
+        builder: (context) => CloseRegionNavigationHelperScreen(
+          targetLatitude: targetLatitude,
+          targetLongitude: targetLongitude,
+          isWidget: isWidget ?? false,
+        ),
+      );
+
+  const CloseRegionNavigationHelperScreen(
+      {super.key, required this.targetLatitude, required this.targetLongitude, required this.isWidget});
+
+  @override
+  _CloseRegionNavigationHelperScreenState createState() => _CloseRegionNavigationHelperScreenState();
+}
+
+class _CloseRegionNavigationHelperScreenState extends State<CloseRegionNavigationHelperScreen> {
+  final _locationStreamController = StreamController<LocationStatus>.broadcast();
+
+  Stream<LocationStatus> get stream => _locationStreamController.stream;
+  late final CloseRegionCompass closeRegionCompass = CloseRegionCompass(widget.targetLatitude, widget.targetLongitude);
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLocationStatus();
+  }
+
+  @override
+  void dispose() {
+    _locationStreamController.close();
+    closeRegionCompass.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final child = StreamBuilder(
+      stream: stream,
+      builder: (context, AsyncSnapshot<LocationStatus> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) return LoadingIndicator();
+        if (snapshot.data!.enabled == true) {
+          switch (snapshot.data!.status) {
+            case LocationPermission.always:
+            case LocationPermission.whileInUse:
+              return _PointingArrow(closeRegionCompass, widget.isWidget);
+
+            case LocationPermission.denied:
+              return LocationErrorWidget(
+                error: 'Location service permission denied',
+                callback: _checkLocationStatus,
+              );
+            case LocationPermission.deniedForever:
+              return LocationErrorWidget(
+                error: 'Location service Denied Forever !',
+                callback: _checkLocationStatus,
+              );
+            default:
+              return const SizedBox();
+          }
+        } else {
+          return LocationErrorWidget(
+            error: 'Please enable Location service',
+            callback: _checkLocationStatus,
+          );
+        }
+      },
+    );
+    if (widget.isWidget) return child;
+
+    return Scaffold(
+      body: Stack(
+        children: [
+          Consumer<MapsProvider>(
+            builder: (context, provider, child) {
+              double distance = provider.distanceToSelectedSite;
+              Color color;
+              if (distance < 0.1) {
+                color = Colors.green;
+              } else if (distance < 0.5) {
+                color = Colors.red;
+              } else if (distance < 1) {
+                color = Colors.orange;
+              } else {
+                color = Colors.black;
+              }
+
+              return AnimatedContainer(
+                alignment: Alignment.center,
+                color: color,
+                padding: const EdgeInsets.all(8.0),
+                duration: Duration(milliseconds: 300),
+                child: Column(
+                  children: [
+                    Row(
+                      children: [
+                        Spacer(),
+                        SafeArea(
+                          child: IconButton(
+                            onPressed: () => Navigator.pop(context),
+                            icon: Icon(
+                              Icons.close,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Spacer(),
+                    if (distance < 0.1)
+                      Text(
+                        'Arrived !',
+                        style: GoogleFonts.teko(
+                          color: Colors.white,
+                          fontSize: 40,
+                        ),
+                      ),
+                    Row(
+                      children: [
+                        Spacer(),
+                        Opacity(
+                          opacity: 0,
+                          child: Text(
+                            'KMPH',
+                            style: GoogleFonts.teko(
+                              color: Colors.white,
+                              fontSize: 30,
+                            ),
+                          ).paddingOnly(top: 40, right: 10),
+                        ),
+                        Text(
+                          provider.speed.toStringAsFixed(2),
+                          style: GoogleFonts.teko(
+                            color: Colors.white,
+                            fontSize: 120,
+                          ),
+                        ),
+                        Text(
+                          'KMPH',
+                          style: GoogleFonts.teko(
+                            color: Colors.white70,
+                            fontSize: 30,
+                          ),
+                        ).paddingOnly(top: 40, left: 10),
+                        Spacer(),
+                      ],
+                    ),
+                    RichText(
+                      text: TextSpan(
+                        text: getReadableDistance(distance),
+                        style: GoogleFonts.teko(
+                          color: Colors.white,
+                          fontSize: 40,
+                        ),
+                        children: const <TextSpan>[
+                          TextSpan(
+                            text: ' to reach',
+                            style: TextStyle(
+                              fontFamily: AppFonts.nunito,
+                              color: Colors.white70,
+                              fontSize: 16,
+                            ),
+                          ),
+                          TextSpan(
+                            text: ' dive site',
+                            style: TextStyle(
+                              fontFamily: AppFonts.nunito,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    Spacing.h30,
+                  ],
+                ),
+              );
+            },
+          ),
+          Positioned(
+            top: 130,
+            child: SizedBox(
+              width: Screen.width,
+              child: Center(child: child),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  String getReadableDistance(double distance) {
+    if (distance < 1) {
+      return '${(distance * 1000).toStringAsFixed(0)} mts';
+    }
+    return '${distance.toStringAsFixed(1)} kms';
+  }
+
+  Future<void> _checkLocationStatus() async {
+    final locationStatus = await CloseRegionCompass.checkLocationStatus();
+    if (locationStatus.enabled && locationStatus.status == LocationPermission.denied) {
+      await CloseRegionCompass.requestPermissions();
+      final s = await CloseRegionCompass.checkLocationStatus();
+      _locationStreamController.sink.add(s);
+    } else {
+      _locationStreamController.sink.add(locationStatus);
+    }
+  }
+}
+
+class _PointingArrow extends StatelessWidget {
+  final CloseRegionCompass closeRegionCompass;
+  final bool showArrowOnly;
+
+  _PointingArrow(this.closeRegionCompass, this.showArrowOnly);
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder(
+      stream: closeRegionCompass.siteStream,
+      builder: (_, AsyncSnapshot<Direction> snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) return LoadingIndicator();
+        final siteDirection = snapshot.data!;
+        return Stack(
+          alignment: Alignment.center,
+          children: <Widget>[
+            Transform.rotate(
+              angle: (siteDirection.site * (pi / 180) * -1),
+              alignment: Alignment.center,
+              child: SvgPicture.asset(
+                'assets/needle.svg',
+                fit: BoxFit.contain,
+                color: showArrowOnly ? Colors.black : Colors.white,
+                height: 300,
+                alignment: Alignment.center,
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+}

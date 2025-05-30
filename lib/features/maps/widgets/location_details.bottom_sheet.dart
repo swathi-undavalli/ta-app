@@ -22,12 +22,10 @@ class LocationDetailsBottomSheet extends StatefulWidget {
   }
 
   @override
-  State<LocationDetailsBottomSheet> createState() =>
-      _LocationDetailsBottomSheetState();
+  State<LocationDetailsBottomSheet> createState() => _LocationDetailsBottomSheetState();
 }
 
-class _LocationDetailsBottomSheetState
-    extends State<LocationDetailsBottomSheet> {
+class _LocationDetailsBottomSheetState extends State<LocationDetailsBottomSheet> {
   late final MapsProvider provider;
   late TextEditingController _locationName;
   late FocusNode _locationFocusNode;
@@ -36,7 +34,7 @@ class _LocationDetailsBottomSheetState
   void initState() {
     super.initState();
     provider = context.read<MapsProvider>();
-    _locationName = TextEditingController(text: 'Location name');
+    _locationName = TextEditingController(text: 'Untitled site');
     _locationFocusNode = FocusNode();
   }
 
@@ -50,8 +48,8 @@ class _LocationDetailsBottomSheetState
   @override
   Widget build(BuildContext context) {
     double distance = provider.calculateDistanceInKm(
-      provider.currentLocation!.latitude,
-      provider.currentLocation!.longitude,
+      provider.currentUserLocation!.latitude,
+      provider.currentUserLocation!.longitude,
       provider.currentCenterPosition!.latitude,
       provider.currentCenterPosition!.longitude,
     );
@@ -84,7 +82,7 @@ class _LocationDetailsBottomSheetState
     return Row(
       children: [
         const Text(
-          'Add Marker',
+          'New dive site',
           style: TextStyle(
             fontSize: 16,
             color: Colors.black,
@@ -113,11 +111,11 @@ class _LocationDetailsBottomSheetState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const Text(
-            'Current location',
+            'My current location',
             style: TextStyle(color: Colors.black, fontSize: 12),
           ),
           Text(
-            '${provider.currentLocation?.latitude.toStringAsFixed(6)} , ${provider.currentLocation?.longitude.toStringAsFixed(6)}',
+            '${provider.currentUserLocation?.latitude.toStringAsFixed(6)} , ${provider.currentUserLocation?.longitude.toStringAsFixed(6)}',
             style: const TextStyle(
               fontWeight: FontWeight.bold,
               color: Colors.black,
@@ -126,7 +124,7 @@ class _LocationDetailsBottomSheetState
           ),
           Spacing.h10,
           const Text(
-            'Selected location',
+            'Pointed location',
             style: TextStyle(color: Colors.black, fontSize: 12),
           ),
           Text(
@@ -139,7 +137,7 @@ class _LocationDetailsBottomSheetState
           ),
           Spacing.h10,
           const Text(
-            'Distance from GPS',
+            'Distance from my location',
             style: TextStyle(color: Colors.black, fontSize: 12),
           ),
           Text(
@@ -178,11 +176,11 @@ class _LocationDetailsBottomSheetState
             child: Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: Colors.grey.shade400,
+                color: Colors.black12,
               ),
               child: const Icon(
                 Icons.edit,
-                color: Colors.white,
+                color: Colors.black,
                 size: 20,
               ).paddingAll(5),
             ),

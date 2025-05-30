@@ -4,15 +4,8 @@ import 'package:temple_ui_tools/styling/padding_extensions.dart';
 import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 
 class OverlayIconWidget extends StatelessWidget {
-  final VoidCallback onAddTap;
-  final VoidCallback onLocationTap;
-  final VoidCallback onEyeTap;
-
   const OverlayIconWidget({
     super.key,
-    required this.onAddTap,
-    required this.onLocationTap,
-    required this.onEyeTap,
   });
 
   @override
@@ -26,16 +19,11 @@ class OverlayIconWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            _buildIconButton(icon: Icons.navigation_rounded, onTap: onLocationTap),
             Spacing.w10,
             _buildHorizontalLine(),
-            InkWell(
-              onTap: onAddTap,
-              child: const Icon(Icons.add, size: 20),
-            ),
+            const Icon(Icons.add, size: 20),
             _buildHorizontalLine(),
             Spacing.w10,
-            _buildIconButton(icon: Icons.remove_red_eye_rounded, onTap: onEyeTap),
           ],
         ),
         _buildVerticalLine(),

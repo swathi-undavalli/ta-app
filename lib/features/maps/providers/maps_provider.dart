@@ -16,15 +16,16 @@ class MapsProvider extends ChangeNotifier {
   MapsProvider({required this.mapsRepository, required this.locationService});
 
   GoogleMapController? mapController;
-  LatLng? currentLocation;
+  LatLng? currentUserLocation;
   DiveSiteModel? selectedLocation;
+  final int maxRecentLocations = 5;
   LatLng? currentCenterPosition;
   List<LatLng> recentLocations = [];
   bool showOverlay = false;
   bool showLoading = false;
   List<DiveSiteModel> diveSites = [];
-  bool _isDeadHeadingRunning = false;
   double currentZoom = 15;
+  double speed = 0;
 
   Future<void> fetchCurrentLocation(
     BuildContext context, {
@@ -39,19 +40,28 @@ class MapsProvider extends ChangeNotifier {
         return;
       }
       locationService.location.getLocation().then((location) {
-        currentLocation = LatLng(
+        currentUserLocation = LatLng(
           location.latitude!,
           location.longitude!,
         );
         notifyListeners();
-        _drawDeadHeading();
       });
 
       locationService.location.onLocationChanged.listen((newLoc) {
-        currentLocation = LatLng(
+        currentUserLocation = LatLng(
           newLoc.latitude!,
           newLoc.longitude!,
         );
+        double? speedInMps = newLoc.speed; // Speed in meters/second
+        double? speedInKmph = speedInMps != null ? speedInMps * 3.6 : null;
+        speed = speedInKmph ?? 0;
+
+        if (currentUserLocation != recentLocations.lastOrNull) {
+          recentLocations.add(currentUserLocation!);
+        }
+
+        if (recentLocations.length > 5) recentLocations.removeAt(0);
+
         notifyListeners();
       });
     } on PlatformException catch (err) {
@@ -64,41 +74,16 @@ class MapsProvider extends ChangeNotifier {
     }
   }
 
-  void _drawDeadHeading() async {
-    if (_isDeadHeadingRunning) return;
-    _isDeadHeadingRunning = true;
-
-    while (true) {
-      int seconds = 1;
-
-      if (selectedLocation != null && currentLocation != null) {
-        num distance = calculateDistanceInKm(
-              currentLocation!.latitude,
-              currentLocation!.longitude,
-              selectedLocation!.latLang.latitude,
-              selectedLocation!.latLang.longitude,
-            ) *
-            1000;
-
-        seconds = distance >= 5
-            ? 60
-            : distance >= 1
-                ? 30
-                : 1;
-      }
-
-      await Future.delayed(Duration(seconds: seconds));
-
-      if (currentLocation != recentLocations.lastOrNull) {
-        recentLocations.add(currentLocation!);
-      }
-
-      if (recentLocations.length > 5) {
-        recentLocations.removeAt(0);
-      }
-
-      notifyListeners();
+  double get distanceToSelectedSite {
+    if (currentUserLocation == null || selectedLocation == null) {
+      return 0.0;
     }
+    return calculateDistanceInKm(
+      currentUserLocation!.latitude,
+      currentUserLocation!.longitude,
+      selectedLocation!.latLang.latitude,
+      selectedLocation!.latLang.longitude,
+    );
   }
 
   void hideOverlay() {
@@ -118,10 +103,10 @@ class MapsProvider extends ChangeNotifier {
   void onMapCreated(GoogleMapController controller) {
     mapController = controller;
 
-    if (currentLocation != null) {
+    if (currentUserLocation != null) {
       mapController?.animateCamera(
         CameraUpdate.newCameraPosition(
-          CameraPosition(target: currentLocation!, zoom: 15),
+          CameraPosition(target: currentUserLocation!, zoom: 15),
         ),
       );
     }
@@ -149,8 +134,14 @@ class MapsProvider extends ChangeNotifier {
   }
 
   void onMapTap(LatLng position) {
-    currentCenterPosition = position;
+    // currentCenterPosition = position;
+    // showOverlay = true;
+    // notifyListeners();
+  }
+
+  void showPlusPointer() {
     showOverlay = true;
+    selectedLocation = null;
     notifyListeners();
   }
 

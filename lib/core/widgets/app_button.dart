@@ -7,6 +7,7 @@ class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback onTap;
   final Color? buttonColor;
+  final Color? textColor;
   final double height;
   final double width;
   final double borderRadius;
@@ -19,6 +20,7 @@ class AppButton extends StatelessWidget {
     required this.text,
     required this.onTap,
     this.buttonColor,
+    this.textColor,
     this.height = 31,
     this.width = 100,
     this.borderRadius = 20,
@@ -47,6 +49,7 @@ class AppButton extends StatelessWidget {
     required String text,
     required VoidCallback onTap,
     Color? buttonColor,
+    Color? textColor,
     bool showLoading = false,
     bool isSecondary = false,
     double height = 50,
@@ -61,6 +64,7 @@ class AppButton extends StatelessWidget {
       showLoading: showLoading,
       isSecondary: isSecondary,
       buttonColor: buttonColor,
+      textColor: textColor,
       borderRadius: 10,
     );
   }
@@ -71,9 +75,7 @@ class AppButton extends StatelessWidget {
       style: ButtonStyle(
         overlayColor: WidgetStateProperty.all(Colors.white.withOpacity(0.1)),
         backgroundColor: WidgetStateProperty.all<Color>(
-          isSecondary
-              ? AppColors.background.disabledGrey
-              : buttonColor ?? Colors.black,
+          isSecondary ? AppColors.background.disabledGrey : buttonColor ?? Colors.black,
         ),
         shape: WidgetStateProperty.all<RoundedRectangleBorder>(
           RoundedRectangleBorder(
@@ -87,11 +89,11 @@ class AppButton extends StatelessWidget {
       ),
       onPressed: showLoading ? null : onTap,
       child: showLoading
-          ? const SizedBox(
+          ? SizedBox(
               height: 20,
               width: 20,
               child: CircularProgressIndicator(
-                color: Colors.white,
+                color: textColor ?? Colors.white,
                 strokeWidth: 2,
               ),
             )
@@ -100,7 +102,7 @@ class AppButton extends StatelessWidget {
               style: TextStyle(
                 fontSize: fontSize,
                 fontWeight: FontWeight.w600,
-                color: Colors.white,
+                color: textColor ?? Colors.white,
               ),
             ).paddingHorizontal(10),
     );

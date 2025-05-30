@@ -12,8 +12,7 @@ double calculateBearing(LatLng start, LatLng end) {
   double deltaLon = endLonRad - startLonRad;
 
   double y = sin(deltaLon) * cos(endLatRad);
-  double x = cos(startLatRad) * sin(endLatRad) -
-      sin(startLatRad) * cos(endLatRad) * cos(deltaLon);
+  double x = cos(startLatRad) * sin(endLatRad) - sin(startLatRad) * cos(endLatRad) * cos(deltaLon);
 
   return (degrees(atan2(y, x)) + 360) % 360; // Normalize to 0-360
 }
@@ -26,8 +25,8 @@ LatLng destinationPoint(LatLng start, double distance, double bearing) {
   double startLatRad = radians(start.latitude);
   double startLonRad = radians(start.longitude);
 
-  double destLatRad = asin(sin(startLatRad) * cos(distanceRatio) +
-      cos(startLatRad) * sin(distanceRatio) * cos(radians(bearing)));
+  double destLatRad =
+  asin(sin(startLatRad) * cos(distanceRatio) + cos(startLatRad) * sin(distanceRatio) * cos(radians(bearing)));
 
   double destLonRad = startLonRad +
       atan2(sin(radians(bearing)) * sin(distanceRatio) * cos(startLatRad),
@@ -47,29 +46,24 @@ double degrees(double radians) {
 }
 
 // Function to calculate the distance to the edge of the map based on the zoom level
-double calculateDistanceToEdge(
-    double mapWidth, double mapHeight, double zoomLevel) {
+double calculateDistanceToEdge(double mapWidth, double mapHeight, double zoomLevel) {
   // You can adjust this based on your specific map's scaling and how much distance
   // corresponds to each pixel at the current zoom level. This is a rough estimate.
-  double metersPerPixel =
-      156543.03 * cos(radians(11.983048)) / (pow(2, zoomLevel));
+  double metersPerPixel = 156543.03 * cos(radians(11.983048)) / (pow(2, zoomLevel));
 
   // Calculate half the diagonal distance to the edge of the map
-  double diagonalDistance =
-      sqrt(pow(mapWidth, 2) + pow(mapHeight, 2)) / 2 * metersPerPixel;
+  double diagonalDistance = sqrt(pow(mapWidth, 2) + pow(mapHeight, 2)) / 2 * metersPerPixel;
 
   return diagonalDistance; // Return the distance to the edge
 }
 
-LatLng getNextPointOnLine(LatLng start, LatLng end, double mapWidth,
-    double mapHeight, double zoomLevel) {
+LatLng getNextPointOnLine(LatLng start, LatLng end, double mapWidth, double mapHeight, double zoomLevel) {
   // Calculate the bearing from start to end
   double bearing = calculateBearing(start, end);
 
   // Calculate the distance to the edge of the map
   // Here we assume the map covers a certain distance at the current zoom level
-  double distanceToEdge =
-      calculateDistanceToEdge(mapWidth, mapHeight, zoomLevel) * 10000;
+  double distanceToEdge = calculateDistanceToEdge(mapWidth, mapHeight, zoomLevel) * 100;
 
   // Calculate the next point at the edge
   return destinationPoint(start, distanceToEdge, bearing);
