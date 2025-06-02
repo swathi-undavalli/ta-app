@@ -131,6 +131,7 @@ class MapsViewState extends State<MapsView> {
                                           targetLatitude: provider.selectedLocation!.latLang.latitude,
                                           targetLongitude: provider.selectedLocation!.latLang.longitude,
                                           isWidget: true,
+                                          diveSiteName: provider.selectedLocation?.name ?? '',
                                         ).paddingAll(16).center,
                                       ),
                                     ),
@@ -239,6 +240,7 @@ class MapsViewState extends State<MapsView> {
                                               CloseRegionNavigationHelperScreen.route(
                                                 targetLatitude: provider.selectedLocation!.latLang.latitude,
                                                 targetLongitude: provider.selectedLocation!.latLang.longitude,
+                                                diveSite: provider.selectedLocation?.name ?? '',
                                               ),
                                             );
                                           },

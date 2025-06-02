@@ -20,22 +20,28 @@ class CloseRegionNavigationHelperScreen extends StatefulWidget {
   final double targetLatitude;
   final double targetLongitude;
   final bool isWidget;
+  final String diveSiteName;
 
-  static Route route({
-    required double targetLatitude,
-    required double targetLongitude,
-    bool? isWidget,
-  }) =>
+  const CloseRegionNavigationHelperScreen(
+      {super.key,
+      required this.targetLatitude,
+      required this.targetLongitude,
+      required this.isWidget,
+      required this.diveSiteName});
+
+  static Route route(
+          {required double targetLatitude,
+          required double targetLongitude,
+          bool? isWidget,
+          required String diveSite}) =>
       MaterialPageRoute(
         builder: (context) => CloseRegionNavigationHelperScreen(
           targetLatitude: targetLatitude,
           targetLongitude: targetLongitude,
           isWidget: isWidget ?? false,
+          diveSiteName: diveSite,
         ),
       );
-
-  const CloseRegionNavigationHelperScreen(
-      {super.key, required this.targetLatitude, required this.targetLongitude, required this.isWidget});
 
   @override
   _CloseRegionNavigationHelperScreenState createState() => _CloseRegionNavigationHelperScreenState();
