@@ -23,7 +23,7 @@ class AddPaymentsLogic {
             reciptNo: controller.receiptNoTED.text,
             referenceNo: controller.paymentReferenceTED.text,
             paymentMode: controller.paymentModeTED.text,
-            time: DateTime.now(),
+            time: controller.paymentDate,
           ),
         );
         FirebaseFirestore.instance
@@ -76,6 +76,7 @@ class AddPaymentsLogic {
       // ),
     );
   }
+
 }
 
 class AddPaymentsController extends GetxController {

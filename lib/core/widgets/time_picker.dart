@@ -11,9 +11,7 @@ class TimePicker {
       initialTime: TimeOfDay.fromDateTime(initialTime),
     );
     if (pickedTime == null) return null;
-    final selectedDateTime = DateTime.now()
-        // ignore: sdk_version_since
-        .copyWith(hour: pickedTime.hour, minute: pickedTime.minute);
+    final selectedDateTime = DateTime.now().copyWith(hour: pickedTime.hour, minute: pickedTime.minute);
     return selectedDateTime;
   }
 

@@ -204,9 +204,7 @@ class AddPaymentsView extends StatelessWidget {
               return DropdownButton(
                 underline: const SizedBox(),
                 isExpanded: true,
-                value: controller.paymentModeTED.text.isNotEmpty
-                    ? controller.paymentModeTED.text
-                    : null,
+                value: controller.paymentModeTED.text.isNotEmpty ? controller.paymentModeTED.text : null,
                 onChanged: (dynamic mode) {
                   if (mode == 'UPI') {
                     return;
@@ -220,8 +218,7 @@ class AddPaymentsView extends StatelessWidget {
                     child: Text(
                       newMode,
                       style: TextStyle(
-                        color:
-                            (newMode == 'UPI') ? Colors.black12 : Colors.black,
+                        color: (newMode == 'UPI') ? Colors.black12 : Colors.black,
                       ),
                     ),
                   );
