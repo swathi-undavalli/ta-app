@@ -13,7 +13,7 @@ if (keystorePropertiesFile.exists()) {
 
 android {
     namespace = "com.temple_adventures.scubadiving"
-    compileSdk = 35
+    compileSdk = 36
     ndkVersion = "29.0.13113456"
 
     compileOptions {
@@ -29,8 +29,8 @@ android {
 
     defaultConfig {
         applicationId = "com.temple_adventures.scubadiving"
-        minSdk = 23
-        targetSdk = 35
+        minSdkVersion = flutter.minSdkVersion
+        targetSdk = 36
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }

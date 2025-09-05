@@ -38,6 +38,7 @@ class EquipmentProvider extends ChangeNotifier {
   }
 
   // Fetching Equipment Items
+
   void fetchEquipmentItems([bool force = false]) async {
     if (force == false && items.isNotEmpty) return;
 
@@ -88,16 +89,12 @@ class EquipmentProvider extends ChangeNotifier {
   }
 
   void toggleItemSelection(EquipmentItem item) {
-    selectedItems.contains(item)
-        ? selectedItems.remove(item)
-        : selectedItems.add(item);
+    selectedItems.contains(item) ? selectedItems.remove(item) : selectedItems.add(item);
     notifyListeners();
   }
 
   void togglePieceSelection(EquipmentPiece piece) {
-    selectedPieces.contains(piece)
-        ? selectedPieces.remove(piece)
-        : selectedPieces.add(piece);
+    selectedPieces.contains(piece) ? selectedPieces.remove(piece) : selectedPieces.add(piece);
     notifyListeners();
   }
 
@@ -145,8 +142,7 @@ class EquipmentProvider extends ChangeNotifier {
 
       if (query.docs.isEmpty) throw Exception('OTP not found');
 
-      final validation =
-          OtpValidationMapper.fromMap(query.docs.first.data()).copyWith(
+      final validation = OtpValidationMapper.fromMap(query.docs.first.data()).copyWith(
         pieces: selectedPieces,
         renterID: currentEmployee?.id,
       );
@@ -165,12 +161,8 @@ class EquipmentProvider extends ChangeNotifier {
     try {
       firebaseTrackingId = null;
       notifyListeners();
-      var query = await FirebaseFirestore.instance
-          .collection('otpValidation')
-          .where('approve', isEqualTo: false)
-          .get();
-      final existingCodes =
-          query.docs.map((doc) => doc.data()['otp'] as String).toList();
+      var query = await FirebaseFirestore.instance.collection('otpValidation').where('approve', isEqualTo: false).get();
+      final existingCodes = query.docs.map((doc) => doc.data()['otp'] as String).toList();
 
       final code = _generateUniqueOTP(existingCodes);
       final validation = OtpValidation(
@@ -180,9 +172,7 @@ class EquipmentProvider extends ChangeNotifier {
         approve: false,
         pieces: const [],
       );
-      var doc = await FirebaseFirestore.instance
-          .collection('otpValidation')
-          .add(validation.toMap());
+      var doc = await FirebaseFirestore.instance.collection('otpValidation').add(validation.toMap());
       firebaseTrackingId = doc.id;
       notifyListeners();
     } catch (e) {
@@ -192,16 +182,14 @@ class EquipmentProvider extends ChangeNotifier {
 
   // Approving Rental and Adding Log
   Future<void> approveRentalAndAddLog(OtpValidation validation) async {
-    if (firebaseTrackingId == null)
-      throw Exception('firebaseTrackingId is null');
+    if (firebaseTrackingId == null) throw Exception('firebaseTrackingId is null');
 
     try {
       final approvedValidation = validation.copyWith(approve: true);
       await _updateFirebaseValidation(approvedValidation);
 
       // Update renter and lastRented information in pieces
-      repository.updateEquipmentPieces(
-          validation.pieces, validation.renterID, Timestamp.now());
+      repository.updateEquipmentPieces(validation.pieces, validation.renterID, Timestamp.now());
 
       //TODO: implement notes for each log.
       await repository.addEquipmentLog(validation, 'implement this');
@@ -237,10 +225,7 @@ class EquipmentProvider extends ChangeNotifier {
   }
 
   Future<void> _updateFirebaseValidation(OtpValidation validation) async {
-    await FirebaseFirestore.instance
-        .collection('otpValidation')
-        .doc(firebaseTrackingId)
-        .set(validation.toMap());
+    await FirebaseFirestore.instance.collection('otpValidation').doc(firebaseTrackingId).set(validation.toMap());
   }
 
   void _handleError(Object error) {

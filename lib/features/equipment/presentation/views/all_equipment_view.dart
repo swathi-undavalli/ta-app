@@ -1,11 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:temple_ui_tools/temple_ui_tools.dart';
-import 'package:temple_ui_tools/utils/utils.dart';
+import 'package:temple_ui_tools/styling/alignment_extensions.dart';
+import 'package:temple_ui_tools/styling/padding_extensions.dart';
+import 'package:temple_ui_tools/styling/spacing_widgets.dart';
 
+import 'package:temple_ui_tools/utils/utils.dart';
 import '../../../../core/constants/constants.dart';
 import '../../../../core/widgets/access_levels.dart';
+import '../../../../core/widgets/app_button.dart';
 import '../../models/equipment_model.dart';
 import '../../provider/equipment.provider.dart';
 import '../widgets/banner_container.dart';
@@ -85,15 +88,21 @@ class _AllEquipmentViewState extends State<AllEquipmentView> {
                       ).center;
                     }
 
-                    return Wrap(
+                    Iterable<EquipmentCategory> categories = provider.items.map((item) => item.category).toSet();
+
+                    return Column(
                       spacing: 16,
-                      runSpacing: 16,
-                      alignment: WrapAlignment.center,
                       children: [
                         const _GenerateOTPBanner().paddingOnly(bottom: 8),
-                        ...provider.items.map((EquipmentItem item) {
-                          return _EquipmentItemTile(item: item);
-                        }),
+                        ...categories.map(
+                          (EquipmentCategory category) {
+                            return _ExpansionPanel(
+                                    category: category,
+                                    items: provider.items.where((item) => item.category.id == category.id).toList())
+                                .paddingHorizontal(16);
+                          },
+                        ),
+                        Spacing.h100,
                       ],
                     ).paddingOnly(top: 16).center.scrollable;
                   }
@@ -117,8 +126,6 @@ class _EquipmentItemTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double size = (Screen.width / 3) - 15 * 2;
-
     return Selector<EquipmentProvider, List<EquipmentItem>>(
       selector: (context, provider) => provider.selectedItems,
       builder: (context, selectedItems, child) {
@@ -128,16 +135,12 @@ class _EquipmentItemTile extends StatelessWidget {
           onTap: () {
             context.read<EquipmentProvider>().toggleItemSelection(item);
           },
-          onLongPress: () {
-            if (AccessRights.addEquipment) {
-              Navigator.push(context, AddEquipmentView.route(item));
-            }
-          },
-          child: Column(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Container(
-                height: size,
-                width: size,
+                height: 75,
+                width: 75,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
@@ -150,9 +153,30 @@ class _EquipmentItemTile extends StatelessWidget {
                   ),
                 ),
               ),
-              Spacing.h4,
-              Text(
-                item.name,
+              Spacing.w20,
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.name.capitalized,
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                  if (AccessRights.addEquipment)
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(context, AddEquipmentView.route(item));
+                      },
+                      child: Text(
+                        'Edit',
+                        style: TextStyle(
+                          color: AppColors.text.skyBlue,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                    ).paddingOnly(top: 20),
+                ],
               ),
             ],
           ),
@@ -285,5 +309,127 @@ class _MiniButton extends StatelessWidget {
         child: Text(text, style: bannerButtonStyle),
       ),
     );
+  }
+}
+
+class _ExpansionPanel extends StatefulWidget {
+  final EquipmentCategory category;
+  final List<EquipmentItem> items;
+  const _ExpansionPanel({required this.category, required this.items});
+
+  @override
+  State<_ExpansionPanel> createState() => _ExpansionPanelState();
+}
+
+class _ExpansionPanelState extends State<_ExpansionPanel> {
+  bool _expanded = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          // color: appBlue.withOpacity(0.1),
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.black12)),
+      child: Column(
+        children: [
+          InkWell(
+            onTap: () {
+              setState(() {
+                _expanded = !_expanded;
+              });
+            },
+            child: Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: appBlue.withOpacity(0.1),
+                  ),
+                  child: Text(
+                    '${widget.items.length}',
+                    style: TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ).center.paddingAll(8),
+                ).paddingOnly(left: 8),
+                Expanded(
+                  child: CustomTitle(
+                    title: widget.category.name.capitalized,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ).paddingOnly(left: 15, right: 15),
+                ),
+                Selector<EquipmentProvider, List<EquipmentItem>>(
+                  selector: (context, provider) => provider.selectedItems,
+                  shouldRebuild: (old, newEq) => true, // TODO: Update condition as needed
+                  builder: (context, selectedItems, child) {
+                    final currentItems = selectedItems.where((item) => item.category == widget.category);
+
+                    if (currentItems.isEmpty) return const SizedBox();
+                    return Container(
+                      decoration: BoxDecoration(color: Colors.green, borderRadius: BorderRadius.circular(8)),
+                      child: Text(
+                        '${currentItems.length} Selected',
+                        style: TextStyle(color: Colors.white, fontSize: 12),
+                      ).paddingSymmetric(horizontal: 8, vertical: 4),
+                    );
+                  },
+                ),
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _expanded = !_expanded;
+                    });
+                  },
+                  icon: Icon(_expanded ? Icons.expand_less : Icons.expand_more),
+                ),
+              ],
+            ),
+          ),
+          AnimatedSize(
+            duration: Duration(milliseconds: 200),
+            curve: Curves.easeInOut,
+            child: _expanded
+                ? Column(
+                    children: [
+                      ...widget.items.map((EquipmentItem item) {
+                        return _EquipmentItemTile(item: item).paddingAll(10);
+                      }),
+                    ],
+                  )
+                : SizedBox.shrink(),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class CustomTitle extends StatelessWidget {
+  const CustomTitle({
+    super.key,
+    required this.title,
+    this.fontSize = 16,
+    this.fontWeight = FontWeight.bold,
+  });
+  final String title;
+  final double fontSize;
+  final FontWeight fontWeight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Text(
+      title,
+      style: TextStyle(fontSize: fontSize, color: Colors.black, fontWeight: fontWeight),
+    );
+  }
+}
+
+extension StringCasingExtension on String {
+  String get capitalized {
+    if (isEmpty) return this;
+    return this[0].toUpperCase() + substring(1);
   }
 }
